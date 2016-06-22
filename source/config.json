@@ -1,0 +1,9 @@
+{
+    "autoload": [
+        "DBLib/aagDBLib.livecode",
+        "hapMediaViewersLib.livecode"
+    ],
+    "launch_module": "home",
+    "log_level": "info,error,fatal",
+    "log_file": "sivasiva.log"
+}
