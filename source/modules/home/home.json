@@ -1,30 +1,30 @@
 {
     "hero": {
-        "image": "portal-screens/home/hero_home_Who-Is-Siva.jpg",
+        "image": "img/portal-screen/hero_home_Who-Is-Siva.jpg",
         "action": "http://yahoo.com"
     },
     "gems": {
-        "image": "portal-screens/home/thumb_gems_gd-writing-monteblanc.jpg"
+        "image": "img/portal-screen/thumb_gems_gd-writing-monteblanc.jpg"
     },
     "surprise": {
-        "image": "portal-screens/home/thumb_surprise_boy-suitcase.jpg"
+        "image": "img/portal-screen/thumb_surprise_boy-suitcase.jpg"
     },
     "listen": {
-        "image": "portal-screens/home/thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
+        "image": "img/portal-screen/thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
     },
     "look": {
-        "image": "portal-screens/home/thumb_look_video-in-iphone.jpg"
+        "image": "img/portal-screen/thumb_look_video-in-iphone.jpg"
     },
     "practice": {
-        "image": "portal-screens/home/thumb_practice_girl-handstand-shtrstk-130057022.jpg"
+        "image": "img/portal-screen/thumb_practice_girl-handstand-shtrstk-130057022.jpg"
     },
     "read": {
-        "image": "portal-screens/home/thumb_read_mother-daughter-shtrstk-220389001.jpg"
+        "image": "img/portal-screen/thumb_read_mother-daughter-shtrstk-220389001.jpg"
     },
     "website": {
-        "image": "portal-screens/home/thumb_website_ha-com-screenshoot.jpg"
+        "image": "img/portal-screen/thumb_website_ha-com-screenshoot.jpg"
     },
     "games": {
-        "image": "portal-screens/home/thumb_fun-games_tablet-shtrstk-184618028.jpg"
+        "image": "img/portal-screen/thumb_fun-games_tablet-shtrstk-184618028.jpg"
     }
 }
