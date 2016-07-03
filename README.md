@@ -15,3 +15,9 @@ The most important items in this file are:
 ## API
 The loader stack provides a **backscript for the API to be shared between modules**, this exists inside a button called **API backscript**. Libraries also share their code on the message path for other modules to use but the core routines are a part of this backscript.
 
+
+
+
+# Working Back Ups
+  add this to the preopenstack handler of any module: 
+backupStack  to create incremental backups of your work stack every 15 minutes. be sure .gitignore includes ".bac"
