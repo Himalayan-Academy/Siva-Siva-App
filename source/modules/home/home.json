@@ -1,4 +1,4 @@
-fun-game-portal-images": {
+{ "portal-links": {
     "hero": {
         "image": "img/portal-screen/hero_home_Who-Is-Siva.jpg",
         "action": "http://yahoo.com"
@@ -27,9 +27,5 @@ fun-game-portal-images": {
     "games": {
         "image": "img/portal-screen/thumb_fun-games_tablet-shtrstk-184618028.jpg"
     }
-},
-
-"last-game-played": {
-    "name": "word-puzzle-1",
-    "completed": "true"
+}
 }

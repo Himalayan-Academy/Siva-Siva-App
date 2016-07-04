@@ -1,4 +1,4 @@
-{
+{"portal-links": {
     "hero": {
         "image": "img/portal-screen/hero_surprise_boy-opens-suitcase.jpg"
     },
@@ -20,4 +20,5 @@
     "art": {
         "image": "img/portal-screen/thumb_art_artists-hand-shtrstk-266085548.jpg"
     }
+}
 }
