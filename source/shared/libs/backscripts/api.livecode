@@ -1,0 +1,49 @@
+﻿script "API"
+
+
+command scaleStackIfNeeded
+   if the environment is "development" and (item 4 of the effective working screenRect < 800 )  then
+      set the scalefactor of this stack to .75
+      set the height of this stack to 736
+   end if
+end scaleStackIfNeeded
+
+command errorDialog pExecutionError
+   put item 4 of line 1 of pExecutionError into tBrokenStatement
+   put item 2 of line 1 of pExecutionError into tLineNumber
+   put line (item 1 of line 1 of pExecutionError) of the cErrorsList of btn "API Backscript" of stack "loader" into tErrorDescription
+   
+   logError tErrorDescription & ":" && tBrokenStatement && "on line" && tLineNumber
+end errorDialog
+
+private command _goLaunchModule
+   logInfo "Loading launch module..."
+   if the environment is not "development" then
+      hide this stack
+   end if
+   loadModule getConfiguration("launch_module")
+end _goLaunchModule
+
+command goHome
+   _goLaunchModule
+   dispatch "relaunch" to the currentcard of the topstack
+end goHome
+
+command loadModule pModule
+   // find what module file to load
+   logInfo "Loading module:" && pModule
+   put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into tModuleToLoad
+   put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into tModuleConfigurationFile
+   logInfo tModuleToLoad
+   
+   // check and load configuration
+   if there is a file tModuleConfigurationFile then
+      get url ("binfile:" & tModuleConfigurationFile)
+      loadModuleConfiguration pModule, jsonImport(it)
+   end if
+   
+   // load stack
+   go stack tModuleToLoad
+end loadModule
+
+
