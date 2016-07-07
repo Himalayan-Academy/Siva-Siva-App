@@ -3,6 +3,7 @@
         "DBLib/aagDBLib.livecode",
         "hapMediaViewersLib.livecode"
     ],
+    "behaviors": [],
     "frontscripts": [
         "frontscripts/aagScrawlerLib.livecode"
     ],
