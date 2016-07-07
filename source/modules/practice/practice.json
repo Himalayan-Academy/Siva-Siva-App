@@ -1,0 +1,31 @@
+{
+	"portal-links": {
+		"hero": {
+			"image": "img/portal-screen/hero_practice_girl-handstand-shtrstk-169396664.jpg"
+		},
+		"preparation-for-meditation": {
+			"image": "img/portal-screen/thumb_preparation_shtrstk-372104245.jpg"
+		},
+		"mantras": {
+			"image": "img/portal-screen/thumb_mantras_namasivaya.jpg"
+		},
+		"spiritual-workout": {
+			"image": "img/portal-screen/thumb_workout_yoga-on-sand.jpg"
+		},
+		"daily-lesson": {
+			"image": "img/portal-screen/thumb_daily-lesson.jpg"
+		},
+		"affirmations": {
+			"image": "img/portal-screen/thumb_affirmations.jpg"
+		},
+		"my-calendar": {
+			"image": "img/portal-screen/thumb_calendar_shtrstk-325867559.jpg"
+		},
+		"puja-instructions": {
+			"image": "img/portal-screen/thumb_puja.jpg"
+		},
+		"color-meditation": {
+			"image": "img/portal-screen/thumb_color-meditation.jpg"
+		}
+	}
+}
