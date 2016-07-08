@@ -1,30 +1,24 @@
-{
+{ "portal-links": {
     "hero": {
-        "image": "img/portal-screen/hero_home_Who-Is-Siva.jpg",
-        "action": "http://yahoo.com"
+        "image": "img/portal-screen/hero_listen_girl-head-phones.jpg"
     },
-    "gems": {
-        "image": "img/portal-screen/thumb_gems_gd-writing-monteblanc.jpg"
+    "bodhinatha": {
+        "image": "img/portal-screen/thumb_latest-talk-2.jpg"
     },
-    "surprise": {
-        "image": "img/portal-screen/thumb_surprise_boy-suitcase.jpg"
+    "all-bodhinatha": {
+        "image": "img/portal-screen/thumb_all-bd-talks-.jpg"
     },
-    "listen": {
-        "image": "img/portal-screen/thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
+    "gurudeva": {
+        "image": "img/portal-screen/thumb_gurudeva-talks.jpg"
     },
-    "look": {
-        "image": "img/portal-screen/thumb_look_video-in-iphone.jpg"
+    "bhajans": {
+        "image": "img/portal-screen/thumb_songs_shtrstk-104920397.jpg"
     },
-    "practice": {
-        "image": "img/portal-screen/thumb_practice_girl-handstand-shtrstk-130057022.jpg"
+    "chanting": {
+        "image": "img/portal-screen/thumb_sanskrit_shtrstk-324408260.jpg"
     },
-    "read": {
-        "image": "img/portal-screen/thumb_read_mother-daughter-shtrstk-220389001.jpg"
-    },
-    "website": {
-        "image": "img/portal-screen/thumb_website_ha-com-screenshoot.jpg"
-    },
-    "games": {
-        "image": "img/portal-screen/thumb_fun-games_tablet-shtrstk-184618028.jpg"
+    "guru-chronicles": {
+        "image": "img/portal-screen/thumb_guru-chronicles.jpg"
     }
+  }
 }

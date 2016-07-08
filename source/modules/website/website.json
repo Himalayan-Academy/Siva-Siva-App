@@ -1,30 +1,27 @@
-{
+{"portal-links": {
     "hero": {
-        "image": "img/portal-screen/hero_home_Who-Is-Siva.jpg",
-        "action": "http://yahoo.com"
+        "image": "img/portal-screen/hero_website_ha-com-home-screenshot.jpg"
     },
-    "gems": {
-        "image": "img/portal-screen/thumb_gems_gd-writing-monteblanc.jpg"
+    "daily-blog": {
+        "image": "img/portal-screen/thumb_taka.jpg"
     },
-    "surprise": {
-        "image": "img/portal-screen/thumb_surprise_boy-suitcase.jpg"
+    "meet-monks": {
+        "image": "img/portal-screen/thumb_monks-by-marya.jpg"
     },
-    "listen": {
-        "image": "img/portal-screen/thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
+    "monthly-news": {
+        "image": "img/portal-screen/thumb_news.jpg"
     },
-    "look": {
-        "image": "img/portal-screen/thumb_look_video-in-iphone.jpg"
+    "visit": {
+        "image": "img/portal-screen/thumb_visit_shtrstk-370070549.jpg"
     },
-    "practice": {
-        "image": "img/portal-screen/thumb_practice_girl-handstand-shtrstk-130057022.jpg"
+    "virtual-tour": {
+        "image": "img/portal-screen/thumb_virtual-tour.jpg"
     },
-    "read": {
-        "image": "img/portal-screen/thumb_read_mother-daughter-shtrstk-220389001.jpg"
+    "about-the-monastery": {
+        "image": "img/portal-screen/thumb_about-monastery.jpg"
     },
-    "website": {
-        "image": "img/portal-screen/thumb_website_ha-com-screenshoot.jpg"
-    },
-    "games": {
-        "image": "img/portal-screen/thumb_fun-games_tablet-shtrstk-184618028.jpg"
+    "our-guru-lineage": {
+        "image": "img/portal-screen/thumb_lineage.jpg"
     }
+}
 }

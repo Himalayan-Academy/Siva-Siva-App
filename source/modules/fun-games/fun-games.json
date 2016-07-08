@@ -1,30 +1,18 @@
-{
+{"portal-links": {
     "hero": {
-        "image": "img/portal-screen/hero_home_Who-Is-Siva.jpg",
-    
+        "image": "img/portal-screen/hero_fun-games_kids-sprawled-shtrstk-245394961.jpg"
     },
-    "gems": {
-        "image": "img/portal-screen/thumb_gems_gd-writing-monteblanc.jpg"
+    "humor": {
+        "image": "img/portal-screen/thumb_humor.jpg"
     },
-    "surprise": {
-        "image": "img/portal-screen/thumb_surprise_boy-suitcase.jpg"
+    "word-puzzles": {
+        "image": "img/portal-screen/thumb_word-puzzles.jpg"
     },
-    "listen": {
-        "image": "img/portal-screen/thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
+    "coloring": {
+        "image": "img/portal-screen/thumb_coloring.jpg"
     },
-    "look": {
-        "image": "img/portal-screen/thumb_look_video-in-iphone.jpg"
-    },
-    "practice": {
-        "image": "img/portal-screen/thumb_practice_girl-handstand-shtrstk-130057022.jpg"
-    },
-    "read": {
-        "image": "img/portal-screen/thumb_read_mother-daughter-shtrstk-220389001.jpg"
-    },
-    "website": {
-        "image": "img/portal-screen/thumb_website_ha-com-screenshoot.jpg"
-    },
-    "games": {
-        "image": "img/portal-screen/thumb_fun-games_tablet-shtrstk-184618028.jpg"
+    "image-puzzles": {
+        "image": "img/portal-screen/thumb_image-puzzles.jpg"
     }
+}
 }
