@@ -1,0 +1,303 @@
+﻿script "mediaDataAndTransformers"
+
+local aMediaMeta,sCurrentGraphicRect,tMediaMeta
+
+command checkThisScriptIsInMsgPath
+   answer "Yes, I'm here. You found me" with "OK"
+end checkThisScriptIsInMsgPath
+
+---> FETCH RANDOM
+
+## need to set it up to take multiple params in  for the data queru
+
+#curl -vv -H "Content-Type: application/json" -X POST -d '{"data": {"media_type": "art/photography","tags":"Bodhinatha"}}' "http://dev.himalayanacademy.com/api3/getrandomitem/json" | python -mjson.tool
+
+command fetchRandomMediaItem pSelectParams
+   
+   #The selection Params are passed down from the calling command as quoted strings 
+   # each set of two = column + value
+   # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
+   # assuming there is a match.. check HAPMAN for criteria you can use
+   # TBD: categories?  how to pass one to the API?
+   # the CURL call wants to pass this as JSON in a single "data" object like this:
+   # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
+   # so we have to build that from incoming params
+   
+   repeat with x = 1 to the number of items of pSelectParams
+      if (x mod 2) <> 0 then next repeat
+      put  item (x -1) of pSelectParams into y
+      put item x of pSelectParams  into pSelect["data"][y]
+   end repeat
+   put JsonExport(pSelect) into tJsonQuery # now properly formed for the CURL
+   
+   put  format ("curl vv  -H \"Content-Type: application/json\" -X POST -d  ' ##SELECTPARAMS##' \"http://dev.himalayanacademy.com/api3/getrandomitem/json\" | python -mjson.tool") into tCurlCall
+   replace "##SELECTPARAMS##" with tJsonQuery in tCurlCall
+   put Shell (tCurlCall) into tMediaMeta
+   delete line 1 to 4 of tMediaMeta
+   # if you want to see what you are getting
+   # uncomment this line:
+   # put tMediaMeta
+   put jsonImport(tMediaMeta) into aMediaMeta
+   #Hack
+   if aMediaMetadata["approved_for_public"]= "NO" then
+      # we have a record that will either have no file or should not be offered yet
+      # get another one right away
+      --put Shell (tCurlCall) into tMediaMeta
+      delete line 1 to 4 of tMediaMeta
+      put jsonImport(tMediaMeta) into aMediaMeta
+   end if
+end fetchRandomMediaItem
+
+function getMediaURL pBestFormat
+   put aMediaMeta["media_type"] into pMediaType
+   # each media type will entail a different path on the /media directory 
+   switch 
+      case pMediaType contains "audio/"
+         put FolderForAudio(pMediaType) into pServerPath
+         return ("http://www.himalayanacademy.com/"  & pServerPath)
+         break
+      case pMediaType contains "art/"
+         #BR 2016-07-16 in the future we need to have the API export one object per format_name 
+         # or possible the filename.. if dots are allowed in JSON strings
+         # in the JSON formats array for now we are depending on formats to be output
+         # in order and for the 3rd one to be the med sized image. 
+         # but this seems too vulnerable to breaking to me...
+         put FolderForArt(pBestFormat) into pServerPath
+         return ("http://www.himalayanacademy.com/"  & pServerPath)
+         break
+      case pMediaType contains "video"
+
+         # there are not paths... we just need to get the URL from the video and
+         # convert it to the proper embed form for use in a browser widget
+         put aMediaMeta["formats"][1]["url"] into pURL
+       return  convertYouTubeURL (pURL)
+   end switch
+   
+end getMediaURL
+
+function getMediaItemMetadata
+
+   put empty into tViewData
+   # create small HTML chunck from the data we want
+   put aMediaMeta["title"] into tTitle
+   put aMediaMeta["sub_title"] into tSubTitle
+   put aMediaMeta["artists"] into tArtists
+   put aMediaMeta["author"] into tAuthor
+   put aMediaMeta["description"] into tDescription
+   put aMediaMeta["date_created"] into tDateCreated
+   
+   put "<p>" into tViewData
+   put (tTitle,tSubTitle,tArtists,tAuthor,tDateCreated, tDescription) into tFields
+   repeat for each item x in tFields
+      if x <> empty then
+         switch 
+            case x = tTitle
+               put (htmlTagger (h2,tTitle) ) &"<br>" & cr after tViewData
+               break
+            case x = tSubTitle
+               put (htmlTagger (h3,tSubTitle) ) &"<br>" & cr after tViewData
+               break
+            case x = tArtists
+               put (htmlTagger (bold,tArtists) ) &"<br>" & cr after tViewData
+               break
+            case  x= tAuthor
+               put (htmlTagger (bold,tAuthor) ) &"<br>" & cr after tViewData
+               break
+            case x = tDateCreated
+               put (htmlTagger (bold,tDateCreated) ) &"<br><br >" & cr after tViewData
+               break
+            case  x= tDescription
+               put tDescription  & cr after tViewData # plain text
+         end switch
+      end if
+      end repeat
+      put "</p>" & cr& cr after tViewData
+      put aMediaMeta["sub_title"] after tViewData
+      return tViewData
+end getMediaItemMetadata
+
+function htmlTagger pStyle,  pText, 
+   put "<#S#>#T#</#S#>" into tMarkedUp
+   switch pStyle
+      case "bold"
+         put "b" into tTag
+         break
+      case "italic"
+         put "i" into tTag
+         break
+      case "h1"
+         put "h1" into tTag
+         break
+      case "h2"
+         put "h2" into tTag
+         break
+      case "h3"
+         put "h3" into tTag
+         break
+   end switch
+   replace "#S#" with tTag in tMarkedup
+   replace "#T#" with pText in tMarkedUp
+   return tMarkedUp
+   
+end htmlTagger
+
+
+
+---> ## ART PATHFINDER
+
+## need a switch here for top level media type
+
+
+function folderForArt pBestFormat
+
+   put "media/art/" into pServerPath
+
+   # Art is divided into categories represented by sub-directories on the server
+   # we need to parse the media_type to get the folder
+   
+   set the itemdel to "/" 
+   put item 2 of aMediaMeta["media_type"] into tArtDirectory
+   put tArtDirectory & "/" after pServerPath
+   
+   # unlike audio, there are no further sub-directories so we can go directly to the fileID
+   put  aMediaMeta["file_id"]  &"/" after pServerPath
+   
+   # "pBestformat" species the size, typically we just want either med or large
+   # pass this from your card script based on your view requirements
+   # this script must be agnostic.
+   # lots of the art varies 
+   # and many use cases will use it very small
+   # you need to know your collection to make the right choise
+   # sml and thm have been cropped to a small horizontal format, even for native portrait orientation
+   #sml is useful because the ratio is always the same: 
+    
+    
+   # WE ill have to refactor here later if we switch the JSON output to something different
+   # pBestFormat must be a match for one of these or it will fail
+   set the itemdel to ","
+   put "ful,lrg,med,sml,thm" into tSizes
+   put itemoffset(pBestFormat,tSizes) into tChosenOne
+
+   # store the native size as this may be useful for resizing the img later:
+   put aMediaMeta["formats"][tChosenOne]["format_name"] into sCurrentGraphicRect
+   
+   put aMediaMeta["formats"][tChosenOne]["filename"] after pServerPath # assume we get the medium sized one
+return pServerPath
+
+   
+end folderForArt
+
+function getRectOfCurrentGrc
+  return sCurrentGraphicRect
+end getRectOfCurrentGrc
+
+
+---> AUDIO PATHFINDER
+
+function folderForAudio pMediaType
+   put "media/audio/" into tServerPath
+   
+   switch 
+      case pMediaType = "audio/song"
+         put "songs/" after tServerPath
+         put aMediaMeta["genre"] &"/" after tServerPath
+         if aMediaMeta["genre"] <> "natchintanai" then
+            if  aMediaMeta["deity"] <> empty then put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
+            end if
+         break
+      case pMediaType="audio/inspiredtalk"
+         put "inspired-talks/" after tServerPath
+         put aMediaMeta["author"] into tAuthor
+         put aMediaMeta["date_created"] into tDateCreated
+         set the itemdel to "-"
+         put item 1 of tDateCreated into tYear
+         switch tAuthor
+            case "Satguru Sivaya Subramuniyaswami" 
+               put "gurudeva/" after tServerPath
+               break
+            case "Satguru Bodhinatha Veylanswami" 
+               put "bodhinatha/" after tServerPath
+         end switch
+         put tYear & "/" after tServerPath	
+          break	
+      case "audio/chant"
+         put "chants/" after tServerPath
+          break
+      case "audio/shum"
+         put "shum/" after tServerPath
+          break
+   end switch
+     put aMediaMeta["file_id"] & "/" after tServerPath
+         put aMediaMeta["formats"][1]["filename"] after tServerPath
+         return tServerPath
+end folderForAudio
+
+---> IMAGE PROCESSING METHODS
+# Br: July 15th, 2016
+# Images arriving from the server need to fit the screen
+# the general use case will almost always be a portrait screen
+# landscape orientation will be used in specific cases for games or graphic stories
+# As of today (July 15) these handlers to do not addess landscape 
+# but we will pass a landscape param anyway so that we can implement later
+# "pOrientation"
+# We copied some already good methods from the gurudeva app. and modified from there.
+# 
+
+on resizeToHeight pImage,pSize
+   set the itemdel to "x"
+   put item 1 of sCurrentGraphicRect into tOrigImgWidth
+   put item 2 of sCurrentGraphicRect into tOrigImgHeight
+   # it may not be necessary
+   if pSize > tOrigImgHeight then exit resizeToHeight
+   put (pSize)/tOrigImgHeight  into tRatio
+  put (tOrigImgWidth * tRatio) into tNewWidth
+  put (tOrigImgHeight * tRatio) into tNewHeight
+  set the rect of img pImage to 0,0,tNewWidth,tNewHeight  
+end resizeToHeight
+
+on resizeToWidth pImage,pSize 
+      set the itemdel to "x"
+   put item 1 of sCurrentGraphicRect into tOrigImgWidth
+   put item 2 of sCurrentGraphicRect into tOrigImgHeight
+   # it may not be necessary
+      if pSize > tOrigImgWidth then exit resizeToWidth
+  put pSize/tOrigImgWidth into tRatio 
+  put (tOrigImgWidth * tRatio) into tNewWidth
+  put (tOrigImgHeight * tRatio) into tNewHeight
+  set the rect of img pImage to 0,0,tNewWidth,tNewHeight
+end resizeToWidth
+
+on toggleImgSize pImage, pFullSize, pTargetSize 
+   -- if second param is empty we toggle it; otherwise set it as specified;
+  -- called from main img script when tapped and when main cd closes to reset
+  if pFullSize = "" then -- calculate if it's already full size
+    put (the width of img pImage >= the width of this cd) into tFullSize
+  end if
+  put the formattedWidth of img pImage into tFWd
+  put the formattedHeight of img pImage into tFHt
+  if tFullSize then -- reduce to fit
+    resizeToWidth pImage,pTargetSize
+  else -- return to full size
+    resizeToHeight pImage,tFHt
+  end if
+  set the loc of img pImage to the loc of this cd
+  set the vis of group pImage to not tFullSize
+end toggleImgSize
+
+---> VIDEO PRESENTATION UTILITIES
+
+# convert incoming URL from the formats table in the Jnanam database
+# URL are stored in this form:
+# "http://www.youtube.com/watch?v=T6mwoO9sXPI&feature=youtube_gdata_player"
+
+function convertYouTubeURL pURL
+   set the itemdel to "?"
+   put item 2 of pURL into tQueryString
+   split tQueryString with "&" and "="
+   return "https://www.youtube.com/embed/" & tQueryString["v"]
+end convertYouTubeURL
+
+
+
+
+

@@ -1,0 +1,211 @@
+﻿script "libScroll"
+# libScroll v2.0.beta 
+# Gurgen Hovhannisyan
+# DIGITAL POMEGRANATE LLC 2016
+---------------------------------------------------------------------------------------
+-- Native Scroller name
+constant kLibScrollScrollerName = "libScroll"
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+-- Global variables
+---------------------------------------------------------------------------------------
+global gLibScrollScrollingGroupID
+global gLibScrollScrollingStack
+global gLibScrollLastScrollingGroup
+global gLibScrollScrollerProps
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+-- libScrollInit
+-- DESCRIPTION
+--         Init libScroll
+-- PARAMETERS
+--
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollInit
+   if the environment is not "mobile" then exit libScrollInit
+   
+   -- Delete old one
+   libScrollDelete
+   
+   -- Init library
+   put the long id of this stack into gLibScrollScrollingStack
+   set the behavior of this stack to the long id of stack "libScroll"
+   
+   send libScrollCreate to gLibScrollScrollingStack
+end libScrollInit
+---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------
+-- libScrollConnect
+-- DESCRIPTION
+--         Connect scroller behaviors to group that need a scroller
+-- PARAMETERS
+--         pGroupID: The long id of group to scroll
+--         pDirection: vertical/horizontal. If pDirection is empty then scroller will 
+--                               work on both directions
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollConnect pGroupID, pDirection
+   if the environment is not "mobile" then exit libScrollConnect
+   -- Get short id
+   put the id of pGroupID into tGroupID
+      
+   -- Save the direction
+   put pDirection into gLibScrollScrollerProps[tGroupID]["direction"]
+   put the rect of pGroupID into gLibScrollScrollerProps[tGroupID]["rect"]
+   put the formattedRect of pGroupID into gLibScrollScrollerProps[tGroupID]["contentRect"]
+   put the vScroll of pGroupID into gLibScrollScrollerProps[tGroupID]["vScroll"]
+   put the hScroll of pGroupID into gLibScrollScrollerProps[tGroupID]["hScroll"]
+   
+   -- There is a bug with native scroller, so we need to add group left/top when scrolling
+   if the platform is "Android" then  put the left of pGroupID into gLibScrollScrollerProps[tGroupID]["left"]
+   if the platform is "Android" then  put the top of pGroupID into gLibScrollScrollerProps[tGroupID]["top"]
+end libScrollConnect
+---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------
+-- libScrollEnable
+-- DESCRIPTION
+--         Check the group name and change the scroller properties and show it
+-- PARAMETERS
+--         pGroupID: The long id of group to scroll
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollEnable pGroupID
+   if the environment is not "mobile" then exit libScrollEnable
+   
+   -- If not connected then connect
+   if gLibScrollScrollerProps[the id of pGroupID] is empty then
+      libScrollConnect pGroupID
+   end if
+   
+   -- Check the last scroller name to change scroller properties
+   if gLibScrollLastScrollingGroup is not pGroupID then
+      -- Update scroller properties
+      libScrollSetProps gLibScrollScrollerProps[the id of pGroupID]
+      
+      -- Update variables
+      put pGroupID into gLibScrollScrollingGroupID
+      put pGroupID into gLibScrollLastScrollingGroup
+   end if
+   
+   -- Show scroller
+   mobileControlSet kLibScrollScrollerName, "visible", true
+   mobileControlSet kLibScrollScrollerName, "scrollingEnabled", true
+end libScrollEnable
+---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------
+-- libScrollDisable
+-- DESCRIPTION
+--         Hide the scroller
+-- PARAMETERS
+--        
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollDisable
+   if the environment is not "mobile" then exit libScrollDisable
+   mobileControlSet kLibScrollScrollerName, "visible", false
+end libScrollDisable
+---------------------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------------------
+-- libScrollCreate
+-- DESCRIPTION
+--         Create mobile native scroller
+-- PARAMETERS
+--          
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollCreate
+   mobileControlCreate "scroller", kLibScrollScrollerName
+   mobileControlSet kLibScrollScrollerName, "visible", false
+   mobileControlSet kLibScrollScrollerName, "scrollingEnabled", true
+   mobileControlSet kLibScrollScrollerName, "vIndicator", false
+   mobileControlSet kLibScrollScrollerName, "hIndicator", false
+end libScrollCreate
+---------------------------------------------------------------------------------------
+ 
+ 
+
+---------------------------------------------------------------------------------------
+-- libScrollSetProps
+-- DESCRIPTION
+--         Get the group properties and set to scroller
+-- PARAMETERS
+--         pProps: Scroller properties  
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollSetProps pProps
+   mobileControlSet kLibScrollScrollerName, "rect", pProps["rect"]
+   mobileControlSet kLibScrollScrollerName, "contentRect", pProps["contentRect"]
+   mobileControlSet kLibScrollScrollerName, "vscroll", pProps["vScroll"]
+   mobileControlSet kLibScrollScrollerName, "hscroll", pProps["hScroll"]
+end libScrollSetProps
+---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------
+-- scrollerDidScroll
+-- DESCRIPTION
+--         Sent when the properties of a scroller have changed.
+-- PARAMETERS
+--         hOffset: The horizontal scroll of an iOS scroller control.  
+--         vOffset:The vertical scroll of an iOS scroller control.   
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command scrollerDidScroll hOffset, vOffset 
+   -- Check the direction to scroll
+   switch gLibScrollScrollerProps[the id of gLibScrollScrollingGroupID]["direction"]
+      case "horizontal"
+         set the hScroll of gLibScrollScrollingGroupID to (hOffset - gLibScrollScrollerProps[the id of gLibScrollScrollingGroupID]["left"])
+         break
+      case "vertical"
+         set the vScroll of  gLibScrollScrollingGroupID to (vOffset - gLibScrollScrollerProps[the id of gLibScrollScrollingGroupID]["top"])
+         break
+      default
+         -- Scroll on both directions
+         set the hScroll of gLibScrollScrollingGroupID to (hOffset - gLibScrollScrollerProps[the id of gLibScrollScrollingGroupID]["left"])
+         set the vScroll of  gLibScrollScrollingGroupID to (vOffset - gLibScrollScrollerProps[the id of gLibScrollScrollingGroupID]["top"])
+   end switch  
+end scrollerDidScroll
+---------------------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------------------
+-- libScrollDelete
+-- DESCRIPTION
+--         Delete native scroller
+-- PARAMETERS
+--
+--CHANGES
+--         07/18/2016: Gurgen - Created
+---------------------------------------------------------------------------------------
+command libScrollDelete
+   if kLibScrollScrollerName is among the lines of mobileControls() then
+      mobileControlDelete kLibScrollScrollerName
+   end if
+   
+   -- Reset varialbles
+   put empty into gLibScrollScrollingGroupID
+   put empty into gLibScrollScrollingStack
+   put empty into gLibScrollLastScrollingGroup
+   put empty into gLibScrollScrollerProps
+end libScrollDelete
+---------------------------------------------------------------------------------------

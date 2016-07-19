@@ -5,10 +5,12 @@
     ],
     "behaviors": [],
     "frontscripts": [
-        "frontscripts/aagScrawlerLib.livecode"
+        "frontscripts/aagFldScrollerLib.livecode",
+        "frontscripts/libScroll.livecode"
     ],
     "backscripts": [
-        "backscripts/api.livecode"
+        "backscripts/api.livecode",
+        "backscripts/mediaDataAndTransformers.livecodescript"
     ],
     "launch_module": "home",
     "log_level": "info,error,fatal",
