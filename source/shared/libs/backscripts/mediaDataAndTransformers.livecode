@@ -201,8 +201,11 @@ function folderForAudio pMediaType
       case pMediaType = "audio/song"
          put "songs/" after tServerPath
          put aMediaMeta["genre"] &"/" after tServerPath
-         if aMediaMeta["genre"] <> "natchintanai" then
-            if  aMediaMeta["deity"] <> empty then put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
+
+         if (aMediaMeta["genre"] = "bhajan") OR (aMediaMeta["genre"] <> "bhakti-gitam")  then
+            # only these two genres have sub folders on disk
+            # other Genres may have "diety" assignments, but not stored on disk in separate folders
+            put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
             end if
          break
       case pMediaType="audio/inspiredtalk"

@@ -26,6 +26,7 @@ global gLibScrollScrollerProps
 --         07/18/2016: Gurgen - Created
 ---------------------------------------------------------------------------------------
 command libScrollInit
+loginfo "libScrolInit called"
    if the environment is not "mobile" then exit libScrollInit
    
    -- Delete old one
