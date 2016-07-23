@@ -8,14 +8,14 @@ command scaleStackIfNeeded
    end if
 end scaleStackIfNeeded
 
-command errorDialog pExecutionError
-   put item 4 of line 1 of pExecutionError into tBrokenStatement
-   put item 2 of line 1 of pExecutionError into tLineNumber
-   put "non-descript error" into tErrorDescription
-   --put line (item 1 of line 1 of pExecutionError) of the cErrorsList of btn "API Backscript" of stack "loader" into tErrorDescription
-   
-   logError tErrorDescription & ":" && tBrokenStatement && "on line" && tLineNumber
-end errorDialog
+# command errorDialog pExecutionError
+#    put item 4 of line 1 of pExecutionError into tBrokenStatement
+#    put item 2 of line 1 of pExecutionError into tLineNumber
+#    put "non-descript error" into tErrorDescription
+#    --put line (item 1 of line 1 of pExecutionError) of the cErrorsList of btn "API Backscript" of stack "loader" into tErrorDescription
+#    
+#    logError tErrorDescription & ":" && tBrokenStatement && "on line" && tLineNumber
+# end errorDialog
 
 private command _goLaunchModule
    logInfo "Loading launch module..."
@@ -27,7 +27,7 @@ end _goLaunchModule
 
 command goHome
    _goLaunchModule
-   dispatch "relaunch" to the currentcard of the topstack
+   dispatch "relaunch" to card (the currentcard of the topstack) of the topstack
 end goHome
 
 command loadModule pModule
