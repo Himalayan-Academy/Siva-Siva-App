@@ -199,6 +199,7 @@ end scrollerDidScroll
 --         07/18/2016: Gurgen - Created
 ---------------------------------------------------------------------------------------
 command libScrollDelete
+     if the environment is not "mobile" then exit libScrollDelete
    if kLibScrollScrollerName is among the lines of mobileControls() then
       mobileControlDelete kLibScrollScrollerName
    end if

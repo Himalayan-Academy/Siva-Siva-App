@@ -5,7 +5,6 @@
     ],
     "behaviors": [],
     "frontscripts": [
-        "frontscripts/aagFldScrollerLib.livecode",
         "frontscripts/libScroll.livecode",
         "frontscripts/libMobileAudioPlayer.livecode"
     ],

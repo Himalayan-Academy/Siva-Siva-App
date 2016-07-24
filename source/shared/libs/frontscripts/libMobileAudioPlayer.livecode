@@ -13,7 +13,7 @@ local sPlayerID
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
 -- DESCRIPTION
---         Init libScroll
+--        
 -- PARAMETERS
 --		pURL: the path to the audio file, either http or local
 --		pPlayerName: this could be called from any module and the player name will vary
@@ -28,7 +28,7 @@ local sPlayerID
 ---------------------------------------------------------------------------------------
 on createMobileAudioPlayer pURL, pPlayerName
   if sPlayerID is in mobileControls() then mobileControlDelete sPlayerID -- init
-  mobileControlCreate "player"
+  mobileControlCreate pPlayerName
   put the result into sPlayerId
   -- adjust location for mobile:
   put the rect of player pPlayerName into tRect
@@ -62,13 +62,13 @@ on setMobileAudioPlayer pState --jg: control the state of the mobile player
     mobileControlSet sPlayerId, "visible", false
     mobileControlDelete sPlayerId
     if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
-    hide grc "Show Controller" of cd "audio"
+    --hide grc "Show Controller" of cd "audio"
   end if
 end setMobileAudioPlayer
 
 on playerFinished -- sent on mobile when audio is done; reset icon
-  if there is a grp "soundIsPlaying" then hide grp "soundIsPlaying"
-  hide grc "Show Controller" of cd "audio"
+  --if there is a grp "soundIsPlaying" then hide grp "soundIsPlaying"
+  --hide grc "Show Controller" of cd "audio"
   if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
 end playerFinished
 

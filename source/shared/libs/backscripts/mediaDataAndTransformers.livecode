@@ -8,9 +8,12 @@ end checkThisScriptIsInMsgPath
 
 ---> FETCH RANDOM
 
-## need to set it up to take multiple params in  for the data queru
+# MODEL FOR CALL TO API
 
-#curl -vv -H "Content-Type: application/json" -X POST -d '{"data": {"media_type": "art/photography","tags":"Bodhinatha"}}' "http://dev.himalayanacademy.com/api3/getrandomitem/json" | python -mjson.tool
+#the httpheaders to "content-type: application/json"
+#POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
+
+
 
 command fetchRandomMediaItem pSelectParams
    
@@ -28,22 +31,21 @@ command fetchRandomMediaItem pSelectParams
       put  item (x -1) of pSelectParams into y
       put item x of pSelectParams  into pSelect["data"][y]
    end repeat
-   put JsonExport(pSelect) into tJsonQuery # now properly formed for the CURL
-   
-   put  format ("curl vv  -H \"Content-Type: application/json\" -X POST -d  ' ##SELECTPARAMS##' \"http://dev.himalayanacademy.com/api3/getrandomitem/json\" | python -mjson.tool") into tCurlCall
-   replace "##SELECTPARAMS##" with tJsonQuery in tCurlCall
-   put Shell (tCurlCall) into tMediaMeta
-   delete line 1 to 4 of tMediaMeta
+   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
+   set the httpheaders to "content-type: application/json"
+   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   put it into tMediaMeta
+
    # if you want to see what you are getting
    # uncomment this line:
    # put tMediaMeta
    put jsonImport(tMediaMeta) into aMediaMeta
-   #Hack
    if aMediaMetadata["approved_for_public"]= "NO" then
       # we have a record that will either have no file or should not be offered yet
       # get another one right away
-      --put Shell (tCurlCall) into tMediaMeta
-      delete line 1 to 4 of tMediaMeta
+   set the httpheaders to "content-type: application/json"
+   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   put it into tMediaMeta
       put jsonImport(tMediaMeta) into aMediaMeta
    end if
 end fetchRandomMediaItem
@@ -198,15 +200,21 @@ function folderForAudio pMediaType
    put "media/audio/" into tServerPath
    
    switch 
+      case pMediaType = "audio/chant"
+         put "chants/" after tServerPath
+         break
+      case pMediaType = "audio/shum"
+         put "shum/" after tServerPath
+         break
       case pMediaType = "audio/song"
          put "songs/" after tServerPath
          put aMediaMeta["genre"] &"/" after tServerPath
-
+         
          if (aMediaMeta["genre"] = "bhajan") OR (aMediaMeta["genre"] <> "bhakti-gitam")  then
             # only these two genres have sub folders on disk
             # other Genres may have "diety" assignments, but not stored on disk in separate folders
             put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
-            end if
+         end if
          break
       case pMediaType="audio/inspiredtalk"
          put "inspired-talks/" after tServerPath
@@ -220,19 +228,15 @@ function folderForAudio pMediaType
                break
             case "Satguru Bodhinatha Veylanswami" 
                put "bodhinatha/" after tServerPath
+               break
          end switch
          put tYear & "/" after tServerPath	
-          break	
-      case "audio/chant"
-         put "chants/" after tServerPath
-          break
-      case "audio/shum"
-         put "shum/" after tServerPath
-          break
+         break	
+
    end switch
-     put aMediaMeta["file_id"] & "/" after tServerPath
-         put aMediaMeta["formats"][1]["filename"] after tServerPath
-         return tServerPath
+   put aMediaMeta["file_id"] & "/" after tServerPath
+   put aMediaMeta["formats"][1]["filename"] after tServerPath
+   return tServerPath
 end folderForAudio
 
 ---> IMAGE PROCESSING METHODS
