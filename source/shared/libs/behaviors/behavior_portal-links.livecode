@@ -1,0 +1,86 @@
+﻿script "behavior_portal-links"
+  
+local sMouseLoc, sStartLoc,sBlendLevel
+
+--on openBackground (the long id of me)
+--  send hideLogo to me in 1 second
+--end openBackground
+
+--on closeBackground (the long id of me)
+--   set the blendLevel of button "Home-Logo" to 0
+--end closeBackground
+
+
+--command hideLogo
+--   repeat 100 times
+--      put the blendlevel of btn "home-logo" into sBlendLevel
+--      add 1 to sBlendLevel
+--      set the blendLevel of button "home-Logo" to sBlendLevel
+--      send hideLogo to me in 2 milliseconds
+--   end repeat
+--end hideLogo
+
+on mouseDown
+  put the mouseloc into sMouseLoc
+  put sMouseLoc into sStartLoc
+
+  if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
+    setScroll
+  end if
+end mouseDown
+
+on setScroll
+  if the mouse is down then
+    lock screen
+    if item 2 of sMouseLoc > the mouseV then
+      set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+    else
+      set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+    end if
+    put the mouseloc into sMouseLoc
+    send "setScroll" to me in 20 millisec
+    unlock screen
+  else
+    put empty into sMouseLoc
+  end if
+end setScroll
+
+
+on  mouseUp
+   if abs(the mouseV - item 2 of sStartLoc) <= 10 then
+      libScrollDelete # we have to delete the scroller before we move to another stack
+      # users tapped
+      put the owner of the target into tTarget
+      switch 
+         case (tTarget contains "_gems")
+            loadModule "gems"
+            break
+         case (tTarget contains "_surprise") 
+            loadModule "surprise"
+            break
+         case tTarget contains "_look"
+            loadModule "look"
+            break
+            
+         case tTarget contains "_listen"
+            loadModule "listen"
+            break
+            
+         case tTarget contains "_practice"
+            loadModule "practice"
+            break
+            
+         case tTarget contains "_read"
+            loadModule "read"
+            break
+         case tTarget contains "_website"
+            loadModule "website"
+            break
+         case tTarget contains "_games"
+            loadModule "fun"
+            break
+      end switch
+   end if
+   
+end  mouseup
+

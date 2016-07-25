@@ -3,14 +3,16 @@
         "DBLib/aagDBLib.livecode",
         "hapMediaViewersLib.livecode"
     ],
-    "behaviors": [],
+    "behaviors": [
+        "behaviors/behavior_portal-links.livecode"
+    ],
     "frontscripts": [
-        "frontscripts/libScroll.livecode",
-        "frontscripts/libMobileAudioPlayer.livecode"
+        "frontscripts/libScroll.livecode"     
     ],
     "backscripts": [
         "backscripts/api.livecode",
-        "backscripts/mediaDataAndTransformers.livecode"
+        "backscripts/mediaDataAndTransformers.livecode",
+        "backscripts/libMobileAudioPlayer.livecode"
     ],
     "launch_module": "home",
     "log_level": "info,error,fatal",

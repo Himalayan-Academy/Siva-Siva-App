@@ -304,6 +304,10 @@ function convertYouTubeURL pURL
    return "https://www.youtube.com/embed/" & tQueryString["v"]
 end convertYouTubeURL
 
+command checkMetaBackScript pMsg
+   answer "got it" with pMsg
+end checkMetaBackScript
+
 
 
 
