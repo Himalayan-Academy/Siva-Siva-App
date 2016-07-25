@@ -1,0 +1,36 @@
+BR:
+
+Images to get for the traits UI
+
+CARD BACKGROUNDS
+-- pick full square cropped and optimized stone texture backgrounds for cards
+
+1478 X 1478
+
+3 options same size different stone textures
+
+set up an opening screen
+
+install AEEngine the start using as library.
+
+---------
+
+
+
+David:
+
+Send the list of filenames you have already for the images that we would use.
+
+Decide on crops size.
+
+incorporate stone backgrounds
+incorporate at least one image for one traits somewhere
+
+
+
+
+
+
+
+
+
