@@ -11,14 +11,12 @@ local sMouseLoc, sStartLoc,sBlendLevel
 --end closeBackground
 
 
---command hideLogo
---   repeat 100 times
---      put the blendlevel of btn "home-logo" into sBlendLevel
---      add 1 to sBlendLevel
---      set the blendLevel of button "home-Logo" to sBlendLevel
---      send hideLogo to me in 2 milliseconds
---   end repeat
---end hideLogo
+command hideLogo
+   repeat with x = 1 to 100
+      set the blendLevel of button "home-Logo" to x
+      wait 2 milliseconds
+   end repeat
+end hideLogo
 
 on mouseDown
   put the mouseloc into sMouseLoc
@@ -47,39 +45,55 @@ end setScroll
 
 
 on  mouseUp
+   
    if abs(the mouseV - item 2 of sStartLoc) <= 10 then
-      libScrollDelete # we have to delete the scroller before we move to another stack
-      # users tapped
-      put the owner of the target into tTarget
-      switch 
-         case (tTarget contains "_gems")
-            loadModule "gems"
-            break
-         case (tTarget contains "_surprise") 
-            loadModule "surprise"
-            break
-         case tTarget contains "_look"
-            loadModule "look"
-            break
+      # user tapped
+      
+      
+      put the long name of the owner of tWhereWeAre
+      switch  tWhereWeAre
+         
+         case tWhereWeAre contains "home.livecode"
             
-         case tTarget contains "_listen"
-            loadModule "listen"
-            break
+            libScrollDelete # we have to delete the scroller before we move to another stack
             
-         case tTarget contains "_practice"
-            loadModule "practice"
+            put the owner of the target into tTarget
+            switch 
+               case (tTarget contains "_gems")
+                  loadModule "gems"
+                  break
+               case (tTarget contains "_surprise") 
+                  loadModule "surprise"
+                  break
+               case tTarget contains "_look"
+                  loadModule "look"
+                  break
+                  
+               case tTarget contains "_listen"
+                  loadModule "listen"
+                  break
+                  
+               case tTarget contains "_practice"
+                  loadModule "practice"
+                  break
+                  
+               case tTarget contains "_read"
+                  loadModule "read"
+                  break
+               case tTarget contains "_website"
+                  loadModule "website"
+                  break
+               case tTarget contains "_games"
+                  loadModule "fun"
+                  break
+            end switch
             break
-            
-         case tTarget contains "_read"
-            loadModule "read"
-            break
-         case tTarget contains "_website"
-            loadModule "website"
-            break
-         case tTarget contains "_games"
-            loadModule "fun"
+         case tWhereWeAre contains "surprise.livecode"
+            go to card (the short name of (the owner of the target) )
             break
       end switch
+      
+      
    end if
    
 end  mouseup
