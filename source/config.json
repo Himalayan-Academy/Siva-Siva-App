@@ -1,7 +1,8 @@
 {
     "libraries": [
         "DBLib/aagDBLib.livecode",
-        "hapMediaViewersLib.livecode"
+        "hapMediaViewersLib.livecode",
+        "animationEngine.livecode"
     ],
     "behaviors": [
         "behaviors/behavior_portal-links.livecode"
