@@ -1,7 +1,8 @@
 {
     "libraries": [
         "DBLib/aagDBLib.livecode",
-        "hapMediaViewersLib.livecode",
+        "hapMediaViewerPortraitLib.livecode",
+        "hapMediaViewerLandscapeLib.livecode",
         "animationEngine.livecode"
     ],
     "behaviors": [

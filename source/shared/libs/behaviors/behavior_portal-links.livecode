@@ -1,14 +1,6 @@
 ﻿script "behavior_portal-links"
   
-local sMouseLoc, sStartLoc,sBlendLevel
-
---on openBackground (the long id of me)
---  send hideLogo to me in 1 second
---end openBackground
-
---on closeBackground (the long id of me)
---   set the blendLevel of button "Home-Logo" to 0
---end closeBackground
+local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
 
 
 command hideLogo
@@ -19,13 +11,23 @@ command hideLogo
 end hideLogo
 
 on mouseDown
+ parseTargetOwner 
   put the mouseloc into sMouseLoc
   put sMouseLoc into sStartLoc
-
   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
     setScroll
   end if
 end mouseDown
+
+on parseTargetOwner
+   put the short name of the owner of the target into sTargetOwner
+         
+      # parse the owner
+      set the itemdel to "_"
+      put item 1 of sTargetOwner into sTargetModule
+      put item 2 of sTargetOwner into sTargetAction
+   
+end parseTargetOwner
 
 on setScroll
   if the mouse is down then
@@ -46,53 +48,90 @@ end setScroll
 
 on  mouseUp
    
+   # by convention the links on these portal pages are groups of three objects
+   # label field, image, and a background, these are the mouse targets
+   # each of these groups is explicitly named
+   # by this convention: modulename[underscore]specific-link-target-action
+   # So we are depending on the short name of the immediate owner of the target
+   
    if abs(the mouseV - item 2 of sStartLoc) <= 10 then
+      
       # user tapped
       
-      
-      put the long name of the owner of tWhereWeAre
-      switch  tWhereWeAre
+      switch  sTargetModule
          
-         case tWhereWeAre contains "home.livecode"
-            
-            libScrollDelete # we have to delete the scroller before we move to another stack
-            
-            put the owner of the target into tTarget
-            switch 
-               case (tTarget contains "_gems")
+         case "home"
+            switch sTargetAction
+               case "gems"
                   loadModule "gems"
                   break
-               case (tTarget contains "_surprise") 
+               case "surprise"
                   loadModule "surprise"
                   break
-               case tTarget contains "_look"
+               case "look"
                   loadModule "look"
                   break
                   
-               case tTarget contains "_listen"
+               case "listen"
                   loadModule "listen"
                   break
                   
-               case tTarget contains "_practice"
+               case "practice"
                   loadModule "practice"
                   break
                   
-               case tTarget contains "_read"
+               case "read"
                   loadModule "read"
                   break
-               case tTarget contains "_website"
+               case "website"
                   loadModule "website"
                   break
-               case tTarget contains "_games"
+               case "games"
                   loadModule "fun"
                   break
             end switch
             break
-         case tWhereWeAre contains "surprise.livecode"
-            go to card (the short name of (the owner of the target) )
+            # End of actions for the Home module Links Card
+         Case "gems"
+            put sTargetOwner
             break
+            # End of actions for the Gems module  Card
+         case "surprise"
+            if sTargetAction="video" then
+               fetchRandomMediaItem ("media_type","video")
+               put getMediaURL ()  into sURL
+               launchURL "landscape", sURL
+               exit mouseUp
+            else
+               go to card sTargetOwner
+            end if
+            break
+            # End of actions for the Surprise Module Links 
+         Case "listen"
+            put sTargetOwner
+            break
+            # End of actions for the Listen Module  Links Card
+         Case "look"
+            put sTargetOwner
+            break
+            # End of actions for the Look Module  Links Card
+         Case "practice"
+            put sTargetOwner
+            break
+            # End of actions for the Practice Module  Links Card
+         Case "read"
+            put sTargetOwner
+            break
+            # End of actions for the Read Module  Links Card
+         Case "website"
+            put sTargetOwner
+            break
+            # End of actions for the Website Module  Links Card
+         Case "games"
+            put sTargetOwner
+            break
+            # End of actions for the Games Module  Links Card
       end switch
-      
       
    end if
    
