@@ -46,7 +46,7 @@ command loadModule pModule
    end if
    
    // load stack
-   go stack tModuleToLoad
+  go stack tModuleToLoad
 end loadModule
 
 
@@ -77,7 +77,7 @@ end loadModule
 # or landscape. So we have to pass the orientation to fork to the 
 # Correct Stack(s) which are put into use on start up as a lib
 
-command launchURL pOrienttation, pURL
+command launchURL pOrientation, pURL
    if pOrientation="portrait" then
       go card "web viewer" of stack "hapMediaViewerPortraitLib"
    else

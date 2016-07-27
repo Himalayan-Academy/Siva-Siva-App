@@ -62,7 +62,7 @@ on setMobileAudioPlayer pState --jg: control the state of the mobile player
     mobileControlSet sPlayerId, "visible", false
     mobileControlDelete sPlayerId
     if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
-    --hide grc "Show Controller" of cd "audio"
+     hide grc "Show Controller" of cd "audio"
   end if
 end setMobileAudioPlayer
 
