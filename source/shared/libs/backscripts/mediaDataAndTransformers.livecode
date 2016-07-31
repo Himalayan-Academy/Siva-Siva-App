@@ -1,6 +1,6 @@
 ﻿script "mediaDataAndTransformers"
 
-local aMediaMeta,sCurrentGraphicRect,tMediaMeta
+local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta
 
 command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
@@ -38,9 +38,9 @@ command fetchRandomMediaItem pSelectParams
 
    # if you want to see what you are getting
    # uncomment this line:
-   # put tMediaMeta
+  # put tMediaMeta
    put jsonImport(tMediaMeta) into aMediaMeta
-   if aMediaMetadata["approved_for_public"]= "NO" then
+   if aMediaMeta["approved_for_public"]= "NO" then
       # we have a record that will either have no file or should not be offered yet
       # get another one right away
    set the httpheaders to "content-type: application/json"
@@ -49,6 +49,44 @@ command fetchRandomMediaItem pSelectParams
       put jsonImport(tMediaMeta) into aMediaMeta
    end if
 end fetchRandomMediaItem
+
+
+# temporary until we get the SQL database working.
+
+command fetchRandomQuote pSelectParams
+   
+   repeat with x = 1 to the number of items of pSelectParams
+      if (x mod 2) <> 0 then next repeat
+      put  item (x -1) of pSelectParams into y
+      put item x of pSelectParams  into pSelect["data"][y]
+   end repeat
+   
+   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
+   
+   set the httpheaders to "content-type: application/json"
+   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomquote/json"
+   put it into tQuoteData
+   
+   # if you want to see what you are getting
+   # uncomment this line:
+   # put tQuoteData
+   put jsonImport(tQuoteData) into aQuoteData
+   
+   if aQuoteData["approved_for_public"]= "NO" then
+      # we have a record that will either have no file or should not be offered yet
+      # get another one right away
+      set the httpheaders to "content-type: application/json"
+      POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+      put it into tQuoteData
+      put jsonImport(tMediaMeta) into aQuoteData
+   end if
+end fetchRandomQuote
+
+function getQuoteData
+   return aQuoteData
+end getQuoteData
+
+
 
 function getMediaURL pBestFormat
    put aMediaMeta["media_type"] into pMediaType

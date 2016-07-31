@@ -1,5 +1,8 @@
 ﻿script "API"
 
+on openstack
+   set the loc of this stack to the screenloc
+end openstack
 
 command scaleStackIfNeeded
    if the environment is "development" and (item 4 of the effective working screenRect < 800 )  then
@@ -46,7 +49,7 @@ command loadModule pModule
    end if
    
    // load stack
-  go stack tModuleToLoad
+  go stack tModuleToLoad in a new window
 end loadModule
 
 
@@ -80,12 +83,36 @@ end loadModule
 command launchURL pOrientation, pURL
    if pOrientation="portrait" then
       go card "web viewer" of stack "hapMediaViewerPortraitLib"
+        initializeInterfaceDefaults  pOrientation
    else
-       go card "web viewer" of stack "hapMediaViewerLandscapeLib"
+      go card "web viewer" of stack "hapMediaViewerLandscapeLib"
+       initializeInterfaceDefaults  pOrientation
       end if
-   --initializeInterfaceDefaults
+ 
    set the URL of widget "browser" to pURL
 end launchURL
+
+command initializeInterfaceDefaults pOrientation
+   
+   if isMobile() then  -- jg
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      if the platform = "iphone" then
+         iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
+      end if
+      if pOrientation ="portrait" then
+          mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+         set the width of this stack to 414
+         set the height of this stack to 736
+      else
+         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both portrait orientations
+       set the width of this stack to 736
+      set the height of this stack to 414
+      end if
+   else
+      set the dontUseQT to true --jg: only need this once on startup
+   end if
+   
+end initializeInterfaceDefaults
 
 command launchAudio pURL, pOptionalImage
    // temporarily using launchURL for this one.

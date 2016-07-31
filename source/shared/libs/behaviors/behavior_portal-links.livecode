@@ -115,7 +115,12 @@ on  mouseUp
             break
             # End of actions for the Surprise Module Links 
          Case "listen"
-           -- put sTargetOwner
+                       --put sTargetOwner
+            switch sTargetAction
+               case "all-bodhinatha"
+                  go to card "bodhinatha-talks"
+                  break
+            end switch
             break
             # End of actions for the Listen Module  Links Card
          Case "look"
