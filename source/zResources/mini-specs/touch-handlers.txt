@@ -2,7 +2,7 @@ on touchStart pTouchID
     put the millisecs into             sTouchEventsA[pTouchID]["start"]
     put the long id of the target into sTouchEventsA[pTouchID]["target"]
     send "_TestLongPress" && pTouchID to me in kLongPressDuration millisecs
-    pass touchStart
+    pass touchStart 
 end touchStart
 
 on touchEnd pTouchID
