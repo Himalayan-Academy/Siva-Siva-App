@@ -309,23 +309,28 @@ on resizeToWidth pImage,pSize
   put pSize/tOrigImgWidth into tRatio 
   put (tOrigImgWidth * tRatio) into tNewWidth
   put (tOrigImgHeight * tRatio) into tNewHeight
-  set the rect of img pImage to 0,0,tNewWidth,tNewHeight
+  set the rect of  pImage to 0,0,tNewWidth,tNewHeight
 end resizeToWidth
 
 on toggleImgSize pImage, pFullSize, pTargetSize 
+   # pImage is the long ID of the image
+   # you do not use "img ## to refer to it... just "pImage"
+
    -- if second param is empty we toggle it; otherwise set it as specified;
   -- called from main img script when tapped and when main cd closes to reset
-  if pFullSize = "" then -- calculate if it's already full size
-    put (the width of img pImage >= the width of this cd) into tFullSize
+   if pFullSize = "" then -- calculate if it's already full size
+      put (the width of  pImage >= the width of this cd) into tFullSize
+
   end if
-  put the formattedWidth of img pImage into tFWd
-  put the formattedHeight of img pImage into tFHt
+  put the formattedWidth of  pImage into tFWd
+  put the formattedHeight of  pImage into tFHt
+
   if tFullSize then -- reduce to fit
     resizeToWidth pImage,pTargetSize
   else -- return to full size
     resizeToHeight pImage,tFHt
   end if
-  set the loc of img pImage to the loc of this cd
+  set the loc of  pImage to the loc of this cd
   set the vis of group pImage to not tFullSize
 end toggleImgSize
 
