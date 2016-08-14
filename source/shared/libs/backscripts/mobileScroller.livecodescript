@@ -34,3 +34,11 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
     mobileControlDelete pName
   end repeat
 end deleteMobileControl
+
+on deleteAllMobileControls -- jg: delete all mobile controls of any type
+  if not isMobile() then exit deleteAllMobileControls
+  put mobileControls() into tList
+  repeat for each line l in tList
+    mobileControlDelete l
+  end repeat
+end deleteAllMobileControls

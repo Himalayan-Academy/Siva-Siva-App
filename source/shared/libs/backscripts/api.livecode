@@ -23,11 +23,11 @@ command errorDialog pExecutionError
 end errorDialog
 
 private command _goLaunchModule
-   logInfo "Loading launch module..."
-   if the environment is not "development" then
-      hide this stack
-   end if
-   loadModule getConfiguration("launch_module")
+  logInfo "Loading launch module..."
+  --   if the environment is not "development" then
+  --      hide this stack
+  --   end if
+  loadModule getConfiguration("launch_module") -- jg: this does the hiding
 end _goLaunchModule
 
 command goHome
@@ -36,20 +36,24 @@ command goHome
 end goHome
 
 command loadModule pModule
-   // find what module file to load
-   logInfo "Loading module:" && pModule
-   put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into tModuleToLoad
-   put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into tModuleConfigurationFile
-   logInfo tModuleToLoad
-   
-   // check and load configuration
-   if there is a file tModuleConfigurationFile then
-      get url ("binfile:" & tModuleConfigurationFile)
-      loadModuleConfiguration pModule, jsonImport(it)
-   end if
-   
-   // load stack
+  // find what module file to load
+  logInfo "Loading module:" && pModule
+  put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into tModuleToLoad
+  put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into tModuleConfigurationFile
+  logInfo tModuleToLoad
+  
+  // check and load configuration
+  if there is a file tModuleConfigurationFile then
+    get url ("binfile:" & tModuleConfigurationFile)
+    loadModuleConfiguration pModule, jsonImport(it)
+  end if
+  
+  // load stack
+  put the short name of this stack into tOrigStack --jg: this avoids screen flashes
   go stack tModuleToLoad in a new window
+  if tOrigStack <> "loader"  and the filename of stack tOrigStack <> tModuleToLoad then
+    close stack tOrigStack --jg: close orig stack after new one is in front
+  end if
 end loadModule
 
 
@@ -124,5 +128,10 @@ command launchBook pFileID
    get "http://dev.himalayanacademy.com/book/" & pFileID
    launchURL it
 end launchBook
+
+function pingServer --jg: UTF8 text file on server should contain only the word "true"
+  get url "http://www.himalayanacademy.com/ping.txt"
+  return textDecode(it,"UTF8") = "true"
+end pingServer
 
 
