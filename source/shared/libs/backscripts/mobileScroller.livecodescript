@@ -14,15 +14,16 @@ command CreateScroller pName -- scrolling fields
   mobileControlSet pName, "hScroll" , 0
   mobileControlSet pName, "vScroll" , 0
   mobileControlSet pName, "hIndicator" , false
-  if pName = "quote" then
-     mobileControlSet pName, "vIndicator", true
-  end if
+  mobileControlSet pName, "vIndicator", true
   mobileControlSet pName, "visible",  true
 end CreateScroller
 
-on scrollerDidScroll hScrolled, vScrolled
+on scrollerDidScroll pHScrolled, pVScrolled
   put mobileControlTarget() into tControlID
-  set the vscroll of control tControlID to vscrolled
+  put the long name of control tControlID of this cd of the topstack into tControlName
+  --  ANSWER TCONTROLNAME  --###
+  --  set the vscroll of tControlID to pVScrolled
+  set the vscroll of TCONTROLNAME to pVScrolled --###
   pass scrollerDidScroll
 end scrollerDidScroll
 

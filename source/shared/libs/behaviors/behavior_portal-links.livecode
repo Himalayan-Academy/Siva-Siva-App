@@ -58,6 +58,16 @@ on setScroll
   end if
 end setScroll
 
+## jg: touch msgs required on android, becauseLC isn't sending mouseUps when scroller is active;
+# probably a bug, since mouseDown does get sent
+on touchStart pID
+  mouseDown
+end touchStart
+
+on touchEnd pID
+  mouseUp
+end touchEnd
+
 
 on  mouseUp
   

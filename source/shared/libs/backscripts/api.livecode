@@ -27,7 +27,7 @@ private command _goLaunchModule
   --   if the environment is not "development" then
   --      hide this stack
   --   end if
-  loadModule getConfiguration("launch_module") -- jg: this does the hiding
+  loadModule getConfiguration("launch_module")
 end _goLaunchModule
 
 command goHome
