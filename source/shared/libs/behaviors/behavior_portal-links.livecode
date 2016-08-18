@@ -2,13 +2,6 @@
   
 local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
 
-on mouseDoubleDown pButton
-  --  mouseDown pButton -- jg: just block these
-end mouseDoubleDown
-
-on mouseDoubleUp pButton
-  --  mouseUp pButton -- jg: just block these
-end mouseDoubleUp
 
 command hideLogo
    repeat with x = 1 to 100

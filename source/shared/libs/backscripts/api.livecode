@@ -35,6 +35,19 @@ command goHome
    --dispatch "relaunch" to card (the current card of the topstack) of the topstack
 end goHome
 
+on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not right yet
+  -- msg is only sent on mobile
+  -- recentcards isn't stable, try this way:
+  get the recentcards
+  filter it without "*loader.livecode*"
+  filter it without the long id of this cd
+  if line 1 of it = "" then
+    quit
+  else
+    go (line 1 of it)
+  end if
+end backKey
+
 command loadModule pModule
   // find what module file to load
   logInfo "Loading module:" && pModule
