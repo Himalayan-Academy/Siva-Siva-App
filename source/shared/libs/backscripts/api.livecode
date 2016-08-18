@@ -44,7 +44,7 @@ on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not rig
   if line 1 of it = "" then
     quit
   else
-    go (line 1 of it)
+    go (line 1 of it)  --### NEED TO LOAD MODULE
   end if
 end backKey
 
