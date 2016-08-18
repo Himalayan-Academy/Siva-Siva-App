@@ -6,13 +6,13 @@
         "animationEngine.livecode"
     ],
     "behaviors": [
-        "behaviors/behavior_portal-links.livecode",
-        "behaviors/mobileScroller.livecodescript"
+        "behaviors/behavior_portal-links.livecode"
     ],
     "frontscripts": [],
     "backscripts": [
         "backscripts/api.livecode",
-        "backscripts/mediaDataAndTransformers.livecode"
+        "backscripts/mediaDataAndTransformers.livecode",
+        "backscripts/mobileScroller.livecodescript"
     ],
     "launch_module": "home",
     "log_level": "info,error,fatal",
