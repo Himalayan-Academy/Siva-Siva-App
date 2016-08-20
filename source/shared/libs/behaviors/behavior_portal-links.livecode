@@ -13,7 +13,7 @@ command hideLogo
 end hideLogo
 
 command setBlendLevel pLevel
-   set the blendLevel of btn "home-Logo" to pLevel
+   if there is a btn "home-logo" then set the blendLevel of btn "home-Logo" to pLevel
 end setBlendLevel
 
 on mouseDown

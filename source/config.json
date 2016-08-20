@@ -12,6 +12,7 @@
     "backscripts": [
         "backscripts/api.livecode",
         "backscripts/mediaDataAndTransformers.livecode",
+        "backscripts/libMobileAudioPlayer.livecode",
         "backscripts/mobileScroller.livecodescript"
     ],
     "launch_module": "home",

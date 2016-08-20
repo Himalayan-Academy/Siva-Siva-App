@@ -14,40 +14,44 @@ end checkThisScriptIsInMsgPath
 #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
 
 
-
 command fetchRandomMediaItem pSelectParams
-   
-   #The selection Params are passed down from the calling command as quoted strings 
-   # each set of two = column + value
-   # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
-   # assuming there is a match.. check HAPMAN for criteria you can use
-   # TBD: categories?  how to pass one to the API?
-   # the CURL call wants to pass this as JSON in a single "data" object like this:
-   # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
-   # so we have to build that from incoming params
-   
-   repeat with x = 1 to the number of items of pSelectParams
-      if (x mod 2) <> 0 then next repeat
-      put  item (x -1) of pSelectParams into y
-      put item x of pSelectParams  into pSelect["data"][y]
-   end repeat
-   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
-   set the httpheaders to "content-type: application/json"
-   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-   put it into tMediaMeta
-
-   # if you want to see what you are getting
-   # uncomment this line:
+  
+  #The selection Params are passed down from the calling command as quoted strings 
+  # each set of two = column + value
+  # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
+  # assuming there is a match.. check HAPMAN for criteria you can use
+  # TBD: categories?  how to pass one to the API?
+  # the CURL call wants to pass this as JSON in a single "data" object like this:
+  # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
+  # so we have to build that from incoming params
+  
+  repeat with x = 1 to the number of items of pSelectParams
+    if (x mod 2) <> 0 then next repeat
+    put  item (x -1) of pSelectParams into y
+    put item x of pSelectParams  into pSelect["data"][y]
+  end repeat
+  put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
+  set the httpheaders to "content-type: application/json"
+  POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+  put it into tMediaMeta
+  # if you want to see what you are getting
+  # uncomment this line:
   # put tMediaMeta
-   put jsonImport(tMediaMeta) into aMediaMeta
-   if aMediaMeta["approved_for_public"]= "NO" then
+  
+  try
+    put jsonImport(tMediaMeta) into aMediaMeta
+  catch tErr
+    logError tErr
+  finally
+    if aMediaMeta["approved_for_public"]= "NO" then
       # we have a record that will either have no file or should not be offered yet
       # get another one right away
-   set the httpheaders to "content-type: application/json"
-   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-   put it into tMediaMeta
+      set the httpheaders to "content-type: application/json"
+      POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+      put it into tMediaMeta
       put jsonImport(tMediaMeta) into aMediaMeta
-   end if
+    end if
+  end try
 end fetchRandomMediaItem
 
 
@@ -350,8 +354,6 @@ end convertYouTubeURL
 command checkMetaBackScript pMsg
    answer "got it" with pMsg
 end checkMetaBackScript
-
-
 
 
 

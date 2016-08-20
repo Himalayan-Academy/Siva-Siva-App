@@ -25,6 +25,19 @@
 	
 	
 ###Revisions 8/18/2016 - jg
+	Removed audio player script from audio card in Surprise, moved to libMobileAudioPlayer stack. Updated json config to load libMobileAudioPlayer.livecode as backscript.
+	
+	Revised portal-links behavior to check existence of logo img before showing it to avoid errors when current card doesn't have the image.
+	
+	Android controller now displays correctly, so we don't need the "Show Controller" button any more. Removed it.
+	
+	
+###Revisions 8/19/2016 - jg
+	Fixed libMobileAudioPlayer backscript which wasn't creating a mobile player control at all. It also now hides the LC player if the platform is mobile, since the LC one was visible as a grey box on Android.
+	
+	Revised mediaDataAndTransformers script to use a "try" structure in "fetchRandomMediaItem" to avoid script errors (and script abort) for audio files that return no metadata.
+	
+	Moved all the audio loading handlers in Surprise to openCard and added a new "showBusyIndicator" handler to libMobileAudioPlayer, which shows/hides an indicator on demand (desktop and mobile both.) Now the indicator can be called immediately when the audio card opens. Otherwise there was a significant delay on the portal card before the audio card and indicator appeared. Current glitch is I couldn't find the indicator gif BR added so right now desktop doesn't show one.
 	
 	
 
