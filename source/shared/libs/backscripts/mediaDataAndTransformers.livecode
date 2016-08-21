@@ -5,7 +5,7 @@ local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta
 command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
 end checkThisScriptIsInMsgPath
-
+ 
 ---> FETCH RANDOM
 
 # MODEL FOR CALL TO API
@@ -42,15 +42,6 @@ command fetchRandomMediaItem pSelectParams
     put jsonImport(tMediaMeta) into aMediaMeta
   catch tErr
     logError tErr
-  finally
-    if aMediaMeta["approved_for_public"]= "NO" then
-      # we have a record that will either have no file or should not be offered yet
-      # get another one right away
-      set the httpheaders to "content-type: application/json"
-      POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-      put it into tMediaMeta
-      put jsonImport(tMediaMeta) into aMediaMeta
-    end if
   end try
 end fetchRandomMediaItem
 
@@ -76,14 +67,6 @@ command fetchRandomQuote pSelectParams
    # put tQuoteData
    put jsonImport(tQuoteData) into aQuoteData
    
-   if aQuoteData["approved_for_public"]= "NO" then
-      # we have a record that will either have no file or should not be offered yet
-      # get another one right away
-      set the httpheaders to "content-type: application/json"
-      POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-      put it into tQuoteData
-      put jsonImport(tMediaMeta) into aQuoteData
-   end if
 end fetchRandomQuote
 
 function getQuoteData
@@ -120,7 +103,7 @@ function getMediaURL pBestFormat
 end getMediaURL
 
 function getMediaItemMetadata
-
+    
    put empty into tViewData
    # create small HTML chunck from the data we want
    put aMediaMeta["title"] into tTitle
@@ -130,34 +113,45 @@ function getMediaItemMetadata
    put aMediaMeta["description"] into tDescription
    put aMediaMeta["date_created"] into tDateCreated
    
-   put "<p>" into tViewData
-   put (tTitle,tSubTitle,tArtists,tAuthor,tDateCreated, tDescription) into tFields
-   repeat for each item x in tFields
+# data has commas so we have to use a lines as a delimiter
+   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription) into tFields
+
+   repeat for each line x in tFields
       if x <> empty then
-         switch 
-            case x = tTitle
-               put (htmlTagger (h2,tTitle) ) &"<br>" & cr after tViewData
-               break
-            case x = tSubTitle
-               put (htmlTagger (h3,tSubTitle) ) &"<br>" & cr after tViewData
-               break
-            case x = tArtists
-               put (htmlTagger (bold,tArtists) ) &"<br>" & cr after tViewData
-               break
-            case  x= tAuthor
-               put (htmlTagger (bold,tAuthor) ) &"<br>" & cr after tViewData
-               break
-            case x = tDateCreated
-               put (htmlTagger (bold,tDateCreated) ) &"<br><br >" & cr after tViewData
-               break
-            case  x= tDescription
-               put tDescription  & cr after tViewData # plain text
-         end switch
+         put x & cr & cr after tViewData
       end if
-      end repeat
-      put "</p>" & cr& cr after tViewData
-      put aMediaMeta["sub_title"] after tViewData
-      return tViewData
+   end repeat
+     return tViewData
+   
+   
+   
+   # the whole html text thing is breaking everything!
+   
+   --   repeat for each item x in tFields
+   --      if x <> empty then
+   --         switch 
+   --            case x = tTitle
+   --               put (htmlTagger (bold,tTitle) ) &"<br>" & cr after tViewData
+   --               break
+   --            case x = tSubTitle
+   --               put (htmlTagger (bold,tSubTitle) ) &"<br>" & cr after tViewData
+   --               break
+   --            case x = tArtists
+   --               put (htmlTagger (bold,tArtists) ) &"<br>" & cr after tViewData
+   --               break
+   --            case  x= tAuthor
+   --               put (htmlTagger (bold,tAuthor) ) &"<br>" & cr after tViewData
+   --               break
+   --            case x = tDateCreated
+   --               put (htmlTagger (bold,tDateCreated) ) &"<br><br >" & cr after tViewData
+   --               break
+   --            case  x= tDescription
+   --               put tDescription  & cr after tViewData # plain text
+   --         end switch
+   --      end if
+   --      end repeat
+   --      put "</p>" & cr& cr after tViewData
+ 
 end getMediaItemMetadata
 
 function htmlTagger pStyle,  pText, 
@@ -184,6 +178,16 @@ function htmlTagger pStyle,  pText,
    return tMarkedUp
    
 end htmlTagger
+
+## Need a better function here.. this method loses data
+## we need to just target the tags and leave enclosed strings.
+
+function stripHTML pText
+   set the htmlText of the templateField to pText
+   put the text of the  templateField into tPlainText
+   reset the templateField
+   return tPlainText
+end stripHTML
 
 
 
@@ -252,7 +256,7 @@ function folderForAudio pMediaType
          put "songs/" after tServerPath
          put aMediaMeta["genre"] &"/" after tServerPath
          
-         if (aMediaMeta["genre"] = "bhajan") OR (aMediaMeta["genre"] <> "bhakti-gitam")  then
+         if (aMediaMeta["genre"] = "bhajan") OR (aMediaMeta["genre"] = "bhakti-gitam")  then
             # only these two genres have sub folders on disk
             # other Genres may have "diety" assignments, but not stored on disk in separate folders
             put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
