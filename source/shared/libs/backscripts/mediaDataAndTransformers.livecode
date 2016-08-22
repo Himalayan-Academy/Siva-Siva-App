@@ -112,6 +112,8 @@ function getMediaItemMetadata
    put aMediaMeta["author"] into tAuthor
    put aMediaMeta["description"] into tDescription
    put aMediaMeta["date_created"] into tDateCreated
+   # do not  display a non-date string as zeros
+   if tDateCreated ="0000-00-00" then put "" into tDateCreated
    
 # data has commas so we have to use a lines as a delimiter
    put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription) into tFields
