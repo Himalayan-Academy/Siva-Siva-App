@@ -8,7 +8,7 @@
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerID
+local pPlayerName -- jg: don't think we need this any more; check
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -29,8 +29,8 @@ local sPlayerID
 
 
 command createMobileAudioPlayer pURL, pPlayerName
-  if sPlayerID is among the lines of mobileControls() then mobileControlDelete sPlayerID -- init
-  mobileControlCreate "player"
+  if pPlayerName is among the lines of mobileControls() then mobileControlDelete pPlayerName -- init
+  mobileControlCreate "player",pPlayerName
   put the result into sPlayerId
   -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
   put the rect of player pPlayerName into tRect 
@@ -39,10 +39,10 @@ command createMobileAudioPlayer pURL, pPlayerName
     put item 4 of tRect - item 2 of tRect into tHeight
     subtract tHeight from item 2 of tRect
   end if
-  mobileControlSet sPlayerID, "visible", true 
-  mobileControlSet sPlayerId, "rect", tRect
-  mobileControlSet sPlayerId, "showController", true 
-  mobileControlSet sPlayerId, "filename", pURL 
+  mobileControlSet pPlayerName, "visible", true 
+  mobileControlSet pPlayerName, "rect", tRect
+  mobileControlSet pPlayerName, "showController", true 
+  mobileControlSet pPlayerName, "filename", pURL 
   if pURL begins with "http" then
     showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
   end if
@@ -52,24 +52,24 @@ end createMobileAudioPlayer
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
   if theProperty is "duration" then
     showBusyIndicator false -- Remove the "Loading..." indicator and start playing
-    mobileControlDo sPlayerId, "play"
+    mobileControlDo pPlayerName, "play"
   end if
 end playerPropertyAvailable
 
 command setMobileAudioPlayer pState --jg: control the state of the mobile player
   -- pState = "pause", "play", or "stop"
-  mobileControlDo sPlayerId, pState
+  mobileControlDo pPlayerName, pState
   if pState = "stop" then
     showBusyIndicator false -- in case it's still showing
-    mobileControlSet sPlayerId, "visible", false
-    mobileControlDelete sPlayerId
+    mobileControlSet pPlayerName, "visible", false
+    mobileControlDelete pPlayerName
     if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
   end if
 end setMobileAudioPlayer
 
 on playerFinished -- sent on mobile when audio is done
   if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
-  mobileControlDelete sPlayerID
+  mobileControlDelete pPlayerName
 end playerFinished
 
 --on playStopped -- sent on desktop when audio is done
@@ -81,8 +81,8 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
   -- pBool = boolean
   if isMobile() then
     hide player pPlayerName -- the LC one; never show it
-    mobileControlSet sPlayerId, "showController",pBool
-    mobileControlSet sPlayerId, "visible", pBool
+    mobileControlSet pPlayerName, "showController",pBool
+    mobileControlSet pPlayerName, "visible", pBool
   else
     set the vis of player pPlayerName to pBool
   end if
@@ -96,7 +96,9 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
       mobileBusyIndicatorStop
     end if
   else
-    -- jg: show/hide the aimated gif; can't find it
+    if there is a btn "loading"  then
+      set the vis of btn "loading"  to pBool
+    end if
   end if
 end showBusyIndicator
 
