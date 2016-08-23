@@ -2,6 +2,21 @@
 
 # [Latest Entries on top]
 
+###Revisions 8/22/2016 - jg
+	Surprise Me - audio card
+		Moved the text setup for the AudioDetails field into the "showAudioDetails" handler. Field handling is slow, so openCard immediately fetches and plays the audio while the details field is being adjusted for display.
+		
+		Added a mobile scroller to the AudioDetails field if the content is taller than the field height.
+		
+		Fixed all instances of isMobile() so the busy indicator works (the function was missing parentheses.)  Deleted hideBusyIndicator handler, replaced it with "showBusyIndicator false", a handler in the libMobileAudioPlayer backscript. 
+		
+		Optimized the openCard handler a bit.
+		
+	libMobileAudioPlayer backscript
+		ShowBusyIndicator now shows/hides the "loading" button on desktop, if one exists. For use on other cards, be sure the button is named "loading" and it should work everywhere.
+		
+		
+
 ###Revisions 8/20/2016 - br
 
 	Loader Gifs for Desktop
