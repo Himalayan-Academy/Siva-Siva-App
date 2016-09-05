@@ -21,6 +21,7 @@ REQUIREMENTS:
 --Timers
 --4 different scenarios
 --tracking across sessions (how many cycles were completed to date)
+-- advance forward through all 
 
 FUNCTIONAL SPECIFICATION
 

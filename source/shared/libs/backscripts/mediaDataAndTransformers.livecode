@@ -32,8 +32,14 @@ command fetchRandomMediaItem pSelectParams
   end repeat
   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
   set the httpheaders to "content-type: application/json"
+
   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+  --put the result
   put it into tMediaMeta
+  if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
+     put empty into aMediaMeta
+  end if
+
   # if you want to see what you are getting
   # uncomment this line:
   # put tMediaMeta
@@ -287,7 +293,9 @@ function folderForAudio pMediaType
    return tServerPath
 end folderForAudio
 
----> IMAGE PROCESSING METHODS
+##########################################################
+## IMAGE PROCESSING METHODS
+##########################################################
 # Br: July 15th, 2016
 # Images arriving from the server need to fit the screen
 # the general use case will almost always be a portrait screen
@@ -296,7 +304,26 @@ end folderForAudio
 # but we will pass a landscape param anyway so that we can implement later
 # "pOrientation"
 # We copied some already good methods from the gurudeva app. and modified from there.
-# 
+##########################################################
+
+on manualTestFetch pimage
+   # just fror development... 
+   # use a temp button on the UI to check for image resolution behavior etc
+     answer file "Chose an image"
+   put it into sURL
+   set the filename of pImage to sURL
+        put the formattedWidth of  pImage into tFWd
+     put the formattedHeight of  pImage into tFHt
+     put (tFWd & "x" & tFHt) into sCurrentGraphicRect
+   resizeToHeight pimage, 736
+   set the loc of pimage to the loc of this card
+   show control "quoteControl"
+   put sCurrentGraphicRect
+end manualTestFetch
+
+## NOTE: for the following handlers to work you must pass
+## the rect in the form of  width x height  this this form ("736x552")
+## and the long ID of the target image to "pImage" 
 
 on resizeToHeight pImage,pSize
    set the itemdel to "x"
@@ -307,7 +334,7 @@ on resizeToHeight pImage,pSize
    put (pSize)/tOrigImgHeight  into tRatio
   put (tOrigImgWidth * tRatio) into tNewWidth
   put (tOrigImgHeight * tRatio) into tNewHeight
-  set the rect of img pImage to 0,0,tNewWidth,tNewHeight  
+  set the rect of  pImage to 0,0,tNewWidth,tNewHeight  
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 
@@ -323,6 +350,11 @@ on resizeToWidth pImage,pSize
 end resizeToWidth
 
 on toggleImgSize pImage, pFullSize, pTargetSize 
+   # we may not always this rect of the images from  the metadata
+   # May as well just find out what it is right here.
+   
+
+   
    # pImage is the long ID of the image
    # you do not use "img ## to refer to it... just "pImage"
 
@@ -333,7 +365,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize
 
   end if
   put the formattedWidth of  pImage into tFWd
-  put the formattedHeight of  pImage into tFHt
+     put the formattedHeight of  pImage into tFHt
 
   if tFullSize then -- reduce to fit
     resizeToWidth pImage,pTargetSize
@@ -341,10 +373,15 @@ on toggleImgSize pImage, pFullSize, pTargetSize
     resizeToHeight pImage,tFHt
   end if
   set the loc of  pImage to the loc of this cd
-  set the vis of group pImage to not tFullSize
+  if there is a control "quoteControl" then
+     set the vis of group quoteControl to not tFullSize
+  end if
+  
 end toggleImgSize
 
----> VIDEO PRESENTATION UTILITIES
+##########################################################
+## VIDEO PRESENTATION UTILITIES
+##########################################################
 
 # convert incoming URL from the formats table in the Jnanam database
 # URL are stored in this form:
