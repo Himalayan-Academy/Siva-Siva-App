@@ -1,0 +1,183 @@
+﻿script "behavior_portal-links"
+  
+local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
+
+
+command hideLogo
+   repeat with x = 1 to 100
+      # not good to use "wait" in any mobile context.. 
+      # it blocks so the scrolling will fail until the 
+      # wait is over.
+     send "setBlendLevel x"  to me in 2 milliseconds
+   end repeat
+end hideLogo
+
+command setBlendLevel pLevel
+   if there is a btn "home-logo" then set the blendLevel of btn "home-Logo" to pLevel
+end setBlendLevel
+
+on mouseDown
+  parseTargetOwner 
+  put the mouseloc into sMouseLoc
+  put sMouseLoc into sStartLoc
+  if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
+    setScroll
+  end if
+end mouseDown
+
+on parseTargetOwner
+  put the short name of the owner of the target into sTargetOwner
+  
+  # parse the owner
+  set the itemdel to "_"
+  put item 1 of sTargetOwner into sTargetModule
+  put item 2 of sTargetOwner into sTargetAction
+  
+end parseTargetOwner
+
+on setScroll
+  if the mouse is down then
+    lock screen
+    if item 2 of sMouseLoc > the mouseV then
+      set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+    else
+      set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+    end if
+    put the mouseloc into sMouseLoc
+    send "setScroll" to me in 20 millisec
+    unlock screen
+  else
+    put empty into sMouseLoc
+  end if
+end setScroll
+
+## jg: using touch msgs on android, because something is blocking mouseUps when scroller is active;
+on touchStart pID
+  mouseDown
+end touchStart
+
+on touchEnd pID
+  mouseUp
+end touchEnd
+
+
+on  mouseUp
+  
+  # by convention the links on these portal pages are groups of three objects
+  # label field, image, and a background, these are the mouse targets
+  # each of these groups is explicitly named
+  # by this convention: modulename[underscore]specific-link-target-action
+  # So we are depending on the short name of the immediate owner of the target
+  
+  if abs(the mouseV - item 2 of sStartLoc) <= 10 then
+    
+    # user tapped
+    
+    switch  sTargetModule
+      
+      case "home"
+        --        close this stack --jg: let loadModule handle this to avoid screen flash
+        switch sTargetAction
+          case "gems"
+            loadModule "gems"
+            break
+          case "surprise"
+            loadModule "surprise"
+            break
+          case "look"
+            loadModule "look"
+            break
+            
+          case "listen"
+            loadModule "listen"
+            break
+            
+          case "practice"
+            loadModule "practice"
+            break
+            
+          case "read"
+            loadModule "read"
+            break
+          case "website"
+            loadModule "website"
+            break
+          case "games"
+            loadModule "fun"
+            break
+        end switch
+        break
+        # End of actions for the Home module Links Card
+      Case "gems"
+        -- put sTargetOwner
+        break
+        # End of actions for the Gems module  Card
+      case "surprise"
+        if sTargetAction="video" then
+          fetchRandomMediaItem ("media_type","video")
+          put getMediaURL ()  into sURL
+          launchURL "landscape", sURL
+          exit mouseUp
+        else
+          go to card sTargetOwner
+        end if
+        break
+        # End of actions for the Surprise Module Links 
+      Case "listen"
+        --put sTargetOwner
+        switch sTargetAction
+          case "all-bodhinatha"
+            go to card "bodhinatha-talks"
+            break
+        end switch
+        break
+        # End of actions for the Listen Module  Links Card
+      Case "look"
+        -- put sTargetOwner
+        break
+        # End of actions for the Look Module  Links Card
+      Case "practice"
+        -- put sTargetOwner
+        break
+        # End of actions for the Practice Module  Links Card
+      Case "read"
+        -- put sTargetOwner
+        break
+        # End of actions for the Read Module  Links Card
+      Case "website"
+        switch sTargetAction
+          case "daily-blog"
+            launchURL "portrait", "http://www.himalayanacademy.com/blog/taka/"
+            break
+          case "meet-monks"
+            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/meet-the-monks"
+            break
+          case "monthly-news"
+            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/newsletter"
+            break
+          case "visit"
+            launchURL "portrait", "http://dev.himalayanacademy.com/visit"
+            break
+          case "virtual-tour"
+            launchURL "portrait", "http://dev.himalayanacademy.com/visit/virtual-tour"
+            break
+          case "about-the-monastery"
+            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/about"
+            break
+          case "our-guru-lineage"
+            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/lineage-philosophy/lineage"
+            break
+        end switch
+        -- put sTargetOwner
+        break
+        # End of actions for the Website Module  Links Card
+      Case "games"
+        -- put sTargetOwner
+        break
+        # End of actions for the Games Module  Links Card
+    end switch
+    
+  end if
+  
+end  mouseup
+

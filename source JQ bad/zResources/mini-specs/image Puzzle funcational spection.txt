@@ -1,0 +1,28 @@
+ Image Puzzle game
+ 
+ Sendan Boys' ideas
+ 
+ 1) have to finish all sets from 4 pcs to 36 piece
+ 2) each set has to be finished in a certain amount of time.
+ 3) then you get a new puzzle.... 
+ 
+ 4) track your score 
+ 5) Global score board on line, showing various players.. 
+ 6)  in a certain amount of time to get a new puzzle.
+
+
+Sounds: when puzzle piece locks in... 
+
+Audio settings: turn audio on or off
+Music on
+
+button clicks, snap in place clicks, completion music 
+
+two settings for older and younger kids.
+
+Younger get longer times and less pieces to get a new image
+
+Add a new image each month
+
+try graphing users times to get a baseline for time it takes to finish
+

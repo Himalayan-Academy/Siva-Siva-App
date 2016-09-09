@@ -1,0 +1,18 @@
+{ "portal-links": {
+    "hero": {
+        "image": "img/portal-screen/hero_look_big-eye-shtrstk-13603590.jpg"
+    },
+    "video-library": {
+        "image": "img/portal-screen/thumb_gurudeva_on-iphone.jpg"
+    },
+    "slideshows": {
+        "image": "img/portal-screen/thumb_slideshows.jpg"
+    },
+    "art": {
+        "image": "img/portal-screen/thumb_guru-vision.jpg"
+    },
+    "history-movie": {
+        "image": "img/portal-screen/thumb_history-movie.jpg"
+    }
+}
+}

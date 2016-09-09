@@ -1,0 +1,85 @@
+INDICES/TABLES OF CONTENTS
+
+We have right now a total of twelve screens that will be simply be indices to content.
+
+All these will require a single text field that turns into a clickable list. 
+
+The actual text of top level will vary depending on media type. 
+
+Inspired talks and slide shows are organized by year
+Singing by Genre
+Art by Artist
+etc.
+
+Only in the case of Gurudeva and Bodhinatha's talks would I think an image appropriate. for the rest, flat background are best and we want to use the whole screen top to bottom for the index so that the user is not forced to scroll down unnecessarily
+
+Engineering and usability wise flat full screen backgrounds should serve well for the others. On thing I thought of using were the backgrounds from the trilogy opening pages.
+Very soft.. A strong background could be stone patterns.
+
+
+Design wants to be as minimalist as possible as this is purely navigation across lists and pop-ups.   Engineering wise we just want call two things
+
+1) background image
+2) clickable list
+
+UX is simple: clickin the top links replace screen with nextlevel 
+
+Header required on all screens with back and title: The title in the header automatically carries over from the label on the top level portal links.
+
+Hoping for a modern, youth catching look and feel for all but Sanskrit chanting, 
+Guru Chroncles and Hindu Art.
+
+
+Audio:
+
+All Bodhinatha's Talks
+Gurudeva's Talks
+The Master Course
+Bhajans by Devotees
+Sanskrit Chanting
+The Guru Chronicles
+
+Look
+
+YouTube Library
+Slideshows
+Hindu art (unless Sadasivanathaswami designs a more robust module, we will go with an index for starters)
+
+Read
+
+Frequently Asked Questions
+All Our Online books.
+educational Insights
+
+Website
+
+
+################################################
+UNIQUE MODULES:
+
+Other links go to modules, each unique
+FAQ
+Gems of Wisdom
+Surprise me
+Practice: 
+    Preparation for meditation
+    Mantras
+    spiritual work out
+    lesson of the day:
+    Affirmations
+    Hindu Calendar
+    Instructions for Puja
+    Color meditation
+    
+Read
+  Interactive books
+     Character Traits
+     Path to Siva
+     Gurudeva toolbox
+         
+Fun and Games
+    Humor
+    Image puzzles
+    Word puzzles
+    
+    V3 Formal Registered Master Course Student Registration and submit worksheets on app.

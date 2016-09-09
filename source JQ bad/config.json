@@ -1,0 +1,20 @@
+{
+    "libraries": [
+        "DBLib/aagDBLib.livecode",
+        "hapMediaViewerPortraitLib.livecode",
+        "hapMediaViewerLandscapeLib.livecode",
+        "animationEngine.livecode"
+    ],
+    "behaviors": [
+        "behaviors/behavior_portal-links.livecode"
+    ],
+    "frontscripts": [],
+    "backscripts": [
+        "backscripts/api.livecode",
+        "backscripts/mediaDataAndTransformers.livecode",
+        "backscripts/libMobileControls.livecodescript"
+    ],
+    "launch_module": "home",
+    "log_level": "info,error,fatal",
+    "log_file": "sivasiva.log"
+}

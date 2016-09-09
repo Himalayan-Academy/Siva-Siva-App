@@ -1,0 +1,27 @@
+{"portal-links": {
+    "hero": {
+        "image": "img/portal-screen/hero_website_ha-com-home-screenshot.jpg"
+    },
+    "daily-blog": {
+        "image": "img/portal-screen/thumb_taka.jpg"
+    },
+    "meet-monks": {
+        "image": "img/portal-screen/thumb_monks-by-marya.jpg"
+    },
+    "monthly-news": {
+        "image": "img/portal-screen/thumb_news.jpg"
+    },
+    "visit": {
+        "image": "img/portal-screen/thumb_visit_shtrstk-370070549.jpg"
+    },
+    "virtual-tour": {
+        "image": "img/portal-screen/thumb_virtual-tour.jpg"
+    },
+    "about-the-monastery": {
+        "image": "img/portal-screen/thumb_about-monastery.jpg"
+    },
+    "our-guru-lineage": {
+        "image": "img/portal-screen/thumb_lineage.jpg"
+    }
+}
+}
