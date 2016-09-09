@@ -13,25 +13,13 @@ end createBrowserWidget
 
 // PRIVATE ROUTINES BELOW
 
-command closeStopCloseGoRecent
-   # for now we assume if we close this stack the previous stack will still be open underneath
-   delete widget "Browser"
-   close me
-   
-   --   if (exists (widget pBrowserName) ) then
-   --      delete widget pBrowserName
-   --   end if
-   --   go recent
-end closeStopCloseGoRecent
+-- command closeStopCloseGoRecent
+--   # for now we assume if we close this stack the previous stack will still be open underneath
+--   --   delete widget "Browser"
+--   --   close me
 
-
-
-
-
-private function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
-   return the environment is "development"
-end dev
-
-private function isMobile -- jg, for convenience
-   return the environment is "mobile"
-end isMobile
+--   --   if (exists (widget pBrowserName) ) then
+--   --      delete widget pBrowserName
+--   --   end if
+--   --   go recent
+-- end closeStopCloseGoRecent
