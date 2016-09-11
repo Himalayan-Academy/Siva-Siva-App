@@ -82,7 +82,7 @@ end loadModule
 * Buttons for going "recent card" are provided and an optional  "relaunch" message is sent to the cards when going back
 *
 * === PUBLIC API ===
-*   launchURL <pOrientation>,<pURL>: launches given web page.
+*  launchURL <pOrientation>,<pURL>: launches given web page.
 *  launchAudio <pURL>, [pOptionalImage]: launches the audio with an optional cover image.
 *  launchBook <pFileID>: just a convenience method for launching books, internally it calls launchURL.
 *
@@ -98,37 +98,54 @@ end loadModule
 # Correct Stack(s) which are put into use on start up as a lib
 
 command launchURL pOrientation, pURL
-   if pOrientation="portrait" then
-      go card "web viewer" of stack "hapMediaViewerPortraitLib"
-        initializeInterfaceDefaults  pOrientation
-   else
-      go card "web viewer" of stack "hapMediaViewerLandscapeLib"
-       initializeInterfaceDefaults  pOrientation
-      end if
- 
-   set the URL of widget "browser" to pURL
+  if pOrientation = "" then -- try to determine based on media type
+    put getOrientationByType(pURL) into tViewerType
+  end if
+  if pOrientation="portrait" then
+    go card "web viewer" of stack "hapMediaViewerPortraitLib"
+    initializeInterfaceDefaults  pOrientation
+  else
+    go card "web viewer" of stack "hapMediaViewerLandscapeLib"
+    initializeInterfaceDefaults  pOrientation
+  end if
+  set the URL of widget "browser" to pURL
 end launchURL
 
+function getOrientationByType pURL -- return correct orientation for a URL;
+  -- called by launchURL and orientationChanged in browser cd of both viewer stacks
+  -- Some media is locked to an orientation, some allow any.
+  -- This tries to determine the allowed orientation for a media type.
+  -- (Add slideshows later to landscape view)
+  switch
+    case pURL contains "youtube" --  a movie [add slideshow when URL format is known]
+      --     case pURL contains "SLIDESHOW"  --### add when format is known
+      return "landscape" 
+      break
+    case pURL contains "PORTRAIT" --### fix this when format is known
+      return "portrait"
+      break
+    default
+      return "any" -- allows rotation
+  end switch
+end getOrientationByType
+
+
 command initializeInterfaceDefaults pOrientation
-   
-   if isMobile() then  -- jg
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      if the platform = "iphone" then
-         iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
-      end if
-      if pOrientation ="portrait" then
-          mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-         set the width of this stack to 414
-         set the height of this stack to 736
-      else
-         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both portrait orientations
-       set the width of this stack to 736
-      set the height of this stack to 414
-      end if
-   else
-      set the dontUseQT to true --jg: only need this once on startup
-   end if
-   
+  if isMobile() then  -- jg
+    set the fullscreenmode of this stack to "showAll" -- better for wider screens
+    if the platform = "iphone" then
+      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
+    end if
+    if pOrientation ="portrait" then
+      mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      --       set the width of this stack to 414 -- don't need if using 2 stacks
+      --       set the height of this stack to 736
+    else
+      mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+      --       set the width of this stack to 736
+      --       set the height of this stack to 414
+    end if
+  end if
 end initializeInterfaceDefaults
 
 command launchAudio pURL, pOptionalImage
