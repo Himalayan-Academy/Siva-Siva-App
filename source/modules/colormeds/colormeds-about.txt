@@ -1,0 +1,7 @@
+EditingGuide\This is a very lean structured text schema. Array elements are separated by pipe ; key-name value pairs are separated by backslash. To call text into the app. load the array and call the key.  you cannot us a pipe or backslash in any key or text string, no white space around key string
+|intro\<p>Color meditation sets a foundation for mastery of self-awareness. Think of it as exercise for the muscles you use to control your mind and emotions. Learn to be the free traveler through the mind as you bath yourself in the purity of color. <br /></p>
+
+<p>We offer four progressively more advanced practice levels.<br /></p>
+
+<p>You must complete at least 1 round per day, per level, for 8 days, before the next is revealed. As you progress you can practice any that you have already achieved, depending on your time and goals</p>
+|
