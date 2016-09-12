@@ -132,9 +132,6 @@ end getOrientationByType
 command initializeInterfaceDefaults pOrientation
   if isMobile() then  -- jg
     set the fullscreenmode of this stack to "showAll" -- better for wider screens
-    if the platform = "iphone" then
-      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
-    end if
     if pOrientation ="portrait" then
       mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
       --       set the width of this stack to 414 -- don't need if using 2 stacks
