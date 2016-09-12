@@ -1,8 +1,8 @@
 ﻿script "API"
 
-on openstack
-   set the loc of this stack to the screenloc
-end openstack
+-- on openstack
+--    set the loc of this stack to the screenloc --jg: now in loader
+-- end openstack
 
 command scaleStackIfNeeded
    if the environment is "development" and (item 4 of the effective working screenRect < 800 )  then
@@ -103,12 +103,11 @@ command launchURL pOrientation, pURL
   end if
   if pOrientation="portrait" then
     go card "web viewer" of stack "hapMediaViewerPortraitLib"
-    initializeInterfaceDefaults  pOrientation
   else
     go card "web viewer" of stack "hapMediaViewerLandscapeLib"
-    initializeInterfaceDefaults  pOrientation
   end if
-  set the URL of widget "browser" to pURL
+  initializeInterfaceDefaults pOrientation
+  set the URL of widget "browser" of this stack to pURL
 end launchURL
 
 function getOrientationByType pURL -- return correct orientation for a URL;
