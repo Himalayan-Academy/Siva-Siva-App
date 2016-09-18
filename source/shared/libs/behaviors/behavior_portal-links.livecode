@@ -17,6 +17,8 @@ command setBlendLevel pLevel
 end setBlendLevel
 
 on mouseDown
+
+   put the owner of the target
   parseTargetOwner 
   put the mouseloc into sMouseLoc
   put sMouseLoc into sStartLoc
@@ -26,8 +28,8 @@ on mouseDown
 end mouseDown
 
 on parseTargetOwner
-  put the short name of the owner of the target into sTargetOwner
-  
+   put the short name of the owner of the target into sTargetOwner
+
   # parse the owner
   set the itemdel to "_"
   put item 1 of sTargetOwner into sTargetModule
@@ -144,7 +146,7 @@ on  mouseUp
         -- put sTargetOwner
         break
         # End of actions for the Read Module  Links Card
-      Case "website"
+     Case "website"
         switch sTargetAction
           case "daily-blog"
             launchURL "portrait", "http://www.himalayanacademy.com/blog/taka/"
@@ -168,13 +170,32 @@ on  mouseUp
             launchURL "portrait", "http://dev.himalayanacademy.com/monastery/lineage-philosophy/lineage"
             break
         end switch
-        -- put sTargetOwner
+       
         break
         # End of actions for the Website Module  Links Card
-      Case "games"
-        -- put sTargetOwner
-        break
-        # End of actions for the Games Module  Links Card
+      Case "fun"
+          switch sTargetAction
+             case "humor"
+                Answer "Load Humor" with "OK"
+            --loadModule "humor"
+            break
+         case "word-puzzles"
+            Answer "Load word-puzzles" with "OK"
+            loadModule "wordpuzzles"
+            break
+         case "coloring"
+             Answer "Load word-puzzles" with "OK"
+            --loadModule "coloring"
+            break
+            
+         case "image-puzzles"
+            Answer "Load image-puzzles" with "OK"
+            --loadModule "image-puzzles"
+            break
+      end switch
+         # End of actions for the Fund Module  Portal-links group
+         break
+     
     end switch
     
   end if
