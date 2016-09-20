@@ -17,8 +17,6 @@ command setBlendLevel pLevel
 end setBlendLevel
 
 on mouseDown
-
-   put the owner of the target
   parseTargetOwner 
   put the mouseloc into sMouseLoc
   put sMouseLoc into sStartLoc
@@ -173,6 +171,7 @@ on  mouseUp
        
         break
         # End of actions for the Website Module  Links Card
+        
       Case "fun"
           switch sTargetAction
              case "humor"
@@ -180,8 +179,7 @@ on  mouseUp
             --loadModule "humor"
             break
          case "word-puzzles"
-            Answer "Load word-puzzles" with "OK"
-            loadModule "wordpuzzles"
+            loadModule "wordpuzzles" # landscape stack
             break
          case "coloring"
              Answer "Load word-puzzles" with "OK"
@@ -193,7 +191,8 @@ on  mouseUp
             --loadModule "image-puzzles"
             break
       end switch
-         # End of actions for the Fund Module  Portal-links group
+      # End of actions for the Fund Module  Portal-links group
+      
          break
      
     end switch
