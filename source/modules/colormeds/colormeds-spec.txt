@@ -16,7 +16,14 @@ User can only start with #1, must complete 50 (is that too many?) rounds to go t
 REQUIREMENTS:
 
 --User Choices
---Audio explanations
+--Audio explanations --> Recordings
+	- About 
+	- Basic color flood Level 1
+	- Basic Color Flood Level 2
+	- Basic Color flood/transform
+	- Advanced 18 colors of Shum
+			link to monthly shum meditations
+-- Gong sound	
 --Audio Guide
 --Timers
 --4 different scenarios

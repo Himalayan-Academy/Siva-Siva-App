@@ -12,8 +12,7 @@
     "backscripts": [
         "backscripts/api.livecode",
         "backscripts/mediaDataAndTransformers.livecode",
-        "backscripts/libMobileAudioPlayer.livecode",
-        "backscripts/mobileScroller.livecodescript"
+        "backscripts/libMobileControls.livecodescript"
     ],
     "launch_module": "home",
     "log_level": "info,error,fatal",
