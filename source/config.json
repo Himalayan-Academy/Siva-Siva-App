@@ -3,7 +3,8 @@
         "DBLib/aagDBLib.livecode",
         "hapMediaViewerPortraitLib.livecode",
         "hapMediaViewerLandscapeLib.livecode",
-        "animationEngine.livecode"
+        "animationEngine.livecode",
+        "jnanam/jnanam.livecodescript"
     ],
     "behaviors": [
         "behaviors/behavior_portal-links.livecode"
