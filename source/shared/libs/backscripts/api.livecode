@@ -1,8 +1,5 @@
 ﻿script "API"
 
--- on openstack
---    set the loc of this stack to the screenloc --jg: now in loader
--- end openstack
 
 command scaleStackIfNeeded
    if the environment is "development" and (item 4 of the effective working screenRect < 800 )  then
@@ -44,7 +41,8 @@ on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not rig
   if line 1 of it = "" then
     quit
   else
-    go (line 1 of it)  --### NEED TO LOAD MODULE
+   EXIT BACKKEY -- block for now until it's fixed
+   go (line 1 of it)  --### NEED TO LOAD MODULE
   end if
 end backKey
 
@@ -101,14 +99,38 @@ command launchURL pOrientation, pURL
   if pOrientation = "" then -- try to determine based on media type
     put getOrientationByType(pURL) into tViewerType
   end if
+  --   lock recent -- don't add viewers to the recentcards list so back btn doesn't go there
   if pOrientation="portrait" then
-    go card "web viewer" of stack "hapMediaViewerPortraitLib"
+    put "hapMediaViewerPortraitLib" into tNewViewer
+    put "hapMediaViewerLandscapeLib" into tOldViewer
   else
-    go card "web viewer" of stack "hapMediaViewerLandscapeLib"
+    put "hapMediaViewerLandscapeLib" into tNewViewer
+    put "hapMediaViewerPortraitLib" into tOldViewer
   end if
-  initializeInterfaceDefaults pOrientation
-  set the URL of widget "browser" of this stack to pURL
+  --   initializeInterfaceDefaults pOrientation -- jg: done in viewer preOpenStack instead
+  set the vis of widget "browser" of stack tNewViewer to not isMobile()
+  if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
+  go card "web viewer" of stack tNewViewer
+  if isMobile() then
+    createBrowser "browser",pURL
+  else -- view on desktop; vis set in viewer stack
+    set the URL of widget "browser" of stack tNewViewer to pURL
+  end if
+  if tOldViewer is in the openStacks then close stack tOldViewer -- device was rotated; close orig viewer
+  --   unlock recent
 end launchURL
+
+command initializeInterfaceDefaults pOrientation -- mobile orientation setup
+  -- sent in viewer preOpenStack
+  if isMobile() then 
+    set the fullscreenmode of this stack to "showAll" -- better for wider screens
+    if pOrientation ="portrait" then
+      mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+    else
+      mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+    end if
+  end if
+end initializeInterfaceDefaults
 
 function getOrientationByType pURL -- return correct orientation for a URL;
   -- called by launchURL and orientationChanged in browser cd of both viewer stacks
@@ -128,22 +150,6 @@ function getOrientationByType pURL -- return correct orientation for a URL;
   end switch
 end getOrientationByType
 
-
-command initializeInterfaceDefaults pOrientation
-  if isMobile() then  -- jg
-    set the fullscreenmode of this stack to "showAll" -- better for wider screens
-    if pOrientation ="portrait" then
-      mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-      --       set the width of this stack to 414 -- don't need if using 2 stacks
-      --       set the height of this stack to 736
-    else
-      mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-      --       set the width of this stack to 736
-      --       set the height of this stack to 414
-    end if
-  end if
-end initializeInterfaceDefaults
-
 command launchAudio pURL, pOptionalImage
    // temporarily using launchURL for this one.
   launchURL pURL
@@ -159,5 +165,4 @@ function pingServer --jg: UTF8 text file on server should contain only the word 
   get url "http://www.himalayanacademy.com/ping.txt"
   return textDecode(it,"UTF8") = "true"
 end pingServer
-
 

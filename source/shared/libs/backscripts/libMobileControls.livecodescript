@@ -1,4 +1,18 @@
 ﻿script "libMobileControls"
+######### Mobile Browser Controls ############
+
+command CreateBrowser pName,pURL,pRect -- mobile browser
+  -- pName = name of placeholder grc, used for rect
+  if not isMobile() then exit CreateBrowser
+  if pName is among the lines of mobileControls() then mobileControlDelete pName -- init
+  mobileControlCreate "browser", pName
+  mobileControlSet pName, "rect", pRect
+  mobileControlSet pName, "canBounce", true
+  mobileControlSet pName, "scrollingEnabled" , true
+  mobileControlSet pName, "URL", pURL
+  mobileControlSet pName, "visible",  true
+end CreateBrowser
+
 
 ######### Mobile Scroller Controls ############
 
@@ -23,23 +37,6 @@ on scrollerDidScroll pHScrolled, pVScrolled
   set the vscroll of tControlName to pVScrolled
   pass scrollerDidScroll
 end scrollerDidScroll
-
-on deleteMobileControl pName -- jg: deletes an existing mobile control
-  -- native controls should be deleted if possible when no longer needed, as
-  -- they are overlaid on the stack and will float over all cards
-  if not isMobile() then exit deleteMobileControl
-  repeat while pName is among the lines of mobileControls()
-    mobileControlDelete pName
-  end repeat
-end deleteMobileControl
-
-on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
-  if not isMobile() then exit deleteAllMobileControls
-  put mobileControls() into tList
-  repeat for each line l in tList
-    mobileControlDelete l
-  end repeat
-end deleteAllMobileControls
 
 
 ######### Mobile Player Controls ############
@@ -130,6 +127,25 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
     set the vis of player pPlayerName to pBool
   end if
 end showPlayer
+
+######### Mobile Utilities ############
+
+on deleteMobileControl pName -- jg: deletes an existing mobile control
+  -- native controls should be deleted if possible when no longer needed, as
+  -- they are overlaid on the stack and will float over all cards
+  if not isMobile() then exit deleteMobileControl
+  repeat while pName is among the lines of mobileControls()
+    mobileControlDelete pName
+  end repeat
+end deleteMobileControl
+
+on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
+  if not isMobile() then exit deleteAllMobileControls
+  put mobileControls() into tList
+  repeat for each line l in tList
+    mobileControlDelete l
+  end repeat
+end deleteAllMobileControls
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
   if isMobile() then

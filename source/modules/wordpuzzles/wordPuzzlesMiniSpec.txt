@@ -5,7 +5,7 @@ V1
 Opening View: This is Card 1
 	-- choose random nature background
 	-- show title "Unjumble - Turn Confusion into Knowledge" (field)
-	-- fade out title (use blendlevel)
+	-- fade out title (use blendlevel) -- JG: using visual effect instead, it's cleaner
 	-- show controls (need labels? or switch to icons?)
 			-- New Puzzle (button) : initiates new puzzle
 			-- Reveal (button) :  show hidden words below other words
@@ -34,3 +34,6 @@ Completion View:
 	-- Button appears "Read in Context"  # I know I said "info icon" but I think it is beter to be more clear... so just put a button for now.
 	-- Dialog "You Did It! X number of words in N minutes and N seconds. use settings to get longer quotes."  with "OK"
 	-- on "OK" clear puzzle and fetch new random background.
+	JG: can't clear board on completion, else "Read in context" doesn't make sense. Will clear on New Puzzle instead.
+
+
