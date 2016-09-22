@@ -1,0 +1,14 @@
+{
+  "settings": {
+    "global": "", 
+    "modules": {
+      "colormeds": {
+        "audioGuide": "true", 
+        "breathCount": "6", 
+        "breathPace": "1.5", 
+        "currentLevel": "1", 
+        "cycle": "1"
+      }
+    }
+  }
+}
