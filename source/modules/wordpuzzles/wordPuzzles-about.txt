@@ -1,0 +1,5 @@
+<p>Word Puzzles offers a fun way to explore quotations found in learning materials. The words from each quotation are scattered about the screen and your job is to drag them into the proper order. A Start oval near the left side of the screen shows where to drop the first word.<br /></p>
+
+<p>Use the Settings button to control the difficulty of the puzzles by limiting how long each quotation will be. A timer will tell you how long it took you to finish.<br /></p>
+
+<p>Once you've completed a puzzle, you will have the option to read the quote in the context of the original source material. Note that not all quotes have contextual reading available.<br /></p>

@@ -37,3 +37,4 @@ Completion View:
 	JG: can't clear board on completion, else "Read in context" doesn't make sense. Will clear on New Puzzle instead.
 
 
+Add About box - copy from colorMeds

@@ -166,3 +166,8 @@ function pingServer --jg: UTF8 text file on server should contain only the word 
   return textDecode(it,"UTF8") = "true"
 end pingServer
 
+command showCustomPrompt pPrompt -- create a custom dialog
+  -- Scott Rossi's opensource scripts
+  answer pPrompt  --### FOR NOW
+end showCustomPrompt
+
