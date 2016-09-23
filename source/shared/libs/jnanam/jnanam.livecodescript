@@ -24,7 +24,9 @@ private command _setupDatabase
    if there is not a file pathToJnanamDatabase() then
       _copyAndDecompress
    end if
-   _loadDatabase
+   if sID is not a number then
+      _loadDatabase
+   end if
 end _setupDatabase
 
 private command _copyAndDecompress

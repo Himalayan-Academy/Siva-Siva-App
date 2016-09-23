@@ -10,7 +10,27 @@ command setPref pKey, pValue
    _makeSurePreferencesFileExists
    put url ("binfile:" & pathForPreferencesFile()) into tJSON
    put jsonImport(tJSON) into tPreferencesA
-   put pValue into tPreferencesA[pKey]
+   
+   if "/" is not in pKey then
+      // simple lookup, checking for root level key
+      put pValue into tPreferencesA[pKey]
+   else
+      // complex lookup, passed a path.
+      
+      // first trim
+      if char -1 of pKey is "/" then delete char -1 of pKey
+      if char 1 of pKey is "/" then delete char 1 of pKey
+      
+      // Assemble statement (irgh)
+      put "['" before char 1 of pKey
+      put "']" after char -1 of pKey
+      replace "/" with "']['" in pKey
+      replace "'" with quote in pKey
+      get "put pValue into tPreferencesA" & pKey
+      
+      // this executes a command such as put pValue into tPreferencesA["key"]["child"]["grandchild"]
+      do it
+   end if
    put jsonExport(tPreferencesA) into tJSON
    put tJSON into url  ("binfile:" & pathForPreferencesFile())
 end setPref
@@ -19,10 +39,31 @@ function getPref pKey
    _makeSurePreferencesFileExists
    put url ("binfile:" & pathForPreferencesFile()) into tJSON
    put jsonImport(tJSON) into tPreferencesA
-   if the keys of tPreferencesA is empty or pKey is not among the lines of the keys of tPreferencesA then
-      return false
+   if "/" is not in pKey then
+      // quick lookup, direct root level key.
+      if the keys of tPreferencesA is empty or pKey is not among the lines of the keys of tPreferencesA then
+         return false
+      else
+         return tPreferencesA[pKey]
+      end if
    else
-      return tPreferencesA[pKey]
+      // complex lookup, treated as a path to get inner child of settings.
+      
+      // first trim
+      if char -1 of pKey is "/" then delete char -1 of pKey
+      if char 1 of pKey is "/" then delete char 1 of pKey
+      
+      // now lookup
+      set the itemdel to "/"
+      repeat for each item k in pKey
+         get tPreferencesA[k] 
+         put it into tPreferencesA // reduce tPreferencesA by making children root and discarding the rest
+      end repeat
+      if tPreferencesA is empty then
+         return false
+      else
+         return tPreferencesA
+      end if
    end if
 end getPref
 
