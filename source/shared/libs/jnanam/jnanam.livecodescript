@@ -6,9 +6,12 @@
 */
 
 local sID
+local sLoaded
 
 on librarystack
-   _setupDatabase
+   if sLoaded is not true then
+      _setupDatabase
+   end if
 end librarystack
 
 function pathToJnanamDatabase
@@ -21,12 +24,14 @@ function pathToJnanamDatabase
 end pathToJnanamDatabase
 
 private command _setupDatabase
-   if there is not a file pathToJnanamDatabase() then
+   if there is not a file pathToJnanamDatabase() or the environment is "development" then
       _copyAndDecompress
    end if
+   
    if sID is not a number then
       _loadDatabase
    end if
+   put true into sLoaded
 end _setupDatabase
 
 private command _copyAndDecompress
@@ -51,5 +56,24 @@ end _loadDatabase
 function jnanamDB
    return sID
 end jnanamDB
+
+command updatePhotoCache
+   ## This command will cycle the photos on disk and update the 
+   ## cached_on_disk field on the SQLite database for all photos
+   ## that are present.
+   updateCache "art/photography"
+end updatePhotoCache
+
+command updateCache pMediaType
+   dbWhere "media_type", pMediaType
+   put dbGet("item") into tItemsA
+   put the number of lines in the keys of tItemsA into tTotal
+   repeat with x = 1 to tTotal
+      put pathForItem(pMediaType, tItemsA[x]) into tFilePath
+      if there is a file tFilePath then
+         
+      end if
+   end repeat
+end updateCache
 
 
