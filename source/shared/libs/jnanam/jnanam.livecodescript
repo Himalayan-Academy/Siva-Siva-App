@@ -45,7 +45,6 @@ private command _loadDatabase
       exit to top
    else
       put it into sID
-      dbSetDefaultConnectionID sID
    end if
 end _loadDatabase
 
