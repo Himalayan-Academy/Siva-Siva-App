@@ -1,0 +1,242 @@
+Mini Spec for Gems of Wisdom
+
+
+VIEWS:
+	√ Image object and quote field for each:
+	√ Dynamic Change Out
+		-- Realm of God
+		-- Realm of Soul
+		-- Realm of Life
+	√ Browser Widget √ Eye icon + Close Icon
+	√ Top Navigation: √ right arrows.
+	√ Next in Realm Navigation one right arrow
+
+MODELS:
+	√ ping server to see if we can call all images
+	-- if not online then filter with cached images only
+	√ Set custom prop containing SQL for each realm.
+	-- method fetches and sets random file name of image
+	√ and inserts random quote, create mobile scroller, if URL available
+	
+	√ set the custom prop for EYE control and show eye control
+	√ else hide EYE control
+	
+	
+CONTROLLERS
+    √ preopencard: Realm changes from 1 to another when opening the stack, use a random(3)
+	√ right arrow cycles through realms.
+	-- bottom right arrow navigation takes you through more of the same realm.
+	-- Eye button appears if URL is available to read opens browser widget
+	-- X out to close browser widget; 
+	
+SHARING: 
+	-- Need a global library for sharing
+	-- decide what to pass
+	
+FAVORITES
+  -- ?? save quote? random selection is irretrievable  unless we store image file_id and quote_id
+  -- perhaps not needed for this module.	
+	
+
+
+
+	
+------------------------------------------------------------
+
+REFERENCE DATA:
+
+CACHED IMAGES:
+	images were uploaded in batches and tags set
+	item id 6976 thru 8162  are all "Realm of God" and have that as a tag.
+	item id 8163 thru 8384  are all "Realm of Soul" and have that as a tag.
+	item id 8385 thru 8731  are all "Realm of Life" and have that as a tag.
+
+
+QUOTE TABLE COLUMNS:
+	entered_by
+	author_info
+	hinduism_today_usage
+	production_notes
+	author_dates
+	source_item_id
+	last_modified_date
+	approved_for_public
+	content
+	author
+	citation
+	quote_date
+	source_url
+	quote_id
+	last_modified_by
+	subject
+	entered_date
+
+CATEGORIES ID GROUPED BY REALM  
+
+# Includes all assigned children and parent category_id'sParent  and   Children 
+
+Realm of God  7,37,75,17,55,68,82,161,100,101,102,122,123,168
+
+	161	Creation
+	100	Lord Ganesha
+	101	Lord Murugan
+	102	Lord Nataraja
+	122	Shakti
+	123	Siva
+	168	Temple
+	7	Realm of God 
+	37	Devas
+	75	Inner Worlds
+	17	Astral Plane
+	55	Gods
+	68	Home Shrine
+	82	Ishta Devata
+
+Realm of Soul
+139,148,15,16,23,25,149,38,60,83,84,95,96,97,135,154,115,132,125,130,106,160,78,79,89,9,157,132,154,117,121,104,58,167,166
+
+	139	Spiritual Practice
+	166	darshan
+	167	Aura
+	148	Affirmation
+	15	Asana
+	16	Ashtanga Yoga
+	23	Bhakti
+	25	Chakras
+	149	Concentration
+	38	Devotion
+	60	Hatha Yoga
+	83	Japa
+	84	Jnana	
+	95	Koshas
+	96	Kriya
+	97	Kundalini
+	135	Meditation
+	154	Moksha
+	115	Raja Yoga	
+	132	The Self
+	125	Transformation
+	130	Yoga
+	106	Metaphysics	
+	160	Earth Plane
+	78	Instinctive Mind
+	79	Intellectual Mind
+	89	Kali Yuga
+	9	Realm of Knowledge
+	157	Superconscious Mind
+	132	The Self
+	154	Moksha
+	117	Reincarnation
+	121	Scriptures
+	104	Mantra
+	58	Guru
+-------
+
+Realm of Life
+
+
+6,13,14,165,19,21,24,26,30,35,137,39,41,134,45,47,51,29,53,56,61,70,74,144,107,108,110,111,145,150,54,152,127,128,133,136,129,131,18,20,22,27,34,40,42,46,51,163,62,63,162,64,65,90,99,156,91,92,155,158,151,11,124,152,146,119,118,164,112,113,114,28,14,142,165,159,143,43,31,40,57,66,73,5,12,153,33,44,49,72,76,80,81,87,88,93,94,105,126,138,140,141,147
+
+6	Spiritual Living
+13	Anava-Ego
+14	Anger
+165	Attachment
+19	Austerity
+21	Basic Life Skills
+24	Brahmacharya
+26	Challenges
+30	Charya
+35	Death And Dying
+137	Diet
+39	Discipline
+41	Ethics
+134	Facing Life
+45	Fear
+47	Food
+51	Gender Issues
+29	Giving
+53	Goals
+56	Good Conduct
+61	Health
+70	Hospitality
+74	Initiation
+144	Loneliness
+107	Mistakes
+108	Monastic Life
+110	Nonviolence
+111	Obstacles
+145	Psychic Protection
+150	Planning
+54	Tithing
+152	Tolerance
+127	Virtue
+128	Willpower
+133	Wisdom
+136	Worship
+129	Yamas And Niyamas
+131	Hinduism
+18	Astrology
+20	Ayurveda
+22	Bhajan
+27	Chanting
+34	Culture
+40	Education
+42	Evolution
+46	Festivals
+51	Gender Issues
+163	Hindu Basics
+62	Hindu Beliefs
+63	Hindu Sects
+162	Hinduism Today
+64	History
+65	Homa Fire
+90	Karma
+99	Lingam
+156	Handicrafts
+91	Karma Management
+92	Karma Yoga
+155	Performing Arts
+158	Prayer
+151	Regrets
+11	Temple Worship
+124	Tirumurai
+152	Tolerance
+146	Religion
+119	Rites of Passage
+118	Rituals
+164	Saiva Dharma
+112	Other Religions
+113	Philosophy
+114	Pilgrimage
+28	Character
+14	Anger
+142	Appreciation
+165	Attachment
+159	Forgiveness
+143	Joyful
+43	Family Life
+31	Children
+40	Education
+57	Grihastha Dharma
+66	Home Ceremony
+73	Husband's Dharma
+5	Parenting
+12	Testimony
+153	Wife's Dharma
+Construction	33
+Farming	44
+Gardens	49
+Humor	72
+Innersearch	76
+Interfaith	80
+Iraivan Temple	81
+Kadavul Hindu Temple	87
+Guru Lineage	88
+Kauai's Hindu Monastery	93
+Kauai	94
+Mauritius	105
+Travel	126
+Cool Stuff	138
+Shum	140
+Don't Panic	141
+Suicide	147

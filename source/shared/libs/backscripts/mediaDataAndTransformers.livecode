@@ -241,7 +241,13 @@ function folderForArt pBestFormat
 return pServerPath
 
    
-end folderForArt
+end  folderForArt
+
+command insertImageDimensions pImage
+   put ( (the formattedwidth of img pImage) & "x" & (the formattedheight of img pImage) ) into sCurrentGraphicRect
+end insertImageDimensions
+
+
 
 function getRectOfCurrentGrc
   return sCurrentGraphicRect
@@ -361,7 +367,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize
    -- if second param is empty we toggle it; otherwise set it as specified;
   -- called from main img script when tapped and when main cd closes to reset
    if pFullSize = "" then -- calculate if it's already full size
-      put (the width of  pImage >= the width of this cd) into tFullSize
+      put (the width of  pImage > the width of this cd) into tFullSize
 
   end if
   put the formattedWidth of  pImage into tFWd

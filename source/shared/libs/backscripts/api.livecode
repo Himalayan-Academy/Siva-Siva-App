@@ -108,14 +108,14 @@ command launchURL pOrientation, pURL
     put "hapMediaViewerPortraitLib" into tOldViewer
   end if
   --   initializeInterfaceDefaults pOrientation -- jg: done in viewer preOpenStack instead
-  set the vis of widget "browser" of stack tNewViewer to not isMobile()
+ -- set the vis of widget "browser" of stack tNewViewer to not isMobile()
   if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
   go card "web viewer" of stack tNewViewer
-  if isMobile() then
-    createBrowser "browser",pURL
-  else -- view on desktop; vis set in viewer stack
+--  if isMobile() then
+ --   createBrowser "browser",pURL
+--  else -- view on desktop; vis set in viewer stack
     set the URL of widget "browser" of stack tNewViewer to pURL
-  end if
+--  end if
   if tOldViewer is in the openStacks then close stack tOldViewer -- device was rotated; close orig viewer
   --   unlock recent
 end launchURL
