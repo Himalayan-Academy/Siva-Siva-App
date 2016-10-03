@@ -1,0 +1,58 @@
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Meditation</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+
+<ion-content has-footer padding class="meditationlist" style="background-size:cover;background-image:url('img/blue-paper.jpg');">
+
+  <div class="square-img-workout center" style="background-image:url('img/meditation-yellow.jpg')"> </div>
+
+  <p>Select a Meditation:</p>
+  <ion-list style="margin-top:6px;">
+    <button (click)="GoGanesha()" ion-item style="background-color: rgba(107, 84, 196, 0.6);">
+      <ion-thumbnail item-left>
+        <img src="img/meditation-green-thm.jpg">
+      </ion-thumbnail>
+      <h2>Inner Light</h2>
+      <p style="color:#999">"A meditation on varying degrees of inner light"</p>
+    </button>
+    <button (click)="GoHanuman()" ion-item style="background-color:rgba(81, 59, 171, 0.6);">
+      <ion-thumbnail item-left>
+        <img src="img/meditation-posture-thm.jpg">
+      </ion-thumbnail>
+      <h2>Inner Sound</h2>
+      <p style="color:#999">"A meditation focused on developing sensitivity to inner sounds, particularly the high 'eeee' or nada-nadi shakti"</p>
+    </button>
+    <button (click)="GoSaravana()" ion-item style="background-color:rgba(63, 46, 133, 0.6);">
+      <ion-thumbnail item-left>
+        <img src="img/meditation-orange-thm.jpg">
+      </ion-thumbnail>
+      <h2>Inner Self</h2>
+      <p style="color:#999">"A meditation with the sole focus of one's Awarness becoming aware of itself, dissolving into pure consciousness and beyond"</p>
+    </button>
+
+
+  </ion-list>
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar primary>
+    <ion-buttons>
+      <button (click)="GoBack()">
+        <ion-icon name="arrow-back"></ion-icon>back
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button (click)="infoPopover()">
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

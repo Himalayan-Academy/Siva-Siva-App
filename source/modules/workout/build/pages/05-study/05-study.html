@@ -1,0 +1,92 @@
+<!--
+  Generated template for the 05StudyPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Study</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+
+<ion-content has-footer padding style="background-size:cover;background-image:url('img/orange-blur.jpg');">
+
+  <div class="square-img-med center" style="background-image:url('img/palm-leafs.jpg')"> </div>
+<p>Select from our online publications:</p>
+  <ion-list style="margin-top:6px;">
+    <button (click)="Book1()" ion-item style="background-color:rgba(289, 168, 65, 0.7);">
+      <ion-thumbnail item-left>
+        <img src="img/loving-ganesha_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>Loving Ganesha</h2>
+          <p>Hinduism's Endearing Elephant-Faced God</p>
+      </button>
+    <button (click)="Book2()" ion-item style="background-color:rgba(295, 139, 10, 0.7);">
+      <ion-thumbnail item-left>
+        <img src="img/what-is-hinduism_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>What Is Hinduism?</h2>
+          <p>Modern Adventures Into A Profound Global Faith</p>
+     </button>
+    <button (click)="Book3()" ion-item style="background-color:rgba(285, 119, 0, 0.7);">
+      <ion-thumbnail item-left>
+          <img src="img/dancing-with-siva_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>Dancing With Siva</h2>
+          <p>Hinduism's Contemporary Catechism</p>
+     </button>
+    <button (click)="Book4()" ion-item style="background-color:rgba(265, 99, 0, 0.7);">
+      <ion-thumbnail item-left>
+        <img src="img/know-thyself_ei_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>Know Thyself</h2>
+            <p>14 Daily Enlightenment Lessons</p>
+     </button>
+    <button (click)="Book5()" ion-item style="background-color:rgba(235, 79, 0, 0.7);">
+      <ion-thumbnail item-left>
+        <img src="img/yogas-forgotten-foundation_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>Yoga's Forgotten Foundation</h2>
+        <p>Twenty Timeless Keys To Your Divine Destiny</p>
+     </button>
+    <button (click)="Book6()" ion-item style="background-color:rgba(205, 69, 0, 0.7);">
+      <ion-thumbnail item-left>
+          <img src="img/weavers-wisdom_cover_thm.jpg">
+      </ion-thumbnail>
+      <h2>Weavers Wisdom</h2>
+            <p>Ancient Precepts For A Perfect Life</p>
+
+     </button>
+    <button (click)="Book7()" ion-item style="background-color:rgba(163, 60, 0, 0.7);">
+      <ion-thumbnail item-left>
+        <img src="img/merging-with-siva_cover_med.jpg">
+      </ion-thumbnail>
+        <h2>Merging With Siva</h2>
+        <p>Hinduism's Contemporary Metaphysics</p>
+     </button>
+
+
+  </ion-list>
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar primary>
+    <ion-buttons >
+      <button (click)="GoBack()">
+        <ion-icon name="arrow-back"></ion-icon>back
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+    <button (click)="infoPopover()">
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

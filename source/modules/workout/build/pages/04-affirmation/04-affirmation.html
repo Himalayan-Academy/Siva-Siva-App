@@ -1,0 +1,92 @@
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Affirmation</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content has-footer padding style="background-size:cover;background-image:url('img/green-back.jpg');">
+
+  <div class="square-img-med center" style="background-image:url('img/affirmation.jpg')"> </div>
+
+
+
+
+<p>Select an Affirmation:</p>
+
+<ion-list style="margin-top:6px;">
+  <button (click)="showAlert()" (click)="GoAff1()" ion-item style="background-color: rgba(140, 217, 140, 0.6);">
+    <ion-thumbnail item-left>
+      <img src="img/flower_gold.jpg">
+    </ion-thumbnail>
+    <h2> "Im all right, right now"</h2>
+
+  </button>
+  <button (click)="showAlert()" (click)="GoAff2()" ion-item style="background-color:rgba(102, 204, 102,  0.6);">
+    <ion-thumbnail item-left>
+      <img src="img/flower_indigo.jpg">
+    </ion-thumbnail>
+    <h2> "I can. I will. I am able to accomplish what I plan"</h2>
+
+  </button>
+  <button  (click)="showAlert()" (click)="GoAff3()" ion-item style="background-color: rgba(64, 191, 64, 0.6);">
+    <ion-thumbnail item-left>
+      <img src="img/flower_orange.jpg">
+    </ion-thumbnail>
+    <h2> "I am the complete master of all my forces. My spiritual energies govern and control the force fields wherever I am for the highest good. Through understanding, being pure, full of spirited life, I am filled and thrilled with unlimited power, now and forever. I will be what I will to be. I will do what I will to do."</h2>
+
+  </button>
+  <button  (click)="showAlert()" (click)="GoAff4()" ion-item style="background-color: rgba(51, 153, 51, 0.6);">
+    <ion-thumbnail item-left>
+      <img src="img/flower_pink.jpg">
+    </ion-thumbnail>
+    <h2> "All my needs will always be met."</h2>
+
+  </button>
+  <button  (click)="showAlert()" (click)="GoAff5()" ion-item style="background-color: rgba(38, 115, 38, 0.6);">
+    <ion-thumbnail item-left>
+    <img src="img/flower_yellow.jpg">
+    </ion-thumbnail>
+    <h2> "I am now open to a flow of spiritual energy in which I perceive the most worthy course of action for this day. My service, being selfless, opens new doors of supply, making available all of the tools required so that my work will be beautiful, energetic and influential to the highest degree."</h2>
+
+  </button>
+  <button  (click)="showAlert()" (click)="GoAff6()" ion-item style="background-color: rgba(25, 77, 25, 0.6); ">
+    <ion-thumbnail item-left>
+    <img src="img/flower_green.jpg">
+    </ion-thumbnail>
+    <h2> "I am the master of my body, my mind and my emotions"</h2>
+
+
+  </button>
+  <button  (click)="showAlert()" (click)="GoAff7()" ion-item style="background-color: rgba(12, 39, 12, 0.6);">
+    <ion-thumbnail item-left>
+      <img src="img/flower_blue.jpg">
+    </ion-thumbnail>
+    <h2> I am not my body, mind or emotions. They are but shells of the infinite energy that flows through them all. I am this energy. I am its source. "</h2>
+
+
+  </button>
+
+
+</ion-list>
+
+
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar primary>
+    <ion-buttons>
+      <button (click)="GoBack()">
+        <ion-icon name="arrow-back"></ion-icon>back
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button (click)="infoPopover()">
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
