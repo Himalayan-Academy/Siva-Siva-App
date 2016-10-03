@@ -1,93 +1,100 @@
 ﻿script "mediaDataAndTransformers"
 
-local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta
+local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
 
 command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
 end checkThisScriptIsInMsgPath
  
----> FETCH RANDOM
-
-# MODEL FOR CALL TO API
-
-#the httpheaders to "content-type: application/json"
-#POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
-
-
+ ---> FETCH RANDOM
+ 
+ # MODEL FOR CALL TO API
+ 
+ #the httpheaders to "content-type: application/json"
+ #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
+ 
+ 
 command fetchRandomMediaItem pSelectParams
-  
-  #The selection Params are passed down from the calling command as quoted strings 
-  # each set of two = column + value
-  # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
-  # assuming there is a match.. check HAPMAN for criteria you can use
-  # TBD: categories?  how to pass one to the API?
-  # the CURL call wants to pass this as JSON in a single "data" object like this:
-  # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
-  # so we have to build that from incoming params
-  
-  repeat with x = 1 to the number of items of pSelectParams
-    if (x mod 2) <> 0 then next repeat
-    put  item (x -1) of pSelectParams into y
-    put item x of pSelectParams  into pSelect["data"][y]
-  end repeat
-  put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
-  set the httpheaders to "content-type: application/json"
-
-  POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-  --put the result
-  put it into tMediaMeta
-  if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
-     put empty into aMediaMeta
-  end if
-
-  # if you want to see what you are getting
-  # uncomment this line:
-  # put tMediaMeta
-  
-  try
-    put jsonImport(tMediaMeta) into aMediaMeta
-  catch tErr
-    logError tErr
-  end try
+   
+   --   #The selection Params are passed down from the calling command as quoted strings 
+   --   # each set of two = column + value
+   --   # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
+   --   # assuming there is a match.. check HAPMAN for criteria you can use
+   --   # TBD: categories?  how to pass one to the API?
+   --   # the CURL call wants to pass this as JSON in a single "data" object like this:
+   --   # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
+   --   # so we have to build that from incoming params
+   
+   --   repeat with x = 1 to the number of items of pSelectParams
+   --     if (x mod 2) <> 0 then next repeat
+   --     put  item (x -1) of pSelectParams into y
+   --     put item x of pSelectParams  into pSelect["data"][y]
+   --   end repeat
+   --   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
+   --   set the httpheaders to "content-type: application/json"
+   
+   --   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   --   --put the result
+   --   put it into tMediaMeta
+   --   if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
+   --      put empty into aMediaMeta
+   --   end if
+   
+   --   # if you want to see what you are getting
+   --   # uncomment this line:
+   --   # put tMediaMeta
+   
+   --   try
+   --     put jsonImport(tMediaMeta) into aMediaMeta
+   --   catch tErr
+   --     logError tErr
+   --   end try
+   -- end fetchRandomMediaItem
+   
+   #### ABOVE CALLS THE API ON THE SERVER
+   #### BELOW WE USE THE LOCAL DATABASE
+   
+   
+   put char 2 to -2 of word 2 of the params into tColumn
+   
+   put item 2 of params() into tValue
+   put "%" after char 1 of tValue
+   put "%" before char -1 of tValue
+   
+   # very bad form... need something better!
+   # problem is I am hard wiring a single SQL query option here
+   # with only as single column/value pair
+   # model for SQL
+   # this only takes one column/value pair... media type
+   
+   put format ("SELECT  * FROM item WHERE :1 LIKE :2  ORDER BY RANDOM() LIMIT 1") into tSQL
+   replace ":1" with tColumn in tSQL
+   replace ":2" with tValue in tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet("item", tConnectionID) into aSelectedItem
+   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into aMediaMeta["item_id"]
+   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into aMediaMeta["file_id"]
+   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into aMediaMeta["media_type"]
+     put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into aMediaMeta["date_created"]
+     put textDecode ( aSelectedItem[1]["genre"], UTF8)  into aMediaMeta["genre"]
+        put textDecode ( aSelectedItem[1]["deity"], UTF8)  into aMediaMeta["deity"]
+   put textDecode ( aSelectedItem[1]["title"], UTF8)  into aMediaMeta["title"]
+   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into aMediaMeta["sub_title"] 
+   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into aMediaMeta["artists"]
+   put textDecode ( aSelectedItem[1]["author"], UTF8)  into aMediaMeta["author"]
+   put textDecode ( aSelectedItem[1]["description"], UTF8)  into aMediaMeta["description"]
+   
+   put getformatData (aMediaMeta["item_id"])
 end fetchRandomMediaItem
-
-
-# temporary until we get the SQL database working.
-
-command fetchRandomQuote pSelectParams
-   
-   repeat with x = 1 to the number of items of pSelectParams
-      if (x mod 2) <> 0 then next repeat
-      put  item (x -1) of pSelectParams into y
-      put item x of pSelectParams  into pSelect["data"][y]
-   end repeat
-   
-   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
-   
-   set the httpheaders to "content-type: application/json"
-   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomquote/json"
-   put it into tQuoteData
-   
-   # if you want to see what you are getting
-   # uncomment this line:
-   # put tQuoteData
-   put jsonImport(tQuoteData) into aQuoteData
-   
-end fetchRandomQuote
-
-function getQuoteData
-   return aQuoteData
-end getQuoteData
-
-
-
-function getMediaURL pBestFormat
+ 
+ function getMediaURL
    put aMediaMeta["media_type"] into pMediaType
    # each media type will entail a different path on the /media directory 
    switch 
       case pMediaType contains "audio/"
-         put FolderForAudio(pMediaType) into pServerPath
-         return ("http://www.himalayanacademy.com/"  & pServerPath)
+         put FolderForAudio(pMediaType)  into pServerPath
+         return ("http://www.himalayanacademy.com/"  & pServerPath)        
          break
       case pMediaType contains "art/"
          #BR 2016-07-16 in the future we need to have the API export one object per format_name 
@@ -130,8 +137,16 @@ function getMediaItemMetadata
       end if
    end repeat
      return tViewData
-   
-   
+ 
+  end getMediaItemMetadata
+  
+function getformatData pItemID
+   put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet("item_format", tConnectionID) into aSelectedItemFormats   
+end getformatData
+
    
    # the whole html text thing is breaking everything!
    
@@ -159,10 +174,8 @@ function getMediaItemMetadata
    --      end if
    --      end repeat
    --      put "</p>" & cr& cr after tViewData
- 
-end getMediaItemMetadata
-
-function htmlTagger pStyle,  pText, 
+   
+function htmlTagger pStyle,  pText
    put "<#S#>#T#</#S#>" into tMarkedUp
    switch pStyle
       case "bold"
@@ -295,7 +308,7 @@ function folderForAudio pMediaType
 
    end switch
    put aMediaMeta["file_id"] & "/" after tServerPath
-   put aMediaMeta["formats"][1]["filename"] after tServerPath
+put aSelectedItemFormats["1"]["filename"] after tServerPath
    return tServerPath
 end folderForAudio
 
@@ -358,17 +371,14 @@ end resizeToWidth
 on toggleImgSize pImage, pFullSize, pTargetSize 
    # we may not always this rect of the images from  the metadata
    # May as well just find out what it is right here.
-   
-
-   
    # pImage is the long ID of the image
    # you do not use "img ## to refer to it... just "pImage"
 
    -- if second param is empty we toggle it; otherwise set it as specified;
-  -- called from main img script when tapped and when main cd closes to reset
+   -- called from main img script when tapped and when main cd closes to reset
+   
    if pFullSize = "" then -- calculate if it's already full size
       put (the width of  pImage > the width of this cd) into tFullSize
-
   end if
   put the formattedWidth of  pImage into tFWd
      put the formattedHeight of  pImage into tFHt
@@ -379,10 +389,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize
     resizeToHeight pImage,tFHt
   end if
   set the loc of  pImage to the loc of this cd
-  if there is a control "quoteControl" then
-     set the vis of group quoteControl to not tFullSize
-  end if
-  
+
 end toggleImgSize
 
 ##########################################################

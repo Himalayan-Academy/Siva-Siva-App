@@ -62,142 +62,150 @@ end touchEnd
 
 
 on  mouseUp
-  
-  # by convention the links on these portal pages are groups of three objects
-  # label field, image, and a background, these are the mouse targets
-  # each of these groups is explicitly named
-  # by this convention: modulename[underscore]specific-link-target-action
-  # So we are depending on the short name of the immediate owner of the target
-  
-  if abs(the mouseV - item 2 of sStartLoc) <= 10 then
-    
-    # user tapped
-    
-    switch  sTargetModule
+   
+   # by convention the links on these portal pages are groups of three objects
+   # label field, image, and a background, these are the mouse targets
+   # each of these groups is explicitly named
+   # by this convention: modulename[underscore]specific-link-target-action
+   # So we are depending on the short name of the immediate owner of the target
+   
+   if abs(the mouseV - item 2 of sStartLoc) <= 10 then
       
-      case "home"
-        --        close this stack --jg: let loadModule handle this to avoid screen flash
-        switch sTargetAction
-          case "gems"
-            loadModule "gems"
+      # user tapped
+      
+      switch  sTargetModule
+         
+         case "home"
+            --        close this stack --jg: let loadModule handle this to avoid screen flash
+            switch sTargetAction
+               case "gems"
+                  loadModule "gems"
+                  break
+               case "surprise"
+                  loadModule "surprise"
+                  break
+               case "look"
+                  loadModule "look"
+                  break
+                  
+               case "listen"
+                  loadModule "listen"
+                  break
+                  
+               case "practice"
+                  loadModule "practice"
+                  break
+                  
+               case "read"
+                  loadModule "read"
+                  break
+               case "website"
+                  loadModule "website"
+                  break
+               case "games"
+                  loadModule "fun"
+                  break
+            end switch
             break
-          case "surprise"
-            loadModule "surprise"
+            # End of actions for the Home module Links Card
+         Case "gems"
+            -- put sTargetOwner
             break
-          case "look"
-            loadModule "look"
+            # End of actions for the Gems module  Card
+         case "surprise"
+            if sTargetAction="video" then
+               fetchRandomMediaItem ("media_type","video")
+               put getMediaURL ()  into sURL
+               launchURL "landscape", sURL
+               exit mouseUp
+            else
+               go to card sTargetOwner
+            end if
+            break
+            # End of actions for the Surprise Module Links 
+         Case "listen"
+            --put sTargetOwner
+            switch sTargetAction
+               case "all-bodhinatha"
+                  go to card "bodhinatha-talks"
+                  break
+            end switch
+            break
+            # End of actions for the Listen Module  Links Card
+         Case "look"
+            -- put sTargetOwner
+            break
+            # End of actions for the Look Module  Links Card
+         Case "practice"
+            switch sTargetAction
+               case "workout"
+                  loadModule "workout"
+                  break
+            end switch
+            break
+            # End of actions for the Practice Module  Links Card
+         Case "read"
+            switch sTargetAction
+               case "traits"
+                  loadModule "traits"
+                  break
+            end switch
+            break
+            # End of actions for the Read Module  Links Card
+         Case "website"
+            switch sTargetAction
+               case "daily-blog"
+                  launchURL "portrait", "http://www.himalayanacademy.com/blog/taka/"
+                  break
+               case "meet-monks"
+                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/meet-the-monks"
+                  break
+               case "monthly-news"
+                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/newsletter"
+                  break
+               case "visit"
+                  launchURL "portrait", "http://www.himalayanacademy.com/visit"
+                  break
+               case "virtual-tour"
+                  launchURL "portrait", "http://www.himalayanacademy.com/visit/virtual-tour"
+                  break
+               case "about-the-monastery"
+                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/about"
+                  break
+               case "our-guru-lineage"
+                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/lineage-philosophy/lineage"
+                  break
+            end switch
+            
+            break
+            # End of actions for the Website Module  Links Card
+            
+         Case "fun"
+            switch sTargetAction
+               case "humor"
+                  Answer "Load Humor" with "OK"
+                  --loadModule "humor"
+                  break
+               case "word-puzzles"
+                  loadModule "wordpuzzles" # landscape stack
+                  break
+               case "coloring"
+                  Answer "Load word-puzzles" with "OK"
+                  --loadModule "coloring"
+                  break
+                  
+               case "image-puzzles"
+                  Answer "Load image-puzzles" with "OK"
+                  --loadModule "image-puzzles"
+                  break
+            end switch
+            # End of actions for the Fund Module  Portal-links group
+            
             break
             
-          case "listen"
-            loadModule "listen"
-            break
-            
-          case "practice"
-            loadModule "practice"
-            break
-            
-          case "read"
-            loadModule "read"
-            break
-          case "website"
-            loadModule "website"
-            break
-          case "games"
-            loadModule "fun"
-            break
-        end switch
-        break
-        # End of actions for the Home module Links Card
-      Case "gems"
-        -- put sTargetOwner
-        break
-        # End of actions for the Gems module  Card
-      case "surprise"
-        if sTargetAction="video" then
-          fetchRandomMediaItem ("media_type","video")
-          put getMediaURL ()  into sURL
-          launchURL "landscape", sURL
-          exit mouseUp
-        else
-          go to card sTargetOwner
-        end if
-        break
-        # End of actions for the Surprise Module Links 
-      Case "listen"
-        --put sTargetOwner
-        switch sTargetAction
-          case "all-bodhinatha"
-            go to card "bodhinatha-talks"
-            break
-        end switch
-        break
-        # End of actions for the Listen Module  Links Card
-      Case "look"
-        -- put sTargetOwner
-        break
-        # End of actions for the Look Module  Links Card
-      Case "practice"
-        -- put sTargetOwner
-        break
-        # End of actions for the Practice Module  Links Card
-      Case "read"
-        -- put sTargetOwner
-        break
-        # End of actions for the Read Module  Links Card
-     Case "website"
-        switch sTargetAction
-          case "daily-blog"
-            launchURL "portrait", "http://www.himalayanacademy.com/blog/taka/"
-            break
-          case "meet-monks"
-            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/meet-the-monks"
-            break
-          case "monthly-news"
-            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/newsletter"
-            break
-          case "visit"
-            launchURL "portrait", "http://dev.himalayanacademy.com/visit"
-            break
-          case "virtual-tour"
-            launchURL "portrait", "http://dev.himalayanacademy.com/visit/virtual-tour"
-            break
-          case "about-the-monastery"
-            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/about"
-            break
-          case "our-guru-lineage"
-            launchURL "portrait", "http://dev.himalayanacademy.com/monastery/lineage-philosophy/lineage"
-            break
-        end switch
-       
-        break
-        # End of actions for the Website Module  Links Card
-        
-      Case "fun"
-          switch sTargetAction
-             case "humor"
-                Answer "Load Humor" with "OK"
-            --loadModule "humor"
-            break
-         case "word-puzzles"
-            loadModule "wordpuzzles" # landscape stack
-            break
-         case "coloring"
-             Answer "Load word-puzzles" with "OK"
-            --loadModule "coloring"
-            break
-            
-         case "image-puzzles"
-            Answer "Load image-puzzles" with "OK"
-            --loadModule "image-puzzles"
-            break
       end switch
-      # End of actions for the Fund Module  Portal-links group
       
-         break
-     
-    end switch
-    
-  end if
-  
+   end if
+   
 end  mouseup
 
