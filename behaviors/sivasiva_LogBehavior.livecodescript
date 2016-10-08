@@ -8,6 +8,12 @@ We have also moved all logging handlers to this behavior and use before and afte
 This improves legibility, forces us to write the code in a nice modular fashion, the and allows us to simply remove all logging when we deploy.
 */
 
+
+--> Variables
+-
+global sConfigA
+
+
 --> Logging | Custom
 -
 command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
@@ -25,6 +31,10 @@ end jgAndroidLog
 
 --> Logging | before and After
 -
+before _loadJsonConfig
+   logInfo "About to load App configuration..."
+end _loadJsonConfig
+
 after _loadJsonConfig
    logInfo "App configuration loaded..."
 end _loadJsonConfig
@@ -44,55 +54,6 @@ end _loadFrontScript
 before _loadBackScript tStackPath, sharedLibFolder
    logInfo "Loading backscript" && tStackPath
 end _loadBackScript
-
-
---> Logging
--
-/*
-Basic loggin handlers.
-Consider moving to a general library "lib_Logging"?
-*/
-
-command logInfo pMessage
-   logRaw "info", pMessage
-end logInfo
-
-command logError pMessage
-   logRaw "error", pMessage
-end logError
-
-command logFatal pMessage
-   logRaw "fatal", pMessage
-end logFatal
-
-command logRaw pLevel, pMessage
-   if the environment is not "development" then
-      // for now, lets not log stuff in Mobile -- jg needs to see these
-      if (the hilite of btn "jg android log" of cd 1 of stack "loader") then
-         put specialFolderPath("documents") & "/mobilelog.txt" into tFile
-         open file tFile for append
-         write pMessage & cr to file tFile
-         close file tFile
-         exit logRaw
-      end if
-   end if
-   
-   put item -2 of line -3 of the executioncontexts into tCalledHandler
-   put item -1 of line -3 of the executioncontexts into tLineNumber
-   put the short name of (item 1 of line -3 of the executioncontexts) into tObjectReference
-   
-   if char 1 of tCalledHandler is "_" then
-      put " (PRIVATE)" into tPrivateFlag
-   else
-      put empty into tPrivateFlag
-   end if
-   
-   if pLevel is among the items of sConfigA["log_level"] then
-      put the short date && the short time && "[" & pLevel & "]" && tObjectReference & "#" & tLineNumber into logLine
-      put space & ">>>" && tCalledHandler  & tPrivateFlag && ":" && pMessage after logLine
-      put CR & logLine after url ("binfile:" & sConfigA["log_file"])
-   end if
-end logRaw
 
 
 --> Testing

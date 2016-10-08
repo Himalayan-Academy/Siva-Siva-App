@@ -18,25 +18,28 @@
 * PS: This library was created after reading Richard Gaskins description of his scroller backscript.
 */
 
-on preOpenCard
-   /* 
-   Be aware that this is called for all cards, this leads to overhead so this function needs to be very zippy.
-   
-   It checks the card for fields and groups with scrollbars and replaces them as needed.
-   */
-   
-   logInfo "called!"
-   switch the environment
-      case "mobile"
-         replaceLCFieldsWithMobileFields
-         instantiateMobileScrollers
-         break
-      case "development"
-         break
-      default
-         break
-   end switch
-   pass preOpenCard
+-- on preOpenCard
+-- called every time a card opens
+-- move to card script or better a behavior
+
+/* 
+Be aware that this is called for all cards, this leads to overhead so this function needs to be very zippy.
+
+It checks the card for fields and groups with scrollbars and replaces them as needed.
+*/
+
+logInfo "called!"
+switch the environment
+   case "mobile"
+      replaceLCFieldsWithMobileFields
+      instantiateMobileScrollers
+      break
+   case "development"
+      break
+   default
+      break
+end switch
+pass preOpenCard
 end preOpenCard
 
 private command replaceLCFieldsWithMobileFields

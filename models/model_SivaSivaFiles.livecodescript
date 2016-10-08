@@ -16,12 +16,6 @@ function sivasiva_GetModuleConfigurationArray pModule
    return someArray
 end sivasiva_GetModuleConfigurationArray
 
-function sivasiva_GetModuleJson pModule
-   put sivasiva_GetModuleJsonFile (pModule) into tModuleConfigurationFile
-   put url ("binfile:" & tModuleConfigurationFile) into someJSON
-   return someJSON
-end sivasiva_GetModuleJson
-
 
 --> SivaSiva | Paths
 -
@@ -36,17 +30,25 @@ end sivasiva_AssetFolder
 
 --> SivaSiva | Paths | Modules
 -
+function sivasiva_GetModuleJson pModule
+   put sivasiva_GetModuleJsonFile (pModule) into tModuleConfigurationFile
+   put url ("binfile:" & tModuleConfigurationFile) into someJSON
+   return someJSON
+end sivasiva_GetModuleJson
+
+function sivasiva_GetModuleJsonFile pModule
+   if pModule is empty then put the short name of me into pModule
+   
+   put sivasiva_GetModuleFolder (pModule) into sivasivaModuleFolder
+   put sivasivaModuleFolder & pModule & ".json" into tModuleConfigurationFile
+   return tModuleConfigurationFile
+end sivasiva_GetModuleJsonFile
+
 function sivasiva_GetModuleStackPath pModule
    put sivasiva_GetModuleFolder (pModule) into moduleFolder
    put moduleFolder & pModule & ".livecode" into tModuleToLoad
    return tModuleToLoad
 end sivasiva_GetModuleStackPath
-
-function sivasiva_GetModuleJsonFile pModule
-   put sivasiva_GetModuleFolder (pModule) into sivasivaModuleFolder
-   put sivasivaModuleFolder & pModule & ".json" into tModuleConfigurationFile
-   return tModuleConfigurationFile
-end sivasiva_GetModuleJsonFile
 
 function sivasiva_GetModuleFolder pModule
    put sivasiva_GetModuleRootFolder() & pModule & "/" into sivasivaModuleRootFolder
@@ -54,7 +56,7 @@ function sivasiva_GetModuleFolder pModule
 end sivasiva_GetModuleFolder
 
 function sivasiva_GetModuleRootFolder
-   put sivasiva_ProjectFolder() & "assets/" into moduleRootFolder
+   put sivasiva_ProjectFolder() & "modules/" into moduleRootFolder
    return moduleRootFolder
    
    -- was "getPathToModulesFolder"

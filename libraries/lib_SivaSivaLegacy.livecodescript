@@ -15,9 +15,7 @@ global sConfigA
 --> Legacy | Paths
 -
 function getPathToModulesFolder
-   -- legacy shim in case any scripts are still using this
-   breakpoint
-   
+   -- legacy shim in case any scripts are still using this   
    return sivasiva_GetModuleRootFolder()
 end getPathToModulesFolder
 
