@@ -1,0 +1,46 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Introspection</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content has-footer padding style="background-size:cover;background-image:url('img/blue-paper.jpg');">
+
+  <div class="square-img-home center" style="background-image:url('img/meditate-blue.jpg')"> </div>
+
+  <button (click)="showAlert()" (click)="GoAum()" blue1 large block><div class="circle-blue"></div>Chant Aum</button>
+
+  <button (click)="showAlert()" (click)="GoPranayama()" blue2 large block><div class="circle-blue"></div>Simple Pranayama</button>
+
+  <button (click)="showAlert()" (click)="GoMeditate()" blue3 large block><div class="circle-blue"></div>Meditation</button>
+
+
+
+
+
+
+
+
+
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar primary>
+    <ion-buttons >
+      <button (click)="GoBack()">
+        <ion-icon name="arrow-back"></ion-icon>back
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button (click)="infoPopover()">
+        <ion-icon name="information-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

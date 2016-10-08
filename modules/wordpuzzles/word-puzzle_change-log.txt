@@ -1,5 +1,13 @@
 Word Puzzles Change Log
 
+10/3/16 - Jacque
+CHECK HOME PROXIMITY HANDLER
+	Handlers are written to allow any duplicate word to occupy any dupliate position. They work, but are currently disabled because the cropping of the images isn't consistent enough. If a word is (correctly) placed in a position different from the original crop, it doesn't quite align correctly. We shouldl discuss if you want to fix the cropping or leave the stricter word placement as-is. The hanlders are marked and only need to be uncommented. There are two handlers in the card script and two in the behavior.
+	
+DROPPED PIECE LAYERING
+	When a piece is dropped into a correct position, it is now layered under the other "floating" pieces. This avoids the situation where a dropped piece covers an unplaced one, and you can't grab the unplaced one because it isn't showing.
+
+
 2016-09-25 --Brahmanathaswami
 
 REDUCED LEVELS TO 4 ONLY

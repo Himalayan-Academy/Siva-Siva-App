@@ -1,0 +1,36 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Aum Chanting</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content  class="has-header" padding style="background-size:cover;background-image:url('img/blue-paper.jpg');">
+
+  <div class="square-img-workout" style="background-image:url('img/aum.jpg')"> </div>
+
+  <ion-row>
+    <button class="btn-border btn-end" primaryfull block (click)="End()">
+      <ion-icon name="close-circle"></ion-icon>End
+    </button>
+    <button block greys>
+      <p>{{ timertime }}</p>
+    </button>
+    <button (click)="playMantra()" class="btn-border" block primaryfull>
+      Mantra<ion-icon name="volume-up"></ion-icon>
+    </button>
+  </ion-row>
+
+
+
+<div text-center class="card-1-blue">
+
+              <h3>Silently or aloud, repeat the mantra:</h3>
+              <h1 style="font-size:50px;">"Aum"</h1>
+
+
+</div>
+</ion-content>

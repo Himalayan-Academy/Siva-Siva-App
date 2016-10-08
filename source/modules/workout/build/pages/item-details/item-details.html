@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Custom Affirmation</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content has-footer padding style="background-size:cover;background-image:url('img/green-back.jpg');">
+
+<div class="square-img-med center" style="background-image:url('img/flower_blue.jpg')"> </div>
+
+ <div *ngIf="selectedItem" class="selection">
+
+    <div class="card-1-blue">
+      Repeat the following Affirmation:<br/>
+      <h1>{{selectedItem.title}}</h1>
+    </div>
+  </div>
+</ion-content>
