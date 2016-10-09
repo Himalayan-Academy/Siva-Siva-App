@@ -141,6 +141,9 @@ on  mouseUp
                case "workout"
                   loadModule "workout"
                   break
+                  case "color-meditation"
+                  loadModule "color-meditation"
+                  break
             end switch
             break
             # End of actions for the Practice Module  Links Card
@@ -155,25 +158,25 @@ on  mouseUp
          Case "website"
             switch sTargetAction
                case "daily-blog"
-                  launchURL "portrait", "http://www.himalayanacademy.com/blog/taka/"
+                  launchURL "portrait", "https://www.himalayanacademy.com/blog/taka/"
                   break
                case "meet-monks"
-                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/meet-the-monks"
+                  launchURL "portrait", "https://www.himalayanacademy.com/monastery/meet-the-monks"
                   break
                case "monthly-news"
-                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/newsletter"
+                  launchURL "portrait", "https://www.himalayanacademy.com/monastery/newsletter"
                   break
                case "visit"
-                  launchURL "portrait", "http://www.himalayanacademy.com/visit"
+                  launchURL "portrait", "https://www.himalayanacademy.com/visit"
                   break
                case "virtual-tour"
-                  launchURL "portrait", "http://www.himalayanacademy.com/visit/virtual-tour"
+                  launchURL "portrait", "https://www.himalayanacademy.com/visit/virtual-tour"
                   break
                case "about-the-monastery"
-                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/about"
+                  launchURL "portrait", "https://www.himalayanacademy.com/monastery/about"
                   break
                case "our-guru-lineage"
-                  launchURL "portrait", "http://www.himalayanacademy.com/monastery/lineage-philosophy/lineage"
+                  launchURL "portrait", "https://www.himalayanacademy.com/monastery/lineage-philosophy/lineage"
                   break
             end switch
             

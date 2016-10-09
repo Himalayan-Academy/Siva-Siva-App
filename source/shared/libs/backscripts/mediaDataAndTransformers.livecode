@@ -74,6 +74,7 @@ command fetchRandomMediaItem pSelectParams
    dbSetSQL tSQL
    put dbGet("item", tConnectionID) into aSelectedItem
    put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into aMediaMeta["item_id"]
+     put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into aMediaMeta["approved_for_public"] 
    put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into aMediaMeta["file_id"]
    put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into aMediaMeta["media_type"]
      put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into aMediaMeta["date_created"]
