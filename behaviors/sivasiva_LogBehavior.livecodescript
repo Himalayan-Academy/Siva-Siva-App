@@ -88,3 +88,67 @@ end load_FrontScript
 before load_BackScript tStackPath, sharedLibFolder
    logInfo "Loading backscript" && tStackPath
 end load_BackScript
+
+
+--> Logging
+-
+/*
+Moved this library to this behavior as we need to start logging before any libraries are loaded.
+If we start to want general purpose logging throughout the stack we can move this code to a library.
+Possible a backscript or something that we ensure is loaded first.
+*/
+
+command logInfo pMessage
+   logRaw "info", pMessage
+end logInfo
+
+command logError pMessage
+   logRaw "error", pMessage
+end logError
+
+command logFatal pMessage
+   logRaw "fatal", pMessage
+end logFatal
+
+command logRaw pLevel, pMessage
+   put the params
+   
+   if the environment is not "development" then
+      // for now, lets not log stuff in Mobile -- jg needs to see these
+      if (the hilite of btn "jg android log" of cd 1 of stack "loader") then
+         put specialFolderPath ("documents") & "/mobilelog.txt" into tFile
+         open file tFile for append
+         write pMessage & cr to file tFile
+         close file tFile
+         exit logRaw
+      end if
+   end if
+   
+   put item -2 of line -3 of the executioncontexts into tCalledHandler
+   put item -1 of line -3 of the executioncontexts into tLineNumber
+   put the short name of (item 1 of line -3 of the executioncontexts) into tObjectReference
+   
+   if char 1 of tCalledHandler is "_" then
+      put " (PRIVATE)" into tPrivateFlag
+   else
+      put empty into tPrivateFlag
+   end if
+   
+   if pLevel is among the items of sConfigA["log_level"] then
+      put the short date && the short time && "[" & pLevel & "]" && tObjectReference & "#" & tLineNumber into logLine
+      put space & ">>>" && tCalledHandler  & tPrivateFlag && ":" && pMessage after logLine
+      put CR & logLine after url ("binfile:" & sConfigA["log_file"])
+   end if
+end logRaw
+
+
+--> Model | Logging
+-
+function mobile_LogFile
+   if the environment is not "development" then
+      put specialFolderPath ("documents") & "/mobilelog.txt" into logFile
+   else
+      put sConfigA ["log_file"] into logFile
+   end if
+   return logFile
+end mobile_LogFile

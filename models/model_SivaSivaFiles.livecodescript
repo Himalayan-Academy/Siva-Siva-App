@@ -22,6 +22,12 @@ end sivasiva_AssetFolder
 
 --> SivaSiva | Paths | Modules
 -
+function sivasiva_ListModules
+   put sivasiva_GetModuleRootFolder() into modulesFolder  
+   put folder_ListShort (modulesFolder) into moduleNames
+   return moduleNames
+end sivasiva_ListModules
+
 function sivasiva_GetModuleStackPath moduleName
    put sivasiva_GetModuleFolder (moduleName) into moduleFolder
    put moduleFolder & pModule & ".livecode" into tModuleToLoad
@@ -43,3 +49,18 @@ function sivasiva_GetModuleRootFolder
    put sivasiva_ProjectFolder() & "modules/" into moduleRootFolder
    return moduleRootFolder
 end sivasiva_GetModuleRootFolder
+
+
+--> Deps
+-
+function folder_ListShort rootFolder
+   if there is not a folder rootFolder then return empty
+   
+   put the defaultfolder into oDefault
+   set the defaultfolder to rootFolder
+   put the folders into shortFolders
+   set the defaultfolder to oDefault
+   
+   filter shortFolders without ".*"
+   return shortFolders
+end folder_ListShort

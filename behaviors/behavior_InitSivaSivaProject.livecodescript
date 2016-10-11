@@ -43,11 +43,11 @@ command init_AppConfiguration
    -- setBasePath -- jg
    */
    
-   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
-   
    -- for logging
    put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject --  must be in the stackfiles
    set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+   
+   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
    
    -- the first thing we must do is start using all required libraries
    init_LoadLibraries

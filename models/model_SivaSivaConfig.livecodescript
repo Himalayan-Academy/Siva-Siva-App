@@ -44,7 +44,7 @@ function sivasiva_GetModuleJson moduleName
    return someJSON
 end sivasiva_GetModuleJson
 
-function sivasiva_GetModuleJsonFile moduleName   
+function sivasiva_GetModuleJsonFile moduleName
    put sivasiva_GetModuleFolder (moduleName) into sivasivaModuleFolder
    put sivasivaModuleFolder & moduleName & ".json" into tModuleConfigurationFile
    return tModuleConfigurationFile
