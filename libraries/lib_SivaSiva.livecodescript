@@ -132,7 +132,7 @@ function hack_FindPortalImage moduleName, pReturnRelative
    -- in case we have not created new json array structure
    
    put sivasiva_GetModuleFolderFromArray (moduleName) into sivasivaModuleFolder
-   put sivasiva_GetModuleConfigurationArray (moduleName) into configurationArray
+   put sivasiva_GetModuleCongifArray (moduleName) into configurationArray
    put configurationArray ["portal-links"] into portalLinkArray
    repeat for each key portalLinkName in portalLinkArray
       put portalLinkArray [portalLinkName]["image"] into relativeImagefile
@@ -152,7 +152,7 @@ function hack_FindPortalImage moduleName, pReturnRelative
 end hack_FindPortalImage
 
 function hack_ListPortalLinks moduleName
-   put sivasiva_GetModuleConfigurationArray (moduleName) into configurationArray
+   put sivasiva_GetModuleCongifArray (moduleName) into configurationArray
    put configurationArray ["portal-links"] into portalLinkArray
    repeat for each key portalLinkName in portalLinkArray
       put portalLinkArray [portalLinkName]["image"] into relativeImageFile
@@ -179,7 +179,7 @@ function hack_ListPortalLinks moduleName
 end hack_ListPortalLinks
 
 function hack_GetPortalLinkImage portalLinkName, moduleName, pReturnRelative
-   put sivasiva_GetModuleConfigurationArray (moduleName) into configurationArray
+   put sivasiva_GetModuleCongifArray (moduleName) into configurationArray
    put configurationArray ["portal-links"] into portalLinkArray
    put portalLinkArray [portalLinkName]["image"] into relativeImagefile
    put sivasiva_GetModuleFolderFromArray (moduleName) into sivasivaModuleFolder

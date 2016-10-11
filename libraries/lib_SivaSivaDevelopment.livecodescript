@@ -14,6 +14,13 @@ This library will eventually be moved into a separate authoring project.
 */
 
 
+--> Working on
+-
+command testMessagePath pMessage -- is this needed?
+   answer pMessage with "OK"
+end testMessagePath
+
+
 --> From API
 -
 command scaleStackIfNeeded

@@ -4,7 +4,7 @@
 license: GPLv3
 name: behavior_InitSivaSivaProject
 type: behavior
-version: 0.1
+version: 0.2
 
 /*
 Here we keep all initilisation code for the Siva-Siva-App.
@@ -27,15 +27,13 @@ We can now experiment with:
 4) Integration with the responsive "Sivasiva Browser" view.
 */
 
---> Variables
--
-global sConfigA
-
 
 --> SivaSiva | Init
 -
-command loadAppConfiguration  
+command init_AppConfiguration  
    /*
+   Was called "loadAppConfiguration"
+   
    Called by the "preOpenStack" of the Siva-Siva-App's first card script
    
    Avoid relying on "setBasePath" and instead pass long paths to handlers
@@ -45,12 +43,19 @@ command loadAppConfiguration
    -- setBasePath -- jg
    */
    
-   -- for logging (must be in the stackfiles)
-   set the behavior of stack "behavior_InitSivaSivaProject"  to the name of stack "behavior_InitSivaSivaProject" 
+   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
    
-   _loadJsonConfig
-   _initializeDependencies
+   -- for logging
+   put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject --  must be in the stackfiles
+   set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
    
+   -- the first thing we must do is start using all required libraries
+   init_LoadLibraries
+   
+   -- once we have loaded the libraries we can use them to load any needed configuration
+   init_LoadJsonConfig
+   
+   -- set things up fro mobile
    if the environment is "mobile" then 
       set the fullscreenmode of this stack to "showAll"
       mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
@@ -59,20 +64,23 @@ command loadAppConfiguration
       end if
    end if
    
-   /*
    -- here we can put custom handlers
+   /*
    -- if not dev() then close me -- we are not using the invisible loader stack method any more
-   goHome
+   goHome -- may not need to do this now as we place the portal stack on the home stacks card
    */
-end loadAppConfiguration
+end init_AppConfiguration
 
-command _loadJsonConfig
-   put sivasiva_GetProjectConfigurationArray() into sConfigA
-   put true into sConfigA ["initialized"]
-end _loadJsonConfig
-
-private command  _initializeDependencies
-   -- consider moving front and backscripts to be regular libraries
+command  init_LoadLibraries
+   /*
+   Consider moving front and backscripts to be regular libraries.
+   We should not need to load any behaviors manually (needs checing on mobile).
+   The only provisos / exceptions are:
+   
+   1) All behavior stacks are in the home stacks stackfiles
+   2) Any behaviors of script only stacks (as the property is not stored) - this happens with nested behaviors such as logging.
+   */
+   
    put sivasiva_ProjectFolder() into projectFolder
    
    -- we start using both "library" stacks and "model" stacks
@@ -83,7 +91,7 @@ private command  _initializeDependencies
    put getPathForSharedLibraries() into sharedLibFolder
    repeat for each key x in sConfigA["libraries"]
       put sConfigA ["libraries"][x] into tStackPath
-      _loadLibrary tStackPath, sharedLibFolder
+      load_Library tStackPath, sharedLibFolder
    end repeat
    */
    
@@ -93,7 +101,7 @@ private command  _initializeDependencies
    -- old way to do it based on configuration
    repeat for each key x in sConfigA ["backscripts"]
       put  sConfigA ["backscripts"][x] into tStackPath
-      _loadBackScript tStackPath, sharedLibFolder
+      load_BackScript tStackPath, sharedLibFolder
    end repeat
    */
    
@@ -106,7 +114,7 @@ private command  _initializeDependencies
       _loadFrontScripts tStackPath, sharedLibFolder
    end repeat
    */
-end _initializeDependencies
+end init_LoadLibraries
 
 
 -->Project | Start | Load
@@ -117,17 +125,17 @@ For legibility and logging.
 They must be public handlers for this to work.
 */
 
-command _loadLibrary stackPath, pShortFolder
+command load_Library stackPath, pShortFolder
    start using stack stackPath
-end _loadLibrary
+end load_Library
 
-command _loadFrontScript stackPath
+command load_FrontScript stackPath
    insert the script of stack stackPath into front
-end _loadFrontScript
+end load_FrontScript
 
-command _loadBackScript stackPath
+command load_BackScript stackPath
    insert the script of stack stackPath into back
-end _loadBackScript
+end load_BackScript
 
 
 -->Project | Start
@@ -137,7 +145,7 @@ command project_StartBackScriptsInFolder projectFolder
    put folder_ListStackPaths (standardFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
-      _loadBackScript stackPath
+      load_BackScript stackPath
    end repeat
    return stackPaths
 end project_StartBackScriptsInFolder
@@ -147,7 +155,7 @@ command project_StartFrontScriptsInFolder projectFolder
    put folder_ListStackPaths (standardFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
-      _loadFrontScript stackPath
+      load_FrontScript stackPath
    end repeat
    return stackPaths
 end project_StartFrontScriptsInFolder
@@ -157,7 +165,26 @@ command project_UseStacksInFolder shortFolder, projectFolder
    put folder_ListStackPaths (standardFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
-      _loadLibrary stackPath, shortFolder
+      load_Library stackPath, shortFolder
    end repeat
    return stackPaths
 end project_UseStacksInFolder
+
+
+--> Deps
+-
+function folder_ListStackPaths someFolder
+   -- new version: version 8.1
+   if there is not a folder someFolder then return empty
+   
+   put files (someFolder) into shortFiles
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put stackFilePath & CR after stackFilePaths
+      end if
+   end repeat
+   delete char -1 of stackFilePaths
+   return stackFilePaths
+end folder_ListStackPaths
