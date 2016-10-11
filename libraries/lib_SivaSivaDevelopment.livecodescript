@@ -7,8 +7,9 @@ type: library
 version: 0.1
 
 /*
-Here we place handlers that are useful in development but are not to be used in the final deployed mobile app.
+Place your development handlers here!
 
+This stack is for handlers that are useful in development but are not to be used in the final deployed mobile app.
 This library will eventually be moved into a separate authoring project.
 */
 
