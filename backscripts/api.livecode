@@ -1,50 +1,56 @@
 ﻿script "API"
+--> Metadata
+-
+/*
+This is the original API stack.
+We have moved the "Web Browser API" section into it's own library.
+
+This library is currenlty used as a backscript.
+AFAIK this is unecessary and should be moved into the libraries folder where it will automatically be loaded as a conventional library.
+*/
 
 
-command scaleStackIfNeeded
-   if the environment is "development" and (item 4 of the effective working screenRect < 800 )  then
-      set the scalefactor of this stack to .75
-      set the height of this stack to 736
+--> Init
+-
+command initializeInterfaceDefaults pOrientation -- mobile orientation setup
+   /*
+   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
+   Possibly to initialisations scripts at the card layer (as a behavior)
+   */
+   
+   if isMobile() then 
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      if pOrientation ="portrait" then
+         mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      else
+         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+      end if
    end if
-end scaleStackIfNeeded
+end initializeInterfaceDefaults
 
-command errorDialog pExecutionError
-   if not isMobile() then
-      --put pExecutionError
-      put item 4 of line 1 of pExecutionError into tBrokenStatement
-      put item 2 of line 1 of pExecutionError into tLineNumber
-      put line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors  into tErrorDescription 
-      # scriptExecutionErrors  seems to be a global prop in the IDE, no longer the cErrorList custom property of a binary stack
-      logError tErrorDescription & ":" && tBrokenStatement && "on line" && tLineNumber
+
+--> Events
+-
+on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not right yet
+   -- msg is only sent on mobile
+   -- recentcards isn't stable, try this way:
+   get the recentcards
+   filter it without "*loader.livecode*"
+   filter it without the long id of this cd
+   if line 1 of it = "" then
+      quit
+   else
+      EXIT BACKKEY -- block for now until it's fixed
+      go (line 1 of it)  --### NEED TO LOAD MODULE
    end if
-end errorDialog
+end backKey
 
-private command _goLaunchModule
-  logInfo "Loading launch module..."
-  --   if the environment is not "development" then
-  --      hide this stack
-  --   end if
-  loadModule getConfiguration("launch_module")
-end _goLaunchModule
 
+--> Navigation
+-
 command goHome
    _goLaunchModule
-   --dispatch "relaunch" to card (the current card of the topstack) of the topstack
 end goHome
-
-on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not right yet
-  -- msg is only sent on mobile
-  -- recentcards isn't stable, try this way:
-  get the recentcards
-  filter it without "*loader.livecode*"
-  filter it without the long id of this cd
-  if line 1 of it = "" then
-    quit
-  else
-   EXIT BACKKEY -- block for now until it's fixed
-   go (line 1 of it)  --### NEED TO LOAD MODULE
-  end if
-end backKey
 
 command loadModule pModule
   // find what module file to load
@@ -68,106 +74,20 @@ command loadModule pModule
 end loadModule
 
 
---> ##### Web Browser API ####### -->
-/**
-* BR: July 27, moved this from the Hap media viewer stacks to the main API
-* HAP Media Viewers Library 
-*
-* Objective: library stack that provides auxiliary routines and UI for vieweing web pages,
-* listening to audio and watching videos.
-*
-* Its public API may be called from any stack. It will cause a defaultstack change as it takes over the app. 
-* Buttons for going "recent card" are provided and an optional  "relaunch" message is sent to the cards when going back
-*
-* === PUBLIC API ===
-*  launchURL <pOrientation>,<pURL>: launches given web page.
-*  launchAudio <pURL>, [pOptionalImage]: launches the audio with an optional cover image.
-*  launchBook <pFileID>: just a convenience method for launching books, internally it calls launchURL.
-*
-*
+--> Private
+-
+private command _goLaunchModule
+   logInfo "Loading launch module..."
+   loadModule getConfiguration("launch_module")
+end _goLaunchModule
+
+
+
+--> Display
+-
+/*
+Based on an open source script by Scott Rossi:
 */
-
-# The browser widget has serious issues with dynamic resizing
-# and repositioning. Currently it is not possible to have two cards 
-# in the same stack one portrait orientation and then dynamically
-# change the size of the stack and resize the browser widget
-# a simpler method is to have two different stacks preset for portrait
-# or landscape. So we have to pass the orientation to fork to the 
-# Correct Stack(s) which are put into use on start up as a lib
-
-command launchURL pOrientation, pURL
-  if pOrientation = "" then -- try to determine based on media type
-    put getOrientationByType(pURL) into tViewerType
-  end if
-  --   lock recent -- don't add viewers to the recentcards list so back btn doesn't go there
-  if pOrientation="portrait" then
-    put "hapMediaViewerPortraitLib" into tNewViewer
-    put "hapMediaViewerLandscapeLib" into tOldViewer
-  else
-    put "hapMediaViewerLandscapeLib" into tNewViewer
-    put "hapMediaViewerPortraitLib" into tOldViewer
-  end if
-  --   initializeInterfaceDefaults pOrientation -- jg: done in viewer preOpenStack instead
- -- set the vis of widget "browser" of stack tNewViewer to not isMobile()
-  if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
-  go card "web viewer" of stack tNewViewer
---  if isMobile() then
- --   createBrowser "browser",pURL
---  else -- view on desktop; vis set in viewer stack
-    set the URL of widget "browser" of stack tNewViewer to pURL
---  end if
-  if tOldViewer is in the openStacks then close stack tOldViewer -- device was rotated; close orig viewer
-  --   unlock recent
-end launchURL
-
-command initializeInterfaceDefaults pOrientation -- mobile orientation setup
-  -- sent in viewer preOpenStack
-  if isMobile() then 
-    set the fullscreenmode of this stack to "showAll" -- better for wider screens
-    if pOrientation ="portrait" then
-      mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-    else
-      mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-    end if
-  end if
-end initializeInterfaceDefaults
-
-function getOrientationByType pURL -- return correct orientation for a URL;
-  -- called by launchURL and orientationChanged in browser cd of both viewer stacks
-  -- Some media is locked to an orientation, some allow any.
-  -- This tries to determine the allowed orientation for a media type.
-  -- (Add slideshows later to landscape view)
-  switch
-    case pURL contains "youtube" --  a movie [add slideshow when URL format is known]
-      --     case pURL contains "SLIDESHOW"  --### add when format is known
-      return "landscape" 
-      break
-    case pURL contains "PORTRAIT" --### fix this when format is known
-      return "portrait"
-      break
-    default
-      return "any" -- allows rotation
-  end switch
-end getOrientationByType
-
-command launchAudio pURL, pOptionalImage
-   // temporarily using launchURL for this one.
-  launchURL pURL
-end launchAudio
-
-
-command launchBook pFileID
-   get "http://dev.himalayanacademy.com/book/" & pFileID
-   launchURL it
-end launchBook
-
-function pingServer --jg: UTF8 text file on server should contain only the word "true"
-  get url "http://www.himalayanacademy.com/ping.txt"
-  return textDecode(it,"UTF8") = "true"
-end pingServer
-
-
-###  based on an open source script by Scott Rossi:
 
 on showCustomMsg pShow,pMsg,pLoc,pWidth,pHeight
   -- pShow = boolean, show or hide msg grp
@@ -200,42 +120,41 @@ on showCustomMsg pShow,pMsg,pLoc,pWidth,pHeight
 end showCustomMsg
 
 on buildMsgDisplay pLoc,pTxt,pWidth,pHeight -- revised from Scott Rossi's open source
-  -- pLoc = loc for display
-  -- pTxt = text string to display; must be fairly short
-  try
-    set the name of the templateGraphic to "alphabkgnd"
-    set the backColor of the templateGraphic to black
-    set the lineSize of the templateGraphic to 0
-    set the style of the templateGraphic to roundrect
-    set the opaque of the templateGraphic to true
-    set the width of the templateGraphic to pWidth -- 250 
-    set the height of the templateGraphic to pHeight -- 50
-    set the blendLevel of the templateGraphic to 50
-    set the loc of the templateGraphic to pLoc
-    create grc
-    reset the templateGraphic
-    set the name of the templateField to "alphaDisplayFld"
-    set the borderWidth of the templateField to 0
-    set the opaque of the templateField to false
-    set the traversalOn of the templateField to false
-    set the locktext of the templateField to true
-    set the autohilite of the templateField to false
-    set the textFont of the templateField to "verdana"
-    set the textSize of the templateField to 24
-    set the textheight of the templateField to 36
-    set the textColor of the templateField to white
-    set the textAlign of the templateField to center
-    set the text of the templateField to pTxt
-    set the width of the templateField to pWidth -- 250
-    set the height of the templateField to pHeight-4 -- 46
-    set the loc of the templateField to pLoc
-    --    set the script of the templateField to "on mouseUp" &cr& "send" &&quote& "showCustomMsg false" &quote && \
-          --          "to this cd in 1" &cr& "end mouseUp" -- fails in app
-    create fld
-    reset the templateField
-  catch tErr
-    put "Result:" && the result && "Error:" && tErr
-    --    log tErr
-  end try
+   -- pLoc = loc for display
+   -- pTxt = text string to display; must be fairly short
+   try
+      set the name of the templateGraphic to "alphabkgnd"
+      set the backColor of the templateGraphic to black
+      set the lineSize of the templateGraphic to 0
+      set the style of the templateGraphic to roundrect
+      set the opaque of the templateGraphic to true
+      set the width of the templateGraphic to pWidth -- 250 
+      set the height of the templateGraphic to pHeight -- 50
+      set the blendLevel of the templateGraphic to 50
+      set the loc of the templateGraphic to pLoc
+      create grc
+      reset the templateGraphic
+      set the name of the templateField to "alphaDisplayFld"
+      set the borderWidth of the templateField to 0
+      set the opaque of the templateField to false
+      set the traversalOn of the templateField to false
+      set the locktext of the templateField to true
+      set the autohilite of the templateField to false
+      set the textFont of the templateField to "verdana"
+      set the textSize of the templateField to 24
+      set the textheight of the templateField to 36
+      set the textColor of the templateField to white
+      set the textAlign of the templateField to center
+      set the text of the templateField to pTxt
+      set the width of the templateField to pWidth -- 250
+      set the height of the templateField to pHeight-4 -- 46
+      set the loc of the templateField to pLoc
+      
+      create fld
+      reset the templateField
+   catch tErr
+      put "Result:" && the result && "Error:" && tErr
+      --    log tErr
+   end try
 end buildMsgDisplay
 
