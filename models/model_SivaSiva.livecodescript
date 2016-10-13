@@ -13,137 +13,84 @@ or later the equivalent "model_SivaSiva.json" file
 */
 
 
---> SivaSiva | Portal | Images
+--> Working on
 -
-function sivasiva_GetPortalHomeLinkImage portalLinkName 
-   put sivasiva_GetPortalLinkImage (portalLinkName, "home") into imageFile
-   return imageFile
-end sivasiva_GetPortalHomeLinkImage
+function portal_ListRowNames portalName, pSivaSectionArray
+   put portal_GetArray (portalName, pSivasivaData) into   moduleArray
+   put moduleArray ["rowData"] into rowData
+   put item 2 of the extents of rowData into maxNum
+   repeat with keyNum = 1 to maxNum
+      put rowData [keyNum]["rowName"] into portalLinkName
+      put portalLinkName & CR after orderedPortalLinkNames
+   end repeat
+   delete char -1 of orderedPortalLinkNames
+   return orderedPortalLinkNames
+end portal_ListRowNames
 
-function sivasiva_GetPortalImage moduleName, pReturnRelative
-   put sivasiva_GetModuleArray (moduleName) into moduleArray
-   if moduleArray is not an array then return hack_FindPortalImage (moduleName) -- legacy hack
-   
-   put moduleArray ["portalImage"] into relativeImage
-   if pReturnRelative is true then return relativeImage
-   
-   put moduleArray ["moduleFolder"] into moduleFolder
-   put moduleFolder & relativeImage into imageFile
-   return imageFile
-end sivasiva_GetPortalImage
+function portal_GetArray portalName, pSivasivaData
+   if pSivasivaData is not an array then put sivasiva_FetchData() into pSivasivaData
+   put pSivasivaData ["portalData"][portalName] into portalArray
+   return portalArray
+end portal_GetArray
 
-function sivasiva_GetPortalLinkImage portalLinkName, moduleName, pReturnRelative, pSivaSivaData
-   if pSivaSivaData is not an array then put sivasiva_FetchData() into pSivaSivaData
-   if pSivaSivaData is not an array then return hack_GetPortalLinkImage (portalLinkName, moduleName, pReturnRelative) -- legacy hack
-   
-   sivasiva_SetPortalLinkInfo portalLinkName, moduleName, pSivaSivaData, iconText, relativeImagefile, moduleFolder
-   if pReturnRelative is true then
-      return relativeImagefile
-   else
-      put moduleFolder & relativeImagefile into imageFile
-      return imageFile
-   end if 
-end sivasiva_GetPortalLinkImage
+function portal_GetRowData rowName, pSivasivaData
+   if pSivasivaData is not an array then put sivasiva_FetchData() into pSivasivaData
+   put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
+   put portalRowDictionary [rowName] into rowData
+   return rowData
+end portal_GetRowData
 
-function sivasiva_GetModuleFolderFromArray moduleName, pSivaSivaData
-   if pSivaSivaData is not an array then put sivasiva_FetchData() into pSivaSivaData
-   put sivaSivaData ["module"][moduleName] into moduleArray
-   put moduleArray ["moduleFolder"] into moduleFolder
-end sivasiva_GetModuleFolderFromArray
 
-command sivasiva_SetPortalLinkInfo portalLinkName, moduleName, sivaSivaData, @iconText, @relativeImagefile, @moduleFolder
-   put sivaSivaData ["sectionDictionary"] into sectionDictionaryArray
-   
-   put sectionDictionaryArray [moduleName][portalLinkName] into portalLinkArray
-   put portalLinkArray ["image"] into relativeImagefile
-   put portalLinkArray ["text"] into iconText
-   
-   put sivaSivaData ["module"][moduleName] into moduleArray
-   put moduleArray ["moduleFolder"] into moduleFolder
-end sivasiva_SetPortalLinkInfo
+--> SivaSiva | Model
+-
+function sivasiva_FetchData
+   put "model_SivaSiva" into stackName
+   put stackName & ".json" into shortFile-- could use ".array"
+   put the model_Array [shortFile] of stack stackName into sivasivaData
+   return sivasivaData
+end sivasiva_FetchData
+
+command sivasiva_StoreData sivasivaData
+   put "model_SivaSiva" into stackName
+   put stackName & ".json" into shortFile -- could use ".array"
+   set the model_Array [shortFile] of stack stackName to sivasivaData
+   return the result
+end sivasiva_StoreData
+
+function sivasiva_DataFile
+   put "model_SivaSiva" into stackName
+   put stackName & ".json" into shortFile -- could use ".array"
+   put the model_DataFile [shortFile] of stack stackName into modelDataFile
+   return modelDataFile
+end sivasiva_DataFile
 
 
 --> SivaSiva | Module | List
 -
 function sivasiva_ListHomeLinks
-   return sivasiva_ListPortalLinks ("home")
+   return portal_ListRowNames ("home")
 end sivasiva_ListHomeLinks
 
-function sivasiva_ListPortalLinks moduleName
-   put sivasiva_GetModuleArray (moduleName) into moduleArray
-   if moduleArray is not an array then return hack_ListPortalLinks (moduleName) -- legacy hack
-   
-   put moduleArray ["rowData"] into rowData
-   put item 2 of the extents of rowData into maxNum
-   repeat with keyNum = 1 to maxNum
-      put rowData [keyNum]["portalLinkName"] into portalLinkName
-      put portalLinkName & CR after orderedPortalLinkNames
-   end repeat
-   delete char -1 of orderedPortalLinkNames
-   return orderedPortalLinkNames
-end sivasiva_ListPortalLinks
-
-function sivasiva_ListModules pListHow
+function sivasiva_ListPortals pListHow
    switch pListHow
       case "folders"
-         put getPathToModulesFolder() into modulesFolder
-         put folder_ListShort (modulesFolder) into moduleNames
+         -- will not return portal names if we have other types of "module" in the "modules" folder
+         put sivasiva_ListModuleFolders() into moduleNames
          break
       default
          put sivasiva_FetchData() into sivasivaData
-         put sivasivaData ["module"] into sivasivaModuleData
-         put keys (sivasivaModuleData) into moduleNames
+         put sivasivaData ["portalData"] into portalData
+         put keys (portalData) into moduleNames
          sort moduleNames
    end switch
    return moduleNames
-end sivasiva_ListModules
-
-
---> SivaSiva | Model
--
-function sivasiva_GetRowData rowName, pSivaSectionArray
-   if pSivaSectionArray is not an array then put sivasiva_FetchData() into sivasivaData
-   set the itemdelimiter to "_"
-   put item 1 of rowName into moduleName
-   put item 2 of rowName into portalLinkName
-   
-   put sivasivaData ["module"][moduleName]["moduleFolder"] into moduleFolder
-   put sivasivaData ["sectionDictionary"][moduleName][portalLinkName] into rowData
-   put moduleFolder into rowData ["moduleFolder"]
-   
-   return rowData
-end sivasiva_GetRowData
-
-function sivasiva_GetModuleArray moduleName, pSivaSectionArray
-   if pSivaSectionArray is not an array then put sivasiva_FetchData() into sivasivaData
-   put sivasivaData ["module"][moduleName] into moduleArray
-   return moduleArray
-end sivasiva_GetModuleArray
-
-function sivasiva_GetSectionDictionary moduleName, pSivaSectionArray
-   if pSivaSectionArray is not an array then put sivasiva_FetchData() into sivasivaData
-   put sivasivaData ["sectionDictionary"] into sectionDictionaryArray
-   return sectionDictionaryArray
-end sivasiva_GetSectionDictionary
-
-
---> SivaSiva | Model
--
-function sivasiva_FetchData pShortFile
-   put the model_Array [pShortFile] of stack "model_SivaSiva" into sivaSectionArray
-   return sivaSectionArray
-end sivasiva_FetchData
-
-command sivasiva_StoreData sivaSectionArray
-   set the model_Array [pShortFile] of stack "model_SivaSiva" to sivaSectionArray
-   return the result
-end sivasiva_StoreData
+end sivasiva_ListPortals
 
 
 --> Project | Model | Array
 -
 /*
-These handlers can be i a separate model library.
+These handlers can be in a separate model library.
 
 Convenience handlers that uses a simple naming convention.
 in which a folder placed at the same level of a stack and named the smae as the short name of a stack 
@@ -186,6 +133,7 @@ getprop model_DataFolder
 end model_DataFolder
 
 function array_Fetch someFile
+   -- allows for simple switching of models
    put url ("binfile:" & someFile) into someData
    if someData is empty then return empty
    set the itemdelimiter to "."
@@ -193,24 +141,23 @@ function array_Fetch someFile
       case "json"
          put jsonImport (someData) into modelArray
          break
-      default -- case "array"
+      case "array"
          put arraydecode (someData) into modelArray
          break
+      default
+         -- here we can return an array from a database
+         -- someFile could contain items used in a query
+         -- or even an sql query
    end switch
    return modelArray
 end array_Fetch
 
 command array_Save someFile, modelArray
    if modelArray is not an array then delete file someFile
-   
-   set the itemdelimiter to "/"
-   put item 1 to -2 of someFile into someFolder
-   folder_CreateNested someFolder
-   
    set the itemdelimiter to "."
    switch item -1 of someFile
       case "json"
-         put jsonImport (modelArray) into encodedData
+         put jsonExport (modelArray) into encodedData
          break
       default -- case "array"
          put arrayencode (modelArray) into encodedData

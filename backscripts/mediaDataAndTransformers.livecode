@@ -47,7 +47,7 @@ command fetchRandomMediaItem pSelectParams
   try
     put jsonImport(tMediaMeta) into aMediaMeta
   catch tErr
-    logError tErr
+    log_Error tErr
   end try
 end fetchRandomMediaItem
 

@@ -54,10 +54,10 @@ end goHome
 
 command loadModule pModule
   // find what module file to load
-  logInfo "Loading module:" && pModule
+  log_Info "Loading module:" && pModule
   put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into tModuleToLoad
   put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into tModuleConfigurationFile
-  logInfo tModuleToLoad
+  log_Info tModuleToLoad
   
   // check and load configuration
   if there is a file tModuleConfigurationFile then
@@ -77,7 +77,7 @@ end loadModule
 --> Private
 -
 private command _goLaunchModule
-   logInfo "Loading launch module..."
+   log_Info "Loading launch module..."
    loadModule getConfiguration("launch_module")
 end _goLaunchModule
 

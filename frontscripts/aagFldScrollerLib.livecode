@@ -28,7 +28,7 @@ Be aware that this is called for all cards, this leads to overhead so this funct
 It checks the card for fields and groups with scrollbars and replaces them as needed.
 */
 
-logInfo "called!"
+log_Info "called!"
 switch the environment
    case "mobile"
       replaceLCFieldsWithMobileFields

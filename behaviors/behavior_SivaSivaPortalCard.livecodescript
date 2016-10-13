@@ -37,7 +37,7 @@ end loadPortalImages
 
 command loadImage pImg, pTarget
    put (getPathToModulesFolder() & "surprise/" & pImg) into tImgPath
-   logInfo "Loading image:" && tImgPath
+   log_Info "Loading image:" && tImgPath
    set the filename of pTarget to tImgPath
 end loadImage
 
@@ -62,5 +62,5 @@ on closeCard
 end closeCard
 
 on relaunch
-   logInfo "went back to home module"
+   log_Info "went back to home module"
 end relaunch

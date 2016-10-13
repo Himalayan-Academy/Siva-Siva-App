@@ -13,6 +13,10 @@ We therefore set the behavior of the home card (first card) to this stacks scrip
 
 We use a behavior to take advantage of version control that we get with scriptonly stacks.
 
+== Future ==
+When this code is fully robust and tested, and no longer changing / evolving,
+we can move it back to the card script. That way we avoid nested bahaviors
+
 The preOpenStack handler (which is sent to the card), initialises all project defaults.
 This includes loading all necessary libraries.
 
@@ -28,12 +32,37 @@ We can now experiment with:
 */
 
 
+--> SivaSiva | Init | Logging
+-
+/*
+We aim to remove the need for this section eventually.
+When the code is minimized, tested and stable we can move it back to the card script,
+and even stop loggin the initialisation routines by default
+and include it only as an option (advanced) feature/tool.
+*/
+
+before preOpenStack
+   -- only required to ensure we can log the project initialization
+   init_Logging
+end preOpenStack
+
+command init_Logging
+   --  relies on stack names so ensure the stackfiles is set properly
+   -- we have to ensure the general purpose logging handlers are loaded first
+   start using stack "lib_Log"
+   
+   -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
+   -- we could remove this step if we move this code back to the card script
+   put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
+   set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+end init_Logging
+
+
 --> SivaSiva | Init
 -
 command init_AppConfiguration  
    /*
    Was called "loadAppConfiguration"
-   
    Called by the "preOpenStack" of the Siva-Siva-App's first card script
    
    Avoid relying on "setBasePath" and instead pass long paths to handlers
@@ -42,12 +71,6 @@ command init_AppConfiguration
    -- set the defaultstack to the topstack
    -- setBasePath -- jg
    */
-   
-   -- for logging
-   put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject --  must be in the stackfiles
-   set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
-   
-   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
    
    -- the first thing we must do is start using all required libraries
    init_LoadLibraries
@@ -81,39 +104,21 @@ command  init_LoadLibraries
    2) Any behaviors of script only stacks (as the property is not stored) - this happens with nested behaviors such as logging.
    */
    
+   -- we all need to know where home "sivasiva_ProjectFolder()" is. 
+   -- ideally we fix "sivasiva_ProjectFolder" issue so it can go in a library
+   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
    put sivasiva_ProjectFolder() into projectFolder
    
    -- we start using both "library" stacks and "model" stacks
    project_UseStacksInFolder "models", projectFolder
    project_UseStacksInFolder "libraries", projectFolder
-   /*
-   -- old way to do it based on configuration
-   put getPathForSharedLibraries() into sharedLibFolder
-   repeat for each key x in sConfigA["libraries"]
-      put sConfigA ["libraries"][x] into tStackPath
-      load_Library tStackPath, sharedLibFolder
-   end repeat
-   */
-   
+    
    -- consider moving backscripts to libraries
    project_StartBackScriptsInFolder projectFolder
-   /*
-   -- old way to do it based on configuration
-   repeat for each key x in sConfigA ["backscripts"]
-      put  sConfigA ["backscripts"][x] into tStackPath
-      load_BackScript tStackPath, sharedLibFolder
-   end repeat
-   */
+ 
    
    -- we should not need to use any frontscripts
    project_StartFrontScriptsInFolder projectFolder
-   /*
-   -- old way to do it based on configuration
-   repeat for each key x in sConfigA["frontscripts"]
-      put  sConfigA ["frontscripts"][x] into tStackPath
-      _loadFrontScripts tStackPath, sharedLibFolder
-   end repeat
-   */
 end init_LoadLibraries
 
 
