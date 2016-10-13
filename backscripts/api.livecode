@@ -68,7 +68,7 @@ command loadModule pModule
   // load stack
   put the short name of this stack into tOrigStack --jg: this avoids screen flashes
   go stack tModuleToLoad in a new window
-  if tOrigStack <> "loader"  and the filename of stack tOrigStack <> tModuleToLoad then
+  if tOrigStack <> "Siva-Siva-App"  and the filename of stack tOrigStack <> tModuleToLoad then
     close stack tOrigStack --jg: close orig stack after new one is in front
   end if
 end loadModule

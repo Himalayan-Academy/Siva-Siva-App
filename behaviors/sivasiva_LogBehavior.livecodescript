@@ -27,21 +27,6 @@ so we like to isolate it from the general code andkeep it attached to the card a
 */
 
 
---> Logging | Custom
--
-command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
-   if (the platform = "android") and (the hilite of btn "jg android log" of me) then 
-      put specialFolderPath("documents") & "/mobilelog.txt" into tFile
-      answer "Clear or view log:" with "Cancel" or "Clear" or "View"
-      if it = "view" then
-         answer url ("file:" & tFile)
-      else if it = "clear" then
-         put empty into url ("file:" & tFile)
-      end if
-   end if
-end jgAndroidLog
-
-
 --> Events | Android test builds (okay to remove later)
 -
 on savingStandalone -- pre-processss

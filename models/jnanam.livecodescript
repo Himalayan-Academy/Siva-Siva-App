@@ -68,7 +68,7 @@ end asset_GetFileFromItemArray
 
 function _getProjectFolder
    set itemdel to "/"
-   put item 1 to -2 of the effective filename of stack "loader" into projectFolder
+   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into projectFolder
    return projectFolder
 end _getProjectFolder
 

@@ -33,8 +33,20 @@ global sConfigA
 
 --> Workign on
 -
+command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
+   if (the platform = "android") and _androidIsLogging() then 
+      put mobile_GetLogFile() into logFile
+      answer "Clear or view log:" with "Cancel" or "Clear" or "View"
+      if it = "view" then
+         answer url ("file:" & logFile)
+      else if it = "clear" then
+         put empty into url ("file:" & logFile)
+      end if
+   end if
+end jgAndroidLog
+
 private function _androidIsLogging
-   put the hilite of btn "jg android log" of cd 1 of stack "loader" into isLogging
+   put the hilite of btn "jg android log" of cd 1 of stack "Siva-Siva-App" into isLogging
    return isLogging
 end _androidIsLogging
 
