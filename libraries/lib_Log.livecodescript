@@ -109,6 +109,7 @@ end log_GetFile
 --> Private
 -
 private function desktop_GetLogFile
+   -- sivasiva.log
    put sConfigA ["log_file"] into logFile
    return logFile
 end desktop_GetLogFile
