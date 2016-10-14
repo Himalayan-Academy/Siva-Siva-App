@@ -55,6 +55,8 @@ command init_Logging
    -- we could remove this step if we move this code back to the card script
    put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
    set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+   
+   log_Clear
 end init_Logging
 
 
@@ -62,12 +64,10 @@ end init_Logging
 -
 command init_AppConfiguration  
    /*
-   Was called "loadAppConfiguration"
    Called by the "preOpenStack" of the Siva-Siva-App's first card script
    
    Avoid relying on "setBasePath" and instead pass long paths to handlers
    This is more robust as it is easy for a stray handler to reset the defaultfolder
-   
    -- set the defaultstack to the topstack
    -- setBasePath -- jg
    */
@@ -75,23 +75,20 @@ command init_AppConfiguration
    -- the first thing we must do is start using all required libraries
    init_LoadLibraries
    
+   answer "init_LoadLibraries!"
+   
    -- once we have loaded the libraries we can use them to load any needed configuration
    init_LoadJsonConfig
    
-   -- set things up fro mobile
+   answer "init_LoadJsonConfig!"
+   
+   -- set things up for mobile geometry
    if the environment is "mobile" then 
-      set the fullscreenmode of this stack to "showAll"
-      mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
-      if the platform = "iphone" then
-         iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
-      end if
+      init_MobileGeometry
    end if
    
-   -- here we can put custom handlers
-   /*
-   -- if not dev() then close me -- we are not using the invisible loader stack method any more
-   goHome -- may not need to do this now as we place the portal stack on the home stacks card
-   */
+   -- here we display out first screen
+   init_HomeDisplay
 end init_AppConfiguration
 
 command  init_LoadLibraries
@@ -104,22 +101,41 @@ command  init_LoadLibraries
    2) Any behaviors of script only stacks (as the property is not stored) - this happens with nested behaviors such as logging.
    */
    
-   -- we all need to know where home "sivasiva_ProjectFolder()" is. 
-   -- ideally we fix "sivasiva_ProjectFolder" issue so it can go in a library
-   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
+   -- init_UseHome
    put sivasiva_ProjectFolder() into projectFolder
+   -- answer (there is a folder projectFolder & CR & projectFolder)
    
    -- we start using both "library" stacks and "model" stacks
    project_UseStacksInFolder "models", projectFolder
    project_UseStacksInFolder "libraries", projectFolder
-    
+   
    -- consider moving backscripts to libraries
    project_StartBackScriptsInFolder projectFolder
- 
    
    -- we should not need to use any frontscripts
    project_StartFrontScriptsInFolder projectFolder
 end init_LoadLibraries
+
+command init_UseHome
+   -- we all need to know where home "sivasiva_ProjectFolder()" is. 
+   -- ideally we fix "sivasiva_ProjectFolder" issue so it can go in a library
+   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
+end init_UseHome
+
+command init_MobileGeometry
+   -- see "initializeInterfaceDefaults"
+   -- set the fullscreenmode of this stack to "showAll"
+   mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
+   if the platform = "iphone" then
+      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
+   end if
+end init_MobileGeometry
+
+command init_HomeDisplay
+   -- if the environment is not "development" then close me -- we are not using the invisible loader stack method any more
+   goHome -- may not need to do this now as we place the portal stack on the home stacks card
+   -- answer the params
+end init_HomeDisplay
 
 
 -->Project | Start | Load
@@ -145,9 +161,19 @@ end load_BackScript
 
 -->Project | Start
 -
+command project_UseStacksInFolder shortFolder, projectFolder
+   put projectFolder & shortFolder & slash into standardFolder
+   put sivasiva_ListStackPaths (standardFolder) into stackPaths
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      load_Library stackPath, shortFolder
+   end repeat
+   return stackPaths
+end project_UseStacksInFolder
+
 command project_StartBackScriptsInFolder projectFolder
    put projectFolder & "backscripts" & slash into standardFolder
-   put folder_ListStackPaths (standardFolder) into stackPaths
+   put sivasiva_ListStackPaths (standardFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
       load_BackScript stackPath
@@ -157,7 +183,7 @@ end project_StartBackScriptsInFolder
 
 command project_StartFrontScriptsInFolder projectFolder
    put projectFolder & "frontscripts" & slash into standardFolder
-   put folder_ListStackPaths (standardFolder) into stackPaths
+   put sivasiva_ListStackPaths (standardFolder) into stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
       load_FrontScript stackPath
@@ -165,24 +191,11 @@ command project_StartFrontScriptsInFolder projectFolder
    return stackPaths
 end project_StartFrontScriptsInFolder
 
-command project_UseStacksInFolder shortFolder, projectFolder
-   put projectFolder & shortFolder & slash into standardFolder
-   put folder_ListStackPaths (standardFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      load_Library stackPath, shortFolder
-   end repeat
-   return stackPaths
-end project_UseStacksInFolder
-
 
 --> Deps
 -
-function folder_ListStackPaths someFolder
-   -- new version: version 8.1
-   if there is not a folder someFolder then return empty
-   
-   put files (someFolder) into shortFiles
+function sivasiva_ListStackPaths someFolder  
+   put mobile_ListShortFiles (someFolder, "Siva-Siva-App") into shortFiles
    set the itemdelimiter to "."
    repeat for each line shortFile in shortFiles
       put someFolder & shortFile into stackFilePath
@@ -192,4 +205,16 @@ function folder_ListStackPaths someFolder
    end repeat
    delete char -1 of stackFilePaths
    return stackFilePaths
-end folder_ListStackPaths
+end sivasiva_ListStackPaths
+
+function mobile_ListShortFiles someFolder, homeStackName
+   -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
+   -- requires Livecode 8.1 or greater
+   if there is not a folder someFolder then return empty
+   
+   put the defaultstack into oStack
+   set the defaultstack to homeStackName
+   put files (someFolder) into shortFiles
+   set the defaultstack to oStack
+   return shortFiles
+end mobile_ListShortFiles

@@ -16,13 +16,13 @@ global sConfigA
 -
 function getPathToModulesFolder
    -- legacy shim in case any scripts are still using this   
-   return sivasiva_GetModuleRootFolder()
+   put sivasiva_GetModuleRootFolder() into moduleRootFolder
+   delete char -1 of moduleRootFolder
+   return moduleRootFolder
 end getPathToModulesFolder
 
 function getPathToLoaderStack
    -- legacy shim in case any scripts are still using this
-   breakpoint
-   
    put sivasiva_ProjectFolder() into tSourcePath
    delete char -1 of tSourcePath -- slash
    return tSourcePath
@@ -30,7 +30,6 @@ end getPathToLoaderStack
 
 function getPathToSharedAssetsFolder
    -- legacy shim in case any scripts are still using this
-   breakpoint
    return sivasiva_AssetFolder()
 end getPathToSharedAssetsFolder
 
@@ -41,17 +40,6 @@ function project_DocumentsFolder
    put "/" after docFolder
    return docFolder
 end project_DocumentsFolder
-
-function project_HomeFolder
-   
-end project_HomeFolder
-
-function mobile_HomeFolder
-   --###jg: will fail on desktop if loader stack isn't the defaultstack; ok on mobile
-   put specialFolderPath ("resources") into tPath
-   put "/" after tPath
-   return tPath
-end mobile_HomeFolder
 
 function localPath  --###jg: will fail on desktop if loader stack isn't the defaultstack; ok on mobile
    -- legacy shim in case any scripts are still using this

@@ -11,6 +11,56 @@ This model contains all the handlers we require to access any files and folders.
 */
 
 
+--> Working on
+-
+--> WordPuzzle | Files
+-
+function wordpuzzle_ListLongImageFiles
+   put wordpuzzle_ImageFolder() into imageFolder
+   put mobile_ListLongFiles (imageFolder, "Siva-Siva-App") into longImageFiles
+   return longImageFiles
+end wordpuzzle_ListLongImageFiles
+
+function wordpuzzle_ListShortImageFiles
+   put wordpuzzle_ImageFolder() into imageFolder
+   -- put files (imageFolder) into shortImageFiles
+   put mobile_ListShortFiles (imageFolder, "Siva-Siva-App") into shortImageFiles
+   return shortImageFiles
+end wordpuzzle_ListShortImageFiles
+
+function wordpuzzle_ImageFolder -- source may change later
+   -- was "getPathToImgs" -- "shared/img/bkgnds/nature/landscape/"
+   put sivasiva_AssetFolder ("img/bkgnds/nature/landscape/") into imageFolder
+   return imageFolder
+ end wordpuzzle_ImageFolder
+
+
+--> SivaSiva | Folder
+-
+function sivasiva_ProjectFolder pRelativeFolderPath
+   put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   if pRelativeFolderPath is not empty then
+      put pRelativeFolderPath after projectFolder
+      if char -1 of projectFolder is not slash then put slash after projectFolder
+   end if
+   return projectFolder
+end sivasiva_ProjectFolder
+
+function project_HomeFolder homeStackName
+   if the environment = "mobile" then
+      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
+      put slash after projectHomeFolder
+   else
+      -- the commented out lines make the code below work on mobile
+      -- put the defaultstack into oStack
+      -- set the defaultstack to homeStackName
+      set the itemdelimiter to slash
+      put the filename of stack homeStackName into projectHomeFolder
+      put empty into item -1 of projectHomeFolder
+      -- set the defaultstack to oStack
+   end if
+   return projectHomeFolder
+end project_HomeFolder
 
 --> Portal | Paths
 -
@@ -34,40 +84,15 @@ function portal_GetHeaderImageFile moduleName, pSivasivaData
    put moduleArray ["headerImage"] into shortFile  
    put sivasiva_PortalImageFile (shortFile) into headerImageFile
    
-   if there is not a file headerImageFile then debug_MissingPortalImage headerImageFile, moduleName   -- debugging. Remove later
    return headerImageFile
 end portal_GetHeaderImageFile
 
 
---> SivaSiva | Paths | Assets
--
-function sivasiva_PortalImageFile shortFile
-   put sivasiva_PortalImageFolder() & shortFile into portalImageFile
-   return portalImageFile
-end sivasiva_PortalImageFile
-
-function sivasiva_PortalImageFolder
-   put sivasiva_ProjectFolder() & "assets/img/portal-screens/" into portalImageFolder
-   return portalImageFolder
-end sivasiva_PortalImageFolder
-
-function sivasiva_AssetFolder
-   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
-   return sharedAssetFolder
-end sivasiva_AssetFolder
-
-
 --> SivaSiva | Paths | Modules
 -
-function sivasiva_ListModuleFolders
-   put sivasiva_GetModuleRootFolder() into modulesFolder  
-   put folder_ListShort (modulesFolder) into moduleNames
-   return moduleNames
-end sivasiva_ListModuleFolders
-
 function sivasiva_GetModuleStackPath moduleName
    put sivasiva_GetModuleFolder (moduleName) into moduleFolder
-   put moduleFolder & pModule & ".livecode" into tModuleToLoad
+   put moduleFolder & moduleName & ".livecode" into tModuleToLoad
    return tModuleToLoad
 end sivasiva_GetModuleStackPath
 
@@ -88,8 +113,88 @@ function sivasiva_GetModuleRootFolder
 end sivasiva_GetModuleRootFolder
 
 
+--> SivaSiva | Paths | Assets
+-
+function sivasiva_PortalImageFile shortFile
+   put sivasiva_PortalImageFolder() & shortFile into portalImageFile
+   return portalImageFile
+end sivasiva_PortalImageFile
+
+function sivasiva_PortalImageFolder
+   put sivasiva_AssetFolder ("img/portal-screens/") into portalImageFolder
+   return portalImageFolder
+end sivasiva_PortalImageFolder
+
+function sivasiva_PhotosFolder
+   put sivasiva_AssetFolder ("img/photography/") into photosFolder
+   return photosFolder
+end sivasiva_PhotosFolder
+
+function sivasiva_AssetFolder pRelativeFolderPath
+   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
+   if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
+   return sharedAssetFolder
+end sivasiva_AssetFolder
+
+
+--> SivaSiva | Paths | List
+-
+function sivasiva_ListModelShortFiles
+   put sivasiva_ProjectFolder ("models/") into modelsFolder
+   put mobile_ListShortFiles (modelsFolder, "Siva-Siva-App") into modelShortFiles
+   return modelShortFiles
+end sivasiva_ListModelShortFiles
+
+function sivasiva_ListPhotoFolders
+   put sivasiva_PhotosFolder() into photosFolder  
+   put folder_ListShort (photosFolder) into photoFolderNames
+   return photoFolderNames
+end sivasiva_ListPhotoFolders
+
+function sivasiva_ListModuleFolders
+   put sivasiva_GetModuleRootFolder() into modulesFolder  
+   put folder_ListShort (modulesFolder) into moduleNames
+   return moduleNames
+end sivasiva_ListModuleFolders
+
+function sivasiva_ListStackPaths someFolder  
+   put mobile_ListShortFiles (someFolder, "Siva-Siva-App") into shortFiles
+   set the itemdelimiter to "."
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put stackFilePath & CR after stackFilePaths
+      end if
+   end repeat
+   delete char -1 of stackFilePaths
+   return stackFilePaths
+end sivasiva_ListStackPaths
+
+
 --> Deps
 -
+function mobile_ListLongFiles someFolder, homeStackName
+   put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFiles is "." then next repeat
+      put someFolder & shortFile & CR after longFiles
+   end repeat
+   delete char -1 of longFiles
+   return longFiles
+end mobile_ListLongFiles
+
+function mobile_ListShortFiles someFolder, homeStackName
+   -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
+   -- requires Livecode 8.1 or greater
+   if there is not a folder someFolder then return empty
+   
+   put the defaultstack into oStack
+   set the defaultstack to homeStackName
+   put files (someFolder) into shortFiles
+   set the defaultstack to oStack
+   return shortFiles
+end mobile_ListShortFiles
+
 function folder_ListShort rootFolder
    if there is not a folder rootFolder then return empty
    
@@ -102,17 +207,9 @@ function folder_ListShort rootFolder
    return shortFolders
 end folder_ListShort
 
-
---> Private
--
-private command debug_MissingPortalImage headerImageFile, homeModueName
-   if there is not a file headerImageFile then
-      put headerImageFile
-      breakpoint
-      put portal_GetHeaderImageFile (homeModueName) into imageFile
-      set the itemdelimiter to slash
-      put item 1 to -2 of headerImageFile & slash into imageFolder
-      finder_Reveal imageFolder
-      exit to top
-   end if
-end debug_MissingPortalImage
+-- getprop stack_Folder
+   put the effective filename of the defaultstack into stackFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of stackFolder
+   return stackFolder
+end stack_Folder

@@ -53,31 +53,62 @@ end standaloneSaved
 
 --> Init
 -
+after init_Logging
+   log_Info "After init_Logging..."  
+end init_Logging
+
 after init_AppConfiguration
-   -- convenience for desktop use
-   set the loc of this stack to the screenloc
-   if "API" is in the backscripts then scaleStackIfNeeded -- otherwise fails on loader launch
+   if the environment is "development" then
+      -- convenience for desktop use
+      if "API" is in the backscripts then scaleStackIfNeeded -- otherwise fails on loader launch
+      set the loc of this stack to the screenloc
+   end if
+   
+   log_Info ("After" && the params)
 end init_AppConfiguration
 
 
---> Logging | before and After
+--> Logging | Libraries
 -
-before init_LoadJsonConfig
-   log_Info "About to load App configuration..."
-end init_LoadJsonConfig
-
-after init_LoadJsonConfig
-   log_Info "App configuration loaded..."
-end init_LoadJsonConfig
+after init_UseHome
+   log_Info ("After" && the params)
+end init_UseHome
 
 before load_Library tStackPath, sharedLibFolder
-   log_Info "Loading library" && tStackPath
+   log_Info ("Before" && the params)
 end load_Library
 
 before load_FrontScript tStackPath, sharedLibFolder
-   log_Info "Loading frontscript" && tStackPath
+   log_Info ("Before" && the params)
 end load_FrontScript
 
 before load_BackScript tStackPath, sharedLibFolder
-   log_Info "Loading backscript" && tStackPath
+  log_Info ("Before" && the params)
 end load_BackScript
+
+
+--> Logging | Config
+-
+before init_LoadJsonConfig
+   log_Info ("Before" && the params)
+end init_LoadJsonConfig
+
+after init_LoadJsonConfig
+   log_Info ("After" && the params)
+end init_LoadJsonConfig
+
+before init_MobileGeometry
+   log_Info ("Before" && the params)
+end init_MobileGeometry
+
+after init_MobileGeometry
+   log_Info ("After" && the params)
+end init_MobileGeometry
+
+before init_HomeDisplay
+   log_Info ("Before" && the params)
+end init_HomeDisplay
+
+after init_HomeDisplay
+   log_Info ("After" && the params)
+end init_HomeDisplay

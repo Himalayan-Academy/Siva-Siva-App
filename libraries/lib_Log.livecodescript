@@ -40,7 +40,7 @@ command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home st
       if it = "view" then
          answer url ("file:" & logFile)
       else if it = "clear" then
-         put empty into url ("file:" & logFile)
+         log_Clear
       end if
    end if
 end jgAndroidLog
@@ -72,6 +72,11 @@ end log_Error
 command log_Fatal pMessage
    log_Raw "fatal", pMessage
 end log_Fatal
+
+command log_Clear
+   put log_GetFile() into logFile
+   delete file logFile
+end log_Clear
 
 command log_Raw pLevel, pMessage
    put log_GetFile() into logFile

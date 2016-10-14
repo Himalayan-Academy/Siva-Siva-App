@@ -10,23 +10,49 @@ AFAIK this is unecessary and should be moved into the libraries folder where it 
 */
 
 
---> Init
+--> Navigation
 -
-command initializeInterfaceDefaults pOrientation -- mobile orientation setup
-   /*
-   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
-   Possibly to initialisations scripts at the card layer (as a behavior)
-   */
+command goHome
+   -- log_Info _goLaunchModule ..."
+   -- put getConfiguration ("launch_module") into homeModule
+   loadModule "listen"
+end goHome
+
+command loadModule pModule
+   log_Info "Loading module:" && pModule
+   -- module_LoadConfiguration pModule
+   module_Go pModule
+end loadModule
+
+command module_Go pModule
+   log_Info the params
    
-   if isMobile() then 
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      if pOrientation ="portrait" then
-         mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-      else
-         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-      end if
+   -- put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into moduleStackPath
+   put sivasiva_GetModuleStackPath (pModule) into moduleStackPath
+   put there is a stack moduleStackPath into someBoolean
+   
+   log_Info ("Go to stack" && someBoolean)
+   
+   // load stack
+   put the short name of this stack into tOrigStack --jg: this avoids screen flashes
+   -- go stack moduleStackPath in a new window
+   go to stack pModule in a new window
+   if tOrigStack <> "Siva-Siva-App"  and the filename of stack tOrigStack <> moduleStackPath then
+      close stack tOrigStack --jg: close orig stack after new one is in front
    end if
-end initializeInterfaceDefaults
+end module_Go
+
+command module_LoadConfiguration pModule
+   -- put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into moduleJsonFile
+   put sivasiva_GetModuleJsonFile (pModule) into moduleJsonFile
+   
+   // check and load configuration
+   if there is a file moduleJsonFile then
+      get url ("binfile:" & moduleJsonFile)
+      loadModuleConfiguration pModule, jsonImport(it)
+      log_Info "loadModuleConfiguration"
+   end if
+end module_LoadConfiguration
 
 
 --> Events
@@ -46,41 +72,23 @@ on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not rig
 end backKey
 
 
---> Navigation
+--> Init
 -
-command goHome
-   _goLaunchModule
-end goHome
-
-command loadModule pModule
-  // find what module file to load
-  log_Info "Loading module:" && pModule
-  put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into tModuleToLoad
-  put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into tModuleConfigurationFile
-  log_Info tModuleToLoad
-  
-  // check and load configuration
-  if there is a file tModuleConfigurationFile then
-    get url ("binfile:" & tModuleConfigurationFile)
-    loadModuleConfiguration pModule, jsonImport(it)
-  end if
-  
-  // load stack
-  put the short name of this stack into tOrigStack --jg: this avoids screen flashes
-  go stack tModuleToLoad in a new window
-  if tOrigStack <> "Siva-Siva-App"  and the filename of stack tOrigStack <> tModuleToLoad then
-    close stack tOrigStack --jg: close orig stack after new one is in front
-  end if
-end loadModule
-
-
---> Private
--
-private command _goLaunchModule
-   log_Info "Loading launch module..."
-   loadModule getConfiguration("launch_module")
-end _goLaunchModule
-
+command initializeInterfaceDefaults pOrientation -- mobile orientation setup
+   /*
+   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
+   Possibly better to initialisations scripts at the card layer (as a behavior)
+   */
+   
+   if the environment is "mobile" then 
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      if pOrientation ="portrait" then
+         mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      else
+         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+      end if
+   end if
+end initializeInterfaceDefaults
 
 
 --> Display
