@@ -1,4 +1,25 @@
-﻿script "preferences"
+﻿script "model_SivaSivaPrefs"
+--> MetaData
+-
+license: GPLv3
+name: model_SivaSivaPrefs
+type: model
+version: 0.1
+
+/*
+Begun moving this stack to a model.
+Was 'preferences"
+
+Preferences are stored in platform specific ways. We should take advantage of these.
+There are various forms of preference:
+-  application specific
+-  user preferences
+-  tool or uttility preferences
+*/
+
+--> Variables
+-
+
 /**
 * Preferences Library (aka User Settings)
 *
@@ -6,6 +27,8 @@
 *
 */
 
+--> Prefs
+-
 command setPref pKey, pValue
    _makeSurePreferencesFileExists
    put url ("binfile:" & pathForPreferencesFile()) into tJSON

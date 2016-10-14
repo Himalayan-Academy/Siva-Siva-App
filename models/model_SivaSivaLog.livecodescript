@@ -1,8 +1,8 @@
-﻿script "lib_Log"
+﻿script "model_SivaSivaLog"
 --> MetaData
 -
 license: GPLv3
-name: lib_Log
+name: model_SivaSivaLog
 type: library
 version: 0.2
 
@@ -12,9 +12,14 @@ This library implements system wide loggin functionality to track things like na
 
 == Important ==
 We need to start logging before any libraries are loaded.
-We must ensure this stack is the first to be used loaded first.
+We must ensure this stack is the first to be used / loaded.
 
 == Future ==
+For now this is a specific library for the Siva-Siva-App.
+We look to creating a general purpose "logging module" which works on mobile, server and desktop.
+This module would be it's own project but can be included in any application as an npm style dependeny.
+
+== Consierations ==
 Early discussions considered the idea of using a general purpose logging library to track progress through the various SivaSiva modules.
 Bookmarking, coverage of content for games and feedback could also use such a facility.
 I defer to Andre on this for now? Should it be in the database, or an array based NoSQL model.
@@ -110,28 +115,3 @@ command log_Raw pLevel, pMessage
       return empty
    end if
 end log_Raw
-
-
---> Log | Files
--
-function log_GetFile
-   if the environment is not "development" then
-      return mobile_GetLogFile()
-   else
-      return desktop_GetLogFile()
-   end if
-end log_GetFile
-
-
---> Private
--
-private function desktop_GetLogFile
-   -- sivasiva.log
-   put sConfigA ["log_file"] into logFile
-   return logFile
-end desktop_GetLogFile
-
-private function mobile_GetLogFile
-   put specialFolderPath ("documents") & "/mobilelog.txt" into logFile
-   return logFile
-end mobile_GetLogFile
