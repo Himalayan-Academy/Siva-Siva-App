@@ -13,6 +13,18 @@ This model contains all the handlers we require to access any files and folders.
 
 --> Working on
 -
+function sivasiva_UserSettingsFile
+   put sivasiva_UserSettingsFolder() & "model_SivaSivaPrefs.json" into userSettingsFile
+   if there is not a file userSettingsFile then return empty
+   return userSettingsFile
+end sivasiva_UserSettingsFile
+
+function sivasiva_UserSettingsFolder
+   put sivasiva_ProjectFolder ("models/model_SivaSivaPrefs/") into userSettingsFolder
+   return userSettingsFolder
+end sivasiva_UserSettingsFolder
+
+
 --> WordPuzzle | Files
 -
 function wordpuzzle_ListLongImageFiles

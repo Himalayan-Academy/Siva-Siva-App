@@ -1,8 +1,92 @@
 ﻿script "behavior_portal-links"
-  
+--> MetaData
+-
+license: GPLv3
+name: behavior_portal-links
+type: behavior
+version: 0.3
+
+/*
+Here we begin to define a behavior for portals.
+This will change completely when we add the new componentized portal views with teir navigation.
+*/
+
+
+--> Variables
+-
 local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
 
 
+--> Transitional
+-
+command portal_PreOpenCard portalName
+   initializeInterfaceDefaults "portrait"
+   log_Info "initializeInterfaceDefaults"
+   
+   -- module_LoadConfiguration portalName
+   -- put getModuleConfiguration (portalName) into sConfigA
+   put sivasiva_GetModuleConfigArray (portalName) into sConfigA
+   
+   set the acceleratedRendering of this stack to true
+   loadPortalImages sConfigA
+end portal_PreOpenCard
+
+on preOpenCard
+   put _getPortalName() into portalName
+   portal_PreOpenCard portalName
+   pass preOpenCard
+end preOpenCard
+
+private function _getPortalName
+   set the itemdelimiter to "-"
+   put item 1 of the short name of this card into portalName
+   return portalName
+end _getPortalName
+   
+on opencard
+   put the short name of me into portalGroupName
+   
+   set the blendLevel of button "home-Logo" to 0
+   send hideLogo to me in 1 second
+   set the vScroll of me  to 0 -- ensures correct initial alignment
+   send "createScroller portalGroupName" to me in 500 milliseconds -- jg: does nothing if not mobile
+end opencard
+
+on closeCard
+   put the short name of me into portalGroupName
+   deleteMobileControl portalGroupName -- jg: does nothing if not mobile
+end closeCard
+
+on relaunch
+   --  log_Info "went back to home module"
+end relaunch
+
+command loadImage pImg, pTarget
+   -- put (getPathToModulesFolder() & "home/" & pImg) into tImgPath
+   set the itemdelimiter to slash
+   put item -1 of pImg into shortFile
+   put sivasiva_PortalImageFile (shortFile) into tImgPath
+   
+   log_Info "Loading image:" && tImgPath
+   set the filename of pTarget to tImgPath
+end loadImage
+
+on launchAction pKey
+   put sConfigA[pKey]["action"] into tAction
+   
+   switch
+      case "//" is in tAction
+         launchURL tAction
+         break
+      default
+         break
+   end switch
+end launchAction
+
+
+
+--> Original
+-
 command hideLogo
    repeat with x = 1 to 100
       # not good to use "wait" in any mobile context.. 

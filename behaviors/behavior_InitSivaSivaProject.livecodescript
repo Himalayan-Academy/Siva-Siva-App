@@ -41,21 +41,17 @@ and even stop loggin the initialisation routines by default
 and include it only as an option (advanced) feature/tool.
 */
 
-before preOpenStack
-   -- only required to ensure we can log the project initialization
-   init_Logging
-end preOpenStack
-
 command init_Logging
    --  relies on stack names so ensure the stackfiles is set properly
    -- we have to ensure the general purpose logging handlers are loaded first
-   start using stack "lib_Log"
+   start using stack "model_SivaSivaLog"
    
    -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
    -- we could remove this step if we move this code back to the card script
    put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
    set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
    
+   log_SetLevelList "all"
    log_Clear
 end init_Logging
 
@@ -72,26 +68,36 @@ command init_AppConfiguration
    -- setBasePath -- jg
    */
    
-   -- the first thing we must do is start using all required libraries
-   init_LoadLibraries
+   -- the first thing we must do is know where the top-level project is
+   start using stack "model_SivaSivaFiles"
+   put sivasiva_ProjectFolder() into projectFolder
    
-   answer "init_LoadLibraries!"
+   -- then
+   init_Logging
+   log_Append "Finished init_Logging"
+   
+   -- then start using all required libraries
+   init_LoadLibraries projectFolder
+   log_Append ("Finished init_LoadLibraries" && projectFolder)
    
    -- once we have loaded the libraries we can use them to load any needed configuration
    init_LoadJsonConfig
-   
-   answer "init_LoadJsonConfig!"
+   log_Append "Finished init_LoadJsonConfig"
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
       init_MobileGeometry
+      log_Append "Finished init_MobileGeometry"
    end if
    
    -- here we display out first screen
    init_HomeDisplay
+   log_Append "Finished init_HomeDisplay"
+   
+   display_Log
 end init_AppConfiguration
 
-command  init_LoadLibraries
+command  init_LoadLibraries projectFolder
    /*
    Consider moving front and backscripts to be regular libraries.
    We should not need to load any behaviors manually (needs checing on mobile).
@@ -102,8 +108,6 @@ command  init_LoadLibraries
    */
    
    -- init_UseHome
-   put sivasiva_ProjectFolder() into projectFolder
-   -- answer (there is a folder projectFolder & CR & projectFolder)
    
    -- we start using both "library" stacks and "model" stacks
    project_UseStacksInFolder "models", projectFolder
@@ -161,16 +165,6 @@ end load_BackScript
 
 -->Project | Start
 -
-command project_UseStacksInFolder shortFolder, projectFolder
-   put projectFolder & shortFolder & slash into standardFolder
-   put sivasiva_ListStackPaths (standardFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      load_Library stackPath, shortFolder
-   end repeat
-   return stackPaths
-end project_UseStacksInFolder
-
 command project_StartBackScriptsInFolder projectFolder
    put projectFolder & "backscripts" & slash into standardFolder
    put sivasiva_ListStackPaths (standardFolder) into stackPaths
@@ -191,14 +185,26 @@ command project_StartFrontScriptsInFolder projectFolder
    return stackPaths
 end project_StartFrontScriptsInFolder
 
+command project_UseStacksInFolder shortFolder, projectFolder
+   put projectFolder & shortFolder & slash into standardFolder
+   log_Info ("standardFolder:" && standardFolder)
+   
+   put sivasiva_ListStackPaths (standardFolder) into stackPaths
+   log_Info ("sivasiva_ListStackPaths:" &CR& stackPaths)
+   
+   repeat for each line stackPath in stackPaths
+      if exists (stack stackPath) is false then next repeat
+      load_Library stackPath, shortFolder
+   end repeat
+   return stackPaths
+end project_UseStacksInFolder
+
 
 --> Deps
 -
 function sivasiva_ListStackPaths someFolder  
-   put mobile_ListShortFiles (someFolder, "Siva-Siva-App") into shortFiles
-   set the itemdelimiter to "."
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into stackFilePath
+   put mobile_ListLongFiles (someFolder, "Siva-Siva-App") into longFiles
+   repeat for each line stackFilePath in longFiles
       if there is a stack stackFilePath then
          put stackFilePath & CR after stackFilePaths
       end if
@@ -206,6 +212,19 @@ function sivasiva_ListStackPaths someFolder
    delete char -1 of stackFilePaths
    return stackFilePaths
 end sivasiva_ListStackPaths
+
+
+--> Deps
+-
+function mobile_ListLongFiles someFolder, homeStackName
+   put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFile is "." then next repeat
+      put someFolder & shortFile & CR after longFiles
+   end repeat
+   delete char -1 of longFiles
+   return longFiles
+end mobile_ListLongFiles
 
 function mobile_ListShortFiles someFolder, homeStackName
    -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack

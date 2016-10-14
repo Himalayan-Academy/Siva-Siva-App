@@ -15,7 +15,7 @@ AFAIK this is unecessary and should be moved into the libraries folder where it 
 command goHome
    -- log_Info _goLaunchModule ..."
    -- put getConfiguration ("launch_module") into homeModule
-   loadModule "listen"
+   module_Go "home"
 end goHome
 
 command loadModule pModule
@@ -25,21 +25,18 @@ command loadModule pModule
 end loadModule
 
 command module_Go pModule
-   log_Info the params
-   
-   -- put (getPathToModulesFolder() & pModule & "/" & pModule & ".livecode") into moduleStackPath
    put sivasiva_GetModuleStackPath (pModule) into moduleStackPath
-   put there is a stack moduleStackPath into someBoolean
    
-   log_Info ("Go to stack" && someBoolean)
+   log_Info ("Go to stack" && there is a stack moduleStackPath)
    
-   // load stack
    put the short name of this stack into tOrigStack --jg: this avoids screen flashes
-   -- go stack moduleStackPath in a new window
-   go to stack pModule in a new window
-   if tOrigStack <> "Siva-Siva-App"  and the filename of stack tOrigStack <> moduleStackPath then
+   go stack moduleStackPath in a new window
+   if the environment is "development" then return moduleStackPath
+   
+   if the filename of stack tOrigStack <> moduleStackPath then
       close stack tOrigStack --jg: close orig stack after new one is in front
    end if
+   return moduleStackPath
 end module_Go
 
 command module_LoadConfiguration pModule

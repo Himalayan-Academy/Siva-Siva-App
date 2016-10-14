@@ -20,9 +20,7 @@ global sConfigA
 
 --> SivaSiva | Project | Config
 -
-command init_LoadJsonConfig
-   answer "About to init_LoadJsonConfig"
-   
+command init_LoadJsonConfig   
    put sivasiva_GetModuleConfigArray ("Siva-Siva-App") into sConfigA
    put true into sConfigA ["initialized"]
 end init_LoadJsonConfig
@@ -33,11 +31,7 @@ end init_LoadJsonConfig
 function sivasiva_GetModuleConfigArray pModule
    put sivasiva_GetModuleJson (pModule) into someJSON
    if someJSON is empty then return empty
-   
-   answer "About to import"
-   put jsonImport (someJSON) into someArray
-   answer "Imported"
-   
+   put jsonImport (someJSON) into someArray   
    return someArray
 end sivasiva_GetModuleConfigArray
 
