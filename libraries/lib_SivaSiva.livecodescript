@@ -6,17 +6,24 @@ name: lib_SivaSiva
 type: library
 version: 0.2
 
+/*
+This library is for handlers dealing with generic Siva-Siva-App functionality such as displaying portal images.
+
+Currently these temporary handlers display portal data in the portal template stacks:
+-  View|SivaSiva|Contents|Row
+-  View|SivaSiva|Image|Header
+*/
+
+--> Variables
+-
 local LocalArray
 
 
 --> Working On
 -
+
 --> Display
 -
-/*
-Currenlty display in the template.
-*/
-
 command sivasiva_DisplayHomePortalLink rowName, pSivaSectionArray
    sivasiva_DisplayPortalLink rowName, moduleName, pSivaSectionArray
    return the result
