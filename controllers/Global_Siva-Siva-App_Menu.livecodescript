@@ -14,6 +14,9 @@ on menu_EditPortalModelJson
    launch_Atom jsonFile
 end menu_EditPortalModelJson
 
+on _
+end _
+
 on menu_EditHomeModuleJson indexView, portalName
    put sivasiva_GetModuleJsonFile (portalName) into jsonFile
    if there is not a file jsonFile then
@@ -30,6 +33,19 @@ on menu_DisplayModuleConfig indexView, portalName
    put sivasiva_GetModuleCongifArray (portalName) into configArray
    display_Array configArray
 end menu_DisplayModuleConfig
+
+on _
+end _
+
+on menu_DisplayPortalJson
+   put sivasiva_FetchData() into sivasivaData
+   display_Array sivasivaData, "sivasiva_FetchData(),SivaSiva Portal JSON"
+end menu_DisplayPortalJson
+
+on menu_DisplayTraitsBookArray
+   put traits_FetchBookArray() into bookArray
+   display_Array bookArray, "traits_FetchBookArray(),Charachter Traits Array"
+end menu_DisplayTraitsBookArray
 
 on _
 end _
