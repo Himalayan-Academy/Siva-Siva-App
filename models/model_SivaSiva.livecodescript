@@ -87,3 +87,189 @@ function sivasiva_ListPortals pListHow
    end switch
    return moduleNames
 end sivasiva_ListPortals
+
+
+--> Model | Library
+-
+/*
+Handlers below from "model_Library"
+Not all required (so prune before release).
+*/
+
+getprop model_Names
+   put the stack_Name of the target into modelStackName
+   put the project_Folder of the target into projectFolder
+   put model_ListNames (modelStackName, projectFolder) into shortFiles
+   return shortFiles
+end model_Names
+
+function model_ListNames modelStackName, projectFolder
+   put projectFolder & "models/" & modelStackName & slash into modelDataFolder
+   put folder_ListShortFiles (modelDataFolder) into shortFiles
+   return shortFiles
+end model_ListNames
+
+function model_ListModelFiles pListShort
+   put lcw_ArrayFolder() into libraryArrayFolder
+   put files (libraryArrayFolder) into shortFiles
+   filter shortFiles with "*.array"
+   if pListShort is true then
+      return shortFiles
+   else
+      put file_AddFolderToPaths (shortFiles, libraryArrayFolder) into filePaths
+      return filePaths
+   end if
+end model_ListModelFiles
+
+
+--> Model | Array | Props
+-
+getprop model_Array [pShortFile]
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   put array_FetchModel (modelDataFile) into modelArray
+   return modelArray
+end model_Array
+
+setprop model_Array [pShortFile] dataArray
+   -- assumes the target is a model stack
+   put the model_DataFile [pShortFile] of the target into modelDataFile
+   array_SaveModel modelDataFile, dataArray
+   return modelDataFile
+end model_Array
+
+
+--> Model | Array
+-
+function model_FetchArray modelStackName, projectFolder, pShortFile 
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
+   put array_FetchModel (modelArrayFile) into modelArray
+   return modelArray
+end model_FetchArray
+
+command model_StoreArray modelStackName, projectFolder, modelArray, pShortFile
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
+   array_SaveModel modelArrayFile, modelArray
+   return modelArrayFile
+end model_StoreArray
+
+
+--> Model | Data Folder
+-
+function model_GetDataFolder modelStackName, projectFolder
+   put project_ConstructFolder ("models", projectFolder) into rootModelsFolder
+   put rootModelsFolder & modelStackName & slash into modelDataFolder
+   return modelDataFolder
+end model_GetDataFolder
+
+getprop model_DataFolder [modelStackName]
+   if modelStackName is empty then
+      -- we assume the target is a model stack in the "models/" folder
+      -- simple utitlity that looks for a sister folder to any stack
+      put the stack_Name of the target into modelName
+      put the stack_Folder of the target into stackFolder
+      put stackFolder & modelName & slash into modelDataFolder
+   else
+      -- will search for the model data folder in the "models/" folder of the project the target stack is in
+      put the project_Folder of the target into projectFolder
+      put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   end if
+   return modelDataFolder
+end model_DataFolder
+
+
+--> Model | Data File
+-
+getprop model_DataFile [pShortFile]
+   -- assumes the target is a model stack
+   put the stack_Name of the target into modelStackName
+   put the stack_Folder of the target into stackFolder
+   put stackFolder & modelStackName & slash into modelDataFolder
+   
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_DataFile
+
+function model_GetDataFile modelStackName, projectFolder, pShortFile
+   put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
+   put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
+   return modelDataFile
+end model_GetDataFile
+
+
+--> Array | Model
+-
+/*
+Modified versions of "array_Fetch" and "array_Save"
+Allows storing mmodels as json or other formats based on their file extensions.
+
+The aim is to standarize different ways in which arrays can be stored and fetched,
+in order to make it easier to switch models from simple text files, json files, encoded arrays or databases.
+*/
+
+function array_FetchModel someFile
+   -- allows for simple switching of models
+   put url ("binfile:" & someFile) into someData
+   if someData is empty then return empty
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         put jsonImport (someData) into modelArray
+         break
+      case "array"
+         put arraydecode (someData) into modelArray
+         break
+      default
+         -- here we can return an array from a database
+         -- someFile could contain items used in a query
+         -- or even an sql query
+   end switch
+   return modelArray
+end array_FetchModel
+
+command array_SaveModel someFile, modelArray
+   if modelArray is not an array then delete file someFile
+   set the itemdelimiter to "."
+   switch item -1 of someFile
+      case "json"
+         put jsonExport (modelArray) into encodedData
+         break
+      default -- case "array"
+         put arrayencode (modelArray) into encodedData
+         break
+   end switch
+   put encodedData into url ("binfile:" & someFile)
+end array_SaveModel
+
+
+--> Private
+-
+private function dataFolder_GetFile modelDataFolder, pShortFile
+   if pShortFile is empty then
+      set the itemdelimiter to slash
+      put item -1 of modelDataFolder into modelName
+      put modelName & ".array" into pShortFile
+   end if
+   put modelDataFolder & pShortFile into modelDataFile
+   return modelDataFile
+end dataFolder_GetFile
+
+
+--> Deps
+-
+getprop stack_Name
+   return the short name of the defaultstack
+end stack_Name
+
+-- getprop stack_Object
+return the defaultstack
+end stack_Object
+
+getprop stack_Folder
+   put the effective filename of the defaultstack into stackFolder
+   set the itemdelimiter to slash
+   put empty into item -1 of stackFolder
+   return stackFolder
+end stack_Folder

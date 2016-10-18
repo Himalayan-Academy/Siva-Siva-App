@@ -37,29 +37,31 @@ global sConfigA
 local LocalArray
 
 
+--> Display
+-
+command display_Log
+   put the long id of cd "Log" of stack "Siva-Siva-App" into cardObject
+   put log_Fetch() into fld "Result" of cardObject
+   go to cd "Log" of stack "Siva-Siva-App"
+end display_Log
+
+
 --> Log | Files
 -
 function log_GetFile
    if the environment is "mobile" then
       put the documents folder & slash & "model_SivaSivaLog.txt" into logFile
-      return logFile
    else
       -- put the model_DataFile ["model_SivaSivaLog.txt"] of stack "model_SivaSivaLog" into logFile
       put sivasiva_ProjectFolder ("models/model_SivaSivaLog/") & "model_SivaSivaLog.txt" into logFile
-      return logFile
-      
-      put LocalArray ["logFile"] into logFile
-      if logFile is empty then
-         put the tempname & ".txt" into logFile
-         put logFile into LocalArray ["logFile"]
-      end if
-      return logFile
    end if
+   return logFile
 end log_GetFile
 
 
 --> Workign on
 -
+
 --> Log | Model
 -
 command log_AddLine pMessage, pLevel
@@ -112,9 +114,7 @@ end log_Store
 
 command log_Clear
    put log_GetFile() into logFile
-   put "Cleared log:" && the seconds into clearText
-   
-   -- put clearText into url ("binfile:" & logFile) -- does not work if file does not exist ???
+   put "Cleared log:" && the seconds & CR into clearText
    -- delete file logFile
    log_Store clearText
 end log_Clear
@@ -131,12 +131,6 @@ command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home st
    end if
 end jgAndroidLog
 
-command display_Log
-   put the long id of cd "Log" of stack "Siva-Siva-App" into cardObject
-   put log_Fetch() into fld "Result" of cardObject
-   go to cd "Log" of stack "Siva-Siva-App"
-end display_Log
-
 function log_GetLevelList
    put sConfigA ["log_level"] into logLevelList
    return logLevelList
@@ -150,7 +144,7 @@ command  log_SetLevelList logLevelList
 end log_SetLevelList
 
 private function _androidIsLogging
-   put the hilite of btn "jg android log" of cd 1 of stack "Siva-Siva-App" into isLogging
+   put the hilite of btn "jg android log" of cd "Legacy" of stack "Siva-Siva-App" into isLogging
    return isLogging
 end _androidIsLogging
 

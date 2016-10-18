@@ -11,17 +11,75 @@ version: 0.3
 local LocalArray
 
 
+--> Events
+-
+on touchStart pID
+   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+   mouseDown
+end touchStart
+
+on touchEnd pID
+   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+   answer the params
+   mouseUp
+end touchEnd
+
+on mouseDown
+   set the row_Hilite of me to true
+   pass mouseDown
+end mouseDown
+
+on mouseRelease
+   answer the params
+   set the row_Hilite of me to false
+   pass mouseRelease
+end mouseRelease
+
+on mouseUp
+   put the short name of the target into cName
+   switch cName
+      case "portal-link-label"
+         put the row_Name of me into portalName
+         -- set the portal_Name of me to portalName -- trapped by scrolling_View above
+         break
+      case "portal-link-image"
+         -- put the image_File of me
+         break
+      default
+         -- qput cName
+   end switch
+   set the row_Hilite of me to false
+   pass mouseUp
+end mouseUp
+
+getprop row_Hilite
+   return the blendlevel of me = 0
+end row_Hilite
+
+setprop row_Hilite someBoolean
+   if someBoolean is true then
+      set the blendlevel of me to 50
+   else
+      set the blendlevel of me to 0
+   end if
+end row_Hilite
+
+
 --> Props
 -
 getprop row_Name
-   return LocalArray ["rowName"]
+   return the row_Name of me
+   -- return LocalArray ["rowName"]
 end row_Name
 
 setprop row_Name rowName
    local pSivasivaData
    put portal_GetRowData (rowName, pSivasivaData) into rowData
    set the row_Data of me to rowData
-   put rowName into LocalArray ["rowName"]
+   
+   -- make it permanent
+   set the row_Name of me to rowName
+   -- put rowName into LocalArray ["rowName"]
 end row_Name
 
 getprop row_Data
@@ -173,9 +231,9 @@ end LayoutControl
 
 --> Objects
 -
-getprop sivaSivaContents_Row
+getprop portal_Row
    return the long id of me
-end sivaSivaContents_Row
+end portal_Row
 
 getprop view_Object
    return the long id of me

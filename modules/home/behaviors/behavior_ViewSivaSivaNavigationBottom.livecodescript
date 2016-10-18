@@ -15,7 +15,7 @@ local LocalArray
 --> Work in Progress
 -
 command sivasiva_GoHomePortal btnObject, hiliteBoolean
-   
+   portal_GoHome
 end sivasiva_GoHomePortal
 
 command sivasiva_QueueContent btnObject, hiliteBoolean
@@ -33,7 +33,11 @@ command sivasiva_AddFavorites btnObject, hiliteBoolean
 end sivasiva_AddFavorites
 
 command sivasiva_SettingsGear btnObject, hiliteBoolean
- 
+   put the short name of this stack into tOrigStack
+   lock screen
+   go to stack "Siva-Siva-App"
+   close stack tOrigStack
+   unlock screen
 end sivasiva_SettingsGear
 
 
@@ -41,7 +45,7 @@ end sivasiva_SettingsGear
 -
 on mouseDown
    put the long id of the target into btnObject
-   set the highlite of btnObject to (not the highlite of btnObject)
+   set the highlite of btnObject to true
 end mouseDown
 
 on mouseUp pWhichButton
@@ -54,25 +58,31 @@ on mouseUp pWhichButton
    
    put the highlite of btnObject into someBoolean
    dispatch mCommand with btnObject, someBoolean
-   
    switch it
       case "handled"
          break
       case "unhandled"
       default
-         -- put toUpper (char 1 of btnName) into char 1 of btnName -- totally unecessary :)
-         replace "-" with space in btnName
-         get text_InitialCaps (btnName)
-         replace space with empty in it
-         put "sivasiva_" & it into mCommand
-         
-         put "command" && mCommand && "btnObject, hiliteBoolean" into someHandler
-         put CR & "    -- code here" after someHandler
-         put CR & "end" && mCommand after someHandler
-         set the clipboarddata ["text"] to someHandler
-         put someHandler 
+         _displayCommand
    end switch
+   set the highlite of btnObject to false
 end mouseUp
+
+private command _displayCommand
+   if the environment is "development" then
+      -- put toUpper (char 1 of btnName) into char 1 of btnName -- totally unecessary :)
+      replace "-" with space in btnName
+      get text_InitialCaps (btnName)
+      replace space with empty in it
+      put "sivasiva_" & it into mCommand
+      
+      put "command" && mCommand && "btnObject, hiliteBoolean" into someHandler
+      put CR & "    -- code here" after someHandler
+      put CR & "end" && mCommand after someHandler
+      set the clipboarddata ["text"] to someHandler
+      put someHandler
+   end if
+end _displayCommand
 
 on resizeControl
    LayoutControl

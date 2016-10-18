@@ -32,8 +32,8 @@ so we like to isolate it from the general code andkeep it attached to the card a
 on savingStandalone -- pre-processss
   -- if not an Android app, turn off android logging
   put (the cRevStandaloneSettings["android"] of me = true) into tIsAndroid
-  set the hilite of btn "jg android log" of cd 1 of me to tIsAndroid
-  set the vis of fld "logfld" of cd 1 of me to tIsAndroid
+  set the hilite of btn "jg android log" of cd "Legacy" of me to tIsAndroid
+  set the vis of fld "logfld" of cd "Legacy" of me to tIsAndroid
 end savingStandalone
 
 on standaloneSaved pFolder -- post-process
@@ -45,8 +45,8 @@ on standaloneSaved pFolder -- post-process
     add 1 to tBuildNum
     set the cRevStandaloneSettings["android,version code"] of me to tBuildNum
     
-    set the hilite of btn "jg android log" of cd 1 of me to tIsAndroid
-    set the vis of fld "logfld" of cd 1 of me to false
+    set the hilite of btn "jg android log" of cd "Legacy" of me to tIsAndroid
+    set the vis of fld "logfld" of cd "Legacy" of me to false
   end if
 end standaloneSaved
 

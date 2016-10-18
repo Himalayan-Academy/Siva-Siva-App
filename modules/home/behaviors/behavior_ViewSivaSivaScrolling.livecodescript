@@ -21,7 +21,130 @@ local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
 local LocalArray
 
 
---> Portal | Array
+--> Working on
+-
+command portal_Navigate portalName
+   if portalName is empty then
+      answer "Portal name is empty"
+      breakpoint
+   else
+      set the portal_Name of me to portalName
+   end if
+end portal_Navigate
+
+
+--> Events
+-
+on mouseUp
+   put the portal_Row of the target into portalRow
+   switch
+      case _mouseMoved() is true
+         -- answer "Has scrolled"
+         break
+      case portalRow is empty
+         -- answer "Not a row"
+         break
+      default
+         -- answer "User tapped"
+         put the row_Name of the target into portalName
+         portal_Navigate portalName
+   end switch
+end  mouseup
+
+on setScroll
+   if the mouse is down then
+      lock screen
+      if item 2 of sMouseLoc > the mouseV then
+         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+      else
+         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+      end if
+      put the mouseloc into sMouseLoc
+      send "setScroll" to me in 20 millisec
+      unlock screen
+   else
+      put empty into sMouseLoc
+   end if
+end setScroll
+
+on mouseDown
+   put the mouseloc into sMouseLoc
+   put sMouseLoc into sStartLoc
+   if the environment is not "mobile" then
+      -- mobile will use stack handlers to scroll instead
+      setScroll
+   end if
+end mouseDown
+
+on touchStart pID
+   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+   mouseDown
+end touchStart
+
+on touchEnd pID
+   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+   mouseUp
+end touchEnd
+
+on resizeControl
+   put the rect of me into pRect
+   LayoutControl pRect
+end resizeControl
+
+
+--> Geometry
+-
+on LayoutControl pRect
+   -- for portal view with fixed header and row height
+   lock screen
+   if pRect is empty then put the rect of me into pRect
+   
+   -- put the effective height of _headerView() into FirstHeight
+   put 288 into FirstHeight
+   -- put the effective height of control id topControlID into RowHeight
+   put 122 into RowHeight
+   
+   put the view_Spacing of me into viewSpacing
+   put item 2 of pRect into childTop
+   
+   put the childcontrolids of me into topControlIDs
+   if topControlIDs is empty then return empty
+   
+   put line 1 of topControlIDs into headerID
+   delete line 1 of topControlIDs
+   
+   -- set header height
+   put childTop + FirstHeight into childBottom
+   put pRect into childRect
+   put childTop into item 2 of childRect
+   put childBottom into item 4 of childRect
+   --
+   set the rect of control id headerID to childRect
+   
+   -- now set row heights
+   put childBottom + viewSpacing into childTop
+   repeat for each line topControlID in topControlIDs      
+      put childTop + RowHeight into childBottom
+      
+      put pRect into childRect
+      put childTop into item 2 of childRect
+      put childBottom into item 4 of childRect
+      --
+      set the rect of control id topControlID to childRect
+      
+      put childBottom + viewSpacing into childTop
+   end repeat
+   unlock screen
+end LayoutControl
+
+private function _mouseMoved
+   put abs (the mouseV - item 2 of sStartLoc) into someDistance
+   put someDistance >= 10 into someBoolean
+   return someBoolean
+end _mouseMoved
+
+
+--> Portal
 -
 /*
 The "set the portal_Name"  functionailty depends on the "portal_GetArray" of "model_SivaSiva".
@@ -40,70 +163,6 @@ setprop portal_Name portalName
    return the result
 end portal_Name
 
-private function _rowTemplate
-   -- we can hard wire this (used by "set the portal_Array")
-   -- would be better to limit the least "row_Number" to something like 3 and use an internal template
-   put "View|SivaSiva|Contents|Row" into viewName
-   --  put view_GetTemplateObject (viewName) into rowObject
-   put the long id of control 1 of stack viewName into rowObject
-   return rowObject
-end _rowTemplate
-
-
---> Working on
--
-command portal_Navigate
-   # by convention the links on these portal pages are groups of three objects
-   # label field, image, and a background, these are the mouse targets
-   # each of these groups is explicitly named
-   # by this convention: portalName[underscore]specific-link-target-action
-   # So we are depending on the short name of the immediate owner of the target
-   
-   if abs (the mouseV - item 2 of sStartLoc) <= 10 then
-      # user tapped
-   end if
-end portal_Navigate
-
-command hideLogo
-   repeat with x = 1 to 100
-      # not good to use "wait" in any mobile context.. 
-      # it blocks so the scrolling will fail until the 
-      # wait is over.
-      send "setBlendLevel x"  to me in 2 milliseconds
-   end repeat
-end hideLogo
-
-command setBlendLevel pLevel
-   if there is a btn "home-logo" then set the blendLevel of btn "home-Logo" to pLevel
-end setBlendLevel
-
-on parseTargetOwner
-   put the short name of the owner of the target into sTargetOwner
-   
-   # parse the owner
-   set the itemdel to "_"
-   put item 1 of sTargetOwner into sTargetModule
-   put item 2 of sTargetOwner into sTargetAction
-end parseTargetOwner
-
-
---> Objects
--
-getprop scrolling_View
-   return the long id of me
-end scrolling_View
-
-getprop layout_Object
-   return the long id of me
-end layout_Object
-
-getprop view_Object
-   return the long id of me
-end view_Object
-
-
---> Portal | Array
--
 getprop portal_Array
    put the row_Views of me into rowViews
    repeat with indexNum = 1 to the number of lines of rowViews
@@ -115,7 +174,14 @@ getprop portal_Array
 end portal_Array
 
 setprop portal_Array [pForceRefresh] portalArray  
+   if portalArray is not an array then
+      answer warning "portal_Array is not an array!"
+      exit to top
+   end if
+   
    lock screen
+   set the vScroll of me to 0 -- ensures correct initial alignment
+   
    put portalArray ["portalName"] into portalName
    put portalArray ["rowData"] into portalRowData
    
@@ -130,6 +196,7 @@ setprop portal_Array [pForceRefresh] portalArray
    
    put item 2 of the extents of portalRowData into rowNum
    put _rowTemplate() into rowTemplate
+   
    set the row_Number [rowTemplate] of me to rowNum
    
    repeat for each key rowNum in portalRowData
@@ -192,99 +259,6 @@ setprop row_Number [cloneObject] rowNum
    LayoutControl
    unlock screen
 end row_Number
-
-
---> Events
--
-on mouseDown
-   parseTargetOwner 
-   put the mouseloc into sMouseLoc
-   put sMouseLoc into sStartLoc
-   if the environment is not "mobile" then
-      -- mobile will use stack handlers to scroll instead
-      setScroll
-   end if
-end mouseDown
-
-## jg: using touch msgs on android, because something is blocking mouseUps when scroller is active;
-on touchStart pID
-  mouseDown
-end touchStart
-
-on touchEnd pID
-  mouseUp
-end touchEnd
-
-on mouseUp
-   portal_Navigate
-end  mouseup
-
-on resizeControl pFirstparam
-   put the rect of me into pRect
-   LayoutControl pRect
-end resizeControl
-
-
---> Geometry
--
-on setScroll
-   if the mouse is down then
-      lock screen
-      if item 2 of sMouseLoc > the mouseV then
-         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
-      else
-         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
-      end if
-      put the mouseloc into sMouseLoc
-      send "setScroll" to me in 20 millisec
-      unlock screen
-   else
-      put empty into sMouseLoc
-   end if
-end setScroll
-
-on LayoutControl pRect
-   -- for portal view with fixed header and row height
-   lock screen
-   if pRect is empty then put the rect of me into pRect
-   
-   -- put the effective height of _headerView() into FirstHeight
-   put 288 into FirstHeight
-   -- put the effective height of control id topControlID into RowHeight
-   put 122 into RowHeight
-   
-   put the view_Spacing of me into viewSpacing
-   put item 2 of pRect into childTop
-   
-   put the childcontrolids of me into topControlIDs
-   if topControlIDs is empty then return empty
-      
-   put line 1 of topControlIDs into headerID
-   delete line 1 of topControlIDs
-   
-   -- set header height
-   put childTop + FirstHeight into childBottom
-   put pRect into childRect
-   put childTop into item 2 of childRect
-   put childBottom into item 4 of childRect
-   --
-   set the rect of control id headerID to childRect
-   
-   -- now set row heights
-   put childBottom + viewSpacing into childTop
-   repeat for each line topControlID in topControlIDs      
-      put childTop + RowHeight into childBottom
-      
-      put pRect into childRect
-      put childTop into item 2 of childRect
-      put childBottom into item 4 of childRect
-      --
-      set the rect of control id topControlID to childRect
-      
-      put childBottom + viewSpacing into childTop
-   end repeat
-   unlock screen
-end LayoutControl
 
 
 --> Props
@@ -353,6 +327,21 @@ end image_File
 
 --> Objects
 -
+getprop scrolling_View
+   return the long id of me
+end scrolling_View
+
+getprop layout_Object
+   return the long id of me
+end layout_Object
+
+getprop view_Object
+   return the long id of me
+end view_Object
+
+
+--> Objects | Children
+-
 getprop row_Views
    put the childControlIds of me into idIndex
    delete line 1 of idIndex
@@ -375,7 +364,8 @@ getprop header_View
 end header_View
 
 private function _headerView
-   put the long id of group "Portal Image Header" of me into headerView
+   -- put the long id of group "Portal Image Header" of me into headerView
+   -- return headerView
    
    -- this is more robust when we have the layout finished
    put the childControlIDs of me into idIndex
@@ -390,3 +380,16 @@ private function _rowView rowNum
    if rowID is empty then return empty
    return the long id of control id rowID of me
 end _rowView
+
+private function _rowTemplate
+   put _rowView (2) into rowTemplate
+   return rowTemplate
+   
+   /*
+   -- these handlers are for a template in a separate stack (used in authoring)
+   put "View|SivaSiva|Contents|Row" into viewName
+   put view_GetTemplateObject (viewName) into rowTemplate
+   put the long id of control 1 of stack viewName into rowTemplate
+   return rowTemplate
+   */
+end _rowTemplate

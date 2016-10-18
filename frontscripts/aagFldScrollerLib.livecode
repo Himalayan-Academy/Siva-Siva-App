@@ -28,6 +28,7 @@ Be aware that this is called for all cards, this leads to overhead so this funct
 It checks the card for fields and groups with scrollbars and replaces them as needed.
 */
 
+-- on preOpenCard
 log_Info "called!"
 switch the environment
    case "mobile"
@@ -55,6 +56,6 @@ private command  instantiateMobileScrollers
    */
    
    --repeat with x = 1 to the number of groups in the topstack
-      --answer the short name of group x of the topstack
+   --answer the short name of group x of the topstack
    --end repeat
 end instantiateMobileScrollers

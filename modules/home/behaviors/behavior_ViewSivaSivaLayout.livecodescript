@@ -27,6 +27,20 @@ setprop portal_Name portalName
    return the result
 end portal_Name
 
+getprop logo_Faded
+   if the long id of me is not the long id of the target then pass logo_Faded
+   put the header_View of me into headerView
+   put the logo_Faded of headerView into someBoolean
+   return someBoolean
+end logo_Faded
+
+setprop logo_Faded someBoolean
+   if the long id of me is not the long id of the target then pass logo_Faded
+   put the header_View of me into headerView
+   set the logo_Faded of headerView to someBoolean
+   return the result
+end logo_Faded
+
 
 --> Props
 -
@@ -69,6 +83,14 @@ end scrolling_View
 getprop navigation_View
    return _navigationView()
 end navigation_View
+
+getprop header_View
+   -- a child of a child
+   if the long id of me is not the long id of the target then pass header_View
+   put the scrolling_View of me into scrollingView
+   put the header_View of scrollingView into headerView
+   return headerView
+end header_View
 
 private function _scrollingView
    return the long id of control "SivaSiva Portal Scrolling" of me

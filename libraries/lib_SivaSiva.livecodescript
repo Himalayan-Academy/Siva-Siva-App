@@ -21,6 +21,37 @@ local LocalArray
 
 --> Working On
 -
+command portal_Go moduleName
+   /*
+   The moduleName "home" maps to the stack "sivasivahome" for obvious reasons
+   Otherwise because we have set the stackfiles we could simply go to the short name of the stack
+   */
+   
+   put sivasiva_GetModuleStackPath (moduleName) into moduleStackPath -- not strictly necessary
+   log_Info ("Go to stack" && there is a stack moduleStackPath)
+   
+   put the short name of this stack into tOrigStack --jg: this avoids screen flashes
+   go stack moduleStackPath in a new window
+   if the environment is "development" then
+      return moduleStackPath
+   end if
+   close stack tOrigStack
+   return moduleStackPath
+end portal_Go
+
+command sivasiva_InitDefaults pOrientation -- mobile orientation setup
+   if the environment is "mobile" then 
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      switch pOrientation
+         case "landscape"
+            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+            break
+         default -- "portrait"
+            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      end switch
+   end if
+end sivasiva_InitDefaults
+
 
 --> Display
 -

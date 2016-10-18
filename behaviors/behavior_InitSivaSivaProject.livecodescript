@@ -137,7 +137,7 @@ end init_MobileGeometry
 
 command init_HomeDisplay
    -- if the environment is not "development" then close me -- we are not using the invisible loader stack method any more
-   goHome -- may not need to do this now as we place the portal stack on the home stacks card
+   -- goHome -- may not need to do this now as we place the portal stack on the home stacks card
    -- answer the params
 end init_HomeDisplay
 

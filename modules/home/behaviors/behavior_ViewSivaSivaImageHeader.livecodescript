@@ -17,8 +17,83 @@ It is designed for showing an image, or an SVG / web page.
 local LocalArray
 
 
+--> Events
+-
+on mouseUp
+   put the short name of the target into cName
+   switch cName
+      case "Title"
+      case "Portal Header Image"
+         put the logo_Faded of me into someBoolean
+         set the logo_Faded of me to (not someBoolean)
+         break
+      case "home-logo"
+         set the logo_Faded of me to true
+         break
+      default
+         -- put cName
+         pass mouseUp
+   end switch
+end mouseUp
+
+
 --> Props
 -
+getprop logo_Visible
+   put _logoButton() into logoButton
+   put the blendLevel of logoButton = 0 into fadedIn
+   put fadedIn and the visible of _logoButton() into isVisible
+   return isVisible
+end logo_Visible
+
+setprop logo_Visible someBoolean
+   put _logoButton() into logoButton
+   lock screen
+   set the visible of logoButton to someBoolean
+   set the blendlevel of logoButton to 0
+   unlock screen
+end logo_Visible
+
+getprop logo_Faded
+   put _logoButton() into logoButton
+   put the blendLevel of logoButton = 100 into fadedOut
+   return fadedOut
+end logo_Faded
+
+setprop logo_Faded someBoolean
+   put _logoButton() into logoButton
+   set the visible of logoButton to true
+   put 4 into someIncrement
+   put 0 into someDelay
+   put _logoButton() into logoButton
+   
+   if someBoolean is true then
+      logo_FadeOut 0, logoButton, someIncrement, someDelay
+   else
+      logo_FadeIn 100, logoButton, someIncrement, someDelay
+   end if
+end logo_Faded
+
+command logo_FadeIn newBlendLevel, logoButton, someIncrement, someDelay
+   set the blendLevel of logoButton to newBlendLevel
+   if newBlendLevel > 0 then
+      subtract someIncrement from newBlendLevel
+      send "logo_FadeIn newBlendLevel,logoButton,someIncrement,someDelay" to me in someDelay milliseconds
+   else
+      set the blendLevel of logoButton to 0
+   end if
+end logo_FadeIn
+
+command logo_FadeOut newBlendLevel, logoButton, someIncrement, someDelay
+   set the blendLevel of logoButton to newBlendLevel
+   if newBlendLevel < 100 then
+      add someIncrement to newBlendLevel
+      send "logo_FadeOut newBlendLevel,logoButton,someIncrement,someDelay" to me in someDelay milliseconds
+   else
+      set the blendLevel of logoButton to 100
+   end if
+end logo_FadeOut
+
 getprop portal_Header
    return LocalArray ["portalName"]
 end portal_Header
@@ -151,6 +226,14 @@ end image_Object
 getprop title_View
    return _titleView() 
 end title_View
+
+getprop logo_Button
+   return _logoButton()
+end logo_Button
+
+private function _logoButton
+   return the long id of button "home-logo" of me
+end _logoButton
 
 private function _titleView
    return the long id of group "Portal Header Title" of me
