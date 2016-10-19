@@ -74,7 +74,7 @@ end row_Name
 
 setprop row_Name rowName
    local pSivasivaData
-   put portal_GetRowData (rowName, pSivasivaData) into rowData
+   put portal_GetRowData (rowName) into rowData
    set the row_Data of me to rowData
    
    -- make it permanent
@@ -172,7 +172,6 @@ private command _centreVertically fieldObject
    set the margins of fieldObject to baseMargin
    put the formattedheight of fieldObject into fHeight
    put realHeight into availableHeight
-   -- subtract 2 * baseMargin from availableHeight
    put availableHeight - fHeight into topSpace
    put round (topSpace/2) + baseMargin into topSpace
    put baseMargin,topSpace,baseMargin,baseMargin into newMargins

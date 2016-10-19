@@ -23,21 +23,11 @@ command sivasiva_QueueContent btnObject, hiliteBoolean
 end sivasiva_QueueContent
 
 command sivasiva_AddFavorites btnObject, hiliteBoolean
-   if hiliteBoolean is true then
-      mobileLockOrientation
-      answer "Locked orientation"
-   else
-      mobileUnlockOrientation
-      answer "Unlocked orientation"
-   end if
+   portal_DisplayBookmarks
 end sivasiva_AddFavorites
 
 command sivasiva_SettingsGear btnObject, hiliteBoolean
-   put the short name of this stack into tOrigStack
-   lock screen
-   go to stack "Siva-Siva-App"
-   close stack tOrigStack
-   unlock screen
+   portal_GoLogging
 end sivasiva_SettingsGear
 
 

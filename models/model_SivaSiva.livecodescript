@@ -14,6 +14,10 @@ or later the equivalent "model_SivaSiva.json" file
 Currently working on standardising the model handlers used here in "model_Library"
 */
 
+--> Variables
+-
+local LocalArray
+
 
 --> Working on
 -
@@ -29,22 +33,49 @@ function portal_ListRowNames portalName, pSivaSectionArray
    return orderedPortalLinkNames
 end portal_ListRowNames
 
+
+--> SivaSiva | Model | Cache
+-
+private command _setCachedData @sivasivaData
+   if sivasivaData is not an array then
+      put _getCachedData() into sivasivaData
+   end if
+end _setCachedData
+
+private function _getCachedData
+   put LocalArray ["sivasivaData"] into sivasivaData
+   if sivasivaData is not an array then
+      --here we can cache
+      sivsiva_LoadCachedData
+   end if
+   return sivasivaData
+end _getCachedData
+
+command sivsiva_LoadCachedData
+   put sivasiva_FetchData() into sivasivaData
+   put sivasivaData into LocalArray ["sivasivaData"]
+end sivsiva_LoadCachedData
+
+command sivsiva_ClearCachedData
+   delete variable LocalArray ["sivasivaData"]
+end sivsiva_ClearCachedData
+
+
+--> SivaSiva | Model
+-
 function portal_GetArray portalName, pSivasivaData
-   if pSivasivaData is not an array then put sivasiva_FetchData() into pSivasivaData
+   _setCachedData pSivasivaData
    put pSivasivaData ["portalData"][portalName] into portalArray
    return portalArray
 end portal_GetArray
 
 function portal_GetRowData rowName, pSivasivaData
-   if pSivasivaData is not an array then put sivasiva_FetchData() into pSivasivaData
+   _setCachedData pSivasivaData
    put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
    put portalRowDictionary [rowName] into rowData
    return rowData
 end portal_GetRowData
 
-
---> SivaSiva | Model
--
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile-- could use ".array"

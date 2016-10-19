@@ -13,6 +13,11 @@ This model contains all the handlers we require to access any files and folders.
 
 --> Working on
 -
+function sivasiva_ProjectStackPath
+   put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
+   return projectStackPath
+end sivasiva_ProjectStackPath
+
 function sivasiva_UserSettingsFile
    put sivasiva_UserSettingsFolder() & "model_SivaSivaPrefs.json" into userSettingsFile
    if there is not a file userSettingsFile then return empty

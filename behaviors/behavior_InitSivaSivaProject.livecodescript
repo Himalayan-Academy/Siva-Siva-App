@@ -31,6 +31,10 @@ We can now experiment with:
 4) Integration with the responsive "Sivasiva Browser" view.
 */
 
+--> Variables
+-
+local LocalArray
+
 
 --> SivaSiva | Init | Logging
 -
@@ -58,7 +62,15 @@ end init_Logging
 
 --> SivaSiva | Init
 -
-command init_AppConfiguration  
+function init_GetStatus
+   return LocalArray ["initStatus"]
+end init_GetStatus
+
+command init_SetStatus someBoolean
+   put someboolean is true into LocalArray ["initStatus"]
+end init_SetStatus
+
+command init_AppConfiguration pForceInit
    /*
    Called by the "preOpenStack" of the Siva-Siva-App's first card script
    
@@ -67,6 +79,13 @@ command init_AppConfiguration
    -- set the defaultstack to the topstack
    -- setBasePath -- jg
    */
+   put init_GetStatus() is true into initStatus
+   put pForceInit is true into forceInit
+   if initStatus and forceInit is not true then
+      -- let's not initialise twice
+      -- especially as "init_HomeDisplay" can go to "sivasivahome" and cause recursion / crash ???
+      return false
+   end if
    
    -- the first thing we must do is know where the top-level project is
    start using stack "model_SivaSivaFiles"
@@ -94,8 +113,16 @@ command init_AppConfiguration
    init_HomeDisplay
    log_Append "Finished init_HomeDisplay"
    
-   display_Log
+   init_SetStatus someBoolean
 end init_AppConfiguration
+
+command init_HomeDisplay
+   if the environment is "mobile" then
+      portal_Go "home"
+   else
+      display_Log
+   end if
+end init_HomeDisplay
 
 command  init_LoadLibraries projectFolder
    /*
@@ -121,7 +148,7 @@ command  init_LoadLibraries projectFolder
 end init_LoadLibraries
 
 command init_UseHome
-   -- we all need to know where home "sivasiva_ProjectFolder()" is. 
+   -- we all need to know where home "sivasiva_ProjectFolder()" is. (no longer necessary?)
    -- ideally we fix "sivasiva_ProjectFolder" issue so it can go in a library
    start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
 end init_UseHome
@@ -134,12 +161,6 @@ command init_MobileGeometry
       iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
    end if
 end init_MobileGeometry
-
-command init_HomeDisplay
-   -- if the environment is not "development" then close me -- we are not using the invisible loader stack method any more
-   -- goHome -- may not need to do this now as we place the portal stack on the home stacks card
-   -- answer the params
-end init_HomeDisplay
 
 
 -->Project | Start | Load

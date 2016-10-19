@@ -23,15 +23,6 @@ local LocalArray
 
 --> Working on
 -
-command portal_Navigate portalName
-   if portalName is empty then
-      answer "Portal name is empty"
-      breakpoint
-   else
-      set the portal_Name of me to portalName
-   end if
-end portal_Navigate
-
 
 --> Events
 -
@@ -144,85 +135,8 @@ private function _mouseMoved
 end _mouseMoved
 
 
---> Portal
+--> Scrolling | Row
 -
-/*
-The "set the portal_Name"  functionailty depends on the "portal_GetArray" of "model_SivaSiva".
-*/
-
-getprop portal_Name
-   put LocalArray ["portalName"] into portalName
-   if portalName is empty then put "home" into portalName
-   return portalName
-end portal_Name
-
-setprop portal_Name portalName
-   put portalName into LocalArray ["portalName"]
-   put portal_GetArray (portalName) into portalArray
-   set the portal_Array of me to portalArray
-   return the result
-end portal_Name
-
-getprop portal_Array
-   put the row_Views of me into rowViews
-   repeat with indexNum = 1 to the number of lines of rowViews
-      put line indexNum of rowViews into rowView
-      put the row_Data of rowView into rowData
-      put rowData into portalArray [indexNum]
-   end repeat
-   return portalArray   
-end portal_Array
-
-setprop portal_Array [pForceRefresh] portalArray  
-   if portalArray is not an array then
-      answer warning "portal_Array is not an array!"
-      exit to top
-   end if
-   
-   lock screen
-   set the vScroll of me to 0 -- ensures correct initial alignment
-   
-   put portalArray ["portalName"] into portalName
-   put portalArray ["rowData"] into portalRowData
-   
-   put portalArray ["headerImage"] into shortHeaderFile
-   set the portal_ShortHeaderFile of _headerView() to shortHeaderFile
-   set the portal_Header of _headerView() to portalName
-   
-   if pForceRefresh is true then
-      -- slows things. Only needed if we are switching view types (like adding a grid)
-      set the row_Number of me to 1
-   end if
-   
-   put item 2 of the extents of portalRowData into rowNum
-   put _rowTemplate() into rowTemplate
-   
-   set the row_Number [rowTemplate] of me to rowNum
-   
-   repeat for each key rowNum in portalRowData
-      put portalRowData [rowNum] into rowData
-      put the row_View [rowNum] of me into rowView
-      if exists (rowView) is false then next repeat
-      
-      put rowData ["rowName"] into rowName
-      set the row_Name of rowView to rowName
-   end repeat
-   unlock screen
-end portal_Array
-
-getprop portal_Header
-   if the long id of the target is not the long id of me then pass portal_Header
-   put the portal_Header of _headerView() into moduleStackName
-   return moduleStackName
-end portal_Header
-
-setprop portal_Header moduleStackName
-   if the long id of the target is not the long id of me then pass portal_Header
-   set the portal_Header of _headerView() to moduleStackName
-   put the result into headerView
-   return headerView
-end portal_Header
-
 getprop row_Number
    put the childControlIDs of me into someIDs
    put the number of lines of someIDs into numberOfRows
@@ -380,16 +294,3 @@ private function _rowView rowNum
    if rowID is empty then return empty
    return the long id of control id rowID of me
 end _rowView
-
-private function _rowTemplate
-   put _rowView (2) into rowTemplate
-   return rowTemplate
-   
-   /*
-   -- these handlers are for a template in a separate stack (used in authoring)
-   put "View|SivaSiva|Contents|Row" into viewName
-   put view_GetTemplateObject (viewName) into rowTemplate
-   put the long id of control 1 of stack viewName into rowTemplate
-   return rowTemplate
-   */
-end _rowTemplate

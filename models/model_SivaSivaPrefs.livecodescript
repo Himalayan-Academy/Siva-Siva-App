@@ -7,6 +7,8 @@ type: model
 version: 0.1
 
 /*
+Not refactored yet.
+Should use the model_Array of stack "model_SivaSivaPrefs" ???
 Begun moving this stack to a model.
 Was 'preferences"
 
