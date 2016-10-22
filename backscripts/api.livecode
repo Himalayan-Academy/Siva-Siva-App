@@ -10,42 +10,6 @@ AFAIK this is unecessary and should be moved into the libraries folder where it 
 */
 
 
---> Events
+--> Working on
 -
 
---> Navigation
--
-command goHome
-   -- log_Info _goLaunchModule ..."
-   -- put getConfiguration ("launch_module") into homeModule
-   portal_Go "home"
-end goHome
-
-command loadModule pModule
-   log_Info "Loading module:" && pModule
-   -- module_LoadConfiguration pModule
-   portal_Go pModule
-end loadModule
-
-command module_LoadConfiguration pModule
-   -- put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into moduleJsonFile
-   put sivasiva_GetModuleJsonFile (pModule) into moduleJsonFile
-   
-   // check and load configuration
-   if there is a file moduleJsonFile then
-      get url ("binfile:" & moduleJsonFile)
-      loadModuleConfiguration pModule, jsonImport(it)
-      log_Info "loadModuleConfiguration"
-   end if
-end module_LoadConfiguration
-
-
---> Init
--
-command initializeInterfaceDefaults pOrientation -- mobile orientation setup
-   /*
-   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
-   Possibly better to initialisations scripts at the card layer (as a behavior)
-   */
-   sivasiva_InitDefaults pOrientation
-end initializeInterfaceDefaults

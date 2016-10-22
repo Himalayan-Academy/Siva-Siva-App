@@ -21,61 +21,9 @@ local LocalArray
 
 --> Working on
 -
-function portal_ListRowNames portalName, pSivaSectionArray
-   put portal_GetArray (portalName, pSivasivaData) into   moduleArray
-   put moduleArray ["rowData"] into rowData
-   put item 2 of the extents of rowData into maxNum
-   repeat with keyNum = 1 to maxNum
-      put rowData [keyNum]["rowName"] into portalLinkName
-      put portalLinkName & CR after orderedPortalLinkNames
-   end repeat
-   delete char -1 of orderedPortalLinkNames
-   return orderedPortalLinkNames
-end portal_ListRowNames
-
-
---> SivaSiva | Model | Cache
--
-private command _setCachedData @sivasivaData
-   if sivasivaData is not an array then
-      put _getCachedData() into sivasivaData
-   end if
-end _setCachedData
-
-private function _getCachedData
-   put LocalArray ["sivasivaData"] into sivasivaData
-   if sivasivaData is not an array then
-      --here we can cache
-      sivsiva_LoadCachedData
-   end if
-   return sivasivaData
-end _getCachedData
-
-command sivsiva_LoadCachedData
-   put sivasiva_FetchData() into sivasivaData
-   put sivasivaData into LocalArray ["sivasivaData"]
-end sivsiva_LoadCachedData
-
-command sivsiva_ClearCachedData
-   delete variable LocalArray ["sivasivaData"]
-end sivsiva_ClearCachedData
-
 
 --> SivaSiva | Model
 -
-function portal_GetArray portalName, pSivasivaData
-   _setCachedData pSivasivaData
-   put pSivasivaData ["portalData"][portalName] into portalArray
-   return portalArray
-end portal_GetArray
-
-function portal_GetRowData rowName, pSivasivaData
-   _setCachedData pSivasivaData
-   put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
-   put portalRowDictionary [rowName] into rowData
-   return rowData
-end portal_GetRowData
-
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile-- could use ".array"
@@ -84,6 +32,8 @@ function sivasiva_FetchData
 end sivasiva_FetchData
 
 command sivasiva_StoreData sivasivaData
+   sivasiva_SetCached sivasivaData -- to keep cache in sync
+   
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile -- could use ".array"
    set the model_Array [shortFile] of stack stackName to sivasivaData
@@ -98,26 +48,31 @@ function sivasiva_DataFile
 end sivasiva_DataFile
 
 
---> SivaSiva | Module | List
+--> SivaSiva | Model | Cache
 -
-function sivasiva_ListHomeLinks
-   return portal_ListRowNames ("home")
-end sivasiva_ListHomeLinks
+command sivasiva_SetCached sivasivaData
+   put sivasivaData into LocalArray ["sivasivaData"]
+end sivasiva_SetCached
 
-function sivasiva_ListPortals pListHow
-   switch pListHow
-      case "folders"
-         -- will not return portal names if we have other types of "module" in the "modules" folder
-         put sivasiva_ListModuleFolders() into moduleNames
-         break
-      default
-         put sivasiva_FetchData() into sivasivaData
-         put sivasivaData ["portalData"] into portalData
-         put keys (portalData) into moduleNames
-         sort moduleNames
-   end switch
-   return moduleNames
-end sivasiva_ListPortals
+command sivasiva_FetchOrGetCached @sivasivaData
+   if sivasivaData is not an array then
+      put LocalArray ["sivasivaData"] into sivasivaData
+      if sivasivaData is not an array then
+         sivsiva_LoadCachedData
+         put the result into sivasivaData
+      end if
+   end if
+end sivasiva_FetchOrGetCached
+
+command sivsiva_LoadCachedData
+   put sivasiva_FetchData() into sivasivaData
+   sivasiva_SetCached sivasivaData
+   return sivasivaData
+end sivsiva_LoadCachedData
+
+command sivsiva_ClearCachedData
+   delete variable LocalArray ["sivasivaData"]
+end sivsiva_ClearCachedData
 
 
 --> Model | Library

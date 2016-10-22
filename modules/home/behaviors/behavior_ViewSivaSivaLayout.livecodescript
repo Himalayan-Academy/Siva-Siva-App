@@ -122,16 +122,18 @@ end portal_Header
 -
 getprop logo_Faded
    if the long id of me is not the long id of the target then pass logo_Faded
-   put the header_View of me into headerView
+   put _headerView() into headerView
+   if exists (headerView) is false then return empty
    put the logo_Faded of headerView into someBoolean
    return someBoolean
 end logo_Faded
 
 setprop logo_Faded someBoolean
    if the long id of me is not the long id of the target then pass logo_Faded
-   put the header_View of me into headerView
+   put _headerView() into headerView
+   if exists (headerView) is false then return false
    set the logo_Faded of headerView to someBoolean
-   return the result
+   return true
 end logo_Faded
 
 getprop background_Transparent

@@ -17,7 +17,7 @@ end menu_EditPortalModelJson
 on _
 end _
 
-on menu_EditHomeModuleJson indexView, portalName
+on menu_EditHomeModuleJson whoCares, portalName
    put sivasiva_GetModuleJsonFile (portalName) into jsonFile
    if there is not a file jsonFile then
       breakpoint
@@ -29,7 +29,7 @@ on menu_EditHomeModuleJson indexView, portalName
    launch_Atom jsonFile
 end menu_EditHomeModuleJson
 
-on menu_DisplayModuleConfig indexView, portalName
+on menu_DisplayModuleConfig whoCares, portalName
    put sivasiva_GetModuleCongifArray (portalName) into configArray
    display_Array configArray
 end menu_DisplayModuleConfig
@@ -58,14 +58,24 @@ end submenu_Dev
 --> Dev | Menu
 -
 on menu_DisplaySivasivaData
-   put sivasiva_FetchData () into sivasivaData
-   display_Array sivasivaData
+   put sivasiva_FetchData() into sivasivaData
+   display_Array sivasivaData, "sivasiva_FetchData()", "Global | Siva-Siva-App | Menu"
+   put the result into whoCares
 end menu_DisplaySivasivaData
+
+-- on menu_RestoreSivasivaData
+   put "model_SivaSiva" into stackName
+   put stackName & ".array" into shortFile-- could use ".array"
+   put the model_Array [shortFile] of stack stackName into sivasivaData
+   
+   sivasiva_StoreData sivasivaData
+   menu_DisplaySivasivaData
+end menu_RestoreSivasivaData
 
 on _
 end _
 
-on menu_TidySivasivaData
+on menu_RestoreSivasivaData
    put sivasiva_FetchOldData() into sivasivaData
    -- put sivasiva_FetchData () into sivasivaData
    
@@ -112,7 +122,7 @@ on menu_TidySivasivaData
    display_Array newSivaSivaData
    breakpoint
    sivasiva_StoreData newSivaSivaData
-end menu_TidySivasivaData
+end menu_RestoreSivasivaData
 
 on menu_DisplayOldData
    put sivasiva_FetchOldData() into sivasivaData
@@ -124,7 +134,7 @@ end menu_DisplayOldData
 -
 getprop portal_Names
    -- put portal_ListRowNames ("home") into homeRowNames
-   put sivasiva_ListPortals() into moduleNames
+   put portal_ListNames() into moduleNames
    put "Siva-Siva-App" & CR & "-" & CR into goodModuleNames
    repeat for each line portalName in moduleNames
       put sivasiva_GetModuleJsonFile (portalName) into jsonFile

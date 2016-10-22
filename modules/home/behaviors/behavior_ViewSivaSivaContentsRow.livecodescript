@@ -20,17 +20,20 @@ end touchStart
 
 on touchEnd pID
    -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-   answer the params
+   -- answer the params
    mouseUp
 end touchEnd
 
 on mouseDown
-   set the row_Hilite of me to true
+   -- set the row_Hilite of me to true
+   if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
+      menu_PopUp "Global | SivaSiva | Contents | Row | Menu"
+   end if
    pass mouseDown
 end mouseDown
 
 on mouseRelease
-   answer the params
+   -- answer the params
    set the row_Hilite of me to false
    pass mouseRelease
 end mouseRelease

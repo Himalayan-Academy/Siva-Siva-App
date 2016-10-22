@@ -33,21 +33,29 @@ Rather than rely on an arbitary global variable - we should wrap all access to t
 and move to using other local forms of storage internally.
 */
 
-global sConfigA
 local LocalArray
 
 
+--> Working on
+-
+
 --> Display
 -
-command display_Log
-   put the long id of cd "Log" of stack "Siva-Siva-App" into cardObject
-   put log_Fetch() into fld "Result" of cardObject
-   go to cd "Log" of stack "Siva-Siva-App"
+command display_Log 
+   put log_Fetch() into fld "Result" of cd 1 of stack "Siva-Siva-App"
+   go to stack "Siva-Siva-App"
 end display_Log
 
 
 --> Log | Files
 -
+function logging_GetLogCardObject
+   -- we will probably move the "logging home card" from "Siva-Siva-App" to it's own logging module
+   put sivasiva_ProjectStackPath() into stackPath
+   put the long id of card "Log" of stack stackPath into cardObject
+   return cardObject
+end logging_GetLogCardObject
+
 function log_GetFile
    if the environment is "mobile" then
       put the documents folder & slash & "model_SivaSivaLog.txt" into logFile
@@ -59,12 +67,25 @@ function log_GetFile
 end log_GetFile
 
 
---> Workign on
+--> Log | Levels
 -
+function log_GetLevelList
+   put LocalArray ["log_level"] into logLevelList
+   return logLevelList
+end log_GetLevelList
+
+command  log_SetLevelList logLevelList
+   if logLevelList = "all" then
+      put "info,error,fatal" into logLevelList
+   end if
+   put logLevelList into LocalArray ["log_level"]
+   log_Append "Finished log_SetLevelList"
+end log_SetLevelList
+
 
 --> Log | Model
 -
-command log_AddLine pMessage, pLevel
+command log_Debug pMessage, pLevel
    put item -2 of line -3 of the executioncontexts into tCalledHandler
    put item -1 of line -3 of the executioncontexts into tLineNumber
    put the short name of (item 1 of line -3 of the executioncontexts) into tObjectReference
@@ -78,7 +99,7 @@ command log_AddLine pMessage, pLevel
    
    log_Append logLine
    return the result
-end log_AddLine
+end log_Debug
 
 command log_Append logLines
    put log_GetFile() into logFile
@@ -119,35 +140,6 @@ command log_Clear
    log_Store clearText
 end log_Clear
 
-command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
-   if (the platform = "android") and _androidIsLogging() then 
-      put mobile_GetLogFile() into logFile
-      answer "Clear or view log:" with "Cancel" or "Clear" or "View"
-      if it = "view" then
-         answer url ("file:" & logFile)
-      else if it = "clear" then
-         log_Clear
-      end if
-   end if
-end jgAndroidLog
-
-function log_GetLevelList
-   put sConfigA ["log_level"] into logLevelList
-   return logLevelList
-end log_GetLevelList
-
-command  log_SetLevelList logLevelList
-   if logLevelList = "all" then
-      put "info,error,fatal" into logLevelList
-   end if
-   put logLevelList into sConfigA ["log_level"]
-end log_SetLevelList
-
-private function _androidIsLogging
-   put the hilite of btn "jg android log" of cd "Legacy" of stack "Siva-Siva-App" into isLogging
-   return isLogging
-end _androidIsLogging
-
 
 --> Log
 -
@@ -166,12 +158,12 @@ end log_Fatal
 command log_Raw pLevel, pMessage
    put log_GetLevelList() into logLevelList
    switch
-      case the environment is not "development" and _androidIsLogging() is true
+      case the environment is "mobile"
          log_Append pMessage
          put the result into logFile
          return logFile
       case pLevel is among the items of logLevelList
-         log_AddLine pMessage, pLevel
+         log_Debug pMessage, pLevel
          put the result into logFile
          return logFile
       default

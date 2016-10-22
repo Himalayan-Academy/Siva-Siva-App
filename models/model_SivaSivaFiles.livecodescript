@@ -14,7 +14,11 @@ This model contains all the handlers we require to access any files and folders.
 --> Working on
 -
 function sivasiva_ProjectStackPath
-   put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
+   if the environment is "mobile" then
+      put sivasiva_ProjectFolder() & "mainstack" into projectStackPath
+   else
+      put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
+   end if
    return projectStackPath
 end sivasiva_ProjectStackPath
 

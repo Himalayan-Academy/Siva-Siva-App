@@ -14,12 +14,76 @@ local LocalArray
 
 --> Work in Progress
 -
+getprop bar_Thickness
+   return 50
+end bar_Thickness
+
+command layout_EdgeToEdgeHorizontally innerRect
+   -- rough draft
+   -- should speed up by looping through the childControl IDs once
+   put _viewBackground() into viewBackground
+   put the child_Controls of me into iconViews
+   put the number of lines of iconViews into iconNum
+   
+   put item 1 of innerRect into iconLeft
+   put item 2 of innerRect into iconTop
+   put item 4 of innerRect into iconBottom
+   put item 3 of innerRect - iconLeft into innerWidth
+   put iconBottom - iconTop into iconWidth
+   put innerWidth - (iconNum * iconWidth) into availableWidth
+   put availableWidth / (iconNum - 1) into widthSpacing
+   
+   set the rect of viewBackground to innerRect
+   repeat for each line iconView in iconViews
+      put iconLeft + iconWidth into iconRight
+      put iconLeft,iconTop,iconRight,iconBottom into iconRect
+      
+      set the rect of iconView to iconRect
+      
+      put round (iconRight + widthSpacing) into iconLeft
+   end repeat
+end layout_EdgeToEdgeHorizontally
+
+command layout_SpreadHorizontally pRect
+   put the childcontrolids of me into topControlIDs
+   if topControlIDs is empty then return 0
+   put the number of lines of topControlIDs into numberOfChildren
+   
+   put the view_Spacing of me into viewSpacing
+   put item 3 of pRect - item 1 of pRect into innerWidth
+   
+   put numberOfChildren - 2 into gutterNum
+   put innerWidth - (gutterNum * viewSpacing) into availableWidth
+   put round (availableWidth / (numberOfChildren - 1)) into indexWidth
+   
+   put item 1 of pRect into thisLeft
+   repeat with cNum = 1 to numberOfChildren 
+      put line cNum of topControlIDs into topControlID
+      put the long id of control id topControlID into childView
+      
+      if word 1 of childView = "graphic" then
+         set the rect of childView to pRect
+         next repeat
+      end if
+      
+      put pRect into childRect
+      put thisLeft into item 1 of childRect
+      put thisLeft + indexWidth into thisRight
+      put thisRight into item 3 of childRect
+      
+      set the rect of childView to childRect
+      
+      put thisRight + viewSpacing into thisLeft
+   end repeat
+end layout_SpreadHorizontally
+
+
 command sivasiva_GoHomePortal btnObject, hiliteBoolean
-   portal_GoHome
+   portal_Link "home"
 end sivasiva_GoHomePortal
 
 command sivasiva_QueueContent btnObject, hiliteBoolean
-   sivasiva_ToggleOrientation 
+   -- sivasiva_AddBookMark 
 end sivasiva_QueueContent
 
 command sivasiva_AddFavorites btnObject, hiliteBoolean
@@ -27,7 +91,7 @@ command sivasiva_AddFavorites btnObject, hiliteBoolean
 end sivasiva_AddFavorites
 
 command sivasiva_SettingsGear btnObject, hiliteBoolean
-   portal_GoLogging
+   display_Log
 end sivasiva_SettingsGear
 
 
@@ -153,10 +217,6 @@ setprop stack_Edge whichEdge
    put whichEdge into LocalArray ["stackEdge"]
 end stack_Edge
 
-getprop bar_Thickness
-   return 50
-end bar_Thickness
-
 getprop vertical_Layout
    put LocalArray ["vertical_Layout"] is true into someBoolean
    return someBoolean
@@ -190,45 +250,12 @@ on LayoutControl pRect
    if the vertical_Layout of me is true then
       layout_Vertically pRect
    else
-      layout_Horizontally pRect
+      layout_EdgeToEdgeHorizontally pRect
    end if
    
    unlock screen
    return numberOfChildren
 end LayoutControl
-
-command layout_Horizontally pRect
-   put the childcontrolids of me into topControlIDs
-   if topControlIDs is empty then return 0
-   put the number of lines of topControlIDs into numberOfChildren
-   
-   put the view_Spacing of me into viewSpacing
-   put item 3 of pRect - item 1 of pRect into innerWidth
-   
-   put numberOfChildren - 2 into gutterNum
-   put innerWidth - (gutterNum * viewSpacing) into availableWidth
-   put round (availableWidth / (numberOfChildren - 1)) into indexWidth
-   
-   put item 1 of pRect into thisLeft
-   repeat with cNum = 1 to numberOfChildren 
-      put line cNum of topControlIDs into topControlID
-      put the long id of control id topControlID into childView
-      
-      if word 1 of childView = "graphic" then
-         set the rect of childView to pRect
-         next repeat
-      end if
-      
-      put pRect into childRect
-      put thisLeft into item 1 of childRect
-      put thisLeft + indexWidth into thisRight
-      put thisRight into item 3 of childRect
-      
-      set the rect of childView to childRect
-      
-      put thisRight + viewSpacing into thisLeft
-   end repeat
-end layout_Horizontally
 
 command layout_Vertically pRect
    put the childcontrolids of me into topControlIDs

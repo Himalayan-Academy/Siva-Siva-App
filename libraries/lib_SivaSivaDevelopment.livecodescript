@@ -19,7 +19,26 @@ They should be in "tool" projects outside of a production project.
 
 --> Working on
 -
--> Display
+command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
+   if (the platform = "android") and _androidIsLogging() then 
+      put mobile_GetLogFile() into logFile
+      answer "Clear or view log:" with "Cancel" or "Clear" or "View"
+      if it = "view" then
+         answer url ("file:" & logFile)
+      else if it = "clear" then
+         log_Clear
+      end if
+   end if
+end jgAndroidLog
+
+function _androidIsLogging
+   put the hilite of btn "jg android log" of cd "Legacy" of stack "Siva-Siva-App" into isLogging
+   return isLogging
+end _androidIsLogging
+
+
+
+--> Display
 -
 /*
 Based on an open source script by Scott Rossi:

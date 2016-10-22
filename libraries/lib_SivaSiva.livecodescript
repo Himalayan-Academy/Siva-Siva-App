@@ -21,25 +21,238 @@ local LocalArray
 
 --> Working On
 -
-command portal_Go moduleName
+
+--> SivaSiva | Portal | List
+-
+function portal_GetRowLinkArray rowName
+   --  We use the information stored in the sivasivaData array to retrieve the "link command" and "link param" from the rowName entry
+   
+   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+   put portalRowDictionary [rowName]["link"] into linkArray
+   return linkArray
+end portal_GetRowLinkArray
+
+command portal_SetRowLinkArray rowName, linkArray, pSivasivaData
+   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+   put linkArray into portalRowDictionary [rowName]["link"]
+   portal_SetRowDictionary portalRowDictionary, pSivasivaData
+end portal_SetRowLinkArray
+
+function portal_ContainingRowName rowName, pSivasivaData
+   -- here we only search topPortalNames
+   put portal_ListTopNames() into topPortalNames
+   put portal_GetData (pSivasivaData) into portalData
+   repeat for each line topPortalName in topPortalNames
+      put portalData [topPortalName]["rowData"] into rowData
+      repeat for each key rowNum in rowData
+         if rowData ["rowName"] = rowName then
+            return topPortalName
+         end if
+      end repeat
+   end repeat
+   return empty
+end portal_ContainingRowName
+
+function portal_FindFromRowName rowName, pSivasivaData
+   -- not used ???
+   -- there could be more than one portalName that contains a rowName
+   put portal_GetData (pSivasivaData) into portalData
+   repeat for each key portalName in portalData
+      put portalData [portalName]["rowData"] into rowData
+      repeat for each key rowNum in rowData
+         if rowData ["rowName"] = rowName then
+            put portalName & CR after foundPortalNames
+         end if
+      end repeat
+   end repeat
+   delete char -1 of foundPortalNames
+   sort foundPortalNames
+   return foundPortalNames
+end portal_FindFromRowName
+
+function portal_ListTopNames
+   -- we could hard wire it
+   -- but here we consider rowNames of portal "home" to be the top level portals
+   put portal_ListRowNames ("home") into homeRowNames
+end portal_ListTopNames
+
+function portal_ListNames pListHow, pSivasivaData
+   switch pListHow
+      case "folders"
+         -- will not return portal names if we have other types of "module" in the "modules" folder
+         put sivasiva_ListModuleFolders() into moduleNames
+         break
+      default
+         put portal_GetData (pSivasivaData) into portalData
+         put keys (portalData) into moduleNames
+         sort moduleNames
+   end switch
+   return moduleNames
+end portal_ListNames
+    
+
+--> SivaSiva | Portal | Model
+-
+function portal_GetArray portalName, pSivasivaData
+   put portal_GetData (pSivasivaData) into portalData
+   put portalData [portalName] into portalArray
+   return portalArray
+end portal_GetArray
+
+function portal_GetData pSivasivaData
+   sivasiva_FetchOrGetCached pSivasivaData
+   put pSivasivaData ["portalData"] into portalData
+   return portalData
+end portal_GetData
+
+function portal_GetRowData rowName, pSivasivaData
+   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+   put portalRowDictionary [rowName] into rowData
+   return rowData
+end portal_GetRowData
+
+function portal_GetRowDictionary pSivasivaData
+   sivasiva_FetchOrGetCached pSivasivaData
+   put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
+   return portalRowDictionary
+end portal_GetRowDictionary
+
+command portal_SetRowDictionary portalRowDictionary, pSivasivaData
+   sivasiva_FetchOrGetCached pSivasivaData
+   put portalRowDictionary into pSivasivaData ["portalRowDictionary"]
+   sivasiva_StoreData pSivasivaData
+end portal_SetRowDictionary
+
+
+--> Portal | Bookmarks
+-
+command portal_DisplayBookmarks
+   put portal_GetHomeView() into portalView
+   put "Frequently Asked Questions,Listen,Mantras,Practice" into portalList
+   set the portal_RowNames of portalView to portalList
+end portal_DisplayBookmarks
+
+
+--> Portal | Navigation | API
+-
+/*
+This section is for safe handlers that will be made available in the app through:
+
+- user interaction (such as bookmarking)
+- downloading json portal files that expose or deliver new book contnet
+*/
+
+command portal_DoRowLink rowName
+   -- safe parsing only of accepted commands
+   -- no dymanic execution of arbitrary code
+   
+   put portal_GetRowLinkArray (rowName) into linkArray
+   put linkArray ["portal command"] into linkCommand
+   put linkArray ["portal param"] into linkParam
+   switch linkCommand
+      case "portal_Link"
+         portal_Link linkParam
+         break
+      case "portal_Go"
+         portal_Go linkParam
+         break
+      case "portal_Url"
+         breakpoint
+         break
+      case "portal_LandscapeUrl"
+         breakpoint
+         break
+   end switch
+end portal_DoRowLink
+
+command portal_Url someURL
+   answer "Not done yet!"
+end portal_Url
+
+command portal_LandscapeUrl someURL
+   answer "Not done yet!"
+end portal_LandscapeUrl
+
+command portal_Link portalName
    /*
-   The moduleName "home" maps to the stack "sivasivahome" for obvious reasons
-   Otherwise because we have set the stackfiles we could simply go to the short name of the stack
+   Navigates to the "portal view" and displays the named portal
+   For now we are dynamically creating the portal view on the first card of the "sivasivahome" stack
+   However in the future we may move each portal to it's own card or scrolling group
    */
    
-   put sivasiva_GetModuleStackPath (moduleName) into moduleStackPath -- not strictly necessary
-   log_Info ("Go to stack" && there is a stack moduleStackPath)
+   if portalName is empty then
+      answer "Portal name is empty"
+      breakpoint
+   else
+      put portal_GetHomeStackPath() into portalHomeStackPath
+      put portal_GetHomeView() into portalView
+      
+      lock screen
+      go to stack portalHomeStackPath in a new window
+      set the portal_Name of portalView to portalName
+      if the environment is "mobile" then
+         close stack tOrigStack
+      end if
+      unlock screen
+   end if
+end portal_Link
+
+command portal_Go cardOrStackOject
+   /*
+   This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
+   Because we have set the stackfiles we can simply go to the short name of the stack.
+   The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
+   
+   == To Do ==
+   Explore and test navigation to other stacks:
+   -  why do we need to "go in a new window and then close?
+   - can we hide the home stack instead etc
+   */
    
    put the short name of this stack into tOrigStack --jg: this avoids screen flashes
-   go stack moduleStackPath in a new window
-   if the environment is "development" then
-      return moduleStackPath
+   go cardOrStackOject in a new window
+   put the result into goResult
+   if the environment is "Mobile" then
+      close stack tOrigStack
    end if
-   close stack tOrigStack
-   return moduleStackPath
+   return goResult
 end portal_Go
 
-command sivasiva_InitDefaults pOrientation -- mobile orientation setup
+
+--> Portal | List
+-
+function portal_ListRowNames portalName, pSivaSectionArray
+   put portal_GetArray (portalName, pSivasivaData) into   moduleArray
+   put moduleArray ["rowData"] into rowData
+   put item 2 of the extents of rowData into maxNum
+   repeat with keyNum = 1 to maxNum
+      put rowData [keyNum]["rowName"] into portalLinkName
+      put portalLinkName & CR after orderedPortalLinkNames
+   end repeat
+   delete char -1 of orderedPortalLinkNames
+   return orderedPortalLinkNames
+end portal_ListRowNames
+
+
+--> Portal | Files
+-
+function portal_GetHomeView
+   put portal_GetHomeStackPath() into portalHomeStackPath
+   put the long id of control 1 of cd 1 of stack portalHomeStackPath into portalView
+   -- put the portal_View of stack portalHomeStackPath into portalView
+   return portalView
+end portal_GetHomeView
+
+function portal_GetHomeStackPath
+   -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-App"
+   put the filename of stack "sivasivahome" into portalHomeStackPath
+   return portalHomeStackPath
+end portal_GetHomeStackPath
+
+
+--> Sivasiva
+-
+command sivasiva_InitOrientation pOrientation -- mobile orientation setup
    if the environment is "mobile" then 
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
       switch pOrientation
@@ -50,51 +263,5 @@ command sivasiva_InitDefaults pOrientation -- mobile orientation setup
             mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
       end switch
    end if
-end sivasiva_InitDefaults
+end sivasiva_InitOrientation
 
-
---> Display
--
-command sivasiva_DisplayHomePortalLink rowName, pSivaSectionArray
-   sivasiva_DisplayPortalLink rowName, moduleName, pSivaSectionArray
-   return the result
-end sivasiva_DisplayHomePortalLink
-
-command sivasiva_DisplayPortalLink rowName, moduleName, pSivaSivaData
-   if pSivaSivaData is not an array then put sivasiva_FetchData() into pSivaSivaData
-   put view_GetTemplateObject ("View|SivaSiva|Contents|Row") into rowTemplate
-   
-   sivasiva_SetPortalLinkInfo rowName, moduleName, pSivaSivaData, iconText, relativeImagefile, moduleFolder
-  
-   -- put moduleFolder & relativeImagefile into imageFile
-   set the itemdelimiter to slash
-   put item -1 of relativeImagefile into shortFile
-   put sivasiva_PortalImageFile (shortFile) into imageFile
-   
-   if there is a file imageFile then
-      set the image_File of rowTemplate to imageFile
-   else
-      put imageFile
-      breakpoint
-   end if
-   set the title_Text of rowTemplate to iconText
-   object_GoTo rowTemplate
-   
-   return pSivaSivaData
-end sivasiva_DisplayPortalLink
-
-command sivasiva_SetPortalLinkInfo rowName, sivaSivaData, @imageText, @shortImagefile
-   put sivaSivaData ["portalRowDictionary"] into portalRowDictionary   
-   put portalRowDictionary [rowName]["shortImagefile"] into shortImagefile
-   put portalRowDictionary [rowName]["imageText"] into imageText
-end sivasiva_SetPortalLinkInfo
-
-command sivasiva_DisplayPortalHeader homeModueName, pHeaderView
-   put portal_GetHeaderImageFile (homeModueName) into headerImageFile
-   
-   if exists (pHeaderView) is false then
-      put view_GetTemplateObject ("View|SivaSiva|Image|Header") into pHeaderView
-      object_GoTo pHeaderView
-   end if
-   set the image_File of pHeaderView to headerImageFile
-end sivasiva_DisplayPortalHeader

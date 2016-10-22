@@ -37,8 +37,8 @@ on mouseUp
          break
       default
          -- answer "User tapped"
-         put the row_Name of the target into portalName
-         portal_Navigate portalName
+         put the row_Name of the target into rowName
+         portal_DoRowLink rowName
    end switch
 end  mouseup
 

@@ -49,14 +49,23 @@ command init_Logging
    --  relies on stack names so ensure the stackfiles is set properly
    -- we have to ensure the general purpose logging handlers are loaded first
    start using stack "model_SivaSivaLog"
+   log_Clear
    
+   /*
    -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
    -- we could remove this step if we move this code back to the card script
-   put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
-   set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+   log_Append "Before behavior_SivaSivaLogging"
+   put exists (stack "behavior_SivaSivaLogging") into stackExists
+   if stackExists then
+      put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
+      set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+      log_Append "Set behaviors"
+   end if
+   log_Append stackExists
+   */
    
    log_SetLevelList "all"
-   log_Clear
+   log_Append "End of init_Logging"
 end init_Logging
 
 
@@ -118,21 +127,14 @@ end init_AppConfiguration
 
 command init_HomeDisplay
    if the environment is "mobile" then
-      portal_Go "home"
+      -- portal_Link "home"
    else
-      display_Log
+      -- display_Log
    end if
 end init_HomeDisplay
 
 command  init_LoadLibraries projectFolder
-   /*
-   Consider moving front and backscripts to be regular libraries.
-   We should not need to load any behaviors manually (needs checing on mobile).
-   The only provisos / exceptions are:
-   
-   1) All behavior stacks are in the home stacks stackfiles
-   2) Any behaviors of script only stacks (as the property is not stored) - this happens with nested behaviors such as logging.
-   */
+   log_Append "About to use stacks"
    
    -- init_UseHome
    
@@ -207,11 +209,12 @@ command project_StartFrontScriptsInFolder projectFolder
 end project_StartFrontScriptsInFolder
 
 command project_UseStacksInFolder shortFolder, projectFolder
+   log_Append ("Using stacks" && shortFolder)
    put projectFolder & shortFolder & slash into standardFolder
-   log_Info ("standardFolder:" && standardFolder)
+   log_Append ("standardFolder:" && standardFolder)
    
    put sivasiva_ListStackPaths (standardFolder) into stackPaths
-   log_Info ("sivasiva_ListStackPaths:" &CR& stackPaths)
+   log_Append ("sivasiva_ListStackPaths:" &CR& stackPaths)
    
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat

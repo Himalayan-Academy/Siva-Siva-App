@@ -86,7 +86,7 @@ function getModuleConfiguration pModule
    return sConfigA ["modules"][pModule]
 end getModuleConfiguration
 
-command loadModuleConfiguration pModule pData
+command loadModuleConfiguration pModule, pData
    put pData into sConfigA ["modules"][pModule]
 end loadModuleConfiguration
 
@@ -104,3 +104,106 @@ end isMobile
 command setBasePath
    set the defaultfolder to sivasiva_ProjectFolder()
 end setBasePath
+
+
+--> Legacy | API 
+-
+command goHome
+   -- log_Info _goLaunchModule ..."
+   put getConfiguration ("launch_module") into homeModule
+   portal_Link "home"
+end goHome
+
+command loadModule pModule
+   log_Info "Loading module:" && pModule
+   module_LoadConfiguration pModule
+   portal_Link pModule
+end loadModule
+
+command module_LoadConfiguration pModule
+   -- put (getPathToModulesFolder() & pModule & "/" & pModule & ".json") into moduleJsonFile
+   put sivasiva_GetModuleJsonFile (pModule) into moduleJsonFile
+   
+   // check and load configuration
+   if there is a file moduleJsonFile then
+      get url ("binfile:" & moduleJsonFile)
+      loadModuleConfiguration pModule, jsonImport(it)
+      log_Info "loadModuleConfiguration"
+   end if
+end module_LoadConfiguration
+
+command initializeInterfaceDefaults pOrientation -- mobile orientation setup
+   /*
+   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
+   Possibly better to initialisations scripts at the card layer (as a behavior)
+   */
+   sivasiva_InitOrientation pOrientation
+end initializeInterfaceDefaults
+
+
+--> Legacy | DTB
+-
+command sivasiva_DisplayHomePortalLink rowName, pSivaSectionArray
+   sivasiva_DisplayPortalLink rowName, moduleName, pSivaSectionArray
+   return the result
+end sivasiva_DisplayHomePortalLink
+
+command sivasiva_DisplayPortalLink rowName, moduleName, pSivaSivaData
+   if pSivaSivaData is not an array then put sivasiva_FetchData() into pSivaSivaData
+   put view_GetTemplateObject ("View|SivaSiva|Contents|Row") into rowTemplate
+   
+   sivasiva_SetPortalLinkInfo rowName, moduleName, pSivaSivaData, iconText, relativeImagefile, moduleFolder
+  
+   -- put moduleFolder & relativeImagefile into imageFile
+   set the itemdelimiter to slash
+   put item -1 of relativeImagefile into shortFile
+   put sivasiva_PortalImageFile (shortFile) into imageFile
+   
+   if there is a file imageFile then
+      set the image_File of rowTemplate to imageFile
+   else
+      put imageFile
+      breakpoint
+   end if
+   set the title_Text of rowTemplate to iconText
+   object_GoTo rowTemplate
+   
+   return pSivaSivaData
+end sivasiva_DisplayPortalLink
+
+command sivasiva_SetPortalLinkInfo rowName, sivaSivaData, @imageText, @shortImagefile
+   put sivaSivaData ["portalRowDictionary"] into portalRowDictionary   
+   put portalRowDictionary [rowName]["shortImagefile"] into shortImagefile
+   put portalRowDictionary [rowName]["imageText"] into imageText
+end sivasiva_SetPortalLinkInfo
+
+command sivasiva_DisplayPortalHeader homeModueName, pHeaderView
+   put portal_GetHeaderImageFile (homeModueName) into headerImageFile
+   
+   if exists (pHeaderView) is false then
+      put view_GetTemplateObject ("View|SivaSiva|Image|Header") into pHeaderView
+      object_GoTo pHeaderView
+   end if
+   set the image_File of pHeaderView to headerImageFile
+end sivasiva_DisplayPortalHeader
+
+
+--> Legacy | sivasiva
+-
+-- command loadPortalImages sConfigA
+-- was "loadPortalImages" of card 1 of stack "sivasivahome"
+setBasePath
+// load hero image
+loadImage sConfigA["portal-links"]["hero"]["image"], the long id of image "home-hero"
+
+loadImage sConfigA["portal-links"]["gems"]["image"], the long id of image "portal-link-image" of group "home_gems"
+loadImage sConfigA["portal-links"]["surprise"]["image"], the long id of image "portal-link-image" of group "home_surprise"
+loadImage sConfigA["portal-links"]["listen"]["image"], the long id of image "portal-link-image" of group "home_listen"
+loadImage sConfigA["portal-links"]["look"]["image"], the long id of image "portal-link-image" of group "home_look"
+loadImage sConfigA["portal-links"]["practice"]["image"], the long id of image "portal-link-image" of group "home_practice"
+loadImage sConfigA["portal-links"]["read"]["image"], the long id of image "portal-link-image" of group "home_read"
+loadImage sConfigA["portal-links"]["website"]["image"], the long id of image "portal-link-image" of group "home_website"
+loadImage sConfigA["portal-links"]["games"]["image"], the long id of image "portal-link-image" of group "home_games"
+end loadPortalImages
+
+
