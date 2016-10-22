@@ -76,17 +76,17 @@ function pathForPreferencesFile
 end pathForPreferencesFile
 
 private command _makeSurePreferencesFileExists
-   if there is not a file pathForPreferencesFile() then
-      put the defaultfolder into tDF
-      set the itemdel to "/"
-      set the defaultfolder to item 1 to -2 of the effective filename of this stack
-      if there is a file "preferences.json" then
-         get url ("binfile:preferences.json")
-         put it into url ("binfile:" & pathForPreferencesFile())
-         set the defaultfolder to tDF
-      else
-         set the defaultfolder to tDF
-         throw "error: can't find a valid preferences file"
-      end if
-   end if
+  if there is not a file pathForPreferencesFile() then
+    put the defaultfolder into tDF
+    set the itemdel to "/"
+    set the defaultfolder to item 1 to -2 of the effective filename of me --JG fix: don't use "this stack", it can be anywhere
+    if there is a file "preferences.json" then
+      get url ("binfile:preferences.json")
+      put it into url ("binfile:" & pathForPreferencesFile())
+      set the defaultfolder to tDF
+    else
+      set the defaultfolder to tDF
+      throw "error: can't find a valid preferences file"
+    end if
+  end if
 end _makeSurePreferencesFileExists
