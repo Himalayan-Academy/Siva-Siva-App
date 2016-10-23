@@ -18,6 +18,23 @@ getprop bar_Thickness
    return 50
 end bar_Thickness
 
+private command _displayMouseUpCommand
+   -- should be in an authoring layer
+   if the environment is "development" then
+      -- put toUpper (char 1 of btnName) into char 1 of btnName -- totally unecessary :)
+      replace "-" with space in btnName
+      get text_InitialCaps (btnName)
+      replace space with empty in it
+      put "sivasiva_" & it into mCommand
+      
+      put "command" && mCommand && "btnObject, hiliteBoolean" into someHandler
+      put CR & "    -- code here" after someHandler
+      put CR & "end" && mCommand after someHandler
+      set the clipboarddata ["text"] to someHandler
+      put someHandler
+   end if
+end _displayMouseUpCommand
+
 command layout_EdgeToEdgeHorizontally innerRect
    -- rough draft
    -- should speed up by looping through the childControl IDs once
@@ -78,33 +95,27 @@ command layout_SpreadHorizontally pRect
 end layout_SpreadHorizontally
 
 
-command sivasiva_GoHomePortal btnObject, hiliteBoolean
-   portal_Link "home"
-end sivasiva_GoHomePortal
-
-command sivasiva_QueueContent btnObject, hiliteBoolean
-   -- sivasiva_AddBookMark 
-end sivasiva_QueueContent
-
-command sivasiva_AddFavorites btnObject, hiliteBoolean
-   portal_DisplayBookmarks
-end sivasiva_AddFavorites
-
-command sivasiva_SettingsGear btnObject, hiliteBoolean
-   display_Log
-end sivasiva_SettingsGear
-
-
 --> Events
 -
 on mouseDown
    put the long id of the target into btnObject
-   set the highlite of btnObject to true
+   put the short name of btnObject into btnName
+   switch btnName
+      case "bottomTabBkgnd"
+         -- do nothing
+         break
+      default
+         set the highlite of btnObject to true
+         if the environment is "development" then
+            -- put btnName
+         end if
+   end switch
 end mouseDown
 
 on mouseUp pWhichButton
    put the long id of the target into btnObject
    put the short name of btnObject into btnName
+   if btnName = "bottomTabBkgnd" then pass mouseUp
    
    put btnName into mCommand
    replace "-" with empty in mCommand
@@ -117,26 +128,10 @@ on mouseUp pWhichButton
          break
       case "unhandled"
       default
-         _displayCommand
+         _displayMouseUpCommand
    end switch
    set the highlite of btnObject to false
 end mouseUp
-
-private command _displayCommand
-   if the environment is "development" then
-      -- put toUpper (char 1 of btnName) into char 1 of btnName -- totally unecessary :)
-      replace "-" with space in btnName
-      get text_InitialCaps (btnName)
-      replace space with empty in it
-      put "sivasiva_" & it into mCommand
-      
-      put "command" && mCommand && "btnObject, hiliteBoolean" into someHandler
-      put CR & "    -- code here" after someHandler
-      put CR & "end" && mCommand after someHandler
-      set the clipboarddata ["text"] to someHandler
-      put someHandler
-   end if
-end _displayCommand
 
 on resizeControl
    LayoutControl

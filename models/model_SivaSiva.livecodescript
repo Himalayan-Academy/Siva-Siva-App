@@ -249,8 +249,8 @@ getprop stack_Name
    return the short name of the defaultstack
 end stack_Name
 
--- getprop stack_Object
-return the defaultstack
+getprop stack_Object
+   return the defaultstack
 end stack_Object
 
 getprop stack_Folder

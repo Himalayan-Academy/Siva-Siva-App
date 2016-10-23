@@ -21,6 +21,152 @@ local LocalArray
 
 --> Working On
 -
+command sivasiva_GoHomePortal
+   -- portal_Link "home"
+   -- go to stack "sivasivahome"
+   put the name of stack "sivasivahome" into portalStackObject
+   portal_Go portalStackObject
+   put the portal_View of portalStackObject into portalView
+   set the portal_Name of portalView to "home"
+end sivasiva_GoHomePortal
+
+command sivasiva_QueueContent btnObject, hiliteBoolean
+   -- sivasiva_AddBookMark 
+end sivasiva_QueueContent
+
+command sivasiva_AddFavorites
+   portal_DisplayBookmarks
+end sivasiva_AddFavorites
+
+command sivasiva_SettingsGear
+   -- display_Log
+   -- go to stack "Siva-Siva-App"
+   put the name of stack "Siva-Siva-App" into stackObject
+   portal_Go stackObject
+end sivasiva_SettingsGear
+
+
+--> Portal | Bookmarks
+-
+command portal_DisplayBookmarks
+   put portal_GetHomeView() into portalView
+   put "Frequently Asked Questions,Listen,Mantras,Practice" into portalList
+   set the portal_RowNames of portalView to portalList
+end portal_DisplayBookmarks
+
+
+--> Portal | Navigation | API
+-
+/*
+This section is for safe handlers that will be made available in the app through:
+
+- user interaction (such as bookmarking)
+- downloading json portal files that expose or deliver new book contnet
+*/
+
+command portal_DoRowLink rowName
+   -- safe parsing only of accepted commands
+   -- no dymanic execution of arbitrary code
+   
+   put portal_GetRowLinkArray (rowName) into linkArray
+   put linkArray ["portal command"] into linkCommand
+   put linkArray ["portal param"] into linkParam
+   switch linkCommand
+      case "portal_Link"
+         portal_Link linkParam
+         break
+      case "portal_Go"
+         portal_Go linkParam
+         break
+      case "portal_Url"
+         breakpoint
+         break
+      case "portal_LandscapeUrl"
+         breakpoint
+         break
+   end switch
+end portal_DoRowLink
+
+command portal_Go cardOrStackObject
+   /*
+   This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
+   Because we have set the stackfiles we can simply go to the short name of the stack.
+   The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
+   
+   == To Do ==
+   Explore and test navigation to other stacks:
+   -  why do we need to "go in a new window and then close?
+   - can we hide the home stack instead etc
+   */
+   
+   put the short name of this stack into oStackName
+   go cardOrStackObject in a new window
+   put the result into goResult
+   put the stack_Name of cardOrStackObject into newStackName
+   if newStackName is oStackName then
+      if the long id of cardOrStackObject = the long id of this card then
+         -- the button or icon should proably be changed or disabled
+      else
+         -- going to a different card int he same stack
+         -- answer "Not closing. Destination is the same stack."
+      end if
+   else
+      -- if the environment is "Mobile" then
+      close stack oStackName
+      -- end if
+   end if
+   return goResult
+end portal_Go
+
+command portal_Url someURL
+   answer "Not done yet!"
+end portal_Url
+
+command portal_LandscapeUrl someURL
+   answer "Not done yet!"
+end portal_LandscapeUrl
+
+command portal_Link portalName
+   /*
+   Navigates to the "portal view" and displays the named portal
+   For now we are dynamically creating the portal view on the first card of the "sivasivahome" stack
+   However in the future we may move each portal to it's own card or scrolling group
+   */
+   
+   if portalName is empty then
+      answer "Portal name is empty"
+      breakpoint
+   else
+      put portal_GetHomeStackPath() into portalHomeStackPath
+      put portal_GetHomeView() into portalView
+      
+      lock screen
+      go to stack portalHomeStackPath in a new window
+      set the portal_Name of portalView to portalName
+      if the environment is "mobile" then
+         close stack tOrigStack
+      end if
+      unlock screen
+   end if
+end portal_Link
+
+
+--> Sivasiva
+-
+command sivasiva_InitOrientation pOrientation
+   -- mobile orientation setup
+   if the environment is "mobile" then 
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      switch pOrientation
+         case "landscape"
+            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+            break
+         default -- "portrait"
+            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      end switch
+   end if
+end sivasiva_InitOrientation
+
 
 --> SivaSiva | Portal | List
 -
@@ -124,101 +270,6 @@ command portal_SetRowDictionary portalRowDictionary, pSivasivaData
 end portal_SetRowDictionary
 
 
---> Portal | Bookmarks
--
-command portal_DisplayBookmarks
-   put portal_GetHomeView() into portalView
-   put "Frequently Asked Questions,Listen,Mantras,Practice" into portalList
-   set the portal_RowNames of portalView to portalList
-end portal_DisplayBookmarks
-
-
---> Portal | Navigation | API
--
-/*
-This section is for safe handlers that will be made available in the app through:
-
-- user interaction (such as bookmarking)
-- downloading json portal files that expose or deliver new book contnet
-*/
-
-command portal_DoRowLink rowName
-   -- safe parsing only of accepted commands
-   -- no dymanic execution of arbitrary code
-   
-   put portal_GetRowLinkArray (rowName) into linkArray
-   put linkArray ["portal command"] into linkCommand
-   put linkArray ["portal param"] into linkParam
-   switch linkCommand
-      case "portal_Link"
-         portal_Link linkParam
-         break
-      case "portal_Go"
-         portal_Go linkParam
-         break
-      case "portal_Url"
-         breakpoint
-         break
-      case "portal_LandscapeUrl"
-         breakpoint
-         break
-   end switch
-end portal_DoRowLink
-
-command portal_Url someURL
-   answer "Not done yet!"
-end portal_Url
-
-command portal_LandscapeUrl someURL
-   answer "Not done yet!"
-end portal_LandscapeUrl
-
-command portal_Link portalName
-   /*
-   Navigates to the "portal view" and displays the named portal
-   For now we are dynamically creating the portal view on the first card of the "sivasivahome" stack
-   However in the future we may move each portal to it's own card or scrolling group
-   */
-   
-   if portalName is empty then
-      answer "Portal name is empty"
-      breakpoint
-   else
-      put portal_GetHomeStackPath() into portalHomeStackPath
-      put portal_GetHomeView() into portalView
-      
-      lock screen
-      go to stack portalHomeStackPath in a new window
-      set the portal_Name of portalView to portalName
-      if the environment is "mobile" then
-         close stack tOrigStack
-      end if
-      unlock screen
-   end if
-end portal_Link
-
-command portal_Go cardOrStackOject
-   /*
-   This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
-   Because we have set the stackfiles we can simply go to the short name of the stack.
-   The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
-   
-   == To Do ==
-   Explore and test navigation to other stacks:
-   -  why do we need to "go in a new window and then close?
-   - can we hide the home stack instead etc
-   */
-   
-   put the short name of this stack into tOrigStack --jg: this avoids screen flashes
-   go cardOrStackOject in a new window
-   put the result into goResult
-   if the environment is "Mobile" then
-      close stack tOrigStack
-   end if
-   return goResult
-end portal_Go
-
-
 --> Portal | List
 -
 function portal_ListRowNames portalName, pSivaSectionArray
@@ -248,20 +299,3 @@ function portal_GetHomeStackPath
    put the filename of stack "sivasivahome" into portalHomeStackPath
    return portalHomeStackPath
 end portal_GetHomeStackPath
-
-
---> Sivasiva
--
-command sivasiva_InitOrientation pOrientation -- mobile orientation setup
-   if the environment is "mobile" then 
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      switch pOrientation
-         case "landscape"
-            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-            break
-         default -- "portrait"
-            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-      end switch
-   end if
-end sivasiva_InitOrientation
-

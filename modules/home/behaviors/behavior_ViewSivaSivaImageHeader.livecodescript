@@ -28,7 +28,12 @@ on mouseUp
          set the logo_Faded of me to (not someBoolean)
          break
       case "home-logo"
-         set the logo_Faded of me to true
+         if the environment is "development" then
+            dispatch "stack_ToggleShrink" to me
+         else
+            set the portal_Name of me to "home"
+            -- set the logo_Faded of me to true
+         end if
          break
       default
          -- put cName

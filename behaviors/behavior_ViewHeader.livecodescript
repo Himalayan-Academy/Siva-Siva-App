@@ -46,11 +46,10 @@ on mouseUp
    put the mouseAction of me into tActionName
    switch tActionName
       case "back"
-         go back
+         go to stack "Siva-Siva-App"
          break
       case "add"
-         set the opaque of me to true
-         set the backgroundcolor of me to white
+         go to stack "sivasivahome"
          break
       default
          put tActionName

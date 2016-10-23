@@ -46,7 +46,11 @@ on mouseUp
          -- set the portal_Name of me to portalName -- trapped by scrolling_View above
          break
       case "portal-link-image"
-         -- put the image_File of me
+         if the environment is "development" then
+            put the image_File of me into imageFile
+            put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
+            set the image_File of me to imageFile
+         end if
          break
       default
          -- qput cName

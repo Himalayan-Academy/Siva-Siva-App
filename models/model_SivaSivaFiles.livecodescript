@@ -13,27 +13,6 @@ This model contains all the handlers we require to access any files and folders.
 
 --> Working on
 -
-function sivasiva_ProjectStackPath
-   if the environment is "mobile" then
-      put sivasiva_ProjectFolder() & "mainstack" into projectStackPath
-   else
-      put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
-   end if
-   return projectStackPath
-end sivasiva_ProjectStackPath
-
-function sivasiva_UserSettingsFile
-   put sivasiva_UserSettingsFolder() & "model_SivaSivaPrefs.json" into userSettingsFile
-   if there is not a file userSettingsFile then return empty
-   return userSettingsFile
-end sivasiva_UserSettingsFile
-
-function sivasiva_UserSettingsFolder
-   put sivasiva_ProjectFolder ("models/model_SivaSivaPrefs/") into userSettingsFolder
-   return userSettingsFolder
-end sivasiva_UserSettingsFolder
-
-
 --> WordPuzzle | Files
 -
 function wordpuzzle_ListLongImageFiles
@@ -55,33 +34,6 @@ function wordpuzzle_ImageFolder -- source may change later
    return imageFolder
  end wordpuzzle_ImageFolder
 
-
---> SivaSiva | Folder
--
-function sivasiva_ProjectFolder pRelativeFolderPath
-   put project_HomeFolder ("Siva-Siva-App") into projectFolder
-   if pRelativeFolderPath is not empty then
-      put pRelativeFolderPath after projectFolder
-      if char -1 of projectFolder is not slash then put slash after projectFolder
-   end if
-   return projectFolder
-end sivasiva_ProjectFolder
-
-function project_HomeFolder homeStackName
-   if the environment = "mobile" then
-      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
-      put slash after projectHomeFolder
-   else
-      -- the commented out lines make the code below work on mobile
-      -- put the defaultstack into oStack
-      -- set the defaultstack to homeStackName
-      set the itemdelimiter to slash
-      put the filename of stack homeStackName into projectHomeFolder
-      put empty into item -1 of projectHomeFolder
-      -- set the defaultstack to oStack
-   end if
-   return projectHomeFolder
-end project_HomeFolder
 
 --> Portal | Paths
 -
@@ -109,6 +61,89 @@ function portal_GetHeaderImageFile moduleName, pSivasivaData
 end portal_GetHeaderImageFile
 
 
+--> Working on | Ensure writeable on mobile
+-
+function sivasiva_UserSettingsFile
+   put sivasiva_UserSettingsFolder() & "model_SivaSivaPrefs.json" into userSettingsFile
+   if there is not a file userSettingsFile then return empty
+   return userSettingsFile
+end sivasiva_UserSettingsFile
+
+function sivasiva_UserSettingsFolder
+   put sivasiva_ProjectFolder ("models/model_SivaSivaPrefs/") into userSettingsFolder
+   return userSettingsFolder
+end sivasiva_UserSettingsFolder
+
+
+--> SivaSiva | Paths | Assets
+-
+function sivasiva_PortalImageFile shortFile, pReturnRelative
+   if pReturnRelative is true then
+      -- ../../assets/img/portal-screens/thumb_surprise_boy-suitcase.jpg
+      -- hard wired to the location of sivasivahome and the shared assets folder
+      -- rather than working out the relative file with a script (for now)
+      return "../../assets/img/portal-screens/" & shortFile
+   else
+      put sivasiva_PortalImageFolder() & shortFile into portalImageFile
+   end if
+   return portalImageFile
+end sivasiva_PortalImageFile
+
+function sivasiva_PortalImageFolder
+   put sivasiva_AssetFolder ("img/portal-screens/") into portalImageFolder
+   return portalImageFolder
+end sivasiva_PortalImageFolder
+
+function sivasiva_PhotosFolder
+   put sivasiva_AssetFolder ("img/photography/") into photosFolder
+   return photosFolder
+end sivasiva_PhotosFolder
+
+function sivasiva_AssetFolder pRelativeFolderPath
+   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
+   if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
+   return sharedAssetFolder
+end sivasiva_AssetFolder
+
+
+--> SivaSiva | Project | Files
+-
+function sivasiva_ProjectStackPath
+   -- projecy home stacks are given a different short file name "mainstack" during standlaone building
+   if the environment is "mobile" then
+      put sivasiva_ProjectFolder() & "mainstack" into projectStackPath
+   else
+      put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
+   end if
+   return projectStackPath
+end sivasiva_ProjectStackPath
+
+function sivasiva_ProjectFolder pRelativeFolderPath
+   put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   if pRelativeFolderPath is not empty then
+      put pRelativeFolderPath after projectFolder
+      if char -1 of projectFolder is not slash then put slash after projectFolder
+   end if
+   return projectFolder
+end sivasiva_ProjectFolder
+
+function project_HomeFolder homeStackName
+   if the environment = "mobile" then
+      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
+      put slash after projectHomeFolder
+   else
+      -- the commented out lines make the code below work on mobile
+      -- put the defaultstack into oStack
+      -- set the defaultstack to homeStackName
+      set the itemdelimiter to slash
+      put the filename of stack homeStackName into projectHomeFolder
+      put empty into item -1 of projectHomeFolder
+      -- set the defaultstack to oStack
+   end if
+   return projectHomeFolder
+end project_HomeFolder
+
+
 --> SivaSiva | Paths | Modules
 -
 function sivasiva_GetModuleStackPath moduleName
@@ -132,30 +167,6 @@ function sivasiva_GetModuleRootFolder
    put sivasiva_ProjectFolder() & "modules/" into moduleRootFolder
    return moduleRootFolder
 end sivasiva_GetModuleRootFolder
-
-
---> SivaSiva | Paths | Assets
--
-function sivasiva_PortalImageFile shortFile
-   put sivasiva_PortalImageFolder() & shortFile into portalImageFile
-   return portalImageFile
-end sivasiva_PortalImageFile
-
-function sivasiva_PortalImageFolder
-   put sivasiva_AssetFolder ("img/portal-screens/") into portalImageFolder
-   return portalImageFolder
-end sivasiva_PortalImageFolder
-
-function sivasiva_PhotosFolder
-   put sivasiva_AssetFolder ("img/photography/") into photosFolder
-   return photosFolder
-end sivasiva_PhotosFolder
-
-function sivasiva_AssetFolder pRelativeFolderPath
-   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
-   if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
-   return sharedAssetFolder
-end sivasiva_AssetFolder
 
 
 --> SivaSiva | Paths | List
