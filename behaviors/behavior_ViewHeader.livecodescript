@@ -46,10 +46,10 @@ on mouseUp
    put the mouseAction of me into tActionName
    switch tActionName
       case "back"
-         go to stack "Siva-Siva-App"
+         portal_GoStack "Siva-Siva-App"
          break
       case "add"
-         go to stack "sivasivahome"
+         portal_GoStack "sivasivahome"
          break
       default
          put tActionName

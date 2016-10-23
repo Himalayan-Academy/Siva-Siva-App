@@ -87,6 +87,12 @@ command portal_DoRowLink rowName
    end switch
 end portal_DoRowLink
 
+command portal_GoStack stackName
+   put the name of stack stackName into stackObject
+   portal_Go stackObject
+   return goResult
+end portal_GoStack
+
 command portal_Go cardOrStackObject
    /*
    This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
