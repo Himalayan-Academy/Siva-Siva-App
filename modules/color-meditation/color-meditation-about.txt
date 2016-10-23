@@ -10,6 +10,6 @@ EditingGuide\This is a very lean structured text schema. Array elements are sepa
 <p>This app encourages consistency of practice, so you cannot do 8 rounds all in one hour or one day to see the next level. So you must practicd a minimum of 4 days to get to the next level.<br /></p>
 
 <p>Set a time, do one or two rounds today, then tomorrow and then on two more days, or do one round a day for 8 days.  And the move to the next level. </p>
-|level1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 3 minutes or less, depending on your breath count and pace, which you can adjust in settings. <br /></p>
+|1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 3 minutes or less, depending on your breath count and pace, which you can adjust in settings. <br /></p>
 <p>On the in breath, visualize red, then as you exhale, flood your whole body and aura with the color red. Breath in. Visualize blue. Exhale. Mentally bath yourself in blue. Breath in, visualize yellow and send out yellow through your aura as you exhale.<br /></p>
 <p>If you have difficulty visualizing color, imagine things like a can of red paint pouring over your head,  a blue sky or a yellow dress or flower.</p><p>Use the settings to change the breath interval and to turn the audio guide on or off.</p>

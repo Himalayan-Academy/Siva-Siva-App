@@ -58,17 +58,17 @@ command sivasiva_FetchOrGetCached @sivasivaData
    if sivasivaData is not an array then
       put LocalArray ["sivasivaData"] into sivasivaData
       if sivasivaData is not an array then
-         sivsiva_LoadCachedData
+         sivasiva_LoadCachedData
          put the result into sivasivaData
       end if
    end if
 end sivasiva_FetchOrGetCached
 
-command sivsiva_LoadCachedData
+command sivasiva_LoadCachedData
    put sivasiva_FetchData() into sivasivaData
    sivasiva_SetCached sivasivaData
    return sivasivaData
-end sivsiva_LoadCachedData
+end sivasiva_LoadCachedData
 
 command sivsiva_ClearCachedData
    delete variable LocalArray ["sivasivaData"]

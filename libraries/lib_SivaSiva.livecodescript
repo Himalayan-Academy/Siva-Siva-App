@@ -78,6 +78,9 @@ command portal_DoRowLink rowName
       case "portal_Go"
          portal_Go linkParam
          break
+      case "portal_GoStack"
+         portal_GoStack linkParam
+         break
       case "portal_Url"
          breakpoint
          break
