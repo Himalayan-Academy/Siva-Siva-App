@@ -1,0 +1,18 @@
+EditingGuide\This is a very lean structured text schema. Array elements are separated by pipe ; key-name value pairs are separated by backslash. To call text into the app. load the array and call the key.  you cannot us a pipe or backslash in any key or text string, no white space around key string
+|colorOpening\<p>Color meditation sets a foundation for mastery of self-awareness. Think of it as exercise for the muscles you use to control your thoughts and emotions.<br /></p>
+
+<p>Learn to be a free traveler through the mind as you bath yourself in the purity of color. <br /></p>
+
+<p>We offer four progressively more advanced levels of practice. Each one requires more mastery over the flow of awareness and takes a bit longer than the previous one.<br /></p>
+
+|levelsIndex\<p>You must complete 8 rounds of each level over a minimum of 4 days. Then the next level will be revealed. <br /></p>
+
+<p>This app encourages consistency of practice, so you cannot do 8 rounds all in one hour or one day to see the next level. So you must practicd a minimum of 4 days to get to the next level.<br /></p>
+
+<p>Set a time, do one or two rounds today, then tomorrow and then on two more days, or do one round a day for 8 days.  And the move to the next level. </p>
+
+|level1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 3 minutes or less, depending on your breath count and pace, which you can adjust in settings. <br /></p>
+<p>Exhale all the say to start. On the in-breath, visualize red, then as you exhale, flood your whole body and aura with the color red. Breath in. Visualize blue. Exhale. Mentally bath yourself in blue. Breath in, visualize yellow and send out yellow through your aura as you exhale. Going through all 3 colors, 3 times is one round.<br /></p>
+<p>If you have difficulty visualizing color, imagine things like a can of red paint pouring over your head,  a blue sky or a yellow dress or flower.<br /</p>
+
+<p>>Use the settings to change the breath interval and to turn the audio guide on or off.</p>

@@ -1,0 +1,30 @@
+{
+	"color-meditation": {
+		"colorwheel": [
+			{"name":"Red",
+			"color":"255,0,0"},
+			{"name":"Red-Orange",
+			"color":"255,64,0"},
+			{"name":"Orange",
+			"color":"255,127,0"},
+			{"name":"Orange-Yellow",
+			"color":"255,191,0"},
+			{"name":"Yellow",
+			"color":"255,255,0"},
+			{"name":"Yellow-Green",
+			"color":"191,255,0"},
+			{"name":"Green",
+			"color":"0,255,0"},
+			{"name":"Green-Blue",
+			"color":"0,191,255"},
+			{"name":"Blue",
+			"color":"0,0,255"},
+			{"name":"Blue-Violet",
+			"color":"127,0,255"},
+			{"name":"Violet",
+			"color":"127,0,127"},
+			{"name":"Red-Violet",
+			"color":"191,0,127"}
+			]
+	}
+}

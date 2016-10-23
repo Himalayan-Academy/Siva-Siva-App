@@ -1,0 +1,36 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Meditation: Spine</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content  class="has-header" has-footer padding style="background-size:cover;background-image:url('img/blue-paper.jpg');">
+
+  <div class="square-img-workout center" style="background-image:url('img/meditation-green.jpg')"> </div>
+
+  <ion-row>
+    <button class="btn-border btn-end" primaryfull block (click)="End()">
+      <ion-icon name="close-circle"></ion-icon>End
+    </button>
+    <button block greys>
+      <p>{{ timertime }}</p>
+    </button>
+    <button (click)="Skip()" class="btn-border" block primaryfull>
+      Skip<ion-icon name="arrow-forward"></ion-icon>
+    </button>
+
+  </ion-row>
+
+
+
+  <div class="card-1-blue">
+    <h3 text-center >Step 5: Feel the Power Within the Spine</h3>
+            <p>Further Reading: <br/>The next step step takes us deeper inside, as we become dynamically aware in the spine. Feel the power within the spine, the power-house of energy that feeds out to the external nerves and muscles. Visualize the spine in your mind’s eye. See it as a hollow tube or channel through which life energies flow. Feel it with your inner feelings. It’s there, subtle and silent, yet totally intense. It is a simple feeling. We can all feel it easily. As you feel this hollow spine filled with energy, realize that you are more that energy than you are the physical body through which it flows, more that pure energy than the emotions, than the thought force. Identify yourself with this energy and begin to live your true spiritual heritage on this Earth. As you dive deeper into that energy, you will find that this great power, your sense of awareness and your willpower are all one and the same thing.</p>
+
+
+</div>
+</ion-content>

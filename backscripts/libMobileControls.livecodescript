@@ -48,15 +48,14 @@ end scrollerDidScroll
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local pPlayerName -- jg: may not need this any more; check
+local sPlayerID -- the current player ID
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
 -- DESCRIPTION
 --        
 -- PARAMETERS
---		pURL: the ath to the audio file, either http or local
---		pPlayerName: this could be called from any module and the player name will vary
+--		pURL: the path to the audio file, either http or local
 -- Usage: Call this handler to instantiate the player and make it visible
 -- If intent is to show when card opens, then call from preopencard handler.
 -- if intent is to show dynamically (i.e. default is hidden until the User what to listen to something) then call from the button/or handler using:
@@ -68,21 +67,21 @@ local pPlayerName -- jg: may not need this any more; check
 ---------------------------------------------------------------------------------------
 
 
-command createMobileAudioPlayer pURL, pPlayerName
-  if pPlayerName is among the lines of mobileControls() then mobileControlDelete pPlayerName -- init
-  mobileControlCreate "player",pPlayerName
+command createMobileAudioPlayer pURL
+  if sPlayerID is among the lines of mobileControls() then mobileControlDelete sPlayerID -- init
+  mobileControlCreate "player"
   put the result into sPlayerId
   -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
-  put the rect of player pPlayerName into tRect 
+  put the rect of player sPlayerID into tRect 
   if the platform is "android" then -- android player controls appear above the player; adjust
     -- with controller it's about 4x rect of cd player so align the botom edges:
     put item 4 of tRect - item 2 of tRect into tHeight
     subtract tHeight from item 2 of tRect
   end if
-  mobileControlSet pPlayerName, "visible", true 
-  mobileControlSet pPlayerName, "rect", tRect
-  mobileControlSet pPlayerName, "showController", true 
-  mobileControlSet pPlayerName, "filename", pURL 
+  mobileControlSet sPlayerID, "visible", true 
+  mobileControlSet sPlayerID, "rect", tRect
+  mobileControlSet sPlayerID, "showController", true 
+  mobileControlSet sPlayerID, "filename", pURL 
   if pURL begins with "http" then
     showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
   end if
@@ -92,37 +91,37 @@ end createMobileAudioPlayer
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
   if theProperty is "duration" then
     showBusyIndicator false -- Remove the "Loading..." indicator and start playing
-    mobileControlDo pPlayerName, "play"
+    mobileControlDo sPlayerID, "play"
   end if
 end playerPropertyAvailable
 
 command setMobileAudioPlayer pState --jg: control the state of the mobile player
   -- pState = "pause", "play", or "stop"
-  mobileControlDo pPlayerName, pState
+  mobileControlDo sPlayerID, pState
   if pState = "stop" then
     showBusyIndicator false -- in case it's still showing
-    mobileControlSet pPlayerName, "visible", false
-    mobileControlDelete pPlayerName
+    mobileControlSet sPlayerID, "visible", false
+    mobileControlDelete sPlayerID
     if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
   end if
 end setMobileAudioPlayer
 
 on playerFinished -- sent on mobile when audio is done
   if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
-  mobileControlDelete pPlayerName
+  mobileControlDelete sPlayerID
 end playerFinished
 
 --on playStopped -- sent on desktop when audio is done
 --  if there is a grp "soundIsPlaying" then hide grp "soundIsPlaying"
 --end playStopped
 
-command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
+command showPlayer pBool,pPlayerName --jg: handles visibility of both mobile and desktop players
   -- if audio is playing, player is shown on audio card, hidden elsewhere;
   -- pBool = boolean
   if isMobile() then
     hide player pPlayerName -- the LC one; never show it
-    mobileControlSet pPlayerName, "showController",pBool
-    mobileControlSet pPlayerName, "visible", pBool
+    mobileControlSet sPlayerID, "showController",pBool
+    mobileControlSet sPlayerID, "visible", pBool
   else
     set the vis of player pPlayerName to pBool
   end if
@@ -132,7 +131,8 @@ end showPlayer
 
 on deleteMobileControl pName -- jg: deletes an existing mobile control
   -- native controls should be deleted if possible when no longer needed, as
-  -- they are overlaid on the stack and will float over all cards
+  -- they are overlaid on the stack and will float over all cards.
+  -- Audio players aren't handled here, they are managed independently above.
   if not isMobile() then exit deleteMobileControl
   repeat while pName is among the lines of mobileControls()
     mobileControlDelete pName

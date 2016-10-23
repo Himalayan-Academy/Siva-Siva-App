@@ -1,0 +1,38 @@
+
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Vishnu Mantra</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content  has-footer padding style="background-size:cover;background-image:url('img/purple-paper.jpg');">
+
+  <div class="square-img-lrg center" style="background-image:url('img/mantra_vishnu.jpg')"> </div>
+
+  <ion-row>
+    <button class="btn-border btn-end" primaryfull block (click)="End()">
+      <ion-icon name="close-circle"></ion-icon>End
+    </button>
+    <button block greys>
+      <p>{{ japaCount }}/108</p>
+    </button>
+    <button (click)="playMantra()" class="btn-border" block primaryfull>
+      Mantra<ion-icon name="volume-up"></ion-icon>
+    </button>
+  </ion-row>
+
+
+
+  <div text-center class="card-1-blue">
+
+                <h4>Silently or aloud, repeat the mantra:</h4>
+                <h1>"Aum Vasudevaya Namah"</h1>
+                <p>Press + for each repetition</p>
+                <button block large grass outline style="color:#fff;background-color:rgba(99, 219, 86, 0.4);" (click)="AddJapa()">
+                  <ion-icon name="add-circle"></ion-icon>
+                </button>
+  </div>
+  </ion-content>

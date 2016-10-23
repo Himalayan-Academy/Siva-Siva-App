@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar hideBackButton="true" primary>
+    <ion-title>Bhojana Mantra</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="ten-sadhana" has-footer padding style="background-size:cover;background-image:url('img/purple-paper.jpg');">
+
+  <div class="square-img-workout" style="background-image:url('img/food.jpg')"> </div>
+  <div text-center class="card-1-grey-small">
+  <p>Silently or aloud, practice chanting the following mantra. Press <span style="color:#3a94dc;">Next Line</span> when you are ready to move on to the next section of the chant.</p>
+
+    </div>
+
+<div text-center class="card-1-blue-small">
+    <h1 style="color:rgb(269, 188, 45)">"{{chantText}}"</h1>
+    <br/>
+    <p>Chant Meaning:</p>
+    <h5>"{{chantMeaning}}"</h5>
+  </div>
+
+
+
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar primary>
+    <ion-row>
+      <button class="btn-border btn-end" primaryfull block (click)="End()">
+        <ion-icon name="close-circle"></ion-icon>End
+      </button>
+      <button (click)="playMantra()" class="btn-border" block danger>
+        Mantra
+        <ion-icon name="volume-up"></ion-icon>
+      </button>
+      <button (click)="NextLine()" class="btn-border" block blue2>
+        Next Line
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
