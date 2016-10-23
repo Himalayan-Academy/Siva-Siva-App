@@ -1,13 +1,26 @@
-﻿script "mediaDataAndTransformers"
+﻿script "lib_SivaSivaMedia"
+--> MetaData
+-
+license: GPLv3
+name: lib_SivaSivaMedia
+type: library
+version: 0.2
 
+/*
+Moved from frontscript
+*/
+
+--> Variables
+-
 local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
 
 command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
 end checkThisScriptIsInMsgPath
  
- ---> FETCH RANDOM
  
+ --> FETCH RANDOM
+ -
  # MODEL FOR CALL TO API
  
  #the httpheaders to "content-type: application/json"

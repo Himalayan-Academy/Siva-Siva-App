@@ -11,6 +11,24 @@ version: 0.2
 local LocalArray
 
 
+--> Events
+-
+on resizeControl
+   LayoutControl
+end resizeControl
+
+on preOpenControl
+   -- bug: for some reason we occasionally lose references to nested behaviors
+   -- here we (re)set them manually when the view is first opened
+   put _headerView() into headerView
+   set the behavior of headerView to the behavior of headerView
+   put _scrollingView() into scrollingView
+   set the behavior of scrollingView to the behavior of scrollingView
+   put _navigationView() into navigationView
+   set the behavior of navigationView to the behavior of navigationView
+end preOpenControl
+
+
 --> Portal
 -
 /*
@@ -195,13 +213,6 @@ end _scrollingView
 private function _navigationView
    return the long id of control "SivaSiva Portal Navigation" of me
 end _navigationView
-
-
---> Events
--
-on resizeControl
-   LayoutControl
-end resizeControl
 
 
 --> Geometry
