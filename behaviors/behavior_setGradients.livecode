@@ -1,0 +1,47 @@
+﻿script "behavior_setGradients"
+
+###################
+-- BR: 2016-10-13
+-- General purpose gradient library for 
+-- setting gradients of graphic objects
+-- attach to any graphic as a behavior
+-- Ramp values are curated colors which we like
+-- Assumes the gradient type and layout are set (radial/linear etc and distances)
+-- we are only dealing here with ramp/color
+###################
+
+
+# Defaults:
+constant kPureWhite= "255,255,255"
+constant kPureBlack= "0,0,0"
+constant kDefaultStart= "0.00000" 		# left stop
+constant kDefaultEnd= "1.00000" 		# right stop
+constant kDefaultOpacity= "255" 			# 100% opaque
+
+# add curated color choices here:
+constant kSoftGreen= "88,246,27"
+constant kSoftRed="255,6,23"
+
+# the idea is to make it easy to set from above
+# by just passing a single color value 
+# You can pass the default constants 
+# or specific RGB Values from the trigger handler 
+# fine tune it you want or use defaults
+# minimum parameter you must send would be the second color
+# e.g. 
+# setRamp pStart,pEnd,pColor,kSoftGreen,pAlpha
+
+command setFillGradient pStartPosition,pEndPosition,pColor1, pColor2,pAlpha1,pAlpha2
+	if pStartPosition is empty then put kDefaultStart into pStartPosition
+	if pEndPosition is empty then put kDefaultEnd into pEndPosition
+	if pColor1 is empty then put kPureWhite into pColor1
+	if pColor2 is empty then put kPureBlack into pColor2
+	if pAlpha1 is empty then put kDefaultOpacity into pAlpha1
+	if pAlpha2 is empty then put kDefaultOpacity into pAlpha2
+	put(pStartPosition & comma & pColor1 & comma & pAlpha1) into tGradientRamp
+	put cr &(pEndPosition & comma & pColor2 & comma & pAlpha2) after tGradientRamp
+	set the fillgradient["ramp"] of me to  tGradientRamp
+end setFillGradient
+
+
+
