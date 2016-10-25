@@ -1,9 +1,5 @@
 {
 	"portalRowDictionary": {
-		"Video World": {
-			"imageText": "Video\nWorld",
-			"shortImageFile": "thumb_gurudeva_on-iphone.jpg"
-		},
 		"Affirmations": {
 			"imageText": "Affirmations",
 			"shortImageFile": "thumb_affirmations.jpg"
@@ -60,9 +56,53 @@
 			"imageText": "Spiritual\nWorkout",
 			"shortImageFile": "thumb_workout_yoga-on-sand.jpg"
 		},
+		"Audio World": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"surprise_audio\" of stack \"surprise\""
+			},
+			"imageText": "Audio\nWorld",
+			"shortImageFile": "thumb_audio_boy-headphones-shtrstk-357641909.jpg"
+		},
+		"Video World": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"surprise_video\" of stack \"surprise\""
+			},
+			"imageText": "Video\nWorld",
+			"shortImageFile": "thumb_gurudeva_on-iphone.jpg"
+		},
 		"Sacred Verses": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"surprise_verses\" of stack \"surprise\""
+			},
 			"imageText": "Sacred\nVerses",
 			"shortImageFile": "thumb_verses_ola-leaf-bundles-shtrstk-323174486.jpg"
+		},
+		"Gurudeva Darshan": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"surprise_gurudeva\" of stack \"surprise\""
+			},
+			"imageText": "Gurudeva Darshan",
+			"shortImageFile": "thumb_gurudeva_sharma-painting.jpg"
+		},
+		"Bodhinatha Darshan": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
+			},		
+			"imageText": "Bodhinatha\nDarshan",
+			"shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
+		},
+		"Hindu Art": {
+			"link": {
+				"portal command": "portal_Go",
+				"portal param": "card \"art\" of stack \"surprise\""
+			},
+			"imageText": "Hindu\nArt",
+			"shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.jpg"
 		},
 		"Gems of Wisdom": {
 			"link": {
@@ -83,10 +123,6 @@
 		"Our Guru Lineage": {
 			"imageText": "Our Guru\nLineage",
 			"shortImageFile": "thumb_lineage.jpg"
-		},
-		"Bodhinatha Darshan": {
-			"imageText": "Bodhinatha\nDarshan",
-			"shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
 		},
 		"Monthly News": {
 			"imageText": "Monthly\nNews",
@@ -126,8 +162,8 @@
 		},
 		"Color Meditation": {
 			"link": {
-				"portal command": "portal_GoStack",
-				"portal param": "color-meditation"
+				"portal command": "portal_Go",
+				"portal param": "stack \"color-meditation\""
 			},
 			"imageText": "Color\nMeditation",
 			"shortImageFile": "thumb_color-meditation.jpg"
@@ -135,10 +171,6 @@
 		"How to Visit": {
 			"imageText": "How to Visit",
 			"shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
-		},
-		"Gurudeva Darshan": {
-			"imageText": "Gurudeva Darshan",
-			"shortImageFile": "thumb_gurudeva_sharma-painting.jpg"
 		},
 		"Humor": {
 			"imageText": "Humor",
@@ -167,14 +199,6 @@
 		"Meet the Monks": {
 			"imageText": "Meet the\nMonks",
 			"shortImageFile": "thumb_monks-by-marya.jpg"
-		},
-		"Hindu Art": {
-			"imageText": "Hindu\nArt",
-			"shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.jpg"
-		},
-		"Audio World": {
-			"imageText": "Audio\nWorld",
-			"shortImageFile": "thumb_audio_boy-headphones-shtrstk-357641909.jpg"
 		},
 		"Listen": {
 			"link": {
