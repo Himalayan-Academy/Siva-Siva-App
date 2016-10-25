@@ -19,6 +19,15 @@ Currently these temporary handlers display portal data in the portal template st
 local LocalArray
 
 
+--> Portal | Bookmarks
+-
+command portal_DisplayBookmarks
+   put portal_GetHomeView() into portalView
+   put "Frequently Asked Questions,Listen,Mantras,Practice" into portalList
+   set the portal_RowNames of portalView to portalList
+end portal_DisplayBookmarks
+
+
 --> Working On
 -
 command sivasiva_GoHomePortal
@@ -44,15 +53,6 @@ command sivasiva_SettingsGear
    put the name of stack "Siva-Siva-App" into stackObject
    portal_Go stackObject
 end sivasiva_SettingsGear
-
-
---> Portal | Bookmarks
--
-command portal_DisplayBookmarks
-   put portal_GetHomeView() into portalView
-   put "Frequently Asked Questions,Listen,Mantras,Practice" into portalList
-   set the portal_RowNames of portalView to portalList
-end portal_DisplayBookmarks
 
 
 --> Portal | Navigation | API
@@ -155,23 +155,6 @@ command portal_Link portalName
       unlock screen
    end if
 end portal_Link
-
-
---> Sivasiva
--
-command sivasiva_InitOrientation pOrientation
-   -- mobile orientation setup
-   if the environment is "mobile" then 
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      switch pOrientation
-         case "landscape"
-            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-            break
-         default -- "portrait"
-            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-      end switch
-   end if
-end sivasiva_InitOrientation
 
 
 --> SivaSiva | Portal | List
@@ -305,3 +288,20 @@ function portal_GetHomeStackPath
    put the filename of stack "sivasivahome" into portalHomeStackPath
    return portalHomeStackPath
 end portal_GetHomeStackPath
+
+
+--> Sivasiva
+-
+command sivasiva_InitOrientation pOrientation
+   -- mobile orientation setup
+   if the environment is "mobile" then 
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      switch pOrientation
+         case "landscape"
+            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+            break
+         default -- "portrait"
+            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+      end switch
+   end if
+end sivasiva_InitOrientation

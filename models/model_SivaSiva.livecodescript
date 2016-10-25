@@ -50,25 +50,36 @@ end sivasiva_DataFile
 
 --> SivaSiva | Model | Cache
 -
-command sivasiva_SetCached sivasivaData
-   put sivasivaData into LocalArray ["sivasivaData"]
-end sivasiva_SetCached
+getprop use_SivaSivaCache
+   return LocalArray ["useSivaSivaCache"] is not false
+end use_SivaSivaCache
+
+setprop use_SivaSivaCache someBooelan
+   put someBooelan into LocalArray ["useSivaSivaCache"]
+end use_SivaSivaCache
 
 command sivasiva_FetchOrGetCached @sivasivaData
+   put the use_SivaSivaCache of me into useCache
+   if useCache is false then return sivasiva_FetchData() -- useful in development
+      
    if sivasivaData is not an array then
       put LocalArray ["sivasivaData"] into sivasivaData
       if sivasivaData is not an array then
-         sivsiva_LoadCachedData
+         sivasiva_LoadCachedData
          put the result into sivasivaData
       end if
    end if
 end sivasiva_FetchOrGetCached
 
-command sivsiva_LoadCachedData
+command sivasiva_SetCached sivasivaData
+   put sivasivaData into LocalArray ["sivasivaData"]
+end sivasiva_SetCached
+
+command sivasiva_LoadCachedData
    put sivasiva_FetchData() into sivasivaData
    sivasiva_SetCached sivasivaData
    return sivasivaData
-end sivsiva_LoadCachedData
+end sivasiva_LoadCachedData
 
 command sivsiva_ClearCachedData
    delete variable LocalArray ["sivasivaData"]
