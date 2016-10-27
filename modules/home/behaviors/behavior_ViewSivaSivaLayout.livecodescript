@@ -17,7 +17,7 @@ on preOpenControl
    -- bug: for some reason we occasionally lose references to nested behaviors
    -- here we (re)set them manually when the view is first opened
    
-   send "portal_InitBehaviors" to me in 2 ticks
+   portal_InitBehaviors
    
    -- this is unecessary if the home portal was saved displaying the right images (slows down initialisation)
    -- set the portal_Name of portalView to "home"
@@ -96,7 +96,6 @@ end portal_Array
 setprop portal_Array [pForceRefresh] portalArray  
    if portalArray is not an array then
       answer warning "portal_Array is not an array!"
-      display_ExecutionContexts
       exit to top
    end if
    

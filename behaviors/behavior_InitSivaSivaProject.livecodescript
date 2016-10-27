@@ -121,14 +121,26 @@ command init_AppConfiguration pForceInit
    init_SetStatus someBoolean
    
    -- here we display out first screen
-   init_HomeDisplay
+   -- init_HomeDisplay
    -- log_Append "Finished init_HomeDisplay"
 end init_AppConfiguration
 
 command init_HomeDisplay
    if the environment is "mobile" then
-      portal_Link "home"
+      -- portal_Link "home"
       -- go to stack "sivasivahome"
+      -- hide stack "Siva-Siva-App" -- this crashes
+      
+      put the short name of this stack into oStackName
+      put portal_GetHomeStackPath() into portalHomeStackPath
+      go to stack portalHomeStackPath in a new window
+      
+      -- put portal_GetHomeView() into portalView
+      -- set the portal_Name of portalView to portalName
+      
+      -- hide stack oStackName
+      -- answer oStackName
+      -- hide stack "Siva-Siva-App"
    else
       -- display_Log
    end if

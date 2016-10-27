@@ -78,6 +78,8 @@ end sivasiva_UserSettingsFolder
 --> SivaSiva | Paths | Assets
 -
 function sivasiva_PortalImageFile shortFile, pReturnRelative
+   return "assets/img/portal-screens/" & shortFile
+   
    if pReturnRelative is true then
       -- ../../assets/img/portal-screens/thumb_surprise_boy-suitcase.jpg
       -- hard wired to the location of sivasivahome and the shared assets folder

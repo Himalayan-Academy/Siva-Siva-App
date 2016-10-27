@@ -40,9 +40,8 @@ This section is for safe handlers that will be made available in the app through
 */
 
 command sivasiva_GoHomePortal
-   -- portal_Link "home"
-   -- go to stack "sivasivahome"
-   put the name of stack "sivasivahome" into portalStackObject
+   put portal_GetHomeStackPath() into portalHomeStackPath
+   put the name of stack portalHomeStackPath into portalStackObject
    portal_Go portalStackObject
    put the portal_View of portalStackObject into portalView
    set the portal_Name of portalView to "home"
@@ -101,6 +100,9 @@ command portal_GoStack stackName
 end portal_GoStack
 
 command portal_Go cardOrStackObject
+   go cardOrStackObject
+   return the result
+   
    /*
    This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
    Because we have set the stackfiles we can simply go to the short name of the stack.
@@ -150,14 +152,15 @@ command portal_Link portalName
       answer "Portal name is empty"
       breakpoint
    else
+      put the short name of this stack into oStackName
       put portal_GetHomeStackPath() into portalHomeStackPath
       put portal_GetHomeView() into portalView
       
       lock screen
-      go to stack portalHomeStackPath in a new window
+      go to stack portalHomeStackPath -- in a new window
       set the portal_Name of portalView to portalName
       if the environment is "mobile" then
-         close stack tOrigStack
+         -- close stack oStackName
       end if
       unlock screen
    end if
@@ -283,6 +286,16 @@ end portal_GetData
 
 --> Portal | Files
 -
+getprop scrolling_View
+   put portal_GetHomeView() into portalView
+   put the scrolling_View of portalView into scrollingView
+   return scrollingView
+end scrolling_View
+
+getprop portal_View
+   return portal_GetHomeView()
+end portal_View
+
 function portal_GetHomeView
    put portal_GetHomeStackPath() into portalHomeStackPath
    put the long id of control 1 of cd 1 of stack portalHomeStackPath into portalView
@@ -292,6 +305,7 @@ end portal_GetHomeView
 
 function portal_GetHomeStackPath
    -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-App"
-   put the filename of stack "sivasivahome" into portalHomeStackPath
+   -- put the filename of stack "sivasivahome" into portalHomeStackPath
+   put the filename of stack "Siva-Siva-App" into portalHomeStackPath
    return portalHomeStackPath
 end portal_GetHomeStackPath
