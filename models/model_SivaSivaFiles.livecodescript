@@ -127,22 +127,6 @@ function sivasiva_ProjectFolder pRelativeFolderPath
    return projectFolder
 end sivasiva_ProjectFolder
 
-function project_HomeFolder homeStackName
-   if the environment = "mobile" then
-      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
-      put slash after projectHomeFolder
-   else
-      -- the commented out lines make the code below work on mobile
-      -- put the defaultstack into oStack
-      -- set the defaultstack to homeStackName
-      set the itemdelimiter to slash
-      put the filename of stack homeStackName into projectHomeFolder
-      put empty into item -1 of projectHomeFolder
-      -- set the defaultstack to oStack
-   end if
-   return projectHomeFolder
-end project_HomeFolder
-
 
 --> SivaSiva | Paths | Modules
 -
@@ -227,6 +211,9 @@ function mobile_ListShortFiles someFolder, homeStackName
    return shortFiles
 end mobile_ListShortFiles
 
+
+--> Deps
+-
 function folder_ListShort rootFolder
    if there is not a folder rootFolder then return empty
    
@@ -239,9 +226,18 @@ function folder_ListShort rootFolder
    return shortFolders
 end folder_ListShort
 
--- getprop stack_Folder
-   put the effective filename of the defaultstack into stackFolder
-   set the itemdelimiter to slash
-   put empty into item -1 of stackFolder
-   return stackFolder
-end stack_Folder
+function project_HomeFolder homeStackName
+   if the environment = "mobile" then
+      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
+      put slash after projectHomeFolder
+   else
+      -- the commented out lines make the code below work on mobile
+      -- put the defaultstack into oStack
+      -- set the defaultstack to homeStackName
+      set the itemdelimiter to slash
+      put the filename of stack homeStackName into projectHomeFolder
+      put empty into item -1 of projectHomeFolder
+      -- set the defaultstack to oStack
+   end if
+   return projectHomeFolder
+end project_HomeFolder

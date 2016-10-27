@@ -60,8 +60,15 @@ function log_GetFile
    if the environment is "mobile" then
       put the documents folder & slash & "model_SivaSivaLog.txt" into logFile
    else
-      -- put the model_DataFile ["model_SivaSivaLog.txt"] of stack "model_SivaSivaLog" into logFile
-      put sivasiva_ProjectFolder ("models/model_SivaSivaLog/") & "model_SivaSivaLog.txt" into logFile
+      -- changed to use the system specific temp folder in development environment
+      -- as we don't want to store changing log files in git
+      put LocalArray ["logFile"] into logFile
+      if there is not a file logFile then
+         put the tempname & slash into tempLogFolder
+         folder_CreateNested tempLogFolder
+         put tempLogFolder & "model_SivaSivaLog.txt" into logFile
+         put logFile into LocalArray ["logFile"]
+      end if
    end if
    return logFile
 end log_GetFile
