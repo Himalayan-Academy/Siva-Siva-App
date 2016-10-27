@@ -26,8 +26,10 @@ end touchEnd
 
 on mouseDown
    -- set the row_Hilite of me to true
-   if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
-      menu_PopUp "Global | SivaSiva | Contents | Row | Menu"
+   if the environment is "development" then
+      if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
+         menu_PopUp "Global | SivaSiva | Contents | Row | Menu"
+      end if
    end if
    pass mouseDown
 end mouseDown
@@ -48,9 +50,10 @@ on mouseUp
       case "portal-link-image"
          if the environment is "development" then
             put the image_File of me into imageFile
-           -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
-          --  set the image_File of me to imageFile
+            -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
+            --  set the image_File of me to imageFile 
          end if
+         answer the image_File of me
          break
       default
          -- qput cName

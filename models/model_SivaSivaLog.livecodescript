@@ -42,8 +42,7 @@ local LocalArray
 --> Display
 -
 command display_Log 
-   put log_Fetch() into fld "Result" of cd 1 of stack "Siva-Siva-App"
-   go to stack "Siva-Siva-App"
+   portal_GoStack "Log"
 end display_Log
 
 

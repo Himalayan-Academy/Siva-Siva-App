@@ -4,7 +4,7 @@
 license: GPLv3
 name: behavior_ViewSivaSivaLayout
 type: behavior
-version: 0.2
+version: 0.3
 
 --> Variables
 -
@@ -13,15 +13,22 @@ local LocalArray
 
 --> Events
 -
+on preOpenControl
+   -- bug: for some reason we occasionally lose references to nested behaviors
+   -- here we (re)set them manually when the view is first opened
+   
+   send "portal_InitBehaviors" to me in 2 ticks
+   
+   -- this is unecessary if the home portal was saved displaying the right images (slows down initialisation)
+   -- set the portal_Name of portalView to "home"
+   -- answer "Finished  preOpenControl"
+end preOpenControl
+
 on resizeControl
    LayoutControl
 end resizeControl
 
-on preOpenControl
-   -- bug: for some reason we occasionally lose references to nested behaviors
-   -- here we (re)set them manually when the view is first opened
-   -- currently not doing this for the row_View
-   
+command portal_InitBehaviors
    put _scrollingView() into scrollingView
    set the behavior of scrollingView to the behavior of scrollingView
    put _navigationView() into navigationView
@@ -29,9 +36,11 @@ on preOpenControl
    put _headerView() into headerView
    set the behavior of headerView to the behavior of headerView
    
-   -- this is unecessary if the home portal was saved displaying the right images (slows down initialisation)
-   -- set the portal_Name of portalView to "home"
-end preOpenControl
+   put the row_Views of scrollingView into rowViews
+   repeat for each line rowView in rowViews
+      set the behavior of rowView to the behavior of rowView
+   end repeat
+end portal_InitBehaviors
 
 
 --> Portal

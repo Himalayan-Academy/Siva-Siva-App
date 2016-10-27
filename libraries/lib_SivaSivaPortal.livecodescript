@@ -57,10 +57,7 @@ command sivasiva_AddFavorites
 end sivasiva_AddFavorites
 
 command sivasiva_SettingsGear
-   -- display_Log
-   -- go to stack "Siva-Siva-App"
-   put the name of stack "Siva-Siva-App" into stackObject
-   portal_Go stackObject
+   display_Log
 end sivasiva_SettingsGear
 
 command portal_DoRowLink rowName

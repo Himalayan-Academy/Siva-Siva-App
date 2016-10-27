@@ -102,32 +102,33 @@ command init_AppConfiguration pForceInit
    
    -- then
    init_Logging
-   log_Append "Finished init_Logging"
+   -- log_Append "Finished init_Logging"
    
    -- then start using all required libraries
    init_LoadLibraries projectFolder
-   log_Append ("Finished init_LoadLibraries" && projectFolder)
+   -- log_Append ("Finished init_LoadLibraries" && projectFolder)
    
    -- once we have loaded the libraries we can use them to load any needed configuration
    init_LoadJsonConfig
-   log_Append "Finished init_LoadJsonConfig"
+   -- log_Append "Finished init_LoadJsonConfig"
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
       init_MobileGeometry
-      log_Append "Finished init_MobileGeometry"
+      -- log_Append "Finished init_MobileGeometry"
    end if
+   
+   init_SetStatus someBoolean
    
    -- here we display out first screen
    init_HomeDisplay
-   log_Append "Finished init_HomeDisplay"
-   
-   init_SetStatus someBoolean
+   -- log_Append "Finished init_HomeDisplay"
 end init_AppConfiguration
 
 command init_HomeDisplay
    if the environment is "mobile" then
-      -- portal_Link "home"
+      portal_Link "home"
+      -- go to stack "sivasivahome"
    else
       -- display_Log
    end if
