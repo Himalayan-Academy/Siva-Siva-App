@@ -127,9 +127,9 @@ command portal_Go cardOrStackObject
          -- answer "Not closing. Destination is the same stack."
       end if
    else
-      -- if the environment is "Mobile" then
-      close stack oStackName
-      -- end if
+      if the environment is "Mobile" then
+         close stack oStackName
+      end if
    end if
    return goResult
 end portal_Go
