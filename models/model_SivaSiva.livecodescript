@@ -33,7 +33,7 @@ end sivasiva_FetchData
 
 command sivasiva_StoreData sivasivaData
    sivasiva_SetCached sivasivaData -- to keep cache in sync
-   
+
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile -- could use ".array"
    set the model_Array [shortFile] of stack stackName to sivasivaData
@@ -61,7 +61,7 @@ end use_SivaSivaCache
 command sivasiva_FetchOrGetCached @sivasivaData
    put the use_SivaSivaCache of me into useCache
    if useCache is false then return sivasiva_FetchData() -- useful in development
-      
+
    if sivasivaData is not an array then
       put LocalArray ["sivasivaData"] into sivasivaData
       if sivasivaData is not an array then
@@ -138,7 +138,7 @@ end model_Array
 
 --> Model | Array
 -
-function model_FetchArray modelStackName, projectFolder, pShortFile 
+function model_FetchArray modelStackName, projectFolder, pShortFile
    put model_GetDataFolder (modelStackName, projectFolder) into modelDataFolder
    put dataFolder_GetFile (modelDataFolder, pShortFile) into modelArrayFile
    put array_FetchModel (modelArrayFile) into modelArray
@@ -184,7 +184,7 @@ getprop model_DataFile [pShortFile]
    put the stack_Name of the target into modelStackName
    put the stack_Folder of the target into stackFolder
    put stackFolder & modelStackName & slash into modelDataFolder
-   
+
    put dataFolder_GetFile (modelDataFolder, pShortFile) into modelDataFile
    return modelDataFile
 end model_DataFile
