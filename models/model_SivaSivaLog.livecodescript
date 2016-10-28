@@ -174,3 +174,17 @@ command log_Raw pLevel, pMessage
          return empty
    end switch
 end log_Raw
+
+
+--> Deps
+-
+command folder_CreateNested @someFolder
+   if there is a folder someFolder then return empty   
+   set the itemdelimiter to "/"
+   repeat with itemNum = 1 to the number of items of someFolder
+      put item 1 to itemNum of someFolder & "/" into testFolder
+      if there is a folder testFolder then next repeat
+      create folder testFolder
+   end repeat
+   text_AddTrailing someFolder, slash
+end folder_CreateNested

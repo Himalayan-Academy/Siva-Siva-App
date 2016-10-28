@@ -15,8 +15,6 @@ local LocalArray
 -
 on preOpenControl
    -- bug: for some reason we occasionally lose references to nested behaviors
-   -- here we (re)set them manually when the view is first opened
-   
    portal_InitBehaviors
    
    -- this is unecessary if the home portal was saved displaying the right images (slows down initialisation)
@@ -29,12 +27,18 @@ on resizeControl
 end resizeControl
 
 command portal_InitBehaviors
-   put _scrollingView() into scrollingView
-   set the behavior of scrollingView to the behavior of scrollingView
-   put _navigationView() into navigationView
-   set the behavior of navigationView to the behavior of navigationView
    put _headerView() into headerView
    set the behavior of headerView to the behavior of headerView
+   
+   put _scrollingView() into scrollingView
+   set the behavior of scrollingView to the behavior of scrollingView
+   
+   put _navigationView() into navigationView
+   set the behavior of navigationView to the behavior of navigationView
+   
+   -- little hack to make sure the card is the same colour as the navigation view
+   put the background_Colour of navigationView into someColour
+   set the backgroundcolor of this cd to someColour
    
    put the row_Views of scrollingView into rowViews
    repeat for each line rowView in rowViews
