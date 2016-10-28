@@ -23,10 +23,26 @@ local LocalArray
 
 --> Working on
 -
+command desktop_SetScroll
+   if the mouse is down then
+      lock screen
+      if item 2 of sMouseLoc > the mouseV then
+         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+      else
+         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+      end if
+      put the mouseloc into sMouseLoc
+      send "desktop_SetScroll" to me in 20 millisec
+      unlock screen
+   else
+      put empty into sMouseLoc
+   end if
+end desktop_SetScroll
+
 
 --> Events
 -
-on mouseUp
+on mouseUp  
    put the portal_Row of the target into portalRow
    switch
       case _mouseMoved() is true
@@ -36,45 +52,28 @@ on mouseUp
          -- answer "Not a row"
          break
       default
-         -- answer "User tapped"
          put the row_Name of the target into rowName
          portal_DoRowLink rowName
    end switch
 end  mouseup
-
-on setScroll
-   if the mouse is down then
-      lock screen
-      if item 2 of sMouseLoc > the mouseV then
-         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
-      else
-         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
-      end if
-      put the mouseloc into sMouseLoc
-      send "setScroll" to me in 20 millisec
-      unlock screen
-   else
-      put empty into sMouseLoc
-   end if
-end setScroll
 
 on mouseDown
    put the mouseloc into sMouseLoc
    put sMouseLoc into sStartLoc
    if the environment is not "mobile" then
       -- mobile will use stack handlers to scroll instead
-      setScroll
+      desktop_SetScroll
    end if
 end mouseDown
 
-on touchStart pID
-   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-   mouseDown
+-- on touchStart pID
+-- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+mouseDown
 end touchStart
 
-on touchEnd pID
-   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-   mouseUp
+-- on touchEnd pID
+-- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+mouseUp
 end touchEnd
 
 on resizeControl

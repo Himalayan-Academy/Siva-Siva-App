@@ -72,6 +72,12 @@ command scroller_Delete mobileScrollerName
    return mobileControls()
 end scroller_Delete
 
+command scroller_DeleteAll
+   repeat for each line mobileScrollerName in mobileControls()
+      mobileControlDelete mobileScrollerName
+   end repeat
+end scroller_DeleteAll
+
 command scroller_Create mobileScrollerName
    -- create if mobile scroller does not exist already (returns a unique id)
    

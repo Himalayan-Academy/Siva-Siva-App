@@ -27,30 +27,6 @@ so we like to isolate it from the general code andkeep it attached to the card a
 */
 
 
---> Events | Android test builds (okay to remove later)
--
-on savingStandalone -- pre-processss
-  -- if not an Android app, turn off android logging
-  put (the cRevStandaloneSettings["android"] of me = true) into tIsAndroid
-  set the hilite of btn "jg android log" of cd "Legacy" of me to tIsAndroid
-  set the vis of fld "logfld" of cd "Legacy" of me to tIsAndroid
-end savingStandalone
-
-on standaloneSaved pFolder -- post-process
-  -- increase build number for next time, turn logging back on
-  -- Will be saved at next manual save, otherwise we don't want it anyway.
-  put (the cRevStandaloneSettings["android"] of me = true) into tIsAndroid
-  if tIsAndroid then
-    put the cRevStandaloneSettings["android,version code"] of me into tBuildNum
-    add 1 to tBuildNum
-    set the cRevStandaloneSettings["android,version code"] of me to tBuildNum
-    
-    set the hilite of btn "jg android log" of cd "Legacy" of me to tIsAndroid
-    set the vis of fld "logfld" of cd "Legacy" of me to false
-  end if
-end standaloneSaved
-
-
 --> Init
 -
 after init_Logging

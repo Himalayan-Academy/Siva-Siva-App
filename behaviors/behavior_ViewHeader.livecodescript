@@ -46,10 +46,13 @@ on mouseUp
    put the mouseAction of me into tActionName
    switch tActionName
       case "back"
-         portal_GoStack "Siva-Siva-App"
+         -- portal_GoStack "Siva-Siva-App"
+         go to stack "Siva-Siva-App"
          break
       case "add"
-         portal_GoStack "sivasivahome"
+         -- portal_GoStack "sivasivahome"
+         log_Clear
+         put log_Fetch() into fld "Body" 
          break
       default
          put tActionName

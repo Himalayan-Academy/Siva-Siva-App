@@ -122,15 +122,16 @@ on mouseUp pWhichButton
    put "sivasiva_" before mCommand
    
    put the highlite of btnObject into someBoolean
+   set the highlite of btnObject to false
+   
    dispatch mCommand with btnObject, someBoolean
    switch it
       case "handled"
          break
       case "unhandled"
       default
-         _displayMouseUpCommand
+         -- _displayMouseUpCommand
    end switch
-   set the highlite of btnObject to false
 end mouseUp
 
 on resizeControl

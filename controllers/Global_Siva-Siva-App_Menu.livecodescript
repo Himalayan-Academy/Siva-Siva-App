@@ -9,6 +9,50 @@ version: 0.2
 
 --> Global | Siva-Siva-App | Menu
 -
+on menu_DisplayBookMarks
+   portal_DisplayBookmarks
+end menu_DisplayBookMarks
+
+on menu_DisplayRowNames projectName, portalName
+   breakpoint
+   put portal_ListRowNames (portalName) into rowNames
+   set the portal_RowNames [portalName] of layoutView to rowNames
+end menu_DisplayRowNames
+
+on menu_SetPortalName layoutView, portalName
+   set the portal_Name of layoutView to portalName
+end menu_SetPortalName
+
+on menu_EditBehavior layoutView, whichBehavior
+   switch whichBehavior
+      case "layout"
+         put layoutView into someView
+         break
+      case "scrolling"
+         -- put view_GetTemplateObject ("View|SivaSiva|Scrolling") into someView
+         put the scrolling_View of layoutView into someView
+         break
+      case "bottom navigation"
+         -- put view_GetTemplateObject ("View|SivaSiva|Navigation|Bottom") into someView
+         put the navigation_View of layoutView into someView
+         break
+      case "header image"
+         -- put view_GetTemplateObject ("View|SivaSiva|Image|header") into someView
+         put the scrolling_View of layoutView into scrollingView
+         put the header_View of scrollingView into someView
+         break
+      case "scrolling row"
+         -- put view_GetTemplateObject ("View|SivaSiva|Navigation|Bottom") into someView
+         put the scrolling_View of layoutView into scrollingView
+         put the row_View [1] of scrollingView into someView
+         break
+   end switch
+   edit the script of the behavior of someView
+end menu_EditBehavior
+
+on _
+end _
+
 on menu_EditPortalModelJson
    put sivasiva_DataFile() into jsonFile
    launch_Atom jsonFile

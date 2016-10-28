@@ -4,11 +4,33 @@
 license: GPLv3
 name: behavior_ViewLayoutHeaderAndFooter
 type: behavior
-version: 0.2
+version: 0.3
 
 --> Variables
 -
 local LocalArray
+
+
+--> Events
+-
+on preOpenControl
+   fixBehaviors
+end preOpenControl
+
+command fixBehaviors
+   _fixBehavior _headerView()
+   _fixBehavior _bodyView()
+   _fixBehavior _footerView()
+end fixBehaviors
+
+private command _fixBehavior someChild
+   set the behavior of someChild to the behavior of someChild
+end _fixBehavior
+
+on resizeControl
+   put the rect of me into viewRect
+   LayoutControl viewRect
+end resizeControl
 
 
 --> Display | Props
@@ -80,39 +102,6 @@ private function _footerHeight
 end _footerHeight
 
 
---> Events
--
-on resizeControl
-   put the rect of me into viewRect
-   LayoutControl viewRect
-end resizeControl
-
-command LayoutControl pRect
-   if pRect is empty then put the rect of me into pRect
-   put the inner_Rect [pRect] of me into innerRect
-   put the landscape_Layout of me into isLandscape
-   
-   lock screen
-   -- could use switch and more complex naming like "left-right" etc
-   -- or could work out from pRect if we are landscape or portrait
-   if isLandscape is true then
-      set the vertical_Layout of _footerView() to true
-      
-      -- strangely we we place the footer to the left :)
-      set the rect of _footerView() to _leftRect (innerRect)
-      set the rect of _bodyView() to _middleRect (innerRect)
-      set the rect of _headerView() to _rightRect (innerRect)
-   else
-      set the vertical_Layout of _footerView() to false
-      
-      set the rect of _headerView() to _headerRect (innerRect)
-      set the rect of _bodyView() to _bodyRect (innerRect)
-      set the rect of _footerView() to _footerRect (innerRect)
-   end if
-   unlock screen
-end LayoutControl
-
-
 --> Geometry
 -
 getprop mobile_Orientation
@@ -166,6 +155,31 @@ private function _footerRect pRect
    put item 4 of pRect - _footerHeight() into item 2 of pRect
    return pRect
 end _footerRect
+
+command LayoutControl pRect
+   if pRect is empty then put the rect of me into pRect
+   put the inner_Rect [pRect] of me into innerRect
+   put the landscape_Layout of me into isLandscape
+   
+   lock screen
+   -- could use switch and more complex naming like "left-right" etc
+   -- or could work out from pRect if we are landscape or portrait
+   if isLandscape is true then
+      set the vertical_Layout of _footerView() to true
+      
+      -- strangely we we place the footer to the left :)
+      set the rect of _footerView() to _leftRect (innerRect)
+      set the rect of _bodyView() to _middleRect (innerRect)
+      set the rect of _headerView() to _rightRect (innerRect)
+   else
+      set the vertical_Layout of _footerView() to false
+      
+      set the rect of _headerView() to _headerRect (innerRect)
+      set the rect of _bodyView() to _bodyRect (innerRect)
+      set the rect of _footerView() to _footerRect (innerRect)
+   end if
+   unlock screen
+end LayoutControl
 
 
 --> Geometry | Landscape

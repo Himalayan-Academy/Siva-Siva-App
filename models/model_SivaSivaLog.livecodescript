@@ -19,7 +19,7 @@ For now this is a specific library for the Siva-Siva-App.
 We look to creating a general purpose "logging module" which works on mobile, server and desktop.
 This module would be it's own project but can be included in any application as an npm style dependeny.
 
-== Consierations ==
+== Considerations ==
 Early discussions considered the idea of using a general purpose logging library to track progress through the various SivaSiva modules.
 Bookmarking, coverage of content for games and feedback could also use such a facility.
 I defer to Andre on this for now? Should it be in the database, or an array based NoSQL model.
@@ -38,23 +38,21 @@ local LocalArray
 
 --> Working on
 -
-
---> Display
--
-command display_Log 
-   portal_GoStack "Log"
-end display_Log
+command display_RowLink rowName
+   put portal_GetRowLinkArray (rowName) into linkArray
+   put linkArray ["portal command"] into portalCommand
+   put linkArray ["portal param"] into portalParam
+   
+   put rowName & CR into linkInfo
+   put "portal command:" && portalCommand & CR after linkInfo
+   put "portal param:" && portalParam & CR after linkInfo
+   
+   answer linkInfo
+end display_RowLink
 
 
 --> Log | Files
 -
-function logging_GetLogCardObject
-   -- we will probably move the "logging home card" from "Siva-Siva-App" to it's own logging module
-   put sivasiva_ProjectStackPath() into stackPath
-   put the long id of card "Log" of stack stackPath into cardObject
-   return cardObject
-end logging_GetLogCardObject
-
 function log_GetFile
    if the environment is "mobile" then
       put the documents folder & slash & "model_SivaSivaLog.txt" into logFile

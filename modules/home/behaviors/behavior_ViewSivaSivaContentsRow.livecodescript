@@ -13,15 +13,15 @@ local LocalArray
 
 --> Events
 -
-on touchStart pID
-   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-   mouseDown
+-- on touchStart pID
+-- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+mouseDown
 end touchStart
 
-on touchEnd pID
-   -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-   -- answer the params
-   mouseUp
+-- on touchEnd pID
+-- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+-- answer the params
+mouseUp
 end touchEnd
 
 on mouseDown

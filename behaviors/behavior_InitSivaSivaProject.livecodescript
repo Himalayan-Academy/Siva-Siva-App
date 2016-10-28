@@ -72,27 +72,16 @@ end init_Logging
 --> SivaSiva | Init
 -
 function init_GetStatus
-   return LocalArray ["initStatus"]
+   return the stacksinuse is not empty
 end init_GetStatus
 
-command init_SetStatus someBoolean
-   put someboolean is true into LocalArray ["initStatus"]
-end init_SetStatus
-
-command init_AppConfiguration pForceInit
+command init_AppConfiguration
    /*
    Called by the "preOpenStack" of the Siva-Siva-App's first card script
-   
-   Avoid relying on "setBasePath" and instead pass long paths to handlers
-   This is more robust as it is easy for a stray handler to reset the defaultfolder
-   -- set the defaultstack to the topstack
-   -- setBasePath -- jg
    */
-   put init_GetStatus() is true into initStatus
-   put pForceInit is true into forceInit
-   if initStatus and forceInit is not true then
+   if init_GetStatus() is true then
       -- let's not initialise twice
-      -- especially as "init_HomeDisplay" can go to "sivasivahome" and cause recursion / crash ???
+      -- answer "Exiting init_AppConfiguration"
       return false
    end if
    
@@ -106,51 +95,17 @@ command init_AppConfiguration pForceInit
    
    -- then start using all required libraries
    init_LoadLibraries projectFolder
-   -- log_Append ("Finished init_LoadLibraries" && projectFolder)
    
    -- once we have loaded the libraries we can use them to load any needed configuration
    init_LoadJsonConfig
-   -- log_Append "Finished init_LoadJsonConfig"
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
       init_MobileGeometry
-      -- log_Append "Finished init_MobileGeometry"
    end if
-   
-   init_SetStatus someBoolean
-   
-   -- here we display out first screen
-   -- init_HomeDisplay
-   -- log_Append "Finished init_HomeDisplay"
 end init_AppConfiguration
 
-command init_HomeDisplay
-   if the environment is "mobile" then
-      -- portal_Link "home"
-      -- go to stack "sivasivahome"
-      -- hide stack "Siva-Siva-App" -- this crashes
-      
-      put the short name of this stack into oStackName
-      put portal_GetHomeStackPath() into portalHomeStackPath
-      go to stack portalHomeStackPath in a new window
-      
-      -- put portal_GetHomeView() into portalView
-      -- set the portal_Name of portalView to portalName
-      
-      -- hide stack oStackName
-      -- answer oStackName
-      -- hide stack "Siva-Siva-App"
-   else
-      -- display_Log
-   end if
-end init_HomeDisplay
-
 command  init_LoadLibraries projectFolder
-   log_Append "About to use stacks"
-   
-   -- init_UseHome
-   
    -- we start using both "library" stacks and "model" stacks
    project_UseStacksInFolder "models", projectFolder
    project_UseStacksInFolder "libraries", projectFolder
@@ -161,12 +116,6 @@ command  init_LoadLibraries projectFolder
    -- we should not need to use any frontscripts
    project_StartFrontScriptsInFolder projectFolder
 end init_LoadLibraries
-
-command init_UseHome
-   -- we all need to know where home "sivasiva_ProjectFolder()" is. (no longer necessary?)
-   -- ideally we fix "sivasiva_ProjectFolder" issue so it can go in a library
-   start using this stack -- "Siva-Siva-App" (only required for "sivasiva_ProjectFolder" handler)
-end init_UseHome
 
 command init_MobileGeometry
    -- see "initializeInterfaceDefaults"
@@ -222,12 +171,8 @@ command project_StartFrontScriptsInFolder projectFolder
 end project_StartFrontScriptsInFolder
 
 command project_UseStacksInFolder shortFolder, projectFolder
-   log_Append ("Using stacks" && shortFolder)
    put projectFolder & shortFolder & slash into standardFolder
-   log_Append ("standardFolder:" && standardFolder)
-   
    put sivasiva_ListStackPaths (standardFolder) into stackPaths
-   log_Append ("sivasiva_ListStackPaths:" &CR& stackPaths)
    
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
@@ -250,9 +195,6 @@ function sivasiva_ListStackPaths someFolder
    return stackFilePaths
 end sivasiva_ListStackPaths
 
-
---> Deps
--
 function mobile_ListLongFiles someFolder, homeStackName
    put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
    repeat for each line shortFile in shortFiles

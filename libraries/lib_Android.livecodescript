@@ -19,8 +19,8 @@ on backKey --jg: for Android; otherwise goes to loader screen  --### jg: not rig
    -- recentcards isn't stable, try this way:
    
    go recent
-   put the recentcards into rCards
-   answer rCards
+   -- put the recentcards into rCards
+   -- answer rCards
 end backKey
 
 

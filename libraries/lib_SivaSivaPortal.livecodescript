@@ -29,36 +29,6 @@ local LocalArray
 
 --> Working On
 -
-
---> Portal | Navigation | API
--
-/*
-This section is for safe handlers that will be made available in the app through:
-
-- user interaction (such as bookmarking)
-- downloading json portal files that expose or deliver new book content
-*/
-
-command sivasiva_GoHomePortal
-   put portal_GetHomeStackPath() into portalHomeStackPath
-   put the name of stack portalHomeStackPath into portalStackObject
-   portal_Go portalStackObject
-   put the portal_View of portalStackObject into portalView
-   set the portal_Name of portalView to "home"
-end sivasiva_GoHomePortal
-
-command sivasiva_QueueContent btnObject, hiliteBoolean
-   -- sivasiva_AddBookMark 
-end sivasiva_QueueContent
-
-command sivasiva_AddFavorites
-   portal_DisplayBookmarks
-end sivasiva_AddFavorites
-
-command sivasiva_SettingsGear
-   display_Log
-end sivasiva_SettingsGear
-
 command portal_DoRowLink rowName
    -- safe parsing only of accepted commands
    -- no dymanic execution of arbitrary code
@@ -66,9 +36,15 @@ command portal_DoRowLink rowName
    put portal_GetRowLinkArray (rowName) into linkArray
    put linkArray ["portal command"] into linkCommand
    put linkArray ["portal param"] into linkParam
+   
+   -- display_RowLink rowName
+   
    switch linkCommand
       case "portal_Link"
          portal_Link linkParam
+         break
+      case "portal_Stack"
+         portal_Stack linkParam
          break
       case "portal_Go"
          portal_Go linkParam
@@ -82,36 +58,37 @@ command portal_DoRowLink rowName
    end switch
 end portal_DoRowLink
 
+command portal_Link portalName
+   -- navigates to the "portal view" and displays the named portal
+   put portal_GetHomeView() into portalView
+   set the portal_Name of portalView to portalName
+   portal_GoStack "Siva-Siva-App"
+end portal_Link
+
 command portal_GoName portalName
-   -- could look this up
-   -- put portal_GetData (pSivasivaData) into portalData
-   
-   -- instead we do a quick hack
-   if portalName = "home" then put "sivasivahome" into portalName
-   put the name of stack portalName into stackObject
-   portal_Go stackObject
-   return goResult
+   portal_GoStack portalName
+   return the result
 end portal_GoName
 
 command portal_GoStack stackName
-   put the name of stack stackName into stackObject
-   portal_Go stackObject
-   return goResult
+   -- goes to the new stack
+   -- closes the current stack
+   -- safely ignores if we are alrady in the new stack
+   
+   put the short name of this stack into oStackName
+   if oStackName = stackName then return oStackName
+   
+   go to stack stackName
+   close stack oStackName
+   return oStackName
 end portal_GoStack
 
 command portal_Go cardOrStackObject
-   go cardOrStackObject
-   return the result
-   
+   answer portal_Go
    /*
-   This handler os for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
+   This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
    Because we have set the stackfiles we can simply go to the short name of the stack.
    The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
-   
-   == To Do ==
-   Explore and test navigation to other stacks:
-   -  why do we need to "go in a new window and then close?
-   - can we hide the home stack instead etc
    */
    
    put the short name of this stack into oStackName
@@ -122,7 +99,7 @@ command portal_Go cardOrStackObject
       if the long id of cardOrStackObject = the long id of this card then
          -- the button or icon should proably be changed or disabled
       else
-         -- going to a different card int he same stack
+         -- going to a different card in the same stack
          -- answer "Not closing. Destination is the same stack."
       end if
    else
@@ -133,6 +110,44 @@ command portal_Go cardOrStackObject
    return goResult
 end portal_Go
 
+
+--> Portal | Navigation | API
+-
+/*
+This section is for safe handlers that will be made available in the app through:
+
+- user interaction (such as bookmarking)
+- downloading json portal files that expose or deliver new book content
+*/
+
+command display_Log
+   portal_GoStack "Log"
+end display_Log
+
+command sivasiva_GoHomePortal
+   put the portal_View of stack "Siva-Siva-App" into portalView
+   set the portal_Name of portalView to "home"
+   portal_GoStack "Siva-Siva-App"
+end sivasiva_GoHomePortal
+
+command sivasiva_QueueContent btnObject, hiliteBoolean
+   -- sivasiva_AddBookMark
+   if the environment is "mobile" then
+      answer mobileControls()
+      answer the openstacks
+   else
+      answer "Does not work on desktop"
+   end if
+end sivasiva_QueueContent
+
+command sivasiva_AddFavorites
+   portal_DisplayBookmarks
+end sivasiva_AddFavorites
+
+command sivasiva_SettingsGear
+   display_Log
+end sivasiva_SettingsGear
+
 command portal_Url someURL
    answer "Not done yet!"
 end portal_Url
@@ -140,31 +155,6 @@ end portal_Url
 command portal_LandscapeUrl someURL
    answer "Not done yet!"
 end portal_LandscapeUrl
-
-command portal_Link portalName
-   /*
-   Navigates to the "portal view" and displays the named portal
-   For now we are dynamically creating the portal view on the first card of the "sivasivahome" stack
-   However in the future we may move each portal to it's own card or scrolling group
-   */
-   
-   if portalName is empty then
-      answer "Portal name is empty"
-      breakpoint
-   else
-      put the short name of this stack into oStackName
-      put portal_GetHomeStackPath() into portalHomeStackPath
-      put portal_GetHomeView() into portalView
-      
-      lock screen
-      go to stack portalHomeStackPath -- in a new window
-      set the portal_Name of portalView to portalName
-      if the environment is "mobile" then
-         -- close stack oStackName
-      end if
-      unlock screen
-   end if
-end portal_Link
 
 
 --> SivaSiva | Portal | Row
