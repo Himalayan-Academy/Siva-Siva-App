@@ -188,3 +188,9 @@ command folder_CreateNested @someFolder
    end repeat
    text_AddTrailing someFolder, slash
 end folder_CreateNested
+
+command text_AddTrailing @someText, someChar
+   if char -1 of someText is not someChar then
+      put someChar after someText
+   end if
+end text_AddTrailing
