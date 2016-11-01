@@ -66,11 +66,11 @@ private function asset_GetFileFromItemArray pItemA
    return assetFile
 end asset_GetFileFromItemArray
 
-function _getProjectFolder
+function sivasiva_getProjectFolder
    set itemdel to "/"
    put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into projectFolder
-   return projectFolder
-end _getProjectFolder
+   return projectFolder & "/"
+end sivasiva_getProjectFolder
 
 function jnanam_GetDatabasePath
    -- was "pathToJnanamDatabase"
@@ -146,7 +146,8 @@ command updatePhotoCache
    updateCache "art/photography"
 end updatePhotoCache
 
-private command updateCache pMediaType   
+private command updateCache pMediaType 
+   dbSetDefaultConnectionID jnanamDB()  
    dbWhere "media_type", pMediaType
    put dbGet ("item") into tItemsA
    
@@ -159,10 +160,10 @@ private command updateCache pMediaType
          put tItemsA [x]["file_id"] into fileID
          dbWhere "file_id", fileID
          
-         put true into tNewDataA ["email"]
+         put true into tNewDataA ["cached_on_disk"]
          put dbUpdate ("item", tNewDataA) into tResult
-         answer tResult
-         breakpoint
+         add 1 to tTotalCachedFiles
       end if
    end repeat
+   put "cached files:" && tTotalCachedFiles
 end updateCache
