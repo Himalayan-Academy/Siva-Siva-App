@@ -275,10 +275,8 @@
 				"2": {
 					"rowName": "Slideshows"
 				},
+				
 				"3": {
-					"rowName": "Hindu Art"
-				},
-				"4": {
 					"rowName": "History Movie"
 				}
 			},
@@ -467,5 +465,10 @@
 			},
 			"headerImage": "hero_read_gurudeva-signing-book.jpg"
 		}
+	},
+	"disabledContent":{
+	"3": {
+					"rowName": "Hindu Art"
+				}
 	}
 }

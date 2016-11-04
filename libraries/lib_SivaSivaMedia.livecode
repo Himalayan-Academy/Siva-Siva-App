@@ -27,7 +27,7 @@ end checkThisScriptIsInMsgPath
  #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
  
  
-command fetchRandomMediaItem pSelectParams
+command _old_fetchRandomMediaItem pSelectParams
    
    --   #The selection Params are passed down from the calling command as quoted strings 
    --   # each set of two = column + value
@@ -87,12 +87,12 @@ command fetchRandomMediaItem pSelectParams
    dbSetSQL tSQL
    put dbGet("item", tConnectionID) into aSelectedItem
    put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into aMediaMeta["item_id"]
-     put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into aMediaMeta["approved_for_public"] 
+   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into aMediaMeta["approved_for_public"] 
    put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into aMediaMeta["file_id"]
    put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into aMediaMeta["media_type"]
-     put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into aMediaMeta["date_created"]
-     put textDecode ( aSelectedItem[1]["genre"], UTF8)  into aMediaMeta["genre"]
-        put textDecode ( aSelectedItem[1]["deity"], UTF8)  into aMediaMeta["deity"]
+   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into aMediaMeta["date_created"]
+   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into aMediaMeta["genre"]
+   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into aMediaMeta["deity"]
    put textDecode ( aSelectedItem[1]["title"], UTF8)  into aMediaMeta["title"]
    put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into aMediaMeta["sub_title"] 
    put textDecode ( aSelectedItem[1]["artists"], UTF8)  into aMediaMeta["artists"]
@@ -100,6 +100,28 @@ command fetchRandomMediaItem pSelectParams
    put textDecode ( aSelectedItem[1]["description"], UTF8)  into aMediaMeta["description"]
    
    put getformatData (aMediaMeta["item_id"])
+end _old_fetchRandomMediaItem
+
+function fetchRandomMediaItem
+   if the paramcount mod 2 is not 0 then
+      return "err: param count needs to be even"
+   end if
+   
+   put  JnanamDB() into tConnectionID
+   repeat with x = 1 to the paramcount step 2
+      if param(x) is not empty then
+         dbLike param(x), param(x+1)
+      end if
+   end repeat
+   
+   dbOrderBy "RANDOM()"
+   dbLimit 1
+   put dbGet("item", tConnectionID) into selectedItemsA
+   put selectedItemsA[1] into tRetValA
+   repeat for each key k in tRetValA
+      put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
+   end repeat
+   return tRetValA
 end fetchRandomMediaItem
  
  function getMediaURL
