@@ -84,7 +84,7 @@ command portal_GoStack stackName
 end portal_GoStack
 
 command portal_Go cardOrStackObject
-   answer portal_Go
+   -- answer portal_Go
    /*
    This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
    Because we have set the stackfiles we can simply go to the short name of the stack.
