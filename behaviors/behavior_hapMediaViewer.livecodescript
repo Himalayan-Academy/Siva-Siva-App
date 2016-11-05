@@ -1,4 +1,4 @@
-﻿script "behavior_hapMediaViewer"
+﻿script "behavior_HapMediaViewer"
 
 command createBrowserWidget pOrientation
    create invisible widget "Browser" as "com.livecode.widget.browser"

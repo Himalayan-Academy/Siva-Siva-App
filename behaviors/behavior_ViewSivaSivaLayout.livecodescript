@@ -11,6 +11,38 @@ version: 0.3
 local LocalArray
 
 
+--> Working on
+-
+getprop row_BackgroundColour
+   put the row_View [1] of _scrollingView() into rowView
+   put the background_Colour of rowView into someColour
+   return someColour
+end row_BackgroundColour
+
+setprop row_BackgroundColour someColour
+   put the row_Views of _scrollingView() into rowViews
+   lock screen
+   repeat for each line rowView in rowViews
+      set the background_Colour of rowView to someColour
+   end repeat
+   unlock screen
+end row_BackgroundColour
+
+getprop background_Transparent
+   put the showBorder of me into someBoolean
+   return someBoolean
+end background_Transparent
+
+setprop background_Transparent someBoolean
+   if the long id of the target is not the long id of me then pass background_Transparent
+   lock screen
+   set the showBorder of me to someBoolean
+   set the opaque of me to someBoolean
+   set the background_Transparent of _scrollingView() to (not someBoolean)
+   unlock screen
+end background_Transparent
+
+
 --> Events
 -
 on preOpenControl
@@ -171,20 +203,6 @@ setprop logo_Faded someBoolean
    return true
 end logo_Faded
 
-getprop background_Transparent
-   put the showBorder of me into someBoolean
-   return someBoolean
-end background_Transparent
-
-setprop background_Transparent someBoolean
-   if the long id of the target is not the long id of me then pass background_Transparent
-   lock screen
-   set the showBorder of me to someBoolean
-   set the opaque of me to someBoolean
-   set the background_Transparent of _scrollingView() to (not someBoolean)
-   unlock screen
-end background_Transparent
-
 
 --> Object
 -
@@ -218,8 +236,12 @@ getprop header_View
 end header_View
 
 private function _headerView
-   put the scrolling_View of me into scrollingView
-   put the header_View of scrollingView into headerView
+   put the long id of group "Portal Image header" of me into headerView
+   return headerView
+   
+   -- won't work if the behavior is not resolving
+   put _scrollingView() into scrollingView
+   put the header_View of scrollingView into headerView 
    return headerView
 end _headerView
 

@@ -19,14 +19,15 @@ Currently these temporary handlers display portal data in the portal template st
 -
 command sivasiva_InitOrientation pOrientation
    -- mobile orientation setup
-   if the environment is "mobile" then
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      switch pOrientation
-         case "landscape"
-            mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-            break
-         default -- "portrait"
-            mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-      end switch
-   end if
+   if the environment is not "mobile" then return false
+   
+   set the fullscreenmode of this stack to "showAll" -- better for wider screens
+   switch pOrientation
+      case "landscape"
+         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
+         break
+      default -- "portrait"
+         mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
+   end switch
+   return true
 end sivasiva_InitOrientation

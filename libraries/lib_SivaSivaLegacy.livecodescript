@@ -134,9 +134,9 @@ end module_LoadConfiguration
 
 command initializeInterfaceDefaults pOrientation -- mobile orientation setup
    /*
-   Currently sent in viewer preOpenStack and currenlty by all "portal" stack cards and the hap media viewers (browser) stacks.
-   Possibly better to initialisations scripts at the card layer (as a behavior)
+   Deprecated. Use "sivasiva_InitOrientation"
    */
+   breakpoint
    sivasiva_InitOrientation pOrientation
 end initializeInterfaceDefaults
 
