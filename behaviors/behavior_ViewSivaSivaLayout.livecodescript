@@ -131,8 +131,7 @@ end portal_Array
 
 setprop portal_Array [pForceRefresh] portalArray  
    if portalArray is not an array then
-      answer warning "portal_Array is not an array!"
-      exit to top
+      return false
    end if
    
    put _scrollingView() into scrollingView
@@ -142,6 +141,9 @@ setprop portal_Array [pForceRefresh] portalArray
    lock screen
    put portalArray ["portalName"] into portalName
    set the portal_Header of headerView to portalName
+   
+   put portalArray ["portalColour"] into portalColour
+   if portalColour is empty then put "255,241,208" into portalColour
    
    put portalArray ["rowData"] into portalRowData
    set the vScroll of scrollingView to 0
@@ -156,8 +158,10 @@ setprop portal_Array [pForceRefresh] portalArray
       put the row_View [rowNum] of scrollingView into rowView
       put rowData ["rowName"] into rowName
       set the row_Name of rowView to rowName
+      set the background_Colour of rowView to portalColour
    end repeat
    unlock screen
+   return true
 end portal_Array
 
 getprop portal_Name

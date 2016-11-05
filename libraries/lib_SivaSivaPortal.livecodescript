@@ -261,17 +261,54 @@ command portal_SetRowDictionary portalRowDictionary, pSivasivaData
    sivasiva_StoreData pSivasivaData
 end portal_SetRowDictionary
 
+function portal_GetHeaderImage portalName, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalArray ["headerImage"] into shortHeaderImageFile
+   return shortHeaderImageFile
+end portal_GetHeaderImage
+
+command portal_SetHeaderImage portalName, shortHeaderImageFile, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put shortHeaderImageFile into portalArray ["headerImage"]
+   portal_SetArray portalName, portalArray, pSivasivaData
+end portal_SetHeaderImage
+
+function portal_GetPortalColour portalName, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalArray ["portalColour"] into portalColour
+   if portalColour is empty then return "255,241,208"
+   return portalColour
+end portal_GetPortalColour
+
+command portal_SetPortalColour portalName, portalColour, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalColour into portalArray ["portalColour"]
+   portal_SetArray portalName, portalArray, pSivasivaData
+end portal_SetPortalColour
+
 function portal_GetArray portalName, pSivasivaData
    put portal_GetData (pSivasivaData) into portalData
    put portalData [portalName] into portalArray
    return portalArray
 end portal_GetArray
 
+command portal_SetArray portalName, portalArray, pSivasivaData
+   put portal_GetData (pSivasivaData) into portalData
+   put portalArray into portalData [portalName]
+   portal_SetData portalData, pSivasivaData
+end portal_SetArray
+
 function portal_GetData pSivasivaData
    sivasiva_FetchOrGetCached pSivasivaData
    put pSivasivaData ["portalData"] into portalData
    return portalData
 end portal_GetData
+
+command portal_SetData portalData, pSivasivaData
+   sivasiva_FetchOrGetCached pSivasivaData
+   put portalData into pSivasivaData ["portalData"]
+   sivasiva_StoreData pSivasivaData
+end portal_SetData
 
 
 --> Portal | Files

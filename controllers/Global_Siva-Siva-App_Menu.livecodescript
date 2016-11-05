@@ -14,16 +14,19 @@ on menu_DisplayBookMarks
 end menu_DisplayBookMarks
 
 on menu_DisplayRowNames projectName, portalName
-   breakpoint
+   put portal_GetHomeView() into layoutView
    put portal_ListRowNames (portalName) into rowNames
    set the portal_RowNames [portalName] of layoutView to rowNames
 end menu_DisplayRowNames
 
-on menu_SetPortalName layoutView, portalName
+on menu_SetPortalName projectName, portalName
+   put portal_GetHomeView() into layoutView
    set the portal_Name of layoutView to portalName
 end menu_SetPortalName
 
-on menu_EditBehavior layoutView, whichBehavior
+on menu_EditBehavior projectName, whichBehavior
+   put portal_GetHomeView() into layoutView
+   
    switch whichBehavior
       case "layout"
          put layoutView into someView
@@ -49,6 +52,34 @@ on menu_EditBehavior layoutView, whichBehavior
    end switch
    edit the script of the behavior of someView
 end menu_EditBehavior
+
+on _
+end _
+
+on menu_SetPortalHeaderImage projectName, portalName
+   put sivasiva_PortalImageFolder() into someFolder
+   answer file "Select header image" with someFolder
+   if it is empty then exit to top 
+   put it into headerImageFile
+   set the itemdelimiter to slash
+   put item -1 of headerImageFile into shortHeaderImageFile
+   
+   portal_SetHeaderImage portalName, shortHeaderImageFile
+   
+   put portal_GetHomeView() into layoutView
+   set the portal_Name of layoutView to portalName
+end menu_SetPortalHeaderImage
+
+on menu_SetPortalColour projectName, portalName
+   answer color
+   if it is empty then exit to top 
+   put it into portalColour
+   
+   portal_SetPortalColour portalName, portalColour
+   
+   put portal_GetHomeView() into layoutView
+   set the portal_Name of layoutView to portalName
+end menu_SetPortalColour
 
 on _
 end _
@@ -176,20 +207,15 @@ end menu_DisplayOldData
 
 --> Global | Siva-Siva-App | Menu | Props
 -
+getprop portal_Name
+   put portal_GetHomeView() into portalView
+   put the portal_Name of portalView into portalName
+   return portalName
+end portal_Name
+
 getprop portal_Names
-   -- put portal_ListRowNames ("home") into homeRowNames
    put portal_ListNames() into moduleNames
-   put "Siva-Siva-App" & CR & "-" & CR into goodModuleNames
-   repeat for each line portalName in moduleNames
-      put sivasiva_GetModuleJsonFile (portalName) into jsonFile
-      if there is a file jsonFile then
-         put portalName & CR after goodModuleNames
-      else
-         put "(" & portalName & CR after goodModuleNames
-      end if
-   end repeat
-   delete char -1 of goodModuleNames
-   return goodModuleNames
+   return moduleNames
 end portal_Names
 
 
