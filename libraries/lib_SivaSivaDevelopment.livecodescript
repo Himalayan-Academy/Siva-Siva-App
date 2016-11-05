@@ -19,6 +19,45 @@ They should be in "tool" projects outside of a production project.
 
 --> Working on
 -
+on functionKey keyNumber
+   if the optionKey is "Down" then breakpoint
+   put the top_Card of the topStack into topCard
+   switch keyNumber
+      case 10
+         stack_ToggleShrink
+         break
+   end switch
+   pass functionKey
+end functionKey
+
+command stack_ToggleShrink pStackObject
+   if pStackObject is empty then
+      put the topStack into pStackObject
+   end if
+   put the scalefactor of pStackObject into oFactor
+   if oFactor = 1 then
+      stack_Shrink pStackObject, 0.75
+   else
+      stack_Shrink pStackObject, 1
+   end if
+end stack_ToggleShrink
+
+command stack_Shrink scriptObject, pScaleFactor
+   if pScaleFactor is empty then put 0.7 into pScaleFactor
+   
+   put the stack_Name of scriptObject into stackName
+   lock screen
+   put the topleft of stack stackName into oTopLeft
+   set the scaleFactor of stack stackName to pScaleFactor
+   
+   -- bug in screen rects for shrunk stacks
+   put pScaleFactor * item 1 of oTopLeft into item 1 of shrunkTopLeft
+   put pScaleFactor * item 2 of oTopLeft into item 2 of shrunkTopLeft
+   set the topleft of stack stackName to shrunkTopLeft
+   unlock screen
+   -- put oTopLeft
+end stack_Shrink
+
 command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
    if (the platform = "android") and _androidIsLogging() then 
       put mobile_GetLogFile() into logFile
@@ -30,6 +69,12 @@ command jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home st
       end if
    end if
 end jgAndroidLog
+
+getprop top_Card
+   -- using a virtual custom property sets the target and therefore "this"
+   put the long id of this card into cardObject
+   return cardObject
+end top_Card
 
 function _androidIsLogging
    put the hilite of btn "jg android log" of cd "Legacy" of stack "Siva-Siva-App" into isLogging
