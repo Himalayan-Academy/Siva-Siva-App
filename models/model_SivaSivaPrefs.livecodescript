@@ -27,7 +27,14 @@ There are various forms of preference:
 *
 * This library provides commands and functions to store user defined settings
 *
-*/
+*/  
+
+-->Testing (BR)
+-- 
+
+command checkPrefsFilePath # from msg box
+   _makeSurePreferencesFileExists
+end checkPrefsFilePath
 
 --> Prefs
 -
@@ -102,9 +109,10 @@ end pathForPreferencesFile
 
 private command _makeSurePreferencesFileExists
   if there is not a file pathForPreferencesFile() then
-    put the defaultfolder into tDF
+     put the defaultfolder into tDF
     set the itemdel to "/"
     set the defaultfolder to item 1 to -2 of the effective filename of me --JG fix: don't use "this stack", it can be anywhere
+    put the defaultFolder
     if there is a file "preferences.json" then
       get url ("binfile:preferences.json")
       put it into url ("binfile:" & pathForPreferencesFile())

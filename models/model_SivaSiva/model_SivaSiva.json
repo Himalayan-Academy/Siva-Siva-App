@@ -149,6 +149,10 @@
 			"shortImageFile": "thumb_all-bd-talks-.jpg"
 		},
 		"Path to Siva: A Catechism for Youth": {
+		"link": {
+				"portal command": "portal_Go",
+				"portal param": "stack \"pathtosiva\""
+			},
 			"imageText": "Path to Siva:\nA Catechism\nfor Youth",
 			"shortImageFile": "thumb_path-to-siva_shtrstk-124120210.jpg"
 		},
@@ -183,7 +187,7 @@
 		"Word Puzzles": {
 		"link": {
 				"portal command": "portal_Go",
-				"portal param": "stack \"word-puzzles\""
+				"portal param": "stack \"wordpuzzles\""
 			},
 			"imageText": "Word\nPuzzles",
 			"shortImageFile": "thumb_word-puzzles.jpg"
@@ -444,22 +448,22 @@
 				"6": {
 					"rowName": "A Character Building Workbook"
 				},
-				"2": {
+				"7": {
 					"rowName": "Gurudeva's Spiritual Toolbox"
 				},
-				"3": {
+				"5": {
 					"rowName": "All Our On-Line Books"
 				},
-				"5": {
+				"1": {
 					"rowName": "Path to Siva: A Catechism for Youth"
 				},
-				"1": {
+				"2": {
 					"rowName": "Frequently Asked Questions"
 				},
 				"4": {
 					"rowName": "The Master Course"
 				},
-				"7": {
+				"3": {
 					"rowName": "Hindu Lexicon"
 				}
 			},
