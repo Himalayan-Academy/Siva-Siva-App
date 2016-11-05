@@ -92,7 +92,7 @@
 			"link": {
 				"portal command": "portal_Go",
 				"portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
-			},		
+			},
 			"imageText": "Bodhinatha\nDarshan",
 			"shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
 		},
@@ -268,7 +268,7 @@
 			"imageText": "Gurudeva's\nSpiritual\nToolbox",
 			"shortImageFile": "thumb_toolbox.jpg"
 		}
-	}, 
+	},
 	"portalData": {
 		"look": {
 			"portalName": "look",
@@ -279,7 +279,7 @@
 				"2": {
 					"rowName": "Slideshows"
 				},
-				
+
 				"3": {
 					"rowName": "History Movie"
 				}
