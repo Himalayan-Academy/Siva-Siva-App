@@ -17,24 +17,26 @@ local LocalArray
 --> Working on
 -
 
---> Jnanam | Folders
+--> Events
 -
-function sivasiva_GetAssetFolder
-   put sivasiva_GetProjectFolder() into projectFolder
-   put asset_GetFolder (projectFolder) into sivasivaAssetFolder
-   return sivasivaAssetFolder
-end sivasiva_GetAssetFolder
-
-function asset_GetFolder projectFolder, pShortAssetFolder
-   put "assets/" into subFolderPath
-   if pShortAssetFolder is not empty then
-      text_AddTrailing pShortAssetFolder, slash
-      put pShortAssetFolder after subFolderPath
+on librarystack
+   -- best not to place this here as it will get called every time
+   if the long id of the target is not the long id of me then pass librarystack
+     
+   if sLoaded is not true then
+      _setupDatabase
    end if
-   put projectFolder & subFolderPath into assetFolder
-   folder_CreateNested assetFolder
-   return assetFolder
-end asset_GetFolder
+end librarystack
+
+
+--> Jnanam | Photos
+-
+command jnanam_UpdatePhotoCache
+   ## This command will cycle the photos on disk and update the 
+   ## cached_on_disk field on the SQLite database for all photos
+   ## that are present.
+   updateCache "art/photography"
+end jnanam_UpdatePhotoCache
 
 
 --> Jnanam | Files
@@ -55,7 +57,7 @@ end jnanam_GetModelFolder
 
 private function asset_GetFileFromItemArray pItemA
    -- was "pathForItem"
-   put sivasiva_GetAssetFolder() into assetFolder
+   put sivasiva_AssetFolder() into assetFolder
    put pItemA ["file_id"] into fileID
    
    switch pItemA ["media_type"]
@@ -66,12 +68,6 @@ private function asset_GetFileFromItemArray pItemA
    return assetFile
 end asset_GetFileFromItemArray
 
-function sivasiva_getProjectFolder
-   set itemdel to "/"
-   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into projectFolder
-   return projectFolder & "/"
-end sivasiva_getProjectFolder
-
 function jnanam_GetDatabasePath
    -- was "pathToJnanamDatabase"
    if the environment is "development" then
@@ -81,18 +77,6 @@ function jnanam_GetDatabasePath
       return specialfolderpath("documents") & "/jnanam.sqlite"
    end if
 end jnanam_GetDatabasePath
-
-
---> Events
--
-on librarystack
-   -- best not to place this here as it will get called every time
-   if the long id of the target is not the long id of me then pass librarystack
-     
-   if sLoaded is not true then
-      _setupDatabase
-   end if
-end librarystack
 
 
 --> Jnanam
@@ -139,15 +123,7 @@ private command _loadDatabase
    end if
 end _loadDatabase
 
-command updatePhotoCache
-   ## This command will cycle the photos on disk and update the 
-   ## cached_on_disk field on the SQLite database for all photos
-   ## that are present.
-   updateCache "art/photography"
-end updatePhotoCache
-
-private command updateCache pMediaType 
-   dbSetDefaultConnectionID jnanamDB()  
+private command updateCache pMediaType   
    dbWhere "media_type", pMediaType
    put dbGet ("item") into tItemsA
    
@@ -160,10 +136,10 @@ private command updateCache pMediaType
          put tItemsA [x]["file_id"] into fileID
          dbWhere "file_id", fileID
          
-         put true into tNewDataA ["cached_on_disk"]
+         put true into tNewDataA ["email"]
          put dbUpdate ("item", tNewDataA) into tResult
-         add 1 to tTotalCachedFiles
+         answer tResult
+         breakpoint
       end if
    end repeat
-   put "cached files:" && tTotalCachedFiles
 end updateCache

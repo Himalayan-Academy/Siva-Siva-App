@@ -301,8 +301,8 @@ local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
 --> Transitional
 -
 command portal_PreOpenCard portalName
-   initializeInterfaceDefaults "portrait"
-   log_Info "initializeInterfaceDefaults"
+   sivasiva_InitOrientation "portrait"
+   log_Info "sivasiva_InitOrientation"
    
    -- module_LoadConfiguration portalName
    -- put getModuleConfiguration (portalName) into sConfigA

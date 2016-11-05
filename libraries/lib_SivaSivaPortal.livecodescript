@@ -133,8 +133,8 @@ end sivasiva_GoHomePortal
 command sivasiva_QueueContent btnObject, hiliteBoolean
    -- sivasiva_AddBookMark
    if the environment is "mobile" then
+      scroller_Create "portal scroller"
       answer mobileControls()
-      answer the openstacks
    else
       answer "Does not work on desktop"
    end if

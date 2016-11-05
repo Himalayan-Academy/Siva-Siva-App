@@ -72,7 +72,8 @@ end init_Logging
 --> SivaSiva | Init
 -
 function init_GetStatus
-   return the stacksinuse is not empty
+   put "lib_SivaSiva" is among the lines of the stacksinuse into someBoolean
+   return someBoolean
 end init_GetStatus
 
 command init_AppConfiguration
@@ -91,7 +92,6 @@ command init_AppConfiguration
    
    -- then
    init_Logging
-   -- log_Append "Finished init_Logging"
    
    -- then start using all required libraries
    init_LoadLibraries projectFolder

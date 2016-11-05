@@ -101,11 +101,31 @@ function sivasiva_PhotosFolder
    return photosFolder
 end sivasiva_PhotosFolder
 
+
+--> SivaSiva | Asset | Folders
+-
 function sivasiva_AssetFolder pRelativeFolderPath
    put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
    if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
    return sharedAssetFolder
 end sivasiva_AssetFolder
+
+function sivasiva_AssetFolder
+   put sivasiva_GetProjectFolder() into projectFolder
+   put asset_GetFolder (projectFolder) into sivasivaAssetFolder
+   return sivasivaAssetFolder
+end sivasiva_AssetFolder
+
+function asset_GetFolder projectFolder, pShortAssetFolder
+   put "assets/" into subFolderPath
+   if pShortAssetFolder is not empty then
+      text_AddTrailing pShortAssetFolder, slash
+      put pShortAssetFolder after subFolderPath
+   end if
+   put projectFolder & subFolderPath into assetFolder
+   folder_CreateNested assetFolder
+   return assetFolder
+end asset_GetFolder
 
 
 --> SivaSiva | Project | Files

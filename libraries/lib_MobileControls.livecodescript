@@ -12,10 +12,67 @@ This stack has been moved from a frontscript to a library.
 The suggestion is to split this into general and more specific libraires - for instance lib_MobileScroller and lib_MobileAdio etc ?
 */
 
+--> Variables
+-
+/*
+Here we store information about the target of the scrolling action such as:
+
+-  LocalArray ["scrollingview"] = the long id of the target of the field or group to scroll.
+*/
+
+local LocalArray
+
+
 --> Working On
 -
+getprop formatted_VerticalRect
+   put the long id of the target into scrollerObject
+   put the rect of scrollerObject into fRect
+   put the formattedheight of scrollerObject into item 4 of fRect
+   return fRect
+end formatted_VerticalRect
+
+getprop formatted_Rect
+   put the long id of the target into scrollerObject
+   put the topleft of scrollerObject into sTopLeft
+   put the formattedwidth of scrollerObject into fWidth
+   put the formattedheight of scrollerObject into fHeight
+   put sTopLeft,fWidth,fHeight into fRect
+   return fRect
+end formatted_Rect
+
+command scroller_SetFormattedRect pIdOrName
+   -- a utility function to automatically reset a scroller to the formattedwith and formattedheight
+   put LocalArray ["scrollerView"] into scrollingView
+   if exists (scrollingView) is false then
+      answer scrollingView
+      return empty
+   end if
+   if pIdOrName is empty then
+      put LocalArray ["mobileScrollerName"] into pIdOrName
+   end if
+   
+   put the rect of scrollingView into scrollingViewRect
+   put the formatted_VerticalRect of scrollingView into fRect
+    
+   scroller_SetRect pIdOrName, scrollingViewRect, fRect
+end scroller_SetFormattedRect
+
+command scroller_SetRect idOrName, groupRect, pFormattedRect
+   if the environment is not "mobile" then return false
+   
+   if pFormattedRect is empty then put groupRect into pFormattedRect
+   mobileControlSet idOrName, "rect", groupRect
+   mobileControlSet idOrName, "contentRect" , pFormattedRect
+   mobileControlSet idOrName, "hScroll" , 0
+   mobileControlSet idOrName, "vScroll" , 0
+   return true
+end scroller_SetRect
+
 private command displayScroll vScrolled
    -- in case you want to debug directly on the portal screen
+   -- should remove when deployed as only useful for debiggin portal screens
+   
    put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
    put the row_View [1] of scrollingView into rowView
    set the title_Text of rowView to vScrolled
@@ -28,58 +85,84 @@ on scrollerDidScroll hScrolled, vScrolled
    -- this message is sent to the same object that created the mobile scroller (this library)
    -- would prefer to move it to a behavior that an be used in multiple places
    
-   put mobileControlTarget() into idOrName
-   if idOrName = "portal scroller" then
-      -- put the scrolling_View of me into scrollingView
-      put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
-      -- displayScroll (idOrName &CR& vScrolled)
-      set the vscroll of scrollingView to vScrolled
+   -- put mobileControlTarget() into idOrName
+   -- if idOrName = "portal scroller" then
+   -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
+   -- displayScroll (idOrName &CR& vScrolled)
+   
+   put LocalArray ["scrollerView"] into scrollingView
+   if exists (scrollingView) is false then
+      answer scrollingView
+      return empty
    end if
+   
+   set the vscroll of scrollingView to vScrolled
+   -- end if
    pass scrollerDidScroll
 end scrollerDidScroll
 
 
 --> Mobile | Scroller
 -
-/*
-Consider moving this part of the library to a shared behavior?
-*/
-
 setprop mobile_VerticalScroller [fRect] mobileScrollerName
    -- we could also store some information about the scroller as a group property
    -- for now let's just use the mobileScrollerName
-   if the environment is not "mobile" then return false
-   if mobileScrollerName is empty then
-      scroller_Delete mobileScrollerName
-      return the result
-   end if
-   
    put the long id of the target into scrollerView
+   put scrollerView into LocalArray ["scrollerView"]
+   
+   switch
+      case the environment is not "mobile"
+         return false
+      case mobileScrollerName is empty
+         scroller_Delete mobileScrollerName
+         return the result
+      case mobileScrollerName is not among the lines of mobileControls()
+         scroller_Create mobileScrollerName
+         put the result into mobileScrollerID
+         break 
+      default
+         answer ("Error" && existingControls)
+   end switch
    
    set the vScroll of scrollerView to 0 -- ensures correct initial alignment
-   put the rect of scrollerView into groupRect
-   if fRect is empty then put the formatted_Rect of scrollerView into fRect
+   put the rect of scrollerView into scrollingViewRect
+   if fRect is empty then put the formatted_VerticalRect of scrollerView into fRect
    
-   scroller_Create mobileScrollerName
-   put the result into mobileScrollerID 
-   scroller_SetRect mobileScrollerID, groupRect, fRect
+   scroller_SetRect mobileScrollerID, scrollingViewRect, fRect
    scroller_ShowVertical mobileScrollerID
+   
+   -- answer scrollingViewRect & CR & fRect & CR & mobileScrollerID & CR & "mobile_VerticalScroller"
+   
+   put mobileScrollerName into LocalArray ["mobileScrollerName"]
    return mobileScrollerID
 end mobile_VerticalScroller
 
+getprop mobile_VerticalScroller
+   -- not needed ?
+   if the environment is not "mobile" then return false
+   put mobileControlTarget() into idOrName
+   return idOrName
+end mobile_VerticalScroller
+
 command scroller_Delete mobileScrollerName
+   if the environment is not "mobile" then return false
    mobileControlDelete mobileScrollerName
    return mobileControls()
 end scroller_Delete
 
 command scroller_DeleteAll
-   repeat for each line mobileScrollerName in mobileControls()
+   if the environment is not "mobile" then return false
+   put mobileControls() into allControls
+   repeat for each line mobileScrollerName in allControls
       mobileControlDelete mobileScrollerName
    end repeat
+   answer ("scroller_DeleteAll" & CR & allControls)
+   return allControls
 end scroller_DeleteAll
 
 command scroller_Create mobileScrollerName
    -- create if mobile scroller does not exist already (returns a unique id)
+   if the environment is not "mobile" then return false
    
    put mobileControls() into mobileControllerNames
    if mobileScrollerName is among the lines of mobileControllerNames then
@@ -91,27 +174,13 @@ command scroller_Create mobileScrollerName
    return mobileScrollerID
 end scroller_Create
 
-command scroller_SetRect idOrName, groupRect, pFormattedRect
-   if pFormattedRect is empty then put groupRect into pFormattedRect
-   mobileControlSet idOrName, "rect", groupRect
-   mobileControlSet idOrName, "contentRect" , pFormattedRect
-   mobileControlSet idOrName, "hScroll" , 0
-   mobileControlSet idOrName, "vScroll" , 0
-end scroller_SetRect
-
 command scroller_ShowVertical idOrName
+   if the environment is not "mobile" then return false
+   
    mobileControlSet idOrName, "hIndicator" , false
    mobileControlSet idOrName, "vIndicator", true
    mobileControlSet idOrName, "visible",  true
 end scroller_ShowVertical
-
-getprop formatted_Rect
-   put the long id of the target into scrollerObject
-   put the formattedwidth of scrollerObject into fWidth
-   put the formattedheight of scrollerObject into fHeight
-   put 0,0,fWidth,fHeight into fRect
-   return fRect
-end formatted_Rect
 
 
 ######### Mobile Browser Controls ############

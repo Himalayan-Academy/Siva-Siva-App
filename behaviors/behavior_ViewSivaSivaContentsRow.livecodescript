@@ -62,8 +62,22 @@ on mouseUp
    pass mouseUp
 end mouseUp
 
+
+--> Props
+-
+getprop background_Colour
+   put the backgroundcolor of _graphicObject() into someColour
+   return someColour
+end background_Colour
+
+setprop background_Colour someColour
+   put _graphicObject() into graphicObject
+   set the backgroundcolor of graphicObject to someColour
+   return graphicObject
+end background_Colour
+
 getprop row_Hilite
-   return the blendlevel of me = 0
+   return the blendlevel of me is not 0
 end row_Hilite
 
 setprop row_Hilite someBoolean
@@ -74,9 +88,6 @@ setprop row_Hilite someBoolean
    end if
 end row_Hilite
 
-
---> Props
--
 getprop row_Name
    return the row_Name of me
    -- return LocalArray ["rowName"]
