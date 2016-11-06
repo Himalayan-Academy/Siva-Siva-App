@@ -1,8 +1,8 @@
 {
-  "settings": {
+  "preferences": {
     "global": "", 
     "modules": {
-      "colormeds": {
+      "color-meditation": {
         "audioGuide": "true", 
         "breathCount": "6", 
         "breathPace": "1.5", 
