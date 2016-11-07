@@ -101,9 +101,9 @@ end getPref
 
 function pathForPreferencesFile
    if the environment is mobile then 
-      return specialfolderpath("documents") & "/preferences.json"
+      return specialfolderpath("documents") & "/sivasiva_preferences.json"
    else
-      return specialfolderpath("temporary") & "/preferences.json"
+      return specialfolderpath("temporary") & "/sivasiva_preferences.json"
    end if
 end pathForPreferencesFile
 
