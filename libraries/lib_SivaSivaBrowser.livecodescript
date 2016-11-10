@@ -45,7 +45,7 @@ command launchAudio pURL, pOptionalImage
 end launchAudio
 
 command launchBook pFileID
-   get "http://dev.himalayanacademy.com/book/" & pFileID
+   get "https://www.himalayanacademy.com/book/" & pFileID
    launchURL it
 end launchBook
 
@@ -90,6 +90,6 @@ end getOrientationByType
 function pingServer
    -- currenlty ony used by stack "gems"
     --jg: UTF8 text file on server should contain only the word "true"
-   get url "http://www.himalayanacademy.com/ping.txt"
+   get url "https://www.himalayanacademy.com/ping.txt"
    return textDecode(it,"UTF8") = "true"
 end pingServer
