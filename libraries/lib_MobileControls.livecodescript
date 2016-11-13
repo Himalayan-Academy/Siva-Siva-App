@@ -267,7 +267,7 @@ command createMobileAudioPlayer pURL, pPlayerName
    mobileControlSet pPlayerName, "rect", tRect
    mobileControlSet pPlayerName, "showController", true 
    mobileControlSet pPlayerName, "filename", pURL 
-   if pURL begins with "http" then
+   if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
    if mobileIdleTimerLocked() is false then mobileLockIdleTimer --jg: disallow screen lock
