@@ -80,26 +80,26 @@ end displayScroll
 
 
 --> Mobile | Scroller | Events
--
-on scrollerDidScroll hScrolled, vScrolled
-   -- this message is sent to the same object that created the mobile scroller (this library)
-   -- would prefer to move it to a behavior that an be used in multiple places
-   
-   -- put mobileControlTarget() into idOrName
-   -- if idOrName = "portal scroller" then
-   -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
-   -- displayScroll (idOrName &CR& vScrolled)
-   
-   put LocalArray ["scrollerView"] into scrollingView
-   if exists (scrollingView) is false then
-      answer scrollingView
-      return empty
-   end if
-   
-   set the vscroll of scrollingView to vScrolled
-   -- end if
-   pass scrollerDidScroll
-end scrollerDidScroll
+--  David's method
+-- on scrollerDidScroll hScrolled, vScrolled
+--    -- this message is sent to the same object that created the mobile scroller (this library)
+--    -- would prefer to move it to a behavior that an be used in multiple places
+
+--    -- put mobileControlTarget() into idOrName
+--    -- if idOrName = "portal scroller" then
+--    -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
+--    -- displayScroll (idOrName &CR& vScrolled)
+
+--    put LocalArray ["scrollerView"] into scrollingView
+--    if exists (scrollingView) is false then
+--       answer scrollingView
+--       return empty
+--    end if
+
+--    set the vscroll of scrollingView to vScrolled
+--    -- end if
+--    pass scrollerDidScroll
+-- end scrollerDidScroll
 
 
 --> Mobile | Scroller
@@ -182,6 +182,31 @@ command scroller_ShowVertical idOrName
    mobileControlSet idOrName, "visible",  true
 end scroller_ShowVertical
 
+####### jacque Scroller methods
+
+
+-- mobile scrollers --
+
+command createScroller pName -- pass short name of control that should scroll
+  if not isMobile() then exit CreateScroller
+  deleteMobileControl pName -- delete any existing
+  mobileControlCreate "scroller", pName
+  mobileControlSet pName, "rect", (the rect of control pName)
+  put  (0,0,the formattedwidth of control pName,the formattedheight of control pName) into tRect
+  mobileControlSet pName, "contentRect" , tRect
+  mobileControlSet pName, "hScroll" , 0
+  mobileControlSet pName, "vScroll" , 0
+  mobileControlSet pName, "hIndicator" , false
+  mobileControlSet pName, "vIndicator", true
+  mobileControlSet pName, "visible",  true
+end createScroller
+
+on scrollerDidScroll hScrolled, vScrolled
+  put mobileControlTarget() into tControlID
+  set the vScroll of control tControlID to vScrolled
+  pass scrollerDidScroll # added by BR because this was in the Gurudeva app
+end scrollerDidScroll 
+
 
 ######### Mobile Browser Controls ############
 
@@ -196,31 +221,6 @@ command CreateBrowser pName,pURL,pRect -- mobile browser
    mobileControlSet pName, "URL", pURL
    mobileControlSet pName, "visible",  true
 end CreateBrowser
-
-
-######### Mobile Scroller Controls ############
-
-command CreateScroller pName -- scrolling fields
-   if not isMobile() then exit CreateScroller
-   deleteMobileControl pName -- delete any existing
-   put (the rect of control pName) into tRect
-   mobileControlCreate "scroller", pName
-   mobileControlSet pName, "rect", tRect
-   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName) into tRect
-   mobileControlSet pName, "contentRect" , tRect
-   mobileControlSet pName, "hScroll" , 0
-   mobileControlSet pName, "vScroll" , 0
-   mobileControlSet pName, "hIndicator" , false
-   mobileControlSet pName, "vIndicator", true
-   mobileControlSet pName, "visible",  true
-end CreateScroller
-
-on scrollerDidScroll pHScrolled, pVScrolled
-   put mobileControlTarget() into tControlID
-   put the long name of control tControlID of this cd of the topstack into tControlName
-   set the vscroll of tControlName to pVScrolled
-   pass scrollerDidScroll
-end scrollerDidScroll
 
 
 ######### Mobile Player Controls ############
@@ -330,6 +330,7 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
       mobileControlDelete l
    end repeat
 end deleteAllMobileControls
+
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
    if isMobile() then
