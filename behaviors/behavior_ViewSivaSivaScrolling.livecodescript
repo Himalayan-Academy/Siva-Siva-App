@@ -58,12 +58,14 @@ on mouseUp
 end  mouseup
 
 on mouseDown
-   put the mouseloc into sMouseLoc
-   put sMouseLoc into sStartLoc
-   if the environment is not "mobile" then
+   if the environment is "mobile" then
       -- mobile will use stack handlers to scroll instead
+   else
+      put the mouseloc into sMouseLoc
+      put sMouseLoc into sStartLoc
       desktop_SetScroll
    end if
+   pass mouseDown
 end mouseDown
 
 -- on touchStart pID

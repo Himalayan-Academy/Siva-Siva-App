@@ -75,7 +75,7 @@ on menu_SetPortalColour projectName, portalName
    if it is empty then exit to top 
    put it into portalColour
    
-   portal_SetPortalColour portalName, portalColour
+   portal_SetBackgroundColour portalName, portalColour
    
    put portal_GetHomeView() into layoutView
    set the portal_Name of layoutView to portalName

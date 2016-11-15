@@ -29,6 +29,19 @@ local LocalArray
 
 --> Working On
 -
+function portal_GetLinkUrl portalName, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalArray ["portalColour"] into portalColour
+   if portalColour is empty then return "255,241,208"
+   return portalColour
+end portal_GetLinkUrl
+
+command portal_SetLinkUrl portalName, portalColour, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalColour into portalArray ["portalColour"]
+   portal_SetArray portalName, portalArray, pSivasivaData
+end portal_SetLinkUrl
+
 command portal_DoRowLink rowName
    -- safe parsing only of accepted commands
    -- no dymanic execution of arbitrary code
@@ -49,14 +62,22 @@ command portal_DoRowLink rowName
       case "portal_Go"
          portal_Go linkParam
          break
-      case "portal_Url"
-         breakpoint
+      case "portal_GoUrl"
+         portal_GoUrl linkParam
          break
-      case "portal_LandscapeUrl"
-         breakpoint
+      case "portal_GoLandscapeUrl"
+         portal_GoLandscapeUrl linkParam
          break
    end switch
 end portal_DoRowLink
+
+command portal_GoUrl someURL
+   answer someURL
+end portal_GoUrl
+
+command portal_GoLandscapeUrl someURL
+   answer someURL
+end portal_GoLandscapeUrl
 
 command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
@@ -147,14 +168,6 @@ end sivasiva_AddFavorites
 command sivasiva_SettingsGear
    display_Log
 end sivasiva_SettingsGear
-
-command portal_Url someURL
-   answer "Not done yet!"
-end portal_Url
-
-command portal_LandscapeUrl someURL
-   answer "Not done yet!"
-end portal_LandscapeUrl
 
 
 --> SivaSiva | Portal | Row
@@ -273,18 +286,18 @@ command portal_SetHeaderImage portalName, shortHeaderImageFile, pSivasivaData
    portal_SetArray portalName, portalArray, pSivasivaData
 end portal_SetHeaderImage
 
-function portal_GetPortalColour portalName, pSivasivaData
+function portal_GetBackgroundColour portalName, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray
    put portalArray ["portalColour"] into portalColour
    if portalColour is empty then return "255,241,208"
    return portalColour
-end portal_GetPortalColour
+end portal_GetBackgroundColour
 
-command portal_SetPortalColour portalName, portalColour, pSivasivaData
+command portal_SetBackgroundColour portalName, portalColour, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray
    put portalColour into portalArray ["portalColour"]
    portal_SetArray portalName, portalArray, pSivasivaData
-end portal_SetPortalColour
+end portal_SetBackgroundColour
 
 function portal_GetArray portalName, pSivasivaData
    put portal_GetData (pSivasivaData) into portalData
