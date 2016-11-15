@@ -11,13 +11,12 @@ deps: function portal_GetArray
 Cloned and customised many of the LayoutControl handlers from "behavior_ViewLayoutVertical"
 The "behavior_ViewLayoutVertical" behavior can be added to add some extra functionality.
 But it should work without "behavior_ViewLayoutVertical"
-
 */
 
 
 --> Variables
 -
-local sMouseLoc, sStartLoc,sBlendLevel,sTargetOwner,sTargetModule,sTargetAction
+local sMouseLoc, sStartLoc
 local LocalArray
 
 
@@ -42,7 +41,7 @@ end desktop_SetScroll
 
 --> Events
 -
-on mouseUp  
+on mouseUp   
    put the portal_Row of the target into portalRow
    switch
       case _mouseMoved() is true
@@ -52,7 +51,8 @@ on mouseUp
          -- answer "Not a row"
          break
       default
-         put the row_Name of the target into rowName
+         -- answer "Click"
+         put the row_Name of the target into rowName  
          portal_DoRowLink rowName
    end switch
 end  mouseup
@@ -60,10 +60,13 @@ end  mouseup
 on mouseDown
    put the mouseloc into sMouseLoc
    put sMouseLoc into sStartLoc
-   if the environment is not "mobile" then
+   
+   if the environment is "mobile" then
       -- mobile will use stack handlers to scroll instead
+   else
       desktop_SetScroll
    end if
+   pass mouseDown
 end mouseDown
 
 -- on touchStart pID
