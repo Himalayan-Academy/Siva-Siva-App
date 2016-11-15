@@ -24,7 +24,7 @@ end touchStart
 mouseUp
 end touchEnd
 
-on mouseDown
+on mouseDown   
    -- set the row_Hilite of me to true
    if the environment is "development" then
       if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
