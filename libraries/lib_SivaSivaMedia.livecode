@@ -130,7 +130,7 @@ end fetchRandomMediaItem
    switch 
       case pMediaType contains "audio/"
          put FolderForAudio(pMediaType)  into pServerPath
-         return ("http://www.himalayanacademy.com/"  & pServerPath)        
+         return ("https://www.himalayanacademy.com/"  & pServerPath)        
          break
       case pMediaType contains "art/"
          #BR 2016-07-16 in the future we need to have the API export one object per format_name 
@@ -139,7 +139,7 @@ end fetchRandomMediaItem
          # in order and for the 3rd one to be the med sized image. 
          # but this seems too vulnerable to breaking to me...
          put FolderForArt(pBestFormat) into pServerPath
-         return ("http://www.himalayanacademy.com/"  & pServerPath)
+         return ("https://www.himalayanacademy.com/"  & pServerPath)
          break
       case pMediaType contains "video"
 
@@ -293,7 +293,7 @@ return pServerPath
 end  folderForArt
 
 command insertImageDimensions pImage
-   put ( (the formattedwidth of img pImage) & "x" & (the formattedheight of img pImage) ) into sCurrentGraphicRect
+   put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
 end insertImageDimensions
 
 
