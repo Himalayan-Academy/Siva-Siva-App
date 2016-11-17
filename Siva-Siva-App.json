@@ -5,7 +5,8 @@
         "hapMediaViewerLandscapeLib.livecode",
         "animationEngine.livecode",
         "jnanam/jnanam.livecodescript",
-        "preferences.livecodescript"
+        "preferences.livecodescript",
+        "panchangam_api.livecodescript"
     ],
     "behaviors": [
         "behaviors/behavior_portal-links.livecode"

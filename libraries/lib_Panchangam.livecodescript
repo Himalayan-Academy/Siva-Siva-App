@@ -1,4 +1,4 @@
-﻿script "panchangam_api"
+﻿script "lib_Panchangam"
 constant kCALENDAR_CHECK_KEY = 1
 constant kCALENDAR_META_KEY = 2
 constant kCALENDAR_EVENTS_KEY = 3
