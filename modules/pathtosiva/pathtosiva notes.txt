@@ -1,0 +1,6 @@
+Notes:
+
+11/16/16
+Path to Siva is not yet mobile-ready and has only been run on desktop. It is only partially complete and has only basic features so far. It was placed into the git repository for feedback on visual and behavioral features. More to follow later.
+
+SetPref and getPref are disabled for now until I know the correct parameters to send.
