@@ -26,6 +26,12 @@ on librarystack
    if sLoaded is not true then
       _setupDatabase
    end if
+   
+   # BR: assuming the set up does not fail then we need to updated the item table with
+   # what is cached on disk, this could expand to include other media later.
+   
+   jnanam_UpdatePhotoCache
+   
 end librarystack
 
 
@@ -82,6 +88,9 @@ end jnanam_GetDatabasePath
 --> Jnanam
 -
 function jnanamDB
+      if sID is not a number then
+      _loadDatabase
+   end if
    return sID
 end jnanamDB
 
@@ -124,6 +133,22 @@ private command _loadDatabase
 end _loadDatabase
 
 private command updateCache pMediaType   
+      switch pMediaType
+         case "art/photography"
+            put sivasiva_AssetFolder() & "/img/photography/" into tPathToPhotos
+            put folders (tPathToPhotos) into tFileIDs
+            delete line 1 of tFileIDs# .. listing
+            replace cr with comma in tFileIDs
+            put format ("UPDATE item SET cached_on_disk=\"true\" WHERE file_id IN" ) into pSQL
+            put " (" & quoteValuesforSQLparam(tFileIDs) & ")" after pSQL
+            put JnanamDB() into pDatabaseConnectionID
+            dbExecuteSQL pSQL, pDatabaseConnectionID
+          break
+       default
+          
+   --##BR 2016-11-22: this doesn't work
+   -- all items on disk should have their "cached_on_disk" updated to "true
+ 
    dbWhere "media_type", pMediaType
    put dbGet ("item") into tItemsA
    
@@ -136,10 +161,26 @@ private command updateCache pMediaType
          put tItemsA [x]["file_id"] into fileID
          dbWhere "file_id", fileID
          
-         put true into tNewDataA ["email"]
+          ## put true into tNewDataA["email"] --Br "email"?
+         put "true" into tNewDataA ["cached_on_disk"] -- BR still doesn't work
+        
          put dbUpdate ("item", tNewDataA) into tResult
          answer tResult
          breakpoint
       end if
    end repeat
+   
+  end switch
+   
 end updateCache
+
+function quoteValuesforSQLparam pValueList
+   # pass a list of items comma separated and return with quotes
+   put empty into tQuotedList # just in case
+   repeat for each item x in pValueList
+      put quote & x & quote & comma after tQuotedList
+   end repeat
+   delete char -1 of tQuotedList
+   return tQuotedList
+end quoteValuesforSQLparam
+
