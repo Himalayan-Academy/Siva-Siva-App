@@ -25,6 +25,18 @@ local LocalArray
 
 --> Working On
 -
+private command displayScroll vScrolled
+   -- in case you want to debug directly on the portal screen
+   -- should remove when deployed as only useful for debiggin portal screens
+   
+   put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
+   put the row_View [1] of scrollingView into rowView
+   set the title_Text of rowView to vScrolled
+end displayScroll
+
+
+--> Mobile | Scroller | Geometry
+-
 getprop formatted_VerticalRect
    put the long id of the target into scrollerObject
    put the rect of scrollerObject into fRect
@@ -69,37 +81,27 @@ command scroller_SetRect idOrName, groupRect, pFormattedRect
    return true
 end scroller_SetRect
 
-private command displayScroll vScrolled
-   -- in case you want to debug directly on the portal screen
-   -- should remove when deployed as only useful for debiggin portal screens
-   
-   put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
-   put the row_View [1] of scrollingView into rowView
-   set the title_Text of rowView to vScrolled
-end displayScroll
-
 
 --> Mobile | Scroller | Events
---  David's method
--- on scrollerDidScroll hScrolled, vScrolled
---    -- this message is sent to the same object that created the mobile scroller (this library)
---    -- would prefer to move it to a behavior that an be used in multiple places
-
---    -- put mobileControlTarget() into idOrName
---    -- if idOrName = "portal scroller" then
---    -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
---    -- displayScroll (idOrName &CR& vScrolled)
-
---    put LocalArray ["scrollerView"] into scrollingView
---    if exists (scrollingView) is false then
---       answer scrollingView
---       return empty
---    end if
-
---    set the vscroll of scrollingView to vScrolled
---    -- end if
---    pass scrollerDidScroll
--- end scrollerDidScroll
+-
+on scrollerDidScroll hScrolled, vScrolled
+   -- this message is sent to the same object that created the mobile scroller (this library)
+   -- would prefer to move it to a behavior that an be used in multiple places
+   
+   -- put mobileControlTarget() into idOrName
+   -- if idOrName = "portal scroller" then
+   -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
+   -- displayScroll (idOrName &CR& vScrolled)
+   
+   put LocalArray ["scrollerView"] into scrollingView
+   if exists (scrollingView) is false then
+      answer scrollingView
+      return empty
+   end if
+   
+   set the vscroll of scrollingView to vScrolled
+   pass scrollerDidScroll
+end scrollerDidScroll
 
 
 --> Mobile | Scroller

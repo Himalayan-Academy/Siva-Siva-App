@@ -140,7 +140,7 @@ command initializeInterfaceDefaults pOrientation -- mobile orientation setup
    sivasiva_InitOrientation pOrientation
 end initializeInterfaceDefaults
 
-
+/*
 --> Legacy | DTB
 -
 command sivasiva_DisplayHomePortalLink rowName, pSivaSectionArray
@@ -205,5 +205,4 @@ loadImage sConfigA["portal-links"]["read"]["image"], the long id of image "porta
 loadImage sConfigA["portal-links"]["website"]["image"], the long id of image "portal-link-image" of group "home_website"
 loadImage sConfigA["portal-links"]["games"]["image"], the long id of image "portal-link-image" of group "home_games"
 end loadPortalImages
-
-
+*/

@@ -4,7 +4,7 @@
 license: GPLv3
 name: behavior_ViewSivaSivaImageHeader
 type: behavior
-version: 0.1
+version: 0.2
 
 /*
 This is a fixed height view, at the top of the home screen of a SivaSiva module.
@@ -24,8 +24,18 @@ on mouseUp
    switch cName
       case "Title"
       case "Portal Header Image"
-         put the logo_Faded of me into someBoolean
-         set the logo_Faded of me to (not someBoolean)
+         -- put the logo_Faded of me into someBoolean
+         -- set the logo_Faded of me to (not someBoolean)
+         
+         put sivasiva_ProjectFolder() into projectFolder
+         answer folder_ListShort (projectFolder)
+         
+         put sivasiva_ConstructFolder ("libraries") into standardFolder
+         put mobile_ListShortFiles (standardFolder) into shortFiles
+         answer shortFiles
+         
+         answer project_ListFolderStacks ("libraries")
+         answer project_ListFolderStacks ("models")
          break
       case "home-logo"
          if the environment is "development" then
