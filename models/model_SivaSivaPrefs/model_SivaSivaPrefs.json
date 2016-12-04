@@ -1,13 +1,13 @@
 {
-  "settings": {
+  "preferences": {
     "global": "", 
     "modules": {
-      "colormeds": {
-        "audioGuide": "true", 
-        "breathCount": "6", 
-        "breathPace": "1.5", 
+      "color-meditation": {
+        "audioOn": "true", 
+        "breathCount": "5", 
+        "breathPace": "1", 
         "currentLevel": "1", 
-        "cycle": "1"
+        "cycles": "2"
       }
     }
   }

@@ -54,11 +54,11 @@ before load_Library tStackPath, sharedLibFolder
    log_Info ("Before" && the params)
 end load_Library
 
-before load_FrontScript tStackPath, sharedLibFolder
+-- before load_FrontScript tStackPath, sharedLibFolder
    log_Info ("Before" && the params)
 end load_FrontScript
 
-before load_BackScript tStackPath, sharedLibFolder
+-- before load_BackScript tStackPath, sharedLibFolder
   log_Info ("Before" && the params)
 end load_BackScript
 

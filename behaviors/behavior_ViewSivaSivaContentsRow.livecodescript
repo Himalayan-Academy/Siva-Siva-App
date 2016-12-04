@@ -24,7 +24,7 @@ end touchStart
 mouseUp
 end touchEnd
 
-on mouseDown
+on mouseDown   
    -- set the row_Hilite of me to true
    if the environment is "development" then
       if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
@@ -34,32 +34,32 @@ on mouseDown
    pass mouseDown
 end mouseDown
 
-on mouseRelease
-   -- answer the params
-   set the row_Hilite of me to false
-   pass mouseRelease
+-- on mouseRelease
+-- answer the params
+set the row_Hilite of me to false
+pass mouseRelease
 end mouseRelease
 
-on mouseUp
-   put the short name of the target into cName
-   switch cName
-      case "portal-link-label"
-         put the row_Name of me into portalName
-         -- set the portal_Name of me to portalName -- trapped by scrolling_View above
-         break
-      case "portal-link-image"
-         if the environment is "development" then
-            put the image_File of me into imageFile
-            -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
-            --  set the image_File of me to imageFile 
-         end if
-         answer the image_File of me
-         break
-      default
-         -- qput cName
-   end switch
-   set the row_Hilite of me to false
-   pass mouseUp
+-- on mouseUp
+put the short name of the target into cName
+switch cName
+   case "portal-link-label"
+      put the row_Name of me into portalName
+      -- set the portal_Name of me to portalName -- trapped by scrolling_View above
+      break
+   case "portal-link-image"
+      if the environment is "development" then
+         put the image_File of me into imageFile
+         -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
+         --  set the image_File of me to imageFile 
+      end if
+      -- answer the image_File of me
+      break
+   default
+      -- put cName
+end switch
+-- set the row_Hilite of me to false
+pass mouseUp
 end mouseUp
 
 

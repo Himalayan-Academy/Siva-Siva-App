@@ -18,15 +18,7 @@ Project cofiguration uses the same structure, and handlers, as individual module
 global sConfigA
 
 
---> SivaSiva | Project | Config
--
-command init_LoadJsonConfig   
-   put sivasiva_GetModuleConfigArray ("Siva-Siva-App") into sConfigA
-   put true into sConfigA ["initialized"]
-end init_LoadJsonConfig
-
-
---> SivaSiva | Module | Config
+--> SivaSiva | Config
 -
 function sivasiva_GetModuleConfigArray pModule
    put sivasiva_GetModuleJson (pModule) into someJSON
@@ -34,6 +26,11 @@ function sivasiva_GetModuleConfigArray pModule
    put jsonImport (someJSON) into someArray   
    return someArray
 end sivasiva_GetModuleConfigArray
+
+command init_LoadJsonConfig   
+   put sivasiva_GetModuleConfigArray ("Siva-Siva-App") into sConfigA
+   put true into sConfigA ["initialized"]
+end init_LoadJsonConfig
 
 
 --> SivaSiva | Paths | Modules

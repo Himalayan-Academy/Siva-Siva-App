@@ -3,13 +3,17 @@ EditingGuide\This is a very lean structured text schema. Array elements are sepa
 
 <p> Learn to be a free traveler through the mind as you bath yourself in the purity of color. <br /></p>
 
-<p>We offer four progressively more advanced levels of practice. Each one requires more mastery over the flow of awareness and takes a bit longer than the previous one.<br /></p>
-
-|levelsIndex\<p>You must complete 8 rounds of each level over a minimum of 4 days. Then the next level will be revealed. <br /></p>
+<p>We offer three progressively more advanced levels of practice. Each one requires more mastery over the flow of awareness and takes a bit longer than the previous one.<br /></p>
+|levelsIndex\<p>Practice with your eyes open, looking at the screen. Later you will find you have the power to do this practice on your own, without use the phone. <br /></p>
+|1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 1-3 minutes, depending on your breath count and pace, which you can adjust in settings. Your goal should be to reach 9 counts on the inbreath and 9 counts on the outbreath, following your hearbeat. <br /></p>
+<p>On the in breath, visualize red, then as you exhale, flood your whole body and aura with the color red. Breath in. Visualize blue. Exhale. Mentally bath yourself in blue. Breath in, visualize yellow and send out yellow through your aura as you exhale.<br /></p>
+<p>If you have difficulty visualizing color, imagine things like a can of red paint pouring over your head,  a blue sky or a yellow dress or flower.</p><p>Use the settings to change the breath interval and to turn the audio guide on or off.</p>
+|2\<p>In Level 2 we extend the practice to seven tertiary colors that also relate to the chakras. You will master visualization of red, orange, yellow, green, blue and blue-violet.<br /></p>
+<p>On the in breath, visualize the color, then as you exhale, flood your whole body and aura with that color.<br /></p>
+<p>If you have difficulty visualizing color, imagine flowers or the sky. During the day, practice observing all the colors that appear everywhere in your world. This will help you in this practice later.</p>
+|3\<p>In Level 3 we work again with the three primary colors: red, blue and yellow. Flood  your body and aura with each color when you inhale. Then when you exhale, instead of flooding the body with that color, imagine that clear white light flows out from your spine. As you do, the color and your whole body and aura, filled with the color on inhalation becomes progressively lighter until they turns to pure white. Once you master this practice with the three primary colors, you can, on your own, try it with the seven tertiary colors.</p>
+|progressive-later\<p>You must complete 8 rounds of each level over a minimum of 4 days. Then the next level will be revealed. <br /></p>
 
 <p>This app encourages consistency of practice, so you cannot do 8 rounds all in one hour or one day to see the next level. So you must practicd a minimum of 4 days to get to the next level.<br /></p>
 
 <p>Set a time, do one or two rounds today, then tomorrow and then on two more days, or do one round a day for 8 days.  And the move to the next level. </p>
-|1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 3 minutes or less, depending on your breath count and pace, which you can adjust in settings. <br /></p>
-<p>On the in breath, visualize red, then as you exhale, flood your whole body and aura with the color red. Breath in. Visualize blue. Exhale. Mentally bath yourself in blue. Breath in, visualize yellow and send out yellow through your aura as you exhale.<br /></p>
-<p>If you have difficulty visualizing color, imagine things like a can of red paint pouring over your head,  a blue sky or a yellow dress or flower.</p><p>Use the settings to change the breath interval and to turn the audio guide on or off.</p>

@@ -25,6 +25,18 @@ local LocalArray
 
 --> Working On
 -
+private command displayScroll vScrolled
+   -- in case you want to debug directly on the portal screen
+   -- should remove when deployed as only useful for debiggin portal screens
+   
+   put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
+   put the row_View [1] of scrollingView into rowView
+   set the title_Text of rowView to vScrolled
+end displayScroll
+
+
+--> Mobile | Scroller | Geometry
+-
 getprop formatted_VerticalRect
    put the long id of the target into scrollerObject
    put the rect of scrollerObject into fRect
@@ -69,15 +81,6 @@ command scroller_SetRect idOrName, groupRect, pFormattedRect
    return true
 end scroller_SetRect
 
-private command displayScroll vScrolled
-   -- in case you want to debug directly on the portal screen
-   -- should remove when deployed as only useful for debiggin portal screens
-   
-   put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
-   put the row_View [1] of scrollingView into rowView
-   set the title_Text of rowView to vScrolled
-end displayScroll
-
 
 --> Mobile | Scroller | Events
 -
@@ -97,7 +100,6 @@ on scrollerDidScroll hScrolled, vScrolled
    end if
    
    set the vscroll of scrollingView to vScrolled
-   -- end if
    pass scrollerDidScroll
 end scrollerDidScroll
 
@@ -182,6 +184,31 @@ command scroller_ShowVertical idOrName
    mobileControlSet idOrName, "visible",  true
 end scroller_ShowVertical
 
+####### jacque Scroller methods
+
+
+-- mobile scrollers --
+
+command createScroller pName -- pass short name of control that should scroll
+  if not isMobile() then exit CreateScroller
+  deleteMobileControl pName -- delete any existing
+  mobileControlCreate "scroller", pName
+  mobileControlSet pName, "rect", (the rect of control pName)
+  put  (0,0,the formattedwidth of control pName,the formattedheight of control pName) into tRect
+  mobileControlSet pName, "contentRect" , tRect
+  mobileControlSet pName, "hScroll" , 0
+  mobileControlSet pName, "vScroll" , 0
+  mobileControlSet pName, "hIndicator" , false
+  mobileControlSet pName, "vIndicator", true
+  mobileControlSet pName, "visible",  true
+end createScroller
+
+on scrollerDidScroll hScrolled, vScrolled
+  put mobileControlTarget() into tControlID
+  set the vScroll of control tControlID to vScrolled
+  pass scrollerDidScroll # added by BR because this was in the Gurudeva app
+end scrollerDidScroll 
+
 
 ######### Mobile Browser Controls ############
 
@@ -196,31 +223,6 @@ command CreateBrowser pName,pURL,pRect -- mobile browser
    mobileControlSet pName, "URL", pURL
    mobileControlSet pName, "visible",  true
 end CreateBrowser
-
-
-######### Mobile Scroller Controls ############
-
-command CreateScroller pName -- scrolling fields
-   if not isMobile() then exit CreateScroller
-   deleteMobileControl pName -- delete any existing
-   put (the rect of control pName) into tRect
-   mobileControlCreate "scroller", pName
-   mobileControlSet pName, "rect", tRect
-   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName) into tRect
-   mobileControlSet pName, "contentRect" , tRect
-   mobileControlSet pName, "hScroll" , 0
-   mobileControlSet pName, "vScroll" , 0
-   mobileControlSet pName, "hIndicator" , false
-   mobileControlSet pName, "vIndicator", true
-   mobileControlSet pName, "visible",  true
-end CreateScroller
-
-on scrollerDidScroll pHScrolled, pVScrolled
-   put mobileControlTarget() into tControlID
-   put the long name of control tControlID of this cd of the topstack into tControlName
-   set the vscroll of tControlName to pVScrolled
-   pass scrollerDidScroll
-end scrollerDidScroll
 
 
 ######### Mobile Player Controls ############
@@ -267,7 +269,7 @@ command createMobileAudioPlayer pURL, pPlayerName
    mobileControlSet pPlayerName, "rect", tRect
    mobileControlSet pPlayerName, "showController", true 
    mobileControlSet pPlayerName, "filename", pURL 
-   if pURL begins with "http" then
+   if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
    if mobileIdleTimerLocked() is false then mobileLockIdleTimer --jg: disallow screen lock
@@ -330,6 +332,7 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
       mobileControlDelete l
    end repeat
 end deleteAllMobileControls
+
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
    if isMobile() then
