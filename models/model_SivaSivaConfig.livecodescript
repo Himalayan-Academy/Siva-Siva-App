@@ -20,34 +20,44 @@ global sConfigA
 
 --> SivaSiva | Config
 -
-function sivasiva_GetModuleConfigArray pModule
-   put sivasiva_GetModuleJson (pModule) into someJSON
-   if someJSON is empty then return empty
-   put jsonImport (someJSON) into someArray   
-   return someArray
-end sivasiva_GetModuleConfigArray
-
 command init_LoadJsonConfig   
    put sivasiva_GetModuleConfigArray ("Siva-Siva-App") into sConfigA
    put true into sConfigA ["initialized"]
 end init_LoadJsonConfig
+
+function sivasiva_GetModuleConfigArray moduleName
+   put sivasiva_GetModuleJson (moduleName) into someJSON
+   if someJSON is empty then return empty
+   put jsonImport (someJSON) into configArray   
+   return configArray
+end sivasiva_GetModuleConfigArray
+
+command sivasiva_SetModuleConfigArray moduleName, configArray
+   put jsonExport (configArray) into someJSON
+   sivasiva_SetModuleJson moduleName, someJSON
+end sivasiva_SetModuleConfigArray
 
 
 --> SivaSiva | Paths | Modules
 -
 function sivasiva_GetModuleJson moduleName
    put sivasiva_GetModuleJsonFile (moduleName) into jsonFile
-   if there is not a file jsonFile then
-      log_Info "File does not exist"
-      return empty
-   end if
-   
    put url ("binfile:" & jsonFile) into someJSON
    return someJSON
 end sivasiva_GetModuleJson
 
+command sivasiva_SetModuleJson moduleName, someJSON
+   put sivasiva_GetModuleJsonFile (moduleName) into jsonFile   
+   put someJSON into url ("binfile:" & jsonFile)
+   return jsonFile
+end sivasiva_SetModuleJson
+
 function sivasiva_GetModuleJsonFile moduleName
-   put sivasiva_GetModuleFolder (moduleName) into sivasivaModuleFolder
-   put sivasivaModuleFolder & moduleName & ".json" into jsonFile
+   if moduleName = "home" then
+      put sivasiva_ProjectFolder() & "Siva-Siva-App.json" into jsonFile
+   else
+      put sivasiva_GetModuleFolder (moduleName) into sivasivaModuleFolder
+      put sivasivaModuleFolder & moduleName & ".json" into jsonFile
+   end if
    return jsonFile
 end sivasiva_GetModuleJsonFile

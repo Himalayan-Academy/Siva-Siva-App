@@ -27,6 +27,12 @@ on mouseUp
          -- put the logo_Faded of me into someBoolean
          -- set the logo_Faded of me to (not someBoolean)
          
+         put init_ListStacksToUse() into stackNames
+         replace comma with CR in stackNames
+         answer stackNames
+         answer the stacksinuse
+         
+         /*
          put sivasiva_ProjectFolder() into projectFolder
          answer folder_ListShort (projectFolder)
          
@@ -36,6 +42,7 @@ on mouseUp
          
          answer project_ListFolderStacks ("libraries")
          answer project_ListFolderStacks ("models")
+         */
          break
       case "home-logo"
          if the environment is "development" then

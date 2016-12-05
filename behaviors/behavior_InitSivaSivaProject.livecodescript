@@ -137,11 +137,12 @@ command init_AppConfiguration
    -- then
    init_Logging
    
+   -- due to bug in the files on Android we must use config to load libraries
+   start using stack "model_SivaSivaConfig"
+   init_LoadJsonConfig
+   
    -- then start using all required libraries
    init_LoadLibraries
-   
-   -- once we have loaded the libraries we can use them to load any needed configuration
-   init_LoadJsonConfig
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
@@ -149,10 +150,8 @@ command init_AppConfiguration
    end if
 end init_AppConfiguration
 
-command  init_LoadLibraries projectFolder  
-   -- we start using both "library" stacks and "model" stacks
-   
-   put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
+command  init_LoadLibraries  
+   put init_ListStacksToUse() into stackNames   
    repeat for each item stackName in stackNames
       if there is a stack stackName then
          start using stack stackName
@@ -163,15 +162,24 @@ command  init_LoadLibraries projectFolder
    -- answer the stacksinuse
    return true
    
+   -- if we can get the files working on Android we should use the handlers below instead
    put project_ListFolderStacks ("libraries") into stackPaths
    project_UseStacks stackPaths
-   
    put project_ListFolderStacks ("models") into stackPaths
    project_UseStacks stackPaths
-   
-   -- project_StartBackScriptsInFolder projectFolder
-   -- project_StartFrontScriptsInFolder projectFolder
+   -- project_StartBackScriptsInFolder
+   -- project_StartFrontScriptsInFolder
 end init_LoadLibraries
+
+function init_ListStacksToUse
+   -- we start using both "library" stacks and "model" stacks
+   -- due to bug in the files on Android we must use config to load libraries
+   
+   global sConfigA
+   put sConfigA ["models"] & comma & sConfigA ["libraries"] into stackNames
+   -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
+   return stackNames
+end init_ListStacksToUse
 
 command init_MobileGeometry
    -- see "initializeInterfaceDefaults"

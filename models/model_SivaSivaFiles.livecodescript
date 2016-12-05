@@ -43,15 +43,15 @@ function stack_PathsFromShortFiles shortFiles, someFolder
 end stack_PathsFromShortFiles
 
 function mobile_ListShortFiles someFolder
-   -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
+   -- bug: does not work on Android, despite fix Livecode bug on Android by setting the defaultstack on 8.1.2 rc2
    -- requires Livecode 8.1 or greater
+   
    if there is not a folder someFolder then return empty
    put the defaultstack into oFolder
    set the defaultfolder to someFolder
    put the files into shortFiles
    set the defaultfolder to oFolder
    
-   answer shortFiles
    return shortFiles
    
    -- no longer working on Android with LC 8.2 rc@
