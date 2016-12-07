@@ -13,6 +13,117 @@ This model contains all the handlers we require to access any files and folders.
 
 --> Working on
 -
+function project_ListFolderStacks shortFolder
+   put sivasiva_ConstructFolder (shortFolder) into standardFolder
+   put sivasiva_ListStackPaths (standardFolder) into stackPaths
+   return stackPaths
+end project_ListFolderStacks
+
+function sivasiva_ConstructFolder shortFolder
+   put sivasiva_ProjectFolder() into projectFolder
+   put projectFolder & shortFolder & slash into standardFolder
+   return standardFolder
+end sivasiva_ConstructFolder
+
+function sivasiva_ListStackPaths someFolder  
+   put mobile_ListShortFiles (someFolder) into shortFiles
+   put stack_PathsFromShortFiles (shortFiles, someFolder) into stackFilePaths
+   return stackFilePaths
+end sivasiva_ListStackPaths
+
+function stack_PathsFromShortFiles shortFiles, someFolder
+   repeat for each line shortFile in shortFiles
+      put someFolder & shortFile into stackFilePath
+      if there is a stack stackFilePath then
+         put stackFilePath & CR after stackFilePaths
+      end if
+   end repeat
+   delete char -1 of stackFilePaths
+   return stackFilePaths
+end stack_PathsFromShortFiles
+
+function mobile_ListShortFiles someFolder
+   -- bug: does not work on Android, despite fix Livecode bug on Android by setting the defaultstack on 8.1.2 rc2
+   -- requires Livecode 8.1 or greater
+   
+   if there is not a folder someFolder then return empty
+   put the defaultstack into oFolder
+   set the defaultfolder to someFolder
+   put the files into shortFiles
+   set the defaultfolder to oFolder
+   
+   return shortFiles
+   
+   -- no longer working on Android with LC 8.2 rc@
+   put the defaultstack into oStack
+   set the defaultstack to homeStackName
+   -- put files (someFolder) into shortFiles
+   put the files into shortFiles
+   set the defaultstack to oStack
+   return shortFiles
+end mobile_ListShortFiles
+
+function mobile_ListLongFiles someFolder, homeStackName
+   put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
+   repeat for each line shortFile in shortFiles
+      if char 1 of shortFiles is "." then next repeat
+      put someFolder & shortFile & CR after longFiles
+   end repeat
+   delete char -1 of longFiles
+   return longFiles
+end mobile_ListLongFiles
+
+function folder_ListShort rootFolder
+   if there is not a folder rootFolder then return empty
+   
+   put the defaultfolder into oDefault
+   set the defaultfolder to rootFolder
+   put the folders into shortFolders
+   set the defaultfolder to oDefault
+   
+   filter shortFolders without ".*"
+   return shortFolders
+end folder_ListShort
+
+
+--> SivaSiva | Project | Files
+-
+function sivasiva_ProjectStackPath
+   -- project home stacks are given a different short file name "mainstack" during standlaone building
+   if the environment is "mobile" then
+      put sivasiva_ProjectFolder() & "mainstack" into projectStackPath
+   else
+      put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
+   end if
+   return projectStackPath
+end sivasiva_ProjectStackPath
+
+function sivasiva_ProjectFolder pRelativeFolderPath
+   put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   if pRelativeFolderPath is not empty then
+      put pRelativeFolderPath after projectFolder
+      if char -1 of projectFolder is not slash then put slash after projectFolder
+   end if
+   return projectFolder
+end sivasiva_ProjectFolder
+
+function project_HomeFolder homeStackName
+   if the environment = "mobile" then
+      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
+      put slash after projectHomeFolder
+   else
+      -- the commented out lines make the code below work on mobile
+      -- put the defaultstack into oStack
+      -- set the defaultstack to homeStackName
+      set the itemdelimiter to slash
+      put the filename of stack homeStackName into projectHomeFolder
+      put empty into item -1 of projectHomeFolder
+      -- set the defaultstack to oStack
+   end if
+   return projectHomeFolder
+end project_HomeFolder
+
+
 --> WordPuzzle | Files
 -
 function wordpuzzle_ListLongImageFiles
@@ -128,28 +239,6 @@ function asset_GetFolder projectFolder, pShortAssetFolder
 end asset_GetFolder
 
 
---> SivaSiva | Project | Files
--
-function sivasiva_ProjectStackPath
-   -- projecy home stacks are given a different short file name "mainstack" during standlaone building
-   if the environment is "mobile" then
-      put sivasiva_ProjectFolder() & "mainstack" into projectStackPath
-   else
-      put sivasiva_ProjectFolder() & "Siva-Siva-App.livecode" into projectStackPath
-   end if
-   return projectStackPath
-end sivasiva_ProjectStackPath
-
-function sivasiva_ProjectFolder pRelativeFolderPath
-   put project_HomeFolder ("Siva-Siva-App") into projectFolder
-   if pRelativeFolderPath is not empty then
-      put pRelativeFolderPath after projectFolder
-      if char -1 of projectFolder is not slash then put slash after projectFolder
-   end if
-   return projectFolder
-end sivasiva_ProjectFolder
-
-
 --> SivaSiva | Paths | Modules
 -
 function sivasiva_GetModuleStackPath moduleName
@@ -194,72 +283,3 @@ function sivasiva_ListModuleFolders
    put folder_ListShort (modulesFolder) into moduleNames
    return moduleNames
 end sivasiva_ListModuleFolders
-
-function sivasiva_ListStackPaths someFolder  
-   put mobile_ListShortFiles (someFolder, "Siva-Siva-App") into shortFiles
-   set the itemdelimiter to "."
-   repeat for each line shortFile in shortFiles
-      put someFolder & shortFile into stackFilePath
-      if there is a stack stackFilePath then
-         put stackFilePath & CR after stackFilePaths
-      end if
-   end repeat
-   delete char -1 of stackFilePaths
-   return stackFilePaths
-end sivasiva_ListStackPaths
-
-
---> Deps
--
-function mobile_ListLongFiles someFolder, homeStackName
-   put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
-   repeat for each line shortFile in shortFiles
-      if char 1 of shortFiles is "." then next repeat
-      put someFolder & shortFile & CR after longFiles
-   end repeat
-   delete char -1 of longFiles
-   return longFiles
-end mobile_ListLongFiles
-
-function mobile_ListShortFiles someFolder, homeStackName
-   -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
-   -- requires Livecode 8.1 or greater
-   if there is not a folder someFolder then return empty
-   
-   put the defaultstack into oStack
-   set the defaultstack to homeStackName
-   put files (someFolder) into shortFiles
-   set the defaultstack to oStack
-   return shortFiles
-end mobile_ListShortFiles
-
-
---> Deps
--
-function folder_ListShort rootFolder
-   if there is not a folder rootFolder then return empty
-   
-   put the defaultfolder into oDefault
-   set the defaultfolder to rootFolder
-   put the folders into shortFolders
-   set the defaultfolder to oDefault
-   
-   filter shortFolders without ".*"
-   return shortFolders
-end folder_ListShort
-
-function project_HomeFolder homeStackName
-   if the environment = "mobile" then
-      put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
-      put slash after projectHomeFolder
-   else
-      -- the commented out lines make the code below work on mobile
-      -- put the defaultstack into oStack
-      -- set the defaultstack to homeStackName
-      set the itemdelimiter to slash
-      put the filename of stack homeStackName into projectHomeFolder
-      put empty into item -1 of projectHomeFolder
-      -- set the defaultstack to oStack
-   end if
-   return projectHomeFolder
-end project_HomeFolder

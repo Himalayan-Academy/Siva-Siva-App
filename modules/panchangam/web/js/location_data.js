@@ -1,0 +1,8 @@
+var location = {
+    usa: [
+
+    ],
+    world: [
+
+    ]
+}

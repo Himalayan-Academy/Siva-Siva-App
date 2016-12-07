@@ -25,3 +25,5 @@ FIXED:
 1) 8/02: read me not loading portal images: check json and also check card script to be sure new method/behavior is assigned BR: SHEESH.. THE CARD SCRIPT WAS COMPLETELY BLANK.. .WIPED OUT! I HAD TO RE-DO THE WHOLE LOADPORTALIMAGES HANDLER AGAIN FROM SCRATCH...works now....
 
 
+blah lah
+line 2

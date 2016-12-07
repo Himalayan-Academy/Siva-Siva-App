@@ -1,5 +1,22 @@
 Notes:
 
+12/4/16
+Changed glossary flags to a color instead. Now does bulk-flagging in one pass on for glossary words in the body text. An on/off switch and menu item was added to the top of the TOC so the user can show or hide the glossary flags on demand.
+
+Updated cover page with new, resized image. Fixed error when bg img is clicked on Choose Your Path card. Header on lesson card is now semi-transparent. Back arrow on photo index now goes to Choose Your Path.
+
+12/3/16
+Glossary words are now flagged in lesson text on mouseDown. They are unflagged after a brief interval. Long-press still shows the definition. To indicate lookup terms, it uses the "flagged" property, which was created for spell checkers and works well here.
+
+11/30/16
+Worked around a LC bug when setting the vScroll of the TOC.
+
+11/27/16
+Changed all references to "chapter" to "lesson" and updated all lesson text. Revised TOC. Added "Choose Your Path" card with icons and appropriate navigation handlers. Adjusted position of Gurudeva quote in some particular lessons.
+
+11/20/16
+Module is now mobilized. SetPref and getPref work but are session-only for now.
+
 11/16/16
 Path to Siva is not yet mobile-ready and has only been run on desktop. It is only partially complete and has only basic features so far. It was placed into the git repository for feedback on visual and behavioral features. More to follow later.
 

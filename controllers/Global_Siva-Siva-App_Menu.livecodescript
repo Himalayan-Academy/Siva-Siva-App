@@ -92,8 +92,26 @@ end menu_EditPortalModelJson
 on _
 end _
 
+on menu_StoreHomeJson portalName
+   put sivasiva_GetModuleConfigArray ("Siva-Siva-App") into configArray
+   
+   repeat for each item shortFolder in "libraries,models"
+      put project_ListFolderStacks (shortFolder) into stackPaths
+      put empty into stackNames
+      repeat for each line stackPath in stackPaths
+         put the short name of stack stackPath & comma after stackNames
+      end repeat
+      delete char -1 of stackNames
+      put stackNames into configArray [shortFolder]
+   end repeat
+   
+   sivasiva_SetModuleConfigArray "Siva-Siva-App", configArray
+   init_LoadJsonConfig
+end menu_StoreHomeJson
+
 on menu_EditHomeModuleJson whoCares, portalName
    put sivasiva_GetModuleJsonFile (portalName) into jsonFile
+   
    if there is not a file jsonFile then
       breakpoint
       set the itemdelimiter to slash
@@ -105,7 +123,7 @@ on menu_EditHomeModuleJson whoCares, portalName
 end menu_EditHomeModuleJson
 
 on menu_DisplayModuleConfig whoCares, portalName
-   put sivasiva_GetModuleCongifArray (portalName) into configArray
+   put sivasiva_GetModuleConfigArray (portalName) into configArray
    display_Array configArray
 end menu_DisplayModuleConfig
 

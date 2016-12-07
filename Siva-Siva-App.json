@@ -1,22 +1,7 @@
 {
-    "libraries": [
-        "DBLib/aagDBLib.livecode",
-        "hapMediaViewerPortraitLib.livecode",
-        "hapMediaViewerLandscapeLib.livecode",
-        "animationEngine.livecode",
-        "jnanam/jnanam.livecodescript",
-        "preferences.livecodescript"
-    ],
-    "behaviors": [
-        "behaviors/behavior_portal-links.livecode"
-    ],
-    "frontscripts": [],
-    "backscripts": [
-        "backscripts/api.livecode",
-        "backscripts/mediaDataAndTransformers.livecode",
-        "backscripts/libMobileControls.livecodescript"
-    ],
     "launch_module": "home",
-    "log_level": "info,error,fatal",
-    "log_file": "sivasiva.log"
-}
+    "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs",
+    "log_file": "sivasiva.log",
+    "libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal","log_level": "info,error,fatal"
+    }
+
