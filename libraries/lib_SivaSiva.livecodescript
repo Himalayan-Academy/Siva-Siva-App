@@ -31,3 +31,15 @@ command sivasiva_InitOrientation pOrientation
    end switch
    return true
 end sivasiva_InitOrientation
+
+# missing function used by many modules and scripts
+# BR: added back in 2016-12-06
+function isMobile
+	 if the environment is not "mobile" then 
+		 return false
+	 else
+		 return true
+	 end if
+end isMobile
+
+
