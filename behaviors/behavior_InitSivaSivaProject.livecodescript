@@ -47,9 +47,11 @@ on preOpenStack
    
    put the portal_View of me into portalView
    _fixPortalBehavior portalView
-   set the rect of portalView to the rect of this card -- only useful for authoring
    
-   set the portal_Name of portalView to "home"
+   if the environment is "development" then
+      set the rect of portalView to the rect of this card -- only useful for authoring
+      set the portal_Name of portalView to "home"
+   end if
    
    pass preOpenStack
 end preOpenStack

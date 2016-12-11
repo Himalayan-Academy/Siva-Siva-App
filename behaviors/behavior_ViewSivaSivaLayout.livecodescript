@@ -48,14 +48,11 @@ end background_Transparent
 on preOpenControl
    -- bug: for some reason we occasionally lose references to nested behaviors
    portal_InitBehaviors
-   
-   -- this is unecessary if the home portal was saved displaying the right images (slows down initialisation)
-   -- set the portal_Name of portalView to "home"
-   -- answer "Finished  preOpenControl"
 end preOpenControl
 
-on resizeControl
-   LayoutControl
+-- on resizeControl
+-- resizing not active
+LayoutControl
 end resizeControl
 
 command portal_InitBehaviors
@@ -173,7 +170,23 @@ end portal_Name
 setprop portal_Name portalName  
    put portal_GetArray (portalName) into portalArray
    set the portal_Array of me to portalArray
+   set the portal_Name of me to portalName
+   
+   # DTB: added to reset the mobile scroller
+   portal_ResetMobileScrollerRect
 end portal_Name
+
+private command portal_ResetMobileScrollerRect
+   # DTB: added to reset the mobile scroller
+   if the environment is "mobile" then
+      -- put the rect of me into scrollingViewRect
+      -- put the formatted_VerticalRect of me into fRect
+      -- scroller_SetRect pIdOrName, scrollingViewRect, fRect
+      mobileControlSet "portal scroller", "vScroll" , 0
+   else
+      -- could set the vScrolll to 0
+   end if
+end portal_ResetMobileScrollerRect
 
 getprop portal_Header
    if the long id of the target is not the long id of me then pass portal_Header

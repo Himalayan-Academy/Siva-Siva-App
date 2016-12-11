@@ -50,9 +50,9 @@ on mouseUp
          go to stack "Siva-Siva-App"
          break
       case "add"
-         -- portal_GoStack "sivasivahome"
-         log_Clear
-         put log_Fetch() into fld "Body" 
+         -- log_Clear
+         -- put log_Fetch() into fld "Body"
+         sivasiva_ToggleOrientation
          break
       default
          put tActionName
