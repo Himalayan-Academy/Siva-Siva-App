@@ -38,6 +38,10 @@
       "shortImageFile": "thumb_about-monastery.jpg"
     },
     "My Hindu Calendar": {
+      "link": {
+        "portal command": "portal_Go",
+        "portal param": "stack \"panchangam\""
+      },
       "imageText": "My Hindu\nCalendar",
       "shortImageFile": "thumb_calendar_shtrstk-325867559.jpg"
     },
