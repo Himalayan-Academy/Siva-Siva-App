@@ -1,0 +1,62 @@
+<section class="hero is-medium is-primary is-bold is-fullheight has-lotus-background">
+    <div class="hero-head">
+        <header class="nav has-translucent-box">
+            <div class="container">
+                <div class="nav-left">
+                    <a id="go-back-button" class="nav-item">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="nav-center has-text-centered">
+                    <a id="calendar-name" href="#" class="nav-item">
+                        {{calname}}
+                    </a>
+                </div>
+                <span class="nav-toggle">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+
+                <div class="nav-right nav-menu">
+                    </a>
+                    <a class="nav-item" href="http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF">
+                        Introduction to the Hindu Calendar
+                    </a>
+                    <span class="nav-item">
+                    <a id="switch-location" class="button is-primary is-inverted">
+                      <span class="icon">
+                        <i class="fa fa-globe"></i>
+                      </span>
+                      <span>Switch Location</span>
+                    </a>
+                  </span>
+                </div>
+            </div>
+        </header>
+    </div>
+
+
+    <div class="hero-body">
+        <div class="container has-translucent-box has-padding-10">
+            <h1 class="title">
+                {{date date}} &bull; {{headline}}
+            </h1>
+            <h2 class="subtitle">
+                {{#each extra}}
+                {{this}}
+                {{#unless @last}} &bull; {{/unless}}
+                {{/each}}
+            </h2>
+        </div>
+    </div>
+    <div class="hero-foot">
+        <nav class="tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="#"><i class="fa fa-angle-double-down"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</section>

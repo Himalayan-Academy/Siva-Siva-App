@@ -1,0 +1,22 @@
+  <br>
+    <div class="columns is-multiline">
+    {{#each this}}
+        <div class="column is-one-quarter">
+            <div class="card is-fullwidth">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        {{date this.date}} &bull; {{{this.summary}}}
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        {{{replaceNewLines this.description}}}
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item">Add event</a>
+                </footer>
+            </div>
+        </div>
+    {{/each}}
+    </div>
