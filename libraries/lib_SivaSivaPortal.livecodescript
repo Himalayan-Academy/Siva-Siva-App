@@ -83,9 +83,11 @@ end portal_GoLandscapeUrl
 
 command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
+   lock screen
+   portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
    set the portal_Name of portalView to portalName
-   portal_GoStack "Siva-Siva-App"
+   unlock screen
 end portal_Link
 
 command portal_GoName portalName
@@ -132,44 +134,6 @@ command portal_Go cardOrStackObject
    end if
    return goResult
 end portal_Go
-
-
---> Portal | Navigation | API
--
-/*
-This section is for safe handlers that will be made available in the app through:
-
-- user interaction (such as bookmarking)
-- downloading json portal files that expose or deliver new book content
-*/
-
-command display_Log
-   portal_GoStack "Log"
-end display_Log
-
-command sivasiva_GoHomePortal
-   put the portal_View of stack "Siva-Siva-App" into portalView
-   set the portal_Name of portalView to "home"
-   portal_GoStack "Siva-Siva-App"
-end sivasiva_GoHomePortal
-
-command sivasiva_QueueContent btnObject, hiliteBoolean
-   -- sivasiva_AddBookMark
-   if the environment is "mobile" then
-      scroller_Create "portal scroller"
-      answer mobileControls()
-   else
-      answer "Does not work on desktop"
-   end if
-end sivasiva_QueueContent
-
-command sivasiva_AddFavorites
-   portal_DisplayBookmarks
-end sivasiva_AddFavorites
-
-command sivasiva_SettingsGear
-   display_Log
-end sivasiva_SettingsGear
 
 
 --> SivaSiva | Portal | Row
