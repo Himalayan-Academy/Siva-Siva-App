@@ -1,8 +1,8 @@
-﻿script "lib_SivaSivaDisplayMsgs"
+﻿script "lib_Dialogs"
 --> MetaData
 -
 license: GPLv3
-name: lib_SivaSivaCustomMessage
+name: lib_Dialogs
 type: library
 version: 0.1
 
@@ -16,14 +16,14 @@ array that we can change dynamically depending on tne context requirments.
 
 */
 
-on showCustomMsg pShow,pMsg,pLoc,pWidth,pHeight
+on showCustomMsg Show,Msg,pLoc,pWidth,pHeight
   -- pShow = boolean, show or hide msg grp
   -- pLoc = cd loc for display placement; defaults to 1/4 up from bottom center
    -- pMsg = text to display, defaults to "Getting files"; room for only a couple of words
    --BR: set other defaults in case you just have a short msg
    
-  if pShow <> false then -- show it
-     if pMsg = "" then put "Getting files..." into pMsg
+  if Show <> false then -- show it
+     if Msg = "" then put "Getting files..." into pMsg
      if pWidth = "" then put "350" into pWidth
        if pHeight = "" then put "25" into pHeight
     if pLoc = "" then
@@ -31,7 +31,7 @@ on showCustomMsg pShow,pMsg,pLoc,pWidth,pHeight
       put tV - (tV div 4) into tV
       put (item 1 of the loc of this cd),tV into pLoc
     end if
-    buildMsgDisplay pLoc,pMsg,pWidth,pHeight
+    buildMsgDisplay pLoc,Msg,pWidth,pHeight
   else -- clear all
     set the defaultstack to the topstack
     if there is a fld "alphaDisplayFld" then
@@ -47,9 +47,9 @@ on showCustomMsg pShow,pMsg,pLoc,pWidth,pHeight
   end if
 end showCustomMsg
 
-on buildMsgDisplay pLoc,pTxt,pWidth,pHeight -- revised from open source by Scott Rossi
+on buildMsgDisplay pLoc,Msg,pWidth,pHeight -- revised from open source by Scott Rossi
    -- pLoc = loc for display
-   -- pTxt = text string to display
+   -- Msg = text string to display
    try
       set the name of the templateGraphic to "alphabkgnd"
       set the backColor of the templateGraphic to black
@@ -73,7 +73,7 @@ on buildMsgDisplay pLoc,pTxt,pWidth,pHeight -- revised from open source by Scott
       set the textheight of the templateField to 36
       set the textColor of the templateField to white
       set the textAlign of the templateField to center
-      set the text of the templateField to pTxt
+      set the text of the templateField to Msg
       set the width of the templateField to 400
       set the height of the templateField to pHeight
       set the loc of the templateField to pLoc
