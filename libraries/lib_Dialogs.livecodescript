@@ -16,7 +16,7 @@ array that we can change dynamically depending on tne context requirments.
 
 */
 
-on showCustomMsg Show,Msg,pLoc,pWidth,pHeight
+on dialog_CustomMsg Show,Msg,pLoc,pWidth,pHeight
   -- pShow = boolean, show or hide msg grp
   -- pLoc = cd loc for display placement; defaults to 1/4 up from bottom center
    -- pMsg = text to display, defaults to "Getting files"; room for only a couple of words
@@ -45,7 +45,7 @@ on showCustomMsg Show,Msg,pLoc,pWidth,pHeight
       end repeat
     end if
   end if
-end showCustomMsg
+end dialog_CustomMsg
 
 on buildMsgDisplay pLoc,Msg,pWidth,pHeight -- revised from open source by Scott Rossi
    -- pLoc = loc for display
