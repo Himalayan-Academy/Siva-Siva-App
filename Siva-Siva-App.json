@@ -1,1 +1,7 @@
-{"launch_module": "home","models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs","log_file": "sivasiva.log","libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal","log_level": "info,error,fatal"}
+{
+  "launch_module": "home", 
+  "libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs" 
+  "log_file": "sivasiva.log", 
+  "log_level": "info,error,fatal", 
+  "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs"
+}
