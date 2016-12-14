@@ -1,7 +1,10 @@
 Notes:
 
+12/12/16
+Added imgSource "swish" and tightened line spacing in lesson body text.
+
 12/11/16
-Change text color on photo index labels. Work around LC bug where group formattedHeight is not updated when caption slides down. Fix "dead" icons on Choose card.
+Change text color on photo index labels. Fix missing hero imgs on mobile. Work around LC bug where group formattedHeight is not updated when caption slides down. Fix "dead" icons on Choose card.
 
 12/4/16
 Changed glossary flags to a color instead. Now does bulk-flagging in one pass on for glossary words in the body text. An on/off switch and menu item was added to the top of the TOC so the user can show or hide the glossary flags on demand.
