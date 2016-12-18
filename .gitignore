@@ -5,3 +5,4 @@ zArchives
 source/shared/img/gems/*
 .idea
 node_modules
+jspm_packages

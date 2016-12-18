@@ -52,6 +52,7 @@ gulp.task('scripts', function(){
     }}))
     .pipe(concat('main.js'))
     .pipe(babel({
+      presets: ["es2016"],
       sourceMaps: true,
       minified: true
     }))
@@ -63,7 +64,9 @@ gulp.task('scripts', function(){
 
 gulp.task('templates', function(){
   gulp.src('src/templates/*.hbs')
-    .pipe(handlebars())
+    .pipe(handlebars({
+        handlebars: require('handlebars')
+    }))
     .pipe(wrap('Handlebars.template(<%= contents %>)'))
     .pipe(declare({
       namespace: 'Panchangam.templates',
