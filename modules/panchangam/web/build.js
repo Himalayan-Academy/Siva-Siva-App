@@ -9638,11 +9638,11 @@ System.registerDynamic("lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js
   module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
       var stack1;
 
-      return "        <div class=\"column is-one-quarter\">\r\n            <div class=\"card is-fullwidth\">\r\n                <header class=\"card-header\">\r\n                    <p class=\"card-header-title\">\r\n                        " + ((stack1 = container.lambda(depth0 != null ? depth0.summary : depth0, depth0)) != null ? stack1 : "") + " &bull; " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n                    </p>\r\n                </header>\r\n                <div class=\"card-content\">\r\n                    <div class=\"content\">\r\n                        " + ((stack1 = (helpers.replaceNewLines || depth0 && depth0.replaceNewLines || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.summary : depth0, { "name": "replaceNewLines", "hash": {}, "data": data })) != null ? stack1 : "") + "\r\n                    </div>\r\n                </div>\r\n                <footer class=\"card-footer\">\r\n                    <a class=\"card-footer-item\">Add event</a>\r\n                </footer>\r\n            </div>\r\n        </div>\r\n";
+      return "            <li>\r\n                <span class=\"sun\">" + ((stack1 = container.lambda((stack1 = depth0 != null ? depth0.summary : depth0) != null ? stack1["0"] : stack1, depth0)) != null ? stack1 : "") + "</span> \r\n                <span class=\"pretty-date\">" + container.escapeExpression((helpers.shortDate || depth0 && depth0.shortDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "shortDate", "hash": {}, "data": data })) + "</span><br>\r\n                <span class=\"extra-summary\">" + ((stack1 = (helpers.from_index || depth0 && depth0.from_index || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.summary : depth0, 1, { "name": "from_index", "hash": {}, "data": data })) != null ? stack1 : "") + "</span>\r\n            </li>\r\n";
     }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
       var stack1;
 
-      return "  <br>\r\n    <div class=\"columns is-multiline\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "    </div>";
+      return "  <br>\r\n    <div class=\"container\">\r\n        <ul class=\"month-display\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "        </ul>\r\n    </div>";
     }, "useData": true });
   return module.exports;
 });
@@ -16321,7 +16321,10 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
                 result[day].date.timezone = root.getFirstPropertyValue("x-wr-timezone");
                 result[day].description = (result[day].description || " ") + value.getFirstPropertyValue("description");
                 if (!result[day].summary) {
-                    result[day].summary = value.getFirstPropertyValue("summary");
+                    result[day].summary = [];
+                    result[day].summary.push(value.getFirstPropertyValue("summary"));
+                } else {
+                    result[day].summary.push(value.getFirstPropertyValue("summary"));
                 }
 
                 return result;
@@ -16426,9 +16429,19 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
                 return returnValue;
             });
 
+            Handlebars.registerHelper("shortDate", function (date) {
+                var date = date.year + "-" + date.month + "-" + date.day;
+                var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format("MMM Do, ddd");
+                return returnValue;
+            });
+
             Handlebars.registerHelper("replaceNewLines", function (str) {
                 var breakTag = "<br>";
                 return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+            });
+
+            Handlebars.registerHelper('from_index', function (context, ndx) {
+                return context.slice(ndx).join(" &bull; ");
             });
 
             Handlebars.registerHelper("debug", function (optionalValue) {

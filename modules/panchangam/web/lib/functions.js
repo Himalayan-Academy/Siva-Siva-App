@@ -17,9 +17,19 @@ Handlebars.registerHelper("prettyDate", function (date) {
     return returnValue;
 });
 
+Handlebars.registerHelper("shortDate", function (date) {
+    var date = date.year + "-" + date.month + "-" + date.day;
+    var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format("MMM Do, ddd");
+    return returnValue;
+});
+
 Handlebars.registerHelper("replaceNewLines", function (str) {
     var breakTag = "<br>";
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+});
+
+Handlebars.registerHelper('from_index', function(context,ndx) {
+  return context.slice(ndx).join(" &bull; ");
 });
 
 Handlebars.registerHelper("debug", function(optionalValue) {
@@ -183,7 +193,10 @@ function displayCalendar(root) {
             result[day].date.timezone = root.getFirstPropertyValue("x-wr-timezone");
             result[day].description = (result[day].description || " ") + value.getFirstPropertyValue("description");
             if (!result[day].summary) {
-                result[day].summary = value.getFirstPropertyValue("summary")
+                result[day].summary = []
+                result[day].summary.push(value.getFirstPropertyValue("summary"))
+            } else {
+                result[day].summary.push(value.getFirstPropertyValue("summary"))
             }
 
             return result;

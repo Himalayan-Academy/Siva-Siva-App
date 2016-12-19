@@ -1,22 +1,12 @@
   <br>
-    <div class="columns is-multiline">
-    {{#each this}}
-        <div class="column is-one-quarter">
-            <div class="card is-fullwidth">
-                <header class="card-header">
-                    <p class="card-header-title">
-                        {{{this.summary}}} &bull; {{prettyDate this.date}}
-                    </p>
-                </header>
-                <div class="card-content">
-                    <div class="content">
-                        {{{replaceNewLines this.summary}}}
-                    </div>
-                </div>
-                <footer class="card-footer">
-                    <a class="card-footer-item">Add event</a>
-                </footer>
-            </div>
-        </div>
-    {{/each}}
+    <div class="container">
+        <ul class="month-display">
+             {{#each this}}
+            <li>
+                <span class="sun">{{{this.summary.[0]}}}</span> 
+                <span class="pretty-date">{{shortDate this.date}}</span><br>
+                <span class="extra-summary">{{{from_index this.summary 1}}}</span>
+            </li>
+            {{/each}}
+        </ul>
     </div>
