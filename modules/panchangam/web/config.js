@@ -17,26 +17,24 @@ System.config({
       "lib/main.js",
       "lib/bootstrap.js",
       "lib/functions.js",
-      "npm:whatwg-fetch@2.0.1.js",
-      "npm:whatwg-fetch@2.0.1/fetch.js",
       "npm:ical.js@1.2.2.js",
       "npm:ical.js@1.2.2/build/ical.js",
       "github:jspm/nodelibs-process@0.1.2.js",
       "github:jspm/nodelibs-process@0.1.2/index.js",
       "npm:process@0.11.9.js",
       "npm:process@0.11.9/browser.js",
-      "github:components/handlebars.js@4.0.5/handlebars.runtime.js",
       "lib/templates.js",
       "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "github:components/handlebars.js@4.0.5/handlebars.runtime.js",
       "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js",
-      "npm:lodash@4.17.2.js",
-      "npm:lodash@4.17.2/lodash.js",
       "npm:moment-timezone@0.5.10.js",
       "npm:moment-timezone@0.5.10/builds/moment-timezone-with-data.js",
       "npm:moment@2.17.1.js",
-      "npm:moment@2.17.1/moment.js"
+      "npm:moment@2.17.1/moment.js",
+      "npm:lodash@4.17.2.js",
+      "npm:lodash@4.17.2/lodash.js"
     ]
   },
 
@@ -49,8 +47,6 @@ System.config({
     "ical.js": "npm:ical.js@1.2.2",
     "lodash": "npm:lodash@4.17.2",
     "moment-timezone": "npm:moment-timezone@0.5.10",
-    "promise-polyfill": "npm:promise-polyfill@6.0.2",
-    "whatwg-fetch": "npm:whatwg-fetch@2.0.1",
     "github:davis/plugin-hbs@1.2.3": {
       "handlebars": "github:components/handlebars.js@4.0.5"
     },

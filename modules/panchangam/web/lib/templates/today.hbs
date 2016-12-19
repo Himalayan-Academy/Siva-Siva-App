@@ -49,7 +49,10 @@
                 {{#unless @last}} &bull; {{/unless}}
                 {{/each}}
                 <br>
-                {{next_retreat.interval}} days until {{next_retreat.summary}}
+                <span class="retreat-info">
+                    <i class="fa fa-smile-o" aria-hidden="true"></i>
+                    {{retreatLabel next_retreat.interval}} {{next_retreat.summary}}
+                </span>
             </h2>
         </div>
     </div>
