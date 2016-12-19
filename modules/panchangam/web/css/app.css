@@ -1,0 +1,42 @@
+.has-lotus-background {
+    background-image: url("../images/lotus.jpg") !important;
+    background-size: cover !important;
+}
+
+.has-translucent-box {
+    background: rgba(191, 187, 187, 0.4) !important;
+    border-radius: 5px;
+}
+
+.has-padding-10 {
+    padding: 10px;
+}
+
+.is-fullheight {
+   min-height: 100vh;
+}
+
+.month-display li {
+    padding-top: 4px;
+    padding-bottom: 22px;
+    padding-left: 10px;
+    padding-right: 10px; 
+    display: block;
+    size: 100%;
+    border-bottom: solid 1px dimgray;  
+} 
+
+.pretty-date {
+    float: right;
+    font-weight: bold;
+}
+
+.sun {
+    float: left;
+    font-weight: bold;
+}
+
+.extra-summary {
+    display: block;
+    width: 100%;
+}

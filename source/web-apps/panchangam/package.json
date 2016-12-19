@@ -2,6 +2,11 @@
   "dependencies": {
     "jspm": "^0.16.48"
   },
+  "scripts": {
+    "bundle": "jspm bundle lib/main build.js --inject",
+    "unbundle": "jspm unbundle",
+    "deploy": "./deploy.sh"
+  },
   "jspm": {
     "dependencies": {
       "handlebars": "github:components/handlebars.js@^4.0.5",
