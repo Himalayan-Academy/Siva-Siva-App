@@ -42,7 +42,9 @@ on preOpenStack
    -- start using this stack
    init_AppConfiguration -- load all libraries and configure app
    
-   sivasiva_InitOrientation "portrait"
+   -- sivasiva_InitOrientation "portrait"
+   set the fullscreenmode of this stack to "showAll" -- better for wider screens
+   mobile_SetAllowedOrientation "portrait"
    set the acceleratedRendering of this stack to true
    
    put the portal_View of me into portalView
