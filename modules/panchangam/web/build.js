@@ -9638,7 +9638,7 @@ System.registerDynamic("lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js
   module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
       var stack1;
 
-      return "        <div class=\"column is-one-quarter\">\r\n            <div class=\"card is-fullwidth\">\r\n                <header class=\"card-header\">\r\n                    <p class=\"card-header-title\">\r\n                        " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + " &bull; " + ((stack1 = container.lambda(depth0 != null ? depth0.summary : depth0, depth0)) != null ? stack1 : "") + "\r\n                    </p>\r\n                </header>\r\n                <div class=\"card-content\">\r\n                    <div class=\"content\">\r\n                        " + ((stack1 = (helpers.replaceNewLines || depth0 && depth0.replaceNewLines || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.description : depth0, { "name": "replaceNewLines", "hash": {}, "data": data })) != null ? stack1 : "") + "\r\n                    </div>\r\n                </div>\r\n                <footer class=\"card-footer\">\r\n                    <a class=\"card-footer-item\">Add event</a>\r\n                </footer>\r\n            </div>\r\n        </div>\r\n";
+      return "        <div class=\"column is-one-quarter\">\r\n            <div class=\"card is-fullwidth\">\r\n                <header class=\"card-header\">\r\n                    <p class=\"card-header-title\">\r\n                        " + ((stack1 = container.lambda(depth0 != null ? depth0.summary : depth0, depth0)) != null ? stack1 : "") + " &bull; " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n                    </p>\r\n                </header>\r\n                <div class=\"card-content\">\r\n                    <div class=\"content\">\r\n                        " + ((stack1 = (helpers.replaceNewLines || depth0 && depth0.replaceNewLines || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.summary : depth0, { "name": "replaceNewLines", "hash": {}, "data": data })) != null ? stack1 : "") + "\r\n                    </div>\r\n                </div>\r\n                <footer class=\"card-footer\">\r\n                    <a class=\"card-footer-item\">Add event</a>\r\n                </footer>\r\n            </div>\r\n        </div>\r\n";
     }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
       var stack1;
 
@@ -9660,7 +9660,7 @@ System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js
         }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
             var stack1, helper;
 
-            return "<section class=\"hero is-medium is-primary is-bold is-fullheight has-lotus-background\">\r\n    <div class=\"hero-head\">\r\n        <header class=\"nav has-translucent-box\">\r\n            <div class=\"container\">\r\n                <div class=\"nav-left\">\r\n                    <a id=\"go-back-button\" class=\"nav-item\">\r\n                        <i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>\r\n                    </a>\r\n                </div>\r\n                <div class=\"nav-center has-text-centered\">\r\n                    <a id=\"calendar-name\" href=\"#\" class=\"nav-item\">\r\n                        " + container.escapeExpression((helper = (helper = helpers.calname || (depth0 != null ? depth0.calname : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "calname", "hash": {}, "data": data }) : helper)) + "\r\n                    </a>\r\n                </div>\r\n                <span class=\"nav-toggle\">\r\n                  <span></span>\r\n                  <span></span>\r\n                  <span></span>\r\n                </span>\r\n\r\n                <div class=\"nav-right nav-menu\">\r\n                    </a>\r\n                    <a class=\"nav-item\" href=\"http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF\">\r\n                        Introduction to the Hindu Calendar\r\n                    </a>\r\n                    <span class=\"nav-item\">\r\n                    <a id=\"switch-location\" class=\"button is-primary is-inverted\">\r\n                      <span class=\"icon\">\r\n                        <i class=\"fa fa-globe\"></i>\r\n                      </span>\r\n                      <span>Switch Location</span>\r\n                    </a>\r\n                  </span>\r\n                </div>\r\n            </div>\r\n        </header>\r\n    </div>\r\n\r\n\r\n    <div class=\"hero-body\">\r\n        <div class=\"container has-translucent-box has-padding-10\">\r\n            <h1 class=\"title\">\r\n                 <strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n            </h1>\r\n            <h2 class=\"subtitle\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra : depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "            </h2>\r\n        </div>\r\n    </div>\r\n    <div class=\"hero-foot\">\r\n        <nav class=\"tabs\">\r\n            <div class=\"container\">\r\n                <ul>\r\n                    <li><a href=\"#\"><i class=\"fa fa-angle-double-down\"></i></a></li>\r\n                </ul>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</section>";
+            return "<section class=\"hero is-medium is-primary is-bold is-fullheight has-lotus-background\">\r\n    <div class=\"hero-head\">\r\n        <header class=\"nav has-translucent-box\">\r\n            <div class=\"container\">\r\n                <div class=\"nav-left\">\r\n                    <a id=\"go-back-button\" class=\"nav-item\">\r\n                        <i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>\r\n                    </a>\r\n                </div>\r\n                <div class=\"nav-center has-text-centered\">\r\n                    <a id=\"calendar-name\" href=\"#\" class=\"nav-item\">\r\n                        " + container.escapeExpression((helper = (helper = helpers.calname || (depth0 != null ? depth0.calname : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "calname", "hash": {}, "data": data }) : helper)) + "\r\n                    </a>\r\n                </div>\r\n                <span class=\"nav-toggle\">\r\n                  <span></span>\r\n                  <span></span>\r\n                  <span></span>\r\n                </span>\r\n\r\n                <div class=\"nav-right nav-menu\">\r\n                    </a>\r\n                    <a class=\"nav-item\" href=\"http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF\">\r\n                        Introduction to the Hindu Calendar\r\n                    </a>\r\n                    <span class=\"nav-item\">\r\n                    <a id=\"switch-location\" class=\"button is-primary is-inverted\">\r\n                      <span class=\"icon\">\r\n                        <i class=\"fa fa-globe\"></i>\r\n                      </span>\r\n                      <span>Switch Location</span>\r\n                    </a>\r\n                  </span>\r\n                </div>\r\n            </div>\r\n        </header>\r\n    </div>\r\n\r\n\r\n    <div class=\"hero-body\">\r\n        <div class=\"container has-translucent-box has-padding-10\">\r\n            <h1 class=\"title\">\r\n                 <strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n                 \r\n            </h1>\r\n            <h2 class=\"subtitle\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra : depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "                <br>\r\n                " + container.escapeExpression(container.lambda((stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.interval : stack1, depth0)) + " days until " + container.escapeExpression(container.lambda((stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.summary : stack1, depth0)) + "\r\n            </h2>\r\n        </div>\r\n    </div>\r\n    <div class=\"hero-foot\">\r\n        <nav class=\"tabs\">\r\n            <div class=\"container\">\r\n                <ul>\r\n                    <li><a href=\"#\"><i class=\"fa fa-angle-double-down\"></i></a></li>\r\n                </ul>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</section>";
         }, "useData": true });
     return module.exports;
 });
@@ -16229,12 +16229,55 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
             return found_events;
         }
 
+        function findNextRetreat(date) {
+            date = moment(date);
+            var events = root.getAllSubcomponents('vevent');
+            var interval;
+
+            var next_retreat = _.find(events, function (event) {
+                var summary = event.getFirstPropertyValue("summary");
+                var dtstart = event.getFirstPropertyValue("dtstart").toString();
+                var event_date = moment(dtstart);
+                interval = event_date.diff(date, "days");
+
+                if (event_date.diff(date) <= 0) {
+                    // event is in the past, not needed.
+                    return false;
+                }
+
+                if (summary.indexOf("Retreat") !== -1) {
+                    console.log("retreat star", event);
+                    console.log("interval", interval);
+                    return true;
+                }
+            });
+
+            var return_value = {
+                date: next_retreat.getFirstPropertyValue("dtstart").toString(),
+                summary: next_retreat.getFirstPropertyValue("summary"),
+                interval: interval
+            };
+
+            return return_value;
+        }
+
         function findEventsForMonth(month) {
             month = moment(month).format('YYYY-MM');
             console.log("month:", month);
             var events = root.getAllSubcomponents('vevent');
 
             var found_events = _.filter(events, function (event) {
+
+                // Skip *loka Day
+                var summary = event.getFirstPropertyValue("summary");
+
+                var skippables = ["loka Day", "VRATA"];
+                for (var i = 0; i <= skippables.length; i++) {
+                    if (summary.indexOf(skippables[i]) !== -1) {
+                        return false;
+                    }
+                }
+
                 var dtstart = event.getFirstPropertyValue("dtstart").toString().substr(0, 7);
                 return dtstart == month;
             });
@@ -16252,6 +16295,8 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
                     return v.getFirstPropertyValue("summary");
                 })
             };
+
+            context.next_retreat = findNextRetreat(events[0].getFirstPropertyValue("dtstart"));
 
             context.date.timezone = root.getFirstPropertyValue("x-wr-timezone");
             console.log(context);
@@ -16376,14 +16421,26 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
              */
 
             Handlebars.registerHelper("prettyDate", function (date) {
-                var obj = { year: date.year, month: date.month, day: date.day };
-
-                return moment.tz("2016-12-17", date.timezone).format("MMM Do YYYY, dddd");
+                var date = date.year + "-" + date.month + "-" + date.day;
+                var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format("MMM Do YYYY, dddd");
+                return returnValue;
             });
 
             Handlebars.registerHelper("replaceNewLines", function (str) {
                 var breakTag = "<br>";
                 return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+            });
+
+            Handlebars.registerHelper("debug", function (optionalValue) {
+                console.log("Current Context");
+                console.log("====================");
+                console.log(this);
+
+                if (optionalValue) {
+                    console.log("Value");
+                    console.log("====================");
+                    console.log(optionalValue);
+                }
             });
         }
     };

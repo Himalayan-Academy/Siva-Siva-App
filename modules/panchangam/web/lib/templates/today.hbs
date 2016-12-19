@@ -41,12 +41,15 @@
         <div class="container has-translucent-box has-padding-10">
             <h1 class="title">
                  <strong>{{headline}}</strong> <br> {{prettyDate date}}
+                 
             </h1>
             <h2 class="subtitle">
                 {{#each extra}}
                 {{this}}
                 {{#unless @last}} &bull; {{/unless}}
                 {{/each}}
+                <br>
+                {{next_retreat.interval}} days until {{next_retreat.summary}}
             </h2>
         </div>
     </div>

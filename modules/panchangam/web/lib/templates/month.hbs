@@ -5,12 +5,12 @@
             <div class="card is-fullwidth">
                 <header class="card-header">
                     <p class="card-header-title">
-                        {{prettyDate this.date}} &bull; {{{this.summary}}}
+                        {{{this.summary}}} &bull; {{prettyDate this.date}}
                     </p>
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        {{{replaceNewLines this.description}}}
+                        {{{replaceNewLines this.summary}}}
                     </div>
                 </div>
                 <footer class="card-footer">

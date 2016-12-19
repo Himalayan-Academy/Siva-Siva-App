@@ -12,14 +12,26 @@ import "whatwg-fetch"
  */
 
 Handlebars.registerHelper("prettyDate", function (date) {
-    var obj = { year: date.year, month: date.month, day: date.day };
-
-    return moment.tz("2016-12-17", date.timezone).format("MMM Do YYYY, dddd");
+    var date = date.year + "-" + date.month + "-" + date.day;
+    var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format("MMM Do YYYY, dddd");
+    return returnValue;
 });
 
 Handlebars.registerHelper("replaceNewLines", function (str) {
     var breakTag = "<br>";
     return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+});
+
+Handlebars.registerHelper("debug", function(optionalValue) {
+  console.log("Current Context");
+  console.log("====================");
+  console.log(this);
+ 
+  if (optionalValue) {
+    console.log("Value");
+    console.log("====================");
+    console.log(optionalValue);
+  }
 });
 
 /**
@@ -67,10 +79,6 @@ function displayCalendar(root) {
                 }
             }
 
-
-
-
-
             var dtstart = event.getFirstPropertyValue("dtstart").toString();
             return dtstart == date;
 
@@ -81,12 +89,56 @@ function displayCalendar(root) {
         return found_events
     }
 
+    function findNextRetreat(date) {
+        date = moment(date);
+        var events = root.getAllSubcomponents('vevent');
+        var interval;
+
+        var next_retreat = _.find(events, function(event) {
+            var summary = event.getFirstPropertyValue("summary");
+            var dtstart = event.getFirstPropertyValue("dtstart").toString();
+            var event_date = moment(dtstart);
+            interval = event_date.diff(date, "days");
+
+
+            if (event_date.diff(date) <= 0) {
+                // event is in the past, not needed.
+                return false;
+            }
+
+            if (summary.indexOf("Retreat") !== -1) {
+                console.log("retreat star", event);
+                console.log("interval", interval)
+                return true;
+            }
+        });
+
+        var return_value = {
+            date: next_retreat.getFirstPropertyValue("dtstart").toString(),
+            summary: next_retreat.getFirstPropertyValue("summary"),
+            interval: interval
+        }; 
+
+        return return_value;
+    }
+
     function findEventsForMonth(month) {
         month = moment(month).format('YYYY-MM');
         console.log("month:", month)
         var events = root.getAllSubcomponents('vevent');
 
         var found_events = _.filter(events, function (event) {
+
+             // Skip *loka Day
+            var summary = event.getFirstPropertyValue("summary");
+
+            var skippables = ["loka Day", "VRATA"];
+            for (var i = 0; i <= skippables.length; i++) {
+                if (summary.indexOf(skippables[i]) !== -1) {
+                    return false;
+                }
+            }
+
             var dtstart = event.getFirstPropertyValue("dtstart").toString().substr(0, 7);
             return dtstart == month;
 
@@ -105,6 +157,8 @@ function displayCalendar(root) {
                 return v.getFirstPropertyValue("summary")
             })
         }
+
+        context.next_retreat = findNextRetreat(events[0].getFirstPropertyValue("dtstart"));
 
         context.date.timezone = root.getFirstPropertyValue("x-wr-timezone");
         console.log(context);
