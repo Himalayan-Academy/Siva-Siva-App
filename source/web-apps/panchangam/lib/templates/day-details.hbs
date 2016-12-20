@@ -38,15 +38,15 @@
 
 
     <div class="hero-body">
-        <div class="container has-translucent-box has-padding-10" data-modal-open="today-modal">
+        <div class="container has-translucent-box has-padding-10">
             <h1 class="title">
-                 <strong>{{headline}}</strong> <br> {{prettyDate date}}
-                 
+                <strong>{{headline}}</strong> <br> {{prettyDate date}}
+
             </h1>
             <h2 class="subtitle">
                 {{#each extra}}
-                {{this}}
-                {{#unless @last}} &bull; {{/unless}}
+                    {{this}}
+                    {{#unless @last}} &bull; {{/unless}}
                 {{/each}}
                 <br>
                 <span class="retreat-info">
@@ -54,6 +54,10 @@
                     {{retreatLabel next_retreat.interval}} {{next_retreat.summary}}
                 </span>
             </h2>
+
+            <div class="is-description">
+                {{{replaceNewLines description}}}
+            </div>
         </div>
     </div>
     <div class="hero-foot">
@@ -66,18 +70,3 @@
         </nav>
     </div>
 </section>
-
-<div id="today-modal" class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title"><strong>{{headline}}</strong> <br> {{prettyDate date}}</p>
-        </header>
-        <section class="modal-card-body">
-            {{{replaceNewLines description }}}
-        </section>
-        <footer class="modal-card-foot">
-            <a class="button is-primary" data-modal-close="today-modal">Close</a>
-        </footer>
-    </div>
-</div>

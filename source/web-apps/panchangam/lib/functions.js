@@ -1,5 +1,3 @@
-import moment from "moment-timezone"
-import _ from "lodash"
 import templates from "./templates.js"
 import "ical.js"
 import panchangam from "./panchagam.js"
@@ -8,15 +6,38 @@ import panchangam from "./panchagam.js"
  * Calendar display
  */
 
-function switchLocation(url) {
-    url = "hawaii.ics";
+export function loadPanchangamFromURL(url) {
+    console.log("Loading panchangam from URL", url)
     fetch(url).then(function (response) {
         return response.text()
     }).then(function (ics) {
         console.log("Calendar arrived, parsing...")
-        panchangam.load(ics)
+        let loaded = panchangam.load(ics)
+        if (loaded) {
+            localStorage.setItem("calendar", ics)
+        }
         displayCalendar(panchangam.root);
     });
+}
+
+export function loadPanchangamFromMemory() {
+    console.log("Loading panchangam from memory")
+
+    let ics = localStorage.getItem("calendar")
+
+    if (!ics) {
+        return false
+    }
+
+    let loaded = panchangam.load(ics)
+
+    if (!loaded) {
+        return false
+    }
+
+    displayCalendar(panchangam.root)
+
+    return true
 }
 
 function displayCalendar(root) {
@@ -29,6 +50,7 @@ function displayCalendar(root) {
             calname: panchangam.calendarName,
             date: day.date,
             headline: day.summary,
+            description: day.description,
             extra: day.extra_information,
             next_retreat: day.next_retreat
         }
@@ -49,9 +71,7 @@ function displayCalendar(root) {
         var template = templates.month;
         var html = template(events);
         document.body.innerHTML = document.body.innerHTML + html;
-        bindMenuControls()
-        bindMonthControls()
-        history.pushState(events, "Panchangam", "#panchangam")
+
     }
 
     // find today.
@@ -63,6 +83,10 @@ function displayCalendar(root) {
     // display rest of the month.
     var events = panchangam.informationForMonth(today)
     displayMonth(events);
+
+    bindMenuControls()
+    bindDayControls()
+    bindMonthControls()
 }
 
 function bindMenuControls() {
@@ -82,6 +106,23 @@ function bindMenuControls() {
     document.querySelector("#go-back-button").addEventListener("click", function () {
         history.go(-1);
     })
+
+    // Modals
+    var openers = document.querySelectorAll("[data-modal-open]");
+    [].forEach.call(openers, function(element) {
+        element.addEventListener("click", function() {
+            var target = document.querySelector("#" + element.getAttribute("data-modal-open"));
+            target.classList.add("is-active")
+        })
+    })
+
+    var closers = document.querySelectorAll("[data-modal-close]");
+    [].forEach.call(closers, function(element) {
+        element.addEventListener("click", function() {
+            var target = document.querySelector("#" + element.getAttribute("data-modal-close"));
+            target.classList.remove("is-active")
+        })
+    })
 }
 
 /**
@@ -99,17 +140,21 @@ export function bindRegionSelector() {
     })
 }
 
-function bindCitySelector() {
+export function bindCitySelector() {
     document.querySelectorAll("[data-ics]").forEach(function (item) {
         item.addEventListener("click", function (el) {
             var url = item.getAttribute("data-ics");
             console.log(url);
-            switchLocation(url);
+            loadPanchangamFromURL(url);
         })
     })
 }
 
 function bindMonthControls() {
+
+}
+
+function bindDayControls() {
 
 }
 
@@ -119,8 +164,5 @@ export function showScreen(screen, state) {
     state.currentScreen = screen;
     var html = templates[screen](state);
     document.body.innerHTML = html;
-
-    history.pushState(state, "Panchangam", "#" + screen);
-
 }
 

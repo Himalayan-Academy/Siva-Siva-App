@@ -1,5 +1,5 @@
 System.config({
-  baseURL: "/",
+  baseURL: "",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
@@ -16,6 +16,10 @@ System.config({
     "build.js": [
       "lib/main.js",
       "lib/bootstrap.js",
+      "lib/location-data.js",
+      "npm:minimal-router@1.0.5.js",
+      "npm:minimal-router@1.0.5/lib/index.js",
+      "npm:minimal-router@1.0.5/lib/Router.js",
       "lib/functions.js",
       "lib/panchagam.js",
       "npm:moment-timezone@0.5.10.js",
@@ -34,8 +38,9 @@ System.config({
       "npm:core-js@1.2.7/library/fn/object/define-properties.js",
       "npm:core-js@1.2.7/library/modules/$.js",
       "lib/templates.js",
-      "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js",
       "github:components/handlebars.js@4.0.5/handlebars.runtime.js",
+      "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js"
@@ -50,6 +55,7 @@ System.config({
     "hbs": "github:davis/plugin-hbs@1.2.3",
     "ical.js": "npm:ical.js@1.2.2",
     "lodash": "npm:lodash@4.17.2",
+    "minimal-router": "npm:minimal-router@1.0.5",
     "moment-timezone": "npm:moment-timezone@0.5.10",
     "github:davis/plugin-hbs@1.2.3": {
       "handlebars": "github:components/handlebars.js@4.0.5"

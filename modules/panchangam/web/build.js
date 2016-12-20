@@ -5,7 +5,7 @@ System.registerDynamic("lib/templates/region-select.hbs!github:davis/plugin-hbs@
       GLOBAL = global;
   var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
   module.exports = Handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
-      return " <section class=\"section has-lotus-background is-fullheight\">\r\n        <div class=\"container\">\r\n            <div class=\"heading has-translucent-box has-padding-10\">\r\n                <h1 class=\"title\">Select your location</h1>\r\n                <h2 class=\"subtitle\">\r\n                    Please, select your location to view the correct Panchangam\r\n                </h2>\r\n            </div>\r\n            <button class=\"button is-primary is-large region-selector\" data-region=\"usa\">USA</button>\r\n            <button class=\"button is-primary is-large region-selector\" data-region=\"world\">World</button>\r\n        </div>\r\n    </section>";
+      return " <section class=\"section has-lotus-background is-fullheight\">\r\n        <div class=\"container\">\r\n            <div class=\"heading has-translucent-box has-padding-10\">\r\n                <h1 class=\"title\">Select your location</h1>\r\n                <h2 class=\"subtitle\">\r\n                    Please, select your location to view the correct Panchangam\r\n                </h2>\r\n            </div>\r\n            <a href=\"#/region/usa\" class=\"button is-primary is-large region-selector\">USA</a>\r\n            <a href=\"#/region/world\" class=\"button is-primary is-large region-selector\">World</a>\r\n        </div>\r\n    </section>";
     }, "useData": true });
   return module.exports;
 });
@@ -14,8 +14,14 @@ System.registerDynamic("lib/templates/city-select-usa.hbs!github:davis/plugin-hb
       global = this || self,
       GLOBAL = global;
   var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
-  module.exports = Handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
-      return "<section class=\"section has-lotus-background is-fullheight\">\r\n        <div class=\"container\">\r\n            <div class=\"heading has-translucent-box has-padding-10\">\r\n                <h1 class=\"title\">Select your city</h1>\r\n                <h2 class=\"subtitle\">\r\n                    Please, select your location to view the correct Panchangam\r\n                </h2>\r\n            </div>\r\n            <table class=\"table\">\r\n                <thead>\r\n                <tr>\r\n                    <th>City</th>\r\n                </tr>\r\n                </thead>\r\n                <tbody>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/albany_ny.ics\">Albany NY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/albuquerque_nm.ics\">Albuquerque NM  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/alsea_or.ics\">Alsea OR  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/amarillo_tx.ics\">Amarillo TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/anchorage_ak.ics\">Anchorage AK  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/asheville_nc.ics\">Asheville NC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/athens_ga.ics\">Athens GA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/atlanta_ga.ics\">Atlanta GA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/auburn_al.ics\">Auburn AL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/austin_tx.ics\">Austin TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/baltimore_md.ics\">Baltimore MD  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/baton_rouge_la.ics\">Baton Rouge LA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bettendorf_ia.ics\">Bettendorf IA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/birmingham_al.ics\">Birmingham AL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bixby_ok.ics\">Bixby OK  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomfield_nj.ics\">Bloomfield NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomington_il.ics\">Bloomington IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomington_in.ics\">Bloomington IN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boca_raton_fl.ics\">Boca Raton FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boise_id.ics\">Boise ID  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boone_nc.ics\">Boone NC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boston_ma.ics\">Boston MA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bowling_green_ky.ics\">Bowling Green KY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/branchville_nj.ics\">Branchville NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/broomfield_co.ics\">Broomfield CO  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/buffalo_ny.ics\">Buffalo NY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cary_nc.ics\">Cary NC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/champaign_il.ics\">Champaign IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chantilly_va.ics\">Chantilly VA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chapel_hill_nc.ics\">Chapel Hill NC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/charlotte_nc.ics\">Charlotte NC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/charlottesville_va.ics\">Charlottesville VA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chicago_il.ics\">Chicago IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cincinnati_oh.ics\">Cincinnati OH  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cleveland_oh.ics\">Cleveland OH  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/columbia_sc.ics\">Columbia SC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/columbus_oh.ics\">Columbus OH  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/dallas_tx.ics\">Dallas TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/davenport_ia.ics\">Davenport IA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/denver_co.ics\">Denver CO  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/des_moines_ia.ics\">Des Moines IA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/detroit_mi.ics\">Detroit MI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/downers_grove_il.ics\">Downers Grove IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/easton_md.ics\">Easton MD  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/edison_nj.ics\">Edison NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/el_paso_tx.ics\">El Paso TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/etobicoke_on.ics\">Etobicoke ON  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/eugene_or.ics\">Eugene OR  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fairfax_va.ics\">Fairfax VA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/flemington_nj.ics\">Flemington NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fort_lauderdale_fl.ics\">Fort Lauderdale FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fort_wayne_in.ics\">Fort Wayne IN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/frederick_md.ics\">Frederick MD  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fresno_ca.ics\">Fresno CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/gainesville_fl.ics\">Gainesville FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/greenville_sc.ics\">Greenville SC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hartford_ct.ics\">Hartford CT  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hattiesburg_ms.ics\">Hattiesburg MS  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hawaii.ics\">HawaII  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/honolulu_hi.ics\">Honolulu HI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/houston_tx.ics\">Houston TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/indianapolis_in.ics\">Indianapolis IN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/irvine_ca.ics\">Irvine CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/jacksonville_fl.ics\">Jacksonville FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/kansas_city_ks.ics\">Kansas City KS  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/knoxville_tn.ics\">Knoxville TN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/lanham_md.ics\">Lanham MD  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/lansing_mi.ics\">Lansing MI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/las_vegas_nv.ics\">Las Vegas NV  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/los_angeles_ca.ics\">Los Angeles CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/louisville_ky.ics\">Louisville KY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/madison_wi.ics\">Madison WI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/memphis_tn.ics\">Memphis TN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/miami_fl.ics\">Miami FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/michigan_city_in.ics\">Michigan City IN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/midland_tx.ics\">Midland TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/milwaukee_wi.ics\">Milwaukee WI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/minneapolis_st_paul_mn.ics\">Minneapolis St Paul MN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/mobile_al.ics\">Mobile AL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/modesto_ca.ics\">Modesto CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/monroe_nj.ics\">Monroe NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/montpelier_vt.ics\">Montpelier VT  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/nashville_tn.ics\">Nashville TN  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/new_orleans_la.ics\">New Orleans LA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/new_york_city_ny.ics\">New York City NY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/newport_beach_ca.ics\">Newport Beach CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/normal_il.ics\">Normal IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/norman_ok.ics\">Norman OK  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/nutley_nj.ics\">Nutley NJ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/omaha_ne.ics\">Omaha NE  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/orlando_fl.ics\">Orlando FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/peoria_il.ics\">Peoria IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/philadelphia_pa.ics\">Philadelphia PA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/phoenix_az.ics\">Phoenix AZ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/phoenixville_pa.ics\">Phoenixville PA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/pittsburgh_pa.ics\">Pittsburgh PA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/pleasanton_ca.ics\">Pleasanton CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/portland_or.ics\">Portland OR  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/rapid_city_sd.ics\">Rapid City SD  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/reno_nv.ics\">Reno NV  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/richmond_va.ics\">Richmond VA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/rochester_ny.ics\">Rochester NY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/sacramento_ca.ics\">Sacramento CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/salt_lake_city_ut.ics\">Salt Lake City UT  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_antonio_tx.ics\">San Antonio TX  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_diego_ca.ics\">San Diego CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_francisco_ca.ics\">San Francisco CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_jose_ca.ics\">San Jose CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_ramon_ca.ics\">San Ramon CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/santa_clara_ca.ics\">Santa Clara CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/santa_fe_nm.ics\">Santa Fe NM  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/scottsdale_az.ics\">Scottsdale AZ  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/seattle_wa.ics\">Seattle WA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/spokane_wa.ics\">Spokane WA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/springfield_or.ics\">Springfield OR  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/st_helena_ca.ics\">St Helena CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/st_louis_mo.ics\">St Louis MO  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/stamford_ct.ics\">Stamford CT  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/syracuse_ny.ics\">Syracuse NY  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/tampa_fl.ics\">Tampa FL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/volcano_hi.ics\">Volcano HI  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/walnut_creek_ca.ics\">Walnut Creek CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/washington_dc.ics\">Washington DC  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/wheaton_il.ics\">Wheaton IL  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/whittier_ca.ics\">Whittier CA  </a></td></tr>\r\n                <tr><td><a href='#' data-ics=\"http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/winter_garden_fl.ics\">Winter Garden FL  </a></td></tr>\r\n                </tbody>\r\n            </table>\r\n        </div>\r\n    </section>";
+  module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
+      var helper;
+
+      return "                    <tr><td><a href='#' data-ics=\"" + container.escapeExpression((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "url", "hash": {}, "data": data }) : helper)) + "\">" + container.escapeExpression((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "name", "hash": {}, "data": data }) : helper)) + "</a></td></tr>\r\n";
+    }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
+      var stack1;
+
+      return "<section class=\"section has-lotus-background is-fullheight\">\r\n        <div class=\"container\">\r\n            <div class=\"heading has-translucent-box has-padding-10\">\r\n                <h1 class=\"title\">Select your city</h1>\r\n                <h2 class=\"subtitle\">\r\n                    Please, select your location to view the correct Panchangam\r\n                </h2>\r\n            </div>\r\n            <table class=\"table\">\r\n                <thead>\r\n                <tr>\r\n                    <th>City</th>\r\n                </tr>\r\n                </thead>\r\n                <tbody>\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "                </tbody>\r\n            </table>\r\n        </div>\r\n    </section>";
     }, "useData": true });
   return module.exports;
 });
@@ -27,13 +33,31 @@ System.registerDynamic("lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js
   module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
       var stack1;
 
-      return "            <li>\r\n                <span class=\"sun\">" + ((stack1 = container.lambda((stack1 = depth0 != null ? depth0.summary : depth0) != null ? stack1["0"] : stack1, depth0)) != null ? stack1 : "") + "</span> \r\n                <span class=\"pretty-date\">" + container.escapeExpression((helpers.shortDate || depth0 && depth0.shortDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "shortDate", "hash": {}, "data": data })) + "</span><br>\r\n                <span class=\"extra-summary\">" + ((stack1 = (helpers.from_index || depth0 && depth0.from_index || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.summary : depth0, 1, { "name": "from_index", "hash": {}, "data": data })) != null ? stack1 : "") + "</span>\r\n            </li>\r\n";
+      return "            <li>\r\n                <span class=\"sun\">" + ((stack1 = container.lambda(depth0 != null ? depth0.summary : depth0, depth0)) != null ? stack1 : "") + "</span> \r\n                <span class=\"pretty-date\">" + container.escapeExpression((helpers.shortDate || depth0 && depth0.shortDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "shortDate", "hash": {}, "data": data })) + "</span><br>\r\n                <span class=\"extra-summary\">" + ((stack1 = (helpers.from_index || depth0 && depth0.from_index || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra_information : depth0, 0, { "name": "from_index", "hash": {}, "data": data })) != null ? stack1 : "") + "</span>\r\n            </li>\r\n";
     }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
       var stack1;
 
       return "  <br>\r\n    <div class=\"container\">\r\n        <ul class=\"month-display\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "        </ul>\r\n    </div>";
     }, "useData": true });
   return module.exports;
+});
+System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+    var define,
+        global = this || self,
+        GLOBAL = global;
+    var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+    module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
+            var stack1;
+
+            return "                " + container.escapeExpression(container.lambda(depth0, depth0)) + "\r\n                " + ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {}, data && data.last, { "name": "unless", "hash": {}, "fn": container.program(2, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "\r\n";
+        }, "2": function (container, depth0, helpers, partials, data) {
+            return " &bull; ";
+        }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
+            var stack1, helper;
+
+            return "<section class=\"hero is-medium is-primary is-bold is-fullheight has-lotus-background\">\r\n    <div class=\"hero-head\">\r\n        <header class=\"nav has-translucent-box\">\r\n            <div class=\"container\">\r\n                <div class=\"nav-left\">\r\n                    <a id=\"go-back-button\" class=\"nav-item\">\r\n                        <i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>\r\n                    </a>\r\n                </div>\r\n                <div class=\"nav-center has-text-centered\">\r\n                    <a id=\"calendar-name\" href=\"#\" class=\"nav-item\">\r\n                        " + container.escapeExpression((helper = (helper = helpers.calname || (depth0 != null ? depth0.calname : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "calname", "hash": {}, "data": data }) : helper)) + "\r\n                    </a>\r\n                </div>\r\n                <span class=\"nav-toggle\">\r\n                  <span></span>\r\n                  <span></span>\r\n                  <span></span>\r\n                </span>\r\n\r\n                <div class=\"nav-right nav-menu\">\r\n                    </a>\r\n                    <a class=\"nav-item\" href=\"http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF\">\r\n                        Introduction to the Hindu Calendar\r\n                    </a>\r\n                    <span class=\"nav-item\">\r\n                    <a id=\"switch-location\" class=\"button is-primary is-inverted\">\r\n                      <span class=\"icon\">\r\n                        <i class=\"fa fa-globe\"></i>\r\n                      </span>\r\n                      <span>Switch Location</span>\r\n                    </a>\r\n                  </span>\r\n                </div>\r\n            </div>\r\n        </header>\r\n    </div>\r\n\r\n\r\n    <div class=\"hero-body\">\r\n        <div class=\"container has-translucent-box has-padding-10\" data-modal-open=\"today-modal\">\r\n            <h1 class=\"title\">\r\n                 <strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n                 \r\n            </h1>\r\n            <h2 class=\"subtitle\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra : depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "                <br>\r\n                <span class=\"retreat-info\">\r\n                    <i class=\"fa fa-smile-o\" aria-hidden=\"true\"></i>\r\n                    " + container.escapeExpression((helpers.retreatLabel || depth0 && depth0.retreatLabel || helpers.helperMissing).call(depth0 != null ? depth0 : {}, (stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.interval : stack1, { "name": "retreatLabel", "hash": {}, "data": data })) + " " + container.escapeExpression(container.lambda((stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.summary : stack1, depth0)) + "\r\n                </span>\r\n            </h2>\r\n        </div>\r\n    </div>\r\n    <div class=\"hero-foot\">\r\n        <nav class=\"tabs\">\r\n            <div class=\"container\">\r\n                <ul>\r\n                    <li><a href=\"#\"><i class=\"fa fa-angle-double-down\"></i></a></li>\r\n                </ul>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</section>\r\n\r\n<div id=\"today-modal\" class=\"modal\">\r\n    <div class=\"modal-background\"></div>\r\n    <div class=\"modal-card\">\r\n        <header class=\"modal-card-head\">\r\n            <p class=\"modal-card-title\"><strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "</p>\r\n        </header>\r\n        <section class=\"modal-card-body\">\r\n            " + ((stack1 = (helpers.replaceNewLines || depth0 && depth0.replaceNewLines || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.description : depth0, { "name": "replaceNewLines", "hash": {}, "data": data })) != null ? stack1 : "") + "\r\n        </section>\r\n        <footer class=\"modal-card-foot\">\r\n            <a class=\"button is-primary\" data-modal-close=\"today-modal\">Close</a>\r\n        </footer>\r\n    </div>\r\n</div>";
+        }, "useData": true });
+    return module.exports;
 });
 (function() {
 var define = System.amdDefine;
@@ -898,7 +922,7 @@ var define = System.amdDefine;
 ;
 
 })();
-System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+System.registerDynamic("lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
     var define,
         global = this || self,
         GLOBAL = global;
@@ -906,21 +930,21 @@ System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js
     module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
             var stack1;
 
-            return "                " + container.escapeExpression(container.lambda(depth0, depth0)) + "\r\n                " + ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {}, data && data.last, { "name": "unless", "hash": {}, "fn": container.program(2, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "\r\n";
+            return "                    " + container.escapeExpression(container.lambda(depth0, depth0)) + "\r\n                    " + ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {}, data && data.last, { "name": "unless", "hash": {}, "fn": container.program(2, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "\r\n";
         }, "2": function (container, depth0, helpers, partials, data) {
             return " &bull; ";
         }, "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
             var stack1, helper;
 
-            return "<section class=\"hero is-medium is-primary is-bold is-fullheight has-lotus-background\">\r\n    <div class=\"hero-head\">\r\n        <header class=\"nav has-translucent-box\">\r\n            <div class=\"container\">\r\n                <div class=\"nav-left\">\r\n                    <a id=\"go-back-button\" class=\"nav-item\">\r\n                        <i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>\r\n                    </a>\r\n                </div>\r\n                <div class=\"nav-center has-text-centered\">\r\n                    <a id=\"calendar-name\" href=\"#\" class=\"nav-item\">\r\n                        " + container.escapeExpression((helper = (helper = helpers.calname || (depth0 != null ? depth0.calname : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "calname", "hash": {}, "data": data }) : helper)) + "\r\n                    </a>\r\n                </div>\r\n                <span class=\"nav-toggle\">\r\n                  <span></span>\r\n                  <span></span>\r\n                  <span></span>\r\n                </span>\r\n\r\n                <div class=\"nav-right nav-menu\">\r\n                    </a>\r\n                    <a class=\"nav-item\" href=\"http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF\">\r\n                        Introduction to the Hindu Calendar\r\n                    </a>\r\n                    <span class=\"nav-item\">\r\n                    <a id=\"switch-location\" class=\"button is-primary is-inverted\">\r\n                      <span class=\"icon\">\r\n                        <i class=\"fa fa-globe\"></i>\r\n                      </span>\r\n                      <span>Switch Location</span>\r\n                    </a>\r\n                  </span>\r\n                </div>\r\n            </div>\r\n        </header>\r\n    </div>\r\n\r\n\r\n    <div class=\"hero-body\">\r\n        <div class=\"container has-translucent-box has-padding-10\">\r\n            <h1 class=\"title\">\r\n                 <strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n                 \r\n            </h1>\r\n            <h2 class=\"subtitle\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra : depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "                <br>\r\n                <span class=\"retreat-info\">\r\n                    <i class=\"fa fa-smile-o\" aria-hidden=\"true\"></i>\r\n                    " + container.escapeExpression((helpers.retreatLabel || depth0 && depth0.retreatLabel || helpers.helperMissing).call(depth0 != null ? depth0 : {}, (stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.interval : stack1, { "name": "retreatLabel", "hash": {}, "data": data })) + " " + container.escapeExpression(container.lambda((stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.summary : stack1, depth0)) + "\r\n                </span>\r\n            </h2>\r\n        </div>\r\n    </div>\r\n    <div class=\"hero-foot\">\r\n        <nav class=\"tabs\">\r\n            <div class=\"container\">\r\n                <ul>\r\n                    <li><a href=\"#\"><i class=\"fa fa-angle-double-down\"></i></a></li>\r\n                </ul>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</section>";
+            return "<section class=\"hero is-medium is-primary is-bold is-fullheight has-lotus-background\">\r\n    <div class=\"hero-head\">\r\n        <header class=\"nav has-translucent-box\">\r\n            <div class=\"container\">\r\n                <div class=\"nav-left\">\r\n                    <a id=\"go-back-button\" class=\"nav-item\">\r\n                        <i class=\"fa fa-chevron-left\" aria-hidden=\"true\"></i>\r\n                    </a>\r\n                </div>\r\n                <div class=\"nav-center has-text-centered\">\r\n                    <a id=\"calendar-name\" href=\"#\" class=\"nav-item\">\r\n                        " + container.escapeExpression((helper = (helper = helpers.calname || (depth0 != null ? depth0.calname : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "calname", "hash": {}, "data": data }) : helper)) + "\r\n                    </a>\r\n                </div>\r\n                <span class=\"nav-toggle\">\r\n                  <span></span>\r\n                  <span></span>\r\n                  <span></span>\r\n                </span>\r\n\r\n                <div class=\"nav-right nav-menu\">\r\n                    </a>\r\n                    <a class=\"nav-item\" href=\"http://himalayanacademy.com/html/readlearn/panchangam/pancha_intro.PDF\">\r\n                        Introduction to the Hindu Calendar\r\n                    </a>\r\n                    <span class=\"nav-item\">\r\n                    <a id=\"switch-location\" class=\"button is-primary is-inverted\">\r\n                      <span class=\"icon\">\r\n                        <i class=\"fa fa-globe\"></i>\r\n                      </span>\r\n                      <span>Switch Location</span>\r\n                    </a>\r\n                  </span>\r\n                </div>\r\n            </div>\r\n        </header>\r\n    </div>\r\n\r\n\r\n    <div class=\"hero-body\">\r\n        <div class=\"container has-translucent-box has-padding-10\">\r\n            <h1 class=\"title\">\r\n                <strong>" + container.escapeExpression((helper = (helper = helpers.headline || (depth0 != null ? depth0.headline : depth0)) != null ? helper : helpers.helperMissing, typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {}, { "name": "headline", "hash": {}, "data": data }) : helper)) + "</strong> <br> " + container.escapeExpression((helpers.prettyDate || depth0 && depth0.prettyDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, { "name": "prettyDate", "hash": {}, "data": data })) + "\r\n\r\n            </h1>\r\n            <h2 class=\"subtitle\">\r\n" + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.extra : depth0, { "name": "each", "hash": {}, "fn": container.program(1, data, 0), "inverse": container.noop, "data": data })) != null ? stack1 : "") + "                <br>\r\n                <span class=\"retreat-info\">\r\n                    <i class=\"fa fa-smile-o\" aria-hidden=\"true\"></i>\r\n                    " + container.escapeExpression((helpers.retreatLabel || depth0 && depth0.retreatLabel || helpers.helperMissing).call(depth0 != null ? depth0 : {}, (stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.interval : stack1, { "name": "retreatLabel", "hash": {}, "data": data })) + " " + container.escapeExpression(container.lambda((stack1 = depth0 != null ? depth0.next_retreat : depth0) != null ? stack1.summary : stack1, depth0)) + "\r\n                </span>\r\n            </h2>\r\n\r\n            <div class=\"is-description\">\r\n                " + ((stack1 = (helpers.replaceNewLines || depth0 && depth0.replaceNewLines || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.description : depth0, { "name": "replaceNewLines", "hash": {}, "data": data })) != null ? stack1 : "") + "\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"hero-foot\">\r\n        <nav class=\"tabs\">\r\n            <div class=\"container\">\r\n                <ul>\r\n                    <li><a href=\"#\"><i class=\"fa fa-angle-double-down\"></i></a></li>\r\n                </ul>\r\n            </div>\r\n        </nav>\r\n    </div>\r\n</section>";
         }, "useData": true });
     return module.exports;
 });
-System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js", "npm:moment-timezone@0.5.10.js", "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js"], function (_export) {
+System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js", "npm:moment-timezone@0.5.10.js", "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js"], function (_export) {
     // Templates
     "use strict";
 
-    var Handlebars, moment, region_select, city_select_usa, month, today, templates;
+    var Handlebars, moment, region_select, city_select_usa, month, today, day_details, templates;
     return {
         setters: [function (_githubComponentsHandlebarsJs405HandlebarsRuntimeJs) {
             Handlebars = _githubComponentsHandlebarsJs405HandlebarsRuntimeJs["default"];
@@ -934,13 +958,16 @@ System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/hand
             month = _libTemplatesMonthHbsGithubDavisPluginHbs123Js["default"];
         }, function (_libTemplatesTodayHbsGithubDavisPluginHbs123Js) {
             today = _libTemplatesTodayHbsGithubDavisPluginHbs123Js["default"];
+        }, function (_libTemplatesDayDetailsHbsGithubDavisPluginHbs123Js) {
+            day_details = _libTemplatesDayDetailsHbsGithubDavisPluginHbs123Js["default"];
         }],
         execute: function () {
             templates = {
                 region_select: region_select,
                 city_select_usa: city_select_usa,
                 month: month,
-                today: today
+                today: today,
+                day_details: day_details
             };
 
             /**
@@ -15971,7 +15998,7 @@ System.register("lib/panchagam.js", ["npm:babel-runtime@5.8.38/core-js/object/de
                     // Group events for the same day
 
                     found_events = _.transform(found_events, function (result, event) {
-                        var day = panchangam.getEventDate(event).day;
+                        var day = panchangam.getEventDate(event).day - 1;
 
                         if (!result[day]) {
                             result[day] = [];
@@ -15979,6 +16006,8 @@ System.register("lib/panchagam.js", ["npm:babel-runtime@5.8.38/core-js/object/de
 
                         result[day].push(event);
                     }, []);
+
+                    console.log("grouped events", found_events);
 
                     // Transform them...
                     var final_events = _.transform(found_events, function (result, e) {
@@ -16040,23 +16069,52 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
 
     var moment, _, templates, panchangam;
 
+    _export("loadPanchangamFromURL", loadPanchangamFromURL);
+
+    _export("loadPanchangamFromMemory", loadPanchangamFromMemory);
+
     _export("bindRegionSelector", bindRegionSelector);
 
     /**
      * Region and City select
      */
 
+    _export("bindCitySelector", bindCitySelector);
+
     _export("showScreen", showScreen);
 
-    function switchLocation(url) {
-        url = "hawaii.ics";
+    function loadPanchangamFromURL(url) {
+        console.log("Loading panchangam from URL", url);
         fetch(url).then(function (response) {
             return response.text();
         }).then(function (ics) {
             console.log("Calendar arrived, parsing...");
-            panchangam.load(ics);
+            var loaded = panchangam.load(ics);
+            if (loaded) {
+                localStorage.setItem("calendar", ics);
+            }
             displayCalendar(panchangam.root);
         });
+    }
+
+    function loadPanchangamFromMemory() {
+        console.log("Loading panchangam from memory");
+
+        var ics = localStorage.getItem("calendar");
+
+        if (!ics) {
+            return false;
+        }
+
+        var loaded = panchangam.load(ics);
+
+        if (!loaded) {
+            return false;
+        }
+
+        displayCalendar(panchangam.root);
+
+        return true;
     }
 
     function displayCalendar(root) {
@@ -16069,6 +16127,7 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
                 calname: panchangam.calendarName,
                 date: day.date,
                 headline: day.summary,
+                description: day.description,
                 extra: day.extra_information,
                 next_retreat: day.next_retreat
             };
@@ -16089,9 +16148,6 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
             var template = templates.month;
             var html = template(events);
             document.body.innerHTML = document.body.innerHTML + html;
-            bindMenuControls();
-            bindMonthControls();
-            history.pushState(context, "Panchangam", "#panchangam");
         }
 
         // find today.
@@ -16101,8 +16157,12 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
         displayDay(day);
 
         // display rest of the month.
-        events = panchangam.informationForMonth(today);
+        var events = panchangam.informationForMonth(today);
         displayMonth(events);
+
+        bindMenuControls();
+        bindDayControls();
+        bindMonthControls();
     }
 
     function bindMenuControls() {
@@ -16122,6 +16182,23 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
         document.querySelector("#go-back-button").addEventListener("click", function () {
             history.go(-1);
         });
+
+        // Modals
+        var openers = document.querySelectorAll("[data-modal-open]");
+        [].forEach.call(openers, function (element) {
+            element.addEventListener("click", function () {
+                var target = document.querySelector("#" + element.getAttribute("data-modal-open"));
+                target.classList.add("is-active");
+            });
+        });
+
+        var closers = document.querySelectorAll("[data-modal-close]");
+        [].forEach.call(closers, function (element) {
+            element.addEventListener("click", function () {
+                var target = document.querySelector("#" + element.getAttribute("data-modal-close"));
+                target.classList.remove("is-active");
+            });
+        });
     }
     function bindRegionSelector() {
         document.querySelectorAll(".region-selector").forEach(function (item) {
@@ -16139,12 +16216,14 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
             item.addEventListener("click", function (el) {
                 var url = item.getAttribute("data-ics");
                 console.log(url);
-                switchLocation(url);
+                loadPanchangamFromURL(url);
             });
         });
     }
 
     function bindMonthControls() {}
+
+    function bindDayControls() {}
 
     function showScreen(screen, state) {
         console.log("show screen:", screen);
@@ -16152,8 +16231,6 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
         state.currentScreen = screen;
         var html = templates[screen](state);
         document.body.innerHTML = html;
-
-        history.pushState(state, "Panchangam", "#" + screen);
     }
 
     return {
@@ -16169,30 +16246,1225 @@ System.register("lib/functions.js", ["npm:moment-timezone@0.5.10.js", "npm:lodas
         execute: function () {}
     };
 });
-System.register("lib/bootstrap.js", ["lib/functions.js"], function (_export) {
-        "use strict";
+System.registerDynamic("npm:minimal-router@1.0.5/lib/Router.js", [], true, function ($__require, exports, module) {
+	/* */
+	'use strict';
 
-        var bindRegionSelector, showScreen;
+	var define,
+	    global = this || self,
+	    GLOBAL = global;
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-        _export("bootstrap", bootstrap);
+	var _createClass = function () {
+		function defineProperties(target, props) {
+			for (var i = 0; i < props.length; i++) {
+				var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+			}
+		}return function (Constructor, protoProps, staticProps) {
+			if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+		};
+	}();
 
-        function bootstrap() {
+	var _slicedToArray = function () {
+		function sliceIterator(arr, i) {
+			var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
+				for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+					_arr.push(_s.value);if (i && _arr.length === i) break;
+				}
+			} catch (err) {
+				_d = true;_e = err;
+			} finally {
+				try {
+					if (!_n && _i["return"]) _i["return"]();
+				} finally {
+					if (_d) throw _e;
+				}
+			}return _arr;
+		}return function (arr, i) {
+			if (Array.isArray(arr)) {
+				return arr;
+			} else if (Symbol.iterator in Object(arr)) {
+				return sliceIterator(arr, i);
+			} else {
+				throw new TypeError("Invalid attempt to destructure non-iterable instance");
+			}
+		};
+	}();
 
-                console.log("boot loaded.");
+	exports.getMatchedParams = getMatchedParams;
+	exports.getQueryParams = getQueryParams;
+	exports.createRoute = createRoute;
 
-                showScreen("region_select");
-                bindRegionSelector();
+	function _classCallCheck(instance, Constructor) {
+		if (!(instance instanceof Constructor)) {
+			throw new TypeError("Cannot call a class as a function");
+		}
+	}
 
-                console.log("end of boot sequence");
-        }
+	var parametersPattern = /(:[^\/]+)/g;
 
-        return {
-                setters: [function (_libFunctionsJs) {
-                        bindRegionSelector = _libFunctionsJs.bindRegionSelector;
-                        showScreen = _libFunctionsJs.showScreen;
+	// Some utility functions. Exported just to be able to test them easily
+
+	function getMatchedParams(route, path) {
+		var matches = path.match(route.matcher);
+
+		if (!matches) {
+			return false;
+		}
+
+		return route.params.reduce(function (acc, param, idx) {
+			acc[param] = decodeURIComponent(matches[idx + 1]);
+			return acc;
+		}, {});
+	};
+
+	function getQueryParams(query) {
+		return query.split('&').filter(function (p) {
+			return p.length;
+		}).reduce(function (acc, part) {
+			var _part$split = part.split('=');
+
+			var _part$split2 = _slicedToArray(_part$split, 2);
+
+			var key = _part$split2[0];
+			var value = _part$split2[1];
+
+			acc[decodeURIComponent(key)] = decodeURIComponent(value);
+			return acc;
+		}, {});
+	};
+
+	function createRoute(name, path, handler) {
+		var matcher = new RegExp(path.replace(parametersPattern, '([^\/]+)') + '$');
+		var params = (path.match(parametersPattern) || []).map(function (x) {
+			return x.substring(1);
+		});
+
+		return { name: name, path: path, handler: handler, matcher: matcher, params: params };
+	};
+
+	var findRouteParams = function findRouteParams(routes, path) {
+		var params = void 0;
+		var route = routes.find(function (r) {
+			return params = getMatchedParams(r, path);
+		});
+		return { route: route, params: params };
+	};
+
+	var parseUrl = function parseUrl(url) {
+		var _url$split = url.split('?');
+
+		var _url$split2 = _slicedToArray(_url$split, 2);
+
+		var path = _url$split2[0];
+		var queryString = _url$split2[1];
+
+		return { path: path, queryString: queryString };
+	};
+
+	var stripPrefix = function stripPrefix(url, prefix) {
+		return url.replace(new RegExp('^' + prefix), '');
+	};
+
+	// The actual Router as the default export of the module
+
+	var Router = function () {
+		function Router() {
+			_classCallCheck(this, Router);
+
+			this.routes = [];
+			this.prefix = '';
+		}
+
+		// Adds a route with an _optional_ name, a path and a handler function
+
+
+		_createClass(Router, [{
+			key: 'add',
+			value: function add(name, path, handler) {
+				if (arguments.length == 2) {
+					this.add.apply(this, [''].concat(Array.prototype.slice.call(arguments)));
+				} else {
+					this.routes.push(createRoute(name, path, handler));
+				}
+				return this;
+			}
+		}, {
+			key: 'setPrefix',
+			value: function setPrefix(prefix) {
+				this.prefix = prefix;
+				return this;
+			}
+		}, {
+			key: 'dispatch',
+			value: function dispatch(url) {
+				var _parseUrl = parseUrl(stripPrefix(url, this.prefix));
+
+				var path = _parseUrl.path;
+				var queryString = _parseUrl.queryString;
+
+				var query = getQueryParams(queryString || '');
+
+				var _findRouteParams = findRouteParams(this.routes, path);
+
+				var route = _findRouteParams.route;
+				var params = _findRouteParams.params;
+
+				if (route) {
+					route.handler({ params: params, query: query });
+					return route;
+				}
+
+				return false;
+			}
+		}, {
+			key: 'getCurrentRoute',
+			value: function getCurrentRoute(url) {
+				var _parseUrl2 = parseUrl(stripPrefix(url, this.prefix));
+
+				var path = _parseUrl2.path;
+				var queryString = _parseUrl2.queryString;
+
+				var rp = findRouteParams(this.routes, path);
+				return rp && rp.route;
+			}
+		}, {
+			key: 'formatUrl',
+			value: function formatUrl(routeName) {
+				var params = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var query = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				var route = this.routes.find(function (r) {
+					return r.name === routeName;
+				});
+
+				if (!route) {
+					return '';
+				}
+
+				var queryString = Object.keys(query).map(function (k) {
+					return [k, query[k]];
+				}).map(function (_ref) {
+					var _ref2 = _slicedToArray(_ref, 2);
+
+					var k = _ref2[0];
+					var v = _ref2[1];
+					return encodeURIComponent(k) + '=' + encodeURIComponent(v);
+				}).join('&');
+
+				var path = this.prefix + route.path.replace(parametersPattern, function (match) {
+					return params[match.substring(1)];
+				});
+
+				return queryString.length ? path + '?' + queryString : path;
+			}
+		}]);
+
+		return Router;
+	}();
+
+	exports.default = Router;
+	;
+	return module.exports;
+});
+System.registerDynamic('npm:minimal-router@1.0.5/lib/index.js', ['npm:minimal-router@1.0.5/lib/Router.js'], true, function ($__require, exports, module) {
+  /* */
+  'use strict';
+
+  var define,
+      global = this || self,
+      GLOBAL = global;
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.Router = undefined;
+  var _Router = $__require('npm:minimal-router@1.0.5/lib/Router.js');
+  var _Router2 = _interopRequireDefault(_Router);
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+  }
+  exports.default = _Router2.default;
+  exports.Router = _Router2.default;
+  return module.exports;
+});
+System.registerDynamic("npm:minimal-router@1.0.5.js", ["npm:minimal-router@1.0.5/lib/index.js"], true, function ($__require, exports, module) {
+  var define,
+      global = this || self,
+      GLOBAL = global;
+  module.exports = $__require("npm:minimal-router@1.0.5/lib/index.js");
+  return module.exports;
+});
+System.register("lib/location-data.js", [], function (_export) {
+    "use strict";
+
+    var locationData;
+    return {
+        setters: [],
+        execute: function () {
+            locationData = {
+                usa: [{
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/albany_ny.ics",
+                    name: "Albany NY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/albuquerque_nm.ics",
+                    name: "Albuquerque NM"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/alsea_or.ics",
+                    name: "Alsea OR"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/amarillo_tx.ics",
+                    name: "Amarillo TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/anchorage_ak.ics",
+                    name: "Anchorage AK"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/asheville_nc.ics",
+                    name: "Asheville NC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/athens_ga.ics",
+                    name: "Athens GA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/atlanta_ga.ics",
+                    name: "Atlanta GA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/auburn_al.ics",
+                    name: "Auburn AL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/austin_tx.ics",
+                    name: "Austin TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/baltimore_md.ics",
+                    name: "Baltimore MD"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/baton_rouge_la.ics",
+                    name: "Baton Rouge LA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bettendorf_ia.ics",
+                    name: "Bettendorf IA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/birmingham_al.ics",
+                    name: "Birmingham AL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bixby_ok.ics",
+                    name: "Bixby OK"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomfield_nj.ics",
+                    name: "Bloomfield NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomington_il.ics",
+                    name: "Bloomington IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bloomington_in.ics",
+                    name: "Bloomington IN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boca_raton_fl.ics",
+                    name: "Boca Raton FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boise_id.ics",
+                    name: "Boise ID"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boone_nc.ics",
+                    name: "Boone NC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/boston_ma.ics",
+                    name: "Boston MA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/bowling_green_ky.ics",
+                    name: "Bowling Green KY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/branchville_nj.ics",
+                    name: "Branchville NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/broomfield_co.ics",
+                    name: "Broomfield CO"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/buffalo_ny.ics",
+                    name: "Buffalo NY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cary_nc.ics",
+                    name: "Cary NC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/champaign_il.ics",
+                    name: "Champaign IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chantilly_va.ics",
+                    name: "Chantilly VA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chapel_hill_nc.ics",
+                    name: "Chapel Hill NC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/charlotte_nc.ics",
+                    name: "Charlotte NC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/charlottesville_va.ics",
+                    name: "Charlottesville VA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/chicago_il.ics",
+                    name: "Chicago IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cincinnati_oh.ics",
+                    name: "Cincinnati OH"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/cleveland_oh.ics",
+                    name: "Cleveland OH"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/columbia_sc.ics",
+                    name: "Columbia SC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/columbus_oh.ics",
+                    name: "Columbus OH"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/dallas_tx.ics",
+                    name: "Dallas TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/davenport_ia.ics",
+                    name: "Davenport IA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/denver_co.ics",
+                    name: "Denver CO"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/des_moines_ia.ics",
+                    name: "Des Moines IA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/detroit_mi.ics",
+                    name: "Detroit MI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/downers_grove_il.ics",
+                    name: "Downers Grove IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/easton_md.ics",
+                    name: "Easton MD"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/edison_nj.ics",
+                    name: "Edison NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/el_paso_tx.ics",
+                    name: "El Paso TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/etobicoke_on.ics",
+                    name: "Etobicoke ON"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/eugene_or.ics",
+                    name: "Eugene OR"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fairfax_va.ics",
+                    name: "Fairfax VA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/flemington_nj.ics",
+                    name: "Flemington NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fort_lauderdale_fl.ics",
+                    name: "Fort Lauderdale FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fort_wayne_in.ics",
+                    name: "Fort Wayne IN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/frederick_md.ics",
+                    name: "Frederick MD"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/fresno_ca.ics",
+                    name: "Fresno CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/gainesville_fl.ics",
+                    name: "Gainesville FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/greenville_sc.ics",
+                    name: "Greenville SC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hartford_ct.ics",
+                    name: "Hartford CT"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hattiesburg_ms.ics",
+                    name: "Hattiesburg MS"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/hawaii.ics",
+                    name: "HawaII"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/honolulu_hi.ics",
+                    name: "Honolulu HI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/houston_tx.ics",
+                    name: "Houston TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/indianapolis_in.ics",
+                    name: "Indianapolis IN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/irvine_ca.ics",
+                    name: "Irvine CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/jacksonville_fl.ics",
+                    name: "Jacksonville FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/kansas_city_ks.ics",
+                    name: "Kansas City KS"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/knoxville_tn.ics",
+                    name: "Knoxville TN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/lanham_md.ics",
+                    name: "Lanham MD"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/lansing_mi.ics",
+                    name: "Lansing MI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/las_vegas_nv.ics",
+                    name: "Las Vegas NV"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/los_angeles_ca.ics",
+                    name: "Los Angeles CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/louisville_ky.ics",
+                    name: "Louisville KY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/madison_wi.ics",
+                    name: "Madison WI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/memphis_tn.ics",
+                    name: "Memphis TN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/miami_fl.ics",
+                    name: "Miami FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/michigan_city_in.ics",
+                    name: "Michigan City IN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/midland_tx.ics",
+                    name: "Midland TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/milwaukee_wi.ics",
+                    name: "Milwaukee WI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/minneapolis_st_paul_mn.ics",
+                    name: "Minneapolis St Paul MN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/mobile_al.ics",
+                    name: "Mobile AL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/modesto_ca.ics",
+                    name: "Modesto CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/monroe_nj.ics",
+                    name: "Monroe NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/montpelier_vt.ics",
+                    name: "Montpelier VT"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/nashville_tn.ics",
+                    name: "Nashville TN"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/new_orleans_la.ics",
+                    name: "New Orleans LA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/new_york_city_ny.ics",
+                    name: "New York City NY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/newport_beach_ca.ics",
+                    name: "Newport Beach CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/normal_il.ics",
+                    name: "Normal IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/norman_ok.ics",
+                    name: "Norman OK"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/nutley_nj.ics",
+                    name: "Nutley NJ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/omaha_ne.ics",
+                    name: "Omaha NE"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/orlando_fl.ics",
+                    name: "Orlando FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/peoria_il.ics",
+                    name: "Peoria IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/philadelphia_pa.ics",
+                    name: "Philadelphia PA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/phoenix_az.ics",
+                    name: "Phoenix AZ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/phoenixville_pa.ics",
+                    name: "Phoenixville PA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/pittsburgh_pa.ics",
+                    name: "Pittsburgh PA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/pleasanton_ca.ics",
+                    name: "Pleasanton CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/portland_or.ics",
+                    name: "Portland OR"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/rapid_city_sd.ics",
+                    name: "Rapid City SD"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/reno_nv.ics",
+                    name: "Reno NV"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/richmond_va.ics",
+                    name: "Richmond VA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/rochester_ny.ics",
+                    name: "Rochester NY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/sacramento_ca.ics",
+                    name: "Sacramento CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/salt_lake_city_ut.ics",
+                    name: "Salt Lake City UT"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_antonio_tx.ics",
+                    name: "San Antonio TX"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_diego_ca.ics",
+                    name: "San Diego CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_francisco_ca.ics",
+                    name: "San Francisco CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_jose_ca.ics",
+                    name: "San Jose CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/san_ramon_ca.ics",
+                    name: "San Ramon CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/santa_clara_ca.ics",
+                    name: "Santa Clara CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/santa_fe_nm.ics",
+                    name: "Santa Fe NM"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/scottsdale_az.ics",
+                    name: "Scottsdale AZ"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/seattle_wa.ics",
+                    name: "Seattle WA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/spokane_wa.ics",
+                    name: "Spokane WA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/springfield_or.ics",
+                    name: "Springfield OR"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/st_helena_ca.ics",
+                    name: "St Helena CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/st_louis_mo.ics",
+                    name: "St Louis MO"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/stamford_ct.ics",
+                    name: "Stamford CT"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/syracuse_ny.ics",
+                    name: "Syracuse NY"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/tampa_fl.ics",
+                    name: "Tampa FL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/volcano_hi.ics",
+                    name: "Volcano HI"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/walnut_creek_ca.ics",
+                    name: "Walnut Creek CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/washington_dc.ics",
+                    name: "Washington DC"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/wheaton_il.ics",
+                    name: "Wheaton IL"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/whittier_ca.ics",
+                    name: "Whittier CA"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/usa/winter_garden_fl.ics",
+                    name: "Winter Garden FL"
                 }],
-                execute: function () {}
+                world: [{
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/abu_dhabi_ae.ics",
+                    name: "Abu Dhabi Ae"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/abu_road_india.ics",
+                    name: "Abu Road India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/adana_turkey.ics",
+                    name: "Adana Turkey"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/adelaide_s_australia.ics",
+                    name: "Adelaide S Australia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ahmedabad_india.ics",
+                    name: "Ahmedabad India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/al-khubar_saudi_arabia.ics",
+                    name: "Al-Khubar Saudi Arabia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/almaty_kazakhstan.ics",
+                    name: "Almaty Kazakhstan"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ambala_india.ics",
+                    name: "Ambala India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/amsterdam_netherlands.ics",
+                    name: "Amsterdam Netherlands"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/athens_greece.ics",
+                    name: "Athens Greece"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/auckland_new_zealand.ics",
+                    name: "Auckland New Zealand"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bali_indonesia.ics",
+                    name: "Bali Indonesia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bangalore_india.ics",
+                    name: "Bangalore India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bangkok_thailand.ics",
+                    name: "Bangkok Thailand"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/barcelona_spain.ics",
+                    name: "Barcelona Spain"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/beijing_china.ics",
+                    name: "Beijing China"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/berlin_germany.ics",
+                    name: "Berlin Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/birming_uk.ics",
+                    name: "Birming Uk"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bordeaux_france.ics",
+                    name: "Bordeaux France"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bradford_uk.ics",
+                    name: "Bradford Uk"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bremen_germany.ics",
+                    name: "Bremen Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/brisbane_australia.ics",
+                    name: "Brisbane Australia"
+                }, { url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/brunei.ics", name: "Brunei" }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/brussels_belgium.ics",
+                    name: "Brussels Belgium"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/bucaramanga_columbia.ics",
+                    name: "Bucaramanga Columbia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/budapest_hungary.ics",
+                    name: "Budapest Hungary"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/cairo_egypt.ics",
+                    name: "Cairo Egypt"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/calgary_ab_canada.ics",
+                    name: "Calgary Ab Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/canberra_australia.ics",
+                    name: "Canberra Australia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/cape_town_south_africa.ics",
+                    name: "Cape Town South Africa"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/carcare_switzerland.ics",
+                    name: "Carcare Switzerland"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/chandigarh_india.ics",
+                    name: "Chandigarh India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/chennai_india.ics",
+                    name: "Chennai India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/chernigov_ukraine.ics",
+                    name: "Chernigov Ukraine"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/chidambaram_india.ics",
+                    name: "Chidambaram India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/cologne_germany.ics",
+                    name: "Cologne Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/colombo_sri_lanka.ics",
+                    name: "Colombo Sri Lanka"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/copenhagen_denmark.ics",
+                    name: "Copenhagen Denmark"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/darwin_australia.ics",
+                    name: "Darwin Australia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/doha_qatar.ics",
+                    name: "Doha Qatar"
+                }, { url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/dubai_ae.ics", name: "Dubai Ae" }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/dublin_ire.ics",
+                    name: "Dublin Ire"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/durban_south_africa.ics",
+                    name: "Durban South Africa"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/dushanbe_tajikastan.ics",
+                    name: "Dushanbe Tajikastan"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/dwarka_india.ics",
+                    name: "Dwarka India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/edmonton_canada.ics",
+                    name: "Edmonton Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ellora_india.ics",
+                    name: "Ellora India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/gaborone_botswana.ics",
+                    name: "Gaborone Botswana"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/galway_ireland.ics",
+                    name: "Galway Ireland"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/geneva_switzerland.ics",
+                    name: "Geneva Switzerland"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/georgetown_guyana.ics",
+                    name: "Georgetown Guyana"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/gosnells_aust.ics",
+                    name: "Gosnells Aust"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/grevenbroich_germany.ics",
+                    name: "Grevenbroich Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/gunzburg_germany.ics",
+                    name: "Gunzburg Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/halifax_canada.ics",
+                    name: "Halifax Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/hamm_germany.ics",
+                    name: "Hamm Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ho_chi_minh.ics",
+                    name: "Ho Chi Minh"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/hobart_tasmania.ics",
+                    name: "Hobart Tasmania"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/hong_kong_china.ics",
+                    name: "Hong Kong China"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/hyderabad_india.ics",
+                    name: "Hyderabad India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/imphal_india.ics",
+                    name: "Imphal India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/istanbul_turkey.ics",
+                    name: "Istanbul Turkey"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/jakarta_indonesia.ics",
+                    name: "Jakarta Indonesia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/jalandhar_india.ics",
+                    name: "Jalandhar India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/johannesburg_za.ics",
+                    name: "Johannesburg Za"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kandy_sri_lanka.ics",
+                    name: "Kandy Sri Lanka"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/karachi_pakistan.ics",
+                    name: "Karachi Pakistan"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kathmandu_nepal.ics",
+                    name: "Kathmandu Nepal"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kedarnath_india.ics",
+                    name: "Kedarnath India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kharagpur_india.ics",
+                    name: "Kharagpur India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kiev_ukraine.ics",
+                    name: "Kiev Ukraine"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kingston_jamaica.ics",
+                    name: "Kingston Jamaica"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kinshasa_zaire.ics",
+                    name: "Kinshasa Zaire"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kl_malaysia.ics",
+                    name: "Kl Malaysia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kolkata_india.ics",
+                    name: "Kolkata India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kottayam_india.ics",
+                    name: "Kottayam India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/kuwait_city_kuwait.ics",
+                    name: "Kuwait City Kuwait"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/lelystad_netherlands.ics",
+                    name: "Lelystad Netherlands"
+                }, { url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/lima_peru.ics", name: "Lima Peru" }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ljubljana_solvenia.ics",
+                    name: "Ljubljana Solvenia"
+                }, { url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/london_uk.ics", name: "London Uk" }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/lucknow_india.ics",
+                    name: "Lucknow India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/lusaka_zambia.ics",
+                    name: "Lusaka Zambia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/madrid_spain.ics",
+                    name: "Madrid Spain"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/madurai_india.ics",
+                    name: "Madurai India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/malmo_sweden.ics",
+                    name: "Malmo Sweden"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/manama_bahrain.ics",
+                    name: "Manama Bahrain"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/manokwari_indonesia.ics",
+                    name: "Manokwari Indonesia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/medellin_colombia.ics",
+                    name: "Medellin Colombia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/melbourne_aust.ics",
+                    name: "Melbourne Aust"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/mexico_city_mexico.ics",
+                    name: "Mexico City Mexico"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/milan_italy.ics",
+                    name: "Milan Italy"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/moncton_nb_canada.ics",
+                    name: "Moncton Nb Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/montevideo_uruguay.ics",
+                    name: "Montevideo Uruguay"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/montreal_canada.ics",
+                    name: "Montreal Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/moscow_russia.ics",
+                    name: "Moscow Russia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/mosul_iraq.ics",
+                    name: "Mosul Iraq"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/mumbai_india.ics",
+                    name: "Mumbai India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/mundare_canada.ics",
+                    name: "Mundare Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/munich_germany.ics",
+                    name: "Munich Germany"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/muscat_oman.ics",
+                    name: "Muscat Oman"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/nadi_fiji_islands.ics",
+                    name: "Nadi Fiji Islands"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/nairobi_kenya.ics",
+                    name: "Nairobi Kenya"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/nasik_india.ics",
+                    name: "Nasik India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/new_delhi_india.ics",
+                    name: "New Delhi India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/oslo_norway.ics",
+                    name: "Oslo Norway"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/padua_italy.ics",
+                    name: "Padua Italy"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/paramaribo_suriname.ics",
+                    name: "Paramaribo Suriname"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/paris_france.ics",
+                    name: "Paris France"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/perth_aust.ics",
+                    name: "Perth Aust"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/pietermaritzburg_za.ics",
+                    name: "Pietermaritzburg Za"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/poortugaal_netherlands.ics",
+                    name: "Poortugaal Netherlands"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/port_harcourt_nigeria.ics",
+                    name: "Port Harcourt Nigeria"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/port_louis_mauritius.ics",
+                    name: "Port Louis Mauritius"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/port-of-spain_trinidad_and_tobago.ics",
+                    name: "Port-Of-Spain Trinidad And Tobago"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/porto_portugal.ics",
+                    name: "Porto Portugal"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/pune_india.ics",
+                    name: "Pune India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/pyinmana_myanmar.ics",
+                    name: "Pyinmana Myanmar"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/pyrenees-orientales_france.ics",
+                    name: "Pyrenees-Orientales France"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/rameswaram_india.ics",
+                    name: "Rameswaram India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/ranikhet_india.ics",
+                    name: "Ranikhet India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/regina_sk_canada.ics",
+                    name: "Regina Sk Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/riga_latvia.ics",
+                    name: "Riga Latvia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/rio_de_janeiro_brazil.ics",
+                    name: "Rio De Janeiro Brazil"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/riyadh_saudi_arabia.ics",
+                    name: "Riyadh Saudi Arabia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/rome_italy.ics",
+                    name: "Rome Italy"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/saint-denis_reunion.ics",
+                    name: "Saint-Denis Reunion"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/santiago_chile.ics",
+                    name: "Santiago Chile"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/sao_paulo_brazil.ics",
+                    name: "Sao Paulo Brazil"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/saskatoon_canada.ics",
+                    name: "Saskatoon Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/seoul_korea.ics",
+                    name: "Seoul Korea"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/shanghai_china.ics",
+                    name: "Shanghai China"
+                }, { url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/singapore.ics", name: "Singapore" }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/somerset_west_za.ics",
+                    name: "Somerset West Za"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/sri_sailam_india.ics",
+                    name: "Sri Sailam India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/stockholm_sweden.ics",
+                    name: "Stockholm Sweden"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/surabaya_indonesia.ics",
+                    name: "Surabaya Indonesia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/suva_fiji_islands.ics",
+                    name: "Suva Fiji Islands"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/sydney_australia.ics",
+                    name: "Sydney Australia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/tallinn_estonia.ics",
+                    name: "Tallinn Estonia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/tehran_iran.ics",
+                    name: "Tehran Iran"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/thane_maharashtra_in.ics",
+                    name: "Thane Maharashtra In"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/tirupati_india.ics",
+                    name: "Tirupati India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/tokyo_japan.ics",
+                    name: "Tokyo Japan"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/toronto_canada.ics",
+                    name: "Toronto Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/trichirappalli_india.ics",
+                    name: "Trichirappalli India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/trieste_italy.ics",
+                    name: "Trieste Italy"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/trivandrum_india.ics",
+                    name: "Trivandrum India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/udaipur_india.ics",
+                    name: "Udaipur India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/vancouver_canada.ics",
+                    name: "Vancouver Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/varanasi_india.ics",
+                    name: "Varanasi India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/vienna_austria.ics",
+                    name: "Vienna Austria"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/vizianagaram_india.ics",
+                    name: "Vizianagaram India"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/warsaw_poland.ics",
+                    name: "Warsaw Poland"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/winnipeg_mb_canada.ics",
+                    name: "Winnipeg Mb Canada"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/winterthur_switzerland.ics",
+                    name: "Winterthur Switzerland"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/yangon_myanmar.ics",
+                    name: "Yangon Myanmar"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/yogyakarta_indonesia.ics",
+                    name: "Yogyakarta Indonesia"
+                }, {
+                    url: "http://dev.himalayanacademy.com/media/apps/panchangam/calendars/2016-2017/world/zagreb_croatia.ics",
+                    name: "Zagreb Croatia"
+                }]
+            };
+
+            _export("default", locationData);
+        }
+    };
+});
+System.register('lib/bootstrap.js', ['lib/functions.js', 'npm:minimal-router@1.0.5.js', 'lib/location-data.js'], function (_export) {
+    'use strict';
+
+    var bindCitySelector, showScreen, loadPanchangamFromURL, loadPanchangamFromMemory, Router, locationData, router;
+
+    _export('bootstrap', bootstrap);
+
+    function bootstrap() {
+
+        console.log("Boot loaded.");
+        console.log("Setting routes...");
+
+        router.setPrefix('#');
+
+        router.add('region-select', '/region', function () {
+            showScreen("region_select");
+        });
+
+        router.add('region-specific', '/region/:region', function (_ref) {
+            var params = _ref.params;
+            var query = _ref.query;
+
+            var region = params.region;
+            console.log("Specific region", region);
+            showScreen("city_select_usa", locationData[region]);
+            bindCitySelector();
+        });
+
+        router.add('/calendar/:city', function (_ref2) {
+            var params = _ref2.params;
+            var query = _ref2.query;
+
+            var city = params.city;
+            loadPanchangamFromURL(city);
+            // ... do something with city and sort
+        });
+
+        router.add('/calendar/:city/:year', function (_ref3) {
+            var params = _ref3.params;
+            var query = _ref3.query;
+
+            var city = params.city;
+            var year = params.year;
+            // ... do something with city and sort
+        });
+
+        router.add('/calendar/:city/:year/:month', function (_ref4) {
+            var params = _ref4.params;
+            var query = _ref4.query;
+
+            var city = params.city;
+            var year = params.year;
+            var month = params.month;
+
+            // ... do something with city and sort
+        });
+
+        router.add('/calendar/:city/:year/:month/:day', function (_ref5) {
+            var params = _ref5.params;
+            var query = _ref5.query;
+
+            var city = params.city;
+            var year = params.year;
+            var month = params.month;
+            var day = params.day;
+            // ... do something with city and sort
+        });
+
+        // Listen browser event for back navigation
+        window.onpopstate = function (event) {
+            // dispatch current url to route
+            var path = document.location.hash;
+            if (document.location.search.length) {
+                path += '?' + document.location.search;
+            }
+            router.dispatch(path);
         };
+
+        // Navigate to other routes
+        var navigate = function navigate(routeName, query, params) {
+            var url = router.formatUrl(routeName, query, params);
+            console.log("url", url);
+            history.pushState(null, null, url);
+            router.dispatch(url);
+        };
+
+        console.log("end of boot sequence");
+
+        if (!location.hash) {
+
+            var ics = localStorage.getItem("calendar");
+
+            if (!ics) {
+                navigate("region-select");
+            } else {
+                loadPanchangamFromMemory();
+            }
+        }
+    }
+
+    return {
+        setters: [function (_libFunctionsJs) {
+            bindCitySelector = _libFunctionsJs.bindCitySelector;
+            showScreen = _libFunctionsJs.showScreen;
+            loadPanchangamFromURL = _libFunctionsJs.loadPanchangamFromURL;
+            loadPanchangamFromMemory = _libFunctionsJs.loadPanchangamFromMemory;
+        }, function (_npmMinimalRouter105Js) {
+            Router = _npmMinimalRouter105Js['default'];
+        }, function (_libLocationDataJs) {
+            locationData = _libLocationDataJs['default'];
+        }],
+        execute: function () {
+            router = new Router();
+        }
+    };
 });
 System.register("lib/main.js", ["lib/bootstrap.js"], function (_export) {
   "use strict";

@@ -5,13 +5,15 @@ import moment from "moment-timezone"
 import region_select from "./templates/region-select.hbs!";
 import city_select_usa from "./templates/city-select-usa.hbs!";
 import month from "./templates/month.hbs!";
-import today from "./templates/today.hbs!";
+import today from "./templates/today.hbs!"
+import day_details from "./templates/day-details.hbs!";
 
 var templates = {
     region_select,
     city_select_usa,
     month,
-    today
+    today,
+    day_details
 }
 
 
