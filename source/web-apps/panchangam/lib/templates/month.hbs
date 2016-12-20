@@ -3,9 +3,9 @@
         <ul class="month-display">
              {{#each this}}
             <li>
-                <span class="sun">{{{this.summary.[0]}}}</span> 
+                <span class="sun">{{{this.summary}}}</span> 
                 <span class="pretty-date">{{shortDate this.date}}</span><br>
-                <span class="extra-summary">{{{from_index this.summary 1}}}</span>
+                <span class="extra-summary">{{{from_index this.extra_information 0}}}</span>
             </li>
             {{/each}}
         </ul>

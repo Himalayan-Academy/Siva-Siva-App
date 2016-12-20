@@ -26,5 +26,7 @@ cp -R "$SRC_PATH/hawaii.ics" "$DEST_PATH"
 cp -R "$SRC_PATH/jspm_packages/system.js" "$DEST_PATH/jspm_packages"
 cp -R "$SRC_PATH/index.html" "$DEST_PATH"
 cp -R "$SRC_PATH/build.js" "$DEST_PATH"
+cp -R "$SRC_PATH/build.js.map" "$DEST_PATH"
+
 
 echo "Done!"
