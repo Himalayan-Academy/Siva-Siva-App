@@ -83,7 +83,7 @@ end scroller_SetRect
 
 
 --> Mobile | Scroller | Events
--
+-David's method
 on scrollerDidScroll hScrolled, vScrolled
    -- this message is sent to the same object that created the mobile scroller (this library)
    -- would prefer to move it to a behavior that an be used in multiple places
@@ -102,7 +102,6 @@ on scrollerDidScroll hScrolled, vScrolled
    set the vscroll of scrollingView to vScrolled
    pass scrollerDidScroll
 end scrollerDidScroll
-
 
 --> Mobile | Scroller
 -
@@ -184,45 +183,7 @@ command scroller_ShowVertical idOrName
    mobileControlSet idOrName, "visible",  true
 end scroller_ShowVertical
 
-####### jacque Scroller methods
 
-
--- -- mobile scrollers --
-
--- command createScroller pName -- pass short name of control that should scroll
---   if not isMobile() then exit CreateScroller
---   deleteMobileControl pName -- delete any existing
---   mobileControlCreate "scroller", pName
---   mobileControlSet pName, "rect", (the rect of control pName)
---   put  (0,0,the formattedwidth of control pName,the formattedheight of control pName) into tRect
---   mobileControlSet pName, "contentRect" , tRect
---   mobileControlSet pName, "hScroll" , 0
---   mobileControlSet pName, "vScroll" , 0
---   mobileControlSet pName, "hIndicator" , false
---   mobileControlSet pName, "vIndicator", true
---   mobileControlSet pName, "visible",  true
--- end createScroller
-
--- on scrollerDidScroll hScrolled, vScrolled
---   put mobileControlTarget() into tControlID
---   set the vScroll of control tControlID to vScrolled
---   pass scrollerDidScroll # added by BR because this was in the Gurudeva app
--- end scrollerDidScroll 
-
-
--- ######### Mobile Browser Controls ############
-
--- command CreateBrowser pName,pURL,pRect -- mobile browser
---    -- pName = name of placeholder grc, used for rect
---    if not isMobile() then exit CreateBrowser
---    if pName is among the lines of mobileControls() then mobileControlDelete pName -- init
---    mobileControlCreate "browser", pName
---    mobileControlSet pName, "rect", pRect
---    mobileControlSet pName, "canBounce", true
---    mobileControlSet pName, "scrollingEnabled" , true
---    mobileControlSet pName, "URL", pURL
---    mobileControlSet pName, "visible",  true
--- end CreateBrowser
 
 
 ######### Mobile Player Controls ############
@@ -333,7 +294,6 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    end repeat
 end deleteAllMobileControls
 
-
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
    if isMobile() then
       if pBool = true then
@@ -347,4 +307,5 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
       end if
    end if
 end showBusyIndicator
+
 
