@@ -16,9 +16,18 @@ function bindCitySelector() {
         })
     })
 }
+function bindRegionSelector() {
+    document.querySelectorAll("[data-region]").forEach(function (item) {
+        item.addEventListener("click", function () {
+            var region = item.getAttribute("data-region");
+            showCitySelector(region);
+        })
+    })
+}
 
 function showRegionSelector() {
     document.body.innerHTML = region_select()
+    bindRegionSelector()
 }
 
 function showCitySelector(region) {
