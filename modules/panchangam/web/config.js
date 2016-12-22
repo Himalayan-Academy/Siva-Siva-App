@@ -15,7 +15,7 @@ System.config({
   bundles: {
     "build.js": [
       "lib/main.js",
-      "lib/bootstrap.js",
+      "lib/bootState.js",
       "lib/location-data.js",
       "npm:minimal-router@1.0.5.js",
       "npm:minimal-router@1.0.5/lib/index.js",
@@ -42,7 +42,7 @@ System.config({
       "github:components/handlebars.js@4.0.5/handlebars.runtime.js",
       "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js",
-      "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js"
     ]
   },

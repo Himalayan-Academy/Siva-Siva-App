@@ -9,7 +9,7 @@ System.registerDynamic("lib/templates/region-select.hbs!github:davis/plugin-hbs@
     }, "useData": true });
   return module.exports;
 });
-System.registerDynamic("lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+System.registerDynamic("lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
@@ -940,7 +940,7 @@ System.registerDynamic("lib/templates/day-details.hbs!github:davis/plugin-hbs@1.
         }, "useData": true });
     return module.exports;
 });
-System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js", "npm:moment-timezone@0.5.10.js", "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/city-select-usa.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js"], function (_export) {
+System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js", "npm:moment-timezone@0.5.10.js", "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js"], function (_export) {
     // Templates
     "use strict";
 
@@ -17350,7 +17350,7 @@ System.register("lib/location-data.js", [], function (_export) {
         }
     };
 });
-System.register('lib/bootstrap.js', ['lib/functions.js', 'npm:minimal-router@1.0.5.js', 'lib/location-data.js'], function (_export) {
+System.register('lib/bootState.js', ['lib/functions.js', 'npm:minimal-router@1.0.5.js', 'lib/location-data.js'], function (_export) {
     'use strict';
 
     var bindCitySelector, showScreen, loadPanchangamFromURL, loadPanchangamFromMemory, Router, locationData, router;
@@ -17466,7 +17466,7 @@ System.register('lib/bootstrap.js', ['lib/functions.js', 'npm:minimal-router@1.0
         }
     };
 });
-System.register("lib/main.js", ["lib/bootstrap.js"], function (_export) {
+System.register("lib/main.js", ["lib/bootState.js"], function (_export) {
   "use strict";
 
   var bootstrap;

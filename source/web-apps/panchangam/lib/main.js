@@ -1,4 +1,4 @@
-import {bootstrap} from './bootstrap.js';
+import bootState from './bootState.js';
 
 console.log("bootstrapping...")
-bootstrap();
+bootState.makeActive();

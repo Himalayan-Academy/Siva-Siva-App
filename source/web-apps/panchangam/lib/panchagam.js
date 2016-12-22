@@ -26,7 +26,7 @@ import _ from "lodash"
 import "ical.js"
 import moment from "moment-timezone"
 
-let panchangam = {
+const panchangam = {
     calendar_data: {},
     calendar_root: {},
 

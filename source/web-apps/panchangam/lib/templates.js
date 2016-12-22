@@ -3,7 +3,7 @@ import Handlebars from 'handlebars/handlebars.runtime';
 import moment from "moment-timezone"
 
 import region_select from "./templates/region-select.hbs!";
-import city_select_usa from "./templates/city-select-usa.hbs!";
+import city_select from "./templates/city-select.hbs!";
 import month from "./templates/month.hbs!";
 import today from "./templates/today.hbs!"
 import day_details from "./templates/day-details.hbs!";
