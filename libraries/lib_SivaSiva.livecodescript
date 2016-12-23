@@ -17,20 +17,30 @@ Currently these temporary handlers display portal data in the portal template st
 
 --> Sivasiva
 -
-command sivasiva_InitOrientation pOrientation
-   -- mobile orientation setup
-   if the environment is not "mobile" then return false
+command sivasiva_InitOrientation orientationType
+   -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
    
+   if the environment is not "mobile" then return false
    set the fullscreenmode of this stack to "showAll" -- better for wider screens
-   switch pOrientation
-      case "landscape"
-         mobileSetAllowedOrientations "landscape left,landscape right" -- lock to both landscape orientations
-         break
-      default -- "portrait"
-         mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations
-   end switch
-   return true
+   mobile_SetAllowedOrientation orientationType
 end sivasiva_InitOrientation
+
+command mobile_SetAllowedOrientation orientationType
+   if the environment is not "mobile" then return empty
+   
+   switch orientationType
+      case "portrait"
+         put "portrait,portrait upside down" into allowedOrientations
+         break
+      case "landscape"
+         put "landscape left,landscape right" into allowedOrientations
+         break
+      default -- allow all, ignoring face up/down
+         put "portrait,portrait upside down,landscape left,landscape right" into allowedOrientations
+   end switch
+   mobileSetAllowedOrientations allowedOrientations
+   return allowedOrientations
+end mobile_SetAllowedOrientation
 
 # missing function used by many modules and scripts
 # BR: added back in 2016-12-06
