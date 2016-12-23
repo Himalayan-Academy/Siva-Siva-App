@@ -8,10 +8,12 @@ import calendarDisplayState from "./calendarDisplayState.js"
 
 
 function bindCitySelector() {
-    document.querySelectorAll("[data-ics]").forEach(function (item) {
+    document.querySelectorAll("[data-ics]").forEach((item) => {
         item.addEventListener("click", function (el) {
-            var url = item.getAttribute("data-ics");
-            console.log(url);
+            let url = item.getAttribute("data-ics");
+            console.log("loading Panchangam from", url);
+            document.querySelector("#city-selector").classList.add("hidden");
+            document.querySelector("#city-loader").classList.remove("hidden");
             calendarDisplayState.makeActive(url);
         })
     })
@@ -26,12 +28,12 @@ function bindRegionSelector() {
 }
 
 function showRegionSelector() {
-    document.body.innerHTML = region_select()
+    document.querySelector("#today-display").innerHTML = region_select()
     bindRegionSelector()
 }
 
 function showCitySelector(region) {
-    document.body.innerHTML = city_select(locationData[region])
+    document.querySelector("#today-display").innerHTML = city_select(locationData[region])
     bindCitySelector()
 }
 

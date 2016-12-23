@@ -1,22 +1,36 @@
 <section class="section has-lotus-background is-fullheight">
-        <div class="container">
-            <div class="heading has-translucent-box has-padding-10">
-                <h1 class="title">Select your city</h1>
-                <h2 class="subtitle">
-                    Please, select your location to view the correct Panchangam
-                </h2>
-            </div>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>City</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each this}}
-                    <tr><td><a href='#' data-ics="{{url}}">{{name}}</a></td></tr>
-                {{/each}}
-                </tbody>
-            </table>
+    <div id="city-selector" class="container">
+        <div class="heading has-translucent-box has-padding-10">
+            <h1 class="title">Select your city</h1>
+            <h2 class="subtitle">
+                Please, select your location to view the correct Panchangam
+            </h2>
         </div>
-    </section>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>City</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this}}
+                <tr>
+                    <td><a href='#' data-ics="{{url}}">{{name}}</a></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="city-loader" class="container hidden">
+        <div class="heading has-translucent-box has-padding-10">
+            <h1 class="title">City Selected</h1>
+            <h2 class="subtitle">
+                Please, wait while we load the Panchangam over the Web
+            </h2>
+        </div>
+        <div class="container has-text-centered">
+            <i class="fa fa-spinner fa-spin fa-5x" aria-hidden="true"></i>
+        </div>
+    </div>
+</section>

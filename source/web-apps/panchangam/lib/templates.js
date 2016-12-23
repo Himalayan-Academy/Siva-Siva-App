@@ -19,6 +19,29 @@ export function setHandlebarsHelpers() {
         return returnValue;
     });
 
+    Handlebars.registerHelper("formatDate", function (date, format) {
+        var date = date.year + "-" + date.month + "-" + date.day;
+        var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format(format);
+        return returnValue;
+    });
+
+    Handlebars.registerHelper("isoDate", function (date) {
+        var date = date.year + "-" + date.month + "-" + date.day;
+        var returnValue = moment.tz(date, "YYYY-MM-DD", date.timezone).format("YYYY-MM-DD");
+        return returnValue;
+    });
+
+    Handlebars.registerHelper('isToday', function (passedDate, options) {
+        var timezone = passedDate.timezone;
+        var date = passedDate.year + "-" + passedDate.month + "-" + passedDate.day;
+        var tentativeDate = moment.tz(date, timezone).format("YYYY-MM-DD")
+        var today = moment.tz(Date.now(), timezone).format("YYYY-MM-DD")
+        if (tentativeDate === today) {
+            return options.fn(this);
+        }
+
+    });
+
     Handlebars.registerHelper("replaceNewLines", function (str) {
         var breakTag = "<br>";
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');

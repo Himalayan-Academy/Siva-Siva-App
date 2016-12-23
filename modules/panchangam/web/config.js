@@ -23,7 +23,17 @@ System.config({
       "npm:moment@2.17.1/moment.js",
       "github:components/handlebars.js@4.0.5/handlebars.runtime.js",
       "lib/calendarDisplayState.js",
+      "npm:whatwg-fetch@2.0.1.js",
+      "npm:whatwg-fetch@2.0.1/fetch.js",
+      "npm:jump.js@1.0.1.js",
+      "npm:jump.js@1.0.1/dist/jump.min.js",
+      "lib/locationSelectState.js",
+      "lib/location-data.js",
+      "lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js",
+      "lib/templates/month-navigation.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js",
       "lib/panchagam.js",
       "npm:ical.js@1.2.2.js",
@@ -36,11 +46,7 @@ System.config({
       "npm:lodash@4.17.2/lodash.js",
       "npm:babel-runtime@5.8.38/core-js/object/define-properties.js",
       "npm:core-js@1.2.7/library/fn/object/define-properties.js",
-      "npm:core-js@1.2.7/library/modules/$.js",
-      "lib/locationSelectState.js",
-      "lib/location-data.js",
-      "lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js",
-      "lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js"
+      "npm:core-js@1.2.7/library/modules/$.js"
     ]
   },
 
@@ -51,9 +57,11 @@ System.config({
     "handlebars": "github:components/handlebars.js@4.0.5",
     "hbs": "github:davis/plugin-hbs@1.2.3",
     "ical.js": "npm:ical.js@1.2.2",
+    "jump.js": "npm:jump.js@1.0.1",
     "lodash": "npm:lodash@4.17.2",
     "minimal-router": "npm:minimal-router@1.0.5",
     "moment-timezone": "npm:moment-timezone@0.5.10",
+    "whatwg-fetch": "npm:whatwg-fetch@2.0.1",
     "github:davis/plugin-hbs@1.2.3": {
       "handlebars": "github:components/handlebars.js@4.0.5"
     },
@@ -103,6 +111,10 @@ System.config({
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:jump.js@1.0.1": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:moment-timezone@0.5.10": {
       "moment": "npm:moment@2.17.1",

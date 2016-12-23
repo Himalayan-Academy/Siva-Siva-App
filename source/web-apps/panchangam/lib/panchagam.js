@@ -186,7 +186,6 @@ const panchangam = {
             result[day].push(event)
         }, [])
 
-        console.log("grouped events", found_events)
 
         // Transform them...
          var final_events = _.transform(found_events, function(result, e) {

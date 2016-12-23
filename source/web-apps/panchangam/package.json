@@ -12,9 +12,11 @@
       "handlebars": "github:components/handlebars.js@^4.0.5",
       "hbs": "github:davis/plugin-hbs@^1.2.3",
       "ical.js": "npm:ical.js@^1.2.2",
+      "jump.js": "npm:jump.js@^1.0.1",
       "lodash": "npm:lodash@^4.17.2",
       "minimal-router": "npm:minimal-router@^1.0.5",
-      "moment-timezone": "npm:moment-timezone@^0.5.10"
+      "moment-timezone": "npm:moment-timezone@^0.5.10",
+      "whatwg-fetch": "npm:whatwg-fetch@^2.0.1"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.24",

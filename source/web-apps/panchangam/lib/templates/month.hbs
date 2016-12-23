@@ -2,7 +2,7 @@
     <div class="container">
         <ul class="month-display">
              {{#each this}}
-            <li>
+                 <li id="month-display-item-{{isoDate date}}" {{#isToday date}}class="is-today"{{/isToday}} data-modal-open="date-info-modal" data-date="{{isoDate this.date}}">
                 <span class="sun">{{{this.summary}}}</span> 
                 <span class="pretty-date">{{shortDate this.date}}</span><br>
                 <span class="extra-summary">{{{from_index this.extra_information 0}}}</span>

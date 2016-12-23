@@ -2,17 +2,25 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panchangam</title>
     <link rel="stylesheet" href="css/bulma.css">
     <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/app.css">
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
     <script>
-    System.import('lib/main.js');
-</script>
+        System.import('lib/main.js');
+    </script>
 </head>
 
 <body>
+<div id="today-display"></div>
+<div id="month-navigation-container" class="is-hidden">
+    <div id="month-navigation"></div>
+</div>
+<div id="month-display"></div>
+<div id="date-info-modal" class="modal"></div>
 </body>
 
 </html>
