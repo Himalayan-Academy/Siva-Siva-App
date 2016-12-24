@@ -19,7 +19,7 @@ function bindCitySelector() {
     })
 }
 function bindRegionSelector() {
-    document.querySelectorAll("[data-region]").forEach(function (item) {
+    document.querySelectorAll(".region-selector").forEach(function (item) {
         item.addEventListener("click", function () {
             var region = item.getAttribute("data-region");
             showCitySelector(region);
@@ -49,3 +49,5 @@ let regionSelectState = {
 }
 
 export default regionSelectState
+
+//  file:///data/app/com.himalayanacademy.sivasiva-1/base.apk/assets/modules/panchangam/web/index.html

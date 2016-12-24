@@ -1,5 +1,9 @@
-"bundle";
-System.registerDynamic("npm:core-js@1.2.7/library/modules/$.js", [], true, function ($__require, exports, module) {
+!function(e){function r(e,r,o){return 4===arguments.length?t.apply(this,arguments):void n(e,{declarative:!0,deps:r,declare:o})}function t(e,r,t,o){n(e,{declarative:!1,deps:r,executingRequire:t,execute:o})}function n(e,r){r.name=e,e in v||(v[e]=r),r.normalizedDeps=r.deps}function o(e,r){if(r[e.groupIndex]=r[e.groupIndex]||[],-1==g.call(r[e.groupIndex],e)){r[e.groupIndex].push(e);for(var t=0,n=e.normalizedDeps.length;n>t;t++){var a=e.normalizedDeps[t],u=v[a];if(u&&!u.evaluated){var d=e.groupIndex+(u.declarative!=e.declarative);if(void 0===u.groupIndex||u.groupIndex<d){if(void 0!==u.groupIndex&&(r[u.groupIndex].splice(g.call(r[u.groupIndex],u),1),0==r[u.groupIndex].length))throw new TypeError("Mixed dependency cycle detected");u.groupIndex=d}o(u,r)}}}}function a(e){var r=v[e];r.groupIndex=0;var t=[];o(r,t);for(var n=!!r.declarative==t.length%2,a=t.length-1;a>=0;a--){for(var u=t[a],i=0;i<u.length;i++){var s=u[i];n?d(s):l(s)}n=!n}}function u(e){return y[e]||(y[e]={name:e,dependencies:[],exports:{},importers:[]})}function d(r){if(!r.module){var t=r.module=u(r.name),n=r.module.exports,o=r.declare.call(e,function(e,r){if(t.locked=!0,"object"==typeof e)for(var o in e)n[o]=e[o];else n[e]=r;for(var a=0,u=t.importers.length;u>a;a++){var d=t.importers[a];if(!d.locked)for(var i=0;i<d.dependencies.length;++i)d.dependencies[i]===t&&d.setters[i](n)}return t.locked=!1,r},{id:r.name});t.setters=o.setters,t.execute=o.execute;for(var a=0,i=r.normalizedDeps.length;i>a;a++){var l,s=r.normalizedDeps[a],c=v[s],f=y[s];f?l=f.exports:c&&!c.declarative?l=c.esModule:c?(d(c),f=c.module,l=f.exports):l=p(s),f&&f.importers?(f.importers.push(t),t.dependencies.push(f)):t.dependencies.push(null),t.setters[a]&&t.setters[a](l)}}}function i(e){var r,t=v[e];if(t)t.declarative?f(e,[]):t.evaluated||l(t),r=t.module.exports;else if(r=p(e),!r)throw new Error("Unable to load dependency "+e+".");return(!t||t.declarative)&&r&&r.__useDefault?r["default"]:r}function l(r){if(!r.module){var t={},n=r.module={exports:t,id:r.name};if(!r.executingRequire)for(var o=0,a=r.normalizedDeps.length;a>o;o++){var u=r.normalizedDeps[o],d=v[u];d&&l(d)}r.evaluated=!0;var c=r.execute.call(e,function(e){for(var t=0,n=r.deps.length;n>t;t++)if(r.deps[t]==e)return i(r.normalizedDeps[t]);throw new TypeError("Module "+e+" not declared as a dependency.")},t,n);void 0!==typeof c&&(n.exports=c),t=n.exports,t&&t.__esModule?r.esModule=t:r.esModule=s(t)}}function s(r){var t={};if(("object"==typeof r||"function"==typeof r)&&r!==e)if(m)for(var n in r)"default"!==n&&c(t,r,n);else{var o=r&&r.hasOwnProperty;for(var n in r)"default"===n||o&&!r.hasOwnProperty(n)||(t[n]=r[n])}return t["default"]=r,x(t,"__useDefault",{value:!0}),t}function c(e,r,t){try{var n;(n=Object.getOwnPropertyDescriptor(r,t))&&x(e,t,n)}catch(o){return e[t]=r[t],!1}}function f(r,t){var n=v[r];if(n&&!n.evaluated&&n.declarative){t.push(r);for(var o=0,a=n.normalizedDeps.length;a>o;o++){var u=n.normalizedDeps[o];-1==g.call(t,u)&&(v[u]?f(u,t):p(u))}n.evaluated||(n.evaluated=!0,n.module.execute.call(e))}}function p(e){if(I[e])return I[e];if("@node/"==e.substr(0,6))return I[e]=s(D(e.substr(6)));var r=v[e];if(!r)throw"Module "+e+" not present.";return a(e),f(e,[]),v[e]=void 0,r.declarative&&x(r.module.exports,"__esModule",{value:!0}),I[e]=r.declarative?r.module.exports:r.esModule}var v={},g=Array.prototype.indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(this[r]===e)return r;return-1},m=!0;try{Object.getOwnPropertyDescriptor({a:0},"a")}catch(h){m=!1}var x;!function(){try{Object.defineProperty({},"a",{})&&(x=Object.defineProperty)}catch(e){x=function(e,r,t){try{e[r]=t.value||t.get.call(e)}catch(n){}}}}();var y={},D="undefined"!=typeof System&&System._nodeRequire||"undefined"!=typeof require&&require.resolve&&"undefined"!=typeof process&&require,I={"@empty":{}};return function(e,n,o,a){return function(u){u(function(u){for(var d={_nodeRequire:D,register:r,registerDynamic:t,get:p,set:function(e,r){I[e]=r},newModule:function(e){return e}},i=0;i<n.length;i++)(function(e,r){r&&r.__esModule?I[e]=r:I[e]=s(r)})(n[i],arguments[i]);a(d);var l=p(e[0]);if(e.length>1)for(var i=1;i<e.length;i++)p(e[i]);return o?l["default"]:l})}}}("undefined"!=typeof self?self:global)
+
+(["1"], [], false, function($__System) {
+var require = this.require, exports = this.exports, module = this.module;
+!function(e){function n(e,n){e=e.replace(l,"");var r=e.match(u),t=(r[1].split(",")[n]||"require").replace(s,""),i=p[t]||(p[t]=new RegExp(a+t+f,"g"));i.lastIndex=0;for(var o,c=[];o=i.exec(e);)c.push(o[2]||o[3]);return c}function r(e,n,t,o){if("object"==typeof e&&!(e instanceof Array))return r.apply(null,Array.prototype.splice.call(arguments,1,arguments.length-1));if("string"==typeof e&&"function"==typeof n&&(e=[e]),!(e instanceof Array)){if("string"==typeof e){var l=i.get(e);return l.__useDefault?l["default"]:l}throw new TypeError("Invalid require")}for(var a=[],f=0;f<e.length;f++)a.push(i["import"](e[f],o));Promise.all(a).then(function(e){n&&n.apply(null,e)},t)}function t(t,l,a){"string"!=typeof t&&(a=l,l=t,t=null),l instanceof Array||(a=l,l=["require","exports","module"].splice(0,a.length)),"function"!=typeof a&&(a=function(e){return function(){return e}}(a)),void 0===l[l.length-1]&&l.pop();var f,u,s;-1!=(f=o.call(l,"require"))&&(l.splice(f,1),t||(l=l.concat(n(a.toString(),f)))),-1!=(u=o.call(l,"exports"))&&l.splice(u,1),-1!=(s=o.call(l,"module"))&&l.splice(s,1);var p={name:t,deps:l,execute:function(n,t,o){for(var p=[],c=0;c<l.length;c++)p.push(n(l[c]));o.uri=o.id,o.config=function(){},-1!=s&&p.splice(s,0,o),-1!=u&&p.splice(u,0,t),-1!=f&&p.splice(f,0,function(e,t,l){return"string"==typeof e&&"function"!=typeof t?n(e):r.call(i,e,t,l,o.id)});var d=a.apply(-1==u?e:t,p);return"undefined"==typeof d&&o&&(d=o.exports),"undefined"!=typeof d?d:void 0}};if(t)c.anonDefine||c.isBundle?c.anonDefine&&c.anonDefine.name&&(c.anonDefine=null):c.anonDefine=p,c.isBundle=!0,i.registerDynamic(p.name,p.deps,!1,p.execute);else{if(c.anonDefine&&!c.anonDefine.name)throw new Error("Multiple anonymous defines in module "+t);c.anonDefine=p}}var i=$__System,o=Array.prototype.indexOf||function(e){for(var n=0,r=this.length;r>n;n++)if(this[n]===e)return n;return-1},l=/(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/gm,a="(?:^|[^$_a-zA-Z\\xA0-\\uFFFF.])",f="\\s*\\(\\s*(\"([^\"]+)\"|'([^']+)')\\s*\\)",u=/\(([^\)]*)\)/,s=/^\s+|\s+$/g,p={};t.amd={};var c={isBundle:!1,anonDefine:null};i.amdDefine=t,i.amdRequire=r}("undefined"!=typeof self?self:global);
+$__System.registerDynamic("2", [], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
@@ -19,26 +23,26 @@ System.registerDynamic("npm:core-js@1.2.7/library/modules/$.js", [], true, funct
   };
   return module.exports;
 });
-System.registerDynamic('npm:core-js@1.2.7/library/fn/object/define-properties.js', ['npm:core-js@1.2.7/library/modules/$.js'], true, function ($__require, exports, module) {
+$__System.registerDynamic('3', ['2'], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
   /* */
-  var $ = $__require('npm:core-js@1.2.7/library/modules/$.js');
+  var $ = $__require('2');
   module.exports = function defineProperties(T, D) {
     return $.setDescs(T, D);
   };
   return module.exports;
 });
-System.registerDynamic("npm:babel-runtime@5.8.38/core-js/object/define-properties.js", ["npm:core-js@1.2.7/library/fn/object/define-properties.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("4", ["3"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
   /* */
-  module.exports = { "default": $__require("npm:core-js@1.2.7/library/fn/object/define-properties.js"), __esModule: true };
+  module.exports = { "default": $__require("3"), __esModule: true };
   return module.exports;
 });
-System.registerDynamic('npm:lodash@4.17.2/lodash.js', ['@empty'], true, function ($__require, exports, module) {
+$__System.registerDynamic('5', ['@empty'], true, function ($__require, exports, module) {
   /* */
   "format cjs";
 
@@ -5811,14 +5815,14 @@ System.registerDynamic('npm:lodash@4.17.2/lodash.js', ['@empty'], true, function
   })($__require('@empty').Buffer, $__require('@empty'));
   return module.exports;
 });
-System.registerDynamic("npm:lodash@4.17.2.js", ["npm:lodash@4.17.2/lodash.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("6", ["5"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:lodash@4.17.2/lodash.js");
+  module.exports = $__require("5");
   return module.exports;
 });
-System.registerDynamic('npm:process@0.11.9/browser.js', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('7', [], true, function ($__require, exports, module) {
     var define,
         global = this || self,
         GLOBAL = global;
@@ -6003,28 +6007,28 @@ System.registerDynamic('npm:process@0.11.9/browser.js', [], true, function ($__r
     };
     return module.exports;
 });
-System.registerDynamic("npm:process@0.11.9.js", ["npm:process@0.11.9/browser.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("8", ["7"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:process@0.11.9/browser.js");
+  module.exports = $__require("7");
   return module.exports;
 });
-System.registerDynamic('github:jspm/nodelibs-process@0.1.2/index.js', ['npm:process@0.11.9.js'], true, function ($__require, exports, module) {
+$__System.registerDynamic('9', ['8'], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = System._nodeRequire ? process : $__require('npm:process@0.11.9.js');
+  module.exports = $__System._nodeRequire ? process : $__require('8');
   return module.exports;
 });
-System.registerDynamic("github:jspm/nodelibs-process@0.1.2.js", ["github:jspm/nodelibs-process@0.1.2/index.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("a", ["9"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("github:jspm/nodelibs-process@0.1.2/index.js");
+  module.exports = $__require("9");
   return module.exports;
 });
-System.registerDynamic('npm:ical.js@1.2.2/build/ical.js', ['github:jspm/nodelibs-process@0.1.2.js'], true, function ($__require, exports, module) {
+$__System.registerDynamic('b', ['a'], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
@@ -10951,26 +10955,26 @@ System.registerDynamic('npm:ical.js@1.2.2/build/ical.js', ['github:jspm/nodelibs
       };
       return ComponentParser;
     }();
-  })($__require('github:jspm/nodelibs-process@0.1.2.js'));
+  })($__require('a'));
   return module.exports;
 });
-System.registerDynamic("npm:ical.js@1.2.2.js", ["npm:ical.js@1.2.2/build/ical.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("c", ["b"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:ical.js@1.2.2/build/ical.js");
+  module.exports = $__require("b");
   return module.exports;
 });
-System.register("lib/panchagam.js", ["npm:babel-runtime@5.8.38/core-js/object/define-properties.js", "npm:lodash@4.17.2.js", "npm:ical.js@1.2.2.js", "npm:moment-timezone@0.5.10.js"], function (_export) {
+$__System.register("d", ["4", "6", "c", "e"], function (_export) {
     var _Object$defineProperties, _, moment, panchangam;
 
     return {
-        setters: [function (_npmBabelRuntime5838CoreJsObjectDefinePropertiesJs) {
-            _Object$defineProperties = _npmBabelRuntime5838CoreJsObjectDefinePropertiesJs["default"];
-        }, function (_npmLodash4172Js) {
-            _ = _npmLodash4172Js["default"];
-        }, function (_npmIcalJs122Js) {}, function (_npmMomentTimezone0510Js) {
-            moment = _npmMomentTimezone0510Js["default"];
+        setters: [function (_2) {
+            _Object$defineProperties = _2["default"];
+        }, function (_3) {
+            _ = _3["default"];
+        }, function (_c) {}, function (_e) {
+            moment = _e["default"];
         }],
         execute: function () {
             /**
@@ -11206,11 +11210,11 @@ System.register("lib/panchagam.js", ["npm:babel-runtime@5.8.38/core-js/object/de
         }
     };
 });
-System.registerDynamic("lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("f", ["10"], true, function ($__require, exports, module) {
     var define,
         global = this || self,
         GLOBAL = global;
-    var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+    var Handlebars = $__require("10");
     module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
             var stack1;
 
@@ -11224,21 +11228,21 @@ System.registerDynamic("lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js
         }, "useData": true });
     return module.exports;
 });
-System.registerDynamic("lib/templates/month-navigation.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("11", ["10"], true, function ($__require, exports, module) {
    var define,
        global = this || self,
        GLOBAL = global;
-   var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+   var Handlebars = $__require("10");
    module.exports = Handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
          return "\r\n<p>\r\n    <a class=\"is-pulled-left month-switch-trigger\"><strong><i class=\"fa fa-arrow-left fa-2x\"></i></strong></a>\r\n\r\n    <span class=\"title\" style=\"\">" + container.escapeExpression((helpers.formatDate || depth0 && depth0.formatDate || helpers.helperMissing).call(depth0 != null ? depth0 : {}, depth0 != null ? depth0.date : depth0, "MMMM", { "name": "formatDate", "hash": {}, "data": data })) + "</span>\r\n\r\n    <a class=\"is-pulled-right month-switch-trigger\"><strong><i class=\"fa fa-arrow-right fa-2x\"></i></strong></a>\r\n</p>\r\n";
       }, "useData": true });
    return module.exports;
 });
-System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("12", ["10"], true, function ($__require, exports, module) {
     var define,
         global = this || self,
         GLOBAL = global;
-    var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+    var Handlebars = $__require("10");
     module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
             var stack1;
 
@@ -11252,11 +11256,11 @@ System.registerDynamic("lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js
         }, "useData": true });
     return module.exports;
 });
-System.registerDynamic("lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("13", ["10"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+  var Handlebars = $__require("10");
   module.exports = Handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
       var stack1, helper;
 
@@ -11264,21 +11268,21 @@ System.registerDynamic("lib/templates/day-details.hbs!github:davis/plugin-hbs@1.
     }, "useData": true });
   return module.exports;
 });
-System.registerDynamic("lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("14", ["10"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+  var Handlebars = $__require("10");
   module.exports = Handlebars.template({ "compiler": [7, ">= 4.0.0"], "main": function (container, depth0, helpers, partials, data) {
       return " <section class=\"section has-lotus-background is-fullheight\">\r\n        <div class=\"container\">\r\n            <div class=\"heading has-translucent-box has-padding-10\">\r\n                <h1 class=\"title\">Select your location</h1>\r\n                <h2 class=\"subtitle\">\r\n                    Please, select your location to view the correct Panchangam\r\n                </h2>\r\n            </div>\r\n            <button data-region=\"usa\" class=\"button is-primary is-large region-selector\">USA</button>\r\n            <button data-region=\"world\" class=\"button is-primary is-large region-selector\">World</button>\r\n        </div>\r\n    </section>";
     }, "useData": true });
   return module.exports;
 });
-System.registerDynamic("lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("15", ["10"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  var Handlebars = $__require("github:components/handlebars.js@4.0.5/handlebars.runtime.js");
+  var Handlebars = $__require("10");
   module.exports = Handlebars.template({ "1": function (container, depth0, helpers, partials, data) {
       var helper;
 
@@ -11290,7 +11294,7 @@ System.registerDynamic("lib/templates/city-select.hbs!github:davis/plugin-hbs@1.
     }, "useData": true });
   return module.exports;
 });
-System.register("lib/location-data.js", [], function (_export) {
+$__System.register("16", [], function (_export) {
     "use strict";
 
     var locationData;
@@ -12146,7 +12150,7 @@ System.register("lib/location-data.js", [], function (_export) {
         }
     };
 });
-System.register("lib/locationSelectState.js", ["lib/templates/region-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/city-select.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/location-data.js", "lib/calendarDisplayState.js"], function (_export) {
+$__System.register("17", ["14", "15", "16", "18"], function (_export) {
     "use strict";
 
     var region_select, city_select, locationData, calendarDisplayState, regionSelectState;
@@ -12163,7 +12167,7 @@ System.register("lib/locationSelectState.js", ["lib/templates/region-select.hbs!
         });
     }
     function bindRegionSelector() {
-        document.querySelectorAll("[data-region]").forEach(function (item) {
+        document.querySelectorAll(".region-selector").forEach(function (item) {
             item.addEventListener("click", function () {
                 var region = item.getAttribute("data-region");
                 showCitySelector(region);
@@ -12182,14 +12186,14 @@ System.register("lib/locationSelectState.js", ["lib/templates/region-select.hbs!
     }
 
     return {
-        setters: [function (_libTemplatesRegionSelectHbsGithubDavisPluginHbs123Js) {
-            region_select = _libTemplatesRegionSelectHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libTemplatesCitySelectHbsGithubDavisPluginHbs123Js) {
-            city_select = _libTemplatesCitySelectHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libLocationDataJs) {
-            locationData = _libLocationDataJs["default"];
-        }, function (_libCalendarDisplayStateJs) {
-            calendarDisplayState = _libCalendarDisplayStateJs["default"];
+        setters: [function (_) {
+            region_select = _["default"];
+        }, function (_2) {
+            city_select = _2["default"];
+        }, function (_3) {
+            locationData = _3["default"];
+        }, function (_4) {
+            calendarDisplayState = _4["default"];
         }],
         execute: function () {
             regionSelectState = {
@@ -12206,7 +12210,7 @@ System.register("lib/locationSelectState.js", ["lib/templates/region-select.hbs!
         }
     };
 });
-System.registerDynamic("npm:jump.js@1.0.1/dist/jump.min.js", [], true, function ($__require, exports, module) {
+$__System.registerDynamic("19", [], true, function ($__require, exports, module) {
   /* */
   "format cjs";
   /*!
@@ -12263,14 +12267,14 @@ System.registerDynamic("npm:jump.js@1.0.1/dist/jump.min.js", [], true, function 
   });
   return module.exports;
 });
-System.registerDynamic("npm:jump.js@1.0.1.js", ["npm:jump.js@1.0.1/dist/jump.min.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("1a", ["19"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:jump.js@1.0.1/dist/jump.min.js");
+  module.exports = $__require("19");
   return module.exports;
 });
-System.registerDynamic('npm:whatwg-fetch@2.0.1/fetch.js', [], true, function ($__require, exports, module) {
+$__System.registerDynamic('1b', [], true, function ($__require, exports, module) {
   /* */
   "format cjs";
 
@@ -12732,33 +12736,33 @@ System.registerDynamic('npm:whatwg-fetch@2.0.1/fetch.js', [], true, function ($_
   })(typeof self !== 'undefined' ? self : this);
   return module.exports;
 });
-System.registerDynamic("npm:whatwg-fetch@2.0.1.js", ["npm:whatwg-fetch@2.0.1/fetch.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("1c", ["1b"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:whatwg-fetch@2.0.1/fetch.js");
+  module.exports = $__require("1b");
   return module.exports;
 });
-System.register("lib/calendarDisplayState.js", ["lib/panchagam.js", "lib/templates/month.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/month-navigation.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/today.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/templates/day-details.hbs!github:davis/plugin-hbs@1.2.3.js", "lib/locationSelectState.js", "npm:jump.js@1.0.1.js", "npm:whatwg-fetch@2.0.1.js"], function (_export) {
+$__System.register("18", ["11", "12", "13", "17", "d", "f", "1a", "1c"], function (_export) {
     "use strict";
 
-    var panchangam, month, monthNavigation, today, dayDetailsModal, locationSelectState, jump, calendarDisplayState;
+    var monthNavigation, today, dayDetailsModal, locationSelectState, panchangam, month, jump, calendarDisplayState;
     return {
-        setters: [function (_libPanchagamJs) {
-            panchangam = _libPanchagamJs["default"];
-        }, function (_libTemplatesMonthHbsGithubDavisPluginHbs123Js) {
-            month = _libTemplatesMonthHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libTemplatesMonthNavigationHbsGithubDavisPluginHbs123Js) {
-            monthNavigation = _libTemplatesMonthNavigationHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libTemplatesTodayHbsGithubDavisPluginHbs123Js) {
-            today = _libTemplatesTodayHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libTemplatesDayDetailsHbsGithubDavisPluginHbs123Js) {
-            dayDetailsModal = _libTemplatesDayDetailsHbsGithubDavisPluginHbs123Js["default"];
-        }, function (_libLocationSelectStateJs) {
-            locationSelectState = _libLocationSelectStateJs["default"];
-        }, function (_npmJumpJs101Js) {
-            jump = _npmJumpJs101Js["default"];
-        }, function (_npmWhatwgFetch201Js) {}],
+        setters: [function (_) {
+            monthNavigation = _["default"];
+        }, function (_2) {
+            today = _2["default"];
+        }, function (_3) {
+            dayDetailsModal = _3["default"];
+        }, function (_4) {
+            locationSelectState = _4["default"];
+        }, function (_d) {
+            panchangam = _d["default"];
+        }, function (_f) {
+            month = _f["default"];
+        }, function (_a) {
+            jump = _a["default"];
+        }, function (_c) {}],
         execute: function () {
             calendarDisplayState = {
                 todayDisplayElement: function todayDisplayElement() {
@@ -12906,13 +12910,13 @@ System.register("lib/calendarDisplayState.js", ["lib/panchagam.js", "lib/templat
     };
 });
 (function() {
-var define = System.amdDefine;
+var define = $__System.amdDefine;
 "format amd";
 (function webpackUniversalModuleDefinition(root, factory) {
   if (typeof exports === 'object' && typeof module === 'object')
     module.exports = factory();
   else if (typeof define === 'function' && define.amd)
-    define("github:components/handlebars.js@4.0.5/handlebars.runtime.js", [], factory);
+    define("10", [], factory);
   else if (typeof exports === 'object')
     exports["Handlebars"] = factory();
   else
@@ -13769,11 +13773,11 @@ var define = System.amdDefine;
 
 })();
 (function() {
-var define = System.amdDefine;
+var define = $__System.amdDefine;
 "format amd";
 ;
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define("npm:moment@2.17.1/moment.js", [], factory) : global.moment = factory();
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define("1d", [], factory) : global.moment = factory();
 }(this, (function() {
   'use strict';
   var hookCallback;
@@ -16957,13 +16961,13 @@ var define = System.amdDefine;
 
 })();
 (function() {
-var define = System.amdDefine;
-define("npm:moment@2.17.1.js", ["npm:moment@2.17.1/moment.js"], function(main) {
+var define = $__System.amdDefine;
+define("1e", ["1d"], function(main) {
   return main;
 });
 
 })();
-System.registerDynamic("npm:moment-timezone@0.5.10/builds/moment-timezone-with-data.js", ["npm:moment@2.17.1.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("1f", ["1e"], true, function ($__require, exports, module) {
 	/* */
 	"format cjs";
 	//! moment-timezone.js
@@ -16983,7 +16987,7 @@ System.registerDynamic("npm:moment-timezone@0.5.10/builds/moment-timezone-with-d
 		if (typeof define === 'function' && define.amd) {
 			define(['moment'], factory); // AMD
 		} else if (typeof module === 'object' && module.exports) {
-			module.exports = factory($__require("npm:moment@2.17.1.js")); // Node
+			module.exports = factory($__require("1e")); // Node
 		} else {
 			factory(root.moment); // Browser
 		}
@@ -17592,14 +17596,14 @@ System.registerDynamic("npm:moment-timezone@0.5.10/builds/moment-timezone-with-d
 	});
 	return module.exports;
 });
-System.registerDynamic("npm:moment-timezone@0.5.10.js", ["npm:moment-timezone@0.5.10/builds/moment-timezone-with-data.js"], true, function ($__require, exports, module) {
+$__System.registerDynamic("e", ["1f"], true, function ($__require, exports, module) {
   var define,
       global = this || self,
       GLOBAL = global;
-  module.exports = $__require("npm:moment-timezone@0.5.10/builds/moment-timezone-with-data.js");
+  module.exports = $__require("1f");
   return module.exports;
 });
-System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/handlebars.runtime.js", "npm:moment-timezone@0.5.10.js"], function (_export) {
+$__System.register("20", ["10", "e"], function (_export) {
     // Templates
 
     /**
@@ -17678,10 +17682,10 @@ System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/hand
     }
 
     return {
-        setters: [function (_githubComponentsHandlebarsJs405HandlebarsRuntimeJs) {
-            Handlebars = _githubComponentsHandlebarsJs405HandlebarsRuntimeJs["default"];
-        }, function (_npmMomentTimezone0510Js) {
-            moment = _npmMomentTimezone0510Js["default"];
+        setters: [function (_) {
+            Handlebars = _["default"];
+        }, function (_e) {
+            moment = _e["default"];
         }],
         execute: function () {
             ;
@@ -17690,7 +17694,7 @@ System.register("lib/templates.js", ["github:components/handlebars.js@4.0.5/hand
         }
     };
 });
-System.register("lib/bootState.js", ["lib/locationSelectState.js", "lib/calendarDisplayState.js", "lib/templates.js"], function (_export) {
+$__System.register("21", ["17", "18", "20"], function (_export) {
     "use strict";
 
     var locationSelectState, calendarDisplayState, setHandlebarsHelpers;
@@ -17710,12 +17714,12 @@ System.register("lib/bootState.js", ["lib/locationSelectState.js", "lib/calendar
     }
 
     return {
-        setters: [function (_libLocationSelectStateJs) {
-            locationSelectState = _libLocationSelectStateJs["default"];
-        }, function (_libCalendarDisplayStateJs) {
-            calendarDisplayState = _libCalendarDisplayStateJs["default"];
-        }, function (_libTemplatesJs) {
-            setHandlebarsHelpers = _libTemplatesJs.setHandlebarsHelpers;
+        setters: [function (_) {
+            locationSelectState = _["default"];
+        }, function (_2) {
+            calendarDisplayState = _2["default"];
+        }, function (_3) {
+            setHandlebarsHelpers = _3.setHandlebarsHelpers;
         }],
         execute: function () {
             _export("default", {
@@ -17724,13 +17728,13 @@ System.register("lib/bootState.js", ["lib/locationSelectState.js", "lib/calendar
         }
     };
 });
-System.register("lib/main.js", ["lib/bootState.js"], function (_export) {
+$__System.register("1", ["21"], function (_export) {
   "use strict";
 
   var bootState;
   return {
-    setters: [function (_libBootStateJs) {
-      bootState = _libBootStateJs["default"];
+    setters: [function (_) {
+      bootState = _["default"];
     }],
     execute: function () {
 
@@ -17738,5 +17742,9 @@ System.register("lib/main.js", ["lib/bootState.js"], function (_export) {
       bootState.makeActive();
     }
   };
+});
+})
+(function(factory) {
+  factory();
 });
 //# sourceMappingURL=build.js.map
