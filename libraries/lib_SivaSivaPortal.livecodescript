@@ -88,6 +88,8 @@ command portal_Link portalName
    put portal_GetHomeView() into portalView
    set the portal_Name of portalView to portalName
    unlock screen
+   put portalView
+   set the logo_Faded of portalView to true
 end portal_Link
 
 command portal_GoName portalName
