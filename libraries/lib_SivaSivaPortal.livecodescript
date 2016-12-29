@@ -24,7 +24,7 @@ and accessed via the handlers in the SivaSiva | Portal | Model section below.
 
 --> Variables
 -
-local LocalArray
+local LocalArray, sCurrentPortal
 
 
 --> Working On
@@ -86,10 +86,21 @@ command portal_Link portalName
    lock screen
    portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
+   # BR:  
+   # put portalName into LocalArray["currentPortal"]
+   # can't use the above because it gets wiped in transit
+   # revert to explicit declared local
+   put portalName into sCurrentPortal   
    set the portal_Name of portalView to portalName
+   put portalName into LocalArray["currentPortal"]
    unlock screen
-   set the logo_Faded of portalView to true
 end portal_Link
+
+function portal_Current
+   # BR: Support for tracking the portal from which
+   # a module was launched from   
+   return sCurrentPortal
+end portal_Current
 
 command portal_GoName portalName
    portal_GoStack portalName
