@@ -25,10 +25,10 @@ on dialog_CustomMsg Show,Msg,pLoc,pWidth,pHeight
   if Show <> false then -- show it
      if Msg = "" then put "Getting files..." into pMsg
      if pWidth = "" then put "350" into pWidth
-       if pHeight = "" then put "50" into pHeight
+     if pHeight = "" then put "50" into pHeight
     if pLoc = "" then
       put the height of this cd into tV
-      put tV - (tV div 4) into tV
+      put tV - (tV div 2) into tV # center vertically on card
       put (item 1 of the loc of this cd),tV into pLoc
     end if
     buildMsgDisplay pLoc,Msg,pWidth,pHeight
@@ -58,7 +58,7 @@ on buildMsgDisplay pLoc,Msg,pWidth,pHeight -- revised from open source by Scott 
       set the opaque of the templateGraphic to true
       set the width of the templateGraphic to 400 
       set the height of the templateGraphic to pHeight +16
-      set the blendLevel of the templateGraphic to 50
+      set the blendLevel of the templateGraphic to 35
       set the loc of the templateGraphic to pLoc
       create grc
       reset the templateGraphic
