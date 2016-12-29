@@ -86,21 +86,21 @@ command portal_Link portalName
    lock screen
    portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
-   # BR:  
-   # put portalName into LocalArray["currentPortal"]
-   # can't use the above because it gets wiped in transit
-   # revert to explicit declared local
-   put portalName into sCurrentPortal   
+ 
+  portal_SetCurrent (portalName)
    set the portal_Name of portalView to portalName
-   put portalName into LocalArray["currentPortal"]
    unlock screen
 end portal_Link
 
-function portal_Current
+command portal_SetCurrent portalName
+    put portalName into sCurrentPortal   
+end portal_SetCurrent
+
+function portal_GetCurrent
    # BR: Support for tracking the portal from which
    # a module was launched from   
    return sCurrentPortal
-end portal_Current
+end portal_GetCurrent
 
 command portal_GoName portalName
    portal_GoStack portalName
