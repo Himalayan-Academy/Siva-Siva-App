@@ -25,7 +25,7 @@ on dialog_CustomMsg Show,Msg,pLoc,pWidth,pHeight
   if Show <> false then -- show it
      if Msg = "" then put "Getting files..." into pMsg
      if pWidth = "" then put "350" into pWidth
-       if pHeight = "" then put "25" into pHeight
+       if pHeight = "" then put "50" into pHeight
     if pLoc = "" then
       put the height of this cd into tV
       put tV - (tV div 4) into tV

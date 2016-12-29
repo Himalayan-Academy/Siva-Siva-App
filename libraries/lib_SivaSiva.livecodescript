@@ -83,3 +83,24 @@ end sivasiva_SettingsGear
 command display_Log
    portal_GoStack "Log"
 end display_Log
+
+function pingServer
+   # call from any where to inform user and disable activities
+   # that require internet access to our server or any the external service
+   put url "https://www.himalayanacademy.com/ping.txt" into tOnline 
+    if tOnline="true" then
+       dialog_CustomMsg "true", "You are online!" 
+    else
+       dialog_CustomMsg "true", ("Offline" & cr & "Some Activities Disabled") ,,,120
+   end if
+   send closeMsg to me in 2 seconds  
+    return tOnLine
+end pingServer
+
+on closeMsg
+    dispatch "dialog_CustomMsg" with  "false"  
+end closeMsg
+
+end  pingServer
+
+end pingServer
