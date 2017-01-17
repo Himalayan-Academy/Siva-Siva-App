@@ -90,6 +90,7 @@ command portal_Link portalName
   portal_SetCurrent (portalName)
    set the portal_Name of portalView to portalName
    unlock screen
+   set the logo_Faded of portalView to true
 end portal_Link
 
 command portal_SetCurrent portalName
