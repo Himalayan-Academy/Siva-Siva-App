@@ -54,7 +54,6 @@ on preOpenStack
       set the rect of portalView to the rect of this card -- only useful for authoring
       set the portal_Name of portalView to "home"
    end if
-   
    pass preOpenStack
 end preOpenStack
 

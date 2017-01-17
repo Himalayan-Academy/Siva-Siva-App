@@ -93,27 +93,29 @@ getprop portal_RowNames
    return rowNames
 end portal_RowNames
 
-setprop portal_RowNames [headerName] rowNames
-   replace comma with CR in rowNames
-   put the scrolling_View of me into scrollingView
-   -- put view_GetTemplateObject ("View|SivaSiva|Contents|Row") into rowTemplate
-   put the row_View [2] of scrollingView into rowTemplate
-   
-   lock screen
-   if headerName is not empty then
-      set the portal_Header of _headerView() to headerName
-   end if
-   
-   set the vScroll of scrollingView to 0 -- ensures correct initial alignment
-   put the number of lines of rowNames into maxRowNum
-   set the row_Number [rowTemplate] of scrollingView to (maxRowNum + 1)
-   repeat with rowNum = 1 to maxRowNum
-      put the row_View [rowNum] of scrollingView into rowView
-      put line rowNum of rowNames into rowName
-      set the row_Name of rowView to rowName
-   end repeat
-   unlock screen
-end portal_RowNames
+-- setprop portal_RowNames [headerName] rowNames
+--    answer "Hello" with "OK"
+--    break
+--       replace comma with CR in rowNames
+--    put the scrolling_View of me into scrollingView
+--    -- put view_GetTemplateObject ("View|SivaSiva|Contents|Row") into rowTemplate
+--    put the row_View [2] of scrollingView into rowTemplate
+
+--    lock screen
+--    if headerName is not empty then
+--       set the portal_Header of _headerView() to headerName
+--    end if
+
+--    set the vScroll of scrollingView to 0 -- ensures correct initial alignment
+--    put the number of lines of rowNames into maxRowNum
+--    set the row_Number [rowTemplate] of scrollingView to (maxRowNum + 1)
+--    repeat with rowNum = 1 to maxRowNum
+--       put the row_View [rowNum] of scrollingView into rowView
+--       put line rowNum of rowNames into rowName
+--       set the row_Name of rowView to rowName
+--    end repeat
+--    unlock screen
+-- end portal_RowNames
 
 getprop portal_Array
    put _scrollingView() into scrollingView
