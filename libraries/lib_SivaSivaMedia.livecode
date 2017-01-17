@@ -99,7 +99,7 @@ command _old_fetchRandomMediaItem pSelectParams
    put textDecode ( aSelectedItem[1]["author"], UTF8)  into aMediaMeta["author"]
    put textDecode ( aSelectedItem[1]["description"], UTF8)  into aMediaMeta["description"]
    
-   put getformatData (aMediaMeta["item_id"])
+  getformatData (aMediaMeta["item_id"])
 end _old_fetchRandomMediaItem
 
 function fetchRandomMediaItem
@@ -121,11 +121,13 @@ function fetchRandomMediaItem
    repeat for each key k in tRetValA
       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
    end repeat
-   return tRetValA
+   put tRetValA into aMediaMeta
 end fetchRandomMediaItem
  
- function getMediaURL
+function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
+   
    put aMediaMeta["media_type"] into pMediaType
+   getformatData (aMediaMeta["item_id"])
    # each media type will entail a different path on the /media directory 
    switch 
       case pMediaType contains "audio/"
@@ -133,20 +135,15 @@ end fetchRandomMediaItem
          return ("https://www.himalayanacademy.com/"  & pServerPath)        
          break
       case pMediaType contains "art/"
-         #BR 2016-07-16 in the future we need to have the API export one object per format_name 
-         # or possible the filename.. if dots are allowed in JSON strings
-         # in the JSON formats array for now we are depending on formats to be output
-         # in order and for the 3rd one to be the med sized image. 
-         # but this seems too vulnerable to breaking to me...
-         put FolderForArt(pBestFormat) into pServerPath
+         put FolderForArt(item 1 of pFormat) into pServerPath
          return ("https://www.himalayanacademy.com/"  & pServerPath)
          break
       case pMediaType contains "video"
-
+         
          # there are not paths... we just need to get the URL from the video and
          # convert it to the proper embed form for use in a browser widget
-         put aMediaMeta["formats"][1]["url"] into pURL
-       return  convertYouTubeURL (pURL)
+         put aSelectedFormats["formats"][1]["url"] into pURL
+         return  convertYouTubeURL (pURL)
    end switch
    
 end getMediaURL
@@ -176,7 +173,7 @@ function getMediaItemMetadata
  
   end getMediaItemMetadata
   
-function getformatData pItemID
+command getformatData pItemID
    put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
@@ -254,9 +251,9 @@ end stripHTML
 
 
 function folderForArt pBestFormat
-
+   
    put "media/art/" into pServerPath
-
+   
    # Art is divided into categories represented by sub-directories on the server
    # we need to parse the media_type to get the folder
    
@@ -275,22 +272,17 @@ function folderForArt pBestFormat
    # you need to know your collection to make the right choise
    # sml and thm have been cropped to a small horizontal format, even for native portrait orientation
    #sml is useful because the ratio is always the same: 
-    
-    
-   # WE ill have to refactor here later if we switch the JSON output to something different
-   # pBestFormat must be a match for one of these or it will fail
-   set the itemdel to ","
-   put "ful,lrg,med,sml,thm" into tSizes
-   put itemoffset(pBestFormat,tSizes) into tChosenOne
-
-   # store the native size as this may be useful for resizing the img later:
-   put aMediaMeta["formats"][tChosenOne]["format_name"] into sCurrentGraphicRect
    
-   put aMediaMeta["formats"][tChosenOne]["filename"] after pServerPath # assume we get the medium sized one
-return pServerPath
-
    
-end  folderForArt
+   repeat for each key x in aSelectedItemFormats
+      put aSelectedItemFormats[x]["filename"] into tFilename
+      if  tFilename contains ("_" & pBestFormat) then
+         put tFilename after pServerPath
+         exit repeat
+      end if
+      end repeat
+      return pServerPath
+   end  folderForArt
 
 command insertImageDimensions pImage
    put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
@@ -389,7 +381,7 @@ on resizeToHeight pImage,pSize
    put (pSize)/tOrigImgHeight  into tRatio
   put (tOrigImgWidth * tRatio) into tNewWidth
   put (tOrigImgHeight * tRatio) into tNewHeight
-  set the rect of  pImage to 0,0,tNewWidth,tNewHeight  
+  set the rect of pImage to 0,0,tNewWidth,tNewHeight  
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 

@@ -113,14 +113,7 @@
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.jpg"
         },
-        "Bodhinatha Darshan": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
-            },
-            "imageText": "Bodhinatha\nDarshan",
-            "shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
-        },
+    
         "Monthly News": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/newsletter",
@@ -209,10 +202,18 @@
             "imageText": "Meet the\nMonks",
             "shortImageFile": "thumb_monks-by-marya.jpg"
         },
+        "Bodhinatha Darshan": {
+            "link": {
+                "portal command": "portal_Go",
+                "portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
+            },
+            "imageText": "Bodhinatha\nDarshan",
+            "shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
+        },
         "Hindu Art": {
             "link": {
                 "portal command": "portal_Go",
-                "portal param": "card \"art\" of stack \"surprise\""
+                "portal param": "card \"surprise_art\" of stack \"surprise\""
             },
             "imageText": "Hindu\nArt",
             "shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.jpg"
@@ -291,8 +292,8 @@
         },
         "Surprise Me": {
             "link": {
-                "portal command": "portal_Link",
-                "portal param": "surprise"
+                "portal command": "portal_Go",
+                "portal param": "stack \"surprise\""
             },
             "imageText": "Surprise\nMe",
             "shortImageFile": "thumb_surprise_boy-suitcase.jpg"

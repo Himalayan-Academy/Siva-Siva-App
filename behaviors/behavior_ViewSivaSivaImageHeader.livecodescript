@@ -24,8 +24,9 @@ on mouseUp
    switch cName
       case "Title"
       case "Portal Header Image"
-         put the logo_Faded of me into someBoolean
-         set the logo_Faded of me to (not someBoolean)
+         -- put the logo_Faded of me into someBoolean
+         -- set the logo_Faded of me to (not someBoolean)
+         
          put init_ListStacksToUse() into stackNames
          replace comma with CR in stackNames
          answer stackNames
@@ -84,8 +85,8 @@ end logo_Faded
 setprop logo_Faded someBoolean
    put _logoButton() into logoButton
    set the visible of logoButton to true
-   put 2 into someIncrement
-   put 20 into someDelay
+   put 4 into someIncrement
+   put 0 into someDelay
    put _logoButton() into logoButton
    
    if someBoolean is true then

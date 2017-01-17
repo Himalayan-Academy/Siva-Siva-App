@@ -81,9 +81,9 @@ command sivasiva_LoadCachedData
    return sivasivaData
 end sivasiva_LoadCachedData
 
-command sivsiva_ClearCachedData
+command sivasiva_ClearCachedData
    delete variable LocalArray ["sivasivaData"]
-end sivsiva_ClearCachedData
+end sivasiva_ClearCachedData
 
 
 --> Model | Library

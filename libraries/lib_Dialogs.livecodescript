@@ -32,7 +32,7 @@ on dialog_CustomMsg   pShow,pMsg
       # assume some generic process; normally not advised to send empty
       put "350" into pWidth # locked to this width
          put the height of this cd into tV
-         put tV - (tV div 2) into tV
+         put tV - (tV div 4) into tV
          put (item 1 of the loc of this cd),tV into pLoc
          buildMsgDisplay pLoc,pMsg,pWidth  
          # we do not pass height; it is determined later based on formatted height of msg

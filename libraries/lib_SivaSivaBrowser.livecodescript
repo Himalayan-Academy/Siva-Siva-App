@@ -86,10 +86,3 @@ function getOrientationByType pURL -- return correct orientation for a URL;
          return "any" -- allows rotation
    end switch
 end getOrientationByType
-
-function pingServer
-   -- currenlty ony used by stack "gems"
-    --jg: UTF8 text file on server should contain only the word "true"
-   get url "https://www.himalayanacademy.com/ping.txt"
-   return textDecode(it,"UTF8") = "true"
-end pingServer
