@@ -439,5 +439,26 @@ command checkMetaBackScript pMsg
    answer "got it" with pMsg
 end checkMetaBackScript
 
+##########################################################
+## VISUAL EFFECTS
+##########################################################
 
+command object_FadeIn  pEffectsTarget, newBlendLevel, someIncrement, someDelay
+   set the blendLevel of  pEffectsTarget  to newBlendLevel
+   if newBlendLevel > 0 then
+      subtract someIncrement from newBlendLevel
+      send "object_FadeIn pEffectsTarget, newBlendLevel,someIncrement,someDelay" to me in someDelay milliseconds
+   else
+      set the blendLevel of pEffectsTarget to 0
+   end if
+end object_FadeIn
 
+command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
+   set the blendLevel of  pEffectsTarget  to newBlendLevel
+   if newBlendLevel <100 then
+      add someIncrement to newBlendLevel
+      send "object_FadeOut pEffectsTarget, newBlendLevel,someIncrement,someDelay" to me in someDelay milliseconds
+   else
+      set the blendLevel of pEffectsTarget to 100
+   end if
+end object_FadeOut
