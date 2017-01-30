@@ -1,4 +1,6 @@
 ﻿script "behavior_mobileScroller"
+local sMouseLoc
+
 ######### Mobile Controls ############
 
 command CreateScroller pName -- scrolling fields
@@ -32,3 +34,27 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
     mobileControlDelete pName
   end repeat
 end deleteMobileControl
+
+on mouseDown
+  put the mouseloc into sMouseLoc
+  put sMouseLoc into sStartLoc
+  if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
+    setScroll
+  end if
+end mouseDown
+
+on setScroll
+  if the mouse is down then
+    lock screen
+    if item 2 of sMouseLoc > the mouseV then
+      set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+    else
+      set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+    end if
+    put the mouseloc into sMouseLoc
+    send "setScroll" to me in 20 millisec
+    unlock screen
+  else
+    put empty into sMouseLoc
+  end if
+end setScroll
