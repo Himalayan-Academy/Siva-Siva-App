@@ -123,6 +123,10 @@
             "shortImageFile": "thumb_news.jpg"
         },
         "Lesson of the Day": {
+            "link": {
+                "portal command": "portal_Go",
+                "portal param": "stack \"daily-lesson\""
+            },
             "imageText": "Lesson of\nthe Day",
             "shortImageFile": "thumb_daily-lesson.jpg"
         },
