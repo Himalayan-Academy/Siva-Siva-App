@@ -1,9 +1,4 @@
 {
-    "disabledContent": {
-        "3": {
-            "rowName": "Hindu Art"
-        }
-    },
     "portalRowDictionary": {
         "Video World": {
             "link": {
@@ -28,7 +23,7 @@
         "About the Monastery": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/about",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "About the\nMonastery",
             "shortImageFile": "thumb_about-monastery.jpg"
@@ -42,6 +37,10 @@
             "shortImageFile": "thumb_calendar_shtrstk-325867559.jpg"
         },
         "Our YouTube Library": {
+            "link": {
+                "portal param": "https://www.youtube.com/channel/UCr6mOJAX2uZUUQhSUq2TR_Q",
+                "portal command": "portal_LaunchUrl"
+            },
             "imageText": "Our YouTube\nLibrary",
             "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
         },
@@ -59,7 +58,7 @@
         },
         "Our Daily Blog": {
             "link": {
-                "portal command": "portal_GoUrl",
+                "portal command": "portal_LaunchUrl",
                 "portal param": "https://www.himalayanacademy.com/blog/taka/"
             },
             "imageText": "Our Daily\nBlog",
@@ -96,28 +95,31 @@
         "Take a Virtual Tour": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit/virtual-tour",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "Take a\nVirtual Tour",
             "shortImageFile": "thumb_virtual-tour.jpg"
         },
         "History Movie": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?rel=0",
+                "portal command": "portal_GoUrl"
+            },
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.jpg"
         },
         "Our Guru Lineage": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/lineage-philosophy/lineage",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.jpg"
-        },
-    
+        },  
         "Monthly News": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/newsletter",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "Monthly\nNews",
             "shortImageFile": "thumb_news.jpg"
@@ -161,7 +163,7 @@
         "How to Visit": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "How to Visit",
             "shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
@@ -201,7 +203,7 @@
         "Meet the Monks": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/meet-the-monks",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_LaunchUrl"
             },
             "imageText": "Meet the\nMonks",
             "shortImageFile": "thumb_monks-by-marya.jpg"
@@ -240,8 +242,8 @@
         },
         "Sanskrit Chanting": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"chanting\" of stack \"listen\""
+                "portal command": "portal_LaunchUrl",
+                "portal param": "https://www.himalayanacademy.com/looklisten/chanting"
             },
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
@@ -254,26 +256,18 @@
             "imageText": "Bodhinatha's\nLatest\nInspired Talk",
             "shortImageFile": "thumb_latest-talk-2.jpg"
         },
-        "All of Bodhinatha's Talks": {
+        "All Satgurus' Talks": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"bodhinatha-archive\" of stack \"listen\""
+                "portal command": "portal_LaunchUrl",
+                "portal param": "https://www.himalayanacademy.com/looklisten/talksindex"
             },
-            "imageText": "All of\nBodhinatha's\nTalks",
-            "shortImageFile": "thumb_all-bd-talks-.jpg"
-        },
-        "Gurudeva's Inspired Talks": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"gurudeva-audio\" of stack \"listen\""
-            },
-            "imageText": "Gurudeva's\nInspired Talks",
+            "imageText": "All \nSatgurus'\nTalks",
             "shortImageFile": "thumb_gurudeva-talks.jpg"
         },
         "Songs": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"songs\" of stack \"listen\""
+                "portal command": "portal_LaunchUrl",
+                "portal param": "https://www.himalayanacademy.com/looklisten/music"
             },
             "imageText": "Songs",
             "shortImageFile": "thumb_songs_shtrstk-104920397.jpg"
@@ -343,10 +337,165 @@
                     "rowName": "Our YouTube Library"
                 },
                 "2": {
-                    "rowName": "Slideshows"
+                    "rowName": "History Movie"
+                }
+            },
+            "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
+        },
+        "fun": {
+            "portalName": "fun",
+            "rowData": {
+                "1": {
+                    "rowName": "Word Puzzles"
+                    }
+                },
+            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.jpg"
+        },
+        "listen": {
+            "portalName": "listen",
+            "rowData": {
+                "1": {
+                    "rowName": "Bodhinatha's Latest Talks"
+                },
+                "2": {
+                    "rowName": "All Satgurus' Talks"
                 },
                 "3": {
-                    "rowName": "History Movie"
+                    "rowName": "Songs"
+                },
+                "4": {
+                    "rowName": "Sanskrit Chanting"
+                },
+                "5": {
+                    "rowName": "The Guru Chronicles"
+                }
+            },
+            "headerImage": "hero_listen_girl-head-phones.jpg"
+        },
+        "surprise": {
+            "portalName": "surprise",
+            "rowData": {
+                "1": {
+                    "rowName": "Sacred Verses"
+                },
+                "2": {
+                    "rowName": "Gurudeva Darshan"
+                },
+                "3": {
+                    "rowName": "Bodhinatha Darshan"
+                },
+                "4": {
+                    "rowName": "Hindu Art"
+                },
+                "5": {
+                    "rowName": "Audio World"
+                },
+                "6": {
+                    "rowName": "Video World"
+                }
+            },
+            "headerImage": "hero_surprise_boy-opens-suitcase.jpg"
+        },
+        "website": {
+            "portalName": "website",
+            "rowData": {
+                "1": {
+                    "rowName": "Our Daily Blog"
+                },
+                "2": {
+                    "rowName": "Meet the Monks"
+                },
+                "3": {
+                    "rowName": "Monthly News"
+                },
+                "4": {
+                    "rowName": "How to Visit"
+                },
+                "5": {
+                    "rowName": "Take a Virtual Tour"
+                },
+                "6": {
+                    "rowName": "About the Monastery"
+                },
+                "7": {
+                    "rowName": "Our Guru Lineage"
+                }
+            },
+            "headerImage": "hero_website_ha-com-home-screenshot.jpg"
+        },
+        "practice": {
+            "portalName": "practice",
+            "rowData": {
+                "1": {
+                    "rowName": "Lesson of the Day"
+                },
+                "2": {
+                    "rowName": "Color Meditation"
+                },
+                "3": {
+                    "rowName": "My Hindu Calendar"
+                }
+			},
+            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.jpg"
+        },
+        "home": {
+            "portalName": "home",
+            "rowData": {
+                "1": {
+                    "rowName": "Gems of Wisdom"
+                },
+                "2": {
+                    "rowName": "Surprise Me"
+                },
+                "3": {
+                    "rowName": "Listen"
+                },
+                "4": {
+                    "rowName": "Look"
+                },
+                "5": {
+                    "rowName": "Practice"
+                },
+                "6": {
+                    "rowName": "Read"
+                },
+                "7": {
+                    "rowName": "Our Website"
+                },
+                "8": {
+                    "rowName": "Fun & Games"
+                }
+            },
+            "headerImage": "hero_home_Who-Is-Siva.jpg"
+        },
+        "read": {
+            "portalName": "read",
+            "rowData": {
+                "1": {
+                    "rowName": "Path to Siva: A Catechism for Youth"
+                },
+                "2": {
+                    "rowName": "Hindu Lexicon"
+                },
+                "3": {
+                    "rowName": "The Master Course"
+                },
+                "4": {
+                    "rowName": "All Our On-Line Books"
+                },
+                "5": {
+                    "rowName": "Educational Insights"
+                }
+            },
+            "headerImage": "hero_read_gurudeva-signing-book.jpg"
+        }
+    },
+    "disabledContent": {
+        "look": {
+            "portalName": "look",
+            "rowData": {
+                "2": {
+                    "rowName": "Slideshows"
                 }
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
@@ -534,5 +683,5 @@
             },
             "headerImage": "hero_read_gurudeva-signing-book.jpg"
         }
-    }
+    }   
 }

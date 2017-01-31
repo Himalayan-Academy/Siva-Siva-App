@@ -43,38 +43,45 @@ command portal_SetLinkUrl portalName, portalColour, pSivasivaData
 end portal_SetLinkUrl
 
 command portal_DoRowLink rowName
-   -- safe parsing only of accepted commands
-   -- no dymanic execution of arbitrary code
-   
-   put portal_GetRowLinkArray (rowName) into linkArray
-   put linkArray ["portal command"] into linkCommand
-   put linkArray ["portal param"] into linkParam
-   
-   -- display_RowLink rowName
-   
-   switch linkCommand
-      case "portal_Link"
-         portal_Link linkParam
-         break
-      case "portal_Stack"
-         portal_Stack linkParam
-         break
-      case "portal_Go"
-         portal_Go linkParam
-         break
-      case "portal_GoUrl"
-         portal_GoUrl linkParam
-         break
-      case "portal_GoLandscapeUrl"
-         portal_GoLandscapeUrl linkParam
-         break
-   end switch
+    -- safe parsing only of accepted commands
+    -- no dymanic execution of arbitrary code
+    
+    put portal_GetRowLinkArray (rowName) into linkArray
+    put linkArray ["portal command"] into linkCommand
+    put linkArray ["portal param"] into linkParam
+    
+    -- display_RowLink rowName
+    
+    switch linkCommand
+        case "portal_Link"
+            portal_Link linkParam
+            break
+        case "portal_Stack"
+            portal_Stack linkParam
+            break
+        case "portal_Go"
+            portal_Go linkParam
+            break
+        case "portal_GoUrl"
+            portal_GoUrl linkParam
+            break
+        case "portal_GoLandscapeUrl"
+            portal_GoLandscapeUrl linkParam
+            break
+        case "portal_LaunchUrl" # invoke external browser
+            portal_LaunchURL linkParam
+            break
+    end switch
 end portal_DoRowLink
 
 command portal_GoUrl someURL
    set the browser_URL of stack "View|SivaSiva|Browser" to someURL
    portal_GoStack "View|SivaSiva|Browser"
 end portal_GoUrl
+
+command portal_LaunchUrl someURL
+    launch url someURL    
+end portal_LaunchUrl
 
 command portal_GoLandscapeUrl someURL
    set the browser_URL [true] of stack "View|SivaSiva|Browser" to someURL
