@@ -91,5 +91,13 @@ function pingServer
     return tOnLine
 end pingServer
 
+command sivasiva_SetStatusBarVis visBoolean
+        if visBoolean then
+            mobileShowStatusBar
+        else
+            mobileHideStatusBar
+        end if        
+end sivasiva_SetStatusBarVis
+
 
 

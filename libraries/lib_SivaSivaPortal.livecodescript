@@ -75,8 +75,8 @@ command portal_DoRowLink rowName
 end portal_DoRowLink
 
 command portal_GoUrl someURL
-   set the browser_URL of stack "View|SivaSiva|Browser" to someURL
-   portal_GoStack "View|SivaSiva|Browser"
+   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+   portal_GoStack "view_SivaSivaBrowser"
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
@@ -84,8 +84,8 @@ command portal_LaunchUrl someURL
 end portal_LaunchUrl
 
 command portal_GoLandscapeUrl someURL
-   set the browser_URL [true] of stack "View|SivaSiva|Browser" to someURL
-   portal_GoStack "View|SivaSiva|Browser"
+   set the browser_URL [true] of stack "view_SivaSivaBrowser" to someURL
+   portal_GoStack "view_SivaSivaBrowser"
 end portal_GoLandscapeUrl
 
 command portal_Link portalName
