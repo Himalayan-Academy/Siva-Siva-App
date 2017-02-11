@@ -124,9 +124,18 @@ command portal_GoStack stackName
    if oStackName = stackName then return oStackName
    
    go to stack stackName
-   close stack oStackName
+  --close stack oStackName
+   -- test deleting the stacks to save on RAM
+  send "portal_RemoveStack oStackName" to me in 10 milliseconds  
+--   delete stack oStackName
    return oStackName
 end portal_GoStack
+
+command portal_RemoveStack stackName
+    if stackName <> "Siva-Siva-App" then
+        delete stack stackName
+    end if    
+end portal_RemoveStack 
 
 command portal_Go cardOrStackObject
    -- answer portal_Go
@@ -149,7 +158,8 @@ command portal_Go cardOrStackObject
       end if
    else
       if the environment is "Mobile" then
-         close stack oStackName
+          --close stack oStackName
+          delete stack oStackName
       end if
    end if
    return goResult

@@ -63,7 +63,7 @@ command launchURL pOrientation, pURL
    if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
    go card "web viewer" of stack tNewViewer
    set the URL of widget "browser" of stack tNewViewer to pURL
-   if tOldViewer is in the openStacks then close stack tOldViewer -- device was rotated; close orig viewer
+   if tOldViewer is in the openStacks then delete stack tOldViewer -- device was rotated; close orig viewer
 end launchURL
 
 
