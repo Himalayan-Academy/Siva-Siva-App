@@ -6,7 +6,8 @@
                 "portal param": "card \"surprise_video\" of stack \"surprise\""
             },
             "imageText": "Video\nWorld",
-            "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
+            "shortImageFile": "thumb_gurudeva_on-iphone.jpg",
+            "portalColor": "200,0,0"
         },
         "Affirmations": {
             "imageText": "Affirmations",
@@ -332,6 +333,7 @@
     "portalData": {
         "look": {
             "portalName": "look",
+            "portalColor": "200,100,100",
             "rowData": {
                 "1": {
                     "rowName": "Our YouTube Library"
@@ -431,9 +433,6 @@
                 },
                 "2": {
                     "rowName": "Color Meditation"
-                },
-                "3": {
-                    "rowName": "My Hindu Calendar"
                 }
 			},
             "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.jpg"
@@ -596,12 +595,6 @@
         "practice": {
             "portalName": "practice",
             "rowData": {
-                "1": {
-                    "rowName": "Lesson of the Day"
-                },
-                "2": {
-                    "rowName": "Color Meditation"
-                },
                 "3": {
                     "rowName": "My Hindu Calendar"
                 },
