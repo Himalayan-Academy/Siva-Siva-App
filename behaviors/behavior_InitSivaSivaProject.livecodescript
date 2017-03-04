@@ -45,7 +45,8 @@ on preOpenStack
     -- sivasiva_InitOrientation "portrait"
     set the fullscreenmode of this stack to "showAll" -- better for wider screens
     mobile_SetAllowedOrientation "portrait"
-    set the acceleratedRendering of this stack to true
+    
+       set the acceleratedRendering of this stack to true
     
     if the platform is "iphone" then
         set the compositorType of this stack to "opengl"
