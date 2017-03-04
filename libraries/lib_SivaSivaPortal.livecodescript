@@ -72,6 +72,7 @@ command portal_DoRowLink rowName
             portal_LaunchURL linkParam
             break
     end switch
+
 end portal_DoRowLink
 
 command portal_GoUrl someURL
@@ -90,7 +91,8 @@ end portal_GoLandscapeUrl
 
 command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
-   lock screen
+    lock screen
+    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
    portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
  

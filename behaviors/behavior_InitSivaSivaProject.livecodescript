@@ -42,11 +42,9 @@ on preOpenStack
     -- start using this stack
     init_AppConfiguration -- load all libraries and configure app
     
-    -- sivasiva_InitOrientation "portrait"
+   -- sivasiva_InitOrientation "portrait"
     set the fullscreenmode of this stack to "showAll" -- better for wider screens
     mobile_SetAllowedOrientation "portrait"
-    
-       set the acceleratedRendering of this stack to true
     
     if the platform is "iphone" then
         set the compositorType of this stack to "opengl"
@@ -56,8 +54,7 @@ on preOpenStack
     
     set the compositorTileSize of this stack to 32
     set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
-    
-    
+      
     put the portal_View of me into portalView
     _fixPortalBehavior portalView
     
