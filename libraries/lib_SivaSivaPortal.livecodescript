@@ -96,7 +96,7 @@ command portal_Link portalName
    portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
  
-  portal_SetCurrent (portalName)
+  portal_SetCurrent portalName
    set the portal_Name of portalView to portalName
    unlock screen
    set the logo_Faded of portalView to true
@@ -126,16 +126,13 @@ command portal_GoStack stackName
    if oStackName = stackName then return oStackName
    
    go to stack stackName
-  --close stack oStackName
-   -- test deleting the stacks to save on RAM
-  send "portal_RemoveStack oStackName" to me in 10 milliseconds  
---   delete stack oStackName
+   close stack oStackName  # be sure all stacks are set to destroy on close
    return oStackName
 end portal_GoStack
 
-command portal_RemoveStack stackName
+command portal_RemoveStack oStackName
     if stackName <> "Siva-Siva-App" then
-        delete stack stackName
+        close stack oStackName
     end if    
 end portal_RemoveStack 
 
@@ -160,8 +157,7 @@ command portal_Go cardOrStackObject
       end if
    else
       if the environment is "Mobile" then
-          --close stack oStackName
-          delete stack oStackName
+          close stack oStackName
       end if
    end if
    return goResult
