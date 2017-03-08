@@ -53,13 +53,10 @@ on preOpenStack
     else
         set the compositorType of this stack to "software"
     end if
-    
     set the compositorTileSize of this stack to 32
     set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
     
     put the portal_View of me into portalView
-    
-    
     _fixPortalBehavior portalView
     
     if the environment is "development" then
