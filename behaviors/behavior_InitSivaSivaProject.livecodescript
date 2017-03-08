@@ -57,15 +57,17 @@ on preOpenStack
     set the compositorTileSize of this stack to 32
     set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
     
-    --     put the portal_View of me into portalView
-    --     _fixPortalBehavior portalView
+    put the portal_View of me into portalView
     
-    --     if the environment is "development" then
-    --         set the rect of portalView to the rect of this card -- only useful for authoring
-    --         set the portal_Name of portalView to "home"
-    --     end if
     
-    --  pass preOpenStack
+    _fixPortalBehavior portalView
+    
+    if the environment is "development" then
+        set the rect of portalView to the rect of this card -- only useful for authoring
+        set the portal_Name of portalView to "home"
+    end if
+    
+    pass preOpenStack
 end preOpenStack
 
 on openCard
