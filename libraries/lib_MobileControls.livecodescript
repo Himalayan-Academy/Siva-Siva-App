@@ -151,16 +151,6 @@ command scroller_Delete mobileScrollerName
    return mobileControls()
 end scroller_Delete
 
-command scroller_DeleteAll
-   if the environment is not "mobile" then return false
-   put mobileControls() into allControls
-   repeat for each line mobileScrollerName in allControls
-      mobileControlDelete mobileScrollerName
-   end repeat
-   answer ("scroller_DeleteAll" & CR & allControls)
-   return allControls
-end scroller_DeleteAll
-
 command scroller_Create mobileScrollerName
    -- create if mobile scroller does not exist already (returns a unique id)
    if the environment is not "mobile" then return false

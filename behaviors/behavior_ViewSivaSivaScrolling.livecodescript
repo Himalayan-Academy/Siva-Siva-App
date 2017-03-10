@@ -58,26 +58,26 @@ on mouseUp
 end  mouseup
 
 on mouseDown
-   put the mouseloc into sMouseLoc
-   put sMouseLoc into sStartLoc
-   
-   if the environment is "mobile" then
-      -- mobile will use stack handlers to scroll instead
-   else
-      desktop_SetScroll
-   end if
-   pass mouseDown
+    put the mouseloc into sMouseLoc
+    put sMouseLoc into sStartLoc
+    
+    if the environment is "mobile" then
+        -- mobile will use stack handlers to scroll instead
+    else
+        desktop_SetScroll
+    end if
+    pass mouseDown
 end mouseDown
 
 -- on touchStart pID
 -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-mouseDown
-end touchStart
+-- mouseDown
+-- end touchStart
 
--- on touchEnd pID
--- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-mouseUp
-end touchEnd
+-- -- on touchEnd pID
+-- -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+-- mouseUp
+-- end touchEnd
 
 on resizeControl
    put the rect of me into pRect

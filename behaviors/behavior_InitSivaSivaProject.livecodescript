@@ -1,6 +1,6 @@
 ﻿script "behavior_InitSivaSivaProject"
 --> MetaData
--
+
 license: GPLv3
 name: behavior_InitSivaSivaProject
 type: behavior
@@ -37,25 +37,35 @@ local LocalArray
 
 
 --> Events
--
+
 on preOpenStack
-   -- start using this stack
-   init_AppConfiguration -- load all libraries and configure app
-   
-   -- sivasiva_InitOrientation "portrait"
-   set the fullscreenmode of this stack to "showAll" -- better for wider screens
-   mobile_SetAllowedOrientation "portrait"
-   set the acceleratedRendering of this stack to true
-   
-   put the portal_View of me into portalView
-   _fixPortalBehavior portalView
-   
-   if the environment is "development" then
-      set the rect of portalView to the rect of this card -- only useful for authoring
-      set the portal_Name of portalView to "home"
-   end if
-   
-   pass preOpenStack
+    -- start using this stack
+    init_AppConfiguration -- load all libraries and configure app
+    
+    -- sivasiva_InitOrientation "portrait"
+    set the fullscreenmode of this stack to "showAll" -- better for wider screens
+    mobile_SetAllowedOrientation "portrait"
+    
+    if the environment <> "development" then
+        set the acceleratedRendering of this stack to "true"
+        if the platform is "iphone" then
+            set the compositorType of this stack to "opengl"
+        else
+            set the compositorType of this stack to "software"
+        end if
+        set the compositorTileSize of this stack to 32
+        set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
+    end if
+    
+    put the portal_View of me into portalView
+    _fixPortalBehavior portalView
+    
+    if the environment is "development" then
+        set the rect of portalView to the rect of this card -- only useful for authoring
+        set the portal_Name of portalView to "home"
+    end if
+    
+    pass preOpenStack
 end preOpenStack
 
 on openCard
@@ -93,7 +103,7 @@ end _fixPortalBehavior
 
 
 --> SivaSiva | Init | Logging
--
+
 /*
 We aim to remove the need for this section eventually.
 When the code is tested and stable we can stop loggin the initialisation routines
@@ -124,7 +134,7 @@ end init_Logging
 
 
 --> SivaSiva | Init
--
+
 function init_GetStatus
    put "lib_SivaSiva" is among the lines of the stacksinuse into someBoolean
    return someBoolean
@@ -196,7 +206,7 @@ end init_MobileGeometry
 
 
 -->Project | Start
--
+
 command project_UseStacks stackPaths
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
@@ -227,7 +237,7 @@ end project_StartFrontScriptsInFolder
 
 
 -->Project | Start | Load
--
+
 /*
 Here we split out individual loading of required components.
 For legibility and logging.
@@ -248,7 +258,7 @@ end load_BackScript
 
 
 --> Deps
--
+
 -- function sivasiva_ListStackPaths someFolder  
    put mobile_ListLongFiles (someFolder, "Siva-Siva-App") into longFiles
    repeat for each line stackFilePath in longFiles

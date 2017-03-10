@@ -23,7 +23,7 @@ The second before and after logging handlers for checking this initialisation pr
 
 Yes it would be simpler if this was a library/back/frontscript and not a behavior (or embedded within the application code),
 but this code is only needed for initialisation of the project,
-so we like to isolate it from the general code andkeep it attached to the card as two nested behaviors.
+so we like to isolate it from the general code and keep it attached to the card as two nested behaviors.
 */
 
 
