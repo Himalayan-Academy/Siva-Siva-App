@@ -177,15 +177,25 @@ setprop portal_Name portalName
 end portal_Name
 
 private command portal_ResetMobileScrollerRect
-   # DTB: added to reset the mobile scroller
-   if the environment is "mobile" then
-      -- put the rect of me into scrollingViewRect
-      -- put the formatted_VerticalRect of me into fRect
-      -- scroller_SetRect pIdOrName, scrollingViewRect, fRect
-      mobileControlSet "portal scroller", "vScroll" , 0
-   else
-      -- could set the vScrolll to 0
-   end if
+    # DTB: added to reset the mobile scroller
+    put _scrollingView() into scrollingView
+    if the environment is "mobile" then
+        -- put the rect of me into scrollingViewRect
+        -- put the formatted_VerticalRect of me into fRect
+        -- scroller_SetRect pIdOrName, scrollingViewRect, fRect
+        # BR this is not working... we end up with the same rect as the smaller scroller
+        # with less rows.
+        --mobileControlSet "portal scroller", "vScroll" , 0 
+        --mobileControlSet scrollingView, "rect" , (the rect of scrollingview)
+        # Let's try deleting and recreating. This works
+        # when we explicity delete from another open stack
+        # but when in the same stack we have to run it again:
+        scroller_Delete "portal scroller"
+        --         # using David's method here... it works on the init... should work here too.
+        set the mobile_VerticalScroller of scrollingView to "portal scroller"
+    else
+        -- could set the vScrolll to 0
+    end if
 end portal_ResetMobileScrollerRect
 
 getprop portal_Header

@@ -46,15 +46,16 @@ on preOpenStack
     set the fullscreenmode of this stack to "showAll" -- better for wider screens
     mobile_SetAllowedOrientation "portrait"
     
-    set the acceleratedRendering of this stack to "true"
-    
-    if the platform is "iphone" then
-        set the compositorType of this stack to "opengl"
-    else
-        set the compositorType of this stack to "software"
+    if the environment <> "development" then
+        set the acceleratedRendering of this stack to "true"
+        if the platform is "iphone" then
+            set the compositorType of this stack to "opengl"
+        else
+            set the compositorType of this stack to "software"
+        end if
+        set the compositorTileSize of this stack to 32
+        set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
     end if
-    set the compositorTileSize of this stack to 32
-    set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
     
     put the portal_View of me into portalView
     _fixPortalBehavior portalView

@@ -72,7 +72,6 @@ command portal_DoRowLink rowName
             portal_LaunchURL linkParam
             break
     end switch
-
 end portal_DoRowLink
 
 command portal_GoUrl someURL
