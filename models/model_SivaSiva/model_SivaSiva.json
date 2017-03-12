@@ -169,12 +169,12 @@
             "imageText": "How to Visit",
             "shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
         },
-        "Gurudeva Darshan": {
+        "Darshan": {
             "link": {
                 "portal command": "portal_Go",
-                "portal param": "card \"surprise_gurudeva\" of stack \"surprise\""
+                "portal param": "card \"surprise_darshan\" of stack \"surprise\""
             },
-            "imageText": "Gurudeva Darshan",
+            "imageText": "Darshan",
             "shortImageFile": "thumb_gurudeva_sharma-painting.jpg"
         },
         "Humor": {
@@ -208,14 +208,6 @@
             },
             "imageText": "Meet the\nMonks",
             "shortImageFile": "thumb_monks-by-marya.jpg"
-        },
-        "Bodhinatha Darshan": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
-            },
-            "imageText": "Bodhinatha\nDarshan",
-            "shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
         },
         "Hindu Art": {
             "link": {
@@ -381,18 +373,15 @@
                     "rowName": "Sacred Verses"
                 },
                 "2": {
-                    "rowName": "Gurudeva Darshan"
+                    "rowName": "Darshan"
                 },
                 "3": {
-                    "rowName": "Bodhinatha Darshan"
-                },
-                "4": {
                     "rowName": "Hindu Art"
                 },
-                "5": {
+                "4": {
                     "rowName": "Audio World"
                 },
-                "6": {
+                "5": {
                     "rowName": "Video World"
                 }
             },
