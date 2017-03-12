@@ -8,8 +8,8 @@
 <ul>
 <li>Almost all quotes start with a capital letter</li>
 <li>Tirumantiram quotes start with a number like this "245:"</li>
-<li>If the same word, like "the" or "of" appears several times, you must place the correct one in the correct spot. If it seems like it should be "the" then choose a different "the".</li>
-<li>The word tile will glow when it is near its proper position, let go and it will snap into place.</li>
+<li>If the same word, like "the" or "of" appears several times, you must place the correct one in the correct spot. If it seems like it should be "the" then choose a different "the". [*]  </li>
+<li>The word tile will glow when it is near its proper position, let go and it will snap into place. If it glows and you drag it way... it may still not be in place so move it again until it snaps in place and bht border goes away</li>
 <li>Word tiles that are in place have no border.</li>
-<li>Be careful not to cover over your words. You cannot grab a tile that is under one already in place. If there is a word underneath your glowing tile, first move your glowing tile away, then move the word underneath to the outside or top, and then move the first tile into position.</li>
 </ul>
+<p>* We hope to fix this in a future version so that any "of" will work. But for you must find the right one.</p>

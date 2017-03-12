@@ -4,10 +4,10 @@
     "modules": {
       "color-meditation": {
         "audioGuide": "true", 
-        "breathCount": "6", 
-        "breathPace": "1.5", 
+        "breathCount": "5", 
+        "breathPace": "1", 
         "currentLevel": "1", 
-        "cycle": "1"
+        "cycles": "1"
       }
     }
   }
