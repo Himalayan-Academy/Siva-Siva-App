@@ -142,7 +142,7 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
          
          # there are not paths... we just need to get the URL from the video and
          # convert it to the proper embed form for use in a browser widget
-         put aSelectedFormats["formats"][1]["url"] into pURL
+         put aSelectedItemFormats[1]["url"] into pURL
          return  convertYouTubeURL (pURL)
    end switch
    
@@ -429,10 +429,10 @@ end toggleImgSize
 # "http://www.youtube.com/watch?v=T6mwoO9sXPI&feature=youtube_gdata_player"
 
 function convertYouTubeURL pURL
-   set the itemdel to "?"
-   put item 2 of pURL into tQueryString
-   split tQueryString with "&" and "="
-   return "https://www.youtube.com/embed/" & tQueryString["v"]
+    set the itemdel to "?"
+    put item 2 of pURL into tQueryString
+    split tQueryString with "&" and "="
+    return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
 end convertYouTubeURL
 
 command checkMetaBackScript pMsg
