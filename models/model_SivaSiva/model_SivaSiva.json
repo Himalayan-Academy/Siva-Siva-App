@@ -24,7 +24,7 @@
         "About the Monastery": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/about",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "About the\nMonastery",
             "shortImageFile": "thumb_about-monastery.jpg"
@@ -40,7 +40,7 @@
         "Our YouTube Library": {
             "link": {
                 "portal param": "https://www.youtube.com/channel/UCr6mOJAX2uZUUQhSUq2TR_Q",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Our YouTube\nLibrary",
             "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
@@ -59,7 +59,7 @@
         },
         "Our Daily Blog": {
             "link": {
-                "portal command": "portal_LaunchUrl",
+                "portal command": "portal_GoURL",
                 "portal param": "https://www.himalayanacademy.com/blog/taka/"
             },
             "imageText": "Our Daily\nBlog",
@@ -96,7 +96,7 @@
         "Take a Virtual Tour": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit/virtual-tour",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Take a\nVirtual Tour",
             "shortImageFile": "thumb_virtual-tour.jpg"
@@ -112,7 +112,7 @@
         "Our Guru Lineage": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/lineage-philosophy/lineage",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.jpg"
@@ -120,7 +120,7 @@
         "Monthly News": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/newsletter",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Monthly\nNews",
             "shortImageFile": "thumb_news.jpg"
@@ -164,7 +164,7 @@
         "How to Visit": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "How to Visit",
             "shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
@@ -204,7 +204,7 @@
         "Meet the Monks": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/meet-the-monks",
-                "portal command": "portal_LaunchUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Meet the\nMonks",
             "shortImageFile": "thumb_monks-by-marya.jpg"
@@ -235,7 +235,7 @@
         },
         "Sanskrit Chanting": {
             "link": {
-                "portal command": "portal_LaunchUrl",
+                "portal command": "portal_GoURL",
                 "portal param": "https://www.himalayanacademy.com/looklisten/chanting"
             },
             "imageText": "Sanskrit\nChanting",
@@ -251,7 +251,7 @@
         },
         "All Satgurus' Talks": {
             "link": {
-                "portal command": "portal_LaunchUrl",
+                "portal command": "portal_GoURL",
                 "portal param": "https://www.himalayanacademy.com/looklisten/talksindex"
             },
             "imageText": "All \nSatgurus'\nTalks",
@@ -259,7 +259,7 @@
         },
         "Songs": {
             "link": {
-                "portal command": "portal_LaunchUrl",
+                "portal command": "portal_GoURL",
                 "portal param": "https://www.himalayanacademy.com/looklisten/music"
             },
             "imageText": "Songs",

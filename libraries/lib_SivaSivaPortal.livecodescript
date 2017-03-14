@@ -24,7 +24,7 @@ and accessed via the handlers in the SivaSiva | Portal | Model section below.
 
 --> Variables
 -
-local LocalArray, sCurrentPortal
+local LocalArray, sCurrentPortal,sLastStack
 
 
 --> Working On
@@ -106,27 +106,37 @@ command portal_SetCurrent portalName
 end portal_SetCurrent
 
 function portal_GetCurrent
-   # BR: Support for tracking the portal from which
-   # a module was launched from   
-   return sCurrentPortal
+    # BR: Support for tracking the portal from which
+    # a module was launched from   
+    return sCurrentPortal
 end portal_GetCurrent
 
-command portal_GoName portalName
-   portal_GoStack portalName
-   return the result
-end portal_GoName
+command portal_SetCurrentStack stackName
+    put stackName into sLastStack  
+end portal_SetCurrentStack
+
+function portal_GetLastStack
+    # BR: Support for tracking the stack from which
+    # a module was launched from   so we can go back
+    return sLastStack
+end portal_GetLastStack
 
 command portal_GoStack stackName
-   -- goes to the new stack
-   -- closes the current stack
-   -- safely ignores if we are alrady in the new stack
-   
-   put the short name of this stack into oStackName
-   if oStackName = stackName then return oStackName
-   
-   go to stack stackName
-   close stack oStackName  # be sure all stacks are set to destroy on close
-   return oStackName
+    -- goes to the new stack
+    -- closes the current stack
+    -- safely ignores if we are alrady in the new stack
+    
+    put the short name of this stack into oStackName
+    portal_SetCurrentStack oStackName
+    if oStackName = stackName then return oStackName
+    
+    go to stack stackName
+    # don't want to close the portal stack
+    if not  (oStackName= "Siva-Siva-App" )  then
+    # only other stacks
+    close stack oStackName  # be sure all stacks are set to destroy on close
+end if
+return oStackName
 end portal_GoStack
 
 command portal_RemoveStack oStackName

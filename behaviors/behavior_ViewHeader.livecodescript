@@ -46,8 +46,7 @@ on mouseUp
    put the mouseAction of me into tActionName
    switch tActionName
       case "back"
-         -- portal_GoStack "Siva-Siva-App"
-         go to stack "Siva-Siva-App"
+         portal_Go "Our Website"
          break
       case "add"
          -- log_Clear
