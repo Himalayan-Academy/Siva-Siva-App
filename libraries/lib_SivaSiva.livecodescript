@@ -111,5 +111,3 @@ command setUpCompositor
         set the compositorCacheLimit of the topstack  to (16 * 1024 * 1024)
     end if
 end setUpCompositor
-
-
