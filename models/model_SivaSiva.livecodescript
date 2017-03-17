@@ -24,19 +24,6 @@ local LocalArray
 
 --> SivaSiva | Model
 
-command setUpCompositor
-    if the environment <> "development" then
-        set the acceleratedRendering of the topstack to "true"
-        if the platform is "iphone" then
-            set the compositorType of this stack to "opengl"
-        else
-            set the compositorType of this stack to "software"
-        end if
-        set the compositorTileSize of this stack to 32
-        set the compositorCacheLimit of this stack to (16 * 1024 * 1024)
-    end if
-end setUpCompositor
-
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile-- could use ".array"
