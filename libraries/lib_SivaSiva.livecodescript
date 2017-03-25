@@ -102,12 +102,5 @@ command sivasiva_SetStatusBarVis visBoolean
 command setUpCompositor
     if the environment <> "development" then
         set the acceleratedRendering of the topstack to "true"
-        if the platform is "iphone" then
-            set the compositorType of the topstack  to "opengl"
-        else
-            set the compositorType of the topstack to "software"
-        end if
-        set the compositorTileSize of the topstack  to 32
-        set the compositorCacheLimit of the topstack  to (16 * 1024 * 1024)
     end if
 end setUpCompositor
