@@ -14,46 +14,50 @@ local LocalArray
 --> Working on
 -
 getprop row_BackgroundColour
-   put the row_View [1] of _scrollingView() into rowView
-   put the background_Colour of rowView into someColour
-   return someColour
+    put the row_View [1] of _scrollingView() into rowView
+    put the background_Colour of rowView into someColour
+    return someColour
 end row_BackgroundColour
 
 setprop row_BackgroundColour someColour
-   put the row_Views of _scrollingView() into rowViews
-   lock screen
-   repeat for each line rowView in rowViews
-      set the background_Colour of rowView to someColour
-   end repeat
-   unlock screen
+    put the row_Views of _scrollingView() into rowViews
+    lock screen
+    repeat for each line rowView in rowViews
+        set the background_Colour of rowView to someColour
+    end repeat
+    unlock screen
 end row_BackgroundColour
 
 getprop background_Transparent
-   put the showBorder of me into someBoolean
-   return someBoolean
+    put the showBorder of me into someBoolean
+    return someBoolean
 end background_Transparent
 
 setprop background_Transparent someBoolean
-   if the long id of the target is not the long id of me then pass background_Transparent
-   lock screen
-   set the showBorder of me to someBoolean
-   set the opaque of me to someBoolean
-   set the background_Transparent of _scrollingView() to (not someBoolean)
-   unlock screen
+    if the long id of the target is not the long id of me then pass background_Transparent
+    lock screen
+    set the showBorder of me to someBoolean
+    set the opaque of me to someBoolean
+    set the background_Transparent of _scrollingView() to (not someBoolean)
+    unlock screen
 end background_Transparent
 
 
 --> Events
 -
 on preOpenControl
-   -- bug: for some reason we occasionally lose references to nested behaviors
-   portal_InitBehaviors
+    if the short name of me is "app-bkgnd" then
+        exit preOpenControl
+    end if
+    
+    -- bug: for some reason we occasionally lose references to nested behaviors
+    portal_InitBehaviors
 end preOpenControl
 
--- on resizeControl
--- resizing not active
-LayoutControl
-end resizeControl
+-- -- on resizeControl
+-- -- resizing not active
+-- LayoutControl
+-- end resizeControl
 
 command portal_InitBehaviors
    put _headerView() into headerView

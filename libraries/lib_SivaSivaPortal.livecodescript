@@ -340,8 +340,11 @@ getprop portal_View
 end portal_View
 
 function portal_GetHomeView
-   put portal_GetHomeStackPath() into portalHomeStackPath
-   put the long id of control 1 of cd 1 of stack portalHomeStackPath into portalView
+    put portal_GetHomeStackPath() into portalHomeStackPath
+    #BR -- David had set this to "control 1" but it needs to be set to Control 2 which is the 
+    # group above the background object... why we can't jus declare the name of the4
+    # group is beyond me... but it broke after I put a large background grc on layer 1
+   put the long id of control 2 of cd 1 of stack portalHomeStackPath into portalView
    -- put the portal_View of stack portalHomeStackPath into portalView
    return portalView
 end portal_GetHomeView
