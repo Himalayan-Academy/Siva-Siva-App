@@ -89,13 +89,16 @@ command portal_GoLandscapeUrl someURL
 end portal_GoLandscapeUrl
 
 command portal_Link portalName
+   
    -- navigates to the "portal view" and displays the named portal
-    lock screen
-    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
+   lock screen
+
+   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
    portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    put portal_GetHomeView() into portalView
- 
-  portal_SetCurrent portalName
+   
+   portal_SetCurrent portalName
+   portal_SetCurrentStack "Siva-Siva-App"
    set the portal_Name of portalView to portalName
    unlock screen
    set the logo_Faded of portalView to true
@@ -122,21 +125,23 @@ function portal_GetLastStack
 end portal_GetLastStack
 
 command portal_GoStack stackName
-    -- goes to the new stack
-    -- closes the current stack
-    -- safely ignores if we are alrady in the new stack
-    
-    put the short name of this stack into oStackName
-    portal_SetCurrentStack oStackName
-    if oStackName = stackName then return oStackName
-    
-    go to stack stackName
-    # don't want to close the portal stack
-    if not  (oStackName= "Siva-Siva-App" )  then
-    # only other stacks
-    close stack oStackName  # be sure all stacks are set to destroy on close
-end if
-return oStackName
+   -- goes to the new stack
+   -- closes the current stack  unless we are launching from portal
+   -- or opening a browser window...
+   -- safely ignores if we are alrady in the new stack
+   
+   
+   put the short name of this stack into oStackName
+   portal_SetCurrentStack oStackName
+   if oStackName = stackName then return oStackName
+   
+   go to stack stackName
+   # don't want to close the portal stack
+   if not  (oStackName= "Siva-Siva-App"  OR stackName= "view_SivaSivaBrowser")  then
+      # only other stacks
+      close stack oStackName  # be sure all stacks are set to destroy on close
+   end if
+   return oStackName
 end portal_GoStack
 
 command portal_RemoveStack oStackName

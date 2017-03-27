@@ -117,7 +117,12 @@ setprop mobile_Orientation whichOrientation
    set the footer_IsVisible of me to true
    switch whichOrientation
       case "portrait"
-         set the header_IsVisible of me to true
+         --set the header_IsVisible of me to true
+         set the header_IsVisible of me to false # disable for now
+         # This was david's plan for using this behavior for layout of screens
+         # actually could be very useful, but we need to be able to
+         # disable the header completely in most contexts
+         
          set the landscape_Layout of me to false
          set the view_Margins of _footerView() to "16,8,16,10"
          break

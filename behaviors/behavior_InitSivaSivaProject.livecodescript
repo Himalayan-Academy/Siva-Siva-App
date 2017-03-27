@@ -77,6 +77,7 @@ on openCard
    end if
    
    set the logo_Faded of portalView to true
+   portal_SetCurrentStack "Siva-Siva-App"
    pass openCard
 end openCard
 
