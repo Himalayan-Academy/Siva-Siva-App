@@ -46,6 +46,10 @@
             "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
         },
         "The Master Course": {
+             "link": {
+                "portal param": "https://www.himalayanacademy.com/livespiritually/become-student/mc-options",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "The\nMaster\nCourse",
             "shortImageFile": "thumb_master-coures_trilogy-in-box.jpg"
         },
@@ -124,7 +128,7 @@
             },
             "imageText": "Monthly\nNews",
             "shortImageFile": "thumb_news.jpg"
-        },
+        }, 
         "Lesson of the Day": {
             "link": {
                 "portal command": "portal_Go",
@@ -138,10 +142,18 @@
             "shortImageFile": "thumb_faq_shtrstk-127433528.jpg"
         },
         "Educational Insights": {
+            "link": {
+                "portal param": "https://www.himalayanacademy.com/site/search/file_id/_ei",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "Educational\nInsights",
             "shortImageFile": "thumb_insight-sections.jpg"
         },
         "All Our On-Line Books": {
+            "link": {
+                "portal param": "https://www.himalayanacademy.com/readlearn/books",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "All Our\nOn-Line\nBooks",
             "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.jpg"
         },
@@ -182,6 +194,10 @@
             "shortImageFile": "thumb_humor.jpg"
         },
         "Hindu Lexicon": {
+             "link": {
+                "portal param": "https://www.himalayanacademy.com/view/lexicon",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "Hindu\nLexicon",
             "shortImageFile": "thumb_lexicon_shtrstk-26948821.jpg"
         },
