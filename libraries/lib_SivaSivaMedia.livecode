@@ -123,6 +123,20 @@ function fetchRandomMediaItem
    end repeat
    put tRetValA into aMediaMeta
 end fetchRandomMediaItem
+
+function fetchRemoteMediaItem
+   # we need to pass params to the API on the server to look up 
+   # a record that we know has  not have yet been bundled with the app in the Jnanam dbase
+   # mostly this is for most recent additions of audio and video, or book additions
+   # for major collections we should be updating the app with a fresh dump of the dbase
+   
+   # pseudocode
+   
+   #the httpheaders to "content-type: application/json"
+   #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   
+   
+end fetchRemoteMediaItem
  
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    
@@ -442,6 +456,8 @@ end checkMetaBackScript
 ##########################################################
 ## VISUAL EFFECTS
 ##########################################################
+
+# BR note that hide and show with visual effect "dissolve" also works, tends to run very fast on mobile
 
 command object_FadeIn  pEffectsTarget, newBlendLevel, someIncrement, someDelay
    set the blendLevel of  pEffectsTarget  to newBlendLevel

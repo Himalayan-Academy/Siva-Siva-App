@@ -75,6 +75,11 @@ command portal_DoRowLink rowName
 end portal_DoRowLink
 
 command portal_GoUrl someURL
+   #the Browser is called from various contexts
+   # we need to know where we came from in order to 
+   # handle returning to the context properly.
+   put the short name of this stack into oStackName
+   portal_SetCurrentStack(oStackName)
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
    portal_GoStack "view_SivaSivaBrowser"
 end portal_GoUrl
