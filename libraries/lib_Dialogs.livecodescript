@@ -97,6 +97,6 @@ on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
       put "Result:" && the result && "Error:" && tErr
       -- log tErr
    end try
-   send  closeMsg to me in 1500 milliseconds
+   send  closeMsg to me in 3000 milliseconds
 end buildMsgDisplay
   
