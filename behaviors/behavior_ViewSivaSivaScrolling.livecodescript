@@ -42,26 +42,15 @@ end desktop_SetScroll
 --> Events
 
 on mouseUp   
-    put the mouseLoc into tEndLoc
-    lock screen
-    if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
-          (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
-        put the portal_Row of the target into portalRow
-        put the row_Name of the target into rowName  
-        portal_DoRowLink rowName
-    end if
-    --    switch
-    --       case _mouseMoved() is true
-    --          -- answer "Has scrolled"
-    --          break
-    --       case portalRow is empty
-    --          -- answer "Not a row"
-    --          break
-    --       default
-    --          -- answer "Click"
-    --          put the row_Name of the target into rowName  
-    --          portal_DoRowLink rowName
-    --    end switch
+   put the mouseLoc into tEndLoc
+   lock screen
+   if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
+         (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
+      put the portal_Row of the target into portalRow
+      put the row_Name of the target into rowName  
+      portal_DoRowLink rowName
+   end if
+   unlock screen
 end  mouseup
 
 on mouseDown
