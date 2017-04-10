@@ -5,7 +5,7 @@ license: GPLv3
 name: model_SivaSiva
 type: model
 version: 0.2
-
+Original script by David Bovil
 /*
 The SivaSiva model is an enhanced version of the older config.json model structure.
 The array is stored in a file "Siva-Siva-App/models/model_SivaSiva/model_SivaSiva.array"
@@ -51,7 +51,8 @@ end sivasiva_DataFile
 --> SivaSiva | Model | Cache
 -
 getprop use_SivaSivaCache
-   return LocalArray ["useSivaSivaCache"] is not false
+   return LocalArray ["useSivaSivaCache"] is not false  
+   # BR Apr 9, 2017 never use cached data for now
 end use_SivaSivaCache
 
 setprop use_SivaSivaCache someBooelan

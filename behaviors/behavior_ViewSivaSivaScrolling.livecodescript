@@ -43,14 +43,12 @@ end desktop_SetScroll
 
 on mouseUp   
    put the mouseLoc into tEndLoc
-   lock screen
    if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
          (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
       put the portal_Row of the target into portalRow
       put the row_Name of the target into rowName  
       portal_DoRowLink rowName
    end if
-   unlock screen
 end  mouseup
 
 on mouseDown

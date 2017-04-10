@@ -58,9 +58,6 @@ for instance on the card
 
 command sivasiva_GoHomePortal
    portal_Link "home"
-   -- put the portal_View of stack "Siva-Siva-App" into portalView
-   -- set the portal_Name of portalView to "home"
-   -- portal_GoStack "Siva-Siva-App"
 end sivasiva_GoHomePortal
 
 command sivasiva_QueueContent btnObject, hiliteBoolean

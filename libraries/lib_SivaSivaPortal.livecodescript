@@ -5,6 +5,7 @@ license: GPLv3
 name: lib_SivaSivaPortal
 type: library
 version: 0.2
+Original Script by David Bovill
 
 /*
 The SivaSiva portal is a sel-contained group which presents a "contents view" of:
@@ -56,8 +57,8 @@ command portal_DoRowLink rowName
         case "portal_Link"
             portal_Link linkParam
             break
-        case "portal_Stack"
-            portal_Stack linkParam
+        case "portal_GoStack"  
+            portal_GoStack linkParam
             break
         case "portal_Go"
             portal_Go linkParam
@@ -97,9 +98,10 @@ command portal_Link portalName
    
    -- navigates to the "portal view" and displays the named portal
    lock screen
-
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
+   if not (sLastStack="Siva-Siva-App") then
+      portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
+   end if
    put portal_GetHomeView() into portalView
    
    portal_SetCurrent portalName
@@ -129,24 +131,26 @@ function portal_GetLastStack
     return sLastStack
 end portal_GetLastStack
 
-command portal_GoStack stackName
+command portal_GoStack cardOrStackObject --  stackName
    -- goes to the new stack
    -- closes the current stack  unless we are launching from portal
    -- or opening a browser window...
-   -- safely ignores if we are alrady in the new stack
+   -- safely ignores if we are already in the new stack
    
-   
+   # BR: we need to know where we are to make the right decision
+   # on whether to close the stack or note
    put the short name of this stack into oStackName
    portal_SetCurrentStack oStackName
-   if oStackName = stackName then return oStackName
    
-   go to stack stackName
-   # don't want to close the portal stack
    if not  (oStackName= "Siva-Siva-App"  OR stackName= "view_SivaSivaBrowser")  then
-      # only other stacks
+      # only other stacks   For now we are testing to close the main stack too 
+      # to try and solve the problem on Android...
       close stack oStackName  # be sure all stacks are set to destroy on close
    end if
-   return oStackName
+   
+   go  cardOrStackObject in a new window -- to stack stackName
+   put the short name of this stack into sLastStack
+   
 end portal_GoStack
 
 command portal_RemoveStack oStackName
@@ -155,32 +159,40 @@ command portal_RemoveStack oStackName
     end if    
 end portal_RemoveStack 
 
-command portal_Go cardOrStackObject
-   -- answer portal_Go
-   /*
-   This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
-   Because we have set the stackfiles we can simply go to the short name of the stack.
-   The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
-   */
-   
-   put the short name of this stack into oStackName
-   go cardOrStackObject in a new window
-   put the result into goResult
-   put the stack_Name of cardOrStackObject into newStackName
-   if newStackName is oStackName then
-      if the long id of cardOrStackObject = the long id of this card then
-         -- the button or icon should proably be changed or disabled
-      else
-         -- going to a different card in the same stack
-         -- answer "Not closing. Destination is the same stack."
-      end if
-   else
-      if the environment is "Mobile" then
-          close stack oStackName
-      end if
-   end if
-   return goResult
-end portal_Go
+
+# BR:  Portal_Go is deprecated
+# we have combined going to a stack opr to a card in a stack into one handler:
+# portal_GoStack  because there is where the problems are on Android.
+# We are leaving the mainstack open and then opening new stacks on top of that stack
+# this is working perfectly on Desktop and iOS, but not on Android.
+
+
+-- command portal_Go cardOrStackObject
+--    -- answer portal_Go
+--    /*
+--    This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
+--    Because we have set the stackfiles we can simply go to the short name of the stack.
+--    The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
+--    */
+
+--    put the short name of this stack into oStackName
+--    go cardOrStackObject in a new window
+--    put the result into goResult
+--    put the stack_Name of cardOrStackObject into newStackName
+--    if newStackName is oStackName then
+--       if the long id of cardOrStackObject = the long id of this card then
+--          -- the button or icon should proably be changed or disabled
+--       else
+--          -- going to a different card in the same stack
+--          -- answer "Not closing. Destination is the same stack."
+--       end if
+--    else
+--       if the environment is "Mobile" then
+--           close stack oStackName
+--       end if
+--    end if
+--    return goResult
+-- end portal_Go
 
 
 --> SivaSiva | Portal | Row

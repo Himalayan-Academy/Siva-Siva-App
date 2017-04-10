@@ -2,7 +2,7 @@
     "portalRowDictionary": {
         "Video World": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_video\" of stack \"surprise\""
             },
             "imageText": "Video\nWorld",
@@ -31,7 +31,7 @@
         },
         "My Hindu Calendar": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"panchangam\""
             },
             "imageText": "My Hindu\nCalendar",
@@ -83,7 +83,7 @@
         },
         "Sacred Verses": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_verses\" of stack \"surprise\""
             },
             "imageText": "Sacred\nVerses",
@@ -91,7 +91,7 @@
         },
         "Gems of Wisdom": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"gems\""
             },
             "imageText": "Gems of\nWisdom",
@@ -131,7 +131,7 @@
         }, 
         "Lesson of the Day": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"daily-lesson\""
             },
             "imageText": "Lesson of\nthe Day",
@@ -159,7 +159,7 @@
         },
         "Path to Siva: A Catechism for Youth": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"pathtosiva\""
             },
             "imageText": "Path to Siva:\nA Catechism\nfor Youth",
@@ -167,7 +167,7 @@
         },
         "Color Meditation": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"color-meditation\""
             },
             "imageText": "Color\nMeditation",
@@ -183,7 +183,7 @@
         },
         "Darshan": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_darshan\" of stack \"surprise\""
             },
             "imageText": "Darshan",
@@ -203,7 +203,7 @@
         },
         "Word Puzzles": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"wordpuzzles\""
             },
             "imageText": "Word\nPuzzles",
@@ -227,7 +227,7 @@
         },
         "Hindu Art": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_art\" of stack \"surprise\""
             },
             "imageText": "Hindu\nArt",
@@ -235,7 +235,7 @@
         },
         "Audio World": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_audio\" of stack \"surprise\""
             },
             "imageText": "Audio\nWorld",
@@ -259,7 +259,7 @@
         },
         "Bodhinatha's Latest Talks": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"bodhinatha-latest\" of stack \"listen\""
             },
             "imageText": "Bodhinatha's\nLatest\nInspired Talk",
@@ -283,7 +283,7 @@
         },
         "The Guru Chronicles": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"guru-chronicles-audio\" of stack \"listen\""
             },
             "imageText": "The Guru\nChronicles",
@@ -299,7 +299,7 @@
         },
         "Surprise Me": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"surprise\""
             },
             "imageText": "Surprise\nMe",
