@@ -133,6 +133,22 @@ function init_GetStatus
    return someBoolean
 end init_GetStatus
 
+command init_LoadStackFilesFromConfiguration
+    -- AAG: loads the stackfiels from json 
+    global sConfigA
+
+    put sConfigA["stackfiles"] into tStackFilesA
+    repeat for each key k in tStackFilesA
+        put tStackFilesA[k] into tTempA
+        put tTempA["name"], tTempA["file"] & cf after tBuffer
+    end repeat
+    put the stackfiles of stack "Siva-Siva-App" into tStartingList
+    if char -1 of tStartingList is not among the items of format("\n,\r") then
+        put cr after tStartingList
+    end if
+    set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
+end init_LoadStackFilesFromConfiguration
+
 command init_AppConfiguration
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
    
@@ -147,7 +163,10 @@ command init_AppConfiguration
    -- due to bug in the files on Android we must use config to load libraries
    start using stack "model_SivaSivaConfig"
    init_LoadJsonConfig
-   
+
+   -- reload the stackfiles property
+   init_LoadStackFilesFromConfiguration
+
    -- then start using all required libraries
    init_LoadLibraries
    
@@ -163,7 +182,32 @@ command  init_LoadLibraries
       if there is a stack stackName then
          start using stack stackName
       else
-         answer stackName
+        -- AAG: fix loading of stacks
+         put the defaultFolder into tDF
+         set the itemdel to "/"
+         set the defaultFolder to item 1 to -2 of the effective filename of stack "Siva-Siva-App"
+         set the itemdel to comma
+         put stackName && "loading"
+         switch
+            case ("behavior" is in stackName)
+                put "behaviors/" & stackName & ".livecodescript" into stackName
+                break
+            case ("model" is in stackName)
+                put "models/" & stackName & ".livecodescript" into stackName
+                break  
+            case ("lib" is in stackName)
+                put "libraries/" & stackName & ".livecodescript" into stackName
+                break
+            default
+                put "modules/" & stackName & ".livecode" into stackName
+                break   
+        end switch   
+        if there is a file stackName then
+            start using stackName
+        else
+            answer error "can't find" && stackName
+        end if  
+        set the defaultFolder to tDF       
       end if
    end repeat
    -- answer the stacksinuse
