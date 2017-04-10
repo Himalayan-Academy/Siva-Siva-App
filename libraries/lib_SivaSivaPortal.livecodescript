@@ -100,6 +100,7 @@ command portal_Link portalName
    lock screen
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
    if not (sLastStack="Siva-Siva-App") then
+      close stack sLaststack
       portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
    end if
    put portal_GetHomeView() into portalView
