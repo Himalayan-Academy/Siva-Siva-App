@@ -99,10 +99,14 @@ command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
    lock screen
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   if not (sLastStack="Siva-Siva-App") then
+   if not (sLastStack="Siva-Siva-App") then 
+      # called from a module and not the portal stack
       close stack sLaststack
-      portal_GoStack "Siva-Siva-App" -- does nothing if in the portal stack
+      portal_GoStack "Siva-Siva-App" 
    end if
+   # otherwise we are already in the portal stack
+   # Either case we have to build the view:
+   
    put portal_GetHomeView() into portalView
    
    portal_SetCurrent portalName
@@ -149,7 +153,7 @@ command portal_GoStack cardOrStackObject --  stackName
       close stack oStackName  # be sure all stacks are set to destroy on close
    end if
    
-   go  cardOrStackObject in a new window -- to stack stackName
+   go  cardOrStackObject -- to stack stackName
    put the short name of this stack into sLastStack
    
 end portal_GoStack
