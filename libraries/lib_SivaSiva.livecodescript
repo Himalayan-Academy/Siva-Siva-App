@@ -94,10 +94,5 @@ command sivasiva_SetStatusBarVis visBoolean
         else
             mobileHideStatusBar
         end if        
-    end sivasiva_SetStatusBarVis
+ end sivasiva_SetStatusBarVis
     
-command setUpCompositor
-    if the environment <> "development" then
-        set the acceleratedRendering of the topstack to "true"
-    end if
-end setUpCompositor

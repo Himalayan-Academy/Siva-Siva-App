@@ -99,10 +99,10 @@ command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
    lock screen
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   if not (sLastStack="Siva-Siva-App") then 
+   if not (sLastStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
       close stack sLaststack
-      portal_GoStack "Siva-Siva-App" 
+      portal_GoStack "Siva-Siva-Portal" 
    end if
    # otherwise we are already in the portal stack
    # Either case we have to build the view:
@@ -110,7 +110,7 @@ command portal_Link portalName
    put portal_GetHomeView() into portalView
    
    portal_SetCurrent portalName
-   portal_SetCurrentStack "Siva-Siva-App"
+   portal_SetCurrentStack "Siva-Siva-Portal"
    set the portal_Name of portalView to portalName
    unlock screen
    set the logo_Faded of portalView to true
@@ -143,23 +143,25 @@ command portal_GoStack cardOrStackObject --  stackName
    -- safely ignores if we are already in the new stack
    
    # BR: we need to know where we are to make the right decision
-   # on whether to close the stack or note
+   # on whether to close the stack or not
    put the short name of this stack into oStackName
-   portal_SetCurrentStack oStackName
    
-   if not  (oStackName= "Siva-Siva-App"  OR stackName= "view_SivaSivaBrowser")  then
+   if not  (oStackName= "Siva-Siva-App")   then
+      portal_SetCurrentStack oStackName
+   end if
+   
+   if not  (oStackName= "Siva-Siva-App") then  -- OR stackName= "view_SivaSivaBrowser")  then
       # only other stacks   For now we are testing to close the main stack too 
       # to try and solve the problem on Android...
       close stack oStackName  # be sure all stacks are set to destroy on close
    end if
    
    go  cardOrStackObject -- to stack stackName
-   put the short name of this stack into sLastStack
-   
+
 end portal_GoStack
 
 command portal_RemoveStack oStackName
-    if stackName <> "Siva-Siva-App" then
+    if stackName <> "Siva-Siva-Portal" then
         close stack oStackName
     end if    
 end portal_RemoveStack 
@@ -177,7 +179,7 @@ end portal_RemoveStack
 --    /*
 --    This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
 --    Because we have set the stackfiles we can simply go to the short name of the stack.
---    The exception to this is the Siva-Siva-App" project home stack, which if it is closed menas that we loose the stackfiles capability!
+--    The exception to this is the Siva-Siva-Portal" project home stack, which if it is closed menas that we loose the stackfiles capability!
 --    */
 
 --    put the short name of this stack into oStackName
@@ -377,8 +379,8 @@ function portal_GetHomeView
 end portal_GetHomeView
 
 function portal_GetHomeStackPath
-   -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-App"
+   -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-Portal"
    -- put the filename of stack "sivasivahome" into portalHomeStackPath
-   put the filename of stack "Siva-Siva-App" into portalHomeStackPath
+   put the filename of stack "Siva-Siva-Portal" into portalHomeStackPath
    return portalHomeStackPath
 end portal_GetHomeStackPath

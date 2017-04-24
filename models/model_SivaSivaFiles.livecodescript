@@ -99,7 +99,11 @@ function sivasiva_ProjectStackPath
 end sivasiva_ProjectStackPath
 
 function sivasiva_ProjectFolder pRelativeFolderPath
-   put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   if there is a stack "Siva-Siva-App" then 
+      put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   else
+      put project_HomeFolder ("lib_SivaSivaRoot") into projectFolder
+   end if
    if pRelativeFolderPath is not empty then
       put pRelativeFolderPath after projectFolder
       if char -1 of projectFolder is not slash then put slash after projectFolder
