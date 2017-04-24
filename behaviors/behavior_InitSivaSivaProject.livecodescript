@@ -44,8 +44,7 @@ on preOpenStack
    -- start using this stack
    
    init_AppConfiguration -- load all libraries and configure app
-   
-   --pass preOpenStack
+   pass preOpenStack
 end preOpenStack
 
 function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
@@ -121,9 +120,8 @@ command init_AppConfiguration
    init_Logging
    
    -- due to bug in the files on Android we must use config to load libraries
-   open stack "model_SivaSivaConfig"
    start using stack "model_SivaSivaConfig"
-   put the openstacks
+   
    init_LoadJsonConfig
    
    
@@ -138,10 +136,12 @@ command init_AppConfiguration
    if the environment is "mobile" then 
       init_MobileGeometry
    end if
-   send "openPortalStack" to this stack in 200 milliseconds
+   portal_SetCurrentStack "Siva-Siva-App"
+   send openPortalStack to me in 200 milliseconds
 end init_AppConfiguration
 
 command openPortalStack
+   open stack "Siva-Siva-Portal"
    portal_Link "home"
 end openPortalStack
 

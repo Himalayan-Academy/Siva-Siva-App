@@ -20,9 +20,12 @@ Currently these temporary handlers display portal data in the portal template st
 command sivasiva_InitOrientation orientationType
    -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
    
-   if the environment is not "mobile" then return false
-   set the fullscreenmode of this stack to "showAll" -- better for wider screens
-   mobile_SetAllowedOrientation orientationType
+   if the environment is not "mobile" then
+      return false
+   else
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      mobile_SetAllowedOrientation orientationType
+   end if
 end sivasiva_InitOrientation
 
 command mobile_SetAllowedOrientation orientationType
@@ -80,7 +83,7 @@ end sivasiva_SettingsGear
 command display_Log
    portal_GoStack "Log"
 end display_Log
-
+ 
 function pingServer
    # call from any where to inform user and disable activities
    # that require internet access to our server or any the external service

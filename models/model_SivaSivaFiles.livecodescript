@@ -287,3 +287,7 @@ function sivasiva_ListModuleFolders
    put folder_ListShort (modulesFolder) into moduleNames
    return moduleNames
 end sivasiva_ListModuleFolders
+
+command checkFilesModelIsInUse
+   answer "Yes File Model here!" with "OK"
+end checkFilesModelIsInUse

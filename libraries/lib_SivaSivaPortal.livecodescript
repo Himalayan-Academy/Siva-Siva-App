@@ -99,7 +99,7 @@ command portal_Link portalName
    -- navigates to the "portal view" and displays the named portal
    lock screen
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   if not (sLastStack="Siva-Siva-Portal") then 
+   if not (sLastStack="Siva-Siva-App") then 
       # called from a module and not the portal stack
       close stack sLaststack
       portal_GoStack "Siva-Siva-Portal" 
