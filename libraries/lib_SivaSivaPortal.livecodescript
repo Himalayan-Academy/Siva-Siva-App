@@ -81,8 +81,8 @@ command portal_GoUrl someURL
    # handle returning to the context properly.
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
-   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
    portal_GoStack "view_SivaSivaBrowser"
+   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
 end portal_GoUrl
 
 command portal_LaunchUrl someURL

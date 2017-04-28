@@ -1,70 +1,70 @@
 ﻿script "behavior_ViewSivaSivaContentsRow"
 --> MetaData
--
+
 license: GPLv3
 name: behavior_ViewSivaSivaContentsRow
 type: behavior
 version: 0.3
 
 --> Variables
--
+
 local LocalArray
 
 
 --> Events
--
+
 -- on touchStart pID
 -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-mouseDown
-end touchStart
+-- mouseDown
+-- end touchStart
 
 -- on touchEnd pID
 -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
 -- answer the params
-mouseUp
-end touchEnd
+-- mouseUp
+-- end touchEnd
 
-on mouseDown   
-   -- set the row_Hilite of me to true
-   if the environment is "development" then
-      if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
-         menu_PopUp "Global | SivaSiva | Contents | Row | Menu"
-      end if
-   end if
-   pass mouseDown
-end mouseDown
+-- on mouseDown   
+--    -- set the row_Hilite of me to true
+--    if the environment is "development" then
+--       if the controlKey is "Down" and "Siva-Siva-App" is among the lines of the active_Projects of me then
+--          menu_PopUp "Global | SivaSiva | Contents | Row | Menu"
+--       end if
+--    end if
+--    pass mouseDown
+-- end mouseDown
 
 -- on mouseRelease
 -- answer the params
-set the row_Hilite of me to false
-pass mouseRelease
-end mouseRelease
+-- set the row_Hilite of me to false
+-- pass mouseRelease
+-- end mouseRelease
 
 -- on mouseUp
 put the short name of the target into cName
-switch cName
-   case "portal-link-label"
-      put the row_Name of me into portalName
-      -- set the portal_Name of me to portalName -- trapped by scrolling_View above
-      break
-   case "portal-link-image"
-      if the environment is "development" then
-         put the image_File of me into imageFile
-         -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
-         --  set the image_File of me to imageFile 
-      end if
-      -- answer the image_File of me
-      break
-   default
-      -- put cName
-end switch
--- set the row_Hilite of me to false
-pass mouseUp
-end mouseUp
+-- switch cName
+--    case "portal-link-label"
+--       put the row_Name of me into portalName
+--       -- set the portal_Name of me to portalName -- trapped by scrolling_View above
+--       break
+--    case "portal-link-image"
+--       if the environment is "development" then
+--          put the image_File of me into imageFile
+--          -- put lcw_Ask ("Set the filename fo this image...", imageFile) into imageFile
+--          --  set the image_File of me to imageFile 
+--       end if
+--       -- answer the image_File of me
+--       break
+--    default
+--       -- put cName
+-- end switch
+-- -- set the row_Hilite of me to false
+-- pass mouseUp
+-- end mouseUp
 
 
 --> Props
--
+
 getprop background_Colour
    put the backgroundcolor of _graphicObject() into someColour
    return someColour
@@ -202,7 +202,7 @@ end _centreVertically
 
 
 --> Events
--
+
 on resizeControl
    LayoutControl
    pass resizeControl
@@ -210,7 +210,7 @@ end resizeControl
 
 
 --> Geometry
--
+
 on LayoutControl pRect
    -- let's centre the two halfs and place them in the middle
    if pRect is empty then put the rect of me into pRect
