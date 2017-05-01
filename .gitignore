@@ -6,3 +6,4 @@ source/shared/img/gems/*
 .idea
 *.sublime*
 zDevReference
+zBuilds Alias

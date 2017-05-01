@@ -1,6 +1,5 @@
 ﻿script "lib_SivaSivaMedia"
 --> MetaData
--
 license: GPLv3
 name: lib_SivaSivaMedia
 type: library
@@ -478,3 +477,15 @@ command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
       set the blendLevel of pEffectsTarget to 100
    end if
 end object_FadeOut
+
+
+##########################################################
+## ##########################################################
+## RANDOM IMAGE FOR INIT STACK 
+##  the following is uses to update the image on the home loader card which 
+##  always stays open  our current methods are making this appear in between module transitions
+##  so let's make it interesting.
+##########################################################
+
+
+

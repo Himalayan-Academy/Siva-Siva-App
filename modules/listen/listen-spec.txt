@@ -1,5 +1,25 @@
 Spec for Listen Module
 
+See Spotify for models
+
+Simple implementation
+
+Structurally we have  four views
+
+1) main Library over view with Top categories running top to bottom and "genres" inside those categories on left to right sliders
+2) Genre TOC  has the "album" cover art at the top  option to shuffle play, index of all songs below, and a minified controller with title for the current playing song. 
+3) the nowPlayExpanded group has a song cover, title and player controlle takes over the whole screen
+4) ancillary views: Playlists; Stations; songs, albums Artists Podcasts, my library recently played.
+
+V1: portal will serve as the main library over view until V2
+We to go in app only two "genres"
+    -- Bodhinatha's recent talks
+    -- Guru Chronicles
+
+   we can implement 2) and 3) above for each of these.
+
+   
+
 Analysis of Spotify UX
 
 	1. Home screen indicates off-line if the connection is bad

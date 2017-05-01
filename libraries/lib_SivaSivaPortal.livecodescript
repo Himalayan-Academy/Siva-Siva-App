@@ -145,7 +145,6 @@ command portal_GoStack cardOrStackObject --  stackName
    # BR: we need to know where we are to make the right decision
    # on whether to close the stack or not
    put the short name of this stack into oStackName
-   
    if not  (oStackName= "Siva-Siva-App")   then
       portal_SetCurrentStack oStackName
    end if
@@ -155,9 +154,7 @@ command portal_GoStack cardOrStackObject --  stackName
       # to try and solve the problem on Android...
       close stack oStackName  # be sure all stacks are set to destroy on close
    end if
-   
    go  cardOrStackObject -- to stack stackName
-
 end portal_GoStack
 
 command portal_RemoveStack oStackName

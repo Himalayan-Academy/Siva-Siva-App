@@ -116,13 +116,9 @@ function project_HomeFolder homeStackName
       put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
       put slash after projectHomeFolder
    else
-      -- the commented out lines make the code below work on mobile
-      -- put the defaultstack into oStack
-      -- set the defaultstack to homeStackName
       set the itemdelimiter to slash
       put the filename of stack homeStackName into projectHomeFolder
       put empty into item -1 of projectHomeFolder
-      -- set the defaultstack to oStack
    end if
    return projectHomeFolder
 end project_HomeFolder
