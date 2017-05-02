@@ -123,19 +123,26 @@ function fetchRandomMediaItem
    put tRetValA into aMediaMeta
 end fetchRandomMediaItem
 
-function fetchRemoteMediaItem
+function fetchRemoteMediaItems
+   
+   if the paramcount mod 2 is not 0 then
+      return "err: param count needs to be even"
+   end if
+   
    # we need to pass params to the API on the server to look up 
    # a record that we know has  not have yet been bundled with the app in the Jnanam dbase
    # mostly this is for most recent additions of audio and video, or book additions
    # for major collections we should be updating the app with a fresh dump of the dbase
    
-   # pseudocode
+   # need a function to check latest date in local Jnanam sqlLite dbase.
+   
+   
    
    #the httpheaders to "content-type: application/json"
    #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
    
    
-end fetchRemoteMediaItem
+end fetchRemoteMediaItems
  
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    
