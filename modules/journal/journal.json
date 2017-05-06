@@ -1,0 +1,29 @@
+{
+	"style": {
+        "listView": {
+            "cardBackgroundColor": "#FFF1D0",
+            "activityIconColor": "#6E83B2",
+            "favoriteEnabledIconColor": "#FFD400",
+            "favoriteDisabledIconColor": "#D3D3D3",
+            "filterBackgroundColor": "#FABC00",
+            "headerColor": "#FEFFFD",
+            "headerBackgroundColor": "#7B84E4",
+            "headerHeight": "50",
+            "headerLabel": "Journal",
+            "bodyTextColor": "#4D4A44",
+            "moduleNameColor": "#31302E"
+        },
+        "detailView": {
+            "cardBackgroundColor": "#FFF1D0",
+            "activityIconColor": "#6E83B2",
+            "favoriteIconColor": "#FFD400",
+            "filterBackgroundColor": "#FABC00",
+            "headerColor": "#FEFFFD",
+            "headerBackgroundColor": "#7B84E4",
+            "headerHeight": "50",
+            "headerLabel": "Journal",
+            "bodyTextColor": "#4D4A44",
+            "moduleNameColor": "#31302E"
+        }
+    }
+}

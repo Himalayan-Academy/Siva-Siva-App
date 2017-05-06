@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+    </head>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #FFF9EA;
+        }
+        .header {
+            height: 50px;
+            background-color: #FFF9EA;
+        }
+        #has-image {
+            background-color: #FFF0D3;
+        }
+        #description {
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 1.2em;
+        }
+        .hidden {
+            display: none;
+        }
+
+        button {
+            padding: 15px;
+            border-radius: 20px;
+            background-color: #6884AF;
+            color: #F6F9F9;
+            font-size: 1.1em;
+            border-style: none;
+        }
+    </style>
+    <script>
+        function hideImage() {
+            document.getElementById("has-image").classList.add("hidden");
+        }
+
+        function launchActivity() {
+            liveCode.launchActivity();
+        }
+    </script>
+    <body>
+        <div class="header">
+            <span id="is-favorite"></span>
+            <span id="is-module-icon" class="icon-[[tModuleName]]"></span>
+            <h1>[[tTitle]]</h1>
+        </div>
+        <div id="has-image">
+            <img src="[[tImage]]" onerror="hideImage()">
+        </div>
+        <div id="description">
+            <h1>Description</h1>
+            <p>[[tDescription]]</p>
+        </div>
+        <button class="primary" onclick="launchActivity()">Launch activity</button>
+    </body>
+</html>

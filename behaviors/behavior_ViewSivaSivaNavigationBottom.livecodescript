@@ -432,3 +432,9 @@ command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
    end if
    put leftM,topM,rightM,bottomM into someMargin
 end margin_Normalize
+
+--> AAG | Hopefully navigation
+
+command sivasiva_AddFavorites
+   portal_GoStack "Journal"
+end sivasiva_AddFavorites
