@@ -107,7 +107,7 @@ on mouseDown
       default
          set the highlite of btnObject to true
          if the environment is "development" then
-            -- put btnName
+             --put btnName
          end if
    end switch
 end mouseDown
