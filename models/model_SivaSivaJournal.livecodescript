@@ -50,6 +50,42 @@ function Journal_GetModelFolder
    return JournalModelFolder
 end Journal_GetModelFolder
 
+function journal_convertDate pDateTime
+   -- YYYY-MM-DD HH:MM
+   -- pDateTime could be a date only, or a date and time, so check first
+   -- from: https://sonsothunder.com/devres/livecode/tips/data005.htm
+   put the twelvehourtime into tCurr12HrTime
+   set the twelvehourtime to false
+   if ":" is not in pDateTime then
+      put false into tHasTime
+      put pDateTime into tDate
+      convert tDate to long date
+   else
+      put true into tHasTime
+      put word 1 of pDateTime into tDate
+      convert tDate to long date
+      put word 2 to 3 of pDateTime into tTime
+      convert tTime to long time
+      set the itemDel to ":"
+      if item 1 of tTime < 10 then
+         put "0" before tTime
+      end if
+   end if
+   put last word of tDate into tYear
+   convert tDate to short date
+   set the itemDel to "/"
+   put item 1 of tDate into tMonth
+   put item 2 of tDate into tDay
+   if tMonth < 10 then put 0 before tMonth
+   if tDay < 10 then put 0 before tDay
+   set the twelvehourtime to tCurr12HrTime
+   put tYear & "-" & tMonth & "-" & tDay into tDate
+   if tHasTime then  
+      return (tDate && tTime)
+   else
+      return tDate
+   end if
+end journal_convertDate
 
 function Journal_GetDatabasePath
    if the environment is "development" then
@@ -87,6 +123,8 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    else
       put pModule into tDataA["label"]
    end if
+   
+   put journal_convertDate(the date && the time) into tDataA["date"]
    
    put dbInsert("journal", tDataA, JournalDB()) into tResult
    return tResult
@@ -139,7 +177,7 @@ end Journal_LaunchEntry
 on journalresume pDataA, pEntryA
    put "Error: no one could handle journalresume, going for the default behavior"
    put "Launching" && pEntryA["module"]
-   portal_GoStack pEntryA["module"]
+   portal_Go pEntryA["module"]
 end journalresume
    
    
