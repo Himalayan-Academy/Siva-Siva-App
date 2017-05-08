@@ -3,5 +3,9 @@
   "libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities",
   "log_file": "sivasiva.log", 
   "log_level": "info,error,fatal", 
-  "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal"
+  "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal",
+  "stackfiles": [
+    {"name": "journal", "file": "modules/journal/journal.livecode"},
+    {"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"}
+  ]
 }
