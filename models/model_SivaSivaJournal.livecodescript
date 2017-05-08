@@ -177,11 +177,11 @@ end Journal_LaunchEntry
 on journalresume pDataA, pEntryA
    put "Error: no one could handle journalresume, going for the default behavior"
    put "Launching" && pEntryA["module"]
-   portal_Go pEntryA["module"]
+   portal_GoStack pEntryA["module"]
 end journalresume
    
    
-   function Journal_makeInlineArray
+function Journal_makeInlineArray
    repeat with x = 1 to the paramcount step 2
       put param(x+1) into tTempA[param(x)]
    end repeat

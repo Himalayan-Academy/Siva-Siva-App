@@ -52,7 +52,7 @@ function timeutils_elapsedTime pFromDate, pUntilDate
    put (60 * 60) into tHowManySecondsInAHour
    if tDifference >= tHowManySecondsInAHour then
       get tDifference div tHowManySecondsInAHour
-      put it && "hours " after tResult
+      put it & "h " after tResult
       put tDifference mod tHowManySecondsInAHour into tDifference
    end if
    
@@ -60,7 +60,7 @@ function timeutils_elapsedTime pFromDate, pUntilDate
    put 60 into tHowManySecondsInAMinute
    if tDifference >= tHowManySecondsInAMinute then
       get tDifference div tHowManySecondsInAMinute
-      put it && "minutes" && tSuffix after tResult
+      put it & "m" && tSuffix after tResult
       put tDifference mod tHowManySecondsInAMinute into tDifference
       return tResult
    end if
@@ -69,7 +69,7 @@ function timeutils_elapsedTime pFromDate, pUntilDate
    put 1 into tHowManySecondsInASecond
    if tDifference >= tHowManySecondsInASecond then
       get tDifference div tHowManySecondsInASecond
-      put it && "seconds " after tResult
+      put it & "s " after tResult
    end if
    put tSuffix after tResult
    return tResult
