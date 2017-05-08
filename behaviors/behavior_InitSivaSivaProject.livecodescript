@@ -95,21 +95,25 @@ function init_GetStatus
    return someBoolean
 end init_GetStatus
 
--- command init_LoadStackFilesFromConfiguration
---    -- AAG: loads the stackfiels from json 
---    global sConfigA
+command init_LoadStackFilesFromConfiguration
+   -- AAG: loads the stackfiels from json 
+   global sConfigA
+   
+   put sConfigA["stackfiles"] into tStackFilesA
+   
+   if the keys of tStackFilesA is empty then
+      exit init_LoadStackFilesFromConfiguration
+   end if
 
---    put sConfigA["stackfiles"] into tStackFilesA
---    repeat for each key k in tStackFilesA
---       put tStackFilesA[k] into tTempA
---       put tTempA["name"], tTempA["file"] & cf after tBuffer
---    end repeat
---    put the stackfiles of stack "Siva-Siva-App" into tStartingList
---    if char -1 of tStartingList is not among the items of format("\n,\r") then
---       put cr after tStartingList
---    end if
---    set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
--- end init_LoadStackFilesFromConfiguration
+   put cr into tBuffer
+   repeat for each key k in tStackFilesA
+      put tStackFilesA[k] into tTempA
+      put tTempA["name"], tTempA["file"] & cr after tBuffer
+   end repeat
+   put the stackfiles of stack "Siva-Siva-App" into tStartingList
+
+   set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
+end init_LoadStackFilesFromConfiguration
 
 command init_AppConfiguration
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
@@ -124,13 +128,14 @@ command init_AppConfiguration
    
    init_LoadJsonConfig
    
+     -- reload the stackfiles property
+   init_LoadStackFilesFromConfiguration
    
    
    -- then start using all required libraries
    init_LoadLibraries
    
-   -- reload the stackfiles property
-   --init_LoadStackFilesFromConfiguration
+
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
