@@ -98,6 +98,22 @@ end Journal_GetDatabasePath
 
 --> Journal | Activities
 
+---------------------------------------------------------------------------------------
+-- Journal_RecordEntry
+-- DESCRIPTION
+--         add a journal entry to the journal.sqlite dbase
+-- PARAMETERS
+--  required:
+--         pModule:  must be the short name of a livecode binary stack
+--         pLabel: This appears as the main entry string in the journal, use a short phrase that indicates
+--                          what the activity is.  
+--         pData this an array      
+--    optional:  pTags - any string, but comma separated single words of phrase by convention. see some examples.
+--                        pImage- not yet implements TBD   BR: What does this do?    what value? path to file on disk?         
+--CHANGES
+--         2017-04-01: Andre - Created
+---------------------------------------------------------------------------------------
+
 command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    put pModule into tDataA["module"]
    
@@ -176,8 +192,9 @@ end Journal_LaunchEntry
 
 on journalresume pDataA, pEntryA
    put "Error: no one could handle journalresume, going for the default behavior"
-   put "Launching" && pEntryA["module"]
+   --put "Launching" && pEntryA["module"]
    portal_GoStack pEntryA["module"]
+   close stack "journal"
 end journalresume
    
    

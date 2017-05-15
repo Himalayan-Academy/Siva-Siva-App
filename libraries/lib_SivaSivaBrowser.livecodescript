@@ -31,14 +31,28 @@ This dynamic resizing works fine when a stack in the default (empty) - "set the 
 While using 'showAll' it is not possible to have two cards in the same stack one portrait orientation and then dynamically change the size of the stack and resize the browser widget.
 There are currently two fixes:
 
-- to have two different stacks preset for portrait or landscape. So we have to pass the orientation to fork to the correct Stack(s) which are put into use on start up as a lib
-- use responsive design and "set the fullscreenmode of this stack to empty"
+1) to have two different stacks preset for portrait or landscape. So we have to pass the orientation to fork to the correct Stack(s) which are put into use on start up as a lib
+2) use responsive design and "set the fullscreenmode of this stack to empty"
+
+BR: Note this stack offers options to use 1) above to fork  between
+hapMediaViewerPortraitLib and hapMediaViewerLandscapeLib
+but as of V1 these are not in use and all URLs are passed viea Portal_GoURL
+to Davids responsive view_SivaSivaBrowser stack
+which defaults to portrait orientation and responds 
+when and if the users rotates the device.
+
+But since this lib is put into use on init, we can use it to our advantage for all
+all "vars needed for web browsing.  e.g. to store the last URL viewed in the web browser stack as a local 
+so that value can be accessed by the journal before it is wiped out and also use to go back if necessary,
+to the same web page.
 
 */
 
 
 --> Browser | Public API
--
+
+local sLastWebURL
+
 command launchAudio pURL, pOptionalImage
    -- temporarily using launchURL for this one.
    launchURL pURL
@@ -48,6 +62,14 @@ command launchBook pFileID
    get "https://www.himalayanacademy.com/book/" & pFileID
    launchURL it
 end launchBook
+
+command browser_SetLastURL pWebURL
+   put pURL into sLastWebURL
+end browser_SetLastURL
+
+function browser_GetLastURL
+   return sLasteWebURL
+end browser_GetLastURL
 
 command launchURL pOrientation, pURL
    if pOrientation = "" then -- try to determine based on media type

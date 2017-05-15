@@ -1,4 +1,5 @@
 ﻿script "lib_SivaSivaPortal"
+script "lib_SivaSivaPortal"
 --> MetaData
 -
 license: GPLv3
@@ -8,18 +9,25 @@ version: 0.2
 Original Script by David Bovill
 
 /*
-The SivaSiva portal is a sel-contained group which presents a "contents view" of:
+The SivaSiva portal is a self-contained group which presents a "contents view" of:
 
 1) Top level portals to SivaSiva modules
 2) Second level contents of individual SivaSiva modules
 
-In general navigation terems we can consider the protal view as a giving a "book contents" style overview and springboard to material in individual modules.
+In general navigation terems we can consider the portal view as a 
+giving a "book contents" style overview and springboard to material in individual modules.
 
 Technicaly it is possible to have any number of levels, but we should try to avois any more thant 2 clicks before we navigate to actual module content.
 The portals group is currently placed on one single card - the first card of the "sivasivahome" stack and uses an array stored in the model_SivaSiva.json file.
 This data combines what was previously stored in a number of files scattered throughout the app.
 It is still possible for individual modules to store their own module-specifig configuration data as before, but portal data shoul be stored in the model_SivaSiva.json file
 and accessed via the handlers in the SivaSiva | Portal | Model section below.
+
+BR: Aside from handling the layout of the portal stack, this script also controls
+the general flow of navigation across the entire app, where users are going from one module to another
+Modules handle internal navigation across their own cards in the same stack.
+Key handlers for global navigaiton are the Portal_GoStack, Portal_SetCurrentStack, portal_GetLastStack
+Which are called to track movement across modules so that "Back" will return to the last viewed  view/stack
 */
 
 
@@ -81,11 +89,17 @@ command portal_GoUrl someURL
    # handle returning to the context properly.
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
+   browser_SetLastURL someURL # store it for journal or "go back" later
+   # May as well store the journal entry here, 
+   # but the URL is too long so it has be part of the data
+   put someURL into pData["weburl"]
+   Journal_RecordEntry "view_SivaSivaBrowser", "Web", pData # add more soon, pData, pTags, pImage
    portal_GoStack "view_SivaSivaBrowser"
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
+   # leave Siva Siva app and open the native web app on the device
     launch url someURL    
 end portal_LaunchUrl
 
@@ -117,7 +131,7 @@ command portal_Link portalName
 end portal_Link
 
 command portal_SetCurrent portalName
-    put portalName into sCurrentPortal   
+   put portalName into sCurrentPortal   
 end portal_SetCurrent
 
 function portal_GetCurrent
@@ -134,70 +148,46 @@ function portal_GetLastStack
     # BR: Support for tracking the stack from which
     # a module was launched from   so we can go back
     return sLastStack
-end portal_GetLastStack
+ end portal_GetLastStack
+ 
+ -----------------------------------------------------------
+ -- portal_GoStack
+ -- DESCRIPTION
+	 --  This is the main navigation command that switch stacks on demand
+	 --   it is set to close all stacks other than the loader stack
+	 --    so you will need to be careful about addressing scripts in the hierarchy if the 
+	 --    stack is already closed. 
+	 --  to "go back" this handler set the last module traversed by the user expect for 
+	 -- SivaSivaApp, Journal, and Browser (unless from Journal)
+ -- PARAMETERS
+	 -- this can be simply the short name of the stack  or a string like
+	 -- "card 1 of  stack  tSomeStackName" 
+ -- CHANGES:  2016-08-01 David Bovil -- created
+	 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
+ --------------------------------------------------------------
+ 
+ command portal_GoStack cardOrStackObject 
+	--  stackName
+	# save where we are coming from locally
+	put the short name of this stack into oStackName
+	put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+	if not  (oStackName is among the items of tNoGoBackStacks) then
+		portal_SetCurrentStack oStackName
+	end if
 
-command portal_GoStack cardOrStackObject --  stackName
-   -- goes to the new stack
-   -- closes the current stack  unless we are launching from portal
-   -- or opening a browser window...
-   -- safely ignores if we are already in the new stack
-   
-   # BR: we need to know where we are to make the right decision
-   # on whether to close the stack or not
-   put the short name of this stack into oStackName
-   if not  (oStackName= "Siva-Siva-App")   then
-      portal_SetCurrentStack oStackName
-   end if
-   
-   if not  (oStackName= "Siva-Siva-App") then  -- OR stackName= "view_SivaSivaBrowser")  then
-      # only other stacks   For now we are testing to close the main stack too 
-      # to try and solve the problem on Android...
-      close stack oStackName  # be sure all stacks are set to destroy on close
-   end if
-   go  cardOrStackObject -- to stack stackName
+	if not  (oStackName= "Siva-Siva-App") then  
+		# always close.; all stack should be set to remove window and destroy on close
+		# this is required to function properly o Android 
+		close stack oStackName  
+	end if
+	go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
 end portal_GoStack
 
 command portal_RemoveStack oStackName
-    if stackName <> "Siva-Siva-Portal" then
-        close stack oStackName
-    end if    
-end portal_RemoveStack 
-
-
-# BR:  Portal_Go is deprecated
-# we have combined going to a stack opr to a card in a stack into one handler:
-# portal_GoStack  because there is where the problems are on Android.
-# We are leaving the mainstack open and then opening new stacks on top of that stack
-# this is working perfectly on Desktop and iOS, but not on Android.
-
-
--- command portal_Go cardOrStackObject
---    -- answer portal_Go
---    /*
---    This handler is for navigating to other card in stacks outside of the portal group in the sivasivahome stack.
---    Because we have set the stackfiles we can simply go to the short name of the stack.
---    The exception to this is the Siva-Siva-Portal" project home stack, which if it is closed menas that we loose the stackfiles capability!
---    */
-
---    put the short name of this stack into oStackName
---    go cardOrStackObject in a new window
---    put the result into goResult
---    put the stack_Name of cardOrStackObject into newStackName
---    if newStackName is oStackName then
---       if the long id of cardOrStackObject = the long id of this card then
---          -- the button or icon should proably be changed or disabled
---       else
---          -- going to a different card in the same stack
---          -- answer "Not closing. Destination is the same stack."
---       end if
---    else
---       if the environment is "Mobile" then
---           close stack oStackName
---       end if
---    end if
---    return goResult
--- end portal_Go
-
+	if stackName <> "Siva-Siva-Portal" then
+	close stack oStackName
+	end if    
+end portal_RemoveStack
 
 --> SivaSiva | Portal | Row
 -

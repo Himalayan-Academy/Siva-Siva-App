@@ -113,8 +113,6 @@ on mouseDown
 end mouseDown
 
 on mouseUp pWhichButton
-   put the shortName of this stack into sLaunchingStack
-   portal_SetCurrentStack sLaunchingStack
    put the long id of the target into btnObject
    put the short name of btnObject into btnName
    if btnName = "bottomTabBkgnd" then pass mouseUp
