@@ -172,6 +172,23 @@ function Journal_GetEntries
    return tEntriesA
 end Journal_GetEntries
 
+-------------------------------------------
+-- Journal_LaunchEntry
+-- created 2017-04-15: Andre Garzia
+-- Mod: 2017-05-15 Brahmanathaswami (added these comments)
+-- DESCRIPTION:
+-- This command fetches data from the joural.sqlite dbase.
+-- tEntriesA arracy contains the values of all columns, 1 per key
+-- These are: 1: journal_id; 2:module;3:data (a json object contain whatever the developer wants  to pass;
+-- 4:date [2017-05-15 04:44:00]; 5:tags (text string); 6 :image (not implemented yet); 
+-- 7: is_favorite: integer (usage TBD); 8:comments (aka "notes")
+-- 9:label (appears on journal list)
+-- tDataA contains the name value pairs pass by the developer of the module
+-- to be used as needed on journalResume. 
+-- use any value in tEntryA or tDataA  to trigger custom actions when resuming the module
+----------------------------------------------
+
+
 command Journal_LaunchEntry pEntryID
    dbWhere "journal_id", pEntryID
    put dbGet("journal", JournalDB()) into tEntriesA
@@ -222,7 +239,7 @@ end JournalDB
 -
 private command _setupDatabase
    put Journal_GetDatabasePath() into JournalDatabasePath
-   if there is not a file JournalDatabasePath or the environment is "development" then
+   if there is not a file JournalDatabasePath then -- or the environment is "development" then
       _copyAndDecompress
    end if
    
