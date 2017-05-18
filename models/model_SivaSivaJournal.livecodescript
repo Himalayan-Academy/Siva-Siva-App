@@ -90,7 +90,7 @@ end journal_convertDate
 function Journal_GetDatabasePath
    if the environment is "development" then
       -- use temp?
-      return specialfolderpath("temporary") & "/journal.sqlite"
+      return specialfolderpath("documents") & "/journal.sqlite"
    else
       return specialfolderpath("documents") & "/journal.sqlite"
    end if
@@ -239,7 +239,7 @@ end JournalDB
 -
 private command _setupDatabase
    put Journal_GetDatabasePath() into JournalDatabasePath
-   if there is not a file JournalDatabasePath then -- or the environment is "development" then
+   if there is not a file JournalDatabasePath or the environment is "development" then
       _copyAndDecompress
    end if
    

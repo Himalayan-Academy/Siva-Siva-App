@@ -55,6 +55,9 @@ function isMobile -- jg, for convenience
    return the environment is "mobile"
 end isMobile
 
+command testBehavior 
+   put specialFolderPath("resources")
+end testBehavior
 
 
 --> SivaSiva | Init | Logging
@@ -95,24 +98,24 @@ function init_GetStatus
    return someBoolean
 end init_GetStatus
 
--- command init_LoadStackFilesFromConfiguration
---    -- AAG: loads the stackfiels from json 
---    put  jsonimport(field "json") into sConfigA
-
---    put sConfigA["stackfiles"] into tStackFilesA
---    repeat for each key k in tStackFilesA
---       put tStackFilesA[k] into tTempA
---       if tTempA["name"] is not in the stackfiles of stack "stackfiles tester" then
---          put tTempA["name"], tTempA["file"] & cr after tBuffer
---       end if
---    end repeat
---    put the stackfiles of stack "stackfiles tester" into tStartingList
---    if char -1 of tStartingList is not among the items of format("\n,\r") then
---       put cr after tStartingList
---    end if
-
---    set the stackfiles of stack "stackfiles tester" to (tStartingList & tBuffer)
--- end init_LoadStackFilesFromConfiguration
+command init_LoadStackFilesFromConfiguration
+   -- AAG: loads the stackfiels from json 
+   -- put  jsonimport(field "json") into sConfigA
+   
+   put sConfigA["stackfiles"] into tStackFilesA
+   repeat for each key k in tStackFilesA
+      put tStackFilesA[k] into tTempA
+      if tTempA["name"] is not in the stackfiles of stack "Siva-Siva-App" then
+         put tTempA["name"], tTempA["file"] & cr after tBuffer
+      end if
+   end repeat
+   put the stackfiles of stack "Siva-Siva-App" into tStartingList
+   if char -1 of tStartingList is not among the items of format("\n,\r") then
+      put cr after tStartingList
+   end if
+   
+   set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
+end init_LoadStackFilesFromConfiguration
 
 command init_AppConfiguration
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
@@ -128,7 +131,7 @@ command init_AppConfiguration
    init_LoadJsonConfig
    
      -- reload the stackfiles property
-   --init_LoadStackFilesFromConfiguration
+   init_LoadStackFilesFromConfiguration
    
    
    -- then start using all required libraries
