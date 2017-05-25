@@ -210,8 +210,8 @@ end Journal_LaunchEntry
 on journalresume pDataA, pEntryA
    put "Error: no one could handle journalresume, going for the default behavior"
    --put "Launching" && pEntryA["module"]
-   portal_GoStack pEntryA["module"]
    close stack "journal"
+   portal_GoStack pEntryA["module"]
 end journalresume
    
    
@@ -239,7 +239,7 @@ end JournalDB
 -
 private command _setupDatabase
    put Journal_GetDatabasePath() into JournalDatabasePath
-   if there is not a file JournalDatabasePath or the environment is "development" then
+   if there is not a file JournalDatabasePath then  --or the environment is "development" then
       _copyAndDecompress
    end if
    
