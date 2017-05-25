@@ -98,40 +98,48 @@ end layout_SpreadHorizontally
 --> Events
 -
 on mouseDown
-   put the long id of the target into btnObject
-   put the short name of btnObject into btnName
-   switch btnName
-      case "bottomTabBkgnd"
-         -- do nothing
-         break
-      default
-         set the highlite of btnObject to true
-         if the environment is "development" then
-            --put btnName
-         end if
-   end switch
+   # bug: this behavior is getting events outside the rect of the object it was assigned to
+   # we have to check what's the target
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      switch btnName
+         case "bottomTabBkgnd"
+            -- do nothing
+            break
+         default
+            set the hilite of btnObject to true
+            if the environment is "development" then
+               --put btnName
+            end if
+      end switch
+   end if
 end mouseDown
 
 on mouseUp pWhichButton
-   put the long id of the target into btnObject
-   put the short name of btnObject into btnName
-   if btnName = "bottomTabBkgnd" then pass mouseUp
-   
-   put btnName into mCommand
-   replace "-" with empty in mCommand
-   put "sivasiva_" before mCommand
-   
-   put the highlite of btnObject into someBoolean
-   set the highlite of btnObject to false
-   
-   dispatch mCommand with btnObject, someBoolean
-   switch it
-      case "handled"
-         break
-      case "unhandled"
-      default
-         -- _displayMouseUpCommand
-   end switch
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      if btnName = "bottomTabBkgnd" then pass mouseUp
+      
+      put btnName into mCommand
+      replace "-" with empty in mCommand
+      put "sivasiva_" before mCommand
+      
+      put the highlite of btnObject into someBoolean
+      set the highlite of btnObject to false
+      
+      dispatch mCommand with btnObject, someBoolean
+      switch it
+         case "handled"
+            break
+         case "unhandled"
+         default
+            -- _displayMouseUpCommand
+      end switch
+   end if
 end mouseUp
 
 on resizeControl
