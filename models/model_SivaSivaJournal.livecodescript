@@ -159,15 +159,15 @@ command Journal_SetFavoriteFlag pEntryID, pValue
 end Journal_SetFavoriteFlag
 
 function Journal_GetEntriesForModule pModule
-   dbLimit 50
+   dbLimit 100
    dbLike "module", pModule
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
 end Journal_GetEntriesForModule
 
 function Journal_GetEntries
-   dbLimit 50
-   dbOrderBy "date"
+   dbLimit 100
+   dbOrderBy "date DESC"
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
 end Journal_GetEntries
