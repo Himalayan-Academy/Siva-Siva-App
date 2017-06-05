@@ -33,7 +33,7 @@ Which are called to track movement across modules so that "Back" will return to 
 
 --> Variables
 -
-local LocalArray, sCurrentPortal,sLastStack
+local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 
 
 --> Working On
@@ -51,36 +51,38 @@ command portal_SetLinkUrl portalName, portalColour, pSivasivaData
    portal_SetArray portalName, portalArray, pSivasivaData
 end portal_SetLinkUrl
 
+
+
 command portal_DoRowLink rowName
-    -- safe parsing only of accepted commands
-    -- no dymanic execution of arbitrary code
-    
-    put portal_GetRowLinkArray (rowName) into linkArray
-    put linkArray ["portal command"] into linkCommand
-    put linkArray ["portal param"] into linkParam
-    
-    -- display_RowLink rowName
-    
-    switch linkCommand
-        case "portal_Link"
-            portal_Link linkParam
-            break
-        case "portal_GoStack"  
-            portal_GoStack linkParam
-            break
-        case "portal_Go"
-            portal_Go linkParam
-            break
-        case "portal_GoUrl"
-            portal_GoUrl linkParam
-            break
-        case "portal_GoLandscapeUrl"
-            portal_GoLandscapeUrl linkParam
-            break
-        case "portal_LaunchUrl" # invoke external browser
-            portal_LaunchURL linkParam
-            break
-    end switch
+   -- safe parsing only of accepted commands
+   -- no dymanic execution of arbitrary code
+   portal_SetLastLinkTitle rowName
+   put portal_GetRowLinkArray (rowName) into linkArray
+   put linkArray ["portal command"] into linkCommand
+   put linkArray ["portal param"] into linkParam
+   
+   -- display_RowLink rowName
+   
+   switch linkCommand
+      case "portal_Link"
+         portal_Link linkParam
+         break
+      case "portal_GoStack"  
+         portal_GoStack linkParam
+         break
+      case "portal_Go"
+         portal_Go linkParam
+         break
+      case "portal_GoUrl"
+         portal_GoUrl linkParam
+         break
+      case "portal_GoLandscapeUrl"
+         portal_GoLandscapeUrl linkParam
+         break
+      case "portal_LaunchUrl" # invoke external browser
+         portal_LaunchURL linkParam
+         break
+   end switch
 end portal_DoRowLink
 
 command portal_GoUrl someURL
@@ -93,7 +95,7 @@ command portal_GoUrl someURL
    # May as well store the journal entry here, 
    # but the URL is too long so it has be part of the data
    put someURL into pData["weburl"]
-   Journal_RecordEntry "view_SivaSivaBrowser", "Web", pData # add more soon, pData, pTags, pImage
+   Journal_RecordEntry "view_SivaSivaBrowser", "Webpage", pData # add more soon, pData, pTags, pImage
    portal_GoStack "view_SivaSivaBrowser"
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
 end portal_GoUrl
@@ -145,28 +147,38 @@ command portal_SetCurrentStack stackName
 end portal_SetCurrentStack
 
 function portal_GetLastStack
-    # BR: Support for tracking the stack from which
-    # a module was launched from   so we can go back
-    return sLastStack
- end portal_GetLastStack
- 
- -----------------------------------------------------------
- -- portal_GoStack
- -- DESCRIPTION
-	 --  This is the main navigation command that switch stacks on demand
-	 --   it is set to close all stacks other than the loader stack
-	 --    so you will need to be careful about addressing scripts in the hierarchy if the 
-	 --    stack is already closed. 
-	 --  to "go back" this handler set the last module traversed by the user expect for 
-	 -- SivaSivaApp, Journal, and Browser (unless from Journal)
- -- PARAMETERS
-	 -- this can be simply the short name of the stack  or a string like
-	 -- "card 1 of  stack  tSomeStackName" 
- -- CHANGES:  2016-08-01 David Bovil -- created
-	 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
- --------------------------------------------------------------
- 
- command portal_GoStack cardOrStackObject 
+   # BR: Support for tracking the stack from which
+   # a module was launched from   so we can go back
+   return sLastStack
+end portal_GetLastStack
+
+
+
+command  portal_SetLastLinkTitle rowName
+   put rowName into sLastLinkTitle # for use in Journal and other context to show user a label
+end portal_SetLastLinkTitle
+
+function portal_GetLastLinkTitle
+   return sLastLinkTitle
+end portal_GetLastLinkTitle
+
+-----------------------------------------------------------
+-- portal_GoStack
+-- DESCRIPTION
+--  This is the main navigation command that switch stacks on demand
+--   it is set to close all stacks other than the loader stack
+--    so you will need to be careful about addressing scripts in the hierarchy if the 
+--    stack is already closed. 
+--  to "go back" this handler set the last module traversed by the user expect for 
+-- SivaSivaApp, Journal, and Browser (unless from Journal)
+-- PARAMETERS
+-- this can be simply the short name of the stack  or a string like
+-- "card 1 of  stack  tSomeStackName" 
+-- CHANGES:  2016-08-01 David Bovil -- created
+-- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
+--------------------------------------------------------------
+
+command portal_GoStack cardOrStackObject 
 	--  stackName
 	# save where we are coming from locally
 	put the short name of this stack into oStackName

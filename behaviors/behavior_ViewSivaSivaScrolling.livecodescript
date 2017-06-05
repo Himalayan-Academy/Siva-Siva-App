@@ -42,27 +42,31 @@ end desktop_SetScroll
 --> Events
 
 on mouseUp   
-   put the mouseLoc into tEndLoc
-   if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
-         (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
-      put the portal_Row of the target into portalRow
-      put the row_Name of the target into rowName  
+   put the portal_Row of the target into portalRow
+   put the row_Name of the target into rowName  
+   
+   # put the mouseLoc into tEndLoc  BRT not used?
+   if isMobile() then
       portal_DoRowLink rowName
+   else
+      if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
+            (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
+         portal_DoRowLink rowName
+      end if
    end if
 end  mouseup
 
 on mouseDown
-    put the mouseloc into sMouseLoc
-    put sMouseLoc into sStartLoc
-    put item 1 of sStartLoc into sStartLocX
-    put item 2 of sStartLoc into sStartLocY
-    
-    if the environment is "mobile" then
-        -- mobile will use stack handlers to scroll instead
-    else
-        desktop_SetScroll
-    end if
-    pass mouseDown
+   if the environment is "mobile" then
+      -- mobile will use stack handlers to scroll instead
+   else
+      put the mouseloc into sMouseLoc
+      put sMouseLoc into sStartLoc
+      put item 1 of sStartLoc into sStartLocX
+      put item 2 of sStartLoc into sStartLocY
+      desktop_SetScroll
+   end if
+   pass mouseDown
 end mouseDown
 
 -- on touchStart pID

@@ -463,8 +463,33 @@ end checkMetaBackScript
 ## VISUAL EFFECTS
 ##########################################################
 
-# BR note that hide and show with visual effect "dissolve" also works, tends to run very fast on mobile
 
+
+--> GRADIENT SETTINGS
+
+command setGradient pObject
+   # Param "pObject" works locally with simple object reference like  graphic "header"
+   # otherwise you should  pass the long ID of the object
+   
+   local tNewGradientArray
+   
+   # be careful when cutting and paste to and from email
+   # tabs may get replace by spaces:
+   
+   put "from	208,-201|mirror	false|quality	good|ramp	0.13000,255,255,255,0" & return into tNewGradientArray
+   put "0.62001,60,11,9,212|repeat	1|to	208,-304|type	linear|via	536,-201|wrap	true" after tNewGradientArray
+   
+   split tNewGradientArray by "|" and tab
+   set the fillGradient of pObject to tNewGradientArray
+   
+end setGradient
+
+--> FADE WITH BLENDLEVEL
+-- Better to use dissolve.
+
+   # BR note that hide and show with visual effect "dissolve" also works, 
+   # tends to run very fast on mobile
+   
 command object_FadeIn  pEffectsTarget, newBlendLevel, someIncrement, someDelay
    set the blendLevel of  pEffectsTarget  to newBlendLevel
    if newBlendLevel > 0 then

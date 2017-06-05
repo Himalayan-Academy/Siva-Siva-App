@@ -83,7 +83,7 @@ end scroller_SetRect
 
 
 --> Mobile | Scroller | Events
--David's method
+--David's method
 on scrollerDidScroll hScrolled, vScrolled
    -- this message is sent to the same object that created the mobile scroller (this library)
    -- would prefer to move it to a behavior that an be used in multiple places
@@ -104,9 +104,9 @@ on scrollerDidScroll hScrolled, vScrolled
 end scrollerDidScroll
 
 --> Mobile | Scroller
--
+--
 setprop mobile_VerticalScroller [fRect] mobileScrollerName
-   -- we could also store some information about the scroller as a group property
+   -- we could also store some information about the scroller as a group property ?
    -- for now let's just use the mobileScrollerName
    put the long id of the target into scrollerView
    put scrollerView into LocalArray ["scrollerView"]
