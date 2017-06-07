@@ -85,19 +85,27 @@ command portal_DoRowLink rowName
    end switch
 end portal_DoRowLink
 
-command portal_GoUrl someURL
+command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
-   browser_SetLastURL someURL # store it for journal or "go back" later
-   # May as well store the journal entry here, 
-   # but the URL is too long so it has be part of the data
-   put someURL into pData["weburl"]
-   Journal_RecordEntry "view_SivaSivaBrowser", "Webpage", pData # add more soon, pData, pTags, pImage
    portal_GoStack "view_SivaSivaBrowser"
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+   # we are setting the journal here, but sometimes the call will be made
+   # from another journal entry which is "resuming"  from a different activity 
+   # than the simple web Portal
+   # we need to later resolve the various scenarios
+   # for now we call it simple "Web"
+   if pJournalLabel is empty then 
+      # dev has not passed anything, so probably coming from portal
+      put sLastLinkTitle into tWebPageTags
+   else
+      put pJournalLabel into tWebPageTags
+   end if
+   put someURL into pData["weburl"]
+   Journal_RecordEntry "view_SivaSivaBrowser","Web", pData, tWebPageTags
 end portal_GoUrl
 
 command portal_LaunchUrl someURL

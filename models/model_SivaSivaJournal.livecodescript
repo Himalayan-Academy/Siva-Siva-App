@@ -105,9 +105,12 @@ end Journal_GetDatabasePath
 -- PARAMETERS
 --  required:
 --         pModule:  must be the short name of a livecode binary stack
---         pLabel: This appears as the main entry string in the journal, use a short phrase that indicates
+--         pLabel: This appears as the main entry string in the journal, In large bold type
+--                          use a short phrase that indicates
 --                          what the activity is.  
---         pData this an array      
+--         pData this an array   -- You must pass this, even if empty   
+-- Some important pData array key conventions
+-- "weburl" is used to pass the URL that is based back on resume to the view_SivaSivaBrowser
 --    optional:  pTags - any string, but comma separated single words of phrase by convention. see some examples.
 --                        pImage- not yet implements TBD   BR: What does this do?    what value? path to file on disk?         
 --CHANGES

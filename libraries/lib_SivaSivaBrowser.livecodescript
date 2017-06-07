@@ -1,10 +1,56 @@
 ﻿script "lib_SivaSivaBrowser"
+/* Brahmanathawami June 2017 --
+
+David's code below target the two HAP media stacks. 
+These are pretty much deprecated but we retain the code here for possible future utility
+New functions/Commands on top. These are to handle any calls form anywhere relating
+to web browsing, the browser widget so we hae all this in one place.  
+IIf you are tempted to write code pertaining to a browser widget in our module. 
+Think first: can we put those functons andcommands here, so they can be used universally later.
+
+*/
+
+local sLastWebPageTitle, sLastWebURL
+
+# we store the <title> in the <head> here so we can reference this later the journal.
+# hopefully this will clue the user into what page they were viewing.
+# requires the web site has "intelligent" titles, which most pages do for SEO reasons)
+
+command parseTheHTML pHtmlText, pTargetString
+   # use for scraping out anything from the htmltext of a browser widget
+   # must call *after* URL loads
+   switch pTargetString
+      case "Title"
+         put (offset ("<Title>", pHTMLText) +7) into tStartTitle
+         put (offset ("</Title>", pHTMLText) -1) into tEndTitle
+         put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
+         replace cr with "" in tRawTitle
+         replace tab with "" in tRawTitle
+         put tRawTitle into sLastWebPageTitle
+         break
+   end switch
+end parseTheHTML
+
+function browser_GetLastPageTitle
+   return sLastWebPageTitle
+end browser_GetLastPageTitle
+
+command browser_SetLastURL pWebURL
+   put pWebURL into sLastWebURL
+end browser_SetLastURL
+
+function browser_GetLastURL
+   return sLastWebURL
+end browser_GetLastURL
+
+########### MOSTLY OBSOLETE: 
+
 --> MetaData
--
-license: GPLv3
-name: lib_SivaSivaBrowser
-type: library
-version: 0.1
+
+-- license: GPLv3
+-- name: lib_SivaSivaBrowser
+-- type: library
+-- version: 0.1 by: David Bovill
 
 
 --> From API | Web Browser API
@@ -49,9 +95,12 @@ to the same web page.
 */
 
 
---> Browser | Public API
 
-local sLastWebURL
+
+
+--> Browser | Public API
+--> BR: all the following apply to the two HapMedia viewer stacks, mostly deprecated 
+
 
 command launchAudio pURL, pOptionalImage
    -- temporarily using launchURL for this one.
@@ -63,13 +112,6 @@ command launchBook pFileID
    launchURL it
 end launchBook
 
-command browser_SetLastURL pWebURL
-   put pURL into sLastWebURL
-end browser_SetLastURL
-
-function browser_GetLastURL
-   return sLasteWebURL
-end browser_GetLastURL
 
 command launchURL pOrientation, pURL
    if pOrientation = "" then -- try to determine based on media type
