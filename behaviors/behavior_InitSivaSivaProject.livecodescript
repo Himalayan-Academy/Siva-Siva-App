@@ -6,7 +6,7 @@ name: behavior_InitSivaSivaProject
 type: behavior
 version: 0.2
 by: David Bovill
-
+ 
 /*
 Here we keep all initilisation code for the Siva-Siva-App.
 This code originates from the Siva-Siva-App home card script.
@@ -130,14 +130,14 @@ command init_AppConfiguration
    
    init_LoadJsonConfig
    
-     -- reload the stackfiles property
+   -- reload the stackfiles property
    init_LoadStackFilesFromConfiguration
    
    
    -- then start using all required libraries
    init_LoadLibraries
    
-
+   
    
    -- set things up for mobile geometry
    if the environment is "mobile" then 
@@ -145,11 +145,18 @@ command init_AppConfiguration
    end if
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
+
 end init_AppConfiguration
+
+
 
 command openPortalStack
    open stack "Siva-Siva-Portal"
    portal_Link "home"
+   
+   # app will halt at this point  so now is a good
+   # time to check for updates on a new session
+   sivasiva_checkNewContent
 end openPortalStack
 
 command  init_LoadLibraries  

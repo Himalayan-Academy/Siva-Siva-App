@@ -28,7 +28,9 @@ the general flow of navigation across the entire app, where users are going from
 Modules handle internal navigation across their own cards in the same stack.
 Key handlers for global navigaiton are the Portal_GoStack, Portal_SetCurrentStack, portal_GetLastStack
 Which are called to track movement across modules so that "Back" will return to the last viewed  view/stack
-*/
+
+we Realy should separate all thehandler pertaining to the "views" and move them to a navigation library.
+*/ 
 
 
 --> Variables
