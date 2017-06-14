@@ -143,7 +143,36 @@ function fetchRemoteMediaItems
    
    
 end fetchRemoteMediaItems
- 
+
+-----------------------------------------------------------
+-- fetchRandomImageAsset
+--
+-- DESCRIPTION
+--  Sometimes we want to fetch images without reference to the database.
+-- this is faster, where there is no metadata like category we need to think about
+-- we just want the user to see something different
+--
+-- PARAMETERS
+-- We assume the images are in /assets/img
+-- you must pass the rest of the path to a folder therein
+-- pass a slash 
+-- like "/bkgnd/nature/landscape/"
+-- the path to a random image is returned.
+-- his handler has no knowledge of the size or how the image is to be display
+-- the calling context must do the right thing
+-- typically we must center the image; where most are sized to fill both portrait and landscape
+-- if you need to adjust size then use the resize handlers 
+--
+-- CHANGES:  2017-06-12 Brahmanathaswami-- created
+--------------------------------------------------------------
+
+function fetchRandomImageAsset pCollection
+   put   (sivasiva_AssetFolder()&"img/")  & pCollection into tPath
+   put files (tPath) into tImageList
+   put line (random (the number of lines of tImageList)) of tImageList after tPath
+   return tPath
+end fetchRandomImageAsset
+
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    
    put aMediaMeta["media_type"] into pMediaType
