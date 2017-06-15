@@ -35,7 +35,7 @@ We can now experiment with:
 --> Variables
 -
 local LocalArray
-
+global sConfigA
 
 --> Events
 
@@ -115,6 +115,7 @@ command init_LoadStackFilesFromConfiguration
    end if
    
    set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
+   
 end init_LoadStackFilesFromConfiguration
 
 command init_AppConfiguration
