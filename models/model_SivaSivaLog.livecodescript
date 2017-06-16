@@ -165,6 +165,7 @@ command log_Raw pLevel, pMessage
       case the environment is "mobile"
          log_Append pMessage
          put the result into logFile
+         put the merge of "[[pLevel]]: [[pMessage]]"
          return logFile
       case pLevel is among the items of logLevelList
          log_Debug pMessage, pLevel

@@ -62,6 +62,9 @@ end load_FrontScript
   log_Info ("Before" && the params)
 end load_BackScript
 
+before errorDialog p1, p2
+   put "livecode error:" && p1, p2
+end errorDialog
 
 --> Logging | Config
 -
