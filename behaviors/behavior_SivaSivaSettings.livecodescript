@@ -39,7 +39,7 @@ on displayInfo pVis, pSubject, pBackground
    
    if pVis = "1" then   # We are showing the control
       
-      # set up bacckground image first, if no param then use landscapes as default
+      # set up background image first, if no param then use landscapes as default
       
       if pBackground is empty then 
          put  "/bkgnds/nature/landscape/"  into pBackground
@@ -56,7 +56,7 @@ on displayInfo pVis, pSubject, pBackground
             break
       end switch
       
-      send "updateMyRect" to grp "display-info" # just in case we need to get the geometry updated.
+      send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
       show grp "display-info" with visual effect dissolve very fast
       if the formattedheight of fld "info-text" > the height of fld "info-text" then
          send "CreateScroller info-text to fld "info-text"

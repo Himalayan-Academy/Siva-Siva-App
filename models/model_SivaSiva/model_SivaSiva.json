@@ -165,6 +165,14 @@
             "imageText": "Path to Siva:\nA Catechism\nfor Youth",
             "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.jpg"
         },
+         "Hinduism Today": {
+            "link": {
+                "portal param": "http://digital.hinduismtoday.com/go/hinduism-today",
+                "portal command": "portal_GoURL"
+            },
+            "imageText": "Hinduism Today\nMagazine",
+            "shortImageFile": "thumb_hinduism-today-cover.jpg"
+        },
         "Color Meditation": {
             "link": {
                 "portal command": "portal_GoStack",
@@ -487,7 +495,10 @@
                 "4": {
                     "rowName": "All Our On-Line Books"
                 },
-                "5": {
+                  "5": {
+                    "rowName": "Hinduism Today"
+                },
+                "6": {
                     "rowName": "Educational Insights"
                 }
             },

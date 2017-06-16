@@ -7,6 +7,7 @@
   "stackfiles": [
     {"name": "journal", "file": "modules/journal/journal.livecode"},
     {"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"},
-    {"name:":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"}
+    {"name":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"},
+    {"name":"SivaSivaResources","file":"assets/SivaSivaResources.livecode"}
   ]
 }

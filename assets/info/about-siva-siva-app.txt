@@ -1,0 +1,10 @@
+<center><h1> The SivaSiva App</h1>
+<h3>Portals to Lord Siva's Realm</h3>
+<h2>Discovering Roots, Bridging the Gaps</h2><br />
+</center>
+<p><b>From the Himalayas and ancient India, to Sri Lanka, to Hawaii, to the world &mdash; <br />
+Resources for the 21st Century Digital Age Saivite Generation. <br />
+Join us for an exploration of our spiritual culture and help brainstorm tranmission to the future. </b></p>
+
+<p  style="clear:left;">The first versions of the <i>SivaSiva App</i> provide structured mobile access to the vast resources of the  <a href="https://www.himalayanacademy.com/">www.himalayanacademy.com</a> site. The SivaSivaApp will provide new models for accessing and interacting with content related Saivite Hinduism that can be quickly viewed, and easily digested in a few minutes. If you have more time, the app provides a gateway for you to dive deep into our media collections.  Later versions will bring new and interesting tools for your spiritual life, practice, study, fun and upliftment, enabling access to an ancient culture for a new generation of Saivite Hindus many of who are cut off from their rich heritage.</p>
+<p>The first version is just a platform for more to come. We value your imput. Please share with us what you feel will be useful for your personal practice, spiritual and cultural growth.</p>

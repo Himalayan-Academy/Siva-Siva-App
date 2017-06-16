@@ -33,7 +33,8 @@ We can now experiment with:
 */
 
 --> Variables
--
+
+global  sConfigA
 local LocalArray
 
 
@@ -106,7 +107,7 @@ command init_LoadStackFilesFromConfiguration
    repeat for each key k in tStackFilesA
       put tStackFilesA[k] into tTempA
       if tTempA["name"] is not in the stackfiles of stack "Siva-Siva-App" then
-         put tTempA["name"], tTempA["file"] & cr after tBuffer
+         put tTempA["name"]&comma& tTempA["file"] & cr after tBuffer
       end if
    end repeat
    put the stackfiles of stack "Siva-Siva-App" into tStartingList
@@ -181,7 +182,8 @@ command  init_LoadLibraries
             case ("lib" is in stackName)
                put "libraries/" & stackName & ".livecodescript" into stackName
                break
-            default
+            
+           default
                put "modules/" & stackName & ".livecode" into stackName
                break   
          end switch   
@@ -209,7 +211,7 @@ function init_ListStacksToUse
    -- we start using both "library" stacks and "model" stacks
    -- due to bug in the files on Android we must use config to load libraries
    
-   global sConfigA
+
    put sConfigA ["models"] & comma & sConfigA ["libraries"] into stackNames
    -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
    return stackNames
