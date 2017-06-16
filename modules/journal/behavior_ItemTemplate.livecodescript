@@ -1,0 +1,136 @@
+﻿script "behavior_ItemTemplate"
+local sEntryA
+
+setprop itemOrder pNum
+   layoutGroup pNum
+   --    put jsonexport(sEntryA)
+end itemOrder
+
+setprop journalEntry pEntryA
+   put pEntryA into sEntryA
+   --
+   set the htmltext of field "entry label" of me to sEntryA["label"]
+   set the htmltext of field "tags" of me to sEntryA["tags"]
+   put sEntryA["date"] into tDate
+   put timeutils_ISOtoSeconds(tDate) into tDate
+   put timeutils_elapsedTime(tDate) into tHumanReadableElapsedTime
+   
+   set the htmltext of field "timestamp" of me to tHumanReadableElapsedTime
+   
+end journalEntry
+
+on mouseup
+   put jsonexport(sEntryA)
+   --    dispatch "setupView" to card "detail view" with sEntryA 
+   launchActivity
+end mouseup
+
+on layoutGroup pNum
+   -- general list group stuff
+   set the lockupdates of group "item list" to true
+   set the lockupdates of me to true
+   set the name of me to ("item" && pNum)
+   
+   if the environment is development then
+      --       activateDebugColors
+   end if
+   
+   processInternalFormatting -- this command sets internal group elements
+   processExternalFormatting pNum -- this one sets the group itself
+   fixLayoutMistakes pNum
+end layoutGroup
+
+on activateDebugColors
+   set the backgroundColor of group "item list" to red
+   set the opaque of group "item list" to true
+   
+   set the opaque of me to true
+   set the backgroundColor of me to random(128), random(128), random(128)
+   set the height of group "item list" to (the height of this card - the top of group "item list")
+   
+end activateDebugColors
+
+on processInternalFormatting
+   #Note: some attributes of the group are set on the template on this card
+   # e.g. use the margins propety to 
+   -- colors
+   if sEntryA["is_favorite"] is 0 then
+      set the foreColor of widget "is favorite" of me to getConfigForLayout("listView", "favoriteDisabledIconColor")
+   else
+      set the foreColor of widget "is favorite" of me to getConfigForLayout("listView", "favoriteEnabledIconColor")
+   end if
+   set the iconPath of widget "module icon" of me to getIconForModule()
+   set the foreColor of widget "module icon" of me to getConfigForLayout("listView", "activityIconColor")
+   set the foreColor of field "entry label" of me to getConfigForLayout("listView", "moduleNameColor")
+   set the foreColor of field "timestamp" of me to getConfigForLayout("listView", "bodyTextColor")
+   set the foreColor of field "tags" of me to getConfigForLayout("listView", "bodyTextColor")
+   --    set the foreColor of grc "horizontal rule" of me to getConfigForLayout("listView", "bodyTextColor")
+   
+   -- widths
+   set the width of field "timestamp" of me to the formattedWidth of  field "timestamp" of me
+   set the width of field "entry label" of me to the formattedWidth of  field "entry label" of me
+   set the width of grc "horizontal rule" of me to the width of this card 
+   set the width of grc "journal-item-bkgnd" of me to the width of this card
+   
+   
+   -- positioning
+   set the right of field "timestamp" of me to (the width of this card - 20)
+   set the left of grc "horizontal rule" of me to 0
+   set the left of field "entry label" of me to the right of widget "module icon" of me +10
+   set the left of field "tags" of me to the left of field "entry label" of me
+   set the margins of me to 0,8,0,0
+end processInternalFormatting
+
+on processExternalFormatting pNum
+   
+   set the height of group "item list" to formattedHeight of group "item list"
+   set the top of group "item list" to the bottom of grc "header bar" + 60
+   set the left of group "item list" to 0
+   set the showBorder of me to false
+   
+   -- find group rect
+   set the left of me to 0
+   subtract 1 from pNum
+   set the top of me to (the top of group "item list" + (the height of me * pNum))   
+end processExternalFormatting
+
+on fixLayoutMistakes pNum
+   repeat with x = 1 to pNum
+      set the left of group ("item" && x) to 0
+      set the left of grc "horizontal rule"  of group ("item" && x) to 0
+   end repeat
+end fixLayoutMistakes
+
+function getIconForModule
+   switch sEntryA["module"]
+      case "wordpuzzles"
+         return the iconPath of widget "puzzle-svg-icon" of card "templates"
+         break
+      case "journal"
+      case "affirmations"
+      case "daily-lesson"
+      case "pathtosiva"
+      case "traits"
+         return the iconPath of widget "book-svg-icon" of card "templates"
+         break
+      case "surprise"
+      case "listen"
+         return the iconPath of widget "music-svg-icon" of card "templates"
+         break
+      case "color-meditation"
+      case "gems"
+      case "panchangam"
+      case "settings"
+      default
+         return the iconPath of widget "generic-svg-icon" of card "templates"
+   end switch
+end getIconForModule
+
+
+on launchActivity
+   put "should launch activity" && sEntryA["journal_id"]
+   Journal_LaunchEntry sEntryA["journal_id"]
+   if the result contains "err" then
+      answer error the result
+   end if
+end launchActivity
