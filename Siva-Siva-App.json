@@ -9,6 +9,6 @@
     {"name": "behavior_JournalListView", "file": "modules/journal/behavior_JournalListView.livecodescript"},
     {"name": "journal", "file": "modules/journal/journal.livecode"},
     {"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"},
-    {"name:":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"}
+    {"name":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"}
   ]
 }
