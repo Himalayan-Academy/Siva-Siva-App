@@ -36,7 +36,6 @@ Therefore create all logic here in this script and only use triggers in objects 
 
 on displayInfo pVis, pSubject, pBackground
    
-   
    if pVis = "1" then   # We are showing the control
       
       # set up background image first, if no param 
@@ -54,12 +53,27 @@ on displayInfo pVis, pSubject, pBackground
             put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
             set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
             break
+         case "tos-privacy-eula"
+            put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "release-notes"
+            put path_Assets()&"info/release-notes.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "credits"
+            put path_Assets()&"info/credits.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "User Guide"
+            portal_GoURL someURL ## youtube of mp4 later
+            breadk
       end switch
       
       send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
       show grp "display-info" with visual effect dissolve very fast
       if the formattedheight of fld "info-text" > the height of fld "info-text" then
-         send "CreateScroller info-text to fld "info-text"
+         send "CreateScroller info-text" to fld "info-text"
       end if
    else
       hide grp "display-info" with visual effect dissolve very fast
@@ -67,8 +81,30 @@ on displayInfo pVis, pSubject, pBackground
       deleteMobileControl "info-text" 
    end if
    
-   
 end displayInfo
+
+on sendFeedBack
+    revMail "studyhall@hindu.org",,"SivaSiva App Feedback",\
+         ("Bug reports: Describe what happened and what you expected to happen. " & cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
+      end sendFeedBack
+      
+on fieldLinkClicked pLink
+   switch pLink
+      case "Terms of Service, Privacy Policy, EULA"
+         displayInfo 1,"tos-privacy-eula"
+         break
+         # new link
+      case "Release Notes"
+         displayInfo 1,"release-notes"
+         break
+      case "Credits"
+         displayInfo 1,"credits"
+         break
+      case "Send Feedback"
+         sendFeedBack
+         break
+   end switch
+end fieldLinkClicked
 
 
 
