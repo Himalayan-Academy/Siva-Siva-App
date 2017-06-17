@@ -167,7 +167,7 @@ end fetchRemoteMediaItems
 --------------------------------------------------------------
 
 function fetchRandomImageAsset pCollection
-   put   (sivasiva_AssetFolder()&"img/")  & pCollection into tPath
+   put   (path_Assets()&"img/")  & pCollection into tPath
    put files (tPath) into tImageList
    put line (random (the number of lines of tImageList)) of tImageList after tPath
    return tPath

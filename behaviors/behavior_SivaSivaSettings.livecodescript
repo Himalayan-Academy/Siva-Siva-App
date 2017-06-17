@@ -39,20 +39,20 @@ on displayInfo pVis, pSubject, pBackground
    
    if pVis = "1" then   # We are showing the control
       
-      # set up background image first, if no param then use landscapes as default
+      # set up background image first, if no param 
+      # then use landscapes as default
       
       if pBackground is empty then 
-         put  "/bkgnds/nature/landscape/"  into pBackground
+         put  "bkgnds/nature/landscape/"  into pBackground
       end if
-      
-      put fetchRandomImageAsset (pBackground) into tImagePath  # see lib_SivaSivaMedia
+      put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
       set the filename of img "info-bkgnd-img" to tImagePath
       
       # next insert the text we need, either stored on the app somewhere or from a web URL
       switch pSubject
          case "About"
-            --test
-            put "About" into fld "info-text"
+            put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
             break
       end switch
       
