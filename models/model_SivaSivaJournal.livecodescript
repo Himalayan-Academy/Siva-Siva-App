@@ -143,6 +143,12 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
       put pModule into tDataA["label"]
    end if
    
+   -- fix encodings
+   put textEncode(tDataA["label"], "UTF8") into tDataA["label"]
+   put textEncode(tDataA["data"], "UTF8") into tDataA["data"]
+   put textEncode(tDataA["tags"], "UTF8") into tDataA["tags"]
+   
+   
    put journal_convertDate(the date && the time) into tDataA["date"]
    
    put dbInsert("journal", tDataA, JournalDB()) into tResult

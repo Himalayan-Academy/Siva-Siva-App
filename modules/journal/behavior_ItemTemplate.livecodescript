@@ -9,8 +9,8 @@ end itemOrder
 setprop journalEntry pEntryA
    put pEntryA into sEntryA
    --
-   set the htmltext of field "entry label" of me to sEntryA["label"]
-   set the htmltext of field "tags" of me to sEntryA["tags"]
+   set the htmltext of field "entry label" of me to textDecode(sEntryA["label"], "utf8")
+   set the htmltext of field "tags" of me to textDecode(sEntryA["tags"], "utf8")
    put sEntryA["date"] into tDate
    put timeutils_ISOtoSeconds(tDate) into tDate
    put timeutils_elapsedTime(tDate) into tHumanReadableElapsedTime
