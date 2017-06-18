@@ -57,7 +57,7 @@ command loadFonts
    end if
 end loadFonts
 
-on layoutScreen
+on layoutScreen pModuleFilter
    lock screen
    
    -- set card
@@ -100,8 +100,10 @@ on layoutScreen
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
    repeat for each element tEntryA in tEntriesA
-      createNewJournalEntry tEntryA, tEntryNum
-      add 1 to tEntryNum
+      if pModuleFilter is  empty or tEntryA["module"] is pModuleFilter then
+         createNewJournalEntry tEntryA, tEntryNum
+         add 1 to tEntryNum
+      end if
    end repeat
    
    
