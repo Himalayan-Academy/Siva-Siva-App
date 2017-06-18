@@ -57,7 +57,7 @@ command loadFonts
    end if
 end loadFonts
 
-on layoutScreen
+on layoutScreen pModuleFilter
    lock screen
    
    -- set card
@@ -100,8 +100,10 @@ on layoutScreen
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
    repeat for each element tEntryA in tEntriesA
-      createNewJournalEntry tEntryA, tEntryNum
-      add 1 to tEntryNum
+      if pModuleFilter is  empty or tEntryA["module"] is pModuleFilter then
+         createNewJournalEntry tEntryA, tEntryNum
+         add 1 to tEntryNum
+      end if
    end repeat
    
    
@@ -132,3 +134,31 @@ on createNewJournalEntry pEntryA, pEntryNum
    set the journalEntry of tListItem to pEntryA
    set the itemOrder of tListItem to pEntryNum
 end createNewJournalEntry
+
+on filterByActivityType
+   local tList
+   dbSetSQL "select distinct module from journal"
+   put dbGet(null, journalDB()) into tA
+   repeat for each key m in tA
+      put  tA[m]["module"] into tA[m]["title"] // default value
+      if there is a stack  tA[m]["module"] and  the title of stack tA[m]["module"] is not empty then
+         put the title of stack tA[m]["module"] into tA[m]["title"]
+      end if
+      put  tA[m]["title"] & cr after tList
+   end repeat
+   delete char -1 of tList
+   sort tList
+   put "All" & cr before tList
+   mobilePick tList, "cancel"
+   if the result is 0 then
+      put empty into tModule
+   else
+      put line (the result) of tList into tTitle
+      repeat with x = 1 to the number of lines in the keys of tA
+         if tA[x]["title"] is tTitle then
+            put tA[x]["module"] into tModule
+         end if
+      end repeat
+   end if
+   layoutscreen tModule
+end filterByActivityType
