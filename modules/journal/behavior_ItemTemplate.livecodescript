@@ -9,8 +9,13 @@ end itemOrder
 setprop journalEntry pEntryA
    put pEntryA into sEntryA
    --
+   if there is a stack sEntryA["module"] then
+      put the title of stack  sEntryA["module"] into tTitle
+   else
+      put "Siva Siva App" into tTitle
+   end if
    set the htmltext of field "entry label" of me to textDecode(sEntryA["label"], "utf8")
-   set the htmltext of field "tags" of me to textDecode(sEntryA["tags"], "utf8")
+   set the htmltext of field "tags" of me to textDecode(tTitle, "utf8")
    put sEntryA["date"] into tDate
    put timeutils_ISOtoSeconds(tDate) into tDate
    put timeutils_elapsedTime(tDate) into tHumanReadableElapsedTime
