@@ -35,7 +35,6 @@ Therefore create all logic here in this script and only use triggers in objects 
 ------------------------------------------------------------------------
 
 on displayInfo pVis, pSubject, pBackground
-   
    if pVis = "1" then   # We are showing the control
       
       # set up background image first, if no param 
