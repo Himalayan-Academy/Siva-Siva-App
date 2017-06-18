@@ -33,7 +33,8 @@ We can now experiment with:
 */
 
 --> Variables
--
+
+global  sConfigA
 local LocalArray
 global sConfigA
 
@@ -106,7 +107,7 @@ command init_LoadStackFilesFromConfiguration
    repeat for each key k in tStackFilesA
       put tStackFilesA[k] into tTempA
       if tTempA["name"] is not in the stackfiles of stack "Siva-Siva-App" then
-         put tTempA["name"], tTempA["file"] & cr after tBuffer
+         put tTempA["name"]&comma& tTempA["file"] & cr after tBuffer
       end if
    end repeat
    put the stackfiles of stack "Siva-Siva-App" into tStartingList
@@ -182,7 +183,8 @@ command  init_LoadLibraries
             case ("lib" is in stackName)
                put "libraries/" & stackName & ".livecodescript" into stackName
                break
-            default
+            
+           default
                put "modules/" & stackName & ".livecode" into stackName
                break   
          end switch   
@@ -210,7 +212,7 @@ function init_ListStacksToUse
    -- we start using both "library" stacks and "model" stacks
    -- due to bug in the files on Android we must use config to load libraries
    
-   global sConfigA
+
    put sConfigA ["models"] & comma & sConfigA ["libraries"] into stackNames
    -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
    return stackNames
@@ -320,246 +322,3 @@ set the defaultstack to oStack
 return shortFiles
 end mobile_ListShortFiles
 
-/*
-BR April 19, 2017  here is Andre's old loader stack script
-which was put into the backscript on start up
-
-*/
-
---  constant kSHARED_LIBS_FOLDER = "shared/libs/"
--- constant kSHARED_ASSETS_FOLDER = "shared/assets/"
--- constant kMODULES_FOLDER = "modules/"
-
--- global sConfigA
-
--- command preOpenStack
---   -- For common actions in all modules. Modules can have custom
---   -- behaviors as well, just be sure to dispatch preOpenStack to
---   -- stack "loader" in the module's version of this handler.
---   set the defaultstack to the topstack
---   if isMobile() then 
---     set the fullscreenmode of this stack to "showAll"
---   end if
---   set the loc of this stack to the screenloc
---   if "API" is in the backscripts then scaleStackIfNeeded -- otherwise fails on loader launch
--- end preOpenStack
-
--- command loadAppConfiguration
---   setBasePath -- jg
-
---   if there is not a file "config.json" then
---     answer  "Can't find configuration json file!!!" with "OK"
---     exit to top
---   end if
-
---   get url "binfile:config.json"
---   put jsonImport(it) into sConfigA
---   logInfo"App configuration loaded..."
---   put true into sConfigA["initialized"]
---   _initializeDependencies
---   if not dev() then close me
---   goHome
--- end loadAppConfiguration
-
--- function getConfiguration pKey
---    return sConfigA[pKey]
--- end getConfiguration
-
--- function getModuleConfiguration pModule
---    return sConfigA["modules"][pModule]
--- end getModuleConfiguration
-
--- command loadModuleConfiguration pModule pData
---    put pData into sConfigA["modules"][pModule]
--- end loadModuleConfiguration
-
--- private command  _initializeDependencies
---   lock screen
---   set the itemdel to "/"
---   setBasePath -- jg
---   // load libraries
---   repeat for each key x in sConfigA["libraries"]
---     put  sConfigA["libraries"][x] into tLibrary
---     logInfo"Loading library" && tLibrary
---     start using (getPathForSharedLibraries() & tLibrary)
---   end repeat
-
---   // load behavior stacks
---   // be aware that those stacks are just loaded but not applied.
---   repeat for each key x in sConfigA["behaviors"]
---     put  sConfigA["behaviors"][x] into tStackPath
---     put token -1 of tStackPath into tStackName
---     replace ".livecode" with empty in tStackName
-
---     logInfo"Loading behavior" && tStackPath
---     --go stack (getPathForSharedLibraries() & tStackPath)
---     get the short name of stack (getPathForSharedLibraries() & tStackPath)
---     # still not available as a behavior in the ID  
---     # later we will have to set stack files  
---     # best practices TBD
---   end repeat
-
---   // load backscripts
---   repeat for each key x in sConfigA["backscripts"]
---     put  sConfigA["backscripts"][x] into tStackPath
---     put token -1 of tStackPath into tStackName
---     replace ".livecode" with empty in tStackName
-
---     logInfo"Loading backscript" && tStackPath
---     --go stack (getPathForSharedLibraries() & tStackPath)
---     --insert the script of stack tStackName into back
---     insert the script of stack (getPathForSharedLibraries() & tStackPath) into back
---   end repeat
-
---   // load frontscripts
---   repeat for each key x in sConfigA["frontscripts"]
---     put  sConfigA["frontscripts"][x] into tStackPath
---     put token -1 of tStackPath into tStackName
---     replace ".livecode" with empty in tStackName
-
---     logInfo"Loading frontscript" && tStackPath
---     --go stack (getPathForSharedLibraries() & tStackPath)
---     --insert the script of stack tStackName into front
---     insert the script of stack (getPathForSharedLibraries() & tStackPath) into front
---   end repeat
--- end _initializeDependencies
-
--- --command openExternalBehaviorStacks
--- --   # Behaviors are not available if the stack is not open
--- --   # we cannot set stack files for mobile
--- --   # must open them explicity here, good to do when we start up:
--- --   --put getPathForSharedLibraries() & "mobilecontrols.livecodescript" into tBehaviorStackPath
--- --   logRaw "info",tBehaviorStackPath
--- --  go invisible stack  tBehaviorStackPath
-
--- --end openExternalBehaviorStacks
-
-
--- command logRaw pLevel, pMessage
---   if the environment is not "development" then
---     // for now, lets not log stuff in Mobile -- jg needs to see these
---     if (the hilite of btn "jg android log" of cd 1 of stack "loader") then
---       put specialFolderPath("documents") & "/mobilelog.txt" into tFile
---       open file tFile for append
---       write pMessage & cr to file tFile
---       close file tFile
---       exit logRaw
---     end if
---   end if
-
---   put item -2 of line -3 of the executioncontexts into tCalledHandler
---   put item -1 of line -3 of the executioncontexts into tLineNumber
---   put the short name of (item 1 of line -3 of the executioncontexts) into tObjectReference
-
---   if char 1 of tCalledHandler is "_" then
---     put " (PRIVATE)" into tPrivateFlag
---   else
---     put empty into tPrivateFlag
---   end if
-
---   if pLevel is among the items of sConfigA["log_level"] then
---     put (the short date && the short time && \
-      --           "[" & pLevel & "]" && \
-      --           tObjectReference & "#" &tLineNumber && ">>>" && tCalledHandler  & tPrivateFlag && \
-      --           ":" && pMessage & cr) \
-      --           after url ("binfile:" & sConfigA["log_file"])
---   end if
--- end logRaw
-
--- command logInfo pMessage
---    logRaw "info", pMessage
--- end logInfo
-
--- command logError pMessage
---    logRaw "error", pMessage
--- end logError
-
--- command logFatal pMessage
---    logRaw "fatal", pMessage
--- end logFatal
-
--- ######## Utilities and Helper functions
-
--- ########### Utilities and Helper Functions ##########
-
--- function localPath  --###jg: will fail on desktop if loader stack isn't the defaultstack; ok on mobile
---   put specialFolderPath("resources") into  tPath
---   put "/" after tPath
---   return tPath
--- end localPath
-
--- function documentsPath
---   put specialFolderPath("documents") into  tPath
---   put "/" after tPath
---   return tPath
--- end documentsPath
-
-
-
--- command testMessagePath pMessage
---    answer pMessage with "OK"
--- end testMessagePath
-
-
--- command setBasePath
---    set the defaultfolder to getPathToLoaderStack()
--- end setBasePath
-
--- function getPathToLoaderStack
---   --  return item 1 to -2 of the effective filename of stack "loader" -- jg: fails on mobile
---   put the defaultstack into tOrigStack
---   set the defaultstack to me
---   put specialFolderPath("resources") into tSourcePath -- jg: works on desktop & mobile
---   set the defaultstack to tOrigStack
---   return tSourcePath
--- end getPathToLoaderStack
-
--- function getPathForSharedLibraries
---    return (getPathToLoaderStack() & "/" & kSHARED_LIBS_FOLDER)
--- end getPathForSharedLibraries
-
--- function getPathToSharedAssetsFolder
---    return (getPathToLoaderStack() & "/" & kSHARED_ASSETS_FOLDER)
--- end getPathToSharedAssetsFolder
-
--- function getPathToModulesFolder
---   return (getPathToLoaderStack() & "/" & kMODULES_FOLDER)
--- end getPathToModulesFolder
-
-
--- ## For Android test builds ##
--- ## okay to remove later ##
-
--- on savingStandalone -- pre-processss
---   -- if not an Android app, turn off android logging
---   put (the cRevStandaloneSettings["android"] of me = true) into tIsAndroid
---   set the hilite of btn "jg android log" of cd 1 of me to tIsAndroid
---   set the vis of fld "logfld" of cd 1 of me to tIsAndroid
--- end savingStandalone
-
--- on standaloneSaved pFolder -- post-process
---   -- increase build number for next time, turn logging back on
---   -- Will be saved at next manual save, otherwise we don't want it anyway.
---   put (the cRevStandaloneSettings["android"] of me = true) into tIsAndroid
---   if tIsAndroid then
---     put the cRevStandaloneSettings["android,version code"] of me into tBuildNum
---     add 1 to tBuildNum
---     set the cRevStandaloneSettings["android,version code"] of me to tBuildNum
-
---     set the hilite of btn "jg android log" of cd 1 of me to tIsAndroid
---     set the vis of fld "logfld" of cd 1 of me to false
---   end if
--- end standaloneSaved
-
-
--- on jgAndroidLog  --jg: temporary for testing; sent from Home btn in Home stack  --### REMOVE
---   if (the platform = "android") and (the hilite of btn "jg android log" of me) then 
---     put specialFolderPath("documents") & "/mobilelog.txt" into tFile
---     answer "Clear or view log:" with "Cancel" or "Clear" or "View"
---     if it = "view" then
---       answer url ("file:" & tFile)
---     else if it = "clear" then
---       put empty into url ("file:" & tFile)
---     end if
---   end if
--- end jgAndroidLog
