@@ -14,8 +14,45 @@ constant kMODULES_FOLDER = "modules/"
 --> GENERIC GLOBAL MOBILE
 
 function isMobile
-	return the environment is "mobile"
+   return the environment is "mobile"
 end isMobile
+
+command sivasiva_SetStatusBarVis visBoolean
+   if visBoolean then
+      mobileShowStatusBar
+   else
+      mobileHideStatusBar
+   end if        
+end sivasiva_SetStatusBarVis
+     
+     command sivasiva_InitOrientation orientationType
+   -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
+   
+   if the environment is not "mobile" then
+      return false
+   else
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+      mobile_SetAllowedOrientation orientationType
+   end if
+end sivasiva_InitOrientation
+
+command mobile_SetAllowedOrientation orientationType
+   if the environment is not "mobile" then return empty
+   
+   switch orientationType
+      case "portrait"
+         put "portrait,portrait upside down" into allowedOrientations
+         break
+      case "landscape"
+         put "landscape left,landscape right" into allowedOrientations
+         break
+      default -- allow all, ignoring face up/down
+         put "portrait,portrait upside down,landscape left,landscape right" into allowedOrientations
+   end switch
+   mobileSetAllowedOrientations allowedOrientations
+   return allowedOrientations
+end mobile_SetAllowedOrientation
+    
 
 --> POST INSTALL CONTENT DOWNLOAD HANDLERS
 --
@@ -55,38 +92,9 @@ function sivasiva_IsThereNewContent
    return sDownloadNewContent
 end sivasiva_IsThereNewContent
 
-  --> MOBILE ORIENTATION CHANGE HANDLERS
-##
 
-command sivasiva_InitOrientation orientationType
-   -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
-   
-   if the environment is not "mobile" then
-      return false
-   else
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      mobile_SetAllowedOrientation orientationType
-   end if
-end sivasiva_InitOrientation
 
-command mobile_SetAllowedOrientation orientationType
-   if the environment is not "mobile" then return empty
-   
-   switch orientationType
-      case "portrait"
-         put "portrait,portrait upside down" into allowedOrientations
-         break
-      case "landscape"
-         put "landscape left,landscape right" into allowedOrientations
-         break
-      default -- allow all, ignoring face up/down
-         put "portrait,portrait upside down,landscape left,landscape right" into allowedOrientations
-   end switch
-   mobileSetAllowedOrientations allowedOrientations
-   return allowedOrientations
-end mobile_SetAllowedOrientation
-
---> ### GLOBAL PATHS  GET AND SET
+--> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
 function path_HomeLocal
   if isMobile() then
@@ -115,11 +123,39 @@ function path_Modules
    return tPath
 end path_Modules
 
+--> ### GLOBAL CATEGORY AND REALM TRACKING
+-- use of the journal requires we know certain things about
+-- what the user did before and it is often related to some category
+-- or "realm"   ; there is a challenge to track these in the local props or local vars of 
+-- stacks that are opening and closely, so we do it here.
+
+
+on setCurrentRealm pRealm
+    put pRealm into sConfigA["currentRealm"]
+ end setCurrentRealm
+ 
+ --> TEXT UTILITIES 
+ # maybe this should be in it's own "Utils" library. 
+ # maybe later if we need one; can move then
+ 
+function text_TitleCase pString
+   put toLower(pString) into pString # normalize all chars first
+  
+   # assume words separated by spaces
+   
+   repeat for each word x in pString
+      put toUpper(char 1 of x) into char  1 of x
+      put x & space after tTitleCasedString
+   end repeat
+   delete char -1 of tTitleCaseString
+   return tTitleCasedString
+   
+end text_TitleCase
+
 
 
 #########  ALL The FOLLOWING not in USE
 ## If something here gets active, please move up above this comment.
-
 
 
 --> Portal | Navigation | API
@@ -163,14 +199,7 @@ function pingServer
     return tOnLine
 end pingServer
 
-command sivasiva_SetStatusBarVis visBoolean
-        if visBoolean then
-            mobileShowStatusBar
-        else
-            mobileHideStatusBar
-        end if        
- end sivasiva_SetStatusBarVis
-    
+
     
  --> ANDRE'S ORIGINAL SCRIPTS
  
