@@ -32,51 +32,52 @@ array that we can change dynamically depending on tne context requirments.
 ------------------------------------------------
 
 on displayInfo pVis, pSubject, pBackground
-   if pVis = "1" then   # We are showing the control
-      
-      # set up background image first, if no param 
-      # then use landscapes as default
-      
-      if pBackground is empty then 
-         put  "bkgnds/nature/landscape/"  into pBackground
-      end if
-      put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
-      set the filename of img "info-bkgnd-img" to tImagePath
-      
-      # next insert the text we need, either stored on the app somewhere or from a web URL
-      switch pSubject
-         case "About"
-            put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
-            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
-            break
-         case "tos-privacy-eula"
-            put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
-            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
-            break
-         case "release-notes"
-            put path_Assets()&"info/release-notes.html" into tTextPath
-            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
-            break
-         case "credits"
-            put path_Assets()&"info/credits.html" into tTextPath
-            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
-            break
-         case "User Guide"
-            portal_GoURL someURL ## youtube of mp4 later
-            breadk
-      end switch
-      
-      send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
-      show grp "display-info" with visual effect dissolve very fast
-      if the formattedheight of fld "info-text" > the height of fld "info-text" then
-         send "CreateScroller info-text" to fld "info-text"
-      end if
-   else
-      hide grp "display-info" with visual effect dissolve very fast
-      put empty into fld "info-text"
-      deleteMobileControl "info-text" 
-   end if
-   
+  if pVis = "1" then   # We are showing the control
+    
+    # set up background image first, if no param 
+    # then use landscapes as default
+    
+    if pBackground is empty then 
+      put  "bkgnds/nature/landscape/"  into pBackground
+    end if
+    put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
+    set the filename of img "info-bkgnd-img" to tImagePath
+    
+    # next insert the text we need, either stored on the app somewhere or from a web URL
+    switch pSubject
+      case "About"
+        put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
+        set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
+        break
+      case "tos-privacy-eula"
+        put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
+        set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
+        break
+      case "release-notes"
+        put path_Assets()&"info/release-notes.html" into tTextPath
+        set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
+        break
+      case "credits"
+        put path_Assets()&"info/credits.html" into tTextPath
+        set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
+        break
+      case "User Guide"
+        portal_GoURL someURL ## youtube of mp4 later
+        breadk
+    end switch
+    
+    send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
+    show grp "display-info" with visual effect dissolve very fast
+    if the formattedheight of fld "info-text" > the height of fld "info-text" then
+      set the layerMode of grp "info-container" to "scrolling" -- jg
+      send "CreateScroller info-text" to fld "info-text"
+    end if
+  else
+    hide grp "display-info" with visual effect dissolve very fast
+    put empty into fld "info-text"
+    deleteMobileControl "info-text" 
+  end if
+  
 end displayInfo
 
 on sendFeedBack
