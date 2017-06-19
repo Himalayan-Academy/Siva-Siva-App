@@ -15,6 +15,92 @@ We should get all the params for setting the template field into an
 array that we can change dynamically depending on tne context requirments.
 
 */
+----------------------------------------------
+--> displayInfo
+-- DESCRIPTION: 
+-- used by the group control "display-info"  for showing text on top of any card in any stack
+-- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
+-- some time we may move it to a generic location and copy on demand when needed.
+-- for now if you need it, make a copy to your stack, It is normally hidden and is responsive.
+-- PARAMETERS
+-- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
+-- pSubject... use as a case in the switch to determine what infor is place in the display-text field
+-- can call some html file like from /assets/info/*.html
+-- or could come from a specific module folder toa specific module "how to" info 
+-- CHANGES:
+-- 2017-06-12, Brahmanatahswami: created
+------------------------------------------------
+
+on displayInfo pVis, pSubject, pBackground
+   if pVis = "1" then   # We are showing the control
+      
+      # set up background image first, if no param 
+      # then use landscapes as default
+      
+      if pBackground is empty then 
+         put  "bkgnds/nature/landscape/"  into pBackground
+      end if
+      put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
+      set the filename of img "info-bkgnd-img" to tImagePath
+      
+      # next insert the text we need, either stored on the app somewhere or from a web URL
+      switch pSubject
+         case "About"
+            put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "tos-privacy-eula"
+            put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "release-notes"
+            put path_Assets()&"info/release-notes.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "credits"
+            put path_Assets()&"info/credits.html" into tTextPath
+            set the htmltext of  fld "info-text" to url ("file:/" &tTextPath)
+            break
+         case "User Guide"
+            portal_GoURL someURL ## youtube of mp4 later
+            breadk
+      end switch
+      
+      send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
+      show grp "display-info" with visual effect dissolve very fast
+      if the formattedheight of fld "info-text" > the height of fld "info-text" then
+         send "CreateScroller info-text" to fld "info-text"
+      end if
+   else
+      hide grp "display-info" with visual effect dissolve very fast
+      put empty into fld "info-text"
+      deleteMobileControl "info-text" 
+   end if
+   
+end displayInfo
+
+on sendFeedBack
+    revMail "studyhall@hindu.org",,"SivaSiva App Feedback",\
+         ("Bug reports: Describe what happened and what you expected to happen. " & cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
+      end sendFeedBack
+      
+on fieldLinkClicked pLink
+   switch pLink
+      case "Terms of Service, Privacy Policy, EULA"
+         displayInfo 1,"tos-privacy-eula"
+         break
+         # new link
+      case "Release Notes"
+         displayInfo 1,"release-notes"
+         break
+      case "Credits"
+         displayInfo 1,"credits"
+         break
+      case "Send Feedback"
+         sendFeedBack
+         break
+   end switch
+end fieldLinkClicked
 
 
 on closeMsg
