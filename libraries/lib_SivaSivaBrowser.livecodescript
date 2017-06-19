@@ -26,6 +26,13 @@ command parseTheHTML pHtmlText, pTargetString
          put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
          replace cr with "" in tRawTitle
          replace tab with "" in tRawTitle
+         set the itemdel to "-" # set up for two part titles
+         if the number of items of tRawTitle = 2 then
+            put item 2 of tRawTitle into tRawtitle
+         end if
+         If char 1 of tRawTitle = " " then 
+            delete char 1 of tRawTitle
+         end if      
          put tRawTitle into sLastWebPageTitle
          break
    end switch

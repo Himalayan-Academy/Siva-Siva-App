@@ -189,20 +189,22 @@ end portal_GetLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject 
-	--  stackName
-	# save where we are coming from locally
-	put the short name of this stack into oStackName
-	put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-	if not  (oStackName is among the items of tNoGoBackStacks) then
-		portal_SetCurrentStack oStackName
-	end if
-
-	if not  (oStackName= "Siva-Siva-App") then  
-		# always close.; all stack should be set to remove window and destroy on close
-		# this is required to function properly o Android 
-		close stack oStackName  
-	end if
-	go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
+   --  stackName
+   # save where we are coming from locally
+   put the short name of this stack into oStackName
+   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   if not  (oStackName is among the items of tNoGoBackStacks) then
+      portal_SetCurrentStack oStackName
+   end if
+   
+   if not  (oStackName= "Siva-Siva-App") then  
+      # always close.; all stack should be set to remove window and destroy on close
+      # this is required to function properly o Android 
+      if isMobile() and there is a stack oStackname then # keep open on Desktop
+         close stack oStackName
+      end if
+   end if
+   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
 end portal_GoStack
 
 command portal_RemoveStack oStackName
