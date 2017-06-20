@@ -24,9 +24,9 @@ array that we can change dynamically depending on tne context requirments.
 -- for now if you need it, make a copy to your stack, It is normally hidden and is responsive.
 -- PARAMETERS
 -- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
--- pSubject... use as a case in the switch to determine what infor is place in the display-text field
--- can call some html file like from /assets/info/*.html
--- or could come from a specific module folder toa specific module "how to" info 
+-- pSubject... use as a case in the switch to determine what info is placed in the display-text field
+-- can call some html file like from /assets/info/*.html 
+-- or could come from a specific module folder to a specific module "how to" info 
 -- CHANGES:
 -- 2017-06-12, Brahmanatahswami: created
 ------------------------------------------------
