@@ -133,32 +133,74 @@ on createNewJournalEntry pEntryA, pEntryNum
    put the long id of it into tListItem
    set the journalEntry of tListItem to pEntryA
    set the itemOrder of tListItem to pEntryNum
-end createNewJournalEntry
-
-on filterByActivityType
-   local tList
-   dbSetSQL "select distinct module from journal"
-   put dbGet(null, journalDB()) into tA
-   repeat for each key m in tA
-      put  tA[m]["module"] into tA[m]["title"] // default value
-      if there is a stack  tA[m]["module"] and  the title of stack tA[m]["module"] is not empty then
-         put the title of stack tA[m]["module"] into tA[m]["title"]
-      end if
-      put  tA[m]["title"] & cr after tList
-   end repeat
-   delete char -1 of tList
-   sort tList
-   put "All" & cr before tList
-   mobilePick tList, "cancel"
-   if the result is 0 then
-      put empty into tModule
-   else
-      put line (the result) of tList into tTitle
-      repeat with x = 1 to the number of lines in the keys of tA
-         if tA[x]["title"] is tTitle then
-            put tA[x]["module"] into tModule
-         end if
-      end repeat
-   end if
-   layoutscreen tModule
+ end createNewJournalEntry
+ 
+ local sListA -- array of current journal entries for filtering in next 2 handlers
+ 
+ on filterByActivityType
+  local tList
+  dbSetSQL "select distinct module from journal"
+  put dbGet(null, journalDB()) into sListA
+  repeat for each key m in sListA
+    put  sListA[m]["module"] into sListA[m]["title"] // default value
+    if there is a stack  sListA[m]["module"] and  the title of stack sListA[m]["module"] is not empty then
+      put the title of stack sListA[m]["module"] into sListA[m]["title"]
+    end if
+    put  sListA[m]["title"] & cr after tList
+  end repeat
+  delete char -1 of tList
+  sort tList
+  put "All" & cr before tList
+  if isMobile() then
+    mobilePick tList, "cancel"
+    put the result into tLineNum
+    processFilter tLineNum,tList
+  else -- desktop
+    put tList into btn "filterPopup"
+    popup btn "filterPopup" -- this calls processFilter
+  end if
 end filterByActivityType
+
+on processFilter pLineNum,pList
+  -- pLineNum = line number of user selection
+  -- pList = list of options
+  if pLineNum = 0 then
+    put empty into tModule
+  else
+    put line pLineNum of pList into tTitle
+    repeat with x = 1 to the number of lines in the keys of sListA
+      if sListA[x]["title"] is tTitle then
+        put sListA[x]["module"] into tModule
+      end if
+    end repeat
+  end if
+  layoutscreen tModule
+end processFilter
+
+-- on filterByActivityType
+--   local tList
+--   dbSetSQL "select distinct module from journal"
+--   put dbGet(null, journalDB()) into tA
+--   repeat for each key m in tA
+--     put  tA[m]["module"] into tA[m]["title"] // default value
+--     if there is a stack  tA[m]["module"] and  the title of stack tA[m]["module"] is not empty then
+--       put the title of stack tA[m]["module"] into tA[m]["title"]
+--     end if
+--     put  tA[m]["title"] & cr after tList
+--   end repeat
+--   delete char -1 of tList
+--   sort tList
+--   put "All" & cr before tList
+--   mobilePick tList, "cancel"
+--   if the result is 0 then
+--     put empty into tModule
+--   else
+--     put line (the result) of tList into tTitle
+--     repeat with x = 1 to the number of lines in the keys of tA
+--       if tA[x]["title"] is tTitle then
+--         put tA[x]["module"] into tModule
+--       end if
+--     end repeat
+--   end if
+--   layoutscreen tModule
+-- end filterByActivityType
