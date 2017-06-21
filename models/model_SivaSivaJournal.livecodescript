@@ -174,8 +174,12 @@ function Journal_GetEntriesForModule pModule
    return tEntriesA
 end Journal_GetEntriesForModule
 
-function Journal_GetEntries
-   dbLimit 100
+function Journal_GetEntries pOffset
+   if pOffset is empty then
+      dbLimit 100
+   else
+      dbLimit 100, pOffset
+   end if
    dbOrderBy "date DESC"
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
