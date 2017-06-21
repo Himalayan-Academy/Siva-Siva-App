@@ -26,6 +26,9 @@ command parseTheHTML pHtmlText, pTargetString
          put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
          replace cr with "" in tRawTitle
          replace tab with "" in tRawTitle
+         # we are inconsistent in the title delimiter passed in our CMS
+         # sometime the leading "realm" is separated by a colon, other time a dash
+         replace ":" with "-" in tRawTitle # normalize all those...
          set the itemdel to "-" # set up for two part titles
          if the number of items of tRawTitle = 2 then
             put item 2 of tRawTitle into tRawtitle
