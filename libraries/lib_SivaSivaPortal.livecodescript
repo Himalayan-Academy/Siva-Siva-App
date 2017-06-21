@@ -95,19 +95,22 @@ command portal_GoUrl someURL,pJournalLabel
    portal_SetCurrentStack(oStackName)
    portal_GoStack "view_SivaSivaBrowser"
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-   # we are setting the journal here, but sometimes the call will be made
-   # from another journal entry which is "resuming"  from a different activity 
-   # than the simple web Portal
-   # we need to later resolve the various scenarios
-   # for now we call it simple "Web"
-   if pJournalLabel is empty then 
-      # dev has not passed anything, so probably coming from portal
-      put sLastLinkTitle into tWebPageTags
-   else
-      put pJournalLabel into tWebPageTags
-   end if
-   put someURL into pData["weburl"]
-   Journal_RecordEntry "view_SivaSivaBrowser","Web", pData, tWebPageTags
+   
+   # testing the journal Entry be done from the browser stack itself.
+   
+   --    # we are setting the journal here, but sometimes the call will be made
+   --    # from another journal entry which is "resuming"  from a different activity 
+   --    # than the simple web Portal
+   --    # we need to later resolve the various scenarios
+   --    # for now we call it simple "Web"
+   --    if pJournalLabel is empty then 
+   --       # dev has not passed anything, so probably coming from portal
+   --       put sLastLinkTitle into tWebPageLabel
+   --    else
+   --       put pJournalLabel into tWebPageLabel
+   --    end if
+   --    put someURL into pData["weburl"]
+   --    Journal_RecordEntry "view_SivaSivaBrowser",tWebPageLabel,pData
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
