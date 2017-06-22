@@ -123,8 +123,31 @@ function fetchRandomMediaItem
    put tRetValA into aMediaMeta
 end fetchRandomMediaItem
 
-function fetchRemoteMediaItems
+--> FETCH ALL RECORDS THAT MATCH
+# 
+function fetchMediaItems
+   if the paramcount mod 2 is not 0 then
+      return "err: param count needs to be even"
+   end if
    
+   put  JnanamDB() into tConnectionID
+   repeat with x = 1 to the paramcount step 2
+      if param(x) is not empty then
+         dbLike param(x), param(x+1)
+      end if
+   end repeat
+   put dbGet("item", tConnectionID) into selectedItemsA
+   put selectedItemsA[1] into tRetValA
+   repeat for each key k in tRetValA
+      put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
+   end repeat
+   put tRetValA into aMediaMeta
+   return aMediaMeta
+end fetchMediaItems
+
+
+
+function fetchRemoteMediaItems
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
