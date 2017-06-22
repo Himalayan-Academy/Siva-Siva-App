@@ -1,6 +1,5 @@
 ﻿script "behavior_Listen"
-local sCurrentPlayListA,sTargetPlayList
-
+local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA
 
 on preopenstack
    wait 100 milliseconds with messages
@@ -14,59 +13,132 @@ on openstack
    # for V1 we know we are always coming from the Listen Portal
    # and these are basically playlists like on Spotify, though
    # some might qualify as albums, but we don't have enough to 
-   # make a differentiation. So treat all as playlists
-   
-   # but we have different cards in this stack... 
-   # let's decide where we are going first    
-   # initialize interface
-   # nothing here yet...
-   
-   # assume we are coming from a portal link for now
-   # we need to refactor later
+   # make a differentiation. So treat all as playlists  
+   # if this stack is opened from a closed state
+   # we can safely assume the portal link is the target playlist
    
    put portal_GetLastLinkTitle() into sTargetPlayList   
    playlist_SetCurrent sTargetPlayList
    
-   # if stack is already open we can set this PlayList to anything we want.
-   # and override the initial play list from a portal.
-   
-  playlist_Instantiate 
+   # if stack is already open, then other playlist can be called
+   # using the playlist_SetCurrent command.
+   # now we have our play list we set up the query next
+   playlist_QuerySetUp
    
 end openstack
 
-# we don't know later how this will develop, so let's keep more robust
-# functions all here in the stack script and we can make this a behavior later
-# when coming and going from home or catalogs of plays lists we will 
-# use these to set and get 
+-----------------------------------------------------
+# playlist_Set|GetCurrent
+# DESCRIPTION:  the primary known variable is a string 
+# which is the list name, which is usually it's title
+# in V1 we are just picking this up from the portal link
+# as the Audio UI develops we can create more in this module space
+# we don't know later how this will develop, But regardless 
+# in any scenario we will want to be able to set and get this variable:
+# PARAMS: pass the playlist string, which should also serve as it's title (at least in V1)
+# CHANGES: Created 2017-06-22 Brahmanathaswami
+------------------------------------------------------
 
 on playlist_SetCurrent pList
-   put pList into sCurrentPlayListA["playlist-title"]
+   put pList into sCurrentPlayListA["playlistTitle"]
 end playlist_SetCurrent
 
 function playlist_GetCurrent
-   return sCurrentPlayListA["playlist-title"]
+   return sCurrentPlayListA["playlistTitle"]
 end playlist_GetCurrent
 
-on closeStack
-   set the acceleratedRendering of this stack to "false"
-end closeStack
-
 
 -----------------------------------------------------------------------
-# SET UP THE UI
-# Clean up and then:
-# for now we just install the title and thumbnail 
+# playlist_QuerySetUp
+# DESCRIPTION
+# we have three types of lists based on data storage/CMS
+# each requires a different query
+# Remote list: send JSON to serverwe send JSON for remote list
+# Audiobook: build a path string and download index. json for audio books
+# query the local dbase for already cached metadata in the Local Jnanam dbase
+# we need max six criteria to search our metadata, not all playlists require all string, 
+   # but our query array will still have all these keys; use elements as needed
+   # we will model that array into a json string or dbase query later
+   # media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
+   # see /system/applications/ha/controllers/API3.lc  on the server for details on the remote call
+   #  structure of remote query, for reference:
+   #   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into tJSON
+# We have to do this "by hand"  in a switch case by case statemnt
+# hard wiring the query data in this script is
+# bad practice... later we should externalize to a playlists.json file 
+# but for now:
+# PARAMS: pass the current play list string
+# CHANGES: 2017-06-22 - BR Created
 -----------------------------------------------------------------------
 
-on cleanUpGUI
-   # more later but for now, so no flash of previous content 
-   put empty into fld "title"
-   set the filename of img "playlistPoster" to empty
-   put empty into fld "audioList"
-   put empty into fld currentTitleLabel
-   set the filename of player "audioPlayer" to empty
-   ## add other mobile stuff to clear out here later
-end cleanUpGUI
+
+on playlist_QuerySetUp sTargetPlayList   
+   # Note: we are inserting queries strings... these are not the values of the records
+   # the entire play list
+   # aagDBLib uses "LIKE" so we only need to pass partial string for our searches
+   # again: we should store these values in modules/listen/playlists.json
+   
+   switch sTargetPlayList
+      case "Bodhinatha's Latest Talks" # Remote look up
+         put "inspiredtalk" into sPlaylistQueryA["media_type"]
+         put "Bodhinatha" into sPlaylistQueryA["author"]
+         put "cached" into sPlaylistQueryA["recordType"]
+         put 30 into sPlaylistQueryA["recordCount"]
+         break
+      case " Gurudeva's 1970 Master Course"
+           put "inspiredtalk" into sPlaylistQueryA["media_type"]
+         put "Subramuniyaswami" into sPlaylistQueryA["author"]
+         put "cached" into sPlaylistQueryA["recordType"]
+         put "1970" into sPlaylistQueryA["year"]
+         put "master-course" into sPlaylistQueryA["file_id"]
+         break
+      case "The Guru Chronicles" # Audio book
+         # for audio books; we need to know the file ID, which is the folder name
+         # after that it is a simple path set up.
+         put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
+         put "Swamis of Kauai's Hindu Monastery" into sPlaylistQueryA["getAuthor"]
+         put "audiobook" into sPlaylistQueryA["recordType"]
+         break
+      case "Gujarati Dancing with Siva Audiobook" # Audio book
+         # for audio books; we need to know the file ID, which is the folder name
+         # after that it is a simple path set up.
+         put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"]
+         put "Satguru Sivaya Subramuninyaswami" into sPlaylistQueryA["author"]
+         put "audiobook" into sPlaylistQueryA["recordType"]
+         break         
+   end switch
+   
+   playList_FetchData 
+   
+end playlist_QuerySetUp
+
+-----------------------------------------------------------------------
+# playList_FetchData
+# DESCRIPTION: 
+# We use the values in sCurrentPlayListA  to get what we need to put on the card
+# Later when users select info on the card we will have two known values
+# the line number and the string, which will be the title of the record
+# Sorting differs by recordType: latest|descending by date, audiobook | per json index, cached | alpha by title or file_ID
+# usually trigger on arrival to this stack-card
+# but also from action on UI (Home card later)
+# PARAMS: everything is taken from the sCurrentPlaylistA array
+-----------------------------------------------------------------------
+
+on playList_FetchData
+   
+   put sPlaylistQueryA["recordType"] into tRecordType
+   
+   switch tRecordType
+      case "latest"
+            put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'record-type':'latest','num-of-records':'30'}" into tJSON
+         break
+      case "audiobook"
+         break
+      case "cached"
+         break
+   end switch
+   
+end playList_FetchData
 
 on playlist_Instantiate sTargetPlayList
    
@@ -80,13 +152,44 @@ on playlist_Instantiate sTargetPlayList
    put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
    set the filename of img "playlistPoster" to tPosterPath
    
-   playlist_FetchData sTargetPlayList
+   playlist_SetType sTargetPlayList
 end playlist_Instantiate
 
 
+--> Audio book scenario
+on audiobook_FetchFiles
+   # uses json stored in a location on the serve and not in the dbase
+   # the following snippet from site.lc on our server will help build this.
+   --    case "audio/book"
+   --     rigLoadLibrary "fastjson"
+   --       put url ("file:" & $_SERVER["DOCUMENT_ROOT"] & "/media/audio/books/" & gData["record"]["file_id"] & "/audiobook.json") into tJSON
+   --        put jsonToArray(tJSON) into gData["record"]["audiobook"]
+end audiobook_FetchFiles
+
+
+command fetch_GetLatest pJSON
+   --put the seconds into sStartTimer
+   set the httpheaders to "content-type: application/json"
+   replace "'" with quote in pJSON
+   POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+   if the result is not empty then 
+      put the result into fld "audioList"
+      # reveal field using the function after it is built later      
+   else 
+      put it into tRecords
+      put jsonToArray (tRecords) into sCurrentPlayListA
+      put the keys of sCurrentPlayListA into tKeys
+      sort lines of tKeys ascending numeric
+   end if
+   repeat for each line x in tKeys
+      put tLatestTalks[x]["Title"] & cr after tTitles
+   end repeat
+   put tTitles into fld "audioList"
+end fetch_GetLatest
+
 
 -----------------------------------------------------------------------
-# UI Interactions
+# UI Interactions | card, group, list, detail display change ups
 -----------------------------------------------------------------------
 
 on mouseup   
@@ -103,63 +206,10 @@ on mouseup
    end switch
 end mouseup
 
------------------------------------------------------------------------
-# FETCH, SAVE, DISPLAY A SINGLE PLAY LIST
-# usually trigger on arrival to this stack-card
-# but also from action on UI (Home card later)
------------------------------------------------------------------------
-
-
+---------------------------------------------
+# Select, Play, Listen, Stop UI interactions
+---------------------------------------------
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-
-on playList_FetchData pTargetPlayList
-   
-   # here we want to just get the data and insert into the local array for the current playlist
-   # if the word "Latest" is in the string, we go to the server
-   # otherwise get it from the local Jnanam dbase, which will be much faster. 
-   
-   put "Bodhinatha's Latest Talks, The Guru Chronicles, Sanskrit Chanting, Gurudeva's Archives" into tLocalPlayLists
-   # "Local playlist"  just means we are not sending anyone to a web page, but have a native UI 
-   # for the songs here in the app
-   
-   if tTargetPlayList is among the items of tLocalPlayLists then
-      # We set a play list 
-      playlist_SetCurrent tTargetPlayList
-      go to card "listen-playlists"  -- Behavior on card will handle the playlists.
-      playList_FetchData tTargetPlayList
-   else
-      # for later... when we build a more robust ui for audio
-      # a "Home" card will supplement and "supplant" the listen portal 
-      # which does not scale easily.
-      go to card "listen-home"  
- end if
-   
-   
-end playList_FetchData
-
-command getLatestBodhinathaTalks
-   --put the seconds into sStartTimer
-   set the httpheaders to "content-type: application/json"
-   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'record-type':'latest','num-of-records':'30'}" into tJSON
-   replace "'" with quote in tJSON
-   POST tJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
-   if the result is not empty then 
-      put the result into fld "audioDetails"
-      # reveal field using the function after it is built later
-      
-   else 
-      put it into tRecords
-      put jsonToArray (tRecords) into tLatestTalks
-      put the keys of tLatestTalks into tKeys
-      sort lines of tKeys ascending numeric
-   end if
-   repeat for each line x in tKeys
-      put tLatestTalks[x]["Title"] & cr after tTitles
-   end repeat
-   put tTitles into fld "audioList"
-   
-end getLatestBodhinathaTalks
-
 
 # Let's break out discreet function and stop overloading the open card handlers
 # we can then move these out to library.
@@ -255,12 +305,24 @@ command showNowPlaying pMaxMin
    show fld "audioDetails" with visual effect wipe up very fast
 end showNowPlaying
 
---> Audio book scenario
-on audiobook_FetchFiles
-   # uses json stored in a location on the serve and not in the dbase
-   # the following snippet from site.lc on our server will help build this.
-   --    case "audio/book"
-   --     rigLoadLibrary "fastjson"
-   --       put url ("file:" & $_SERVER["DOCUMENT_ROOT"] & "/media/audio/books/" & gData["record"]["file_id"] & "/audiobook.json") into tJSON
-   --        put jsonToArray(tJSON) into gData["record"]["audiobook"]
-end audiobook_FetchFiles
+on closeStack
+   set the acceleratedRendering of this stack to "false"
+end closeStack
+
+
+-----------------------------------------------------------------------
+# SET UP THE UI
+# Clean up and then:
+# for now we just install the title and thumbnail 
+-----------------------------------------------------------------------
+
+on cleanUpGUI
+   # more later but for now, so no flash of previous content 
+   put empty into fld "title"
+   set the filename of img "playlistPoster" to empty
+   put empty into fld "audioList"
+   put empty into fld currentTitleLabel
+   set the filename of player "audioPlayer" to empty
+   ## add other mobile stuff to clear out here later
+end cleanUpGUI
+

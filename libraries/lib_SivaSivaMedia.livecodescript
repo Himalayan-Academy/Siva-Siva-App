@@ -137,12 +137,13 @@ function fetchMediaItems
       end if
    end repeat
    put dbGet("item", tConnectionID) into selectedItemsA
-   put selectedItemsA[1] into tRetValA
-   repeat for each key k in tRetValA
-      put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
-   end repeat
-   put tRetValA into aMediaMeta
-   return aMediaMeta
+  -- put selectedItemsA[1] into tRetValA
+   --    repeat for each key k in tRetValA
+   --       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
+   --    end repeat
+   --    put tRetValA into aMediaMeta
+   --  return aMediaMeta
+  return selectedItemsA
 end fetchMediaItems
 
 
