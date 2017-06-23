@@ -23,14 +23,14 @@ local LocalArray
 -
 on librarystack
    -- best not to place this here as it will get called every time
-   if the long id of the target is not the long id of me then 
+   if the long id of the target is not the long id of me then
       pass librarystack
    end if
-   
+
    if sLoaded is not true then
       _setupDatabase
    end if
-   
+
 end librarystack
 
 
@@ -80,7 +80,7 @@ function journal_convertDate pDateTime
    if tDay < 10 then put 0 before tDay
    set the twelvehourtime to tCurr12HrTime
    put tYear & "-" & tMonth & "-" & tDay into tDate
-   if tHasTime then  
+   if tHasTime then
       return (tDate && tTime)
    else
       return tDate
@@ -107,19 +107,19 @@ end Journal_GetDatabasePath
 --         pModule:  must be the short name of a livecode binary stack
 --         pLabel: This appears as the main entry string in the journal, In large bold type
 --                          use a short phrase that indicates
---                          what the activity is.  
---         pData this an array   -- You must pass this, even if empty   
+--                          what the activity is.
+--         pData this an array   -- You must pass this, even if empty
 -- Some important pData array key conventions
 -- "weburl" is used to pass the URL that is based back on resume to the view_SivaSivaBrowser
 --    optional:  pTags - any string, but comma separated single words of phrase by convention. see some examples.
---                        pImage- not yet implements TBD   BR: What does this do?    what value? path to file on disk?         
+--                        pImage- not yet implements TBD   BR: What does this do?    what value? path to file on disk?
 --CHANGES
 --         2017-04-01: Andre - Created
 ---------------------------------------------------------------------------------------
 
 command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    put pModule into tDataA["module"]
-   
+
    if the keys of pData is empty then
       if pData is not empty then
          put pData into tTempA["data"]
@@ -128,29 +128,29 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    else
       put jsonexport(pData) into tDataA["data"]
    end if
-   
+
    if pTags is not empty then
       put pTags into tDataA["tags"]
    end if
-   
+
    if pImage is not empty then
       put pImage into tDataA["image"]
    end if
-   
+
    if pLabel is not empty then
       put pLabel into tDataA["label"]
    else
       put pModule into tDataA["label"]
    end if
-   
+
    -- fix encodings
    put textEncode(tDataA["label"], "UTF8") into tDataA["label"]
    put textEncode(tDataA["data"], "UTF8") into tDataA["data"]
    put textEncode(tDataA["tags"], "UTF8") into tDataA["tags"]
-   
-   
+
+
    put journal_convertDate(the date && the time) into tDataA["date"]
-   
+
    put dbInsert("journal", tDataA, JournalDB()) into tResult
    return tResult
 end Journal_RecordEntry
@@ -161,14 +161,19 @@ command Journal_SetFavoriteFlag pEntryID, pValue
    else
       put 0 into tDataA["is_favorite"]
    end if
-   
+
    dbWhere "journal_id", pEntryID
    put dbUpdate("journal", tDataA, journalDB()) into tResult
    return tResult
 end Journal_SetFavoriteFlag
 
-function Journal_GetEntriesForModule pModule
-   dbLimit 100
+function Journal_GetEntriesForModule pModule, pOffset
+   if pOffset is empty then
+      dbLimit 100
+   else
+      dbLimit 100, pOffset
+   end if
+
    dbLike "module", pModule
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
@@ -193,11 +198,11 @@ end Journal_GetEntries
 -- This command fetches data from the joural.sqlite dbase.
 -- tEntriesA arracy contains the values of all columns, 1 per key
 -- These are: 1: journal_id; 2:module;3:data (a json object contain whatever the developer wants  to pass;
--- 4:date [2017-05-15 04:44:00]; 5:tags (text string); 6 :image (not implemented yet); 
+-- 4:date [2017-05-15 04:44:00]; 5:tags (text string); 6 :image (not implemented yet);
 -- 7: is_favorite: integer (usage TBD); 8:comments (aka "notes")
 -- 9:label (appears on journal list)
 -- tDataA contains the name value pairs pass by the developer of the module
--- to be used as needed on journalResume. 
+-- to be used as needed on journalResume.
 -- use any value in tEntryA or tDataA  to trigger custom actions when resuming the module
 ----------------------------------------------
 
@@ -226,8 +231,8 @@ on journalresume pDataA, pEntryA
    close stack "journal"
    portal_GoStack pEntryA["module"]
 end journalresume
-   
-   
+
+
 function Journal_makeInlineArray
    repeat with x = 1 to the paramcount step 2
       put param(x+1) into tTempA[param(x)]
@@ -255,7 +260,7 @@ private command _setupDatabase
    if there is not a file JournalDatabasePath then  --or the environment is "development" then
       _copyAndDecompress
    end if
-   
+
    if sID is not a number then
       _loadDatabase
    end if
@@ -264,7 +269,7 @@ end _setupDatabase
 
 private command _copyAndDecompress
    put Journal_GetCompressedFilePath() into compressedFile
-   
+
    put the defaultfolder into tDF
    set the itemdel to "/"
    set the defaultfolder to item 1 to -2 of the effective filename of this stack
@@ -275,7 +280,7 @@ end _copyAndDecompress
 
 private command _loadDatabase
    put Journal_GetDatabasePath() into sqliteFile
-   
+
    get revOpenDatabase("sqlite", sqliteFile)
    if it is not a number then
       throw it
@@ -284,4 +289,3 @@ private command _loadDatabase
       put it into sID
    end if
 end _loadDatabase
-
