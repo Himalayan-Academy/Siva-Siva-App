@@ -205,12 +205,14 @@ local pPlayerName -- jg: may not need this any more; check
 ---------------------------------------------------------------------------------------
 
 
-command createMobileAudioPlayer pURL, pPlayerName
+command createMobileAudioPlayer pURL, pPlayerName,tRect
    if pPlayerName is among the lines of mobileControls() then mobileControlDelete pPlayerName -- init
    mobileControlCreate "player",pPlayerName
    put the result into sPlayerId
    -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
-   put the rect of player pPlayerName into tRect 
+   if tRect is empty then
+      put the rect of player pPlayerName into tRect 
+   end if   
    if the platform is "android" then -- android player controls appear above the player; adjust
       -- with controller it's about 4x rect of cd player so align the botom edges:
       put item 4 of tRect - item 2 of tRect into tHeight

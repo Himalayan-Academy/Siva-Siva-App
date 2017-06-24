@@ -141,7 +141,8 @@ on select_Play  pSelectedLine
    
    
    if isMobile() then
-      createMobileAudioPlayer tURL, "audioPlayer"
+      createMobileAudioPlayer tURL, "audioPlayer",\
+       (12,the bottom of this card-100, the left of this card -12, the bottom of this card -68)
    else
       set the filename of player "audioPlayer" to tURL
    end if
