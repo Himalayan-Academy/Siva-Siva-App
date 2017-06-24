@@ -158,35 +158,6 @@ end text_TitleCase
 ## If something here gets active, please move up above this comment.
 
 
---> Portal | Navigation | API
--- BR we should probably move all the nav function here from the  lib_
-
-/*
-This section is for default navigation handlers.
-They can be overridden in a stack by placing copies of these handlers in the stack
-for instance on the card
-*/
-
-command sivasiva_GoHomePortal
-   portal_Link "home"
-end sivasiva_GoHomePortal
-
-command sivasiva_QueueContent btnObject, hiliteBoolean
-   -- sivasiva_AddBookMark
-   if the environment is "mobile" then
-      dispatch "sivasiva_ToggleOrientation" to the target
-   else
-      dispatch "sivasiva_ToggleOrientation" to the target
-   end if
-end sivasiva_QueueContent
-
-command sivasiva_AddFavorites
-   portal_DisplayBookmarks
-end sivasiva_AddFavorites
-
-command sivasiva_SettingsGear
-   display_Log
-end sivasiva_SettingsGear
 
 command display_Log
    portal_GoStack "Log"

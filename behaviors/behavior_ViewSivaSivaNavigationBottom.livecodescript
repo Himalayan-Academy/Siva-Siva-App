@@ -11,6 +11,84 @@ version: 0.1
 -
 local LocalArray
 
+--> Events
+-
+on mouseDown
+   # bug: this behavior is getting events outside the rect of the object it was assigned to
+   # we have to check what's the target
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      switch btnName
+         case "bottomTabBkgnd"
+            -- do nothing
+            break
+         default
+            set the hilite of btnObject to true
+            if the environment is "development" then
+               --put btnName
+            end if
+      end switch
+   end if
+end mouseDown
+
+on mouseUp pWhichButton
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      if btnName = "bottomTabBkgnd" then pass mouseUp
+      
+      put btnName into mCommand
+      replace "-" with empty in mCommand
+      put "sivasiva_" before mCommand
+      
+      put the highlite of btnObject into someBoolean
+      set the highlite of btnObject to false
+      
+      dispatch mCommand with btnObject, someBoolean
+      switch it
+         case "handled"
+            break
+         case "unhandled"
+         default
+            -- _displayMouseUpCommand
+      end switch
+   end if
+end mouseUp
+
+
+--> AAG | Hopefully navigation
+
+command sivasiva_AddFavorites
+   portal_GoStack "Journal"
+end sivasiva_AddFavorites
+
+command sivasiva_SettingsGear
+   --display_Log
+   if the short name of this stack is "settings" then
+      dialog_CustomMsg true,"You are at settings."
+   else
+      portal_GoStack "settings"
+   end if
+end sivasiva_SettingsGear
+
+command sivasiva_Share
+      dialog_CustomMsg true,"Share Coming Soon"
+end sivasiva_Share
+
+
+-----------------------------------------------------------------------
+# All of Davids Layout commands and prop setters are below
+# please use the above section for actual navigation
+# later we may deprecate everything below for something simple
+# OTOH it  could be userful for layout the controls when stack are resized
+-----------------------------------------------------------------------
+
+
+getprop Layout_Handlers_Begin_Here
+end Layout_Handlers_Begin_Here
 
 --> Work in Progress
 -
@@ -95,52 +173,7 @@ command layout_SpreadHorizontally pRect
 end layout_SpreadHorizontally
 
 
---> Events
--
-on mouseDown
-   # bug: this behavior is getting events outside the rect of the object it was assigned to
-   # we have to check what's the target
-   put the short name of the target into tTarget
-   if  (tTarget is among the lines of the childControlNames of me) then
-      put the long id of the target into btnObject
-      put the short name of btnObject into btnName
-      switch btnName
-         case "bottomTabBkgnd"
-            -- do nothing
-            break
-         default
-            set the hilite of btnObject to true
-            if the environment is "development" then
-               --put btnName
-            end if
-      end switch
-   end if
-end mouseDown
 
-on mouseUp pWhichButton
-   put the short name of the target into tTarget
-   if  (tTarget is among the lines of the childControlNames of me) then
-      put the long id of the target into btnObject
-      put the short name of btnObject into btnName
-      if btnName = "bottomTabBkgnd" then pass mouseUp
-      
-      put btnName into mCommand
-      replace "-" with empty in mCommand
-      put "sivasiva_" before mCommand
-      
-      put the highlite of btnObject into someBoolean
-      set the highlite of btnObject to false
-      
-      dispatch mCommand with btnObject, someBoolean
-      switch it
-         case "handled"
-            break
-         case "unhandled"
-         default
-            -- _displayMouseUpCommand
-      end switch
-   end if
-end mouseUp
 
 on resizeControl
    LayoutControl
@@ -441,8 +474,4 @@ command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
    put leftM,topM,rightM,bottomM into someMargin
 end margin_Normalize
 
---> AAG | Hopefully navigation
 
-command sivasiva_AddFavorites
-   portal_GoStack "Journal"
-end sivasiva_AddFavorites
