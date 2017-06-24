@@ -1,14 +1,37 @@
 ﻿script "behavior_Listen"
+
+-----------------------------------------------------
+#  behavior_Listen
+#
+# DESCRIPTION
+# this behavior is the /modules/listen/listen.livecode stack script
+# It's primary function is to handle high level calls to get play lists
+# UI consist of 2 main cards
+# listen-playlist - for show a single play list
+# listen-catalog - later: for showing multiple lists like on Spotify # not in V1
+# So as not to over load this script the handlers whose scope deals with
+# user interaction with a single play list/ indivitual songs are in a separate behavior 
+# behavior_ListenSelectPlay
+# assigned to the listen-playlist card
+#
+# PARAMS: Main variable sent to this script is a string which is the name/title of a playlist
+#
+# CHANGES: 2017-06-22 CREATED Brahmanathaswami
+-----
+
+
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA
+local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 
 on preopenstack
-   wait 100 milliseconds with messages
+   # may be fixed in recent versions Android crashed on stack swaps
+   # this little wait helped 
+   wait 100 milliseconds with messages 
    set the fullscreenmode of this stack to "showAll"
    mobile_SetAllowedOrientation "portrait"
    set the acceleratedRendering of this stack to "true"
-   cleanUpGui
 end preopenstack
-
+ 
 on openstack 
    # for V1 we know we are always coming from the Listen Portal
    # and these are basically playlists like on Spotify, though
@@ -23,7 +46,7 @@ on openstack
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
-   playlist_QuerySetUp
+   playlist_QuerySetUp sTargetPlayList
    
 end openstack
 
@@ -39,13 +62,21 @@ end openstack
 # CHANGES: Created 2017-06-22 Brahmanathaswami
 ------------------------------------------------------
 
-on playlist_SetCurrent pList
-   put pList into sCurrentPlayListA["playlistTitle"]
+on playlist_SetCurrent pList  
+   put pList into sTargetPlayList
 end playlist_SetCurrent
 
 function playlist_GetCurrent
-   return sCurrentPlayListA["playlistTitle"]
+   return sCurrentPlayListA["playListTitle"]
 end playlist_GetCurrent
+
+function playlist_GetRecords  # use this to fetch data later for card behavior
+   if sCurrentPlayListA is empty then
+      put "No records Fetched!"
+   else
+      return sCurrentPlaylistA  
+   end if
+end playlist_GetRecords
 
 
 -----------------------------------------------------------------------
@@ -72,7 +103,8 @@ end playlist_GetCurrent
 -----------------------------------------------------------------------
 
 
-on playlist_QuerySetUp sTargetPlayList   
+on playlist_QuerySetUp
+      
    # Note: we are inserting queries strings... these are not the values of the records
    # the entire play list
    # aagDBLib uses "LIKE" so we only need to pass partial string for our searches
@@ -82,7 +114,7 @@ on playlist_QuerySetUp sTargetPlayList
       case "Bodhinatha's Latest Talks" # Remote look up
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
          put "Bodhinatha" into sPlaylistQueryA["author"]
-         put "cached" into sPlaylistQueryA["recordType"]
+         put "latest" into sPlaylistQueryA["recordType"]
          put 30 into sPlaylistQueryA["recordCount"]
          break
       case " Gurudeva's 1970 Master Course"
@@ -129,200 +161,91 @@ on playList_FetchData
    put sPlaylistQueryA["recordType"] into tRecordType
    
    switch tRecordType
-      case "latest"
-            put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'record-type':'latest','num-of-records':'30'}" into tJSON
+      case "latest" 
+         # we do a JSON Call  Hard wiring as a test for now. but we should later 
+         # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
+         # we need because we can then use for different play lists on demand.. 
+         put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into pJSON
+         put the ticks into sStartTimer
+         set the httpheaders to "content-type: application/json"
+         replace "'" with quote in pJSON
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         if the result is not empty then 
+            put the result into fld "audioList"
+            # reveal field using the function after it is built later      
+         else 
+            put it into tRecords
+            put jsonToArray (tRecords) into sCurrentPlayListA
+         end if
+         # add list type for other operations
+         put tRecordType into sCurrentPlayList["listType"]
+         
          break
       case "audiobook"
+         # uses json stored in a location on the serve and not in the dbase
+         # the following snippet from site.lc on our server will help build this.
+         --    case "audio/book"
+         --     rigLoadLibrary "fastjson"
+         --       put url ("file:" & $_SERVER["DOCUMENT_ROOT"] & "/media/audio/books/" & gData["record"]["file_id"] & "/audiobook.json") into tJSON
+         --        put jsonToArray(tJSON) into gData["record"]["audiobook"]
          break
       case "cached"
+         -- pass our sPlaylistQueryA to lib_SivaSivaMedia to fetch records from the local SQLlite dbase
          break
    end switch
    
+   -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
+   # we have the data for our records in the array now.
+   # need know two things from the beginning
+   put tRecordType into sCurrentPlaylistA["listType"]
+   put sTargetPlayList into sCurrentPlayListA["playListTitle"]
+   
+   playlist_Instantiate sTargetPlayList
+   
 end playList_FetchData
 
-on playlist_Instantiate sTargetPlayList
+
+-----------------------------------------------------------------------
+# playlist_Instantiate
+#
+# DESCRIPTION: 
+# card 1 of this stack must always be card "listen-playlist" 
+# as such, object references here refer to controls on that card
+# this is where we fill in the play list 
+#
+# PARAMS: everything is taken from the sCurrentPlaylistA array
+#
+# CHANGES: 2017-06-22 created Brahmanathswami
+-----------------------------------------------------------------------
+
+
+on playlist_Instantiate sTargetPlayList   
+   # we may have the stack already open 
+   # and switching play list so clear the card first:
+   
+   dispatch "cleanUpGui" to card "listen-playlist"
    
    ## Title and thumbnail:
-   put sCurrentPlayListA["playlist-title"] into tTitle
-   put tTitle into fld "title"
-   
+   put sTargetPlayList into tTitle 
+   put tTitle into fld "title"   
    # using: model_SivaSiva, which has functions to get json info we need:
    put sivasiva_FetchData() into tPortalInfoA
    put tPortalInfoA["portalRowDictionary"][tTitle][shortImageFile] into tThumbPath
    put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
    set the filename of img "playlistPoster" to tPosterPath
-   
-   playlist_SetType sTargetPlayList
-end playlist_Instantiate
+   put the keys of sCurrentPlayListA into tKeys
+   sort lines of tKeys ascending numeric
 
-
---> Audio book scenario
-on audiobook_FetchFiles
-   # uses json stored in a location on the serve and not in the dbase
-   # the following snippet from site.lc on our server will help build this.
-   --    case "audio/book"
-   --     rigLoadLibrary "fastjson"
-   --       put url ("file:" & $_SERVER["DOCUMENT_ROOT"] & "/media/audio/books/" & gData["record"]["file_id"] & "/audiobook.json") into tJSON
-   --        put jsonToArray(tJSON) into gData["record"]["audiobook"]
-end audiobook_FetchFiles
-
-
-command fetch_GetLatest pJSON
-   --put the seconds into sStartTimer
-   set the httpheaders to "content-type: application/json"
-   replace "'" with quote in pJSON
-   POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
-   if the result is not empty then 
-      put the result into fld "audioList"
-      # reveal field using the function after it is built later      
-   else 
-      put it into tRecords
-      put jsonToArray (tRecords) into sCurrentPlayListA
-      put the keys of sCurrentPlayListA into tKeys
-      sort lines of tKeys ascending numeric
-   end if
    repeat for each line x in tKeys
-      put tLatestTalks[x]["Title"] & cr after tTitles
+      # the array includes key/values info for theplaylist that are not  audio files
+      # these are always strings, keys for files are always numeric index
+      if isNumber(x) then 
+         put sCurrentPlayListA[x]["Title"] & cr after tTitles
+      end if
    end repeat
    put tTitles into fld "audioList"
-end fetch_GetLatest
-
-
------------------------------------------------------------------------
-# UI Interactions | card, group, list, detail display change ups
------------------------------------------------------------------------
-
-on mouseup   
-   put the target into pTarget
-   put the short name of the Target  into tTarget
-   # there are no scripts at all in any object of the UI.
-   # all logic for user interaction with the GUI is handled here.
-   # but this just a mouse event router. Encapsulate acttion to separate handlers.
-   switch tTarget
-      case "AudioList"
-         put word 2 of the clickline into tSelectNum
-         put tSelectNum
-         break    
-   end switch
-end mouseup
-
----------------------------------------------
-# Select, Play, Listen, Stop UI interactions
----------------------------------------------
-local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-
-# Let's break out discreet function and stop overloading the open card handlers
-# we can then move these out to library.
-# so we should write generalized code that handles none localize param names
-# so they can serve in other contexts.
-# play audio talks/songs is pretty much the same everywhere.
-
-on playChoice 
-   put fetchRandomMediaItem ("media_type","audio") into gotIt
-   put getMediaURL () into tURL
-   if tURL = "" then -- jg: don't continue
-      put "Media not found" into fld "audioDetails"
-      set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
-      showBusyIndicator false
-      exit to top
-   end if
-   
-   
-   if isMobile() then
-      createMobileAudioPlayer tURL, "audioPlayer"
-   else
-      set the filename of player "audioPlayer" to tURL
-   end if
-   
-   showPlayer "true", "audioPlayer"
-   if not isMobile() then 
-      start player "audioPlayer"
-   else
-      setMobileAudioPlayer "play"
-   end if
-   showBusyIndicator false
-   send "showNowPlaying pMax" to me in 10 ticks
-end playChoice
-
-on closeCard
-   hide fld "audioDetails"
-   put empty into fld "audioDetails"
-   showPlayer "false", "audioPlayer"
-   if isMobile() then 
-      deleteAllMobileControls
-   end if
-end closeCard
-
-
-# We will expand or shrink the nowPlayingview
-# by simply
-# collapsing the audio detail field to hold only the title OR
-# expand to show all details.
-# pull down the chevron and to point up
-# controller stays in a fixed location.
-
-# V2 Link to transcript
-
-command showNowPlaying pMaxMin
-   switch pMaxMin
-      case "pMax"
-         break
-      case "pMini"
-         break
-   end switch
-   
-   put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails" 
-   
-   set the textsize of line 1 of fld "audioDetails" to 22
-   set the textstyle of line 1 of fld "audioDetails" to "bold"
-   set the textstyle of line 3 of fld "audioDetails" to "italic"
-   
-   # need to fix this because the height could be too tall
-   # if too tall we need to set max height
-   # and instantiate scrolling on desktop and mobile
-   
-   put the formattedHeight of fld "audioDetails" into tRequiredHeight
-   
-   If tRequiredHeight> 512 then
-      # We need to constrain size and set scrolling
-      # BR: I'm making an attempt here to see if we can accomodate Tablet
-      # by working with the card size instead of setting a fixed pixel rect.
-      
-      set the rect of fld "AudioDetails" to (45,65,the width of this card-45,the height of this card -150) 
-      set the vscrollbar of fld "AudioDetails" to not isMobile()
-      
-      set the mobile_VerticalScroller of fld "AudioDetails" to "AudioDetails"
-      
-   else  # it will fit
-      set the height of fld "audioDetails" to tRequiredHeight
-      if tRequiredHeight > 400 then # too tall to center. falls behind the player controller
-         set the top of fld "AudioDetails" to 66
-      else
-         set the loc of fld "audioDetails" to the loc of this card
-      end if
-   end if
-   
-   show fld "audioDetails" with visual effect wipe up very fast
-end showNowPlaying
+end playlist_Instantiate
 
 on closeStack
    set the acceleratedRendering of this stack to "false"
 end closeStack
-
-
------------------------------------------------------------------------
-# SET UP THE UI
-# Clean up and then:
-# for now we just install the title and thumbnail 
------------------------------------------------------------------------
-
-on cleanUpGUI
-   # more later but for now, so no flash of previous content 
-   put empty into fld "title"
-   set the filename of img "playlistPoster" to empty
-   put empty into fld "audioList"
-   put empty into fld currentTitleLabel
-   set the filename of player "audioPlayer" to empty
-   ## add other mobile stuff to clear out here later
-end cleanUpGUI
-
