@@ -11,7 +11,7 @@ Moved from frontscript
 
 --> Variables
 -
-local aMediaMeta,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
+local sMediaMetaA,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
 
 command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
@@ -49,7 +49,7 @@ command _old_fetchRandomMediaItem pSelectParams
    --   --put the result
    --   put it into tMediaMeta
    --   if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
-   --      put empty into aMediaMeta
+   --      put empty into sMediaMetaA
    --   end if
    
    --   # if you want to see what you are getting
@@ -57,7 +57,7 @@ command _old_fetchRandomMediaItem pSelectParams
    --   # put tMediaMeta
    
    --   try
-   --     put jsonImport(tMediaMeta) into aMediaMeta
+   --     put jsonImport(tMediaMeta) into sMediaMetaA
    --   catch tErr
    --     logError tErr
    --   end try
@@ -85,20 +85,20 @@ command _old_fetchRandomMediaItem pSelectParams
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet("item", tConnectionID) into aSelectedItem
-   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into aMediaMeta["item_id"]
-   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into aMediaMeta["approved_for_public"] 
-   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into aMediaMeta["file_id"]
-   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into aMediaMeta["media_type"]
-   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into aMediaMeta["date_created"]
-   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into aMediaMeta["genre"]
-   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into aMediaMeta["deity"]
-   put textDecode ( aSelectedItem[1]["title"], UTF8)  into aMediaMeta["title"]
-   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into aMediaMeta["sub_title"] 
-   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into aMediaMeta["artists"]
-   put textDecode ( aSelectedItem[1]["author"], UTF8)  into aMediaMeta["author"]
-   put textDecode ( aSelectedItem[1]["description"], UTF8)  into aMediaMeta["description"]
+   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into sMediaMetaA["item_id"]
+   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into sMediaMetaA["approved_for_public"] 
+   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into sMediaMetaA["file_id"]
+   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into sMediaMetaA["media_type"]
+   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into sMediaMetaA["date_created"]
+   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into sMediaMetaA["genre"]
+   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into sMediaMetaA["deity"]
+   put textDecode ( aSelectedItem[1]["title"], UTF8)  into sMediaMetaA["title"]
+   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into sMediaMetaA["sub_title"] 
+   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into sMediaMetaA["artists"]
+   put textDecode ( aSelectedItem[1]["author"], UTF8)  into sMediaMetaA["author"]
+   put textDecode ( aSelectedItem[1]["description"], UTF8)  into sMediaMetaA["description"]
    
-  getformatData (aMediaMeta["item_id"])
+  getformatData (sMediaMetaA["item_id"])
 end _old_fetchRandomMediaItem
 
 function fetchRandomMediaItem
@@ -120,11 +120,55 @@ function fetchRandomMediaItem
    repeat for each key k in tRetValA
       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
    end repeat
-   put tRetValA into aMediaMeta
+   put tRetValA into sMediaMetaA
 end fetchRandomMediaItem
 
-function fetchRemoteMediaItems
+----------------------------------------------------------------------------------
+# metadata_SetRecord
+#
+# DESCRIPTION: This library model data related to media
+# It want primarily an array of records or an array for a single record
+# from the item Table
+# this could come froma function that fetches remote data
+# it could come from the local dbase
+# once we have it, then we can model it and return as needed from this library
+#
+# PARAMS: Pass an item record array here from another stack
+# 
+# CHANGES: CREATED, 2017-06-22. Brahmanathaswami
+
+----------------------------------------------------------------------------------
+
+on metadata_SetRecord pRecordArray
+   put pRecordArray into sMediaMetaA
+end metadata_SetRecord
+
+--> FETCH ALL RECORDS THAT MATCH
+# 
+function fetchMediaItems
+   if the paramcount mod 2 is not 0 then
+      return "err: param count needs to be even"
+   end if
    
+   put  JnanamDB() into tConnectionID
+   repeat with x = 1 to the paramcount step 2
+      if param(x) is not empty then
+         dbLike param(x), param(x+1)
+      end if
+   end repeat
+   put dbGet("item", tConnectionID) into selectedItemsA
+  -- put selectedItemsA[1] into tRetValA
+   --    repeat for each key k in tRetValA
+   --       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
+   --    end repeat
+   --    put tRetValA into sMediaMetaA
+   --  return sMediaMetaA
+  return selectedItemsA
+end fetchMediaItems
+
+
+
+function fetchRemoteMediaItems
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -175,8 +219,8 @@ end fetchRandomImageAsset
 
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    
-   put aMediaMeta["media_type"] into pMediaType
-   getformatData (aMediaMeta["item_id"])
+   put sMediaMetaA["media_type"] into pMediaType
+   getformatData (sMediaMetaA["item_id"])
    # each media type will entail a different path on the /media directory 
    switch 
       case pMediaType contains "audio/"
@@ -201,12 +245,12 @@ function getMediaItemMetadata
     
    put empty into tViewData
    # create small HTML chunck from the data we want
-   put aMediaMeta["title"] into tTitle
-   put aMediaMeta["sub_title"] into tSubTitle
-   put aMediaMeta["artists"] into tArtists
-   put aMediaMeta["author"] into tAuthor
-   put aMediaMeta["description"] into tDescription
-   put aMediaMeta["date_created"] into tDateCreated
+   put sMediaMetaA["title"] into tTitle
+   put sMediaMetaA["sub_title"] into tSubTitle
+   put sMediaMetaA["artists"] into tArtists
+   put sMediaMetaA["author"] into tAuthor
+   put sMediaMetaA["description"] into tDescription
+   put sMediaMetaA["date_created"] into tDateCreated
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated
    
@@ -307,11 +351,11 @@ function folderForArt pBestFormat
    # we need to parse the media_type to get the folder
    
    set the itemdel to "/" 
-   put item 2 of aMediaMeta["media_type"] into tArtDirectory
+   put item 2 of sMediaMetaA["media_type"] into tArtDirectory
    put tArtDirectory & "/" after pServerPath
    
    # unlike audio, there are no further sub-directories so we can go directly to the fileID
-   put  aMediaMeta["file_id"]  &"/" after pServerPath
+   put  sMediaMetaA["file_id"]  &"/" after pServerPath
    
    # "pBestformat" species the size, typically we just want either med or large
    # pass this from your card script based on your view requirements
@@ -358,18 +402,18 @@ function folderForAudio pMediaType
          break
       case pMediaType = "audio/song"
          put "songs/" after tServerPath
-         put aMediaMeta["genre"] &"/" after tServerPath
+         put sMediaMetaA["genre"] &"/" after tServerPath
          
-         if (aMediaMeta["genre"] = "bhajan") OR (aMediaMeta["genre"] = "bhakti-gitam")  then
+         if (sMediaMetaA["genre"] = "bhajan") OR (sMediaMetaA["genre"] = "bhakti-gitam")  then
             # only these two genres have sub folders on disk
             # other Genres may have "diety" assignments, but not stored on disk in separate folders
-            put (toLower(aMediaMeta["deity"])) & "/" after tServerPath
+            put (toLower(sMediaMetaA["deity"])) & "/" after tServerPath
          end if
          break
       case pMediaType="audio/inspiredtalk"
          put "inspired-talks/" after tServerPath
-         put aMediaMeta["author"] into tAuthor
-         put aMediaMeta["date_created"] into tDateCreated
+         put sMediaMetaA["author"] into tAuthor
+         put sMediaMetaA["date_created"] into tDateCreated
          set the itemdel to "-"
          put item 1 of tDateCreated into tYear
          switch tAuthor
@@ -384,7 +428,7 @@ function folderForAudio pMediaType
          break	
 
    end switch
-   put aMediaMeta["file_id"] & "/" after tServerPath
+   put sMediaMetaA["file_id"] & "/" after tServerPath
 put aSelectedItemFormats["1"]["filename"] after tServerPath
    return tServerPath
 end folderForAudio

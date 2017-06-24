@@ -5,13 +5,15 @@
   "log_level": "info,error,fatal",
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal",
   "stackfiles": [
-     {"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
-    {"name": "behavior_Journal", "file": "modules/journal/behavior_Journal.livecodescript"},
-    {"name": "behavior_JournalListView", "file": "modules/journal/behavior_JournalListView.livecodescript"},
-    {"name": "behavior_ItemTemplate", "file": "modules/journal/behavior_ItemTemplate.livecodescript"},
-    {"name": "journal", "file": "modules/journal/journal.livecode"},
-    {"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"},
-    {"name":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"},
-    {"name":"SivaSivaResources","file":"assets/SivaSivaResources.livecode"}
+  	{"name": "behavior_GemsQuotes", "file": "modules/gems/behavior_GemsQuotes.livecodescript"},
+	{"name": "behavior_ListenSelectPlay", "file": "modules/listen/behavior_ListenSelectPlay.livecodescript"},
+	{"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
+	{"name": "behavior_Journal", "file": "modules/journal/behavior_Journal.livecodescript"},
+	{"name": "behavior_JournalListView", "file": "modules/journal/behavior_JournalListView.livecodescript"},
+	{"name": "behavior_ItemTemplate", "file": "modules/journal/behavior_ItemTemplate.livecodescript"},
+	{"name": "journal", "file": "modules/journal/journal.livecode"},
+	{"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"},
+	{"name":"behavior_SivaSivaSettings","file":"behaviors/behavior_SivaSivaSettings.livecodescript"},
+	{"name":"SivaSivaResources","file":"assets/SivaSivaResources.livecode"}
   ]
 }

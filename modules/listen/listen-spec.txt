@@ -1,5 +1,33 @@
 Spec for Listen Module
 
+Process Flow for V1
+
+1) Link from portal goes to listen stack
+2) Card is set up using data from the portal array
+    -- title
+    -- fetch image thumbnnail fo r the top of the screen
+    -- empty the audio list field
+  3) using the link string we fork:
+          if contains "latest"  then we fetch data from remote server and store in array
+          else
+          send query to fetchMediaItems with correct params
+    4) store the array
+    5) sort by title    
+
+4) using the array we fetch a list of titles and insert into the field
+5) the line number of the field should be a match for some key in the array
+6) when users taps a line, sCurrentSelectionA should contain all the metadata for that record
+7)  set the  currentTitleField to the sCurrentSelectionA["title"]
+8) fill field audio details (which remains hidden)
+8) Set the player to remote url (use lib_sivasivaMedia function)
+9) start the player
+10 ) tap on disclosure triange
+
+
+
+
+
+
 See Spotify for models
 
 Simple implementation
