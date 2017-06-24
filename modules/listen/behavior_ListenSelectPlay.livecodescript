@@ -188,6 +188,7 @@ on resetLines
    end repeat
 end resetLines
 
+
 on cleanUpGUI
    # more later but for now, so no flash of previous content 
    put empty into fld "title"
@@ -200,9 +201,6 @@ end cleanUpGUI
 
 on closeStack
    cleanUpGUI
-   save this stack 
-   # does nothing on mobile, but leaves the card clear
-  # So  when we create the standalone, previous play list is not there.
 end closeStack
 
 

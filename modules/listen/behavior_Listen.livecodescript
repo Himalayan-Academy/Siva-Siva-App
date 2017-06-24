@@ -22,6 +22,7 @@
 
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
+local sDownloadedFlag
 
 on preopenstack
    # may be fixed in recent versions Android crashed on stack swaps
@@ -39,6 +40,14 @@ on openstack
    # make a differentiation. So treat all as playlists  
    # if this stack is opened from a closed state
    # we can safely assume the portal link is the target playlist
+   
+   put (fld "audioList" is empty)
+   if fld "audioList" is empty then
+     show widget "Downloading"
+      #We are about to download or fetch a list
+      put "false" into sDownloadedFlag
+      showDownloadProgress
+   end if
    
    put portal_GetLastLinkTitle() into sTargetPlayList   
    playlist_SetCurrent sTargetPlayList
@@ -245,6 +254,23 @@ on playlist_Instantiate sTargetPlayList
    end repeat
    put tTitles into fld "audioList"
 end playlist_Instantiate
+
+on showDownloadProgress
+    
+   if fld "audioList" is not empty then
+      put "true" into sDownloadedFlag
+   end if
+   
+   if sDownloadedFlag is "true" then 
+      set the hightlight of widget "Downloading" to false
+      hide widget "Downloading"
+      exit showDownloadProgress
+   end if
+   put the highlight of widget "Downloading" into tState
+   set the highlight of widget "downloading" to  not tState
+   send showDownloadProgress to me in 200 milliseconds
+end showDownloadProgress
+
 
 on closeStack
    set the acceleratedRendering of this stack to "false"
