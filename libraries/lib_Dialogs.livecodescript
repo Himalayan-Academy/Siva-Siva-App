@@ -79,10 +79,10 @@ on displayInfo pVis, pSubject, pBackground
   end if
   
 end displayInfo
-
+ 
 on sendFeedBack
     revMail "studyhall@hindu.org",,"SivaSiva App Feedback",\
-         ("Bug reports: Describe what happened and what you expected to happen. " & cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
+         ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
       end sendFeedBack
       
 on fieldLinkClicked pLink
@@ -103,7 +103,7 @@ on fieldLinkClicked pLink
    end switch
 end fieldLinkClicked
 
-
+ 
 on closeMsg
    dialog_CustomMsg "false"
 end closeMsg
