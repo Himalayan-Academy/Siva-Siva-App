@@ -6,6 +6,10 @@ on preopenstack
    put sivasiva_GetModuleConfigArray("journal") into sConfigA
 end preopenstack
 
+on backkey
+   send mouseup to widget "go back"
+end backkey
+
 on preopencard
    deleteAllMobileControls
    pass preopencard

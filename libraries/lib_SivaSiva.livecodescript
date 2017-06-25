@@ -123,6 +123,15 @@ function path_Modules
    return tPath
 end path_Modules
 
+on backkey # need for android
+   if the short name of this stack is "journal" then
+      send mouseup to widget "go-back"
+   else
+      
+      send mouseup to widget "go-home-portal"
+   end if
+end backkey
+
 --> ### GLOBAL CATEGORY AND REALM TRACKING
 -- use of the journal requires we know certain things about
 -- what the user did before and it is often related to some category
