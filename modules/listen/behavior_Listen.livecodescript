@@ -253,6 +253,10 @@ on playlist_Instantiate sTargetPlayList
       end if
    end repeat
    put tTitles into fld "audioList"
+      if the formattedHeight fld "audioList" > the height of fld "AudioList" then
+      send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
+   end if
+   
 end playlist_Instantiate
 
 on showDownloadProgress

@@ -21,6 +21,10 @@
 
 local sSelectionsA,sSelectedItemA
 
+on preopencard
+   hide player "audioPlayer"
+end preopencard
+
 on openCard
    # starts out with the entire play list unfiltered
    # card should already have the list installed after stack opens
@@ -78,12 +82,13 @@ on mouseup
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
          if detailVis then
-           hide fld "audioDetails" with visual effect wipe down very fast
+            deleteMobileControl "audioDetails"
+            hide fld "audioDetails" with visual effect wipe down very fast
+            send  "CreateScroller audioList" to fld "audioList"
          else
-            show fld "AudioDetails" with visual effect wipe up very fast
+           select_ShowDetails 
          end if
             set the flipped of pTarget to not detailVis
-         
          break
    end switch
 end mouseup
@@ -141,8 +146,7 @@ on select_Play  pSelectedLine
    
    
    if isMobile() then
-      createMobileAudioPlayer tURL, "audioPlayer",\
-       (12,the bottom of this card-100, the left of this card -12, the bottom of this card -68)
+       createMobileAudioPlayer tURL, "audioPlayer"
    else
       set the filename of player "audioPlayer" to tURL
    end if
@@ -155,28 +159,20 @@ on select_Play  pSelectedLine
    end if
    showBusyIndicator false
    put  sSelectedItemA["title"] into fld "currentTitleLabel"
-   send "select_ShowDetails " to me in 10 ticks
 end select_Play
 
 
 # V2 Link to transcript
 
-command select_ShowDetails 
-   
-   
-   put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails" 
-   
+command select_ShowDetails   
+   deleteMobileControl "audioList"
+   put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
-   
-   
    set the rect of fld "AudioDetails" to (0,the bottom of fld "title",the width of this card,the height of this card -150) 
-   if the formattedHeight fld "audioDetails" > the height of fld "AudioDetails" then
-      send "CreateScroller audioDetails" to fld "audioDetails"
-   end if
-   
    show fld "audioDetails" with visual effect wipe up very fast
+   send "CreateScroller audioDetails" to fld "audioDetails"
 end select_ShowDetails
 
 # we should create a global library for all things text and just pass params
