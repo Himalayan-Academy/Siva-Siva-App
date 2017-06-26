@@ -179,6 +179,17 @@ function Journal_GetEntriesForModule pModule, pOffset
    return tEntriesA
 end Journal_GetEntriesForModule
 
+function Journal_GetEntriesForDate pStartDate, pEndDate, pOffset
+   if pOffset is empty then
+      dbLimit 100
+   else
+      dbLimit 100, pOffset
+   end if
+   //todo: dbwhere for the dates
+   put dbGet("journal", JournalDB()) into tEntriesA
+   return tEntriesA
+end Journal_GetEntriesForDate
+
 function Journal_GetEntries pOffset
    if pOffset is empty then
       dbLimit 100
