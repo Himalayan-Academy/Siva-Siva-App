@@ -5,6 +5,7 @@
   "log_level": "info,error,fatal",
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal",
   "stackfiles": [
+  	{"name": "behavior_SocialShare", "file": "behaviors/behavior_SocialShare.livecodescript"},
   	{"name": "behavior_GemsQuotes", "file": "modules/gems/behavior_GemsQuotes.livecodescript"},
 	{"name": "behavior_ListenSelectPlay", "file": "modules/listen/behavior_ListenSelectPlay.livecodescript"},
 	{"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
