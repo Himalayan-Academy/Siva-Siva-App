@@ -260,7 +260,7 @@
         "Sanskrit Chanting": {
             "link": {
                 "portal command": "portal_GoURL",
-                "portal param": "https://www.himalayanacademy.com/looklisten/chanting"
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
@@ -268,7 +268,7 @@
         "Bodhinatha's Latest Talks": {
             "link": {
                 "portal command": "portal_GoStack",
-                "portal param": "card \"bodhinatha-latest\" of stack \"listen\""
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Bodhinatha's\nLatest\nInspired Talk",
             "shortImageFile": "thumb_latest-talk-2.jpg"
@@ -292,7 +292,7 @@
         "The Guru Chronicles": {
             "link": {
                 "portal command": "portal_GoStack",
-                "portal param": "card \"guru-chronicles-audio\" of stack \"listen\""
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "The Guru\nChronicles",
             "shortImageFile": "thumb_guru-chronicles.jpg"
