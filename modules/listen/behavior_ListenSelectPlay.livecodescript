@@ -33,16 +33,7 @@ on openCard
    
 end openCard
 
-on closeCard
-   cleanUpGui
-   set the acceleratedrendering of this stack to false
-   hide fld "audioDetails"
-   put empty into fld "audioDetails"
-   showPlayer "false", "audioPlayer"
-   if isMobile() then 
-      deleteAllMobileControls
-   end if
-end closeCard
+
 
 on playlist_SetSelections pFilter
    # begins with the entire array of the playlist
@@ -117,14 +108,16 @@ end mouseup
 
 on select_Play  pSelectedLine
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+   lock screen
    resetLines 
-    set the foregroundcolor of  pSelectedLIne to green
+   set the foregroundcolor of  pSelectedLIne to green
+   unlock screen
    put word 2 of pSelectedLIne into tSelectNum
    put sSelectionsA[tSelectNum] into sSelectedItemA
    
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
    # we have to pass the data from here in case it was "latest" because
-   if sSelectionsA["listType"] = "latest" then
+   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
       metadata_SetRecord sSelectedItemA
    end if
    
@@ -146,7 +139,7 @@ on select_Play  pSelectedLine
    
    
    if isMobile() then
-       createMobileAudioPlayer tURL, "audioPlayer"
+      createMobileAudioPlayer tURL, "audioPlayer"
    else
       set the filename of player "audioPlayer" to tURL
    end if
@@ -193,11 +186,22 @@ on cleanUpGUI
    put empty into fld "audioList"
    put empty into fld currentTitleLabel
    set the filename of player "audioPlayer" to empty
+   hide fld "audioDetails"
+   put empty into fld "audioDetails"
+   showPlayer "false", "audioPlayer"
    ## add other mobile stuff to clear out here later
 end cleanUpGUI
 
-on closeStack
-   cleanUpGUI
-end closeStack
+on closeCard
+   cleanUpGui
+   set the acceleratedrendering of this stack to false
+   
+   if isMobile() then 
+      deleteAllMobileControls
+   end if
+end closeCard
 
+-- on closeStack
+--    cleanUpGUI
+-- end closeStack
 

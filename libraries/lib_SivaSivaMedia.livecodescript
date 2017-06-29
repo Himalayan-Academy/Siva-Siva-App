@@ -145,25 +145,24 @@ end metadata_SetRecord
 
 --> FETCH ALL RECORDS THAT MATCH
 # 
-function fetchMediaItems
-   if the paramcount mod 2 is not 0 then
-      return "err: param count needs to be even"
-   end if
-   
+function fetchMediaItems tSearchA
+   #Typically we are no passing and explicitlist
+   # but a pre-set array   
+
    put  JnanamDB() into tConnectionID
-   repeat with x = 1 to the paramcount step 2
-      if param(x) is not empty then
-         dbLike param(x), param(x+1)
+   repeat for each key x in tSearchA
+      if tSearchA[x]is not empty then
+         dbLike x,tSearchA[x]
       end if
    end repeat
    put dbGet("item", tConnectionID) into selectedItemsA
-  -- put selectedItemsA[1] into tRetValA
+   -- put selectedItemsA[1] into tRetValA
    --    repeat for each key k in tRetValA
    --       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
    --    end repeat
    --    put tRetValA into sMediaMetaA
    --  return sMediaMetaA
-  return selectedItemsA
+   return selectedItemsA
 end fetchMediaItems
 
 
@@ -420,6 +419,9 @@ function folderForAudio pMediaType
             case "Satguru Sivaya Subramuniyaswami" 
                put "gurudeva/" after tServerPath
                break
+                   case "Satguru Sivaya Subramuniyaswami\n" 
+               put "gurudeva/" after tServerPath
+               break
             case "Satguru Bodhinatha Veylanswami" 
                put "bodhinatha/" after tServerPath
                break
@@ -584,13 +586,35 @@ command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
 end object_FadeOut
 
 
-##########################################################
-## ##########################################################
-## RANDOM IMAGE FOR INIT STACK 
-##  the following is uses to update the image on the home loader card which 
-##  always stays open  our current methods are making this appear in between module transitions
-##  so let's make it interesting.
-##########################################################
+########### TYPESETTING UTILITIES  #############
+# We frequently need to apply formatting to type in fields.
+# LC have nothing like "type styles" so we have to apply formatting to 
+# to the lines of fields and lists by code.
+# this section of the media library will allow us to make consistent views type
+# across all modules...
+#############################
 
+-----------------------------------------------
+# addSpaceBelowListLines
+#
+# DESCRIPTION: 
+# Frequently titles or labels that are placed into a list may be long and have to wrap
+# in order to keep the wrapped text close to the line above, we set the listheight of the field 
+# appropriate to the text size.
+# but then we need more space between the list items/lines
+#
+# PARAMS:
+# Pass the long ID of the field,and an integer value for the space you want.
+# 
+# CREATED: BRAHManathswami
+# just fishing for global means to set up type styles.
+-----------------------------------------------
+on addSpaceBelowListLines pField, pLineCount, pSpace
+   lock screen
+   repeat with x = 1 to pLineCount
+      set the spacebelow of line x of pField to pSpace
+   end repeat
+   unlock screen
+end addSpaceBelowListLines
 
 
