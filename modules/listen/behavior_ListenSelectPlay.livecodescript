@@ -113,20 +113,26 @@ on select_Play  pSelectedLine
    set the foregroundcolor of  pSelectedLIne to green
    unlock screen
    put word 2 of pSelectedLIne into tSelectNum
-   put sSelectionsA[tSelectNum] into sSelectedItemA
    
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
-   # we have to pass the data from here in case it was "latest" because
+   # but Audio books are completely different CMS: they have no item records for their audio files
+   
    if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      metadata_SetRecord sSelectedItemA
-   end if
-   
-   put getMediaURL (sSelectedItemA["item_id"]) into tURL
-   
-   # but lib_SivaSivaMedia won't have string for the latest item
-   # fortunately there is easily solution for audio:
-   if char -1 of tURL = "/" then
-      put sSelectedItemA["file_id"] & ".mp3" after tURL
+      # everything happens via Jnanam table structure record array
+      put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA   
+      put getMediaURL (sSelectedItemA["item_id"]) into tURL
+      
+      # but lib_SivaSivaMedia won't have string for the latest item
+      # fortunately there is easily solution for audio:
+      if char -1 of tURL = "/" then
+         put sSelectedItemA["file_id"] & ".mp3" after tURL
+      end if      
+   else
+      # its an audio book
+      put getMediaURL("audioBook") into tURL
+      put sSelectionsA["audioBookMetadata"][1]["file_id"] & "/" after tURL
+      put sSelectionsA["audioFiles"]["toc"][tSelectNum]["file"] after tURL
    end if
    
    if tURL = "" then -- jg: don't continue
@@ -159,7 +165,14 @@ end select_Play
 
 command select_ShowDetails   
    deleteMobileControl "audioList"
-   put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
+    if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+       put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
+    else
+          # its an audio book, lib media doesn't know anything, we have to pass the record here
+       getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
+   
+   end if
+  
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"

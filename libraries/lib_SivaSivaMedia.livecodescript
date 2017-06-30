@@ -217,12 +217,18 @@ function fetchRandomImageAsset pCollection
 end fetchRandomImageAsset
 
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
+   if pFormat = "audioBook" then
+      return "https://www.himalayanacademy.com/media/audio/books/"
+      exit getMediaURL
+   end if
    
+      
    put sMediaMetaA["media_type"] into pMediaType
    getformatData (sMediaMetaA["item_id"])
    # each media type will entail a different path on the /media directory 
    switch 
-      case pMediaType contains "audio/"
+      case pMediaType contains "audio/"  
+         # Be careful: conflates with "audio/book"  but CMS is different
          put FolderForAudio(pMediaType)  into pServerPath
          return ("https://www.himalayanacademy.com/"  & pServerPath)        
          break
@@ -240,30 +246,35 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
    
 end getMediaURL
 
-function getMediaItemMetadata
-    
+function getMediaItemMetadata pRecords
+   if pRecords is not empty then
+      put pRecords into sMediaMetaA
+   end if
+   
    put empty into tViewData
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put sMediaMetaA["artists"] into tArtists
-   put sMediaMetaA["author"] into tAuthor
+   put "Artist: " & sMediaMetaA["artists"] into tArtists
+   put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
    put sMediaMetaA["description"] into tDescription
    put sMediaMetaA["date_created"] into tDateCreated
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated
    
-# data has commas so we have to use a lines as a delimiter
+   # data has commas so we have to use a lines as a delimiter
    put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription) into tFields
-
+   
    repeat for each line x in tFields
       if x <> empty then
          put x & cr & cr after tViewData
       end if
    end repeat
-     return tViewData
- 
-  end getMediaItemMetadata
+   replace "\n" with cr in tViewData
+   replace "null" with "" in tViewData
+   return tViewData
+   
+end getMediaItemMetadata
   
 command getformatData pItemID
    put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL

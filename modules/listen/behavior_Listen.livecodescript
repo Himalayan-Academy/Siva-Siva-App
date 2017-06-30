@@ -52,7 +52,7 @@ on openstack
    
    put portal_GetLastLinkTitle() into sTargetPlayList   
    
-   playlist_SetCurrent sTargetPlayList
+    playlist_SetCurrent sTargetPlayList
    
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
@@ -83,10 +83,10 @@ function playlist_GetCurrent
 end playlist_GetCurrent
 
 function playlist_GetRecords  # use this to fetch data later for card behavior
-   if sCurrentPlayListA is empty then
+   if sCurrentPlayListA["audioFiles"] is empty then
       put "No records Fetched!"
    else
-      return sCurrentPlaylistA  
+      return sCurrentPlaylistA
    end if
 end playlist_GetRecords
 
@@ -140,25 +140,21 @@ on playlist_QuerySetUp
       case "Gurudeva's 1970 Audio Master Course"
          put "cached" into sPlaylistQueryA["playlistClass"]
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         put "Subramuniyaswami" into sPlaylistQueryA["author"]
+         put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
          put "1970" into sPlaylistQueryA["date_created"]
          put "master-course" into sPlaylistQueryA["file_id"]
          break
       case "The Guru Chronicles" # Audio book
-         # for audio books; we need to know the file ID, which is the folder name
+         # for audio books; all we need to know the file ID, which is the folder name
          # after that it is a simple path set up.
          put "audiobook" into sPlaylistQueryA["playlistClass"]
          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
-         put "Swamis of Kauai's Hindu Monastery" into sPlaylistQueryA["getAuthor"]
-         
          break
       case "Gujarati Dancing with Siva Audiobook" # Audio book
          # for audio books; we need to know the file ID, which is the folder name
          # after that it is a simple path set up.
          put "audiobook" into sPlaylistQueryA["playlistClass"]
-         put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"]
-         put "Satguru Sivaya Subramuninyaswami" into sPlaylistQueryA["author"]
-         
+         put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
          break         
    end switch
    
@@ -198,27 +194,54 @@ on playList_FetchData
             # reveal field using the function after it is built later      
          else 
             put it into tRecords
-            put jsonToArray (tRecords) into sCurrentPlayListA
+            put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
-         put tPlaylistClass into sCurrentPlayList["playlistClass"]
-         
-         break
-      case "audiobook"
-         # uses json stored in a location on the serve and not in the dbase
-         # the following snippet from site.lc on our server will help build this.
-         --    case "audio/book"
-         --     rigLoadLibrary "fastjson"
-         --       put url ("file:" & $_SERVER["DOCUMENT_ROOT"] & "/media/audio/books/" & gData["record"]["file_id"] & "/audiobook.json") into tJSON
-         --        put jsonToArray(tJSON) into gData["record"]["audiobook"]
+         put tPlaylistClass into sCurrentPlayListA["playlistClass"]
          break
       case "cached"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
-         put fetchMediaItems(tSearchA) into sCurrentPlayListA
-         put tPlaylistClass into sCurrentPlayList["playlistClass"]
-
+         put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]
+         put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
+      case "audiobook"
+         
+          # a simple call to the server to get the TOC
+         # CMS is straightforward, path is consistent, no magic code required
+         put url "http://dev.himalayanacademy.com/media/audio/books/the-guru-chronicles-audiobook/audiobook.json" into tBookToc
+         put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
+         
+         # this should come from the local dBase,
+         # but as of June 29, the local dBase is obsolete
+         
+         --put sPlaylistQueryA into tSearchA
+        -- delete variable tSearchA["playlistClass"]  # don't pass this to the query
+       --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
+         -- put tPlaylistClass into sCurrentPlayList["playlistClass"] 
+         
+         # so we have to fetch info from the server
+         
+                put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
+         put the ticks into sStartTimer
+         set the httpheaders to "content-type: application/json"
+         replace "'" with quote in pJSON
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         if the result is not empty then 
+            put the result into fld "audioList"
+            # reveal field using the function after it is built later      
+         else 
+            put it into tRecords 
+            # But the model is different for audio books. We now have metadata for the whole book
+            # this is not a series of records for individual files
+            # We need this later:
+            put jsonToArray (tRecords) into sCurrentPlayListA["audioBookMetadata"]
+         end if
+        
+         # add list type for other operations
+         put tPlaylistClass into sCurrentPlayListA["playlistClass"]
+        break
+         
    end switch
    
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
@@ -260,16 +283,22 @@ on playlist_Instantiate sTargetPlayList
    put tPortalInfoA["portalRowDictionary"][tTitle][shortImageFile] into tThumbPath
    put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
    set the filename of img "playlistPoster" to tPosterPath
-   put the keys of sCurrentPlayListA into tKeys
-   sort lines of tKeys ascending numeric
+   switch sPlaylistQueryA["playlistClass"] 
+      case "audiobook"
+         put the keys of sCurrentPlayListA["audioFiles"]["toc"] into tKeys
+            sort lines of tKeys ascending numeric
+         repeat for each line x in tKeys
+            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr after tTitles
+         end repeat
+         break
+      default
+         put the keys of sCurrentPlayListA["audioFiles"] into tKeys
+            sort lines of tKeys ascending numeric
+         repeat for each line x in tKeys
+            put sCurrentPlayListA["audioFiles"] [x]["Title"] & cr after tTitles
+         end repeat
+   end switch
    
-   repeat for each line x in tKeys
-      # the array includes key/values info for theplaylist that are not  audio files
-      # these are always strings, keys for files are always numeric index
-      if isNumber(x) then 
-         put sCurrentPlayListA[x]["Title"] & cr after tTitles
-      end if
-   end repeat
    put tTitles into fld "audioList"  
    put the number of lines of tTitles into pLineCount
    addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
