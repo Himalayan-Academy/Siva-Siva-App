@@ -31,6 +31,7 @@ array that we can change dynamically depending on tne context requirments.
 -- 2017-06-12, Brahmanatahswami: created
 ------------------------------------------------
 
+local sShowTime
 on displayInfo pVis, pSubject, pBackground
   if pVis = "1" then   # We are showing the control
     
@@ -108,21 +109,27 @@ on closeMsg
    dialog_CustomMsg "false"
 end closeMsg
 
-on dialog_CustomMsg   pShow,pMsg
+on dialog_CustomMsg   pShow,pMsg,pShowtime
+   if pShowtime is not empty then
+      put pShowtime into sShowtime
+   else
+      put 1500 into sShowTime
+   end if
+   
    -- pShow = boolean, show or hide msg grp
    
    -- pMsg = text to display, defaults to "Please wait..."; 
    -- height of msg displaychanges based on length
-  
+
    if pShow <> false then -- show it
       if pMsg = "" then put "Please wait..." into pMsg 
       # assume some generic process; normally not advised to send empty
       put "350" into pWidth # locked to this width
-         put the height of this cd into tV
-         put tV - (tV div 4) into tV
-         put (item 1 of the loc of this cd),tV into pLoc
-         buildMsgDisplay pLoc,pMsg,pWidth  
-         # we do not pass height; it is determined later based on formatted height of msg
+      put the height of this cd into tV
+      put tV - (tV div 4) into tV
+      put (item 1 of the loc of this cd),tV into pLoc
+      buildMsgDisplay pLoc,pMsg,pWidth  
+      # we do not pass height; it is determined later based on formatted height of msg
    else -- clear all
       set the defaultstack to the topstack
       if there is a fld "alphaDisplayFld" then
@@ -139,7 +146,7 @@ on dialog_CustomMsg   pShow,pMsg
 end dialog_CustomMsg
 
 on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
-
+   
    try 
       set the name of the templateGraphic to "alphabkgnd"
       set the backColor of the templateGraphic to black
@@ -184,6 +191,6 @@ on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
       put "Result:" && the result && "Error:" && tErr
       -- log tErr
    end try
-   send  closeMsg to me in 3000 milliseconds
+   send  closeMsg to me in sShowTime milliseconds  
 end buildMsgDisplay
   

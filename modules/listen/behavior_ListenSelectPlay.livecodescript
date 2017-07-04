@@ -158,6 +158,7 @@ on select_Play  pSelectedLine
    end if
    showBusyIndicator false
    put  sSelectedItemA["title"] into fld "currentTitleLabel"
+ Journal_AddEntry pSelectedLIne
 end select_Play
 
 
@@ -168,9 +169,8 @@ command select_ShowDetails
     if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
        put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
     else
-          # its an audio book, lib media doesn't know anything, we have to pass the record here
-       getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
-   
+       # its an audio book, lib media doesn't know anything, we have to pass the record here       
+     put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
    end if
   
    set the textsize of line 1 of fld "audioDetails" to 22
@@ -191,6 +191,16 @@ on resetLines
    end repeat
 end resetLines
 
+on Journal_AddEntry pSelectedLine
+   put  sSelectionsA["playlistTitle"] into tPlayList
+   put tPlayList into pData["playlist"]
+   put "listen-playlist" into pDataA["card"]
+   put pSelectedLine into pDataA["playSelection"]
+   put value(pSelectedLine) into tPlayFileLabel
+   put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
+   Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
+end Journal_AddEntry
+
 
 on cleanUpGUI
    # more later but for now, so no flash of previous content 
@@ -206,7 +216,6 @@ on cleanUpGUI
 end cleanUpGUI
 
 on closeCard
-   cleanUpGui
    set the acceleratedrendering of this stack to false
    
    if isMobile() then 

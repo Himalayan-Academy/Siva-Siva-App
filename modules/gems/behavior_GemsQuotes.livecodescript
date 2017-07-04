@@ -13,7 +13,7 @@ local sOnLine,sCurrentRealm,sViewState
 
 
 --> Events
-
+ 
 on preOpenCard
    # Make sure our photo cache is updated   
    --  jnanam_UpdatePhotoCache
@@ -228,6 +228,7 @@ command switchViewState
 end switchViewState
 
 command resetUI
+  set the uSourceURL of widget "loadContext" to empty
    if the vis of widget "readContext" then
       toggleReadContext "false"
    end if

@@ -35,7 +35,7 @@ We can now experiment with:
 --> Variables
 
 global  sConfigA
-local LocalArray
+local LocalArray,sOnlineStatus
 global sConfigA
 
 --> Events
@@ -43,6 +43,7 @@ global sConfigA
 on preOpenStack
    set the fullscreenmode of this stack to "showAll"
    -- start using this stack
+    # duplicates what's on the lib_SivaSiva, but we need to fire right away
    
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
@@ -145,6 +146,7 @@ command init_AppConfiguration
    if the environment is "mobile" then 
       init_MobileGeometry
    end if
+      put pingServer() into sOnlineStatus
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
 

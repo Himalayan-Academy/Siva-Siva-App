@@ -325,6 +325,17 @@ on showDownloadProgress
    send showDownloadProgress to me in 200 milliseconds
 end showDownloadProgress
 
+on journalResume  pDataA, pEntryA
+   put "card " & quote &  pDataA["card"] & quote &   " of stack " && quote & pEntryA["module"] & quote into pDestination
+   put pDataA["playList"] into sTargetPlayList
+   close stack "journal"
+   portal_GoStack pDestination 
+   put pDataA["playSelection"] into pSelectedLine
+   dispatch "playlist_Reset" to card "listen-playlist"
+   dispatch "select_Play" to card "listen-playlist" with pSelectedLine
+   
+end journalResume
+
 
 on closeStack
    set the acceleratedRendering of this stack to "false"
