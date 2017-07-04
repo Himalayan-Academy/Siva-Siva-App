@@ -145,7 +145,17 @@ on select_Play  pSelectedLine
    
    
    if isMobile() then
-      createMobileAudioPlayer tURL, "audioPlayer"
+      if the platform is "android" then 
+         # the player is pretty ugly and covers up 120 vertical px
+         # so looks better just to center just under the poster on top
+         put the rect of player "audioPlayer" into tRect 
+         put (the bottom of img "playlistPoster" +10) into item 2 of tRect
+         put (item 2 of tRect +100) into item 4 of tRect
+
+      else 
+         put empty into tRect
+      end if     
+      createMobileAudioPlayer tURL, "audioPlayer",tRect
    else
       set the filename of player "audioPlayer" to tURL
    end if

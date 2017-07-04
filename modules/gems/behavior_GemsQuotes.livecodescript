@@ -38,8 +38,7 @@ on preOpenCard
    
    put 0 into sViewState
    
-   put pingServer() into sOnLine
-   
+   put connectivity_GetStatus() into sOnline
    
    --play (localPath() &"shared/audio/aum.mp3")
    -- create vertical scroller on top of field after all other layout has 
@@ -69,7 +68,6 @@ on closecard
 end closecard
 
 command fetchQuoteAndImage
-   put pingServer() into sOnLine
    hide widget "loadContext"
    set the uSourceURL of widget "loadContext" to empty
    if sCurrentRealm is empty then

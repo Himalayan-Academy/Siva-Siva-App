@@ -216,6 +216,14 @@ function fetchRandomImageAsset pCollection
    return tPath
 end fetchRandomImageAsset
 
+command getRandomVideo
+    put fetchRandomMediaItem ("media_type","video") into GotIt
+    # the above just fetches a record from the item table 
+    # to get the path or URL we have to query the format table:
+    put getMediaURL ("url") into sURL
+    portal_GoUrl SURL
+end getRandomVideo
+
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    if pFormat = "audioBook" then
       return "https://www.himalayanacademy.com/media/audio/books/"
@@ -595,6 +603,15 @@ command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
       set the blendLevel of pEffectsTarget to 100
    end if
 end object_FadeOut
+
+########### LAYOUT ############
+
+on layout_getCardRect
+   --     put "stack: " & the width of this stack into tDims
+   --     put "; card: " & the width of this card after tDims
+   --     put "; screen: " & the screenRect after tDims
+end layout_getCardREct
+
 
 
 ########### TYPESETTING UTILITIES  #############

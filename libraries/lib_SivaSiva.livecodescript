@@ -164,27 +164,58 @@ end text_TitleCase
 # handles both stacks and portal names
 constant kONLINECONTENT= "surprise,website,listen,look,view_SivaSivaBrowser"
 
-function pingServer
-   # call from any where to inform user and disable activities
-   # that require internet access to our server or any the external service
-   put url "https://www.himalayanacademy.com/ping.txt" into sOnlineStatus 
-   return sOnlineStatus
-end pingServer
+Local sPingURL,sServerAttempts # sURLStatusLog
+
+on connectivity_PingServer
+   unload URL "https://www.himalayanacademy.com/ping.txt" 
+  put 0 into sServerAttempts
+   # Logging: put empty into sURLStatusLog
+   put "https://www.himalayanacademy.com/ping.txt" into sPingURL
+   load url sPingURL
+   dispatch "connectivity_UpdateStatus" to me
+end connectivity_PingServer
+
+on connectivity_UpdateStatus
+   if URLStatus(sPingURL) = "cached" then
+      put "true" into sOnLinestatus
+   else
+      put URLStatus(sPingURL)  into tURLStatus
+      if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
+         put tURLStatus into sOnLinestatus
+         dialog_CustomMsg true,"Offline or Low Bandwidth", 1500      
+         # do stuff here to block access  or show indicators.
+         # keep checking but don't hog the CPU... 
+         send "connectivity_PingServer" to me in 1 seconds
+      else
+         # Logging
+         --       put URLStatus(sPingURL) & cr after sURLStatusLog
+         --       put sURLStatusLog
+         add 1 to sServerAttempts
+          dialog_CustomMsg true,"Connecting", 800     
+         send "connectivity_UpdateStatus" to me in 800 milliseconds
+      end if
+   end if
+end connectivity_UpdateStatus
+
+# Use this in the module so we don't ping the server constantly.
+
+function connectivity_GetStatus
+   return sOnLineStatus
+end connectivity_GetStatus
 
 function connectivity_NotAvailable cardOrStackObject
    if sOnlineStatus = "true" then # nothing to do here.. no checks required
       return "true"
    else
       repeat for each item x in kONLINECONTENT
-         if (sOnlineStatus  is empty)  then
-            if (cardOrStackObject contains x) then
-               dialog_CustomMsg true,"Offline or Low Bandwidth"      
-               return "offline"
-               exit repeat
-            end if
+         if (cardOrStackObject contains x) then
+            dialog_CustomMsg true,"Offline or Low Bandwidth",1000   
+            return "offline"
+            exit repeat
          end if
       end repeat
    end if
+   # risking queuing up multiple requests
 end connectivity_NotAvailable
 
 

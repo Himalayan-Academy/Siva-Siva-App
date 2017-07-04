@@ -146,13 +146,15 @@ command init_AppConfiguration
    if the environment is "mobile" then 
       init_MobileGeometry
    end if
-      put pingServer() into sOnlineStatus
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
-
+   send  testConnection to me in 500 milliseconds
+ 
 end init_AppConfiguration
 
-
+on testConnection
+   connectivity_PingServer
+end testConnection
 
 command openPortalStack
    open stack "Siva-Siva-Portal"

@@ -97,7 +97,7 @@ command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   if pingServer() <> "true" then
+   if connectivity_GetStatus() <> "true" then
       # do nothing, inform user
       dialog_CustomMsg true,"Offline or Low Bandwidth" , 1000
       exit portal_GoURL
@@ -137,7 +137,7 @@ command portal_GoLandscapeUrl someURL
 end portal_GoLandscapeUrl
 
 command portal_Link portalName
-   get pingServer() 
+   
    if connectivity_NotAvailable(portalName) is "offline" then
       # do nothing
    else
@@ -210,9 +210,7 @@ end portal_GetLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject 
-   --  stackName
    
-   get pingServer() 
    if connectivity_NotAvailable(cardOrStackObject) is "offline" then
       # do nothing
    else
@@ -231,8 +229,8 @@ command portal_GoStack cardOrStackObject
          end if
       end if
       go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
-   end if
-end portal_GoStack
+      end if
+   end portal_GoStack
 
 command portal_RemoveStack oStackName
 	if stackName <> "Siva-Siva-Portal" then
