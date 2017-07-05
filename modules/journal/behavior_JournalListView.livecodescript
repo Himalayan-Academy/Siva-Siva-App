@@ -9,10 +9,10 @@ on preopencard
   # uncomment this when you go into production:
   # i.e. leave out if you want to use the controls on the device while
   # testing
-  
-  --HideAuxiliaryControls 
-  
-  
+
+  --HideAuxiliaryControls
+
+
   --loadFonts
   layoutScreen
   if isMobile() then
@@ -25,14 +25,14 @@ on HideAuxiliaryControls
    if the environment is "development" then
       exit HideAuxiliaryControls
    end if
-   
+
    repeat with x = 1 to  the number of controls of this card
       if the cAuxiliary of control x of this card is true then
          hide control x of this card
       end if
    end repeat
 end HideAuxiliaryControls
-   
+
 on closeCard
   deleteAllMobileControls
   set the acceleratedRendering of this stack to false
@@ -53,7 +53,7 @@ command loadFonts
       set the defaultfolder to tFontFolder
       put "default: " && tFontFolder
       put "exists?" && there is a folder tFontFolder
-      
+
       put the files
       set the defaultfolder to tDF
    end if
@@ -61,42 +61,42 @@ end loadFonts
 
 on layoutScreen pModuleFilter
   lock screen
-  
+
   -- set card
   set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
-  
+
   -- set header
-  
+
   -- fix group rect
-  
+
   set the width  of group "header" to the width of this card +8
   set the left of group "header" to -4
   set the top of group "header" to 0
-  set the margins of group "header" to 0  
-  
+  set the margins of group "header" to 0
+
   set the width  of  grc "header bar"  to the width of this card +20
   set the loc of grc "header bar" to the loc of this card
-  
-  # must always do this because LC defaults to a margin of 4  
+
+  # must always do this because LC defaults to a margin of 4
   # this offsets elements in the group. So your controls will be topleft 4,4 even if you set them to 0,0
   # so eliminate the margins in the group first.
-  
+
   set the height of grc "header bar" to getConfigForLayout("listView", "headerHeight")
   -- couldn't find a good way to set the gradient programatically, so commented the code below and set it
   -- by hand using the inspector
   --    set the backgroundColor of grc "header bar" to getConfigForLayout("listView", "headerBackgroundColor")
   set the topleft of grc "header bar" to 0,0
-  
-  -- set the textFont of fld "header text" to "Open Sans Light" 
+
+  -- set the textFont of fld "header text" to "Open Sans Light"
   set the width of fld "header text" to the width of this card
   set the height of fld "header text" to getConfigForLayout("listView", "headerHeight")
   set the foreColor of fld "header text" to getConfigForLayout("listView", "headerColor")
   set the topleft of fld "header text" to 0,0
   set the left of widget "Go Back" to 12
   set the htmltext of fld "header text" to getConfigForLayout("listView", "headerLabel")
-  
+
   -- set item list
-  if there is a group "item list" then 
+  if there is a group "item list" then
     delete group "item list"
   end if
   put Journal_GetEntries() into tEntriesA
@@ -107,13 +107,13 @@ on layoutScreen pModuleFilter
       add 1 to tEntryNum
     end if
   end repeat
-  
-  
+
+
   if there is a group "item list" then
     put the topleft of group "item list" into tTopLeft
     put the width of this card - 3, the height of this card - 10 into tBottomRight
-    set the rect of group "item list" to tTopLeft, tBottomRight 
-    
+    set the rect of group "item list" to tTopLeft, tBottomRight
+
     set the behavior of group "item list" to (the long id of stack "behavior_mobileScroller")
     set the layerMode of grp "item list" to "scrolling"
     --if isMobile then
@@ -122,14 +122,14 @@ on layoutScreen pModuleFilter
     --end if
   end if
   unlock screen
-  
+
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum
    if there is not a group "item list" then
       new group "item list"
    end if
-   
+
    put the long id of group "item list" into tListGroup
    set the lockUpdates of tListGroup to true
    copy group "item template" of card "templates" to tListGroup
@@ -137,17 +137,35 @@ on createNewJournalEntry pEntryA, pEntryNum
    set the journalEntry of tListItem to pEntryA
    set the itemOrder of tListItem to pEntryNum
  end createNewJournalEntry
- 
+
+ function crlist
+   repeat with x = 1 to the paramcount
+      put param(x) & cr after tRetVal
+   end repeat
+   delete char -1 of tRetVal
+   return tRetVal
+ end crlist
+
  on filterByDate
-   -- stub
+    -- stub
+    
+   put crlist("All", "Last 3 Days", "This Week", "This Month", "Last 6 Months") into tList
+   if isMobile() then
+     mobilePick tList, "cancel"
+     put the result into tLineNum
+     processFilter tLineNum,tList
+   else -- desktop
+     put tList into btn "filterPopup"
+     popup btn "filterPopup" -- this calls processFilter
+   end if
  end filterByDate
- 
+
  on filterByFavorites
    -- stub
  end filterByFavorites
- 
+
  local sListA -- array of current journal entries for filtering in next 2 handlers
- 
+
  on filterByActivityType
   local tList
   dbSetSQL "select distinct module from journal"
