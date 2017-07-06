@@ -76,7 +76,17 @@ function checkDateRange pEntryA, pDateRange
          end if
          return false
          break
+         // THIS WEEK
       case "This Week"
+         if item 2 of tTodayDate is item 2 of tDate then
+            if item 1 of tTodayDate is item 1 of tDate then
+               if item 3 of tTodayDate -  item 3 of tDate <= 7 then
+                  return true
+               end if
+            end if
+         end if
+         return false
+         break
       case "This Month"
          if item 2 of tTodayDate is item 2 of tDate then
             if item 1 of tTodayDate is item 1 of tDate then
@@ -84,7 +94,14 @@ function checkDateRange pEntryA, pDateRange
             end if
          end if
          return false
+         break
       case "Last 6 Months"
+         if item 1 of tTodayDate is item 1 of tDate then
+            if item 2 of tTodayDate - item 2 of tDate >= 3 then
+               return true
+            end if
+         end if
+         return false
          break
       case "All"
       default
