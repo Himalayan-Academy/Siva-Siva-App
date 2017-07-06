@@ -156,12 +156,16 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
 end Journal_RecordEntry
 
 command Journal_SetFavoriteFlag pEntryID, pValue
-   if pValue then
-      put 1 into tDataA["is_favorite"]
+   if pValue is not a number then
+      if pValue then
+         put 1 into tDataA["is_favorite"]
+      else
+         put 0 into tDataA["is_favorite"]
+      end if
    else
-      put 0 into tDataA["is_favorite"]
+      put pValue into tDataA["is_favorite"]
    end if
-
+   
    dbWhere "journal_id", pEntryID
    put dbUpdate("journal", tDataA, journalDB()) into tResult
    return tResult
