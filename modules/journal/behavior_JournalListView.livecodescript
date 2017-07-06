@@ -59,8 +59,42 @@ command loadFonts
    end if
 end loadFonts
 
-on layoutScreen pModuleFilter
-   lock screen
+function checkDateRange pEntryA, pDateRange
+   put pEntryA["date"] into tDate
+   convert tDate to dateitems
+   put the date into tTodayDate
+   convert tTodayDate to dateitems
+   switch pDateRange
+      // LAST 3 DAYS
+      case "Last 3 Days"
+         if item 2 of tTodayDate is item 2 of tDate then
+            if item 1 of tTodayDate is item 1 of tDate then
+               if item 3 of tTodayDate -  item 3 of tDate <= 3 then
+                  return true
+               end if
+            end if
+         end if
+         return false
+         break
+      case "This Week"
+      case "This Month"
+         if item 2 of tTodayDate is item 2 of tDate then
+            if item 1 of tTodayDate is item 1 of tDate then
+               return true
+            end if
+         end if
+         return false
+      case "Last 6 Months"
+         break
+      case "All"
+      default
+         return true
+         break
+   end switch
+end checkDateRange
+   
+on layoutScreen pModuleFilter, pDateRange
+   lock screen 
    
    -- set card
    set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
@@ -106,6 +140,7 @@ on layoutScreen pModuleFilter
          case pModuleFilter is  empty
          case tEntryA["module"] is pModuleFilter
          case pModuleFilter is "Favorites" and tEntryA["is_favorite"] is 1
+         case pDateRange is not empty and checkDateRange(tEntryA, tDateRange)
             createNewJournalEntry tEntryA, tEntryNum
             add 1 to tEntryNum
             break
@@ -150,19 +185,22 @@ on createNewJournalEntry pEntryA, pEntryNum
    return tRetVal
  end crlist
 
- on filterByDate
-    -- stub
-    
+on filterByDate
+   -- stub
+   
    put crlist("All", "Last 3 Days", "This Week", "This Month", "Last 6 Months") into tList
    if isMobile() then
-     mobilePick tList, "cancel"
-     put the result into tLineNum
-     processFilter tLineNum,tList
+      mobilePick tList, "cancel"
+      put the result into tLineNum
+      put line tLineNum of tList into tDateRange
+      layoutScreen empty, tDateRange
    else -- desktop
-     put tList into btn "filterPopup"
-     popup btn "filterPopup" -- this calls processFilter
+      put tList into btn "filterPopup"
+      popup btn "filterPopup" -- this calls processFilter
+      put the dialogData into tItemName
+      layoutScreen empty, tItemName
    end if
- end filterByDate
+end filterByDate
 
 on filterByFavorites
    if  "Favorites" is in the hilitedItemNames of widget "FilterTabBar" then
@@ -174,28 +212,31 @@ end filterByFavorites
 
  local sListA -- array of current journal entries for filtering in next 2 handlers
 
- on filterByActivityType
-  local tList
-  dbSetSQL "select distinct module from journal"
-  put dbGet(null, journalDB()) into sListA
-  repeat for each key m in sListA
-    put  sListA[m]["module"] into sListA[m]["title"] // default value
-    if there is a stack  sListA[m]["module"] and  the title of stack sListA[m]["module"] is not empty then
-      put the title of stack sListA[m]["module"] into sListA[m]["title"]
-    end if
-    put  sListA[m]["title"] & cr after tList
-  end repeat
-  delete char -1 of tList
-  sort tList
-  put "All" & cr before tList
-  if isMobile() then
-    mobilePick tList, "cancel"
-    put the result into tLineNum
-    processFilter tLineNum,tList
-  else -- desktop
-    put tList into btn "filterPopup"
-    popup btn "filterPopup" -- this calls processFilter
-  end if
+on filterByActivityType
+   local tList
+   dbSetSQL "select distinct module from journal"
+   put dbGet(null, journalDB()) into sListA
+   repeat for each key m in sListA
+      put  sListA[m]["module"] into sListA[m]["title"] // default value
+      if there is a stack  sListA[m]["module"] and  the title of stack sListA[m]["module"] is not empty then
+         put the title of stack sListA[m]["module"] into sListA[m]["title"]
+      end if
+      put  sListA[m]["title"] & cr after tList
+   end repeat
+   delete char -1 of tList
+   sort tList
+   put "All" & cr before tList
+   if isMobile() then
+      mobilePick tList, "cancel"
+      put the result into tLineNum
+      processFilter tLineNum,tList
+   else -- desktop
+      put tList into btn "filterPopup"
+      popup btn "filterPopup" -- this calls processFilter
+      put the dialogData into tItemName
+      put lineoffset(tItemName, tList) into tLineNum
+      processFilter tLineNum, tList
+   end if
 end filterByActivityType
 
 on processFilter pLineNum,pList
