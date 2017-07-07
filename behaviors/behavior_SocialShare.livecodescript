@@ -27,6 +27,29 @@ In the long term they should replace the ones in the stack script.
 We attempt to avoid global variables and use parameters tomake all handlers in the rest of the code portable.
 */
 
+command share_MouseEvent
+   put the short name of the target into pShareChoice
+   if  pShareChoice ="close-sharing" then
+      answer "got it" with "OK"
+      # later:
+      -- hide me with visual effect dissolve very fast
+   else
+      switch pShareChoice
+         case "facebook"
+            # do stuff
+            # break
+         case "tweet"
+            # do stuff
+            # break
+         Case "email"
+            # do Stuff
+           #  break
+         default
+            answer ("Got it : " & pShareChoice) with "OK"
+      end switch
+   end if
+end share_MouseEvent
+
 command shareQuote pShareChoice
    -- this handler intercepts / replaces the handler in the stack "Gurudeva" script
    

@@ -6,6 +6,7 @@ name: behavior_InitSivaSivaProject
 type: behavior
 version: 0.2
 by: David Bovill
+but radically refactored by BR and Andre
  
 /*
 Here we keep all initilisation code for the Siva-Siva-App.
@@ -146,11 +147,20 @@ command init_AppConfiguration
    if the environment is "mobile" then 
       init_MobileGeometry
    end if
+   
+   -- get long id's for global custom controls on card "custom-controls
+   
+    init_StoreControlsIds
+
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
    send  testConnection to me in 500 milliseconds
  
 end init_AppConfiguration
+
+on init_StoreControlsIds
+     put the long id of group "share-ui" of card "custom-controls" into sConfigA["shareControl"]
+end init_StoreControlsIds
 
 on testConnection
    connectivity_PingServer
