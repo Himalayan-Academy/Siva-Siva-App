@@ -1,4 +1,4 @@
-script "behavior_SocialShare"
+﻿script "behavior_SocialShare"
 
 /*
 This script is designed to be the behavior of group "shareControls" of the card "main-view" of stack "Gurudeva" 
