@@ -9,6 +9,7 @@ version: 0.1
 
 --> Variables
 -
+global sConfigA
 local LocalArray
 
 --> Events
@@ -75,8 +76,16 @@ command sivasiva_SettingsGear
 end sivasiva_SettingsGear
 
 command sivasiva_Share
-      dialog_CustomMsg true,"Share Coming Soon"
-   end sivasiva_Share
+   put sConfigA["shareControl"] into tShareControl
+   if (exists(group "share-ui" of this card) ) then
+      if exists (widget "body") then
+         set the top of widget "body" to -50
+      end if
+      show group "share-ui" with visual dissolve very fast
+   else
+      copy tShareControl to this card
+   end if
+end sivasiva_Share
    
    # should be adequate for the portals
    

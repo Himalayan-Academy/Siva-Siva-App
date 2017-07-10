@@ -53,12 +53,12 @@
             "imageText": "The\nMaster\nCourse",
             "shortImageFile": "thumb_master-coures_trilogy-in-box.jpg"
         },
-        "Our Website": {
+        "Monastery Website": {
             "link": {
                 "portal command": "portal_Link",
                 "portal param": "website"
             },
-            "imageText": "Our\nWebsite",
+            "imageText": "Monastery\nWebsite",
             "shortImageFile": "thumb_website_ha-com-screenshoot.jpg"
         },
         "Our Daily Blog": {
@@ -484,7 +484,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Our Website"
+                    "rowName": "Monastery Website"
                 },
                 "8": {
                     "rowName": "Fun & Games"
@@ -528,7 +528,7 @@
             "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
         },
         "fun": {
-            "portalName": "fun",
+            "portalName": "fun  & games",
             "rowData": {
                 "1": {
                     "rowName": "Humor"
@@ -666,7 +666,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Our Website"
+                    "rowName": "Monastery Website"
                 },
                 "8": {
                     "rowName": "Fun & Games"

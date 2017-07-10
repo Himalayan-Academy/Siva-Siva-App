@@ -30,11 +30,12 @@ We attempt to avoid global variables and use parameters tomake all handlers in t
 command share_MouseEvent
    put the short name of the target into pShareChoice
    if  pShareChoice ="close-sharing" then
-      answer "got it" with "OK"
-      # later:
-      -- hide me with visual effect dissolve very fast
+      if exists (widget "body" of this card) then
+         set the top of widget "body" to 0
+      end if
+      hide group "share-ui"
    else
-      switch pShareChoice
+      switch pShareChoice         
          case "facebook"
             # do stuff
             # break
@@ -43,7 +44,7 @@ command share_MouseEvent
             # break
          Case "email"
             # do Stuff
-           #  break
+            #  break
          default
             answer ("Got it : " & pShareChoice) with "OK"
       end switch
