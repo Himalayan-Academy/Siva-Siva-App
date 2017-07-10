@@ -4,6 +4,8 @@ TODO:
 - There is a bug with font copying to android. The folder returned by the assets lib doesn't work
 */
 
+local sLastFilter
+
 on preopencard
   deleteAllMobileControls
   # uncomment this when you go into production:
@@ -61,14 +63,26 @@ end loadFonts
 
 function checkDateRange pEntryA, pDateRange
    put pEntryA["date"] into tDate
-   convert tDate to dateitems
+   -- since LC doesn't understand the SQLite date format. this is a hack to emulate dateitems.
+   set the itemdel to "-"
+   put item 1 of tDate, item 2 of tDate, item 3 of tDate into tDate 
+   if char 1 of item 2 of tDate is 0 then
+      delete char 1 of item 2 of tDate
+   end if
+   if char 1 of item 3 of tDate is 0 then
+      delete char 1 of item 3 of tDate
+   end if
+   set the itemdel to " "
+   put item 1 of tDate into tDate
+   -- end of not-clever dateitems hack.
    put the date into tTodayDate
    convert tTodayDate to dateitems
+   set the itemdel to comma
    switch pDateRange
       // LAST 3 DAYS
       case "Last 3 Days"
-         if item 2 of tTodayDate is item 2 of tDate then
-            if item 1 of tTodayDate is item 1 of tDate then
+         if item 1 of tTodayDate is item 1 of tDate then
+            if item 2 of tTodayDate is item 2 of tDate then
                if item 3 of tTodayDate -  item 3 of tDate <= 3 then
                   return true
                end if
@@ -111,8 +125,16 @@ function checkDateRange pEntryA, pDateRange
 end checkDateRange
    
 on layoutScreen pModuleFilter, pDateRange
-   lock screen 
-   
+   lock screen
+   log_Debug "======================"
+   if (pModuleFilter, pDateRange) is sLastFilter then
+      log_Debug "Do nothing, same as last filter"
+      exit layoutScreen
+   end if
+   put pModuleFilter, pDateRange into sLastFilter
+   log_Debug "pModuleFilter:" && pModuleFilter
+   log_Debug "pDateRange:" && pDateRange
+   put the millisecs into tStart
    -- set card
    set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
    
@@ -154,10 +176,10 @@ on layoutScreen pModuleFilter, pDateRange
    put 1 into tEntryNum
    repeat for each element tEntryA in tEntriesA
       switch
-         case pModuleFilter is  empty
+         case pModuleFilter is  empty and pDateRange is empty
          case tEntryA["module"] is pModuleFilter
          case pModuleFilter is "Favorites" and tEntryA["is_favorite"] is 1
-         case pDateRange is not empty and checkDateRange(tEntryA, tDateRange)
+         case pDateRange is not empty and checkDateRange(tEntryA, pDateRange)
             createNewJournalEntry tEntryA, tEntryNum
             add 1 to tEntryNum
             break
@@ -177,6 +199,7 @@ on layoutScreen pModuleFilter, pDateRange
       dispatch "CreateScroller" to group "item list" with "item list"
       --end if
    end if
+   log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
    
 end layoutScreen
@@ -213,9 +236,9 @@ on filterByDate
       layoutScreen empty, tDateRange
    else -- desktop
       put tList into btn "filterPopup"
-      popup btn "filterPopup" -- this calls processFilter
-      put the dialogData into tItemName
-      layoutScreen empty, tItemName
+      -- Possible bug: the code should block on the popup call until menupick runs.
+      -- apparently this is not happening and the code is continuing to execute.
+      popup btn "filterPopup" 
    end if
 end filterByDate
 
@@ -250,9 +273,6 @@ on filterByActivityType
    else -- desktop
       put tList into btn "filterPopup"
       popup btn "filterPopup" -- this calls processFilter
-      put the dialogData into tItemName
-      put lineoffset(tItemName, tList) into tLineNum
-      processFilter tLineNum, tList
    end if
 end filterByActivityType
 

@@ -90,15 +90,23 @@ end log_SetLevelList
 --> Log | Model
 -
 command log_Debug pMessage, pLevel
-   put item -2 of line -3 of the executioncontexts into tCalledHandler
-   put item -1 of line -3 of the executioncontexts into tLineNumber
-   put the short name of (item 1 of line -3 of the executioncontexts) into tObjectReference
+   put line -2 of the executioncontexts into tEntry
+   put item 2 of tEntry into tCalledHandler
+   put item 3 of tEntry into tLineNumber
+   put the short name of (item 1 of tEntry) into tObjectReference
    if char 1 of tCalledHandler is "_" then
       put " (PRIVATE)" into tPrivateFlag
    else
       put empty into tPrivateFlag
    end if
-   put the short date && the short time && "[" & pLevel & "]" && tObjectReference & "#" & tLineNumber into logLine
+   if pLevel is not empty then
+      put " [" & pLevel & "]" into pLevel
+   end if
+   if word 1 of tObjectReference is "stack" then
+      set the itemdel to "/"
+      put item -3 to -1 of tObjectReference into tObjectReference
+   end if
+   put the short date && the short time & pLevel && tObjectReference & "#" & tLineNumber into logLine
    put space & ">>>" && tCalledHandler  & tPrivateFlag && ":" && pMessage after logLine
    
    log_Append logLine
