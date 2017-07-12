@@ -18,7 +18,7 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-
+ 
 local sSelectionsA,sSelectedItemA
 
 on preopencard
@@ -169,7 +169,7 @@ command select_ShowDetails
        put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
     else
           # its an audio book, lib media doesn't know anything, we have to pass the record here
-       getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
+       put getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
    
    end if
   
