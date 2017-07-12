@@ -28,6 +28,33 @@ We attempt to avoid global variables and use parameters tomake all handlers in t
 */
 
 command share_MouseEvent
+   dispatch "share_Items" to this card
+   
+   # share_items should be in your module stack
+   # and return an array sShareItemsA
+   # which contains values for shared data from the current card of that stack
+   # but if not included in the current stack/ then:
+   
+   if it = "unhandled" then
+      # we have no specific items from the card
+      # so pass generic items will be passed below
+   else
+      put the result into sShareItemsA 
+      # Should at least always include a URL, text, and subject for email
+   end if
+   
+    if sShareItemsA["url"]  is empty then        
+         put "https://www.himalayanacademy.com/looklisten/apps/sivasiva" into sShareItemsA["url"]
+      end if
+      if  sShareItemsA["text"] is empty then
+         put "Check out the new SivaSiva App, a vast realm of marvelous content!" into sShareItemsA["text"]
+      end if
+      if sShareItemsA["subject"] is empty then
+         put "Get the SivaSiva App" into sShareItemsA["subject"]
+      end if
+   
+   put urlEncode(sShareItemsA["url"]) into tURLEncodedURL
+   
    put the short name of the target into pShareChoice
    if  pShareChoice ="close-sharing" then
       if exists (widget "body" of this card) then
@@ -36,20 +63,40 @@ command share_MouseEvent
       hide group "share-ui"
    else
       switch pShareChoice         
-         case "facebook"
-            # do stuff
-            # break
+         case "facebook"         
+            put merge("https://www.facebook.com/dialog/share?app_id=767840830064772&display=page&href=[[tURLEncodedUrl]]&redirect_url=[[tURLEncodedUrl]]")  into tShareURL
+            launch url tShareURL
+            break
          case "tweet"
-            # do stuff
-            # break
+            twitter_TweetItems sShareItemsA
+            break
          Case "email"
-            # do Stuff
-            #  break
-         default
-            answer ("Got it : " & pShareChoice) with "OK"
+            share_Email sShareItemsA
+            break
       end switch
    end if
 end share_MouseEvent
+
+command Share_Email sShareItemsA
+   put sShareItemsA["subject"] into tSubject
+   put empty into tAddress
+   put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
+   revMail tAddress,,tSubject,tBody
+end share_Email
+
+command twitter_TweetItems sShareItemsA
+   put twitter_EncodeIntent (sShareItemsA["text"]) into encodedText
+   put "http://www.twitter.com/intent/tweet?text=" & encodedText into someUrl
+  put "&url=" & urlencode (sShareItemsA["url"]) after someUrl
+   launch url someUrl
+end twitter_TweetItems
+
+----------------------- GURUDEVA APP SHARE LIBRARY-------------
+# All the following were from the Gurudeva app and need to be refactored for this app
+# many of these are deprecated since we are not apply any cosmetics to the buttons
+# also  Andre's library is required... but we have yet to add into the repository.
+# Please move functional handlers above this comment when they move into active service
+# ----------------------------------------------------------------------
 
 command shareQuote pShareChoice
    -- this handler intercepts / replaces the handler in the stack "Gurudeva" script
@@ -106,12 +153,7 @@ command share_Tweet pQuote
    end switch
 end share_Tweet
 
-command share_Email pQuote
-   put "Here is a Gurudeva quote" into tSubject
-   put empty into tAddress
-   put quote & pQuote & quote &  CR & CR  & "-- Satguru Sivaya Subramuniyaswami"  into tBody
-   revMail tAddress,,tSubject,tBody
-end share_Email
+
 
 command shareAudio pShareChoice
    global gCurrentAudio
@@ -318,27 +360,20 @@ command fb_ShareQuote pQuote
    end if
 end fb_ShareQuote
 
-command twitter_ShareQuote pQuote
-   -- put space & _GetGurudevaAppText() after pQuote
-   
-   put twitter_EncodeIntent (pQuote) into encodedText
-   put "http://www.twitter.com/intent/tweet?text=" & encodedText into someUrl
-   -- put "&url=" & urlencode (cGurudevaAppUrl) after someUrl
-   put "&via=" & "kauaimonastery" after someUrl
-   launch url someUrl
-end twitter_ShareQuote
+
 
 function twitter_EncodeIntent pQuote
-   -- put utf8encode (pQuote, false) into pQuote
+
    put unidecode (uniencode (pQuote), "UTF8") into pQuote
-   put urlencode (pQuote) into pQuote
+   put urlencode (pQuote) into encodedText
    
-   if len (pQuote) > 140 then
+   put 140 -26 into tMaxLen
+   if len(pQuote) >tMaxLen then # actually 140 but the URL takes 23 characters
       --### POPULATE EDIT FLD, SHOW EDITING GRP
       -- user can trim in the dialogue
-      -- put char 1 to 140 of encodedText into encodedText
+   put char 1 to tMaxLen of encodedText & "..." into encodedText
    end if
-   return pQuote
+   return encodedText
 end twitter_EncodeIntent
 
 function email_ConstructAudioText

@@ -225,6 +225,12 @@ command switchViewState
    end switch
 end switchViewState
 
+command share_Items
+   put fld "gems-quote" into sShareItemsA["text"]
+   put "Gems of Wisdom from SivaSiva.App" into sShareItemsA["subject"]
+   return sShareItemsA
+end share_Items
+
 command resetUI
   set the uSourceURL of widget "loadContext" to empty
    if the vis of widget "readContext" then
