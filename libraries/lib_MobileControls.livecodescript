@@ -282,8 +282,11 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    if not isMobile() then exit deleteAllMobileControls
    put mobileControls() into tList
    repeat for each line l in tList
-      mobileControlDelete l
-   end repeat
+      if l contains "audioPlayer" then
+      next repeat
+   end if  
+   mobileControlDelete l
+end repeat
 end deleteAllMobileControls
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
@@ -299,5 +302,3 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
       end if
    end if
 end showBusyIndicator
-
-
