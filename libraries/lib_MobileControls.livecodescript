@@ -302,5 +302,3 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
       end if
    end if
 end showBusyIndicator
-
-

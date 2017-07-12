@@ -18,7 +18,7 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-
+ 
 local sSelectionsA,sSelectedItemA
 
 on preopencard
