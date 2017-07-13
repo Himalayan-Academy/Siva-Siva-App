@@ -53,8 +53,16 @@ on mouseUp
          -- put log_Fetch() into fld "Body"
          sivasiva_ToggleOrientation
          break
+      case "test"
+         repeat with x = 1 to (the number of controls of this card)
+            put the short name of control x of this card into tControl
+            put tControl & " | vis:  "& the vis of control tControl & cr  after tOutput
+         end repeat
+         put "URL: " &  the url of widget body after tOutput
+            put tActionName & cr & tOutput
+         break
       default
-         put tActionName
+         put tActionName & cr & tOutput
    end switch
 end mouseUp
 

@@ -50,24 +50,23 @@ end view_Name
 
 --> Events
 -
-on mouseUp
-   local tActionName
-   put the mouseAction of me into tActionName
-   switch tActionName
-      case "back"
-         go back
-         break
-      case "add"
-         set the opaque of me to true
-         set the backgroundcolor of me to white
-         break
-      default
-         put tActionName
-   end switch
-end mouseUp
+-- on mouseUp
+--    local tActionName
+--    put the mouseAction of me into tActionName
+--    switch tActionName
+--       case "back"
+--          go back
+--          break
+--       case "add"
+--          set the opaque of me to true
+--          set the backgroundcolor of me to white
+--          break
+--       default
+--          put tActionName
+--    end switch
+-- end mouseUp
 
 
 --> Browser
 -
-
 
