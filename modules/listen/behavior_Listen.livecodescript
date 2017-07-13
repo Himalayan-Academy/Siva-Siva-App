@@ -326,6 +326,7 @@ on showDownloadProgress
 end showDownloadProgress
 
 on journalResume  pDataA, pEntryA
+   deleteMobileControl "audioPlayer"
    put "card " & quote &  pDataA["card"] & quote &   " of stack " && quote & pEntryA["module"] & quote into pDestination
    put pDataA["playList"] into sTargetPlayList
    close stack "journal"

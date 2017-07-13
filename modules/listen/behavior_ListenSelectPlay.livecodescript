@@ -147,10 +147,8 @@ on select_Play  pSelectedLine
    if isMobile() then
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
-         # so looks better just to center just under the poster on top
-         put the rect of player "audioPlayer" into tRect 
-         put (the bottom of img "playlistPoster" +10) into item 2 of tRect
-         put (item 2 of tRect +100) into item 4 of tRect
+         # we need to try to get it to fit nicely at the bottom:
+         put 70,570,405,679 into tRect
 
       else 
          put empty into tRect
@@ -214,14 +212,14 @@ end Journal_AddEntry
 
 on cleanUpGUI
    # more later but for now, so no flash of previous content 
-   put empty into fld "title"
-   set the filename of img "playlistPoster" to empty
-   put empty into fld "audioList"
-   put empty into fld currentTitleLabel
-   set the filename of player "audioPlayer" to empty
-   hide fld "audioDetails"
-   put empty into fld "audioDetails"
-   showPlayer "false", "audioPlayer"
+   put empty into fld "title" of this card
+   set the filename of img "playlistPoster" of this card to empty
+   put empty into fld "audioList" of this card
+   put empty into fld "currentTitleLabel" of this card
+   set the filename of player "audioPlayer"  of this card to empty
+   hide fld "audioDetails" of this card
+   put empty into fld "audioDetails" of this card
+   showPlayer "false", "audioPlayer" 
    ## add other mobile stuff to clear out here later
 end cleanUpGUI
 
