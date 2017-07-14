@@ -64,7 +64,7 @@ command share_MouseEvent
    else
       switch pShareChoice         
          case "facebook"         
-            put merge("https://www.facebook.com/dialog/share?app_id=767840830064772&display=page&href=[[tURLEncodedUrl]]&redirect_url=[[tURLEncodedUrl]]")  into tShareURL
+            put merge("https://www.facebook.com/dialog/share?app_id=767840830064772&display=page&href=[[tURLEncodedUrl]]&redirect_uri=[[tURLEncodedUrl]]")  into tShareURL
             launch url tShareURL
             break
          case "tweet"
