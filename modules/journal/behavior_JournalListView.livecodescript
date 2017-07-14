@@ -66,39 +66,47 @@ function checkDateRange pEntryA, pDateRange
    -- since LC doesn't understand the SQLite date format. this is a hack to emulate dateitems.
    set the itemdel to "-"
    put item 1 of tDate, item 2 of tDate, item 3 of tDate into tDate 
+   replace " " with "," in tDate
+   replace ":" with "," in tDate
+   put ",1" after tDate
+   set the itemdel to comma
    if char 1 of item 2 of tDate is 0 then
       delete char 1 of item 2 of tDate
    end if
    if char 1 of item 3 of tDate is 0 then
       delete char 1 of item 3 of tDate
    end if
-   set the itemdel to " "
-   put item 1 of tDate into tDate
+   
    -- end of not-clever dateitems hack.
-   put the date into tTodayDate
+   put the internet date into tTodayDate
    convert tTodayDate to dateitems
    set the itemdel to comma
    switch pDateRange
       // LAST 3 DAYS
       case "Last 3 Days"
-         if item 1 of tTodayDate is item 1 of tDate then
-            if item 2 of tTodayDate is item 2 of tDate then
-               if item 3 of tTodayDate -  item 3 of tDate <= 3 then
-                  return true
-               end if
-            end if
+         convert tTodayDate to seconds
+         convert tDate to seconds
+         put 3 * 24 * 60 * 60 into tThreeDays
+         
+         get tTodayDate - tDate 
+         if it <= tThreeDays then
+            return true
          end if
+         
          return false
          break
          // THIS WEEK
-      case "This Week"
-         if item 2 of tTodayDate is item 2 of tDate then
-            if item 1 of tTodayDate is item 1 of tDate then
-               if item 3 of tTodayDate -  item 3 of tDate <= 7 then
-                  return true
-               end if
-            end if
+      case "Last 7 Days"
+         convert tTodayDate to seconds
+         convert tDate to seconds
+         put 7 * 24 * 60 * 60 into tSevenDays
+         
+         
+         get tTodayDate - tDate 
+         if it <= tSevenDays then
+            return true
          end if
+         
          return false
          break
       case "This Month"
@@ -111,7 +119,7 @@ function checkDateRange pEntryA, pDateRange
          break
       case "Last 6 Months"
          if item 1 of tTodayDate is item 1 of tDate then
-            if item 2 of tTodayDate - item 2 of tDate >= 3 then
+            if item 2 of tTodayDate - item 2 of tDate <= 6 then
                return true
             end if
          end if
@@ -228,7 +236,7 @@ on createNewJournalEntry pEntryA, pEntryNum
 on filterByDate
    -- stub
    
-   put crlist("All", "Last 3 Days", "This Week", "This Month", "Last 6 Months") into tList
+   put crlist("All", "Last 3 Days", "Last 7 Days", "This Month", "Last 6 Months") into tList
    if isMobile() then
       mobilePick tList, "cancel"
       put the result into tLineNum
