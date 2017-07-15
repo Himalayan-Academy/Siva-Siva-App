@@ -23,7 +23,7 @@
         },
         "About the Monastery": {
             "link": {
-                "portal param": "https://www.himalayanacademy.com/monastery/about",
+                "portal param": "https://www.himalayanacademy.com/html/info/svg-test.html",
                 "portal command": "portal_GoURL"
             },
             "imageText": "About the\nMonastery",
