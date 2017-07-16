@@ -215,6 +215,8 @@ command createMobileAudioPlayer pURL, pPlayerName,tRect
    end if   
    if the platform is "android" then -- android player controls appear above the player; adjust
       -- with controller it's about 4x rect of cd player so align the botom edges:
+      # this his hard wired to the bottom of the card for now.
+      put (the height of this card)  -70  into item 4 of tRect
       put item 4 of tRect - item 2 of tRect into tHeight
       subtract tHeight from item 2 of tRect
    end if

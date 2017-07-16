@@ -571,11 +571,6 @@ function fb_Button
    return fbButton
 end fb_Button
 
-
---> Junk
--
--- on enableQuoteButtons
-   -- quick hack here as Jacque did not pass preOpenCard
    set the display_FacebookButton of me to fb_IsAuthenticated()
    
    put  "Favorites,Share,Search,Categories"  into pButtons --jg: option btn always visible

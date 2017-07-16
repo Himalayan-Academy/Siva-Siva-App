@@ -354,11 +354,7 @@
             "shortImageFile": "thumb_toolbox.jpg"
         }
     },
-<<<<<<< HEAD
- "portalData": {
-=======
 "portalData": {
->>>>>>> nightly
         "look": {
             "portalName": "look",
             "portalColor": "000,000,000",

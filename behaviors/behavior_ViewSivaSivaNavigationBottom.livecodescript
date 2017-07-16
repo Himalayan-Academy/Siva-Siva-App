@@ -28,7 +28,7 @@ on mouseDown
          default
             set the hilite of btnObject to true
             if the environment is "development" then
-               put btnName
+             #  put btnName
             end if
       end switch
    end if
@@ -54,7 +54,7 @@ on mouseUp pWhichButton
             break
          case "unhandled"
          default
-            _displayMouseUpCommand
+          #  _displayMouseUpCommand
       end switch
    end if
 end mouseUp
@@ -86,28 +86,8 @@ command sivasiva_Share
       copy tShareControl to this card
    end if
 end sivasiva_Share
-<<<<<<< HEAD
 
-# should be adequate for the portals
 
-# Some stacks have their bottom 4 squares button empty
-# if so, the handler hits here
-# we use a case statement because 
-# different stack may require different response to 
-# that button event
-
-command sivasiva_GoHomePortal
-   switch (the short name of this stack)
-      case "Siva-Siva-Portal"
-         if portal_GetCurrent()="home" then
-            dialog_CustomMsg true,"You Are Home!"
-         else
-            portal_Link "home"
-         end if
-         break
-   end switch
-=======
-   
    # should be adequate for the portals
    
    # Some stacks have their bottom 4 squares button empty
@@ -126,7 +106,7 @@ command sivasiva_GoHomePortal
                   end if
             break
       end switch
->>>>>>> nightly
+
 end sivasiva_GoHomePortal
 
 
@@ -226,10 +206,15 @@ command layout_SpreadHorizontally pRect
 end layout_SpreadHorizontally
 
 on resizeControl
-   put the childControlNames of me into tNavControls
-   if the short name of the target is among the lines of tNavControls then
+   if not isMobile() then 
+      put the childControlNames of me into tNavControls
+      if the short name of the target is among the lines of tNavControls then
+         LayoutControl
+      end if
+   else
       LayoutControl
    end if
+   
 end resizeControl
 
 

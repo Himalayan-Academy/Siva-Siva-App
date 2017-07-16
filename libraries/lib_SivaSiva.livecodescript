@@ -2,7 +2,7 @@
 ## VARS 
 
 global sConfigA
-local sDownloadNewContent,sOnlineStatus
+local sDownloadNewContent,sOnlineStatus,sLoaderImage
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
@@ -92,6 +92,10 @@ end sivasiva_IsThereNewContent
 
 
 
+
+on ______PATHS_NAV
+end ______PATHS_NAV
+   
 --> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
 function path_HomeLocal
@@ -164,6 +168,11 @@ end text_TitleCase
 # handles both stacks and portal names
 constant kONLINECONTENT= "surprise,website,listen,look,view_SivaSivaBrowser"
 
+
+on ______CONNECTIVITY HANDLERS   
+end ______CONNECTIVITY
+   
+
 Local sPingURL,sServerAttempts # sURLStatusLog
 
 on connectivity_PingServer
@@ -219,17 +228,24 @@ function connectivity_NotAvailable cardOrStackObject
 end connectivity_NotAvailable
 
 
+on _____VISUALS
+end _____VISUALS
 
-#########  ALL The FOLLOWING not in USE
-## If something here gets active, please move up above this comment.
+-- on loaderImage_VisPath  pBool, pURL
+--    put the long id of image "loader-front-img" of card 1 of stack "Siva-Siva-App" into tLoaderImage
+--    if pURL is not empty then
+--       set the filename of tLoaderImage to pURL
+--    end if
+--    set the vis of tLoaderImage to pBool
+-- end loaderImage_VisPath
 
 command display_Log
    portal_GoStack "Log"
 end display_Log
  
- 
 
- 
+#########  ALL The FOLLOWING not in USE
+## If something here gets active, please move up above this comment.
 
 
     
