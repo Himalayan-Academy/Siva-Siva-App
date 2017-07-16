@@ -13,7 +13,7 @@ local sOnLine,sCurrentRealm,sViewState
 
 
 --> Events
-
+ 
 on preOpenCard
    # Make sure our photo cache is updated   
    --  jnanam_UpdatePhotoCache
@@ -38,8 +38,7 @@ on preOpenCard
    
    put 0 into sViewState
    
-   put pingServer() into sOnLine
-   
+   put connectivity_GetStatus() into sOnline
    
    --play (localPath() &"shared/audio/aum.mp3")
    -- create vertical scroller on top of field after all other layout has 
@@ -69,7 +68,6 @@ on closecard
 end closecard
 
 command fetchQuoteAndImage
-   put pingServer() into sOnLine
    hide widget "loadContext"
    set the uSourceURL of widget "loadContext" to empty
    if sCurrentRealm is empty then
@@ -227,7 +225,14 @@ command switchViewState
    end switch
 end switchViewState
 
+command share_Items
+   put fld "gems-quote" into sShareItemsA["text"]
+   put "Gems of Wisdom from SivaSiva.App" into sShareItemsA["subject"]
+   return sShareItemsA
+end share_Items
+
 command resetUI
+  set the uSourceURL of widget "loadContext" to empty
    if the vis of widget "readContext" then
       toggleReadContext "false"
    end if

@@ -1,5 +1,5 @@
 {
-    "portalRowDictionary": {
+"portalRowDictionary": {
         "Video World": {
             "link": {
                 "portal command": "portal_GoStack",
@@ -23,7 +23,7 @@
         },
         "About the Monastery": {
             "link": {
-                "portal param": "https://www.himalayanacademy.com/monastery/about",
+                "portal param": "https://www.himalayanacademy.com/html/info/svg-test.html",
                 "portal command": "portal_GoURL"
             },
             "imageText": "About the\nMonastery",
@@ -53,12 +53,12 @@
             "imageText": "The\nMaster\nCourse",
             "shortImageFile": "thumb_master-coures_trilogy-in-box.jpg"
         },
-        "Our Website": {
+        "Monastery Website": {
             "link": {
                 "portal command": "portal_Link",
                 "portal param": "website"
             },
-            "imageText": "Our\nWebsite",
+            "imageText": "Monastery\nWebsite",
             "shortImageFile": "thumb_website_ha-com-screenshoot.jpg"
         },
         "Our Daily Blog": {
@@ -167,7 +167,7 @@
         },
          "Hinduism Today": {
             "link": {
-                "portal param": "http://digital.hinduismtoday.com/go/hinduism-today",
+                "portal param": "https://mydigitalpublication.com/publication?m=45852&l=1",
                 "portal command": "portal_GoURL"
             },
             "imageText": "Hinduism Today\nMagazine",
@@ -270,8 +270,16 @@
                 "portal command": "portal_GoStack",
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
-            "imageText": "Bodhinatha's\nLatest\nInspired Talk",
+            "imageText": "Bodhinatha's\nLatest\nInspired Talks",
             "shortImageFile": "thumb_latest-talk-2.jpg"
+        },
+         "Gurudeva's 1970 Audio Master Course": {
+            "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "Gurudeva's\n1970\nAudio Course",
+            "shortImageFile": "thumb_gurudeva-talks.jpg"
         },
         "All Satgurus' Talks": {
             "link": {
@@ -346,7 +354,11 @@
             "shortImageFile": "thumb_toolbox.jpg"
         }
     },
+<<<<<<< HEAD
  "portalData": {
+=======
+"portalData": {
+>>>>>>> nightly
         "look": {
             "portalName": "look",
             "portalColor": "000,000,000",
@@ -375,18 +387,22 @@
                 "1": {
                     "rowName": "Bodhinatha's Latest Talks"
                 },
-                "2": {
-                    "rowName": "All Satgurus' Talks"
+                "2":  {
+                    "rowName": "Gurudeva's 1970 Audio Master Course"
                 },
-                "3": {
-                    "rowName": "Songs"
+                 "3": {
+                    "rowName": "The Guru Chronicles"
                 },
                 "4": {
-                    "rowName": "Sanskrit Chanting"
+                    "rowName": "Songs"
                 },
                 "5": {
-                    "rowName": "The Guru Chronicles"
+                    "rowName": "Sanskrit Chanting"
+                },
+                "6": {
+                    "rowName": "All Satgurus' Talks"
                 }
+              
             },
             "headerImage": "hero_listen_girl-head-phones.jpg"
         },
@@ -472,7 +488,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Our Website"
+                    "rowName": "Monastery Website"
                 },
                 "8": {
                     "rowName": "Fun & Games"
@@ -505,7 +521,7 @@
             "headerImage": "hero_read_gurudeva-signing-book.jpg"
         }
     },
-    "disabledContent": {
+"disabledContent": {
         "look": {
             "portalName": "look",
             "rowData": {
@@ -516,7 +532,7 @@
             "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
         },
         "fun": {
-            "portalName": "fun",
+            "portalName": "fun  & games",
             "rowData": {
                 "1": {
                     "rowName": "Humor"
@@ -654,7 +670,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Our Website"
+                    "rowName": "Monastery Website"
                 },
                 "8": {
                     "rowName": "Fun & Games"

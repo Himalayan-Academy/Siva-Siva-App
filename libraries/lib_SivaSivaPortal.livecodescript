@@ -7,7 +7,7 @@ name: lib_SivaSivaPortal
 type: library
 version: 0.2
 Original Script by David Bovill
-
+ 
 /*
 The SivaSiva portal is a self-contained group which presents a "contents view" of:
 
@@ -38,8 +38,14 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 
 
---> Working On
--
+
+------------- Navigation section -------------------
+# BR: this whole set of handlers probably should move to a separate lib dedicated to navigation
+# or all the way "up" to the primary back script: lib_SivaSiva
+------------------------------------------------------
+
+
+
 function portal_GetLinkUrl portalName, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray
    put portalArray ["portalColour"] into portalColour
@@ -91,26 +97,18 @@ command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   put the short name of this stack into oStackName
-   portal_SetCurrentStack(oStackName)
-   portal_GoStack "view_SivaSivaBrowser"
-   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-   
-   # testing the journal Entry be done from the browser stack itself.
-   
-   --    # we are setting the journal here, but sometimes the call will be made
-   --    # from another journal entry which is "resuming"  from a different activity 
-   --    # than the simple web Portal
-   --    # we need to later resolve the various scenarios
-   --    # for now we call it simple "Web"
-   --    if pJournalLabel is empty then 
-   --       # dev has not passed anything, so probably coming from portal
-   --       put sLastLinkTitle into tWebPageLabel
-   --    else
-   --       put pJournalLabel into tWebPageLabel
-   --    end if
-   --    put someURL into pData["weburl"]
-   --    Journal_RecordEntry "view_SivaSivaBrowser",tWebPageLabel,pData
+   if connectivity_GetStatus() <> "true" then
+      # do nothing, inform user
+      dialog_CustomMsg true,"Offline or Low Bandwidth" , 1000
+      exit portal_GoURL
+   else
+      
+      put the short name of this stack into oStackName
+      portal_SetCurrentStack(oStackName)
+      portal_GoStack "view_SivaSivaBrowser"
+      set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+      
+   end if # closing connectivity check
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
@@ -125,24 +123,29 @@ end portal_GoLandscapeUrl
 
 command portal_Link portalName
    
-   -- navigates to the "portal view" and displays the named portal
-   lock screen
-   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   if not (sLastStack="Siva-Siva-App") then 
-      # called from a module and not the portal stack
-      close stack sLaststack
-      portal_GoStack "Siva-Siva-Portal" 
+   if connectivity_NotAvailable(portalName) is "offline" then
+      # do nothing
+   else
+      
+      -- navigates to the "portal view" and displays the named portal
+      lock screen
+      sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
+      if not (sLastStack="Siva-Siva-App") then 
+         # called from a module and not the portal stack
+         close stack sLaststack
+         portal_GoStack "Siva-Siva-Portal" 
+      end if
+      # otherwise we are already in the portal stack
+      # Either case we have to build the view:
+      
+      put portal_GetHomeView() into portalView
+      
+      portal_SetCurrent portalName
+      portal_SetCurrentStack "Siva-Siva-Portal"
+      set the portal_Name of portalView to portalName
+      unlock screen
+      set the logo_Faded of portalView to true
    end if
-   # otherwise we are already in the portal stack
-   # Either case we have to build the view:
-   
-   put portal_GetHomeView() into portalView
-   
-   portal_SetCurrent portalName
-   portal_SetCurrentStack "Siva-Siva-Portal"
-   set the portal_Name of portalView to portalName
-   unlock screen
-   set the logo_Faded of portalView to true
 end portal_Link
 
 command portal_SetCurrent portalName
@@ -192,29 +195,44 @@ end portal_GetLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject 
-   --  stackName
-   # save where we are coming from locally
-   put the short name of this stack into oStackName
-   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-   if not  (oStackName is among the items of tNoGoBackStacks) then
-      portal_SetCurrentStack oStackName
-   end if
    
-   if not  (oStackName= "Siva-Siva-App") then  
-      # always close.; all stack should be set to remove window and destroy on close
-      # this is required to function properly o Android 
-      if isMobile() and there is a stack oStackname then # keep open on Desktop
-         close stack oStackName
+   if connectivity_NotAvailable(cardOrStackObject) is "offline" then
+      # do nothing
+   else
+      # save where we are coming from locally
+      put the short name of this stack into oStackName
+      put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+      if not  (oStackName is among the items of tNoGoBackStacks) then
+         portal_SetCurrentStack oStackName
       end if
-   end if
-   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
-end portal_GoStack
+      
+      if not  (oStackName= "Siva-Siva-App") then  
+         # always close.; all stack should be set to remove window and destroy on close
+         # this is required to function properly o Android 
+         if isMobile() and there is a stack oStackname then # keep open on Desktop
+            close stack oStackName
+         end if
+      end if
+      go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
+      end if
+   end portal_GoStack
 
 command portal_RemoveStack oStackName
 	if stackName <> "Siva-Siva-Portal" then
 	close stack oStackName
 	end if    
-end portal_RemoveStack
+ end portal_RemoveStack
+
+------------- Loyout section -------------------
+ # BR: this whole set of handlers is really dedicated to the Portal screens "proper"
+ # and could remain here .. encapsulated all Davids lay code for the portals in this
+ # on script, there by separating it entirely from all other message path activity.
+ # in de-bugging then you could simplyl step through all these if the portals were
+ # being dynamically rebuilt. 
+ # buit we might need to move out the portal_GetArray and Set array and Get Set data also
+ # as these can be useful else where and are not needed for layout as such.
+------------------------------------------------------
+
 
 --> SivaSiva | Portal | Row
 -

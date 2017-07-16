@@ -6,6 +6,7 @@ name: behavior_InitSivaSivaProject
 type: behavior
 version: 0.2
 by: David Bovill
+but radically refactored by BR and Andre
  
 /*
 Here we keep all initilisation code for the Siva-Siva-App.
@@ -35,7 +36,7 @@ We can now experiment with:
 --> Variables
 
 global  sConfigA
-local LocalArray
+local LocalArray,sOnlineStatus
 global sConfigA
 
 --> Events
@@ -43,6 +44,7 @@ global sConfigA
 on preOpenStack
    set the fullscreenmode of this stack to "showAll"
    -- start using this stack
+    # duplicates what's on the lib_SivaSiva, but we need to fire right away
    
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
@@ -145,12 +147,24 @@ command init_AppConfiguration
    if the environment is "mobile" then 
       init_MobileGeometry
    end if
+   
+   -- get long id's for global custom controls on card "custom-controls
+   
+    init_StoreControlsIds
+
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
-
+   send  testConnection to me in 500 milliseconds
+ 
 end init_AppConfiguration
 
+on init_StoreControlsIds
+     put the long id of group "share-ui" of card "share-ui" of stack "lib_CustomControls" into sConfigA["shareControl"]
+end init_StoreControlsIds
 
+on testConnection
+   connectivity_PingServer
+end testConnection
 
 command openPortalStack
    open stack "Siva-Siva-Portal"

@@ -2,13 +2,11 @@
 ## VARS 
 
 global sConfigA
-local sDownloadNewContent
+local sDownloadNewContent,sOnlineStatus
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
-
-
 
 
 --> GENERIC GLOBAL MOBILE
@@ -24,8 +22,8 @@ command sivasiva_SetStatusBarVis visBoolean
       mobileHideStatusBar
    end if        
 end sivasiva_SetStatusBarVis
-     
-     command sivasiva_InitOrientation orientationType
+
+command sivasiva_InitOrientation orientationType
    -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
    
    if the environment is not "mobile" then
@@ -52,7 +50,7 @@ command mobile_SetAllowedOrientation orientationType
    mobileSetAllowedOrientations allowedOrientations
    return allowedOrientations
 end mobile_SetAllowedOrientation
-    
+
 
 --> POST INSTALL CONTENT DOWNLOAD HANDLERS
 --
@@ -63,7 +61,7 @@ specific, non-executable, security save content.
 
 Talk with Andre about methods.  
 We probably put a 
-        sivasiva_content.config
+sivasiva_content.config
 file on the server.
 Some JSON with info on what to download
 Fetch this somewhere in the app 
@@ -97,12 +95,12 @@ end sivasiva_IsThereNewContent
 --> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
 function path_HomeLocal
-  if isMobile() then
-    return specialFolderPath("resources") & slash
-  else -- desktop
-    set the itemdel to slash
-    return (item 1 to -2 of the filename of stack "Siva-Siva-App") & slash
-  end if
+   if isMobile() then
+      return specialFolderPath("resources") & slash
+   else -- desktop
+      set the itemdel to slash
+      return (item 1 to -2 of the filename of stack "Siva-Siva-App") & slash
+   end if
 end path_HomeLocal
 
 function path_Documents
@@ -140,16 +138,16 @@ end backkey
 
 
 on setCurrentRealm pRealm
-    put pRealm into sConfigA["currentRealm"]
- end setCurrentRealm
- 
- --> TEXT UTILITIES 
- # maybe this should be in it's own "Utils" library. 
- # maybe later if we need one; can move then
- 
+   put pRealm into sConfigA["currentRealm"]
+end setCurrentRealm
+
+--> TEXT UTILITIES 
+# maybe this should be in it's own "Utils" library. 
+# maybe later if we need one; can move then
+
 function text_TitleCase pString
    put toLower(pString) into pString # normalize all chars first
-  
+   
    # assume words separated by spaces
    
    repeat for each word x in pString
@@ -162,22 +160,76 @@ function text_TitleCase pString
 end text_TitleCase
 
 
+# relates to navigation shoudl move with these handlers later:
+# handles both stacks and portal names
+constant kONLINECONTENT= "surprise,website,listen,look,view_SivaSivaBrowser"
+
+Local sPingURL,sServerAttempts # sURLStatusLog
+
+on connectivity_PingServer
+   unload URL "https://www.himalayanacademy.com/ping.txt" 
+  put 0 into sServerAttempts
+   # Logging: put empty into sURLStatusLog
+   put "https://www.himalayanacademy.com/ping.txt" into sPingURL
+   load url sPingURL
+   dispatch "connectivity_UpdateStatus" to me
+end connectivity_PingServer
+
+on connectivity_UpdateStatus
+   if URLStatus(sPingURL) = "cached" then
+      put "true" into sOnLinestatus
+   else
+      put URLStatus(sPingURL)  into tURLStatus
+      if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
+         put tURLStatus into sOnLinestatus
+         dialog_CustomMsg true,"Offline or Low Bandwidth", 1500      
+         # do stuff here to block access  or show indicators.
+         # keep checking but don't hog the CPU... 
+         send "connectivity_PingServer" to me in 1 seconds
+      else
+         # Logging
+         --       put URLStatus(sPingURL) & cr after sURLStatusLog
+         --       put sURLStatusLog
+         add 1 to sServerAttempts
+          dialog_CustomMsg true,"Connecting", 800     
+         send "connectivity_UpdateStatus" to me in 800 milliseconds
+      end if
+   end if
+end connectivity_UpdateStatus
+
+# Use this in the module so we don't ping the server constantly.
+
+function connectivity_GetStatus
+   return sOnLineStatus
+end connectivity_GetStatus
+
+function connectivity_NotAvailable cardOrStackObject
+   if sOnlineStatus = "true" then # nothing to do here.. no checks required
+      return "true"
+   else
+      repeat for each item x in kONLINECONTENT
+         if (cardOrStackObject contains x) then
+            dialog_CustomMsg true,"Offline or Low Bandwidth",1000   
+            return "offline"
+            exit repeat
+         end if
+      end repeat
+   end if
+   # risking queuing up multiple requests
+end connectivity_NotAvailable
+
+
 
 #########  ALL The FOLLOWING not in USE
 ## If something here gets active, please move up above this comment.
-
-
 
 command display_Log
    portal_GoStack "Log"
 end display_Log
  
-function pingServer
-   # call from any where to inform user and disable activities
-   # that require internet access to our server or any the external service
-   put url "https://www.himalayanacademy.com/ping.txt" into tOnline 
-    return tOnLine
-end pingServer
+ 
+
+ 
 
 
     

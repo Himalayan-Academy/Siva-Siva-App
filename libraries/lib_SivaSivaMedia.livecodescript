@@ -145,25 +145,24 @@ end metadata_SetRecord
 
 --> FETCH ALL RECORDS THAT MATCH
 # 
-function fetchMediaItems
-   if the paramcount mod 2 is not 0 then
-      return "err: param count needs to be even"
-   end if
-   
+function fetchMediaItems tSearchA
+   #Typically we are no passing and explicitlist
+   # but a pre-set array   
+
    put  JnanamDB() into tConnectionID
-   repeat with x = 1 to the paramcount step 2
-      if param(x) is not empty then
-         dbLike param(x), param(x+1)
+   repeat for each key x in tSearchA
+      if tSearchA[x]is not empty then
+         dbLike x,tSearchA[x]
       end if
    end repeat
    put dbGet("item", tConnectionID) into selectedItemsA
-  -- put selectedItemsA[1] into tRetValA
+   -- put selectedItemsA[1] into tRetValA
    --    repeat for each key k in tRetValA
    --       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
    --    end repeat
    --    put tRetValA into sMediaMetaA
    --  return sMediaMetaA
-  return selectedItemsA
+   return selectedItemsA
 end fetchMediaItems
 
 
@@ -217,13 +216,27 @@ function fetchRandomImageAsset pCollection
    return tPath
 end fetchRandomImageAsset
 
+command getRandomVideo
+    put fetchRandomMediaItem ("media_type","video") into GotIt
+    # the above just fetches a record from the item table 
+    # to get the path or URL we have to query the format table:
+    put getMediaURL ("url") into sURL
+    portal_GoUrl SURL
+end getRandomVideo
+
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
+   if pFormat = "audioBook" then
+      return "https://www.himalayanacademy.com/media/audio/books/"
+      exit getMediaURL
+   end if
    
+      
    put sMediaMetaA["media_type"] into pMediaType
    getformatData (sMediaMetaA["item_id"])
    # each media type will entail a different path on the /media directory 
    switch 
-      case pMediaType contains "audio/"
+      case pMediaType contains "audio/"  
+         # Be careful: conflates with "audio/book"  but CMS is different
          put FolderForAudio(pMediaType)  into pServerPath
          return ("https://www.himalayanacademy.com/"  & pServerPath)        
          break
@@ -241,30 +254,35 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
    
 end getMediaURL
 
-function getMediaItemMetadata
-    
+function getMediaItemMetadata pRecords
+   if pRecords is not empty then
+      put pRecords into sMediaMetaA
+   end if
+   
    put empty into tViewData
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put sMediaMetaA["artists"] into tArtists
-   put sMediaMetaA["author"] into tAuthor
+   put "Artist: " & sMediaMetaA["artists"] into tArtists
+   put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
    put sMediaMetaA["description"] into tDescription
    put sMediaMetaA["date_created"] into tDateCreated
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated
    
-# data has commas so we have to use a lines as a delimiter
+   # data has commas so we have to use a lines as a delimiter
    put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription) into tFields
-
+   
    repeat for each line x in tFields
       if x <> empty then
          put x & cr & cr after tViewData
       end if
    end repeat
-     return tViewData
- 
-  end getMediaItemMetadata
+   replace "\n" with cr in tViewData
+   replace "null" with "" in tViewData
+   return tViewData
+   
+end getMediaItemMetadata
   
 command getformatData pItemID
    put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL
@@ -418,6 +436,9 @@ function folderForAudio pMediaType
          put item 1 of tDateCreated into tYear
          switch tAuthor
             case "Satguru Sivaya Subramuniyaswami" 
+               put "gurudeva/" after tServerPath
+               break
+                   case "Satguru Sivaya Subramuniyaswami\n" 
                put "gurudeva/" after tServerPath
                break
             case "Satguru Bodhinatha Veylanswami" 
@@ -583,14 +604,45 @@ command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
    end if
 end object_FadeOut
 
+########### LAYOUT ############
 
-##########################################################
-## ##########################################################
-## RANDOM IMAGE FOR INIT STACK 
-##  the following is uses to update the image on the home loader card which 
-##  always stays open  our current methods are making this appear in between module transitions
-##  so let's make it interesting.
-##########################################################
+on layout_getCardRect
+   --     put "stack: " & the width of this stack into tDims
+   --     put "; card: " & the width of this card after tDims
+   --     put "; screen: " & the screenRect after tDims
+end layout_getCardREct
 
+
+
+########### TYPESETTING UTILITIES  #############
+# We frequently need to apply formatting to type in fields.
+# LC have nothing like "type styles" so we have to apply formatting to 
+# to the lines of fields and lists by code.
+# this section of the media library will allow us to make consistent views type
+# across all modules...
+#############################
+
+-----------------------------------------------
+# addSpaceBelowListLines
+#
+# DESCRIPTION: 
+# Frequently titles or labels that are placed into a list may be long and have to wrap
+# in order to keep the wrapped text close to the line above, we set the listheight of the field 
+# appropriate to the text size.
+# but then we need more space between the list items/lines
+#
+# PARAMS:
+# Pass the long ID of the field,and an integer value for the space you want.
+# 
+# CREATED: BRAHManathswami
+# just fishing for global means to set up type styles.
+-----------------------------------------------
+on addSpaceBelowListLines pField, pLineCount, pSpace
+   lock screen
+   repeat with x = 1 to pLineCount
+      set the spacebelow of line x of pField to pSpace
+   end repeat
+   unlock screen
+end addSpaceBelowListLines
 
 

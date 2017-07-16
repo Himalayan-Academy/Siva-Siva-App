@@ -25,10 +25,29 @@ setprop journalEntry pEntryA
 end journalEntry
 
 on mouseup
-   put jsonexport(sEntryA)
-   --    dispatch "setupView" to card "detail view" with sEntryA 
-   launchActivity
+   if the short name of the target is "is favorite" then
+      setFavorite
+   else
+      put jsonexport(sEntryA)
+      --    dispatch "setupView" to card "detail view" with sEntryA 
+      launchActivity
+   end if
 end mouseup
+
+on setFavorite
+   if sEntryA["is_favorite"] is 0 then
+      put 1 into tValue
+   else
+      put 0 into tValue
+   end if
+   put tValue into sEntryA["is_favorite"]
+   Journal_SetFavoriteFlag sEntryA["journal_id"], tValue
+   if sEntryA["is_favorite"] is 0 then
+      set the foreColor of widget "is favorite" of me to getConfigForLayout("listView", "favoriteDisabledIconColor")
+   else
+      set the foreColor of widget "is favorite" of me to getConfigForLayout("listView", "favoriteEnabledIconColor")
+   end if
+end setFavorite
 
 on layoutGroup pNum
    -- general list group stuff

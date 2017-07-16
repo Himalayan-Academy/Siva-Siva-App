@@ -18,7 +18,7 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-
+ 
 local sSelectionsA,sSelectedItemA
 
 on preopencard
@@ -33,16 +33,7 @@ on openCard
    
 end openCard
 
-on closeCard
-   cleanUpGui
-   set the acceleratedrendering of this stack to false
-   hide fld "audioDetails"
-   put empty into fld "audioDetails"
-   showPlayer "false", "audioPlayer"
-   if isMobile() then 
-      deleteAllMobileControls
-   end if
-end closeCard
+
 
 on playlist_SetSelections pFilter
    # begins with the entire array of the playlist
@@ -117,23 +108,31 @@ end mouseup
 
 on select_Play  pSelectedLine
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+   lock screen
    resetLines 
-    set the foregroundcolor of  pSelectedLIne to green
+   set the foregroundcolor of  pSelectedLIne to green
+   unlock screen
    put word 2 of pSelectedLIne into tSelectNum
-   put sSelectionsA[tSelectNum] into sSelectedItemA
    
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
-   # we have to pass the data from here in case it was "latest" because
-   if sSelectionsA["listType"] = "latest" then
-      metadata_SetRecord sSelectedItemA
-   end if
+   # but Audio books are completely different CMS: they have no item records for their audio files
    
-   put getMediaURL (sSelectedItemA["item_id"]) into tURL
-   
-   # but lib_SivaSivaMedia won't have string for the latest item
-   # fortunately there is easily solution for audio:
-   if char -1 of tURL = "/" then
-      put sSelectedItemA["file_id"] & ".mp3" after tURL
+   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+      # everything happens via Jnanam table structure record array
+      put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA   
+      put getMediaURL (sSelectedItemA["item_id"]) into tURL
+      
+      # but lib_SivaSivaMedia won't have string for the latest item
+      # fortunately there is easily solution for audio:
+      if char -1 of tURL = "/" then
+         put sSelectedItemA["file_id"] & ".mp3" after tURL
+      end if      
+   else
+      # its an audio book
+      put getMediaURL("audioBook") into tURL
+      put sSelectionsA["audioBookMetadata"][1]["file_id"] & "/" after tURL
+      put sSelectionsA["audioFiles"]["toc"][tSelectNum]["file"] after tURL
    end if
    
    if tURL = "" then -- jg: don't continue
@@ -146,7 +145,15 @@ on select_Play  pSelectedLine
    
    
    if isMobile() then
-       createMobileAudioPlayer tURL, "audioPlayer"
+      if the platform is "android" then 
+         # the player is pretty ugly and covers up 120 vertical px
+         # we need to try to get it to fit nicely at the bottom:
+         put 70,570,405,679 into tRect
+
+      else 
+         put empty into tRect
+      end if     
+      createMobileAudioPlayer tURL, "audioPlayer",tRect
    else
       set the filename of player "audioPlayer" to tURL
    end if
@@ -159,6 +166,7 @@ on select_Play  pSelectedLine
    end if
    showBusyIndicator false
    put  sSelectedItemA["title"] into fld "currentTitleLabel"
+ Journal_AddEntry pSelectedLIne
 end select_Play
 
 
@@ -166,7 +174,13 @@ end select_Play
 
 command select_ShowDetails   
    deleteMobileControl "audioList"
-   put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
+    if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+       put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
+    else
+       # its an audio book, lib media doesn't know anything, we have to pass the record here       
+     put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
+   end if
+  
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
@@ -185,19 +199,39 @@ on resetLines
    end repeat
 end resetLines
 
+on Journal_AddEntry pSelectedLine
+   put  sSelectionsA["playlistTitle"] into tPlayList
+   put tPlayList into pData["playlist"]
+   put "listen-playlist" into pDataA["card"]
+   put pSelectedLine into pDataA["playSelection"]
+   put value(pSelectedLine) into tPlayFileLabel
+   put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
+   Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
+end Journal_AddEntry
+
 
 on cleanUpGUI
    # more later but for now, so no flash of previous content 
-   put empty into fld "title"
-   set the filename of img "playlistPoster" to empty
-   put empty into fld "audioList"
-   put empty into fld currentTitleLabel
-   set the filename of player "audioPlayer" to empty
+   put empty into fld "title" of this card
+   set the filename of img "playlistPoster" of this card to empty
+   put empty into fld "audioList" of this card
+   put empty into fld "currentTitleLabel" of this card
+   set the filename of player "audioPlayer"  of this card to empty
+   hide fld "audioDetails" of this card
+   put empty into fld "audioDetails" of this card
+   showPlayer "false", "audioPlayer" 
    ## add other mobile stuff to clear out here later
 end cleanUpGUI
 
-on closeStack
-   cleanUpGUI
-end closeStack
+on closeCard
+   set the acceleratedrendering of this stack to false
+   showPlayer "false","audioPlayer"
+   if isMobile() then 
+      deleteAllMobileControls
+   end if
+end closeCard
 
+-- on closeStack
+--    cleanUpGUI
+-- end closeStack
 

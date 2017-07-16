@@ -41,14 +41,3 @@ function randomElement
    delete char -1 of tRetVal
    return any line of tRetVal
 end randomElement
-
-command deleteAllMobileControls
-   if the environment is not mobile then
-      exit deleteAllMobileControls
-   end if
-   
-   put mobileControls() into tControls
-   repeat for each line x in tControls
-      mobileControlDelete x
-   end repeat
-end deleteAllMobileControls

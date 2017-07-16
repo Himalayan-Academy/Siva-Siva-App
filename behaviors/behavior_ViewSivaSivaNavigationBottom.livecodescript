@@ -86,6 +86,7 @@ command sivasiva_Share
       copy tShareControl to this card
    end if
 end sivasiva_Share
+<<<<<<< HEAD
 
 # should be adequate for the portals
 
@@ -105,6 +106,27 @@ command sivasiva_GoHomePortal
          end if
          break
    end switch
+=======
+   
+   # should be adequate for the portals
+   
+   # Some stacks have their bottom 4 squares button empty
+   # if so, the handler hits here
+   # we use a case statement because 
+   # different stack may require different response to 
+   # that button event
+   
+   command sivasiva_GoHomePortal
+      switch (the short name of this stack)
+         case "Siva-Siva-Portal"
+            if portal_GetCurrent()="home" then
+               dialog_CustomMsg true,"You Are Home!"
+               else
+                  portal_Link "home"
+                  end if
+            break
+      end switch
+>>>>>>> nightly
 end sivasiva_GoHomePortal
 
 
