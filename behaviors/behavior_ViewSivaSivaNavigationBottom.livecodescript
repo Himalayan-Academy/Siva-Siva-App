@@ -9,6 +9,7 @@ version: 0.1
 
 --> Variables
 -
+global sConfigA
 local LocalArray
 
 --> Events
@@ -27,7 +28,7 @@ on mouseDown
          default
             set the hilite of btnObject to true
             if the environment is "development" then
-               --put btnName
+               put btnName
             end if
       end switch
    end if
@@ -53,7 +54,7 @@ on mouseUp pWhichButton
             break
          case "unhandled"
          default
-            -- _displayMouseUpCommand
+            _displayMouseUpCommand
       end switch
    end if
 end mouseUp
@@ -75,27 +76,35 @@ command sivasiva_SettingsGear
 end sivasiva_SettingsGear
 
 command sivasiva_Share
-      dialog_CustomMsg true,"Share Coming Soon"
-   end sivasiva_Share
-   
-   # should be adequate for the portals
-   
-   # Some stacks have their bottom 4 squares button empty
-   # if so, the handler hits here
-   # we use a case statement because 
-   # different stack may require different response to 
-   # that button event
-   
-   command sivasiva_GoHomePortal
-      switch (the short name of this stack)
-         case "Siva-Siva-Portal"
-            if portal_GetCurrent()="home" then
-               dialog_CustomMsg true,"You Are Home!"
-               else
-                  portal_Link "home"
-                  end if
-            break
-      end switch
+   put sConfigA["shareControl"] into tShareControl
+   if (exists(group "share-ui" of this card) ) then
+      if exists (widget "body") then
+         set the top of widget "body" to -50
+      end if
+      show group "share-ui" with visual dissolve very fast
+   else
+      copy tShareControl to this card
+   end if
+end sivasiva_Share
+
+# should be adequate for the portals
+
+# Some stacks have their bottom 4 squares button empty
+# if so, the handler hits here
+# we use a case statement because 
+# different stack may require different response to 
+# that button event
+
+command sivasiva_GoHomePortal
+   switch (the short name of this stack)
+      case "Siva-Siva-Portal"
+         if portal_GetCurrent()="home" then
+            dialog_CustomMsg true,"You Are Home!"
+         else
+            portal_Link "home"
+         end if
+         break
+   end switch
 end sivasiva_GoHomePortal
 
 
@@ -194,11 +203,11 @@ command layout_SpreadHorizontally pRect
    end repeat
 end layout_SpreadHorizontally
 
-
-
-
 on resizeControl
-   LayoutControl
+   put the childControlNames of me into tNavControls
+   if the short name of the target is among the lines of tNavControls then
+      LayoutControl
+   end if
 end resizeControl
 
 

@@ -40,8 +40,7 @@ on openstack
    # make a differentiation. So treat all as playlists  
    # if this stack is opened from a closed state
    # we can safely assume the portal link is the target playlist
-   
-   put (fld "audioList" is empty)
+
    if fld "audioList" is empty then
      show widget "Downloading"
       #We are about to download or fetch a list
@@ -122,7 +121,7 @@ on playlist_QuerySetUp
    switch sTargetPlayList
       case "Bodhinatha's Latest Talks" # Remote look up
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         put "Bodhinatha" into sPlaylistQueryA["author"]
+         put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
          put "latest" into sPlaylistQueryA["recordType"]
          put 30 into sPlaylistQueryA["recordCount"]
          break
@@ -174,7 +173,7 @@ on playList_FetchData
          # we do a JSON Call  Hard wiring as a test for now. but we should later 
          # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
          # we need because we can then use for different play lists on demand.. 
-         put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into pJSON
+         put "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}" into pJSON
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON

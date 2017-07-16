@@ -260,7 +260,7 @@
         "Sanskrit Chanting": {
             "link": {
                 "portal command": "portal_GoURL",
-                "portal param": "card \"listen-playlist\" of stack \"listen\""
+                "portal param": "https://www.himalayanacademy.com/looklisten/chanting"
             },
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
@@ -346,10 +346,10 @@
             "shortImageFile": "thumb_toolbox.jpg"
         }
     },
-    "portalData": {
+ "portalData": {
         "look": {
             "portalName": "look",
-            "portalColor": "200,100,100",
+            "portalColor": "000,000,000",
             "rowData": {
                 "1": {
                     "rowName": "Our YouTube Library"
