@@ -43,15 +43,15 @@ command share_MouseEvent
       # Should at least always include a URL, text, and subject for email
    end if
    
-    if sShareItemsA["url"]  is empty then        
-         put "https://www.himalayanacademy.com/looklisten/apps/sivasiva" into sShareItemsA["url"]
-      end if
-      if  sShareItemsA["text"] is empty then
-         put "Check out the new SivaSiva App, a vast realm of marvelous content!" into sShareItemsA["text"]
-      end if
-      if sShareItemsA["subject"] is empty then
-         put "Get the SivaSiva App" into sShareItemsA["subject"]
-      end if
+   if sShareItemsA["url"]  is empty then        
+      put "https://www.himalayanacademy.com/looklisten/apps/sivasiva" into sShareItemsA["url"]
+   end if
+   if  sShareItemsA["text"] is empty then
+      put "Check out the new SivaSiva App, a vast realm of marvelous content!" into sShareItemsA["text"]
+   end if
+   if sShareItemsA["subject"] is empty then
+      put "Get the SivaSiva App" into sShareItemsA["subject"]
+   end if
    
    put urlEncode(sShareItemsA["url"]) into tURLEncodedURL
    
@@ -60,6 +60,8 @@ command share_MouseEvent
       if exists (widget "body" of this card) then
          set the top of widget "body" to 0
       end if
+      
+      set the left of grp "share-ui" to -2000
       hide group "share-ui"
    else
       switch pShareChoice         

@@ -221,7 +221,7 @@ command getRandomVideo
     # the above just fetches a record from the item table 
     # to get the path or URL we have to query the format table:
     put getMediaURL ("url") into sURL
-    portal_GoUrl SURL
+    portal_GoUrl sURL
 end getRandomVideo
 
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed

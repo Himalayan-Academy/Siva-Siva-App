@@ -81,6 +81,8 @@ command sivasiva_Share
       if exists (widget "body") then
          set the top of widget "body" to -50
       end if
+      set the left of grp "share-ui" to 0 # we had to get it off screen for Android 
+      # here we put it a back.
       show group "share-ui" with visual dissolve very fast
    else
       copy tShareControl to this card

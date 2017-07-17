@@ -231,13 +231,13 @@ end connectivity_NotAvailable
 on _____VISUALS
 end _____VISUALS
 
--- on loaderImage_VisPath  pBool, pURL
---    put the long id of image "loader-front-img" of card 1 of stack "Siva-Siva-App" into tLoaderImage
---    if pURL is not empty then
---       set the filename of tLoaderImage to pURL
---    end if
---    set the vis of tLoaderImage to pBool
--- end loaderImage_VisPath
+# you cannot delete a control from it's own behavior
+# so this:
+
+on deleteShareGroup
+   delete sConfigA["shareControl"]
+end deleteShareGroup
+
 
 command display_Log
    portal_GoStack "Log"
