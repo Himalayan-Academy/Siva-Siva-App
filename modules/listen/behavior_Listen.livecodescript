@@ -180,6 +180,22 @@ end playlist_QuerySetUp
 
 on playList_FetchData
    
+   # we can put in the title and image right away
+   
+    # we may have the stack already open 
+   # and switching play list so clear the card first:
+   
+   dispatch "cleanUpGui" to card "listen-playlist"
+   
+   ## Title and thumbnail:
+   put sTargetPlayList into tTitle 
+   put tTitle into fld "title"   
+   
+   put sivasiva_FetchData() into tPortalInfoA
+   put tPortalInfoA["portalRowDictionary"][tTitle][shortImageFile] into tThumbPath
+   put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
+   set the filename of img "playlistPoster" to tPosterPath
+   
    put sPlaylistQueryA["playlistClass"] into tPlaylistClass
    
    switch tPlaylistClass
@@ -275,30 +291,22 @@ end playList_FetchData
 
 
 on playlist_Instantiate sTargetPlayList   
-   # we may have the stack already open 
-   # and switching play list so clear the card first:
+  
    
-   dispatch "cleanUpGui" to card "listen-playlist"
-   
-   ## Title and thumbnail:
-   put sTargetPlayList into tTitle 
-   put tTitle into fld "title"   
    # using: model_SivaSiva, which has functions to get json info we need:
-   put sivasiva_FetchData() into tPortalInfoA
-   put tPortalInfoA["portalRowDictionary"][tTitle][shortImageFile] into tThumbPath
-   put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
-   set the filename of img "playlistPoster" to tPosterPath
+   
+   
    switch sPlaylistQueryA["playlistClass"] 
       case "audiobook"
          put the keys of sCurrentPlayListA["audioFiles"]["toc"] into tKeys
-            sort lines of tKeys ascending numeric
+         sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
             put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr after tTitles
          end repeat
          break
       default
          put the keys of sCurrentPlayListA["audioFiles"] into tKeys
-            sort lines of tKeys ascending numeric
+         sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
             put sCurrentPlayListA["audioFiles"] [x]["Title"] & cr after tTitles
          end repeat

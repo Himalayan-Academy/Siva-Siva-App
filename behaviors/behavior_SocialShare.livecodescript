@@ -47,10 +47,10 @@ command share_MouseEvent
       put "https://www.himalayanacademy.com/looklisten/apps/sivasiva" into sShareItemsA["url"]
    end if
    if  sShareItemsA["text"] is empty then
-      put "Check out the new SivaSiva App, a vast realm of marvelous content!" into sShareItemsA["text"]
+      put "Coming Soon! The new SivaSiva App: a vast realm of marvelous content!" into sShareItemsA["text"]
    end if
    if sShareItemsA["subject"] is empty then
-      put "Get the SivaSiva App" into sShareItemsA["subject"]
+      put "Coming Soon: the SivaSiva App" into sShareItemsA["subject"]
    end if
    
    put urlEncode(sShareItemsA["url"]) into tURLEncodedURL
@@ -59,8 +59,7 @@ command share_MouseEvent
    if  pShareChoice ="close-sharing" then
       if exists (widget "body" of this card) then
          set the top of widget "body" to 0
-      end if
-      
+      end if    
       set the left of grp "share-ui" to -2000
       hide group "share-ui"
    else
@@ -423,22 +422,22 @@ end _GetGurudevaAppText
 
 --> Events
 -
-on preOpenControl
-   -- "preOpenCard" does not work as not passed by Jacque
-   -- this get's sent to the group every time the card is opened
-   
-   switch the platform
-      case "android"
-         set the display_FacebookButton of me to fb_IsAuthenticated()
-         break
-      case "iphone"
-         set the display_FacebookButton of me to true
-         break
-      default
-         -- put "Desktop Twitter option coming later from David"
-   end switch
-   pass preOpenControl
-end preOpenControl
+-- on preOpenControl
+--    -- "preOpenCard" does not work as not passed by Jacque
+--    -- this get's sent to the group every time the card is opened
+
+--    switch the platform
+--       case "android"
+--          set the display_FacebookButton of me to fb_IsAuthenticated()
+--          break
+--       case "iphone"
+--          set the display_FacebookButton of me to true
+--          break
+--       default
+--          -- put "Desktop Twitter option coming later from David"
+--    end switch
+--    pass preOpenControl
+-- end preOpenControl
 
 
 --> Objects

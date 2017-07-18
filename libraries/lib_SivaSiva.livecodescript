@@ -234,11 +234,6 @@ end _____VISUALS
 # you cannot delete a control from it's own behavior
 # so this:
 
-on deleteShareGroup
-   delete sConfigA["shareControl"]
-end deleteShareGroup
-
-
 command display_Log
    portal_GoStack "Log"
 end display_Log
