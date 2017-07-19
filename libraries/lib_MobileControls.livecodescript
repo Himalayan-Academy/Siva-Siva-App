@@ -237,14 +237,18 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    end if
 end playerPropertyAvailable
 
-command setMobileAudioPlayer pState --jg: control the state of the mobile player
+command setMobileAudioPlayer pPlayerName, pState,pTimeStamp --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
    mobileControlDo pPlayerName, pState
    if pState = "stop" then
       showBusyIndicator false -- in case it's still showing
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
-      if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
+      if mobileIdleTimerLocked() is true then 
+         mobileUnlockIdleTimer
+      end if
+   else 
+      mobileControlSet pPlayerName, "currentTime", pTimeStamp
    end if
 end setMobileAudioPlayer
 

@@ -44,7 +44,7 @@ command share_MouseEvent
    end if
    
    if sShareItemsA["url"]  is empty then        
-      put "https://www.himalayanacademy.com/looklisten/apps/sivasiva" into sShareItemsA["url"]
+      put "https://www.himalayanacademy.com/sivasiva" into sShareItemsA["url"]
    end if
    if  sShareItemsA["text"] is empty then
       put "Coming Soon! The new SivaSiva App: a vast realm of marvelous content!" into sShareItemsA["text"]

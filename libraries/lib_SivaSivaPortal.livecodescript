@@ -209,9 +209,9 @@ command portal_GoStack cardOrStackObject
       if not  (oStackName= "Siva-Siva-App") then  
          # always close.; all stack should be set to remove window and destroy on close
          # this is required to function properly o Android 
-         if isMobile() and there is a stack oStackname then # keep open on Desktop
+      --  if isMobile() and there is a stack oStackname then # keep open on Desktop
             close stack oStackName
-         end if
+     --    end if
       end if
       go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
       end if

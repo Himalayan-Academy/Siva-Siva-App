@@ -2,9 +2,9 @@
 	"style": {
         "listView": {
             "cardBackgroundColor": "#FFF1D0",
-            "activityIconColor": "#6E83B2",
-            "favoriteEnabledIconColor": "#FFD400",
-            "favoriteDisabledIconColor": "#D3D3D3",
+            "activityIconColor": "#2789AF",
+            "favoriteEnabledIconColor": "#FF7A00",
+            "favoriteDisabledIconColor": "#2789Af",
             "filterBackgroundColor": "#FABC00",
             "headerColor": "#FEFFFD",
             "headerBackgroundColor": "#7B84E4",
@@ -27,3 +27,4 @@
         }
     }
 }
+
