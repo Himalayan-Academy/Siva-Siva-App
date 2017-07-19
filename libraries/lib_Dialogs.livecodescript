@@ -121,7 +121,7 @@ on dialog_CustomMsg   pShow,pMsg,pShowtime
    -- pMsg = text to display, defaults to "Please wait..."; 
    -- height of msg displaychanges based on length
 
-   if pShow <> false then -- show it
+   if pShow <> "false" then -- show it
       if pMsg = "" then put "Please wait..." into pMsg 
       # assume some generic process; normally not advised to send empty
       put "350" into pWidth # locked to this width
