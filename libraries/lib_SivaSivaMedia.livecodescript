@@ -520,12 +520,12 @@ on toggleImgSize pImage, pFullSize, pTargetSize
    -- called from main img script when tapped and when main cd closes to reset
    
    if pFullSize = "" then -- calculate if it's already full size
-      put (the width of  pImage > the width of this cd) into tFullSize
+      put (the width of  pImage > the width of this cd) into pFullSize
   end if
   put the formattedWidth of  pImage into tFWd
      put the formattedHeight of  pImage into tFHt
 
-  if tFullSize then -- reduce to fit
+  if pFullSize then -- reduce to fit
     resizeToWidth pImage,pTargetSize
   else -- return to full size
     resizeToHeight pImage,tFHt
