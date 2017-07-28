@@ -2,7 +2,7 @@
 ## VARS 
 
 global sConfigA
-local sDownloadNewContent,sOnlineStatus,sLoaderImage
+local sDownloadNewContent,sOnlineStatus,sLoaderImage,sNewNews
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
@@ -76,6 +76,43 @@ with single word "true" or "false"
 check this first.
 
 */
+
+command news_Fetch
+   # path to news 
+   put path_Documents()&"/assets/info/siva-app-news.html" into tLocalNewsFile
+   
+   # fetch the latest news on server
+   put url "https://www.himalayanacademy.com/media/apps/sivasiva/siva-app-news.html" into tServerNews
+   
+   # check for the existence of news file locally
+   
+   if ( there is a file( tLocalNewsFile) ) then # parse it for the date
+      set the htmltext of templateField() to url ("file:/"& tLocalNewsFile)
+      put line 1 of templateField() into tLocalNewsDate
+      convert tLocalNewsDate to seconds
+   else
+      put empty into tLocalNewsDate
+   end if 
+   
+   set the htmltext of templateField() to tServerNews
+   put line 1 of templateField() into tLatestNewsDate
+   convert tLatestNewsDate to seconds
+   if tLocalNewsDate = tLatestNewsDate then
+      put "false" into sNewNews
+      # do nothing
+   else 
+       # save it
+      put tServerNews into url ("file:/"&tLocalNewsFile)
+      dialog_CustomMsg true, "You have news!"
+      put "true" into sNewNews
+   end if
+   # reset the templateField just in case
+   set the htmlText of templateField() to empty
+end news_Fetch
+
+function news_Check
+   return sNewNews
+end news_Check
 
 command sivasiva_checkNewContent
    # Ping server for updates?
@@ -181,7 +218,7 @@ on connectivity_PingServer
    # Logging: put empty into sURLStatusLog
    put "https://www.himalayanacademy.com/ping.txt" into sPingURL
    load url sPingURL
-   dispatch "connectivity_UpdateStatus" to me
+   dispatch "connectivity_UpdateStatus" to stack "lib_SivaSiva"
 end connectivity_PingServer
 
 on connectivity_UpdateStatus
@@ -194,14 +231,14 @@ on connectivity_UpdateStatus
          dialog_CustomMsg true,"Offline or Low Bandwidth", 1500      
          # do stuff here to block access  or show indicators.
          # keep checking but don't hog the CPU... 
-         send "connectivity_PingServer" to me in 1 seconds
+         send "connectivity_PingServer" to stack "lib_SivaSiva" in 1 seconds
       else
          # Logging
          --       put URLStatus(sPingURL) & cr after sURLStatusLog
          --       put sURLStatusLog
          add 1 to sServerAttempts
           dialog_CustomMsg true,"Connecting", 800     
-         send "connectivity_UpdateStatus" to me in 800 milliseconds
+         send "connectivity_UpdateStatus" to stack "lib_SivaSiva" in 800 milliseconds
       end if
    end if
 end connectivity_UpdateStatus
@@ -476,3 +513,7 @@ which was put into the backscript on start up
 --   end if
 -- end jgAndroidLog
 
+
+on errorDialog pExecutionError, pParseError
+
+end errorDialog

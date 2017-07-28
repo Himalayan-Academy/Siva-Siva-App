@@ -62,7 +62,7 @@ command testBehavior
    put specialFolderPath("resources")
 end testBehavior
 
-
+ 
 --> SivaSiva | Init | Logging
 
 /*
@@ -150,7 +150,12 @@ command init_AppConfiguration
    
    -- get long id's for global custom controls on card "custom-controls
    
-    init_StoreControlsIds
+   init_StoreControlsIds
+   
+   # now create local data and media hierachy
+   
+   init_CreateLocalFolders
+   
 
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
@@ -172,6 +177,8 @@ command openPortalStack
    
    # app will halt at this point  so now is a good
    # time to check for updates on a new session
+   # check for news first
+   sivasiva_CheckForNews
    sivasiva_checkNewContent
 end openPortalStack
 
@@ -218,8 +225,6 @@ command  init_LoadLibraries
    project_UseStacks stackPaths
    put project_ListFolderStacks ("models") into stackPaths
    project_UseStacks stackPaths
-   -- project_StartBackScriptsInFolder
-   -- project_StartFrontScriptsInFolder
 end init_LoadLibraries
 
 function init_ListStacksToUse
@@ -231,7 +236,7 @@ function init_ListStacksToUse
    -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
    return stackNames
 end init_ListStacksToUse
-
+ 
 command init_MobileGeometry
    -- see "initializeInterfaceDefaults"
    -- set the fullscreenmode of this stack to "showAll"
@@ -240,6 +245,90 @@ command init_MobileGeometry
       iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
    end if
 end init_MobileGeometry
+
+command init_CreateLocalFolders
+   # We want have folders correponding to app pkg content and also to the web server
+   # virtually all local content that is specific to the app will be in assets and modules
+   # global libraries, modules, behaviors only update when the app is updated
+   # for media we just map to the web server media folder for all types
+   
+   put specialFolderPath("documents") & "/"  into tLocalFolderRoot # everything goes here
+   # these top level will contain almost everything.
+   # jnanam.sqlite and sivasivapreferences are outside on the top level.
+   
+   put "assets,modules,media" into tTopLocalFolders
+   
+   repeat for each item x in tTopLocalFolders
+      check_CreateFolder (tLocalFolderRoot & x) 
+   end repeat
+   
+   # Second Level... 
+   # first assets
+   # but note that there are sub folders here 
+   # which we are not setting up for now.   
+   put sivasiva_ListAssetsFolders() into tTopAssetsFolders
+   repeat for each line x in tTopAssetsFolders
+      check_CreateFolder (tLocalFolderRoot & "assets/" & x) 
+   end repeat
+   
+   # Second Level... 
+   # modules
+   
+   put sivasiva_ListModuleFolders() into tTopModulesFolders
+   repeat for each line x in tTopModulesFolders
+      check_CreateFolder (tLocalFolderRoot & "modules/" & x) 
+   end repeat
+   
+   
+   # next we build the matching hierarchy for the web media folder
+   # most important will be books and audio
+   
+   put "audio,books,art,slideshows,video" into tTopMediaFolders
+   
+   repeat for each item x in tTopMediaFolders
+      check_CreateFolder (tLocalFolderRoot & "media/" & x) 
+   end repeat
+   
+   # each media type maps to a different hierarchy
+   # books is easy  1 folder per file ID, so we don't need to create anything here
+   # audio is more complex
+   
+   put "inspired-talks,books,chants,songs,shum" into tTopAudioFolders
+   
+   repeat for each item x in tTopAudioFolders
+      check_CreateFolder (tLocalFolderRoot & "media/audio/" & x) 
+   end repeat
+   
+   #Audio books, chants and shum map to subfolders 1 for each file id in the item table
+   
+   # for inspired talks, we have three authors
+   # the listen module needs to pass the year 
+   # and check_Create that year folder as needed
+   
+   put "bodhinatha,gurudeva,sadasivanatha" into tTopAudioAuthorFolders
+   
+   repeat for each item x in tTopAudioAuthorFolders
+      check_CreateFolder (tLocalFolderRoot & "media/audio/inspired-talks/" & x) 
+   end repeat
+   
+   # for songs we have a mor complex hierarchy
+   
+   put "bhajan,bhakti-gitam,natchintanai,stotram,tirumurai" into tTopAudioSongFolders
+   
+   repeat for each item x in tTopAudioSongFolders
+      check_CreateFolder (tLocalFolderRoot & "media/audio/songs/" & x) 
+   end repeat
+   
+   put "ganesha,guru,muruga,other,siva,vedic" into tTopAudioGenreFolders
+   
+   # used by both bhajan and Bhakti-gitam
+   
+   repeat for each item x in tTopAudioGenreFolders
+      check_CreateFolder (tLocalFolderRoot & "media/audio/songs/bhajan/" & x) 
+      check_CreateFolder (tLocalFolderRoot & "media/audio/songs/bhakti-gitam/" & x) 
+   end repeat
+   
+end init_CreateLocalFolders
 
 
 -->Project | Start
@@ -252,25 +341,6 @@ command project_UseStacks stackPaths
    return stackPaths
 end project_UseStacks
 
-command project_StartBackScriptsInFolder projectFolder
-   put projectFolder & "backscripts" & slash into standardFolder
-   put sivasiva_ListStackPaths (standardFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      load_BackScript stackPath
-   end repeat
-   return stackPaths
-end project_StartBackScriptsInFolder
-
-command project_StartFrontScriptsInFolder projectFolder
-   put projectFolder & "frontscripts" & slash into standardFolder
-   put sivasiva_ListStackPaths (standardFolder) into stackPaths
-   repeat for each line stackPath in stackPaths
-      if exists (stack stackPath) is false then next repeat
-      load_FrontScript stackPath
-   end repeat
-   return stackPaths
-end project_StartFrontScriptsInFolder
 
 command isBehaviorActive
    answer "Yes, the behavior was found." with "Yes" or "No"

@@ -278,11 +278,29 @@ function sivasiva_ListPhotoFolders
    return photoFolderNames
 end sivasiva_ListPhotoFolders
 
+function sivasiva_ListAssetsFolders
+   put specialFolderPath("resources") & "/assets" into tAppAssetsFolder
+   put folders(tAppAssetsFolder) into assetsFolders
+   filter assetsFolders without ".."
+   return assetsFolders
+end sivasiva_ListAssetsFolders
+
 function sivasiva_ListModuleFolders
-   put sivasiva_GetModuleRootFolder() into modulesFolder  
-   put folder_ListShort (modulesFolder) into moduleNames
+   put specialFolderPath("resources") & "/modules" into tAppPkgModules
+   put folders(tAppPkgModules) into moduleNames
+   filter moduleNames without ".."
    return moduleNames
 end sivasiva_ListModuleFolders
+
+command check_CreateFolder pTargetFolder
+   if there is a folder (pTargetFolder) then 
+       # do nothing
+      else
+        create folder pTargetFolder
+      end if   
+   end check_CreateFolder
+   
+
 
 command checkFilesModelIsInUse
    answer "Yes File Model here!" with "OK"
