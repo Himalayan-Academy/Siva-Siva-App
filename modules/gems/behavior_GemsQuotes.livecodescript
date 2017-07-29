@@ -183,13 +183,14 @@ command toggleReadContext pState
          put the uSourceURL of the target into tURL
          set the url of widget "readContext" to  tURL
          browser_SetLastURL tURL
+         parseTheHTML (the htmlText of widget "readContext"),"Title"
          hide the target
          hide widget "next-arrow"
          show widget "readContext"
          # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
          # and not actually go back to gem in this case
          show widget "cancel"
-       send  "AddJournalEntry" to me in 500 milliseconds
+         send  "AddJournalEntry" to me in 500 milliseconds
          break
       case "false"
          
@@ -202,7 +203,6 @@ command toggleReadContext pState
 end toggleReadContext
 
 on addJournalEntry
-            parseTheHTML (the htmlText of widget "readContext"),"Title"
          put browser_GetLastURL() into pData["weburl"]
          put browser_GetLastPageTitle() into tTitle
          Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   

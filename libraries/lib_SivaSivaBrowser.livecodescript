@@ -31,14 +31,21 @@ command parseTheHTML pHtmlText, pTargetString
          replace ": " with "-" in tRawTitle # normalize all those...
          set the itemdel to "-" # set up for two part titles
          if tRawTitle contains "YouTube" then # leave it alone
-            # do nothing
+            put "YouTube" into sLastWebPageTitle  # upgrade this later... 
          else # from our web site
-            if the number of items of tRawTitle = 2 then
-               put item 2 of tRawTitle into tRawtitle
+            if browser_GetLastURL() contains "/book/" then
+               # pass just the first words
+               put word 1 to 5 of tRawTitle into tRawTitle
+            else
+               # not a book page...
+               if the number of items of tRawTitle = 2 then
+                  put item 2 of tRawTitle into tRawtitle
+               end if
+               If char 1 of tRawTitle = " " then 
+                  delete char 1 of tRawTitle
+               end if   
             end if
-            If char 1 of tRawTitle = " " then 
-               delete char 1 of tRawTitle
-            end if      
+            
          end if
          put tRawTitle into sLastWebPageTitle
          break

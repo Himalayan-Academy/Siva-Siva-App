@@ -127,6 +127,9 @@ end fixLayoutMistakes
 
 function getIconForModule
    switch sEntryA["module"]
+      case "view_SivaSivaBrowser"
+         return the iconPath of widget "website-svg-icon" of card "templates"
+         break
       case "wordpuzzles"
          return the iconPath of widget "puzzle-svg-icon" of card "templates"
          break
@@ -134,16 +137,23 @@ function getIconForModule
       case "affirmations"
       case "daily-lesson"
       case "pathtosiva"
+      case "gems"
+      case "panchangam"
       case "traits"
          return the iconPath of widget "book-svg-icon" of card "templates"
          break
       case "surprise"
+         return the iconPath of widget "eyeopen-svg-icon" of card "templates"
+         break
       case "listen"
          return the iconPath of widget "music-svg-icon" of card "templates"
          break
       case "color-meditation"
-      case "gems"
-      case "panchangam"
+         # use for all "practices" for now
+         return the iconPath of widget "plane-svg-icon" of card "templates"
+         break
+         
+         
       case "settings"
       default
          return the iconPath of widget "generic-svg-icon" of card "templates"
@@ -158,3 +168,8 @@ on launchActivity
       answer error the result
    end if
 end launchActivity
+
+
+on localNotificationReceived pMessage
+
+end localNotificationReceived
