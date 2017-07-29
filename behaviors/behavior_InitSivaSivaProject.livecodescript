@@ -178,7 +178,7 @@ command openPortalStack
    # app will halt at this point  so now is a good
    # time to check for updates on a new session
    # check for news first
-   sivasiva_CheckForNews
+   news_Fetch
    sivasiva_checkNewContent
 end openPortalStack
 

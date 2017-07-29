@@ -79,12 +79,14 @@ check this first.
 
 command news_Fetch
    # path to news 
-   put path_Documents()&"/assets/info/siva-app-news.html" into tLocalNewsFile
+   put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
    
    # fetch the latest news on server
    put url "https://www.himalayanacademy.com/media/apps/sivasiva/siva-app-news.html" into tServerNews
    
    # check for the existence of news file locally
+   # get date data 
+
    
    if ( there is a file( tLocalNewsFile) ) then # parse it for the date
       set the htmltext of templateField() to url ("file:/"& tLocalNewsFile)
@@ -97,6 +99,9 @@ command news_Fetch
    set the htmltext of templateField() to tServerNews
    put line 1 of templateField() into tLatestNewsDate
    convert tLatestNewsDate to seconds
+   
+   # compare dates
+   
    if tLocalNewsDate = tLatestNewsDate then
       put "false" into sNewNews
       # do nothing
@@ -113,6 +118,10 @@ end news_Fetch
 function news_Check
    return sNewNews
 end news_Check
+
+command news_UserReadNews
+   put "false" into sNewNews
+end news_UserReadNews
 
 command sivasiva_checkNewContent
    # Ping server for updates?
@@ -146,7 +155,9 @@ end path_HomeLocal
 
 function path_Documents
    put specialFolderPath("documents") into  tPath
-   put "/" after tPath
+   put "/" after tPath  
+   # remember not to precede path strings to follow with a slash in your 
+   # handlers, double //   works on desktop but not on mobile
    return tPath
 end path_Documents
 
