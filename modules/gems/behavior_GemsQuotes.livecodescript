@@ -56,15 +56,12 @@ on setCardTitle
     put "Realm of God,Realm of Soul,Realm of Life" into tTitles
    put item sCurrentRealm of tTitles into tRealm
    put tRealm into fld "title"     
+   AddJournalEntry pReadQuote
 end setCardTitle
 
 on closecard
    resetUI
-   put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
-   put "images-quotes" into pDataA["card"]
-   put tRealm into sConfigA["currentRealm"]
-   put tRealm into pDataA["realm"]
-   Journal_RecordEntry "gems", ("Reading" && tRealm && "Quotes" ), pDataA
+
 end closecard
 
 command fetchQuoteAndImage
@@ -74,7 +71,7 @@ command fetchQuoteAndImage
       put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
    end if
    
-   toggleReadContext ("false")
+   --toggleReadContext ("false")
    
    # show a picture first
    ## Fetch Images
@@ -126,8 +123,6 @@ command fetchQuoteAndImage
          end if
       end if
    end if
-   
-   
    
 end fetchQuoteAndImage
 
@@ -183,14 +178,13 @@ command toggleReadContext pState
          put the uSourceURL of the target into tURL
          set the url of widget "readContext" to  tURL
          browser_SetLastURL tURL
-         parseTheHTML (the htmlText of widget "readContext"),"Title"
          hide the target
          hide widget "next-arrow"
          show widget "readContext"
          # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
          # and not actually go back to gem in this case
          show widget "cancel"
-         send  "AddJournalEntry" to me in 500 milliseconds
+         send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1500 milliseconds
          break
       case "false"
          
@@ -202,10 +196,21 @@ command toggleReadContext pState
    end switch
 end toggleReadContext
 
-on addJournalEntry
+on addJournalEntry pContext
+   switch pContext
+      case "pReadQuote"
+         put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
+         put "images-quotes" into pDataA["card"]
+         put tRealm into sConfigA["currentRealm"]
+         put tRealm into pDataA["realm"]
+         Journal_RecordEntry "gems", ("Reading" && tRealm && "Quotes" ), pDataA
+         break
+      case "pBookPage"        
          put browser_GetLastURL() into pData["weburl"]
-         put browser_GetLastPageTitle() into tTitle
+         put  browser_GetLastPageTitle() into tTitle
          Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+   end switch
+   
 end addJournalEntry
 
 command switchViewState 
