@@ -7,6 +7,8 @@
   "stackfiles": [
   	{"name": "lib_CustomControls", "file": "libraries/lib_CustomControls.livecode"},
   	{"name": "behavior_SocialShare", "file": "behaviors/behavior_SocialShare.livecodescript"},
+      {"name": "behavior_WordPuzzles", "file": "modules/wordpuzzles/behavior_WordPuzzles.livecodescript"},
+      {"name": "behavior_tileScript", "file": "modules/wordpuzzles/behavior_tileScript.livecodescript"},
   	{"name": "behavior_GemsQuotes", "file": "modules/gems/behavior_GemsQuotes.livecodescript"},
 	{"name": "behavior_ListenSelectPlay", "file": "modules/listen/behavior_ListenSelectPlay.livecodescript"},
 	{"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
