@@ -343,8 +343,8 @@ on createWordPuzzle
    hide fld "_quote" -- comment this out to see the quote during dev
    unlock screen
    send hideSubjectFld to me in 200 milliseconds
-   set the acceleratedRendering  of this stack to true
-   send "clueGoHome" to image "word_1" in 1 milliseconds
+
+   send "clueGoHome" to image "word_1" in 500 milliseconds
  
 end createWordPuzzle
 
