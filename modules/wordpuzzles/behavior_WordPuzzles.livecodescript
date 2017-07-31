@@ -12,18 +12,32 @@ local sCurLevel,sTileGlow,sCluesGiven
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
-   loadNewBgImg
+    loadNewBgImg
+    setTileGlow "small"
+     put 0 into sCluesGiven
+   # we should be storing the user's pref for length, but for V1
+   # we will just default to the lowest level every time the puzzles are opened:
+   
+  end preOpenCard
+  
+
+command setTileGlow pSize
    put "255,255,255" into sTileGlow["color"]
    put "normal" into sTileGlow["blendMode"]
    put "255" into sTileGlow["opacity"]
    put "box1pass" into sTileGlow["filter"]
-   put "20" into sTileGlow["size"] 
-   put "40" into sTileGlow["spread"]  
-   put 0 into sCluesGiven
-   # we should be storing the user's pref for length, but for V1
-   # we will just default to the lowest level every time the puzzles are opened:
    
-end preOpenCard
+   switch pSize
+      case "small"    
+         put "20" into sTileGlow["size"] 
+         put "40" into sTileGlow["spread"]  
+         break
+      case "large"
+          put "80" into sTileGlow["size"] 
+         put " 100" into sTileGlow["spread"]  
+         break
+   end switch
+end setTileGlow
   
 on closecard
   storeCurrentLevel sCurLevel
@@ -99,6 +113,13 @@ command fetchQuote
    put random (the number of lines of the keys of aSelectedQuotes) into tNo
    put textDecode ( aSelectedQuotes[tNo]["content"], UTF8)  into sQuote
    put textDecode ( aSelectedQuotes[tNo]["subject"], UTF8)  into fld "wordPuzzleSubject"
+   put textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
+   if sSourceURL <> empty then
+      set  the uSourceURL of widget "Context" to sSourceURL
+   else
+      set  the uSourceURL of widget "Context" to empty # wipe an old link
+   end if
+   
    show fld "wordPuzzleSubject"
    #hack to deal with endline bug
    replace "\n" with space in sQuote
@@ -321,9 +342,19 @@ on createWordPuzzle
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
    unlock screen
-   send hideSubjectFld to me in 2 seconds
+   send hideSubjectFld to me in 200 milliseconds
    set the acceleratedRendering  of this stack to true
+   send "clueGoHome" to image "word_1" in 1 milliseconds
+ 
 end createWordPuzzle
+
+on movestopped
+   answer "Move stopped" with "OK"
+   --      if the number of lines of  tWordList  > 15 then
+   --       put line 15 of tWordList into timage
+   --       send "clueGoHome" to image tImage in 1500 milliseconds
+   --    end if
+end movestopped
 
 function getColors -- return a random RGB set
   -- color sets stored in custom prop uColorSets in format: rgb1|rgb2
@@ -573,29 +604,36 @@ command hideSubjectFld
 end hideSubjectFld
 
 on showClues
+   put the uWordList of me into tTiles
+   put the number of lines of tTiles into tWordCount
    if sCluesGiven is empty then
       put 0 into sCluesGiven
    end if
    
    switch sCluesGiven
       case 0 
-         put "The first word goes onto the arrow near the upper left." into pMsg
+         if tWordCount <16 then
+            send "clueGoHome" to image (line tWordCount of tTiles)
+         else
+            send "clueGoHome" to image (line 15 of tTiles)
+         end if  
          add 1 to sCluesGiven
          break
       case 1
-         put "The first word usually starts with a capital letter." into pMsg
+           send "clueGoHome" to image (line tWordCount of tTiles)
          add 1 to sCluesGiven
          break
          case 2
-         put "If you have multiple words that are the same, only one works in place." into pMsg
+          send "clueGoHome" to image (line tWordCount of tTiles)
          add 1 to sCluesGiven
          break
       case 3 
          put "No more clues. You are on your own!" into pMsg
+         dialog_customMsg true,pMsg,1500
          put 0 into sCluesGiven
          break       
    end switch
-   dialog_customMsg true,pMsg,1500
+   
 end showClues
 
 
@@ -627,3 +665,13 @@ command resetUI
    clearBoard
    set the acceleratedRendering of this stack to false
 end resetUI
+
+command checkTileGlow
+   setTileGlow "small"
+   put sTileGlow["size"]
+   set the outerGlow of image "word_5" to sTileGlow
+end checkTileGlow
+
+on startup pMode
+
+end startup

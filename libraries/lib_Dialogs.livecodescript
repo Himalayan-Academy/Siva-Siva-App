@@ -149,7 +149,6 @@ on dialog_CustomMsg   pShow,pMsg,pShowtime
 end dialog_CustomMsg
 
 on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
-   
    try 
       set the name of the templateGraphic to "alphabkgnd"
       set the backColor of the templateGraphic to black
@@ -194,6 +193,6 @@ on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
       put "Result:" && the result && "Error:" && tErr
       -- log tErr
    end try
-   send  closeMsg to me in sShowTime milliseconds  
+   send "closeMsg" to this stack in 500 milliseconds 
 end buildMsgDisplay
   

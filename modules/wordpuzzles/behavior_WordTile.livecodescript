@@ -1,4 +1,4 @@
-﻿script "behavior_tileScript"
+﻿script "behavior_WordTile"
 
 local sDragging
 
@@ -35,16 +35,35 @@ on mouseUp
    put false into sDragging
    put checkHomeProximity() into tIsHome
    if word 1 of tIsHome = true then
-      set the loc of me to the uWordLocation of me 
-      --  set the topleft of me to word 2 of tIsHome   
-      glowtile me, false
-      set the uInPlace  of me to "true" 
-      set the showborder of me to "false"
-      relayer me after grc "startHere"
-      --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
+      lockInPlace
    end if
    checkCompletion
 end mouseUp
+
+command lockInPlace
+   put the long id of me into pTile
+   set the loc of me to the uWordLocation of me 
+   --  set the topleft of me to word 2 of tIsHome  
+   set the uInPlace  of me to "true" 
+   set the showborder of me to "false"
+   relayer me after grc "startHere"
+   --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
+      glowtile me, false
+end lockInPlace
+
+command clueGoHome
+   setTileGlow "large"
+   dispatch "setGlowTile" to this card with  "large" 
+   relayer me to front of card "word-puzzle"
+   move me to the effective  points of grc "MoveClue1" in 1 seconds
+   move me to the uWordLocaton of me in 1 second
+   lockInPlace
+   glowtile me, true
+   wait 700 milliseconds
+   set the outerglow of me to empty
+   setTileGlow "small"
+end clueGoHome
+
 
 on mouseRelease
   put false into sDragging
@@ -94,8 +113,8 @@ function checkHomeProximity # Cause tile to snap to location if close
    put the abs of  (item 1 of the loc of me - item 1 of tMyHome) into tLeftDistance
    put the abs of  (item 2 of the loc of me - item 2 of tMyHome) into tTopDistance
    
-   if (the abs of  (item 1 of the loc of me - item 1 of tMyHome)  < 20) AND \
-         (the abs of  (item 2 of the loc of me - item 2 of tMyHome) <20) then
+   if (the abs of  (item 1 of the loc of me - item 1 of tMyHome)  < 30) AND \
+         (the abs of  (item 2 of the loc of me - item 2 of tMyHome) <30) then
       return "true" 
    end if
    
