@@ -133,25 +133,29 @@ on playlist_QuerySetUp
          # this model could fetch any kid of collection, songs, curated by category or tag... 
          # again we should be using a JSON for this data, and hold the query on disk and not hard
          # code this here.  Later... V2
-         put "latest" into sPlaylistQueryA["playlistClass"]
+         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
-
+         
          put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
          put "latest" into sPlaylistQueryA["recordType"]
-
+         
          put 30 into sPlaylistQueryA["recordCount"]
          break
       case "Gurudeva's 1970 Audio Master Course"
-         put "cached" into sPlaylistQueryA["playlistClass"]
+         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
          put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
          put "1970" into sPlaylistQueryA["date_created"]
          put "master-course" into sPlaylistQueryA["file_id"]
          break
+      case "Sanskrit Chanting"
+         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+         put "audio/chant" into sPlaylistQueryA["media_type"]
+         break
       case "The Guru Chronicles" # Audio book
          # for audio books; all we need to know the file ID, which is the folder name
          # after that it is a simple path set up.
-         put "audiobook" into sPlaylistQueryA["playlistClass"]
+         put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
          break
       case "Gujarati Dancing with Siva Audiobook" # Audio book

@@ -258,9 +258,9 @@
             "shortImageFile": "thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
         },
         "Sanskrit Chanting": {
-            "link": {
-                "portal command": "portal_GoURL",
-                "portal param": "https://www.himalayanacademy.com/looklisten/chanting"
+             "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
