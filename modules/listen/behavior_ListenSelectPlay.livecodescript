@@ -19,7 +19,7 @@
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
  
-local sSelectionsA,sSelectedItemA
+local sSelectionsA,sSelectedItemA,sSelectedURL
 
 on preopencard
    hide player "audioPlayer"
@@ -121,21 +121,21 @@ on select_Play  pSelectedLine
       # everything happens via Jnanam table structure record array
       put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA
       metadata_SetRecord sSelectedItemA   
-      put getMediaURL (sSelectedItemA["item_id"]) into tURL
+      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
       
       # but lib_SivaSivaMedia won't have string for the latest item
       # fortunately there is easily solution for audio:
-      if char -1 of tURL = "/" then
-         put sSelectedItemA["file_id"] & ".mp3" after tURL
+      if char -1 of sSelectedURL = "/" then
+         put sSelectedItemA["file_id"] & ".mp3" after sSelectedURL
       end if      
    else
       # its an audio book
-      put getMediaURL("audioBook") into tURL
-      put sSelectionsA["audioBookMetadata"][1]["file_id"] & "/" after tURL
-      put sSelectionsA["audioFiles"]["toc"][tSelectNum]["file"] after tURL
+      put getMediaURL("audioBook") into sSelectedURL
+      put sSelectionsA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
+      put sSelectionsA["audioFiles"]["toc"][tSelectNum]["file"] after sSelectedURL
    end if
    
-   if tURL = "" then -- jg: don't continue
+   if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
       send mouseUp to widget "chevron-up-down"
@@ -153,9 +153,9 @@ on select_Play  pSelectedLine
       else 
          put empty into tRect
       end if     
-      createMobileAudioPlayer tURL, "audioPlayer",tRect
+      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
    else
-      set the filename of player "audioPlayer" to tURL
+      set the filename of player "audioPlayer" to sSelectedURL
    end if
    
    showPlayer "true", "audioPlayer"

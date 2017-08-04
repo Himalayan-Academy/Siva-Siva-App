@@ -1,11 +1,12 @@
 {
   "launch_module": "home",
-  "libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls",
+  "libraries": "lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls,lib_Downloader",
   "log_file": "sivasiva.log",
   "log_level": "info,error,fatal",
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal",
   "stackfiles": [
-  	{"name": "lib_CustomControls", "file": "libraries/lib_CustomControls.livecode"},
+        {"name": "lib_Downloader", "file": "libraries/lib_Downloader.livecodescript"},
+  	{"name": "lib_CustomControls", "file": "libraries/lib_CustomControls.livecodescript"},
   	{"name": "behavior_SocialShare", "file": "behaviors/behavior_SocialShare.livecodescript"},
       {"name": "behavior_WordPuzzles", "file": "modules/wordpuzzles/behavior_WordPuzzles.livecodescript"},
       {"name": "behavior_WordTile", "file": "modules/wordpuzzles/behavior_WordTile.livecodescript"},
