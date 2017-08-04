@@ -267,7 +267,7 @@ getprop header_View
 end header_View
 
 private function _headerView
-   put the long id of group "Portal Image header" of me into headerView
+   put the long id of group "Portal Image header" into headerView -- of me into headerView
    return headerView
    
    -- won't work if the behavior is not resolving
