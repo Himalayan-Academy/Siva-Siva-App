@@ -238,7 +238,7 @@ end logo_Faded
 --> Object
 -
 getprop portal_View
-   return the long id of me
+   return the long id of grp "SivaSiva Portal Scrolling" -- me
 end portal_View
 
 getprop layout_View
@@ -277,7 +277,7 @@ private function _headerView
 end _headerView
 
 private function _scrollingView
-   return the long id of control "SivaSiva Portal Scrolling" of me
+   return the long id of control "SivaSiva Portal Scrolling" -- of me
 end _scrollingView
 
 private function _navigationView
