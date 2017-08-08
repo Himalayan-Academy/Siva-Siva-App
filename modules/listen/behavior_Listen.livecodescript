@@ -101,7 +101,7 @@ end playlist_GetRecords
 # 2.  Audiobook: build a path string and download index. json for audio books
 # 3. query the local dbase for already cached metadata in the Local Jnanam dbase
 
-# we need max six criteria to search our metadata, not all playlists require all string, 
+# we need max six criteria to search our metadata, not all playlists require all strings, 
 # but our query array will still have all these keys; use elements as needed
 # we will model that array into a json string or dbase query later
 # media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
@@ -126,6 +126,7 @@ on playlist_QuerySetUp
    # the entire play list
    # aagDBLib uses "LIKE" so we only need to pass partial string for our searches
    # again: we should store these values in modules/listen/playlists.json
+   # Add all your new playlists here in V1... assume match to a portal link for V1
    
    switch sTargetPlayList
       case "Bodhinatha's Latest Talks" 
@@ -186,7 +187,7 @@ on playList_FetchData
    
    # we can put in the title and image right away
    
-    # we may have the stack already open 
+   # we may have the stack already open 
    # and switching play list so clear the card first:
    
    dispatch "cleanUpGui" to card "listen-playlist"
@@ -207,12 +208,25 @@ on playList_FetchData
          # we do a JSON Call  Hard wiring as a test for now. but we should later 
          # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
          # we need because we can then use for different play lists on demand.. 
-
-         put "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}" into pJSON
-
+         
+         # the sPlayListQueryA  has the values needed for the API... 
+         # API requires odd construct data: set the query;  recordtype/Count set up how many to return which are 
+         # different function in the API, SQL
+         # e.g. required format need single quotes to go thru the API
+         #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
+         #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
+         # It just set the WHERE clause in the query with what ever you request. then sorts on date sends bak the request number
+         # of records.
+         
+        put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
+         put sPlayListQueryA["author"] into queryData["data"]["author"] 
+         put sPlayListQueryA["recordType"] into queryData["recordType"]
+         put sPlayListQueryA["recordCount"] into queryData["recordcount"]
+         
+         put arrayToJson(queryData) into pJSON
+     
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
-         replace "'" with quote in pJSON
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
          if the result is not empty then 
             put the result into fld "audioList"
@@ -232,22 +246,26 @@ on playList_FetchData
          break
       case "audiobook"
          
-          # a simple call to the server to get the TOC
+         # a simple call to the server to get the TOC
+         # can chose different books base on file_id
+         put sPlaylistQueryA["file_id"] into tFileID
+         
          # CMS is straightforward, path is consistent, no magic code required
-         put url "http://dev.himalayanacademy.com/media/audio/books/the-guru-chronicles-audiobook/audiobook.json" into tBookToc
+         put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
+         put URL tTocURL into tBookToc
          put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
          
          # this should come from the local dBase,
          # but as of June 29, the local dBase is obsolete
          
          --put sPlaylistQueryA into tSearchA
-        -- delete variable tSearchA["playlistClass"]  # don't pass this to the query
-       --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
+         -- delete variable tSearchA["playlistClass"]  # don't pass this to the query
+         --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
          -- put tPlaylistClass into sCurrentPlayList["playlistClass"] 
          
          # so we have to fetch info from the server
          
-                put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
+         put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
@@ -262,10 +280,10 @@ on playList_FetchData
             # We need this later:
             put jsonToArray (tRecords) into sCurrentPlayListA["audioBookMetadata"]
          end if
-        
+         
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]
-        break
+         break
          
    end switch
    
@@ -320,27 +338,40 @@ on playlist_Instantiate sTargetPlayList
    put the number of lines of tTitles into pLineCount
    addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    
+   # here is where we have to check to see if any files are stored locally or not
+   # but this requires us to construct the URL, which is in select
+   
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
    end if
    
 end playlist_Instantiate
 
-on showDownloadProgress
-    
-   if fld "audioList" is not empty then
-      put "true" into sDownloadedFlag
-   end if
    
-   if sDownloadedFlag is "true" then 
-      set the hightlight of widget "Downloading" to false
-      hide widget "Downloading"
-      exit showDownloadProgress
+function getItemURL   pRecordNumber
+   # send of to lib_SivaSivaMedia, which knows all about our media CMS
+   # but Audio books are completely different CMS: they have no item records for their audio files
+   
+   if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
+      # everything happens via Jnanam table structure record array
+      put  sCurrentPlayListA["audioFiles"][pRecordNumber] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA   
+      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
+      
+      # but lib_SivaSivaMedia won't have string for the latest item
+      # fortunately there is easily solution for audio:
+      if char -1 of sSelectedURL = "/" then
+         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
+      end if      
+   else
+      # its an audio book
+      put getMediaURL("audioBook") into sSelectedURL
+      put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
+      put  sCurrentPlayListA["audioFiles"]["toc"][tSelectNum]["file"] after sSelectedURL
    end if
-   put the highlight of widget "Downloading" into tState
-   set the highlight of widget "downloading" to  not tState
-   send showDownloadProgress to me in 200 milliseconds
-end showDownloadProgress
+   return sSelectedURL
+end getItemURL
+
 
 on journalResume  pDataA, pEntryA
    deleteMobileControl "audioPlayer"

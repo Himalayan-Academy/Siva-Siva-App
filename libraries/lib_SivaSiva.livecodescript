@@ -2,7 +2,7 @@
 ## VARS 
 
 global sConfigA
-local sDownloadNewContent,sOnlineStatus,sLoaderImage,sNewNews
+local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
@@ -123,18 +123,18 @@ command news_UserReadNews
    put "false" into sNewNews
 end news_UserReadNews
 
-command sivasiva_checkNewContent
+command newcontent_Check
    # Ping server for updates?
    put "false"  into pBool # for now
-   put pBool into sDownloadNewContent 
-end sivasiva_checkNewContent
+   put pBool into sThereIsNewContent 
+end newcontent_Check
 
 #use this in appropriate places where you may want updates later
 # e.g. About this App; Privacy Policy are common use cases.
 
-function sivasiva_IsThereNewContent  
-   return sDownloadNewContent
-end sivasiva_IsThereNewContent
+function newcontent_IsThere
+   return sThereIsNewContent
+end newcontent_IsThere
 
 
 
@@ -172,6 +172,77 @@ function path_Modules
    put "modules/" after tPath
    return tPath
 end path_Modules
+
+--------------------------------
+-- path_IsFileOnDisk/path_FileForURL
+-- DESCRIPTION:
+-- Called from any stack that wants to use local media
+-- or download it if not available
+-- see init script which sets up folders in /media to match
+-- the web server; CMS in app is the same:
+-- files are in a folder with the  fileID from the database.
+-- if the content is unique to SivaSiva app, then it goes to
+-- /assets or /modules # the module that needs it
+-- All other content maps to DocRoot/media
+-- PARAMS:
+-- you must pass the full path from DOCROOT
+-- must not begin with "http:" 
+-- see  getMediaURL function in lib_SivaSivaMedia
+-- which is use to get a fully qualified URL, or path relative docroot
+
+
+# these are used by by different modules in conjunction 
+# with the behavior_Download to play/use local media or 
+# download it if the context offers that option. 
+# these functions are agnostic about that 
+# we want to end up with paths beginning with
+# /media (from public_html) or /assets, /modules (from /media/apps/sivasiva)
+
+function path_isFileOnDisk pURL  
+  put path_FileFromURL (pUR) into tFilePath
+   if there is a file tFilePath then
+      return true
+   end if
+   return false
+end path_isFileOnDisk
+
+function path_FileForUrl pURL
+   put specialFolderPath("documents") into tDF
+   set the itemdel to "/"
+   # make relative:
+   if  item 1 of pURL contains "http" then
+      delete item 1 to 3 of pURL # now at Docroot (public_html) on the server
+   end if
+   
+   # check now to see if this is an app specific asset
+   # which would be mapped to /media/apps/sivasiva/[some-asset-modules-content]
+   
+   
+   if item 3 of pURL = "sivasiva" then # unique to this app
+      delete item 1 to 3 of pURL  
+   end if
+   
+   put item -1 of pURL into tFile
+   put item 1 to -2 of pURL into tFolder
+   
+   if there is not a folder tFolder then
+      create folder tFolder
+   end if
+   
+   set the defaultFolder to tFolder
+   
+   repeat for each item tPathItem in tPath
+      if there is not a folder tPathItem then
+         create folder tPathItem
+      end if
+      set the defaultFolder to tPathItem
+   end repeat
+   
+   set the defaultFolder to tDF
+   
+   return tFolder & "/" & tPath & "/" & tFile
+end  path_FileForUrl
+
 
 on backkey # need for android
    if the short name of this stack is "journal" then
@@ -212,7 +283,7 @@ function text_TitleCase pString
 end text_TitleCase
 
 
-# relates to navigation shoudl move with these handlers later:
+# relates to navigation shoulf move with these handlers later:
 # handles both stacks and portal names
 constant kONLINECONTENT= "surprise,website,listen,look,view_SivaSivaBrowser"
 

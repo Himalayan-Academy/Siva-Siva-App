@@ -109,10 +109,19 @@ end mouseup
 on select_Play  pSelectedLine
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
    lock screen
-   resetLines 
-   set the foregroundcolor of  pSelectedLIne to green
+  --  set the hilitedlines of fld "audioList" to 0
+        put word 2 of pSelectedLIne into tSelectNum
+
+
+-- resetLines 
+--    set the hilitedlines of fld "audioList" to 0
+--   set the hilitedlines of fld "audioList" to tSelectNum
+--  put "• " before line tSElectNum of fld "audioList"  
+        --set the foregroundcolor of  pSelectedLIne to green
+        
    unlock screen
-   put word 2 of pSelectedLIne into tSelectNum
+   
+
    
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
    # but Audio books are completely different CMS: they have no item records for their audio files

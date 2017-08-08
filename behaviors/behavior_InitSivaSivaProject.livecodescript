@@ -179,7 +179,7 @@ command openPortalStack
    # time to check for updates on a new session
    # check for news first
    news_Fetch
-   sivasiva_checkNewContent
+   newcontent_Check
 end openPortalStack
 
 command  init_LoadLibraries  
