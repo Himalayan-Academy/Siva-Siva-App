@@ -22,7 +22,7 @@
 
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-local sDownloadedFlag
+
 
 on preopenstack
    # may be fixed in recent versions Android crashed on stack swaps
@@ -43,14 +43,6 @@ on openstack
    # be sure to never save the stack with any text in the audio list
    # test assumes if the fld id blank then we have some loading to do.
 
-
-   if fld "audioList" is empty then
-     show widget "Downloading"
-      # We are about to download or fetch a list
-      put "false" into sDownloadedFlag
-      showDownloadProgress
-   end if
-   
    put portal_GetLastLinkTitle() into sTargetPlayList   
    
     playlist_SetCurrent sTargetPlayList
@@ -313,7 +305,7 @@ end playList_FetchData
 
 
 on playlist_Instantiate sTargetPlayList   
-  
+   
    
    # using: model_SivaSiva, which has functions to get json info we need:
    
@@ -335,11 +327,14 @@ on playlist_Instantiate sTargetPlayList
    end switch
    
    put tTitles into fld "audioList"  
+   
+ 
    put the number of lines of tTitles into pLineCount
    addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    
    # here is where we have to check to see if any files are stored locally or not
-   # but this requires us to construct the URL, which is in select
+   
+   markCachedItems tKeys
    
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
@@ -347,15 +342,36 @@ on playlist_Instantiate sTargetPlayList
    
 end playlist_Instantiate
 
-   
-function getItemURL   pRecordNumber
+command markCachedItems pKeys
+   repeat for each line x in pKeys
+      # this as good a place as any to check for the existence of files  
+      # and get the URL for every one in the play list... so we only do this once.
+      put getItemURL(x) into pURL
+      # Check and create folders here
+      put path_isFileOnDisk(pURL) into tLocalStatus
+      put item 1 of tLocalStatus into tIsCached
+      put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
+      if tIsCached then  # need to colored cached files on theUI
+         # store line numbers
+         put x & cr after tCachedFiles
+         put item 2 of tLocalStatus into  sCurrentPlayListA["audioFiles"][x]["myURL"]
+      else
+         put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
+      end if
+   end repeat
+   repeat for each line y in tCachedFiles
+      set the foregroundcolor of line y of fld "audioList" to green
+   end repeat
+end markCachedItems
+
+function getItemURL pRecordNum
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
    # but Audio books are completely different CMS: they have no item records for their audio files
    
    if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
       # everything happens via Jnanam table structure record array
-      put  sCurrentPlayListA["audioFiles"][pRecordNumber] into sSelectedItemA
-      metadata_SetRecord sSelectedItemA   
+      put  sCurrentPlayListA["audioFiles"][pRecordNum] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA
       put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
       
       # but lib_SivaSivaMedia won't have string for the latest item

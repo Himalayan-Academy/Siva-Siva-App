@@ -32,7 +32,7 @@ path_FileForUrl  # will creae a folder if needed for the request URL
 -------------------------------
 -- vars
 
-local sURL, sRequestedBy, sDownloadStart
+local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 
 ---------------------------------
 -- downLoadURL
@@ -51,9 +51,16 @@ local sURL, sRequestedBy, sDownloadStart
 -- otherwise it is not even called in the first place.
 
 
-on downLoadURL pTitle, pURL, pLocalFilePath
-   put the long ID of the target into sRequestedBy
-    put "Downloading" && pTitle into fld "progressTitle" ; exit to top
+on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
+   
+   put "Downloading:" &cr & pTitle into fld "progressTitle"
+  
+   # store some info in local so we can use these when we send msg
+   # back to the calling stack.
+   
+    put pURL into sURL 
+    put pRecordNumber into sRecordNumber
+    put pRequestedBy into sRequestedBy
    
    -- set up a message to show the status of the download as it progresses
    libURLSetStatusCallback "showProgress", the long name of me
@@ -64,7 +71,7 @@ put empty into fld "ProgressField"
 put the seconds into sDownloadStart
    	
    -- start the download process, telling Rev to call the "downloadComplete" handler when finished
-   load URL tDownloadLink with message "downloadComplete"
+   load URL pURL with message "downloadComplete"
 end downLoadURL
 
 
@@ -111,8 +118,7 @@ command showProgress pURL, pStatus
       put tKBperSecond & " KB/sec" after fld "ProgressField"
    end if
 end showProgress
- 
-   
+
 command downloadComplete pURL, pStatus
    -- this is the handler called when the download is finished
    -- the pStatus variable will show the result
@@ -122,20 +128,25 @@ command downloadComplete pURL, pStatus
    
    -- check if there was a problem with the download
    if pStatus = "error" or pStatus = "timeout" then
-      answer error "The file could not be downloaded."
+      put error  &cr& "The file could not be downloaded. Try later." into fld "Progress Title"
+      wait 1 second with messages
+      close this stack
    else
-      -- if there is no problem, save the PDF to the desktop
-      -- work out a file name for saving this file to the desktop
-      set the itemDel to slash
-      put last item of pURL into tFilename
-      put specialFolderPath("Desktop") & slash before tFileName
-      put URL pURL into URL ("binfile:" & tFileName)
-      
-      -- open the downloaded document in the default PDF viewer just to show that it worked
-      launch document tFileName
+      put  path_FileFromURL(sURL) into tLocalPath # includes filename
+      put URL pURL into URL ("binfile:" & tLocalPath)
       
       -- to save memory, now unload the URL from memory
       -- this also means that if you want to run the test again, it does not just use a cached version
       unload pURL
+      
+      delete word 1 to 4 of sRequestedBy
+      dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
+      close this stack
    end if
 end downloadComplete
+
+on closestack
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+end closestack

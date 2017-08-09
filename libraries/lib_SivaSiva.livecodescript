@@ -199,14 +199,14 @@ end path_Modules
 # /media (from public_html) or /assets, /modules (from /media/apps/sivasiva)
 
 function path_isFileOnDisk pURL  
-  put path_FileFromURL (pUR) into tFilePath
+  put path_FileFromURL(pURL) into tFilePath
    if there is a file tFilePath then
-      return true
+      return (true,tFilePath)
    end if
    return false
 end path_isFileOnDisk
 
-function path_FileForUrl pURL
+function path_FileFromURL pURL
    put specialFolderPath("documents") into tDF
    set the itemdel to "/"
    # make relative:
@@ -214,34 +214,20 @@ function path_FileForUrl pURL
       delete item 1 to 3 of pURL # now at Docroot (public_html) on the server
    end if
    
-   # check now to see if this is an app specific asset
-   # which would be mapped to /media/apps/sivasiva/[some-asset-modules-content]
+   # later we download app unique content as a zip file here and unpack it
    
-   
-   if item 3 of pURL = "sivasiva" then # unique to this app
-      delete item 1 to 3 of pURL  
-   end if
    
    put item -1 of pURL into tFile
-   put item 1 to -2 of pURL into tFolder
    
-   if there is not a folder tFolder then
-      create folder tFolder
-   end if
-   
-   set the defaultFolder to tFolder
-   
-   repeat for each item tPathItem in tPath
-      if there is not a folder tPathItem then
-         create folder tPathItem
+   put (the number of items of pURL)-1 into tFolderCount
+   repeat with i = 1 to tFolderCount
+      put item 1 to i of pURL into tFolderToCreate
+      if there is no folder tFolderToCreate then
+         create folder (tDF&"/"& tFolderToCreate)
       end if
-      set the defaultFolder to tPathItem
    end repeat
-   
-   set the defaultFolder to tDF
-   
-   return tFolder & "/" & tPath & "/" & tFile
-end  path_FileForUrl
+   return tDF&"/"&tFolderToCreate &"/" & tFile  # inclues filename after last interaion.
+end  path_FileFromURL
 
 
 on backkey # need for android

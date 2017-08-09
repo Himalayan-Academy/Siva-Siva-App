@@ -54,7 +54,7 @@ end playlist_Reset
 # UI Interactions | card, group, list, detail display change ups
 -----------------------------------------------------------------------
 
-on mouseup   
+on mouseup
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
    # all logic for user interaction with the GUI is handled here.
@@ -64,7 +64,8 @@ on mouseup
    # to separate handlers.
    
    put the target into pTarget
-   put the short name of the Target  into tTarget
+   put the short name of the Target  into tTarget   
+   put the hilitedlines of fld "audioList"  into tSelectNum
    
    switch tTarget
       case "AudioList"
@@ -77,9 +78,18 @@ on mouseup
             hide fld "audioDetails" with visual effect wipe down very fast
             send  "CreateScroller audioList" to fld "audioList"
          else
-           select_ShowDetails 
+            select_ShowDetails 
          end if
-            set the flipped of pTarget to not detailVis
+         set the flipped of pTarget to not detailVis
+         break
+      case "DownloadSelection" 
+         put the long ID of the target into pRequestedBy
+         answer  "Download File?" with "Cancel" or "Yes"
+         if it = "yes" then
+            put    sSelectionsA["audioFiles"][tSelectNum]["title"] into pTitle
+            go stack "view_Download"
+            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,tSelectNum,pRequestedBy
+         end if
          break
    end switch
 end mouseup
@@ -108,41 +118,9 @@ end mouseup
 
 on select_Play  pSelectedLine
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
-   lock screen
-  --  set the hilitedlines of fld "audioList" to 0
-        put word 2 of pSelectedLIne into tSelectNum
-
-
--- resetLines 
---    set the hilitedlines of fld "audioList" to 0
---   set the hilitedlines of fld "audioList" to tSelectNum
---  put "• " before line tSElectNum of fld "audioList"  
-        --set the foregroundcolor of  pSelectedLIne to green
-        
-   unlock screen
+   put word 2 of pSelectedLIne into tSelectNum
    
-
-   
-   # send of to lib_SivaSivaMedia, which knows all about our media CMS
-   # but Audio books are completely different CMS: they have no item records for their audio files
-   
-   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      # everything happens via Jnanam table structure record array
-      put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA
-      metadata_SetRecord sSelectedItemA   
-      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
-      
-      # but lib_SivaSivaMedia won't have string for the latest item
-      # fortunately there is easily solution for audio:
-      if char -1 of sSelectedURL = "/" then
-         put sSelectedItemA["file_id"] & ".mp3" after sSelectedURL
-      end if      
-   else
-      # its an audio book
-      put getMediaURL("audioBook") into sSelectedURL
-      put sSelectionsA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
-      put sSelectionsA["audioFiles"]["toc"][tSelectNum]["file"] after sSelectedURL
-   end if
+   put sSelectionsA["audioFiles"][tSelectNum]["myURL"] into sSelectedURL
    
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
@@ -152,13 +130,11 @@ on select_Play  pSelectedLine
       exit to top
    end if
    
-   
    if isMobile() then
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
          # we need to try to get it to fit nicely at the bottom:
-         put 70,570,405,679 into tRect
-
+         put 70,570,405,679 into tRect       
       else 
          put empty into tRect
       end if     
@@ -174,8 +150,9 @@ on select_Play  pSelectedLine
       setMobileAudioPlayer "play"
    end if
    showBusyIndicator false
-   put  sSelectedItemA["title"] into fld "currentTitleLabel"
- Journal_AddEntry pSelectedLIne
+   put  sSelectionsA["audioFiles"][tSelectNum]["title"] into fld "currentTitleLabel"
+   set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][tSelectNum]["cached"] )
+   Journal_AddEntry pSelectedLIne
 end select_Play
 
 
@@ -200,13 +177,13 @@ end select_ShowDetails
 
 # we should create a global library for all things text and just pass params
 # for now: 
-
-on resetLines
-       set the hilitedlines of fld "audioList" to 0
-   repeat with x = 1 to the number of lines of fld "audioList"
-      set the foregroundcolor of line x of  fld "audioList" to 251,240,200
-   end repeat
-end resetLines
+# ignore for now... trying hilited lines and use color to show cached status
+-- on resetLines
+--        set the hilitedlines of fld "audioList" to 0
+--    repeat with x = 1 to the number of lines of fld "audioList"
+--       set the foregroundcolor of line x of  fld "audioList" to 251,240,200
+--    end repeat
+-- end resetLines
 
 on Journal_AddEntry pSelectedLine
    put  sSelectionsA["playlistTitle"] into tPlayList
@@ -218,6 +195,16 @@ on Journal_AddEntry pSelectedLine
    Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
 end Journal_AddEntry
 
+command updateCachedListings pRecordNumber
+   put "true" into sSelectionsA["audioFiles"][pRecordNumber]["cached"]
+   set the foregroundcolor of line pRecordNumber of fld "audioList" to green
+   # Later we need to update the myURL of the play list selection.
+   # but for now we assume if they have enough bandwidth to download
+   # let them stream... when they come back later the list will be updated
+   
+   
+end updateCachedListings
+
 
 on cleanUpGUI
    # more later but for now, so no flash of previous content 
@@ -227,6 +214,7 @@ on cleanUpGUI
    put empty into fld "currentTitleLabel" of this card
    set the filename of player "audioPlayer"  of this card to empty
    hide fld "audioDetails" of this card
+   hide widget "downloadSelection"
    put empty into fld "audioDetails" of this card
    showPlayer "false", "audioPlayer" 
    ## add other mobile stuff to clear out here later
