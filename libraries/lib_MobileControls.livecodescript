@@ -185,6 +185,7 @@ end scroller_ShowVertical
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
+local sPlayerId 
 local pPlayerName -- jg: may not need this any more; check
 
 ---------------------------------------------------------------------------------------

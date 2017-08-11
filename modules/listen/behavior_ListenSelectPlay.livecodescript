@@ -155,11 +155,12 @@ on select_Play  pSelectedLine
    else
       setMobileAudioPlayer "audioPlayer", "play"
    end if
+   
    showBusyIndicator false
    put  sSelectionsA["audioFiles"][tSelectNum]["title"] into fld "currentTitleLabel"
    # Android player covers it!
    if the platform is "Android" then
-      set the bottom of widget "downloadSelection" to 560 
+      set the bottomleft of widget "downloadSelection" to 14,657
    else
       set the bottom of widget "downloadSelection" to 622
    end if

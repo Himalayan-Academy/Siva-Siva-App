@@ -193,6 +193,6 @@ on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
       put "Result:" && the result && "Error:" && tErr
       -- log tErr
    end try
-   send "closeMsg" to this stack in 500 milliseconds 
+   send "closeMsg" to this stack in sShowTime milliseconds 
 end buildMsgDisplay
   
