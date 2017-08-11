@@ -84,9 +84,14 @@ on mouseup
          break
       case "DownloadSelection" 
          put the long ID of the target into pRequestedBy
+         if sSelectionsA["playListClass"] ="audiobook" then
+            put sSelectionsA["audioFiles"]["toc"][tSelectNum]["label"] into pTitle
+         else
+          put  sSelectionsA["audioFiles"][tSelectNum]["title"]  into pTitle
+         end if
          answer  "Download File?" with "Cancel" or "Yes"
          if it = "yes" then
-            put    sSelectionsA["audioFiles"][tSelectNum]["title"] into pTitle
+            
             go stack "view_Download"
             dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,tSelectNum,pRequestedBy
          end if
@@ -117,6 +122,7 @@ end mouseup
 ---------------------------------------------
 
 on select_Play  pSelectedLine
+   Put "Connecting..." into fld "currentTitleLabel"
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
    put word 2 of pSelectedLIne into tSelectNum
    
@@ -147,10 +153,17 @@ on select_Play  pSelectedLine
    if not isMobile() then 
       start player "audioPlayer"
    else
-      setMobileAudioPlayer "play"
+      setMobileAudioPlayer "audioPlayer", "play"
    end if
    showBusyIndicator false
    put  sSelectionsA["audioFiles"][tSelectNum]["title"] into fld "currentTitleLabel"
+   # Android player covers it!
+   if the platform is "Android" then
+      set the bottom of widget "downloadSelection" to 560 
+   else
+      set the bottom of widget "downloadSelection" to 622
+   end if
+   
    set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][tSelectNum]["cached"] )
    Journal_AddEntry pSelectedLIne
 end select_Play

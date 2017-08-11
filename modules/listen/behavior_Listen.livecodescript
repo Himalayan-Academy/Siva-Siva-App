@@ -383,7 +383,7 @@ function getItemURL pRecordNum
       # its an audio book
       put getMediaURL("audioBook") into sSelectedURL
       put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
-      put  sCurrentPlayListA["audioFiles"]["toc"][tSelectNum]["file"] after sSelectedURL
+      put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
    end if
    return sSelectedURL
 end getItemURL

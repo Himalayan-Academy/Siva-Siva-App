@@ -53,7 +53,7 @@ local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 
 on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
    
-   put "Downloading:" &cr & pTitle into fld "progressTitle"
+   put pTitle into fld "progressTitle"
   
    # store some info in local so we can use these when we send msg
    # back to the calling stack.
@@ -67,7 +67,7 @@ on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
    	
    -- make sure the progress bar is hidden, as this property is used to initialise it
 hide scrollbar "ProgressBar"
-put empty into fld "ProgressField"
+put "Waiting for connection"  into fld "ProgressField"
 put the seconds into sDownloadStart
    	
    -- start the download process, telling Rev to call the "downloadComplete" handler when finished
@@ -144,6 +144,17 @@ command downloadComplete pURL, pStatus
       close this stack
    end if
 end downloadComplete
+
+on mouseup
+   put the short name of target() into tMouseEvent
+   switch tMouseEvent
+      case "cancel"
+         unload sURL
+         close this stack
+         break
+         
+   end switch
+end mouseup
 
 on closestack
    put empty into fld "ProgressTitle"
