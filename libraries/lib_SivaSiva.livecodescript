@@ -108,7 +108,7 @@ command news_Fetch
    else 
        # save it
       put tServerNews into url ("file:/"&tLocalNewsFile)
-      dialog_CustomMsg true, "You have news!"
+      dialog_CustomMsg true,"You have news!",2000
       put "true" into sNewNews
    end if
    # reset the templateField just in case
@@ -155,9 +155,14 @@ end path_HomeLocal
 
 function path_Documents
    put specialFolderPath("documents") into  tPath
-   put "/" after tPath  
-   # remember not to precede path strings to follow with a slash in your 
-   # handlers, double //   works on desktop but not on mobile
+   put "/" after tPath 
+      # remember not to precede path strings to follow with a slash in your 
+   # handlers, double //   works on desktop but not on mobile, especially not on Android   
+   if  not isMobile() then
+      # We may have a desktop version in which case we want all content related to the app to go into a proper folder
+      # in the Users/SomeUser/Documents
+      put "SivaSivaApp/" after tPath
+   end if
    return tPath
 end path_Documents
 
@@ -207,7 +212,7 @@ function path_isFileOnDisk pURL
 end path_isFileOnDisk
 
 function path_FileFromURL pURL
-   put specialFolderPath("documents") into tDF
+   put path_Documents() into tDF
    set the itemdel to "/"
    # make relative:
    if  item 1 of pURL contains "http" then
@@ -271,7 +276,7 @@ end text_TitleCase
 
 # relates to navigation shoulf move with these handlers later:
 # handles both stacks and portal names
-constant kONLINECONTENT= "surprise,website,listen,look,view_SivaSivaBrowser"
+constant kONLINECONTENT= "surprise,website,look,view_SivaSivaBrowser"
 
 
 on ______CONNECTIVITY HANDLERS   
@@ -323,8 +328,9 @@ function connectivity_NotAvailable cardOrStackObject
    else
       repeat for each item x in kONLINECONTENT
          if (cardOrStackObject contains x) then
-            dialog_CustomMsg true,"Offline or Low Bandwidth",1000   
+            dialog_CustomMsg true,"Offline or Low Bandwidth",2000   
             return "offline"
+            # FYI we are letting users open the "Listen" stack even though
             exit repeat
          end if
       end repeat

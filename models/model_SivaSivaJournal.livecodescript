@@ -88,12 +88,7 @@ function journal_convertDate pDateTime
 end journal_convertDate
 
 function Journal_GetDatabasePath
-   if the environment is "development" then
-      -- use temp?
-      return specialfolderpath("documents") & "/journal.sqlite"
-   else
-      return specialfolderpath("documents") & "/journal.sqlite"
-   end if
+      return path_Documents() & "journal.sqlite"
 end Journal_GetDatabasePath
 
 --> Journal | Activities

@@ -201,7 +201,7 @@ end select_ShowDetails
 
 on Journal_AddEntry pSelectedLine
    put  sSelectionsA["playlistTitle"] into tPlayList
-   put tPlayList into pData["playlist"]
+   put tPlayList into pDataA["playlist"]
    put "listen-playlist" into pDataA["card"]
    put pSelectedLine into pDataA["playSelection"]
    put value(pSelectedLine) into tPlayFileLabel

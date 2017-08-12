@@ -99,12 +99,8 @@ function getPref pKey
    end if
 end getPref
 
-function pathForPreferencesFile
-   if the environment is mobile then 
-      return specialfolderpath("documents") & "/sivasiva_preferences.json"
-   else
-      return specialfolderpath("temporary") & "/sivasiva_preferences.json"
-   end if
+on pathForPreferencesFile
+      return path_Documents() & "sivasiva_preferences.json"
 end pathForPreferencesFile
 
 private command _makeSurePreferencesFileExists

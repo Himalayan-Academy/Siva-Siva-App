@@ -195,16 +195,17 @@ command  init_LoadLibraries
          set the itemdel to comma
          put stackName && "loading"
          switch
+            # Always do the libraries first as the may be deps in them required by
+            # other behaviors and models
+              case ("lib" is in stackName)
+               put "libraries/" & stackName & ".livecodescript" into stackName
+               break
             case ("behavior" is in stackName)
                put "behaviors/" & stackName & ".livecodescript" into stackName
                break
             case ("model" is in stackName)
                put "models/" & stackName & ".livecodescript" into stackName
                break  
-            case ("lib" is in stackName)
-               put "libraries/" & stackName & ".livecodescript" into stackName
-               break
-            
            default
                put "modules/" & stackName & ".livecode" into stackName
                break   
@@ -230,9 +231,10 @@ end init_LoadLibraries
 function init_ListStacksToUse
    -- we start using both "library" stacks and "model" stacks
    -- due to bug in the files on Android we must use config to load libraries
-   
+   #Libries must come first because there are dependencies in the
+   # lib_SivaSiva 
 
-   put sConfigA ["models"] & comma & sConfigA ["libraries"] into stackNames
+   put sConfigA ["libraries"] & comma & sConfigA ["models"]  into stackNames
    -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
    return stackNames
 end init_ListStacksToUse
@@ -252,7 +254,8 @@ command init_CreateLocalFolders
    # global libraries, modules, behaviors only update when the app is updated
    # for media we just map to the web server media folder for all types
    
-   put specialFolderPath("documents") & "/"  into tLocalFolderRoot # everything goes here
+   put path_Documents()  into tLocalFolderRoot 
+   # everything goes here path_Documents() alway has a slash 
    # these top level will contain almost everything.
    # jnanam.sqlite and sivasivapreferences are outside on the top level.
    
