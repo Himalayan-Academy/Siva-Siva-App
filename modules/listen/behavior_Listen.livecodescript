@@ -144,6 +144,7 @@ on playlist_QuerySetUp
       case "Sanskrit Chanting"
          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "audio/chant" into sPlaylistQueryA["media_type"]
+         put "YES" into sPlaylistQueryA["approved_for_public"]
          break
       case "The Guru Chronicles" # Audio book
          # for audio books; all we need to know the file ID, which is the folder name

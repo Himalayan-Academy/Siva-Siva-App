@@ -266,6 +266,7 @@ function getMediaItemMetadata pRecords
    put "Artist: " & sMediaMetaA["artists"] into tArtists
    put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
    put sMediaMetaA["description"] into tDescription
+   replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
    put sMediaMetaA["date_created"] into tDateCreated
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated

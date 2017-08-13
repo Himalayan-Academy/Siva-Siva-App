@@ -125,7 +125,8 @@ on select_Play  pSelectedLine
    Put "Connecting..." into fld "currentTitleLabel"
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
    put word 2 of pSelectedLIne into tSelectNum
-   
+   put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA   
+   metadata_SetRecord sSelectedItemA
    put sSelectionsA["audioFiles"][tSelectNum]["myURL"] into sSelectedURL
    
    if sSelectedURL = "" then -- jg: don't continue
@@ -175,12 +176,12 @@ end select_Play
 command select_ShowDetails   
    deleteMobileControl "audioList"
     if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-       put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails"  
+       put textDecode (getMediaItemMetadata(),"UTF8") into fld "audioDetails"
     else
        # its an audio book, lib media doesn't know anything, we have to pass the record here       
-     put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into fld "audioDetails"
+      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
    end if
-  
+
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
