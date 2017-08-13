@@ -281,13 +281,21 @@
             "imageText": "Gurudeva's\n1970\nAudio Course",
             "shortImageFile": "thumb_gurudeva-talks.jpg"
         },
-        "All Satgurus' Talks": {
+        "All Gurudeva Talks": {
             "link": {
               "portal command": "portal_GoStack",
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
-            "imageText": "All \nSatgurus'\nTalks",
+            "imageText": "All \nGurudeva\nTalks",
             "shortImageFile": "thumb_gurudeva-talks.jpg"
+        },
+           "All Bodhinatha Talks": {
+            "link": {
+              "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "All \nBodhinatha\nTalks",
+            "shortImageFile": "thumb_latest-talk-2.jpg"
         },
         "Songs": {
             "link": {
@@ -304,6 +312,22 @@
             },
             "imageText": "The Guru\nChronicles",
             "shortImageFile": "thumb_guru-chronicles.jpg"
+        },
+        "All Recent Additions": {
+            "link": {
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "All Recent\nAdditions",
+            "shortImageFile": "thumb_girl-head-phones.jpg"
+        },
+         "Gujarati Dancing With Siva": {
+            "link": {
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "Gujarati Dancing\nWith Siva",
+            "shortImageFile": "thumb_gujarati-dws.jpg"
         },
         "Fun & Games": {
             "link": {
@@ -396,7 +420,16 @@
                     "rowName": "Sanskrit Chanting"
                 },
                 "6": {
-                    "rowName": "All Satgurus' Talks"
+                    "rowName": "All Gurudeva Talks"
+                },
+                "7": {
+                    "rowName": "All Bodhinatha Talks"
+                },
+                "8": {
+                    "rowName": "All Recent Additions"
+                },
+                "9": {
+                    "rowName": "Gujarati Dancing with Siva"
                 }
               
             },

@@ -141,6 +141,23 @@ on playlist_QuerySetUp
          put "1970" into sPlaylistQueryA["date_created"]
          put "master-course" into sPlaylistQueryA["file_id"]
          break
+      case "Songs" # fetches everything for now.. but nothing new
+         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+         put "audio/song" into sPlaylistQueryA["media_type"]
+         put "YES" into sPlaylistQueryA["approved_for_public"]
+         break
+      case "All Gurudeva Talks" # fetches everything for now.. but nothing new
+         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+         put "inspiredtalk" into sPlaylistQueryA["media_type"]
+         put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
+         put "YES" into sPlaylistQueryA["approved_for_public"]
+         break
+      case "All Bodhinatha Talks" # fetches everything for now.. but nothing new
+         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+         put "inspiredtalk" into sPlaylistQueryA["media_type"]
+         put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
+         put "YES" into sPlaylistQueryA["approved_for_public"]
+         break
       case "Sanskrit Chanting"
          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "audio/chant" into sPlaylistQueryA["media_type"]
@@ -152,12 +169,19 @@ on playlist_QuerySetUp
          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
          break
-      case "Gujarati Dancing with Siva Audiobook" # Audio book
+      case "Gujarati Dancing with Siva" # Audio book
          # for audio books; we need to know the file ID, which is the folder name
          # after that it is a simple path set up.
          put "audiobook" into sPlaylistQueryA["playlistClass"]
          put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
-         break         
+         break   
+      case "All Recent Additions"
+         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
+         put "audio" into sPlaylistQueryA["media_type"]       
+         put "latest" into sPlaylistQueryA["recordType"]   
+         put 50 into sPlaylistQueryA["recordCount"]
+         break      
+         
    end switch
    
    playList_FetchData 
@@ -256,9 +280,11 @@ on playList_FetchData
          --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
          -- put tPlaylistClass into sCurrentPlayList["playlistClass"] 
          
-         # so we have to fetch info from the server
+         # so we have to fetch info from the server 
          
-         put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
+         put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON
+         
+       --  put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
@@ -323,7 +349,11 @@ on playlist_Instantiate sTargetPlayList
          put the keys of sCurrentPlayListA["audioFiles"] into tKeys
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
-            put sCurrentPlayListA["audioFiles"] [x]["Title"] & cr after tTitles
+            put sCurrentPlayListA["audioFiles"] [x]["Title"] after tTitles
+            if sCurrentPlayListA["audioFiles"] [x]["media_type"] ="audio/song" then
+               put ", " &sCurrentPlayListA["audioFiles"] [x]["artists"] after tTitles
+            end if
+            put cr after tTitles
          end repeat
    end switch
    
