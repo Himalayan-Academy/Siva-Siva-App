@@ -161,7 +161,7 @@ function path_Documents
    if  not isMobile() then
       # We may have a desktop version in which case we want all content related to the app to go into a proper folder
       # in the Users/SomeUser/Documents
-      put "SivaSivaApp/" after tPath
+      put "SivaSivaApp/" after tPath 
    end if
    return tPath
 end path_Documents
@@ -227,11 +227,13 @@ function path_FileFromURL pURL
    put (the number of items of pURL)-1 into tFolderCount
    repeat with i = 1 to tFolderCount
       put item 1 to i of pURL into tFolderToCreate
-      if there is no folder tFolderToCreate then
+      if there is no folder (tDF&"/"& tFolderToCreate) then
          create folder (tDF&"/"& tFolderToCreate)
       end if
    end repeat
-   return tDF&"/"&tFolderToCreate &"/" & tFile  # inclues filename after last interaion.
+   return tDF & tFolderToCreate & "/" & tFile   into tCheckURL
+   put tCheckURL
+   return tCheckURL # inclues filename after last interaion.
 end  path_FileFromURL
 
 

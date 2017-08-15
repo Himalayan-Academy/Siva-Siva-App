@@ -44,13 +44,13 @@ command share_MouseEvent
    end if
    
    if sShareItemsA["url"]  is empty then        
-      put "https://www.himalayanacademy.com/sivasiva" into sShareItemsA["url"]
+      put "https://www.himalayanacademy.com/view/sivasiva" into sShareItemsA["url"]
    end if
    if  sShareItemsA["text"] is empty then
-      put "Coming Soon! The new SivaSiva App: a vast realm of marvelous content!" into sShareItemsA["text"]
+      put "The new SivaSiva App: a vast realm of visionary content!" into sShareItemsA["text"]
    end if
    if sShareItemsA["subject"] is empty then
-      put "Coming Soon: the SivaSiva App" into sShareItemsA["subject"]
+      put "SivaSiva App" into sShareItemsA["subject"]
    end if
    
    put urlEncode(sShareItemsA["url"]) into tURLEncodedURL

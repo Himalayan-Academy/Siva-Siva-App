@@ -99,10 +99,10 @@ function getPref pKey
    end if
 end getPref
 
-on pathForPreferencesFile
-      return path_Documents() & "sivasiva_preferences.json"
+function pathForPreferencesFile   
+   return path_Documents() & "sivasiva_preferences.json"
 end pathForPreferencesFile
-
+   
 private command _makeSurePreferencesFileExists
    if there is not a file pathForPreferencesFile() then
       put the defaultfolder into tDF

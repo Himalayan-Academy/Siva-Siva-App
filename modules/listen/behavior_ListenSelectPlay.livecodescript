@@ -19,7 +19,7 @@
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
  
-local sSelectionsA,sSelectedItemA,sSelectedURL
+local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL
 
 on preopencard
    hide player "audioPlayer"
@@ -66,7 +66,7 @@ on mouseup
    put the target into pTarget
    put the short name of the Target  into tTarget   
    put the hilitedlines of fld "audioList"  into tSelectNum
-   
+    
    switch tTarget
       case "AudioList"
          select_Play  clickline()
@@ -122,9 +122,10 @@ end mouseup
 ---------------------------------------------
 
 on select_Play  pSelectedLine
+      put word 2 of pSelectedLIne into tSelectNum
+   put getItemURL(tSelectNum) into sRemoteURL
    Put "Connecting..." into fld "currentTitleLabel"
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
-   put word 2 of pSelectedLIne into tSelectNum
    put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA   
    metadata_SetRecord sSelectedItemA
    put sSelectionsA["audioFiles"][tSelectNum]["myURL"] into sSelectedURL
@@ -210,6 +211,18 @@ on Journal_AddEntry pSelectedLine
    Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
 end Journal_AddEntry
 
+command share_Items 
+   if sRemoteURL is empty then
+      put "https://www.himalayanacademy.com/view/sivasiva" into  tURL
+   else
+      put sRemoteURL into tURL
+   end if
+   put tURL into  sShareItemsA["url"]  
+   put "Listen to This!" into sShareItemsA["subject"]
+   put "Audio available in the SivaSiva app." into sShareItemsA["text"] 
+   return sShareItemsA
+end share_Items
+
 command updateCachedListings pRecordNumber
    put "true" into sSelectionsA["audioFiles"][pRecordNumber]["cached"]
    set the foregroundcolor of line pRecordNumber of fld "audioList" to green
@@ -243,7 +256,7 @@ on closeCard
    end if
 end closeCard
 
--- on closeStack
---    cleanUpGUI
--- end closeStack
 
+on mobileStandaloneSaved pTargetType, pAppBundle
+
+end mobileStandaloneSaved

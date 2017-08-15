@@ -9,7 +9,7 @@ This script  is the behavior assigned to card 1
 # sCurrentRealm is an  integer 1, 2 or 3  not a string!
 
 global sConfigA
-local sOnLine,sCurrentRealm,sViewState
+local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL
 
 
 --> Events
@@ -67,6 +67,7 @@ end closecard
 command fetchQuoteAndImage
    hide widget "loadContext"
    set the uSourceURL of widget "loadContext" to empty
+   
    if sCurrentRealm is empty then
       put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
    end if
@@ -119,6 +120,7 @@ command fetchQuoteAndImage
          # some bogus data in this field so confirm 
          if char 1 to 5 of tSource ="https" then
             set the uSourceURL of widget "loadContext" to tSource
+            put tSource into sCurrentSourceURL  # for sharing 
             show widget "loadContext"
          end if
       end if
@@ -231,13 +233,16 @@ command switchViewState
 end switchViewState
 
 command share_Items
+   put  sCurrentSourceURL into sShareItemsA["url"]  
+   # if url is empty should default to home page for the app
    put fld "gems-quote" into sShareItemsA["text"]
-   put "Gems of Wisdom from SivaSiva.App. Coming out Soon" into sShareItemsA["subject"]
+   put "Gems of Wisdom from SivaSiva.App" into sShareItemsA["subject"]
    return sShareItemsA
 end share_Items
 
 command resetUI
-  set the uSourceURL of widget "loadContext" to empty
+   set the uSourceURL of widget "loadContext" to empty
+   put empty into sCurrentSourceURL
    if the vis of widget "readContext" then
       toggleReadContext "false"
    end if

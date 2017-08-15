@@ -44,8 +44,7 @@ global sConfigA
 on preOpenStack
    set the fullscreenmode of this stack to "showAll"
    -- start using this stack
-    # duplicates what's on the lib_SivaSiva, but we need to fire right away
-   
+   # duplicates what's on the lib_SivaSiva, but we need to fire right away
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
 end preOpenStack

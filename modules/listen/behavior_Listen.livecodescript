@@ -20,7 +20,7 @@
 -----
 
 
-local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA
+local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 
 
@@ -378,7 +378,7 @@ command markCachedItems pKeys
       # this as good a place as any to check for the existence of files  
       # and get the URL for every one in the play list... so we only do this once.
       put getItemURL(x) into pURL
-      # Check and create folders here
+     # Check and create folders here
       put path_isFileOnDisk(pURL) into tLocalStatus
       put item 1 of tLocalStatus into tIsCached
       put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
