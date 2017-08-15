@@ -249,7 +249,7 @@ on cleanUpGUI
 end cleanUpGUI
 
 on closeCard
-   set the acceleratedrendering of this stack to false
+   set the acceleratedrendering of this stack to "false"
    showPlayer "false","audioPlayer"
    if isMobile() then 
       deleteAllMobileControls
