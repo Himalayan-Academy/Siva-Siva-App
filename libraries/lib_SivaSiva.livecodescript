@@ -156,16 +156,16 @@ end path_HomeLocal
 function path_Documents
    put specialFolderPath("documents") into  tPath
    put "/" after tPath 
-      # remember not to precede path strings to follow with a slash in your 
+   # remember not to precede path strings to follow with a slash in your 
    # handlers, double //   works on desktop but not on mobile, especially not on Android   
    if  not isMobile() then
       # We may have a desktop version in which case we want all content related to the app to go into a proper folder
       # in the Users/SomeUser/Documents
       put "SivaSivaApp/" after tPath 
-   end if
-   if not (there is a folder tPath) then  # need for first run ... 
-      create folder tPath
-   end if
+      if not (there is a folder tPath) then  # need for first run ... 
+         create folder tPath
+      end if
+   end if  
    return tPath
 end path_Documents
 
