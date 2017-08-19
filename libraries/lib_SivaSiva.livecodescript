@@ -163,6 +163,9 @@ function path_Documents
       # in the Users/SomeUser/Documents
       put "SivaSivaApp/" after tPath 
    end if
+   if not (there is a folder tPath) then  # need for first run ... 
+      create folder tPath
+   end if
    return tPath
 end path_Documents
 
