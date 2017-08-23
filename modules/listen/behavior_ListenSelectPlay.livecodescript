@@ -50,6 +50,11 @@ on playlist_Reset
    put playlist_GetRecords() into sSelectionsA 
 end playlist_Reset
 
+function checkPlayList
+   return the keys of sSelectionsA
+end checkPlayList
+
+
 -----------------------------------------------------------------------
 # UI Interactions | card, group, list, detail display change ups
 -----------------------------------------------------------------------
@@ -66,7 +71,7 @@ on mouseup
    put the target into pTarget
    put the short name of the Target  into tTarget   
    put the hilitedlines of fld "audioList"  into tSelectNum
-    
+   
    switch tTarget
       case "AudioList"
          select_Play  clickline()
@@ -83,20 +88,13 @@ on mouseup
          set the flipped of pTarget to not detailVis
          break
       case "DownloadSelection" 
-         put the long ID of the target into pRequestedBy
-         if sSelectionsA["playListClass"] ="audiobook" then
-            put sSelectionsA["audioFiles"]["toc"][tSelectNum]["label"] into pTitle
-         else
-          put  sSelectionsA["audioFiles"][tSelectNum]["title"]  into pTitle
-         end if
-         answer  "Download File?" with "Cancel" or "Yes"
-         if it = "yes" then
-            
-            go stack "view_Download"
-            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,tSelectNum,pRequestedBy
-         end if
+         downloadSelection pTarget
          break
-   end switch
+      case "revealMoreActions"
+         put not (the vis of grp "moreActions") into pVis
+       revealMoreActions pVis
+      break
+end switch
 end mouseup
 
 ---------------------------------------------
@@ -191,15 +189,49 @@ command select_ShowDetails
    send "CreateScroller audioDetails" to fld "audioDetails"
 end select_ShowDetails
 
-# we should create a global library for all things text and just pass params
-# for now: 
-# ignore for now... trying hilited lines and use color to show cached status
--- on resetLines
---        set the hilitedlines of fld "audioList" to 0
---    repeat with x = 1 to the number of lines of fld "audioList"
---       set the foregroundcolor of line x of  fld "audioList" to 251,240,200
---    end repeat
--- end resetLines
+command revealMoreActions pVis
+   
+   --pVis = boolean
+   
+   if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
+      set the vis of bg "moreActions" to pVis
+      exit revealMoreActions
+   end if 
+   if  pVis <> false  then -- show it
+      --jg: horiz centering for mobile screens:
+      set the loc of grp "moreActions" to the loc of this cd
+      set the bottom of grp "moreActions" to 0
+      put empty into fld "searchString" of grp "moreActions"
+      set the vis of group "moreActions" to true
+      moveGrp "moreActions", 0, the height of grp "moreActions", 500
+      focus on fld "searchString" --jg: force mobile keyboard
+      select after fld "searchString"
+   else -- hide it
+      focus on nothing
+      moveGrp "moreActions", 0, -(the height of grp "moreActions"), 500
+      hide group "moreActions"
+      put empty into fld "searchString"
+   end if  
+   
+end revealMoreActions
+
+
+--------------
+
+command downloadSelection pTarget
+    put the long ID of pTarget into pRequestedBy
+         if sSelectionsA["playListClass"] ="audiobook" then
+            put sSelectionsA["audioFiles"]["toc"][tSelectNum]["label"] into pTitle
+         else
+            put  sSelectionsA["audioFiles"][tSelectNum]["title"]  into pTitle
+         end if
+         answer  "Download File?" with "Cancel" or "Yes"
+         if it = "yes" then
+            
+            go stack "view_Download"
+            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,tSelectNum,pRequestedBy
+         end if
+end downloadSelection
 
 on Journal_AddEntry pSelectedLine
    put  sSelectionsA["playlistTitle"] into tPlayList
@@ -260,3 +292,8 @@ end closeCard
 on mobileStandaloneSaved pTargetType, pAppBundle
 
 end mobileStandaloneSaved
+
+
+on errorDialog pExecutionError, pParseError
+
+end errorDialog

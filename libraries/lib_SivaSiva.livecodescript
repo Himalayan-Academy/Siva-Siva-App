@@ -344,8 +344,14 @@ function connectivity_NotAvailable cardOrStackObject
 end connectivity_NotAvailable
 
 
-on _____VISUALS
-end _____VISUALS
+on _____VISUALSandUI
+end _____VISUALSandUI
+
+on moveGrp pGrpName, pHorz, pVert, pSpeed -- use move instead of visual effect to prevent Android issues
+  -- pass 0 pHorz for vertical move and 0 to pVert to horizontal move
+  put pHorz,pVert into tPt
+  move grp pGrpName relative tPt in pSpeed milliseconds
+end moveGrp
 
 # you cannot delete a control from it's own behavior
 # so this:

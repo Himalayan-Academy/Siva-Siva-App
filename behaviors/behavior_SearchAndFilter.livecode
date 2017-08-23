@@ -1,0 +1,51 @@
+﻿script "behavior_SearchAndFilter"
+
+###################
+-- BR: 2016-10-13
+-- DESCRIPTION:
+-- General purpose  library for searchs and filters 
+-- Assumes are that we pass three different data classes here
+-- 1) an array of records from Jnanam
+-- 2) a list, as from a list field or datagrid
+-- 3) search a block of text and return results to do generic actions
+-- 4) follows from #3 above but target is a field, and we colorize the text or set links text etc.
+-- presumably these funtions will be generic enough to use across different stacks/cards/contexts
+-- this behavior can be attached to a group where the mouse down passes the target
+-- and based on the target or parent of target different actions are taken
+-- if functionality for the results is unique ot the calling context, this script just returns results
+-- and the calling context decides what to do with it
+-- REQUIREMENTS:
+-- minimally you must have this behavior attached to a group containing
+-- 1) button "search"
+--  2) field "searchString"
+
+###################
+
+on mouseup
+   put the short name of the target into pTarget
+   put the long owner of the target into tOwner
+   split tOwner with " of "
+   put the number of lines of the keys of tOwner into tLevels
+   repeat with x = 1 to tLevels
+      put tOwner[x] & cr after tHierarchy
+   end repeat
+   put tHierarchy
+   switch pTarget
+      case "search"
+         if fld "searchString" is empty then
+            answer "Please enter a search string" with "OK"
+            exit to top
+         else
+            
+            runsearch pClass, pContent
+         end if
+         break
+   end switch
+end mouseup
+
+
+
+
+
+
+
