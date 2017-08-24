@@ -18,34 +18,98 @@
 -- minimally you must have this behavior attached to a group containing
 -- 1) button "search"
 --  2) field "searchString"
+-- 3) classes for search are 
+--                  dbaseRecords
+--                  listLInes
+--                  fieldText
+--                  [later we will have datagrids to consider here...]
+-- At this level for all intents and purposes search and filter are the same
+-- we don't want to use the rawkeydown style of filtering on mobile
+-- it even very non-performant in long lists on desktop.
+-- just keep original data in a var; search that var; use results and reset as needed.
 
 ###################
 
+local sSearchClass,sCallContext,sPlaylistQueryA
+
 on mouseup
-   put the short name of the target into pTarget
-   put the long owner of the target into tOwner
-   split tOwner with " of "
-   put the number of lines of the keys of tOwner into tLevels
-   repeat with x = 1 to tLevels
-      put tOwner[x] & cr after tHierarchy
-   end repeat
-   put tHierarchy
-   switch pTarget
-      case "search"
-         if fld "searchString" is empty then
-            answer "Please enter a search string" with "OK"
-            exit to top
-         else
-            
-            runsearch pClass, pContent
-         end if
+   put getTargetOwnerSegs(the target) into sCallContext
+   
+   switch 
+      case (sCallContext contains "listen-playlist")
+         searchPlayList
          break
    end switch
+   
 end mouseup
 
+------------------------------------------------------------------------
+#  UNIQUE SEARCHES FOR DIFFERENT MODULES ARE ADDED HERE
+# there is a diversity of requirements and use cases 
+# but we only ever look up this kind of data for a cached list
+# i.e. never for recent or audio books, which go to the server.
+# all we need to do is pass a new query up to behavior_Listen.playList_FetchData
+------------------------------------------------------------------------
 
+command searchPlayList
+   put "cached" into tFilterListQueryA["playListClass"]   
+   put playlist_GetCurrent() into tPlayList
+   switch
+      case  (tPlayList= "Songs") # unique seach criteria:
+         put "audio/song" into tFilterListQueryA["media_type"]
+         put the hilitedbuttonname of grp "deity"  into tDeity
+         if tDeity is not "All" then
+            put tDeity into tFilterListQueryA["deity"]
+         end if
+         put the hilitedbuttonname of grp "genre" into tGenre
+         if tGenre is not "All" then
+            put tGenre into tFilterListQueryA["genre"]
+         end if
+         put fld "searchstring" into tStringToFind  
+         put the hilitedButtonName of grp "textColumns" into tTextTarget
+         if (tStringToFind is not empty) AND (tTextTarget is empty) then
+            put "Pick Title, Description or Artist" into fld "searchString"
+            wait 1 second
+            put tstringToFind into fld "searchstring"
+            exit to top
+         else
+            put tStringToFind into tFilterListQueryA[tTextTarget]         
+         end if
+         break
+      case (tPlayList contains "Talks")
+         
+         put "inspiredtalk" into tFilterListQueryA["media_type"]
+         if tPlayList contains "Gurudeva" then 
+            put  "Satguru Sivaya Subramuniyaswami" into tFilterListQueryA["author"]
+         end if
+         if tPlayList contains "Bodhinatha" then 
+            put  "Satguru Bodhinatha Veylanswami" into tFilterListQueryA["author"]
+         end if
+         put fld "searchstring" into tStringToFind  
+         put the hilitedButtonName of grp "textColumns" into tTextTarget
+         if tTextTarget = "Subtitle" then
+            put "sub_title" into tTextTarget # has to match the dBase column name
+         end if
+         if (tStringToFind is not empty) AND (tTextTarget is empty) then
+            put "Pick Search In" into fld "searchString"
+            wait 1 second
+            put tstringToFind into fld "searchstring"
+            exit to top
+         else
+            put tStringToFind into tFilterListQueryA[tTextTarget]         
+         end if
+         
+   end switch
+   
+   revealMoreActions "false"
+   playList_fetchData tFilterListQueryA
+   show widget "revealMoreActions"
+   
+end searchPlayList
 
-
-
+------------------------------------------------------------------------
+#  GENERIC SEARCH CLASS FUNCTIONS BELOW
+# dbaseRecords,listLines,fieldText
+------------------------------------------------------------------------
 
 

@@ -30,24 +30,22 @@ on openCard
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
    playlist_Reset 
-   
+   put sSelectionsA["playListTitle"] into tTitle
+   if (tTitle ="Songs" OR tTitle contains "Talks") AND  (sSelectionsA["playListClass"] = "cached" ) then
+      set the vis of widget "revealMoreActions" to true
+   else
+       set the vis of widget "revealMoreActions" to false # just in case it's hanginh around visible
+    end if
 end openCard
 
 
 
-on playlist_SetSelections pFilter
-   # begins with the entire array of the playlist
-   put playlist_GetRecords() into sSelectionsA 
-   if pFilter is empty then
-      # do nothing... an offer filters later
-   else
-      # do some filtering of current play list in V2
-   end if
+on playlist_SetSelections pFilteredPlayList
+   # begins with the entire array of the playlist 
 end playlist_SetSelections
 
-# if a filter ran, we can get the whole list back:
 on playlist_Reset
-   put playlist_GetRecords() into sSelectionsA 
+      put playlist_GetRecords() into sSelectionsA   
 end playlist_Reset
 
 function checkPlayList
@@ -191,6 +189,7 @@ end select_ShowDetails
 
 command revealMoreActions pVis
    
+
    --pVis = boolean
    
    if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
@@ -198,15 +197,34 @@ command revealMoreActions pVis
       exit revealMoreActions
    end if 
    if  pVis <> false  then -- show it
+      set the acceleratedRendering of this stack to false
       --jg: horiz centering for mobile screens:
+      set the hilitedbuttonName of grp "deity" to "All"
+      set the hilitedbuttonName of grp "genre" to "All"
+      set the hilitedbuttonName of grp "textColumns" to empty
       set the loc of grp "moreActions" to the loc of this cd
       set the bottom of grp "moreActions" to 0
       put empty into fld "searchString" of grp "moreActions"
+         # Set up the form ahead of time
+   # we hide everything not needed for talks
+   if sSelectionsA["playListTitle"] contains "Talks" then
+      hide grp "songProperties"
+      hide button "artists" of grp "textColumns"
+      show button "Subtitle" of grp "textColumns"
+   end if
+   if sSelectionsA["playListTitle"] = "Songs" then
+        show grp "songProperties" 
+      hide button "Subtitle" of grp "textColumns"
+      show button "Artists" of grp "textColumns"
+      end if
       set the vis of group "moreActions" to true
       moveGrp "moreActions", 0, the height of grp "moreActions", 500
+       put "Leave All Empty to Reset" into fld "searchString"
+      wait 1 second; put empty into fld "searchString"
       focus on fld "searchString" --jg: force mobile keyboard
       select after fld "searchString"
    else -- hide it
+      set the acceleratedRendering of this stack to true
       focus on nothing
       moveGrp "moreActions", 0, -(the height of grp "moreActions"), 500
       hide group "moreActions"
@@ -274,6 +292,7 @@ on cleanUpGUI
    put empty into fld "currentTitleLabel" of this card
    set the filename of player "audioPlayer"  of this card to empty
    hide fld "audioDetails" of this card
+   hide widget "revealMoreActions"
    hide widget "downloadSelection"
    put empty into fld "audioDetails" of this card
    showPlayer "false", "audioPlayer" 

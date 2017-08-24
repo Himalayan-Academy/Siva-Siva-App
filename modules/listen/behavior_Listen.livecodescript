@@ -45,8 +45,8 @@ on openstack
 
    put portal_GetLastLinkTitle() into sTargetPlayList   
    
-    playlist_SetCurrent sTargetPlayList
-   
+   playlist_SetCurrent sTargetPlayList
+    
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
@@ -200,7 +200,12 @@ end playlist_QuerySetUp
 # PARAMS: everything is taken from the sCurrentPlaylistA array
 -----------------------------------------------------------------------
 
-on playList_FetchData
+on playList_FetchData pQueryArray
+   
+   if pQueryArray is not empty then # we are passing a query from the search behavior
+      put pQueryArray into sPlaylistQueryA
+   end if
+   
    
    # we can put in the title and image right away
    

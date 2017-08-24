@@ -271,3 +271,25 @@ getprop stack_Folder
    put empty into item -1 of stackFolder
    return stackFolder
 end stack_Folder
+
+
+--------------------------------
+on UTILITIES
+end UTILITIES
+
+function getTargetOwnerSegs
+   # expects the long ID of a control
+   put the long owner of the target into tOwner
+   split tOwner with " of "
+   put the keys of tOwner into tKeys
+   sort tKeys ascending numeric
+   repeat for each line x in tKeys
+      put the short name of tOwner[x] & comma after tSegs
+   end repeat
+   delete char -1 of tSegs
+   return tSegs
+   # item 1 will be  the name of the target control
+   # item -1 =  the stack name
+   # item -2- the card name
+   # Other keys in between will be group names.   
+end getTargetOwnerSegs
