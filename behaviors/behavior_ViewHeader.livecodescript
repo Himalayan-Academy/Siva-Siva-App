@@ -46,16 +46,23 @@ on mouseUp
    put the mouseAction of me into tActionName
    switch tActionName
       case "back"
-         -- portal_GoStack "Siva-Siva-App"
-         go to stack "Siva-Siva-App"
+         portal_Go "Our Website"
          break
       case "add"
          -- log_Clear
          -- put log_Fetch() into fld "Body"
          sivasiva_ToggleOrientation
          break
+      case "test"
+         repeat with x = 1 to (the number of controls of this card)
+            put the short name of control x of this card into tControl
+            put tControl & " | vis:  "& the vis of control tControl & cr  after tOutput
+         end repeat
+         put "URL: " &  the url of widget body after tOutput
+            put tActionName & cr & tOutput
+         break
       default
-         put tActionName
+         put tActionName & cr & tOutput
    end switch
 end mouseUp
 

@@ -14,46 +14,50 @@ local LocalArray
 --> Working on
 -
 getprop row_BackgroundColour
-   put the row_View [1] of _scrollingView() into rowView
-   put the background_Colour of rowView into someColour
-   return someColour
+    put the row_View [1] of _scrollingView() into rowView
+    put the background_Colour of rowView into someColour
+    return someColour
 end row_BackgroundColour
 
 setprop row_BackgroundColour someColour
-   put the row_Views of _scrollingView() into rowViews
-   lock screen
-   repeat for each line rowView in rowViews
-      set the background_Colour of rowView to someColour
-   end repeat
-   unlock screen
+    put the row_Views of _scrollingView() into rowViews
+    lock screen
+    repeat for each line rowView in rowViews
+        set the background_Colour of rowView to someColour
+    end repeat
+    unlock screen
 end row_BackgroundColour
 
 getprop background_Transparent
-   put the showBorder of me into someBoolean
-   return someBoolean
+    put the showBorder of me into someBoolean
+    return someBoolean
 end background_Transparent
 
 setprop background_Transparent someBoolean
-   if the long id of the target is not the long id of me then pass background_Transparent
-   lock screen
-   set the showBorder of me to someBoolean
-   set the opaque of me to someBoolean
-   set the background_Transparent of _scrollingView() to (not someBoolean)
-   unlock screen
+    if the long id of the target is not the long id of me then pass background_Transparent
+    lock screen
+    set the showBorder of me to someBoolean
+    set the opaque of me to someBoolean
+    set the background_Transparent of _scrollingView() to (not someBoolean)
+    unlock screen
 end background_Transparent
 
 
 --> Events
 -
 on preOpenControl
-   -- bug: for some reason we occasionally lose references to nested behaviors
-   portal_InitBehaviors
+    if the short name of me is "app-bkgnd" then
+        exit preOpenControl
+    end if
+    
+    -- bug: for some reason we occasionally lose references to nested behaviors
+    portal_InitBehaviors
 end preOpenControl
 
--- on resizeControl
--- resizing not active
-LayoutControl
-end resizeControl
+-- -- on resizeControl
+-- -- resizing not active
+-- LayoutControl
+-- end resizeControl
 
 command portal_InitBehaviors
    put _headerView() into headerView
@@ -177,15 +181,25 @@ setprop portal_Name portalName
 end portal_Name
 
 private command portal_ResetMobileScrollerRect
-   # DTB: added to reset the mobile scroller
-   if the environment is "mobile" then
-      -- put the rect of me into scrollingViewRect
-      -- put the formatted_VerticalRect of me into fRect
-      -- scroller_SetRect pIdOrName, scrollingViewRect, fRect
-      mobileControlSet "portal scroller", "vScroll" , 0
-   else
-      -- could set the vScrolll to 0
-   end if
+    # DTB: added to reset the mobile scroller
+    put _scrollingView() into scrollingView
+    if the environment is "mobile" then
+        -- put the rect of me into scrollingViewRect
+        -- put the formatted_VerticalRect of me into fRect
+        -- scroller_SetRect pIdOrName, scrollingViewRect, fRect
+        # BR this is not working... we end up with the same rect as the smaller scroller
+        # with less rows.
+        --mobileControlSet "portal scroller", "vScroll" , 0 
+        --mobileControlSet scrollingView, "rect" , (the rect of scrollingview)
+        # Let's try deleting and recreating. This works
+        # when we explicity delete from another open stack
+        # but when in the same stack we have to run it again:
+        scroller_Delete "portal scroller"
+        --         # using David's method here... it works on the init... should work here too.
+        set the mobile_VerticalScroller of scrollingView to "portal scroller"
+    else
+        -- could set the vScrolll to 0
+    end if
 end portal_ResetMobileScrollerRect
 
 getprop portal_Header
@@ -224,7 +238,7 @@ end logo_Faded
 --> Object
 -
 getprop portal_View
-   return the long id of me
+   return the long id of grp "SivaSiva Portal Scrolling" -- me
 end portal_View
 
 getprop layout_View
@@ -253,7 +267,7 @@ getprop header_View
 end header_View
 
 private function _headerView
-   put the long id of group "Portal Image header" of me into headerView
+   put the long id of group "Portal Image header" into headerView -- of me into headerView
    return headerView
    
    -- won't work if the behavior is not resolving
@@ -263,7 +277,7 @@ private function _headerView
 end _headerView
 
 private function _scrollingView
-   return the long id of control "SivaSiva Portal Scrolling" of me
+   return the long id of control "SivaSiva Portal Scrolling" -- of me
 end _scrollingView
 
 private function _navigationView

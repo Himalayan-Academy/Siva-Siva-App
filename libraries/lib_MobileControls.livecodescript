@@ -83,7 +83,7 @@ end scroller_SetRect
 
 
 --> Mobile | Scroller | Events
--David's method
+--David's method
 on scrollerDidScroll hScrolled, vScrolled
    -- this message is sent to the same object that created the mobile scroller (this library)
    -- would prefer to move it to a behavior that an be used in multiple places
@@ -104,9 +104,9 @@ on scrollerDidScroll hScrolled, vScrolled
 end scrollerDidScroll
 
 --> Mobile | Scroller
--
+--
 setprop mobile_VerticalScroller [fRect] mobileScrollerName
-   -- we could also store some information about the scroller as a group property
+   -- we could also store some information about the scroller as a group property ?
    -- for now let's just use the mobileScrollerName
    put the long id of the target into scrollerView
    put scrollerView into LocalArray ["scrollerView"]
@@ -151,16 +151,6 @@ command scroller_Delete mobileScrollerName
    return mobileControls()
 end scroller_Delete
 
-command scroller_DeleteAll
-   if the environment is not "mobile" then return false
-   put mobileControls() into allControls
-   repeat for each line mobileScrollerName in allControls
-      mobileControlDelete mobileScrollerName
-   end repeat
-   answer ("scroller_DeleteAll" & CR & allControls)
-   return allControls
-end scroller_DeleteAll
-
 command scroller_Create mobileScrollerName
    -- create if mobile scroller does not exist already (returns a unique id)
    if the environment is not "mobile" then return false
@@ -195,6 +185,7 @@ end scroller_ShowVertical
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
+local sPlayerId 
 local pPlayerName -- jg: may not need this any more; check
 
 ---------------------------------------------------------------------------------------
@@ -215,14 +206,18 @@ local pPlayerName -- jg: may not need this any more; check
 ---------------------------------------------------------------------------------------
 
 
-command createMobileAudioPlayer pURL, pPlayerName
+command createMobileAudioPlayer pURL, pPlayerName,tRect
    if pPlayerName is among the lines of mobileControls() then mobileControlDelete pPlayerName -- init
    mobileControlCreate "player",pPlayerName
    put the result into sPlayerId
    -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
-   put the rect of player pPlayerName into tRect 
+   if tRect is empty then
+      put the rect of player pPlayerName into tRect 
+   end if   
    if the platform is "android" then -- android player controls appear above the player; adjust
       -- with controller it's about 4x rect of cd player so align the botom edges:
+      # this his hard wired to the bottom of the card for now.
+      put (the height of this card)  -70  into item 4 of tRect
       put item 4 of tRect - item 2 of tRect into tHeight
       subtract tHeight from item 2 of tRect
    end if
@@ -243,14 +238,18 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    end if
 end playerPropertyAvailable
 
-command setMobileAudioPlayer pState --jg: control the state of the mobile player
+command setMobileAudioPlayer pPlayerName, pState,pTimeStamp --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
    mobileControlDo pPlayerName, pState
    if pState = "stop" then
       showBusyIndicator false -- in case it's still showing
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
-      if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
+      if mobileIdleTimerLocked() is true then 
+         mobileUnlockIdleTimer
+      end if
+   else 
+      mobileControlSet pPlayerName, "currentTime", pTimeStamp
    end if
 end setMobileAudioPlayer
 
@@ -290,8 +289,11 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    if not isMobile() then exit deleteAllMobileControls
    put mobileControls() into tList
    repeat for each line l in tList
-      mobileControlDelete l
-   end repeat
+      if l contains "audioPlayer" then
+      next repeat
+   end if  
+   mobileControlDelete l
+end repeat
 end deleteAllMobileControls
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
@@ -307,5 +309,3 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
       end if
    end if
 end showBusyIndicator
-
-

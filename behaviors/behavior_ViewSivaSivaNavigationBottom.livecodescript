@@ -9,8 +9,122 @@ version: 0.1
 
 --> Variables
 -
+global sConfigA
 local LocalArray
 
+--> Events
+-
+on mouseDown
+   # bug: this behavior is getting events outside the rect of the object it was assigned to
+   # we have to check what's the target
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      switch btnName
+         case "bottomTabBkgnd"
+            -- do nothing
+            break
+         default
+            set the hilite of btnObject to true
+            if the environment is "development" then
+             #  put btnName
+            end if
+      end switch
+   end if
+end mouseDown
+
+on mouseUp pWhichButton
+   put the short name of the target into tTarget
+   if  (tTarget is among the lines of the childControlNames of me) then
+      put the long id of the target into btnObject
+      put the short name of btnObject into btnName
+      if btnName = "bottomTabBkgnd" then pass mouseUp
+      
+      put btnName into mCommand
+      replace "-" with empty in mCommand
+      put "sivasiva_" before mCommand
+      
+      put the highlite of btnObject into someBoolean
+      set the highlite of btnObject to false
+      
+      dispatch mCommand with btnObject, someBoolean
+      switch it
+         case "handled"
+            break
+         case "unhandled"
+         default
+          #  _displayMouseUpCommand
+      end switch
+   end if
+end mouseUp
+
+
+--> AAG | Hopefully navigation
+
+command sivasiva_AddFavorites
+   portal_GoStack "Journal"
+end sivasiva_AddFavorites
+
+command sivasiva_SettingsGear
+   --display_Log
+   if the short name of this stack is "settings" then
+      dialog_CustomMsg true,"You are at settings."
+   else
+      portal_GoStack "settings"
+   end if
+end sivasiva_SettingsGear
+
+command sivasiva_Share
+   put sConfigA["shareControl"] into tShareControl
+        if exists (widget "body") then # we are in the browser... need to move it up out of the way
+         set the top of widget "body" to -50
+      end if
+   if (exists(group "share-ui" of this card) ) then 
+      set the left of grp "share-ui" to 0
+      # we had to get it off screen for Android 
+      # here we put it a back.
+      show group "share-ui" with visual dissolve very fast
+   else
+      copy tShareControl to this card
+   end if
+end sivasiva_Share
+
+
+   # should be adequate for the portals
+   
+   # Some stacks have their bottom 4 squares button empty
+   # if so, the handler hits here
+   # we use a case statement because 
+   # different stack may require different response to 
+   # that button event
+   
+   command sivasiva_GoHomePortal
+      switch (the short name of this stack)
+         case "Siva-Siva-Portal"
+            if portal_GetCurrent()="home" then
+               dialog_CustomMsg true,"You Are Home!"
+               else
+                  portal_Link "home"
+                  end if
+            break
+      end switch
+
+end sivasiva_GoHomePortal
+
+
+
+
+-----------------------------------------------------------------------
+# All of Davids Layout commands and prop setters are below
+# please use the above section for actual navigation
+# later we may deprecate everything below for something simple
+# OTOH it  could be userful for layout the controls when stack are resized
+-----------------------------------------------------------------------
+
+
+getprop Layout_Handlers_Begin_Here
+end Layout_Handlers_Begin_Here
 
 --> Work in Progress
 -
@@ -94,48 +208,16 @@ command layout_SpreadHorizontally pRect
    end repeat
 end layout_SpreadHorizontally
 
-
---> Events
--
-on mouseDown
-   put the long id of the target into btnObject
-   put the short name of btnObject into btnName
-   switch btnName
-      case "bottomTabBkgnd"
-         -- do nothing
-         break
-      default
-         set the highlite of btnObject to true
-         if the environment is "development" then
-            -- put btnName
-         end if
-   end switch
-end mouseDown
-
-on mouseUp pWhichButton
-   put the long id of the target into btnObject
-   put the short name of btnObject into btnName
-   if btnName = "bottomTabBkgnd" then pass mouseUp
-   
-   put btnName into mCommand
-   replace "-" with empty in mCommand
-   put "sivasiva_" before mCommand
-   
-   put the highlite of btnObject into someBoolean
-   set the highlite of btnObject to false
-   
-   dispatch mCommand with btnObject, someBoolean
-   switch it
-      case "handled"
-         break
-      case "unhandled"
-      default
-         -- _displayMouseUpCommand
-   end switch
-end mouseUp
-
 on resizeControl
-   LayoutControl
+   if not isMobile() then 
+      put the childControlNames of me into tNavControls
+      if the short name of the target is among the lines of tNavControls then
+         LayoutControl
+      end if
+   else
+      LayoutControl
+   end if
+   
 end resizeControl
 
 
@@ -432,3 +514,5 @@ command margin_Normalize @someMargin, @leftM, @topM, @rightM, @bottomM
    end if
    put leftM,topM,rightM,bottomM into someMargin
 end margin_Normalize
+
+

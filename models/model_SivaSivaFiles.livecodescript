@@ -99,7 +99,11 @@ function sivasiva_ProjectStackPath
 end sivasiva_ProjectStackPath
 
 function sivasiva_ProjectFolder pRelativeFolderPath
-   put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   if there is a stack "Siva-Siva-App" then 
+      put project_HomeFolder ("Siva-Siva-App") into projectFolder
+   else
+      put project_HomeFolder ("lib_SivaSivaRoot") into projectFolder
+   end if
    if pRelativeFolderPath is not empty then
       put pRelativeFolderPath after projectFolder
       if char -1 of projectFolder is not slash then put slash after projectFolder
@@ -112,13 +116,9 @@ function project_HomeFolder homeStackName
       put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
       put slash after projectHomeFolder
    else
-      -- the commented out lines make the code below work on mobile
-      -- put the defaultstack into oStack
-      -- set the defaultstack to homeStackName
       set the itemdelimiter to slash
       put the filename of stack homeStackName into projectHomeFolder
       put empty into item -1 of projectHomeFolder
-      -- set the defaultstack to oStack
    end if
    return projectHomeFolder
 end project_HomeFolder
@@ -215,7 +215,7 @@ end sivasiva_PhotosFolder
 
 --> SivaSiva | Asset | Folders
 -
-function sivasiva_AssetFolder pRelativeFolderPath
+function sivasiva_AssetFolder  pRelativeFolderPath
    put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
    if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
    return sharedAssetFolder
@@ -278,8 +278,30 @@ function sivasiva_ListPhotoFolders
    return photoFolderNames
 end sivasiva_ListPhotoFolders
 
+function sivasiva_ListAssetsFolders
+   put specialFolderPath("resources") & "/assets" into tAppAssetsFolder
+   put folders(tAppAssetsFolder) into assetsFolders
+   filter assetsFolders without ".."
+   return assetsFolders
+end sivasiva_ListAssetsFolders
+
 function sivasiva_ListModuleFolders
-   put sivasiva_GetModuleRootFolder() into modulesFolder  
-   put folder_ListShort (modulesFolder) into moduleNames
+   put specialFolderPath("resources") & "/modules" into tAppPkgModules
+   put folders(tAppPkgModules) into moduleNames
+   filter moduleNames without ".."
    return moduleNames
 end sivasiva_ListModuleFolders
+
+command check_CreateFolder pTargetFolder
+   if there is a folder (pTargetFolder) then 
+       # do nothing
+      else
+        create folder pTargetFolder
+      end if   
+   end check_CreateFolder
+   
+
+
+command checkFilesModelIsInUse
+   answer "Yes File Model here!" with "OK"
+end checkFilesModelIsInUse

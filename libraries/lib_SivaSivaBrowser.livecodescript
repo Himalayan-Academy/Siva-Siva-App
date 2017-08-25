@@ -1,10 +1,77 @@
 ﻿script "lib_SivaSivaBrowser"
+/* Brahmanathawami June 2017 --
+
+David's code below target the two HAP media stacks. 
+These are pretty much deprecated but we retain the code here for possible future utility
+New functions/Commands on top. These are to handle any calls form anywhere relating
+to web browsing, the browser widget so we hae all this in one place.  
+IIf you are tempted to write code pertaining to a browser widget in our module. 
+Think first: can we put those functons andcommands here, so they can be used universally later.
+
+*/
+
+local sLastWebPageTitle, sLastWebURL
+
+# we store the <title> in the <head> here so we can reference this later the journal.
+# hopefully this will clue the user into what page they were viewing.
+# requires the web site has "intelligent" titles, which most pages do for SEO reasons)
+
+command parseTheHTML pHtmlText, pTargetString
+   # use for scraping out anything from the htmltext of a browser widget
+   # must call *after* URL loads
+   switch pTargetString
+      case "Title"
+         put (offset ("<Title>", pHTMLText) +7) into tStartTitle
+         put (offset ("</Title>", pHTMLText) -1) into tEndTitle
+         put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
+         replace cr with "" in tRawTitle
+         replace tab with "" in tRawTitle
+         # we are inconsistent in the title delimiter passed in our CMS
+         # sometime the leading "realm" is separated by a colon, other time a dash
+         replace ": " with "-" in tRawTitle # normalize all those...
+         set the itemdel to "-" # set up for two part titles
+         if tRawTitle contains "YouTube" then # leave it alone
+            put "YouTube" into sLastWebPageTitle  # upgrade this later... 
+         else # from our web site
+            if browser_GetLastURL() contains "/book/" then
+               # pass just the first words
+               put word 1 to 5 of tRawTitle into tRawTitle
+            else
+               # not a book page...
+               if the number of items of tRawTitle = 2 then
+                  put item 2 of tRawTitle into tRawtitle
+               end if
+               If char 1 of tRawTitle = " " then 
+                  delete char 1 of tRawTitle
+               end if   
+            end if
+            
+         end if
+         put tRawTitle into sLastWebPageTitle
+         break
+   end switch
+end parseTheHTML
+
+function browser_GetLastPageTitle
+   return sLastWebPageTitle
+end browser_GetLastPageTitle
+
+command browser_SetLastURL pWebURL
+   put pWebURL into sLastWebURL
+end browser_SetLastURL
+
+function browser_GetLastURL
+   return sLastWebURL
+end browser_GetLastURL
+
+########### MOSTLY OBSOLETE: 
+
 --> MetaData
--
-license: GPLv3
-name: lib_SivaSivaBrowser
-type: library
-version: 0.1
+
+-- license: GPLv3
+-- name: lib_SivaSivaBrowser
+-- type: library
+-- version: 0.1 by: David Bovill
 
 
 --> From API | Web Browser API
@@ -31,14 +98,31 @@ This dynamic resizing works fine when a stack in the default (empty) - "set the 
 While using 'showAll' it is not possible to have two cards in the same stack one portrait orientation and then dynamically change the size of the stack and resize the browser widget.
 There are currently two fixes:
 
-- to have two different stacks preset for portrait or landscape. So we have to pass the orientation to fork to the correct Stack(s) which are put into use on start up as a lib
-- use responsive design and "set the fullscreenmode of this stack to empty"
+1) to have two different stacks preset for portrait or landscape. So we have to pass the orientation to fork to the correct Stack(s) which are put into use on start up as a lib
+2) use responsive design and "set the fullscreenmode of this stack to empty"
+
+BR: Note this stack offers options to use 1) above to fork  between
+hapMediaViewerPortraitLib and hapMediaViewerLandscapeLib
+but as of V1 these are not in use and all URLs are passed viea Portal_GoURL
+to Davids responsive view_SivaSivaBrowser stack
+which defaults to portrait orientation and responds 
+when and if the users rotates the device.
+
+But since this lib is put into use on init, we can use it to our advantage for all
+all "vars needed for web browsing.  e.g. to store the last URL viewed in the web browser stack as a local 
+so that value can be accessed by the journal before it is wiped out and also use to go back if necessary,
+to the same web page.
 
 */
 
 
+
+
+
 --> Browser | Public API
--
+--> BR: all the following apply to the two HapMedia viewer stacks, mostly deprecated 
+
+
 command launchAudio pURL, pOptionalImage
    -- temporarily using launchURL for this one.
    launchURL pURL
@@ -48,6 +132,7 @@ command launchBook pFileID
    get "https://www.himalayanacademy.com/book/" & pFileID
    launchURL it
 end launchBook
+
 
 command launchURL pOrientation, pURL
    if pOrientation = "" then -- try to determine based on media type
@@ -63,7 +148,7 @@ command launchURL pOrientation, pURL
    if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
    go card "web viewer" of stack tNewViewer
    set the URL of widget "browser" of stack tNewViewer to pURL
-   if tOldViewer is in the openStacks then close stack tOldViewer -- device was rotated; close orig viewer
+   if tOldViewer is in the openStacks then delete stack tOldViewer -- device was rotated; close orig viewer
 end launchURL
 
 
@@ -86,10 +171,3 @@ function getOrientationByType pURL -- return correct orientation for a URL;
          return "any" -- allows rotation
    end switch
 end getOrientationByType
-
-function pingServer
-   -- currenlty ony used by stack "gems"
-    --jg: UTF8 text file on server should contain only the word "true"
-   get url "https://www.himalayanacademy.com/ping.txt"
-   return textDecode(it,"UTF8") = "true"
-end pingServer

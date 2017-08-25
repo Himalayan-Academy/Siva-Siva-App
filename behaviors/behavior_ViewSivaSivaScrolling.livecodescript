@@ -15,13 +15,13 @@ But it should work without "behavior_ViewLayoutVertical"
 
 
 --> Variables
--
-local sMouseLoc, sStartLoc
+
+local sMouseLoc, sStartLoc, sStartLocY,sStartLocX
 local LocalArray
 
 
 --> Working on
--
+
 command desktop_SetScroll
    if the mouse is down then
       lock screen
@@ -40,30 +40,30 @@ end desktop_SetScroll
 
 
 --> Events
--
+
 on mouseUp   
    put the portal_Row of the target into portalRow
-   switch
-      case _mouseMoved() is true
-         -- answer "Has scrolled"
-         break
-      case portalRow is empty
-         -- answer "Not a row"
-         break
-      default
-         -- answer "Click"
-         put the row_Name of the target into rowName  
+   put the row_Name of the target into rowName  
+   
+   # put the mouseLoc into tEndLoc  BRT not used?
+   if isMobile() then
+      portal_DoRowLink rowName
+   else
+      if not ((item 2 of the mouseLoc > (sStartLocY+10)) OR \
+            (item 2 of the mouseLoc < (sStartLocY-10) ) )  then
          portal_DoRowLink rowName
-   end switch
+      end if
+   end if
 end  mouseup
 
 on mouseDown
-   put the mouseloc into sMouseLoc
-   put sMouseLoc into sStartLoc
-   
    if the environment is "mobile" then
       -- mobile will use stack handlers to scroll instead
    else
+      put the mouseloc into sMouseLoc
+      put sMouseLoc into sStartLoc
+      put item 1 of sStartLoc into sStartLocX
+      put item 2 of sStartLoc into sStartLocY
       desktop_SetScroll
    end if
    pass mouseDown
@@ -71,13 +71,13 @@ end mouseDown
 
 -- on touchStart pID
 -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-mouseDown
-end touchStart
+-- mouseDown
+-- end touchStart
 
--- on touchEnd pID
--- using touch msgs on android, because something is blocking mouseUps when scroller is active;
-mouseUp
-end touchEnd
+-- -- on touchEnd pID
+-- -- using touch msgs on android, because something is blocking mouseUps when scroller is active;
+-- mouseUp
+-- end touchEnd
 
 on resizeControl
    put the rect of me into pRect

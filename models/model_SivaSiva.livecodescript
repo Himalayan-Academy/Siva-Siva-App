@@ -5,7 +5,7 @@ license: GPLv3
 name: model_SivaSiva
 type: model
 version: 0.2
-
+Original script by David Bovil
 /*
 The SivaSiva model is an enhanced version of the older config.json model structure.
 The array is stored in a file "Siva-Siva-App/models/model_SivaSiva/model_SivaSiva.array"
@@ -20,10 +20,10 @@ local LocalArray
 
 
 --> Working on
--
+
 
 --> SivaSiva | Model
--
+
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile-- could use ".array"
@@ -51,7 +51,8 @@ end sivasiva_DataFile
 --> SivaSiva | Model | Cache
 -
 getprop use_SivaSivaCache
-   return LocalArray ["useSivaSivaCache"] is not false
+   return LocalArray ["useSivaSivaCache"] is not false  
+   # BR Apr 9, 2017 never use cached data for now
 end use_SivaSivaCache
 
 setprop use_SivaSivaCache someBooelan
@@ -81,9 +82,9 @@ command sivasiva_LoadCachedData
    return sivasivaData
 end sivasiva_LoadCachedData
 
-command sivsiva_ClearCachedData
+command sivasiva_ClearCachedData
    delete variable LocalArray ["sivasivaData"]
-end sivsiva_ClearCachedData
+end sivasiva_ClearCachedData
 
 
 --> Model | Library
@@ -270,3 +271,25 @@ getprop stack_Folder
    put empty into item -1 of stackFolder
    return stackFolder
 end stack_Folder
+
+
+--------------------------------
+on UTILITIES
+end UTILITIES
+
+function getTargetOwnerSegs
+   # expects the long ID of a control
+   put the long owner of the target into tOwner
+   split tOwner with " of "
+   put the keys of tOwner into tKeys
+   sort tKeys ascending numeric
+   repeat for each line x in tKeys
+      put the short name of tOwner[x] & comma after tSegs
+   end repeat
+   delete char -1 of tSegs
+   return tSegs
+   # item 1 will be  the name of the target control
+   # item -1 =  the stack name
+   # item -2- the card name
+   # Other keys in between will be group names.   
+end getTargetOwnerSegs

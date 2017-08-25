@@ -2,7 +2,9 @@
 *.log
 zArchives
 *.bac
-source/shared/img/gems/*
 .idea
 node_modules
-source/web-apps/panchangam/jspm_packages
+*.sublime*
+zDevReference
+zBuilds Alias
+

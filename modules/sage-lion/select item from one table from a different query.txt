@@ -1,0 +1,16 @@
+SELECT  * 
+FROM quote
+WHERE quote_id 
+
+IN
+
+(
+SELECT quote_id
+FROM category_quote
+WHERE category_id
+IN  ( :1)
+)
+
+ORDER BY
+RANDOM() 
+LIMIT 1

@@ -1,17 +1,13 @@
 {
-    "disabledContent": {
-        "3": {
-            "rowName": "Hindu Art"
-        }
-    },
-    "portalRowDictionary": {
+"portalRowDictionary": {
         "Video World": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_video\" of stack \"surprise\""
             },
             "imageText": "Video\nWorld",
-            "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
+            "shortImageFile": "thumb_gurudeva_on-iphone.jpg",
+            "portalColor": "200,0,0"
         },
         "Affirmations": {
             "imageText": "Affirmations",
@@ -28,38 +24,46 @@
         "About the Monastery": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/about",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "About the\nMonastery",
             "shortImageFile": "thumb_about-monastery.jpg"
         },
         "My Hindu Calendar": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"panchangam\""
             },
             "imageText": "My Hindu\nCalendar",
             "shortImageFile": "thumb_calendar_shtrstk-325867559.jpg"
         },
         "Our YouTube Library": {
+            "link": {
+                "portal param": "https://www.youtube.com/channel/UCr6mOJAX2uZUUQhSUq2TR_Q",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "Our YouTube\nLibrary",
             "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
         },
         "The Master Course": {
+             "link": {
+                "portal param": "https://www.himalayanacademy.com/livespiritually/become-student/mc-options",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "The\nMaster\nCourse",
             "shortImageFile": "thumb_master-coures_trilogy-in-box.jpg"
         },
-        "Our Website": {
+        "Monastery Website": {
             "link": {
                 "portal command": "portal_Link",
                 "portal param": "website"
             },
-            "imageText": "Our\nWebsite",
+            "imageText": "Monastery\nWebsite",
             "shortImageFile": "thumb_website_ha-com-screenshoot.jpg"
         },
         "Our Daily Blog": {
             "link": {
-                "portal command": "portal_GoUrl",
+                "portal command": "portal_GoURL",
                 "portal param": "https://www.himalayanacademy.com/blog/taka/"
             },
             "imageText": "Our Daily\nBlog",
@@ -79,7 +83,7 @@
         },
         "Sacred Verses": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_verses\" of stack \"surprise\""
             },
             "imageText": "Sacred\nVerses",
@@ -87,7 +91,7 @@
         },
         "Gems of Wisdom": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"gems\""
             },
             "imageText": "Gems of\nWisdom",
@@ -96,40 +100,40 @@
         "Take a Virtual Tour": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit/virtual-tour",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Take a\nVirtual Tour",
             "shortImageFile": "thumb_virtual-tour.jpg"
         },
         "History Movie": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?rel=0",
+                "portal command": "portal_GoUrl"
+            },
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.jpg"
         },
         "Our Guru Lineage": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/lineage-philosophy/lineage",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.jpg"
-        },
-        "Bodhinatha Darshan": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"surprise_bodhinatha\" of stack \"surprise\""
-            },
-            "imageText": "Bodhinatha\nDarshan",
-            "shortImageFile": "thumb_bodhinatha_photo-head-turned.jpg"
-        },
+        },  
         "Monthly News": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/newsletter",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Monthly\nNews",
             "shortImageFile": "thumb_news.jpg"
-        },
+        }, 
         "Lesson of the Day": {
+            "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "stack \"daily-lesson\""
+            },
             "imageText": "Lesson of\nthe Day",
             "shortImageFile": "thumb_daily-lesson.jpg"
         },
@@ -138,24 +142,40 @@
             "shortImageFile": "thumb_faq_shtrstk-127433528.jpg"
         },
         "Educational Insights": {
+            "link": {
+                "portal param": "https://www.himalayanacademy.com/site/search/file_id/_ei",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "Educational\nInsights",
             "shortImageFile": "thumb_insight-sections.jpg"
         },
         "All Our On-Line Books": {
+            "link": {
+                "portal param": "https://www.himalayanacademy.com/readlearn/books",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "All Our\nOn-Line\nBooks",
             "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.jpg"
         },
         "Path to Siva: A Catechism for Youth": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"pathtosiva\""
             },
             "imageText": "Path to Siva:\nA Catechism\nfor Youth",
             "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.jpg"
         },
+         "Hinduism Today": {
+            "link": {
+                "portal param": "https://mydigitalpublication.com/publication?m=45852&l=1",
+                "portal command": "portal_GoURL"
+            },
+            "imageText": "Hinduism Today\nMagazine",
+            "shortImageFile": "thumb_hinduism-today-cover.jpg"
+        },
         "Color Meditation": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"color-meditation\""
             },
             "imageText": "Color\nMeditation",
@@ -164,17 +184,17 @@
         "How to Visit": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/visit",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "How to Visit",
             "shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
         },
-        "Gurudeva Darshan": {
+        "Darshan": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"surprise_gurudeva\" of stack \"surprise\""
+                "portal command": "portal_GoStack",
+                "portal param": "card \"surprise_darshan\" of stack \"surprise\""
             },
-            "imageText": "Gurudeva Darshan",
+            "imageText": "Darshan",
             "shortImageFile": "thumb_gurudeva_sharma-painting.jpg"
         },
         "Humor": {
@@ -182,12 +202,16 @@
             "shortImageFile": "thumb_humor.jpg"
         },
         "Hindu Lexicon": {
+             "link": {
+                "portal param": "https://www.himalayanacademy.com/view/lexicon",
+                "portal command": "portal_GoURL"
+            },
             "imageText": "Hindu\nLexicon",
             "shortImageFile": "thumb_lexicon_shtrstk-26948821.jpg"
         },
         "Word Puzzles": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "stack \"wordpuzzles\""
             },
             "imageText": "Word\nPuzzles",
@@ -204,22 +228,22 @@
         "Meet the Monks": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/meet-the-monks",
-                "portal command": "portal_GoUrl"
+                "portal command": "portal_GoURL"
             },
             "imageText": "Meet the\nMonks",
             "shortImageFile": "thumb_monks-by-marya.jpg"
         },
         "Hindu Art": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"art\" of stack \"surprise\""
+                "portal command": "portal_GoStack",
+                "portal param": "card \"surprise_art\" of stack \"surprise\""
             },
             "imageText": "Hindu\nArt",
             "shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.jpg"
         },
         "Audio World": {
             "link": {
-                "portal command": "portal_Go",
+                "portal command": "portal_GoStack",
                 "portal param": "card \"surprise_audio\" of stack \"surprise\""
             },
             "imageText": "Audio\nWorld",
@@ -234,52 +258,76 @@
             "shortImageFile": "thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
         },
         "Sanskrit Chanting": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"chanting\" of stack \"listen\""
+             "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
         },
         "Bodhinatha's Latest Talks": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"bodhinatha-latest\" of stack \"listen\""
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
-            "imageText": "Bodhinatha's\nLatest\nInspired Talk",
+            "imageText": "Bodhinatha's\nLatest\nInspired Talks",
             "shortImageFile": "thumb_latest-talk-2.jpg"
         },
-        "All of Bodhinatha's Talks": {
+         "Gurudeva's 1970 Audio Master Course": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"bodhinatha-archive\" of stack \"listen\""
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
-            "imageText": "All of\nBodhinatha's\nTalks",
-            "shortImageFile": "thumb_all-bd-talks-.jpg"
-        },
-        "Gurudeva's Inspired Talks": {
-            "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"gurudeva-audio\" of stack \"listen\""
-            },
-            "imageText": "Gurudeva's\nInspired Talks",
+            "imageText": "Gurudeva's\n1970\nAudio Course",
             "shortImageFile": "thumb_gurudeva-talks.jpg"
+        },
+        "All Gurudeva Talks": {
+            "link": {
+              "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "All \nGurudeva\nTalks",
+            "shortImageFile": "thumb_gurudeva-talks.jpg"
+        },
+           "All Bodhinatha Talks": {
+            "link": {
+              "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "All \nBodhinatha\nTalks",
+            "shortImageFile": "thumb_latest-talk-2.jpg"
         },
         "Songs": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"songs\" of stack \"listen\""
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Songs",
             "shortImageFile": "thumb_songs_shtrstk-104920397.jpg"
         },
         "The Guru Chronicles": {
             "link": {
-                "portal command": "portal_Go",
-                "portal param": "card \"guru-chronicles-audio\" of stack \"listen\""
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "The Guru\nChronicles",
             "shortImageFile": "thumb_guru-chronicles.jpg"
+        },
+        "All Recent Additions": {
+            "link": {
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "All Recent\nAdditions",
+            "shortImageFile": "thumb_girl-head-phones.jpg"
+        },
+         "Gujarati Dancing With Siva": {
+            "link": {
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "Gujarati Dancing\nWith Siva",
+            "shortImageFile": "thumb_gujarati-dws.jpg"
         },
         "Fun & Games": {
             "link": {
@@ -291,8 +339,8 @@
         },
         "Surprise Me": {
             "link": {
-                "portal command": "portal_Link",
-                "portal param": "surprise"
+                "portal command": "portal_GoStack",
+                "portal param": "stack \"surprise\""
             },
             "imageText": "Surprise\nMe",
             "shortImageFile": "thumb_surprise_boy-suitcase.jpg"
@@ -330,17 +378,15 @@
             "shortImageFile": "thumb_toolbox.jpg"
         }
     },
-    "portalData": {
+"portalData": {
         "look": {
             "portalName": "look",
+            "portalColor": "000,000,000",
             "rowData": {
                 "1": {
                     "rowName": "Our YouTube Library"
                 },
                 "2": {
-                    "rowName": "Slideshows"
-                },
-                "3": {
                     "rowName": "History Movie"
                 }
             },
@@ -348,6 +394,174 @@
         },
         "fun": {
             "portalName": "fun",
+            "rowData": {
+                "1": {
+                    "rowName": "Word Puzzles"
+                    }
+                },
+            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.jpg"
+        },
+        "listen": {
+            "portalName": "listen",
+            "rowData": {
+                "1": {
+                    "rowName": "Bodhinatha's Latest Talks"
+                },
+                "2":  {
+                    "rowName": "Gurudeva's 1970 Audio Master Course"
+                },
+                 "3": {
+                    "rowName": "The Guru Chronicles"
+                },
+                "4": {
+                    "rowName": "Songs"
+                },
+                "5": {
+                    "rowName": "Sanskrit Chanting"
+                },
+                "6": {
+                    "rowName": "All Gurudeva Talks"
+                },
+                "7": {
+                    "rowName": "All Bodhinatha Talks"
+                },
+                "8": {
+                    "rowName": "All Recent Additions"
+                },
+                "9": {
+                    "rowName": "Gujarati Dancing with Siva"
+                }
+              
+            },
+            "headerImage": "hero_listen_girl-head-phones.jpg"
+        },
+        "surprise": {
+            "portalName": "surprise",
+            "rowData": {
+                "1": {
+                    "rowName": "Sacred Verses"
+                },
+                "2": {
+                    "rowName": "Darshan"
+                },
+                "3": {
+                    "rowName": "Hindu Art"
+                },
+                "4": {
+                    "rowName": "Audio World"
+                },
+                "5": {
+                    "rowName": "Video World"
+                }
+            },
+            "headerImage": "hero_surprise_boy-opens-suitcase.jpg"
+        },
+        "website": {
+            "portalName": "website",
+            "rowData": {
+                "1": {
+                    "rowName": "Our Daily Blog"
+                },
+                "2": {
+                    "rowName": "Meet the Monks"
+                },
+                "3": {
+                    "rowName": "Monthly News"
+                },
+                "4": {
+                    "rowName": "How to Visit"
+                },
+                "5": {
+                    "rowName": "Take a Virtual Tour"
+                },
+                "6": {
+                    "rowName": "About the Monastery"
+                },
+                "7": {
+                    "rowName": "Our Guru Lineage"
+                }
+            },
+            "headerImage": "hero_website_ha-com-home-screenshot.jpg"
+        },
+        "practice": {
+            "portalName": "practice",
+            "rowData": {
+                "1": {
+                    "rowName": "Lesson of the Day"
+                },
+                "2": {
+                    "rowName": "Color Meditation"
+                }
+			},
+            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.jpg"
+        },
+        "home": {
+            "portalName": "home",
+            "rowData": {
+                "1": {
+                    "rowName": "Gems of Wisdom"
+                },
+                "2": {
+                    "rowName": "Surprise Me"
+                },
+                "3": {
+                    "rowName": "Listen"
+                },
+                "4": {
+                    "rowName": "Look"
+                },
+                "5": {
+                    "rowName": "Practice"
+                },
+                "6": {
+                    "rowName": "Read"
+                },
+                "7": {
+                    "rowName": "Monastery Website"
+                },
+                "8": {
+                    "rowName": "Fun & Games"
+                }
+            },
+            "headerImage": "hero_home_Who-Is-Siva.jpg"
+        },
+        "read": {
+            "portalName": "read",
+            "rowData": {
+                "1": {
+                    "rowName": "Path to Siva: A Catechism for Youth"
+                },
+                "2": {
+                    "rowName": "Hindu Lexicon"
+                },
+                "3": {
+                    "rowName": "The Master Course"
+                },
+                "4": {
+                    "rowName": "All Our On-Line Books"
+                },
+                  "5": {
+                    "rowName": "Hinduism Today"
+                },
+                "6": {
+                    "rowName": "Educational Insights"
+                }
+            },
+            "headerImage": "hero_read_gurudeva-signing-book.jpg"
+        }
+    },
+"disabledContent": {
+        "look": {
+            "portalName": "look",
+            "rowData": {
+                "2": {
+                    "rowName": "Slideshows"
+                }
+            },
+            "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
+        },
+        "fun": {
+            "portalName": "fun  & games",
             "rowData": {
                 "1": {
                     "rowName": "Humor"
@@ -442,12 +656,6 @@
         "practice": {
             "portalName": "practice",
             "rowData": {
-                "1": {
-                    "rowName": "Lesson of the Day"
-                },
-                "2": {
-                    "rowName": "Color Meditation"
-                },
                 "3": {
                     "rowName": "My Hindu Calendar"
                 },
@@ -491,7 +699,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Our Website"
+                    "rowName": "Monastery Website"
                 },
                 "8": {
                     "rowName": "Fun & Games"
@@ -529,5 +737,5 @@
             },
             "headerImage": "hero_read_gurudeva-signing-book.jpg"
         }
-    }
+    }   
 }

@@ -1,0 +1,100 @@
+Spec for Listen Module
+
+Process Flow for V1
+
+1) Link from portal goes to listen stack
+2) Card is set up using data from the portal array
+    -- title
+    -- fetch image thumbnnail fo r the top of the screen
+    -- empty the audio list field
+  3) using the link string we fork:
+          if contains "latest"  then we fetch data from remote server and store in array
+          else
+          send query to fetchMediaItems with correct params
+    4) store the array
+    5) sort by title    
+
+4) using the array we fetch a list of titles and insert into the field
+5) the line number of the field should be a match for some key in the array
+6) when users taps a line, sCurrentSelectionA should contain all the metadata for that record
+7)  set the  currentTitleField to the sCurrentSelectionA["title"]
+8) fill field audio details (which remains hidden)
+8) Set the player to remote url (use lib_sivasivaMedia function)
+9) start the player
+10 ) tap on disclosure triange
+
+
+
+
+
+
+See Spotify for models
+
+Simple implementation
+
+Structurally we have  four views
+
+1) main Library over view with Top categories running top to bottom and "genres" inside those categories on left to right sliders
+2) Genre TOC  has the "album" cover art at the top  option to shuffle play, index of all songs below, and a minified controller with title for the current playing song. 
+3) the nowPlayExpanded group has a song cover, title and player controlle takes over the whole screen
+4) ancillary views: Playlists; Stations; songs, albums Artists Podcasts, my library recently played.
+
+V1: portal will serve as the main library over view until V2
+We to go in app only two "genres"
+    -- Bodhinatha's recent talks
+    -- Guru Chronicles
+
+   we can implement 2) and 3) above for each of these.
+
+   
+
+Analysis of Spotify UX
+
+	1. Home screen indicates off-line if the connection is bad
+	2. Home screen is a series of rows of categories with links to collections in each row.
+		– Category Labels are centered 
+		– A category is comprised a series of square album cover art in scrollers that go left to right
+		– each piece of cover art has a title underneath and each one serves as a link to a Collection
+		– Collections may be for a single artist, a type of channel, or a genre, pre-curated playlists or music from a movie the number of followers for that collection or channel
+	
+	3. if you click on a collection Cover art it takes you to another screen with The cover art small at the top the name of the album or collection or playlist big button for shuffle play underneath download on off option which indicates waiting for Wi-Fi. And then underneath this list of songs to the right of each song we are taken to the common navigation option
+			– remove
+			– add to playlist
+			– add to up next
+			– share
+			– go to radio
+			– go to artist
+		
+	4. At the bottom of the screen, the title of the last song played shows with the play icon on the right.
+		– if you click the play icon then the music plays and the icon changes to pause icon
+		– on the left it's a small up arrow
+			– clicking on this gives if full-screen dedicated to this one's song.
+			- the device status bar is hidden in this context
+			– the top of the screen shows an album title
+			- underneath we have album art,
+			- the lower part of the screen has name of the song Artist centered, 
+			- underneath this we see the progress bar for the song how far along we have come
+			-  underneath that a large play button
+			- which turns to pause or back to play
+			- on either side is a Icon that looks like forward to and on the right we wanted to beginning on the left but these are in fact navigation arrows taking us to the next song in this album for collection.
+			- right and left are small icons for looping and shuffling.
+			- to the right of the song title underneath the album art the 3 dots icon invokes navigation, Tool panel to save, add to playlist, share, go to radio, go to go to artist
+			- on the left is a + sign to save this song to your library
+			- on the right at the top is an icon which takes you to the song list for this album, you can drag up-and-down to reorder the songs click left to remove or add to up next which are options made available at the bottom of the screen Tapping again top right take shoe back to the song clicking on the down arrow on the left at the top takes you back to the album List with the status bar of the device now showing again
+
+
+BROWSE SCREEN
+	
+	1. the second icon at the bottom is for browse
+	2. browz takes you to another navigation interface with more links to
+		– charts
+		-New releases
+		– videos
+		 – Podcasts
+		 – discover
+		  – concerts
+	3. the above text links are followed by a series of genres and moods that use Square blocks two per roll with about pixel space around that finished trending including such things as work out, kids and family, Focus soul, etc.
+	– this is way more then we need at this time
+	
+	
+SEARCH SCREEN

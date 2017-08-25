@@ -20,42 +20,43 @@ local LocalArray
 --> Events
 -
 on mouseUp
-   put the short name of the target into cName
-   switch cName
-      case "Title"
-      case "Portal Header Image"
-         -- put the logo_Faded of me into someBoolean
-         -- set the logo_Faded of me to (not someBoolean)
-         
-         put init_ListStacksToUse() into stackNames
-         replace comma with CR in stackNames
-         answer stackNames
-         answer the stacksinuse
-         
-         /*
-         put sivasiva_ProjectFolder() into projectFolder
-         answer folder_ListShort (projectFolder)
-         
-         put sivasiva_ConstructFolder ("libraries") into standardFolder
-         put mobile_ListShortFiles (standardFolder) into shortFiles
-         answer shortFiles
-         
-         answer project_ListFolderStacks ("libraries")
-         answer project_ListFolderStacks ("models")
-         */
-         break
-      case "home-logo"
-         if the environment is "development" then
-            dispatch "stack_ToggleShrink" to me
-         else
-            set the portal_Name of me to "home"
-            -- set the logo_Faded of me to true
-         end if
-         break
-      default
-         -- put cName
-         pass mouseUp
-   end switch
+    put the short name of the target into cName
+    switch cName
+        case "Title"
+        case "Portal Header Image"
+            put the logo_Faded of me into someBoolean
+            set the logo_Faded of me to (not someBoolean)
+            
+            # use for development to check on active scripts in the msg path
+            --          put init_ListStacksToUse() into stackNames
+            --          replace comma with CR in stackNames
+            --          answer stackNames
+            --          answer the stacksinuse
+            
+            /*
+            put sivasiva_ProjectFolder() into projectFolder
+            answer folder_ListShort (projectFolder)
+            
+            put sivasiva_ConstructFolder ("libraries") into standardFolder
+            put mobile_ListShortFiles (standardFolder) into shortFiles
+            answer shortFiles
+            
+            answer project_ListFolderStacks ("libraries")
+            answer project_ListFolderStacks ("models")
+            */
+            break
+        case "home-logo"
+            if the environment is "development" then
+                dispatch "stack_ToggleShrink" to me
+            else
+                set the portal_Name of me to "home"
+                -- set the logo_Faded of me to true
+            end if
+            break
+        default
+            -- put cName
+            pass mouseUp
+    end switch
 end mouseUp
 
 
@@ -85,8 +86,8 @@ end logo_Faded
 setprop logo_Faded someBoolean
    put _logoButton() into logoButton
    set the visible of logoButton to true
-   put 4 into someIncrement
-   put 0 into someDelay
+   put 2 into someIncrement
+   put 20 into someDelay
    put _logoButton() into logoButton
    
    if someBoolean is true then

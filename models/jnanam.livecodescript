@@ -75,13 +75,7 @@ private function asset_GetFileFromItemArray pItemA
 end asset_GetFileFromItemArray
 
 function jnanam_GetDatabasePath
-   -- was "pathToJnanamDatabase"
-   if the environment is "development" then
-      -- use temp?
-      return specialfolderpath("temporary") & "/jnanam.sqlite"
-   else
-      return specialfolderpath("documents") & "/jnanam.sqlite"
-   end if
+      return path_Documents() & "jnanam.sqlite"
 end jnanam_GetDatabasePath
 
 
