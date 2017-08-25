@@ -51,8 +51,7 @@ on openstack
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
    
-   playlist_QuerySetUp sTargetPlayList
-   
+   playlist_QuerySetUp sTargetPlayList 
 end openstack
 
 -----------------------------------------------------
@@ -336,8 +335,13 @@ end playList_FetchData
 -----------------------------------------------------------------------
 
 
-on playlist_Instantiate sTargetPlayList   
-   
+on playlist_Instantiate sTargetPlayList    
+
+   if (sTargetPlayList ="Songs" OR sTargetPlayList contains "Talks") AND  (sPlaylistQueryA["playListClass"] = "cached" ) then
+      set the vis of widget "revealMoreActions" to true
+   else
+       set the vis of widget "revealMoreActions" to false # just in case it's hanginh around visible
+    end if    
    
    # using: model_SivaSiva, which has functions to get json info we need:
    

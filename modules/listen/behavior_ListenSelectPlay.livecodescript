@@ -19,7 +19,7 @@
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
  
-local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL
+local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum
 
 on preopencard
    hide player "audioPlayer"
@@ -30,15 +30,8 @@ on openCard
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
    playlist_Reset 
-   put sSelectionsA["playListTitle"] into tTitle
-   if (tTitle ="Songs" OR tTitle contains "Talks") AND  (sSelectionsA["playListClass"] = "cached" ) then
-      set the vis of widget "revealMoreActions" to true
-   else
-       set the vis of widget "revealMoreActions" to false # just in case it's hanginh around visible
-    end if
-end openCard
-
-
+ end openCard
+ 
 
 on playlist_SetSelections pFilteredPlayList
    # begins with the entire array of the playlist 
@@ -68,8 +61,7 @@ on mouseup
    
    put the target into pTarget
    put the short name of the Target  into tTarget   
-   put the hilitedlines of fld "audioList"  into tSelectNum
-   
+
    switch tTarget
       case "AudioList"
          select_Play  clickline()
@@ -118,13 +110,13 @@ end mouseup
 ---------------------------------------------
 
 on select_Play  pSelectedLine
-      put word 2 of pSelectedLIne into tSelectNum
-   put getItemURL(tSelectNum) into sRemoteURL
+      put word 2 of pSelectedLIne into sSelectNum
+   put getItemURL(sSelectNum) into sRemoteURL
    Put "Connecting..." into fld "currentTitleLabel"
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
-   put sSelectionsA["audioFiles"][tSelectNum] into sSelectedItemA   
+   put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
    metadata_SetRecord sSelectedItemA
-   put sSelectionsA["audioFiles"][tSelectNum]["myURL"] into sSelectedURL
+   put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
    
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
@@ -155,7 +147,7 @@ on select_Play  pSelectedLine
    end if
    
    showBusyIndicator false
-   put  sSelectionsA["audioFiles"][tSelectNum]["title"] into fld "currentTitleLabel"
+   put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
    # Android player covers it!
    if the platform is "Android" then
       set the bottomleft of widget "downloadSelection" to 14,657
@@ -163,7 +155,7 @@ on select_Play  pSelectedLine
       set the bottom of widget "downloadSelection" to 622
    end if
    
-   set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][tSelectNum]["cached"] )
+   set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
    Journal_AddEntry pSelectedLIne
 end select_Play
 
@@ -239,15 +231,15 @@ end revealMoreActions
 command downloadSelection pTarget
     put the long ID of pTarget into pRequestedBy
          if sSelectionsA["playListClass"] ="audiobook" then
-            put sSelectionsA["audioFiles"]["toc"][tSelectNum]["label"] into pTitle
+            put sSelectionsA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
          else
-            put  sSelectionsA["audioFiles"][tSelectNum]["title"]  into pTitle
+            put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
          end if
          answer  "Download File?" with "Cancel" or "Yes"
          if it = "yes" then
             
             go stack "view_Download"
-            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,tSelectNum,pRequestedBy
+            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,pRequestedBy
          end if
 end downloadSelection
 
@@ -273,9 +265,10 @@ command share_Items
    return sShareItemsA
 end share_Items
 
-command updateCachedListings pRecordNumber
-   put "true" into sSelectionsA["audioFiles"][pRecordNumber]["cached"]
-   set the foregroundcolor of line pRecordNumber of fld "audioList" to green
+command updateCachedListings 
+
+   put "true" into sSelectionsA["audioFiles"][sSelectNum]["cached"]
+   set the foregroundcolor of line sSelectNum of fld "audioList" to green
    # Later we need to update the myURL of the play list selection.
    # but for now we assume if they have enough bandwidth to download
    # let them stream... when they come back later the list will be updated
