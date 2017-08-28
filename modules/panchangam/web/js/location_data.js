@@ -1,8 +1,0 @@
-var location = {
-    usa: [
-
-    ],
-    world: [
-
-    ]
-}

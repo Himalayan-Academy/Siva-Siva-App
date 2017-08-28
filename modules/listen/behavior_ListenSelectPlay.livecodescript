@@ -18,8 +18,8 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
- 
-local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum
+
+local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget
 
 on preopencard
    hide player "audioPlayer"
@@ -30,15 +30,15 @@ on openCard
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
    playlist_Reset 
- end openCard
- 
+end openCard
+
 
 on playlist_SetSelections pFilteredPlayList
    # begins with the entire array of the playlist 
 end playlist_SetSelections
 
 on playlist_Reset
-      put playlist_GetRecords() into sSelectionsA   
+   put playlist_GetRecords() into sSelectionsA   
 end playlist_Reset
 
 function checkPlayList
@@ -59,9 +59,9 @@ on mouseup
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
    
-   put the target into pTarget
+  put the target into pTarget
    put the short name of the Target  into tTarget   
-
+   
    switch tTarget
       case "AudioList"
          select_Play  clickline()
@@ -82,9 +82,9 @@ on mouseup
          break
       case "revealMoreActions"
          put not (the vis of grp "moreActions") into pVis
-       revealMoreActions pVis
-      break
-end switch
+         revealMoreActions pVis
+         break
+   end switch
 end mouseup
 
 ---------------------------------------------
@@ -110,7 +110,7 @@ end mouseup
 ---------------------------------------------
 
 on select_Play  pSelectedLine
-      put word 2 of pSelectedLIne into sSelectNum
+   put word 2 of pSelectedLIne into sSelectNum
    put getItemURL(sSelectNum) into sRemoteURL
    Put "Connecting..." into fld "currentTitleLabel"
    playlist_Reset # needed during dev because we often lose the sSelectedItemA value
@@ -164,13 +164,13 @@ end select_Play
 
 command select_ShowDetails   
    deleteMobileControl "audioList"
-    if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-       put textDecode (getMediaItemMetadata(),"UTF8") into fld "audioDetails"
-    else
-       # its an audio book, lib media doesn't know anything, we have to pass the record here       
+   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+      put textDecode (getMediaItemMetadata(),"UTF8") into fld "audioDetails"
+   else
+      # its an audio book, lib media doesn't know anything, we have to pass the record here       
       put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
    end if
-
+   
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
@@ -181,7 +181,7 @@ end select_ShowDetails
 
 command revealMoreActions pVis
    
-
+   
    --pVis = boolean
    
    if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
@@ -197,21 +197,21 @@ command revealMoreActions pVis
       set the loc of grp "moreActions" to the loc of this cd
       set the bottom of grp "moreActions" to 0
       put empty into fld "searchString" of grp "moreActions"
-         # Set up the form ahead of time
-   # we hide everything not needed for talks
-   if sSelectionsA["playListTitle"] contains "Talks" then
-      hide grp "songProperties"
-      hide button "artists" of grp "textColumns"
-      show button "Subtitle" of grp "textColumns"
-   end if
-   if sSelectionsA["playListTitle"] = "Songs" then
-        show grp "songProperties" 
-      hide button "Subtitle" of grp "textColumns"
-      show button "Artists" of grp "textColumns"
+      # Set up the form ahead of time
+      # we hide everything not needed for talks
+      if sSelectionsA["playListTitle"] contains "Talks" then
+         hide grp "songProperties"
+         hide button "artists" of grp "textColumns"
+         show button "Subtitle" of grp "textColumns"
+      end if
+      if sSelectionsA["playListTitle"] = "Songs" then
+         show grp "songProperties" 
+         hide button "Subtitle" of grp "textColumns"
+         show button "Artists" of grp "textColumns"
       end if
       set the vis of group "moreActions" to true
       moveGrp "moreActions", 0, the height of grp "moreActions", 500
-       put "Leave All Empty to Reset" into fld "searchString"
+      put "Leave All Empty to Reset" into fld "searchString"
       wait 1 second; put empty into fld "searchString"
       focus on fld "searchString" --jg: force mobile keyboard
       select after fld "searchString"
@@ -229,19 +229,19 @@ end revealMoreActions
 --------------
 
 command downloadSelection pTarget
-    put the long ID of pTarget into pRequestedBy
-         if sSelectionsA["playListClass"] ="audiobook" then
-            put sSelectionsA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
-         else
-            put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
-         end if
-         answer  "Download File?" with "Cancel" or "Yes"
-         if it = "yes" then
-            
-            go stack "view_Download"
-            dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,pRequestedBy
-         end if
+   put the long ID of pTarget into sLastTarget
+   doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
 end downloadSelection
+
+command downloadAffirmed   
+   if sSelectionsA["playListClass"] ="audiobook" then
+      put sSelectionsA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
+   else
+      put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
+   end if
+   go stack "view_Download"
+   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
+end downloadAffirmed
 
 on Journal_AddEntry pSelectedLine
    put  sSelectionsA["playlistTitle"] into tPlayList

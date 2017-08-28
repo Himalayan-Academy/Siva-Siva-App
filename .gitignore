@@ -2,8 +2,9 @@
 *.log
 zArchives
 *.bac
-source/shared/img/gems/*
 .idea
+node_modules
 *.sublime*
 zDevReference
 zBuilds Alias
+

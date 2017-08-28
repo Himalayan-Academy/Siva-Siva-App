@@ -108,7 +108,7 @@ command news_Fetch
    else 
        # save it
       put tServerNews into url ("file:/"&tLocalNewsFile)
-      dialog_CustomMsg true,"You have news!",2000
+     dispatch "dialog_CustomMsg" to the topstack with "You have news!"
       put "true" into sNewNews
    end if
    # reset the templateField just in case
@@ -306,7 +306,7 @@ on connectivity_UpdateStatus
       put URLStatus(sPingURL)  into tURLStatus
       if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
          put tURLStatus into sOnLinestatus
-         dialog_CustomMsg true,"Offline or Low Bandwidth", 1500      
+         dialog_CustomMsg "Offline or Low Bandwidth"     
          # do stuff here to block access  or show indicators.
          # keep checking but don't hog the CPU... 
          send "connectivity_PingServer" to stack "lib_SivaSiva" in 1 seconds
@@ -315,7 +315,7 @@ on connectivity_UpdateStatus
          --       put URLStatus(sPingURL) & cr after sURLStatusLog
          --       put sURLStatusLog
          add 1 to sServerAttempts
-          dialog_CustomMsg true,"Connecting", 800     
+          dialog_CustomMsg "Connecting"
          send "connectivity_UpdateStatus" to stack "lib_SivaSiva" in 800 milliseconds
       end if
    end if
@@ -333,7 +333,7 @@ function connectivity_NotAvailable cardOrStackObject
    else
       repeat for each item x in kONLINECONTENT
          if (cardOrStackObject contains x) then
-            dialog_CustomMsg true,"Offline or Low Bandwidth",2000   
+            dialog_CustomMsg "Offline or Low Bandwidth"
             return "offline"
             # FYI we are letting users open the "Listen" stack even though
             exit repeat

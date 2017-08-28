@@ -329,6 +329,14 @@
             "imageText": "Gujarati Dancing\nWith Siva",
             "shortImageFile": "thumb_gujarati-dws.jpg"
         },
+        "Gujarati Living With Siva": {
+            "link": {
+                "portal command": "portal_GoStack",
+                  "portal param": "card \"listen-playlist\" of stack \"listen\""
+            },
+            "imageText": "Gujarati Living\nWith Siva",
+            "shortImageFile": "thumb_gujarati-lws.png"
+        },
         "Fun & Games": {
             "link": {
                 "portal command": "portal_Link",
@@ -430,8 +438,10 @@
                 },
                 "9": {
                     "rowName": "Gujarati Dancing with Siva"
-                }
-              
+                },
+                 "10": {
+                    "rowName": "Gujarati Living with Siva"
+                } 
             },
             "headerImage": "hero_listen_girl-head-phones.jpg"
         },
