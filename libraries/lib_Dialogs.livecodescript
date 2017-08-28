@@ -148,7 +148,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    if tMsgLines > 1 then
       set the margins of fld "lbl-dialogPrompt" to 24,20,24,24
    else
-      set the margins of fld "lbl-dialogPrompt" to 24,14,14,14
+      set the margins of fld "lbl-dialogPrompt" to 24,19,24,27
    end if
    set the width of fld "lbl-dialogPrompt" to tCdWidth
    set the left of fld "lbl-dialogPrompt" to 0
