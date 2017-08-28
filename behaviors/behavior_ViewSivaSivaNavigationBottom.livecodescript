@@ -69,7 +69,7 @@ end sivasiva_AddFavorites
 command sivasiva_SettingsGear
    --display_Log
    if the short name of this stack is "settings" then
-      dialog_CustomMsg true,"You are at settings."
+      dialog_CustomMsg "You are at settings."
    else
       portal_GoStack "settings"
    end if
@@ -103,7 +103,7 @@ end sivasiva_Share
       switch (the short name of this stack)
          case "Siva-Siva-Portal"
             if portal_GetCurrent()="home" then
-               dialog_CustomMsg true,"You Are Home!"
+               dialog_CustomMsg "You Are Home!"
                else
                   portal_Link "home"
                   end if

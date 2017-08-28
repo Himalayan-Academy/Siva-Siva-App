@@ -163,7 +163,9 @@ command init_AppConfiguration
 end init_AppConfiguration
 
 on init_StoreControlsIds
-     put the long id of group "share-ui" of card "share-ui" of stack "lib_CustomControls" into sConfigA["shareControl"]
+   put the long id of group "share-ui" of card "share-ui" of stack "lib_CustomControls" into sConfigA["shareControl"]
+   put the long id of group "answerDlgGrp" of card "answerDlgGrp" of stack "lib_CustomControls" into sConfigA["answerDialog"]
+   put the long id of group "bottomToast" of card "dialog_CustomMsg" of stack "lib_CustomControls" into sConfigA["bottomToast"]
 end init_StoreControlsIds
 
 on testConnection

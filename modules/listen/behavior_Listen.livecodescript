@@ -63,6 +63,8 @@ end openstack
 # we don't know later how this will develop, But regardless 
 # in any scenario we will want to be able to set and get this variable:
 # PARAMS: pass the playlist string, which should also serve as it's title (at least in V1)
+# Must be an exact match for the item in the portal dictionary: 
+# see /models/model_SivaSiva/model_SivaSiva.json 
 # CHANGES: Created 2017-06-22 Brahmanathaswami
 ------------------------------------------------------
 
@@ -120,19 +122,27 @@ on playlist_QuerySetUp
    # Add all your new playlists here in V1... assume match to a portal link for V1
    
    switch sTargetPlayList
+   
+# Go to the web server for these latest playlists
       case "Bodhinatha's Latest Talks" 
          # Remote look up based on search criteria... 
          # this model could fetch any kid of collection, songs, curated by category or tag... 
          # again we should be using a JSON for this data, and hold the query on disk and not hard
          # code this here.  Later... V2
          put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
-         put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         
+         put "inspiredtalk" into sPlaylistQueryA["media_type"]         
          put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
-         put "latest" into sPlaylistQueryA["recordType"]
-         
+         put "latest" into sPlaylistQueryA["recordType"]        
          put 30 into sPlaylistQueryA["recordCount"]
          break
+	  case "All Recent Additions"
+         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
+         put "audio" into sPlaylistQueryA["media_type"]       
+         put "latest" into sPlaylistQueryA["recordType"]   
+         put 50 into sPlaylistQueryA["recordCount"]
+         break  
+          
+# fetch all these form the local Jnanam dbase
       case "Gurudeva's 1970 Audio Master Course"
          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
@@ -162,25 +172,23 @@ on playlist_QuerySetUp
          put "audio/chant" into sPlaylistQueryA["media_type"]
          put "YES" into sPlaylistQueryA["approved_for_public"]
          break
+         
+## Audio books:
+		# for audio books; all we need to know the file ID, which is the folder name
+		# after that it is a simple path set up.
       case "The Guru Chronicles" # Audio book
-         # for audio books; all we need to know the file ID, which is the folder name
-         # after that it is a simple path set up.
          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
          break
       case "Gujarati Dancing with Siva" # Audio book
-         # for audio books; we need to know the file ID, which is the folder name
-         # after that it is a simple path set up.
          put "audiobook" into sPlaylistQueryA["playlistClass"]
          put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
          break   
-      case "All Recent Additions"
-         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
-         put "audio" into sPlaylistQueryA["media_type"]       
-         put "latest" into sPlaylistQueryA["recordType"]   
-         put 50 into sPlaylistQueryA["recordCount"]
-         break      
-         
+	 case "Gujarati Living with Siva" # Audio book
+         put "audiobook" into sPlaylistQueryA["playlistClass"]
+         put "living-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
+         break
+               
    end switch
    
    playList_FetchData 

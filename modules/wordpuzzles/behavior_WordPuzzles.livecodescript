@@ -73,7 +73,6 @@ end checkLevel
 
 on closeCard
     deleteMobileControl "aboutText"
-    dialog_CustomMsg false
 end closeCard
 
 on displayAbout pLevel
@@ -512,8 +511,8 @@ command pickLevel  pAction, pValue
          end switch
          hide grp "prefsSelectorGrp"
          put the loc of this cd into pLoc
-         dialog_CustomMsg true,tPrompt,pLoc,,50
-         send "dialog_CustomMsg false" to me in 2 seconds
+         dialog_CustomMsg tPrompt
+         
    end switch
    
    -- display the mobile picker
@@ -581,8 +580,7 @@ command triggercompletion
   end if
   put fld "seconds"  after tTime
   put "Done!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
- dialog_CustomMsg true,tPrompt 
-  send "dialog_CustomMsg false" to me in 5 seconds
+ dialog_CustomMsg tPrompt 
   # later we ahve to save a puzzle solved to tracker for this module
   # pop up the link to read in the book.
   # more quotes and timer etc. for additional fun
@@ -605,6 +603,11 @@ end hideSubjectFld
 
 on showClues
    put the uWordList of me into tTiles
+   if tTiles is empty then
+      dialog_CustomMsg "Start a puzzle first."
+      exit to top
+   end if
+   
    put the number of lines of tTiles into tWordCount
    if sCluesGiven is empty then
       put 0 into sCluesGiven
@@ -629,7 +632,7 @@ on showClues
          break
       case 3 
          put "No more clues. You are on your own!" into pMsg
-         dialog_customMsg true,pMsg,1500
+         dialog_customMsg pMsg
          put 0 into sCluesGiven
          break       
    end switch
@@ -657,7 +660,7 @@ on test -- use this to test correct dimensions
   -- params: pShow,pMsg,pLoc,pWidth,pHeight:
   
   put "You did it!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
- dialog_CustomMsg true,tPrompt
+ dialog_CustomMsg tPrompt
 end test
 
 command resetUI

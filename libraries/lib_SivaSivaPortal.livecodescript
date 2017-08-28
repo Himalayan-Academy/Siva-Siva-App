@@ -99,7 +99,7 @@ command portal_GoUrl someURL,pJournalLabel
    # handle returning to the context properly.
    if connectivity_GetStatus() <> "true" then
       # do nothing, inform user
-      dialog_CustomMsg true,"Offline or Low Bandwidth" , 1000
+      dialog_CustomMsg "Offline or Low Bandwidth"
       exit portal_GoURL
    else
       
