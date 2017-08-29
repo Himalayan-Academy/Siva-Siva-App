@@ -117,8 +117,7 @@ private function _assembleDataForUpload
 end _assembleDataForUpload
 
 private command _truncateData
-   dbSetSQL "truncate activity"
-   get dbGet("activity", trackingDB())
+   get dbDelete("activity", trackingDB(), true)
 end _truncateData
    
    function tracking_makeInlineArray
