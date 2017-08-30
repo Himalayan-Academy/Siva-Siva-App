@@ -145,6 +145,7 @@ command portal_Link portalName
       set the portal_Name of portalView to portalName
       unlock screen
       set the logo_Faded of portalView to true
+      news_Fetch
    end if
 end portal_Link
 
