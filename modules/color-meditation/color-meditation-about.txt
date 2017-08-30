@@ -1,5 +1,5 @@
 EditingGuide\This is a very lean structured text schema. Array elements are separated by pipe ; key-name value pairs are separated by backslash. To call text into the app. load the array and call the key.  you cannot us a pipe or backslash in any key or text string, no white space around key string
-|colorOpening\<p>Color meditation sets a foundation for mastery of self-awareness. Think of it as exercise for the muscles you use to control your thoughts and emotions.br /></p>
+|colorOpening\<p>Color meditation sets a foundation for mastery of self-awareness. Think of it as exercise for the muscles you use to control your thoughts and emotions.<br /></p>
 
 <p> Learn to be a free traveler through the mind as you bath yourself in the purity of color. <br /></p>
 
