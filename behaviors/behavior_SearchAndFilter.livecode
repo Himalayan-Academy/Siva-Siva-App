@@ -54,6 +54,7 @@ end mouseup
 command searchPlayList
    put "cached" into tFilterListQueryA["playListClass"]   
    put playlist_GetCurrent() into tPlayList
+      put "YES" into tFilterListQueryA["approved_for_public"]
    switch
       case  (tPlayList= "Songs") # unique seach criteria:
          put "audio/song" into tFilterListQueryA["media_type"]
