@@ -222,6 +222,7 @@ command portal_GoStack cardOrStackObject
       else 
          put "navigation/goContent" into pAction
       end if
+      put oStackName into pTrackData["exitFrom"]
       tracking_RecordActivity "Portal", pAction, pTrackdata
       
       if not  (oStackName= "Siva-Siva-App") then  

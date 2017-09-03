@@ -189,7 +189,7 @@ command toggleReadContext pState
          # and not actually go back to gem in this case
          show widget "cancel"
          send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
-         put sCurrentRealm into pData["currentRealm"]
+         put  fld "title" into pData["currentRealm"]
          tracking_RecordActivity "Gems", "read/quoteContext", pData
          break
       case "false"

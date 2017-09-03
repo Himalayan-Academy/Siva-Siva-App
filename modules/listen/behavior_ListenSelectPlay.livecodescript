@@ -64,7 +64,8 @@ on mouseup
    
    switch tTarget
       case "AudioList"
-         select_Play  clickline()
+           put word 2 of clickline() into sSelectNum
+         select_Play # will use either the line number or item id
          break  
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
@@ -109,14 +110,28 @@ end mouseup
 # CHANGES: 2017-06-22, CREATED Brahmanathswami
 ---------------------------------------------
 
-on select_Play  pSelectedLine
-   put word 2 of pSelectedLIne into sSelectNum
-   put getItemURL(sSelectNum) into sRemoteURL
-   Put "Connecting..." into fld "currentTitleLabel"
-   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
-   put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
-   metadata_SetRecord sSelectedItemA
-   put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+on select_Play  pitemID  # if item id is empty then defaults to the click line number
+   
+   # if we are coming from a click on the card list then the pItemID will be empty
+   # but we may be dropping in from the journal or another type of list that
+   # simple passes the item_id for the record.. and there is no pSelectedLIne
+   
+   if pItemID is empty then # search from the click line
+      put getItemURL(sSelectNum) into sRemoteURL
+      Put "Connecting..." into fld "currentTitleLabel"
+      playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+      put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
+      metadata_SetRecord sSelectedItemA
+      put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+   else
+      put pitemID into tSearchA["item_id"]
+      put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
+      put tTargetRecordA[1] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA
+      put getMediaURL() into sSelectedURL
+      put path_isFileOnDisk(sSelectedURL) into tLocalStatus
+   end if
+   
    
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
@@ -125,7 +140,13 @@ on select_Play  pSelectedLine
       showBusyIndicator false
       exit to top
    end if
-   
+   startPlayer
+   Journal_AddEntry  sSelectedItemA["item_id"]
+   put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
+   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
+end select_Play
+
+command startPlayer pURL, pTitle
    if isMobile() then
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
@@ -147,19 +168,17 @@ on select_Play  pSelectedLine
    end if
    
    showBusyIndicator false
-   put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
+    put  sSelectedItemA["title"] into fld "currentTitleLabel"
+  # put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
    # Android player covers it!
    if the platform is "Android" then
       set the bottomleft of widget "downloadSelection" to 14,657
    else
       set the bottom of widget "downloadSelection" to 622
    end if
-   
-   set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
-   Journal_AddEntry pSelectedLIne
-   put "audiotitle="& sSelectionsA["audioFiles"][sSelectNum]["title"]   into pTrackdata["contentTarget"]
-   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
-end select_Play
+      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+      #set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
+end startPlayer
 
 
 # V2 Link to transcript
@@ -245,12 +264,14 @@ command downloadAffirmed
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
 end downloadAffirmed
 
-on Journal_AddEntry pSelectedLine
+on Journal_AddEntry pItemID
    put  sSelectionsA["playlistTitle"] into tPlayList
    put tPlayList into pDataA["playlist"]
    put "listen-playlist" into pDataA["card"]
-   put pSelectedLine into pDataA["playSelection"]
-   put value(pSelectedLine) into tPlayFileLabel
+   put pItemID into pDataA["item_id"]
+   put sSelectedItemA["title"] into pDataA["playSelection"]
+   put sSelectedURL into pDataA["audioURL"]
+   put  sSelectedItemA["title"] into tPlayFileLabel
    put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
    Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
 end Journal_AddEntry

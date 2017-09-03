@@ -79,9 +79,11 @@ command share_MouseEvent
 end share_MouseEvent
 
 command Share_Email sShareItemsA
-   put sShareItemsA["subject"] into tSubject
+   put sShareItemsA["subject"] && "From SivaSivaApp"  into tSubject
    put empty into tAddress
    put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
+   put  cr & cr & "------------------------------------" & cr & \
+         "Get the SivaSivaApp today! Go to:" & cr & "https://www.himalayanacademy.com/view/sivasiva" after tBody
    revMail tAddress,,tSubject,tBody
 end share_Email
 

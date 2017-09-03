@@ -447,7 +447,7 @@ on journalResume  pDataA, pEntryA
    portal_GoStack pDestination 
    put pDataA["playSelection"] into pSelectedLine
    dispatch "playlist_Reset" to card "listen-playlist"
-   dispatch "select_Play" to card "listen-playlist" with pSelectedLine
+   dispatch "select_Play" to card "listen-playlist" with pDataA["item_id"]
    
 end journalResume
 
