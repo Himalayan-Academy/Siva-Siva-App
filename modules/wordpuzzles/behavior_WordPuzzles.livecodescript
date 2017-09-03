@@ -41,7 +41,8 @@ end setTileGlow
   
 on closecard
   storeCurrentLevel sCurLevel
-   set the acceleratedRendering of this stack to false
+  set the acceleratedRendering of this stack to false
+   tracking_RecordActivity "Word Puzzle", "navigation/exit", pTrackdata
 end closecard
   
 on openCard
@@ -249,7 +250,7 @@ on createWordPuzzle
    stopTimer
    hide widget "context"
    loadNewBgImg
-   if sCurLevel < 1 then pickLevel -- not yet initialized
+   if sCurLevel < 1 then pickLevel -- not yet initialized, should never happen
    --getPixieList # deprecated for now... 
    put empty into sQuote
    fetchQuote # get a different one -- random for now dbase
@@ -342,9 +343,11 @@ on createWordPuzzle
    hide fld "_quote" -- comment this out to see the quote during dev
    unlock screen
    send hideSubjectFld to me in 200 milliseconds
-
+   
    send "clueGoHome" to image "word_1" in 500 milliseconds
- 
+   
+   put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
+   tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
 end createWordPuzzle
 
 on movestopped

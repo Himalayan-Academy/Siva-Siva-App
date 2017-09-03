@@ -157,6 +157,8 @@ on select_Play  pSelectedLine
    
    set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
    Journal_AddEntry pSelectedLIne
+   put "audiotitle="& sSelectionsA["audioFiles"][sSelectNum]["title"]   into pTrackdata["contentTarget"]
+   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
 
 

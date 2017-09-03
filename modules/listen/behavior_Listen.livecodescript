@@ -387,6 +387,8 @@ on playlist_Instantiate sTargetPlayList
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
    end if
+   put  sTargetPlayList into pData["audio_playlist"]
+   tracking_RecordActivity "Listen", "navigation/playlist", pData
    
 end playlist_Instantiate
 

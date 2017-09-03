@@ -268,19 +268,29 @@ function getMediaItemMetadata pRecords
    put sMediaMetaA["description"] into tDescription
    replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
    put sMediaMetaA["date_created"] into tDateCreated
+   put  sMediaMetaA["audio_file_transcript"] into tTranscript
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated
+   if tTranscript is not empty then  
+      put "Transcript: " & cr & cr before tTranscript
+   end if
    
    # data has commas so we have to use a lines as a delimiter
-   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription) into tFields
+   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript) into tFields
    
    repeat for each line x in tFields
       if x <> empty then
          put x & cr & cr after tViewData
       end if
    end repeat
+   replace "<p>" with "" in tViewData
+   replace "</p>" with "" in tViewData
+   replace (cr &cr &cr) with cr in tViewData
+   replace (cr &cr &cr) with cr in tViewData
+   
    replace "\n" with cr in tViewData
    replace "null" with "" in tViewData
+
    return tViewData
    
 end getMediaItemMetadata

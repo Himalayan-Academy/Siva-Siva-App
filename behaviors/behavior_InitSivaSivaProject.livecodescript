@@ -159,6 +159,9 @@ command init_AppConfiguration
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
    send  testConnection to me in 500 milliseconds
+   
+   tracking_RecordActivity "SivaSivaApp","init/launch", pData
+   send "tracking_UploadData" to stack "model_SivaSivaTracking" in 3 seconds
  
 end init_AppConfiguration
 

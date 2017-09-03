@@ -53,10 +53,12 @@ on preOpenCard
 end preOpenCard
 
 on setCardTitle
-    put "Realm of God,Realm of Soul,Realm of Life" into tTitles
+   put "Realm of God,Realm of Soul,Realm of Life" into tTitles
    put item sCurrentRealm of tTitles into tRealm
    put tRealm into fld "title"     
    AddJournalEntry pReadQuote
+   put tRealm into pData["switchRealm"]
+   tracking_RecordActivity "Gems", "navigation/realms", pData
 end setCardTitle
 
 on closecard
@@ -186,7 +188,9 @@ command toggleReadContext pState
          # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
          # and not actually go back to gem in this case
          show widget "cancel"
-         send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1500 milliseconds
+         send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
+         put sCurrentRealm into pData["currentRealm"]
+         tracking_RecordActivity "Gems", "read/quoteContext", pData
          break
       case "false"
          

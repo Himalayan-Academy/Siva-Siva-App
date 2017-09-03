@@ -90,7 +90,7 @@ command tracking_UploadData
 end tracking_UploadData
 
 private function _thereIsInternet
-   get url "http://dev.himalayanacademy.com/ping.txt"
+   get url "https://www.himalayanacademy.com/ping.txt"
    if it is "true" then
       return true
    else
@@ -141,7 +141,7 @@ end trackingDB
 
 
 --> Private
--
+
 private command _setupDatabase
    put tracking_GetDatabasePath() into trackingDatabasePath
    if there is not a file trackingDatabasePath or the environment is "development" then

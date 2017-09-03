@@ -360,6 +360,17 @@ command display_Log
    portal_GoStack "Log"
 end display_Log
  
+ 
+ on _____Utilities
+ end _____Utilities
+ 
+ function removeQuotes pString
+    # Needed when passing some raw string to json for some functions like analytics
+    # quotes will break theAPI/Jdon
+    replace quote with "" in pString
+    replace "'" with "" in pString
+    return pString
+ end removeQuotes
 
 #########  ALL The FOLLOWING not in USE
 ## If something here gets active, please move up above this comment.
@@ -602,3 +613,5 @@ which was put into the backscript on start up
 on errorDialog pExecutionError, pParseError
 
 end errorDialog
+
+

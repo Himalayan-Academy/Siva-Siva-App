@@ -107,7 +107,8 @@ command portal_GoUrl someURL,pJournalLabel
       portal_SetCurrentStack(oStackName)
       portal_GoStack "view_SivaSivaBrowser"
       set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-      
+      put someURL into pTrackdata["webUrl"]
+       tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
    end if # closing connectivity check
 end portal_GoUrl
 
@@ -126,7 +127,11 @@ command portal_Link portalName
    if connectivity_NotAvailable(portalName) is "offline" then
       # do nothing
    else
-      
+      put portalName into pTrackdata["contentTarget"]
+      # our navigation will change in the future, but this is still the same thing
+      # user is moving from  TOC, or Index, or Map to another
+      # not actually interacting with content at all hyet.
+      tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
       -- navigates to the "portal view" and displays the named portal
       lock screen
       sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
@@ -199,13 +204,25 @@ command portal_GoStack cardOrStackObject
    
    if connectivity_NotAvailable(cardOrStackObject) is "offline" then
       # do nothing
-   else
+   else     
       # save where we are coming from locally
       put the short name of this stack into oStackName
       put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
       if not  (oStackName is among the items of tNoGoBackStacks) then
          portal_SetCurrentStack oStackName
       end if
+      # cannot pass quotes to these strings or you willl
+      # break the JSON, BR added utilities section to lib_SivaSiva
+      
+      put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
+      # user clicks on a portal link but is going out to content
+      
+      if  oStackName is "Siva-Siva-Portal" then 
+         put "navigation/topindex" into pAction
+      else 
+         put "navigation/goContent" into pAction
+      end if
+      tracking_RecordActivity "Portal", pAction, pTrackdata
       
       if not  (oStackName= "Siva-Siva-App") then  
          # always close.; all stacks should be set to remove window and destroy on close
