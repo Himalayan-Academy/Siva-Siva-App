@@ -157,6 +157,7 @@ function path_Documents
    put specialFolderPath("documents") into  tPath
    put "/" after tPath 
    # remember not to precede path strings to follow with a slash in your 
+   # final slashes are added here
    # handlers, double //   works on desktop but not on mobile, especially not on Android   
    if  not isMobile() then
       # We may have a desktop version in which case we want all content related to the app to go into a proper folder

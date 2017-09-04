@@ -100,13 +100,14 @@ end _thereIsInternet
 
 private command _uploadData
    put _assembleDataForUpload() into tDataJSON
+  --  put tDataJSON into  url ("file:" & Path_Documents() & "tracking-from-launch.json")
    post tDataJSON to url ("http://dev.himalayanacademy.com/api/index.php/sivasiva/tracking/" & tracking_UUID())
    if the result is not empty then
       -- error
    else
       put jsonImport(it) into tResultA
       if tResultA["status"] is "uploaded" then
-         _truncateData
+         _truncateData         
       end if
    end if
 end _uploadData
@@ -144,7 +145,7 @@ end trackingDB
 
 private command _setupDatabase
    put tracking_GetDatabasePath() into trackingDatabasePath
-   if there is not a file trackingDatabasePath or the environment is "development" then
+   if there is not a file trackingDatabasePath then -- or the environment is "development" then
       _copyAndDecompress
    end if
    

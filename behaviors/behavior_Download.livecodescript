@@ -130,6 +130,8 @@ command downloadComplete pURL, pStatus
    if pStatus = "error" or pStatus = "timeout" then
       put error  &cr& "The file could not be downloaded. Try later." into fld "Progress Title"
       wait 1 second with messages
+           put removeQuotes(sRequestedBy) into tModule     
+   tracking_RecordActivity tModule,"download/failed"
       close this stack
    else
       put  path_FileFromURL(sURL) into tLocalPath # includes filename
@@ -141,7 +143,9 @@ command downloadComplete pURL, pStatus
       
       delete word 1 to 4 of sRequestedBy
       dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
-      close this stack
+      close this stack   
+      put removeQuotes(sRequestedBy) into tModule     
+   tracking_RecordActivity tModule,"download/saved"
    end if
 end downloadComplete
 

@@ -160,9 +160,10 @@ command init_AppConfiguration
    send openPortalStack to me in 200 milliseconds
    send  testConnection to me in 500 milliseconds
    
-   tracking_RecordActivity "SivaSivaApp","init/launch", pData
-   send "tracking_UploadData" to stack "model_SivaSivaTracking" in 3 seconds
- 
+   send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
+   put platform() into tPlatform
+   put "init/launch/"& tPlatform into tAction
+  send  "tracking_RecordActivity SivaSivaApp,tAction" to stack "model_SivaSivaTracking" in 3 seconds
 end init_AppConfiguration
 
 on init_StoreControlsIds
