@@ -291,42 +291,53 @@ end ______CONNECTIVITY
 
 Local sPingURL,sServerAttempts # sURLStatusLog
 
-on connectivity_PingServer
-   unload URL "https://www.himalayanacademy.com/ping.txt" 
-  put 0 into sServerAttempts
-   # Logging: put empty into sURLStatusLog
-   put "https://www.himalayanacademy.com/ping.txt" into sPingURL
-   load url sPingURL
-   dispatch "connectivity_UpdateStatus" to stack "lib_SivaSiva"
+function connectivity_PingServer   
+   get url "https://www.himalayanacademy.com/ping.txt"
+   if it is "true" then
+      return true
+   else
+      return false
+   end if
+   --    unload URL "https://www.himalayanacademy.com/ping.txt" 
+   --   put 0 into sServerAttempts
+   --    # Logging: put empty into sURLStatusLog
+   --    put "https://www.himalayanacademy.com/ping.txt" into sPingURL
+   --    load url sPingURL
+   --    dispatch "connectivity_UpdateStatus" to stack "lib_SivaSiva"
 end connectivity_PingServer
 
-on connectivity_UpdateStatus
-   if URLStatus(sPingURL) = "cached" then
-      put "true" into sOnLinestatus
-   else
-      put URLStatus(sPingURL)  into tURLStatus
-      if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
-         put tURLStatus into sOnLinestatus
-         dialog_CustomMsg "Offline or Low Bandwidth"     
-         # do stuff here to block access  or show indicators.
-         # keep checking but don't hog the CPU... 
-         send "connectivity_PingServer" to stack "lib_SivaSiva" in 1 seconds
-      else
-         # Logging
-         --       put URLStatus(sPingURL) & cr after sURLStatusLog
-         --       put sURLStatusLog
-         add 1 to sServerAttempts
-          dialog_CustomMsg "Connecting"
-         send "connectivity_UpdateStatus" to stack "lib_SivaSiva" in 800 milliseconds
-      end if
-   end if
-end connectivity_UpdateStatus
 
-# Use this in the module so we don't ping the server constantly.
+
+-- ## Deprecated
 
 function connectivity_GetStatus
    return sOnLineStatus
 end connectivity_GetStatus
+
+-- on connectivity_UpdateStatus
+--    if URLStatus(sPingURL) = "cached" then
+--       put "true" into sOnLinestatus
+--    else
+--       put URLStatus(sPingURL)  into tURLStatus
+--       if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
+--          put tURLStatus into sOnLinestatus
+--          dialog_CustomMsg "Offline or Low Bandwidth"     
+--          # do stuff here to block access  or show indicators.
+--          # keep checking but don't hog the CPU... 
+--          send "connectivity_PingServer" to stack "lib_SivaSiva" in 1 seconds
+--       else
+--          # Logging
+--                put URLStatus(sPingURL) & cr after sURLStatusLog
+--                put sURLStatusLog
+--          add 1 to sServerAttempts
+--           dialog_CustomMsg "Connecting"
+--          send "connectivity_UpdateStatus" to stack "lib_SivaSiva" in 800 milliseconds
+--       end if
+--    end if
+-- end connectivity_UpdateStatus
+
+# Use this in the module so we don't ping the server constantly.
+
 
 function connectivity_NotAvailable cardOrStackObject
    if sOnlineStatus = "true" then # nothing to do here.. no checks required

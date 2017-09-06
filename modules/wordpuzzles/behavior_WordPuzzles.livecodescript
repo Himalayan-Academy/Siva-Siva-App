@@ -124,7 +124,7 @@ command fetchQuote
    #hack to deal with endline bug
    replace "\n" with space in sQuote
    
-   if connectivity_GetStatus ="true"  then
+   if connectivity_PingServer() ="true"  then
       ## Source URL may or may not there
       put   textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
       replace "http:" with "https:" in sSourceURL

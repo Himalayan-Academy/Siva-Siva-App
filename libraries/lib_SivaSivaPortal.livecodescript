@@ -97,7 +97,7 @@ command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   if connectivity_GetStatus() <> "true" then
+   if connectivity_PingServer() <> "true" then
       # do nothing, inform user
       dialog_CustomMsg "Offline or Low Bandwidth"
       exit portal_GoURL
@@ -124,7 +124,9 @@ end portal_GoLandscapeUrl
 
 command portal_Link portalName
    
-   if connectivity_NotAvailable(portalName) is "offline" then
+  -- if connectivity_NotAvailable(portalName) is "offline" then
+   if connectivity_PingServer() is "false" then
+        dialog_CustomMsg "Offline or Low Bandwidth"
       # do nothing
    else
       put portalName into pTrackdata["contentTarget"]

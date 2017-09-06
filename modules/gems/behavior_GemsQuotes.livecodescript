@@ -38,7 +38,7 @@ on preOpenCard
    
    put 0 into sViewState
    
-   put connectivity_GetStatus() into sOnline
+   put connectivity_PingServer() into sOnline
    
    --play (localPath() &"shared/audio/aum.mp3")
    -- create vertical scroller on top of field after all other layout has 
@@ -179,18 +179,22 @@ end checkRealm
 command toggleReadContext pState
    switch pState
       case "true"
-         put the uSourceURL of the target into tURL
-         set the url of widget "readContext" to  tURL
-         browser_SetLastURL tURL
-         hide the target
-         hide widget "next-arrow"
-         show widget "readContext"
-         # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
-         # and not actually go back to gem in this case
-         show widget "cancel"
-         send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
-         put  fld "title" into pData["currentRealm"]
-         tracking_RecordActivity "Gems", "read/quoteContext", pData
+         if connectivity_PingServer() is "true" then
+            put the uSourceURL of the target into tURL
+            set the url of widget "readContext" to  tURL
+            browser_SetLastURL tURL
+            hide the target
+            hide widget "next-arrow" # svg
+            show widget "readContext" # a browser
+            # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
+            # and not actually go back to gem in this case
+            show widget "cancel"
+            send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
+            put  fld "title" into pData["currentRealm"]
+            tracking_RecordActivity "Gems", "read/quoteContext", pData
+         else
+            dialog_CustomMsg "Offline or Low Bandwidth"
+         end if
          break
       case "false"
          

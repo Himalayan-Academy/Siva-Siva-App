@@ -20,7 +20,7 @@
 -----
 
 
-local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL
+local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 
 
@@ -122,8 +122,8 @@ on playlist_QuerySetUp
    # Add all your new playlists here in V1... assume match to a portal link for V1
    
    switch sTargetPlayList
-   
-# Go to the web server for these latest playlists
+      
+      # Go to the web server for these latest playlists
       case "Bodhinatha's Latest Talks" 
          # Remote look up based on search criteria... 
          # this model could fetch any kid of collection, songs, curated by category or tag... 
@@ -135,14 +135,14 @@ on playlist_QuerySetUp
          put "latest" into sPlaylistQueryA["recordType"]        
          put 30 into sPlaylistQueryA["recordCount"]
          break
-	  case "All Recent Additions"
+      case "All Recent Additions"
          put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
          put "audio" into sPlaylistQueryA["media_type"]       
          put "latest" into sPlaylistQueryA["recordType"]   
          put 50 into sPlaylistQueryA["recordCount"]
          break  
-          
-# fetch all these form the local Jnanam dbase
+         
+         # fetch all these form the local Jnanam dbase
       case "Gurudeva's 1970 Audio Master Course"
          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
@@ -173,9 +173,9 @@ on playlist_QuerySetUp
          put "YES" into sPlaylistQueryA["approved_for_public"]
          break
          
-## Audio books:
-		# for audio books; all we need to know the file ID, which is the folder name
-		# after that it is a simple path set up.
+         ## Audio books:
+         # for audio books; all we need to know the file ID, which is the folder name
+         # after that it is a simple path set up.
       case "The Guru Chronicles" # Audio book
          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
@@ -184,11 +184,11 @@ on playlist_QuerySetUp
          put "audiobook" into sPlaylistQueryA["playlistClass"]
          put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
          break   
-	 case "Gujarati Living with Siva" # Audio book
+      case "Gujarati Living with Siva" # Audio book
          put "audiobook" into sPlaylistQueryA["playlistClass"]
          put "living-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
          break
-               
+         
    end switch
    
    playList_FetchData 
@@ -208,6 +208,15 @@ end playlist_QuerySetUp
 -----------------------------------------------------------------------
 
 on playList_FetchData pQueryArray
+   
+   # need to test connection here because we could be dropping in from a search
+   if connectivity_PingServer() is "true" then
+      put "true" into sOnLIne
+   else
+      put "false" into sOnline 
+      #only need to test in specific contexts
+      # user is look for "latest" or is looking for audio not already downloaded.
+   end if
    
    if pQueryArray is not empty then # we are passing a query from the search behavior
       put pQueryArray into sPlaylistQueryA
@@ -247,16 +256,21 @@ on playList_FetchData pQueryArray
          # It just set the WHERE clause in the query with what ever you request. then sorts on date sends bak the request number
          # of records.
          
-        put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
+         put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into queryData["recordType"]
          put sPlayListQueryA["recordCount"] into queryData["recordcount"]
          
          put arrayToJson(queryData) into pJSON
-     
+         
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         if sOnline ="true" then
+            POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         else
+            dialog_CustomMsg "Offline or Low Bandwidth"
+            exit to top
+         end if
          if the result is not empty then 
             put the result into fld "audioList"
             # reveal field using the function after it is built later      
@@ -296,7 +310,7 @@ on playList_FetchData pQueryArray
          
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON
          
-       --  put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
+         --  put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
