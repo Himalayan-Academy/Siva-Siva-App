@@ -69,7 +69,6 @@ end tracking_UUID
 command tracking_RecordActivity pModule, pType, pData
    put pModule into tDataA["module"]
    put pType into tDataA["type"]
-   put the platform into tDataA["platform"]
    
    if the keys of pData is empty then
       if pData is not empty then
@@ -102,7 +101,7 @@ end _thereIsInternet
 private command _uploadData
    put _assembleDataForUpload() into tDataJSON
   --  put tDataJSON into  url ("file:" & Path_Documents() & "tracking-from-launch.json")
-   post tDataJSON to url ("http://dev.himalayanacademy.com/api/index.php/sivasiva/tracking/" & tracking_UUID())
+   post tDataJSON to url ("http://dev.himalayanacademy.com/api/index.php/sivasiva/tracking/" & tracking_UUID() & "/" & the platform)
    if the result is not empty then
       -- error
    else
