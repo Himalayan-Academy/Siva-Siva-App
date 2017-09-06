@@ -69,6 +69,7 @@ end tracking_UUID
 command tracking_RecordActivity pModule, pType, pData
    put pModule into tDataA["module"]
    put pType into tDataA["type"]
+   put the platform into tDataA["platform"]
    
    if the keys of pData is empty then
       if pData is not empty then
