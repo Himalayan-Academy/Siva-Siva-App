@@ -50,7 +50,6 @@ on openstack
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
-   
    playlist_QuerySetUp sTargetPlayList 
 end openstack
 
@@ -255,7 +254,7 @@ on playList_FetchData pQueryArray
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
-         if sOnline ="true" then
+         if connectivity_PingServer()="true" then
             POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
          else
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -305,7 +304,7 @@ on playList_FetchData pQueryArray
          
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
-         if sOnline ="true" then      
+         if connectivity_PingServer() ="true" then      
             POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
          else
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -466,4 +465,7 @@ end journalResume
 
 on closeStack
    set the acceleratedRendering of this stack to "false"
+   if isMobile() then 
+      deleteAllMobileControls
+   end if
 end closeStack
