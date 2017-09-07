@@ -79,6 +79,10 @@ on mouseup
          set the flipped of pTarget to not detailVis
          break
       case "DownloadSelection" 
+           if connectivity_PingServer() <> "true" then
+              dialog_CustomMsg "Offline or Low Bandwidth"
+             exit mouseup
+           end if
          downloadSelection pTarget
          break
       case "revealMoreActions"

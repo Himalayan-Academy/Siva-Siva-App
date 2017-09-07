@@ -155,11 +155,11 @@ command init_AppConfiguration
    
    init_CreateLocalFolders
    
-
+   set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
+   
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 200 milliseconds
-   send  testConnection to me in 500 milliseconds
-   
+
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
    put platform() into tPlatform
    put "init/launch/"& tPlatform into tAction
@@ -173,7 +173,8 @@ on init_StoreControlsIds
 end init_StoreControlsIds
 
 on testConnection
-   connectivity_PingServer
+   get  connectivity_PingServer()
+   put it
 end testConnection
 
 command openPortalStack

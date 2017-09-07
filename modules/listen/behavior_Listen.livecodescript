@@ -209,19 +209,9 @@ end playlist_QuerySetUp
 
 on playList_FetchData pQueryArray
    
-   # need to test connection here because we could be dropping in from a search
-   if connectivity_PingServer() is "true" then
-      put "true" into sOnLIne
-   else
-      put "false" into sOnline 
-      #only need to test in specific contexts
-      # user is look for "latest" or is looking for audio not already downloaded.
-   end if
-   
    if pQueryArray is not empty then # we are passing a query from the search behavior
       put pQueryArray into sPlaylistQueryA
    end if
-   
    
    # we can put in the title and image right away
    
@@ -269,6 +259,8 @@ on playList_FetchData pQueryArray
             POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
          else
             dialog_CustomMsg "Offline or Low Bandwidth"
+            close this stack
+            portal_Link "Listen"
             exit to top
          end if
          if the result is not empty then 
@@ -288,7 +280,6 @@ on playList_FetchData pQueryArray
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
-         
          # a simple call to the server to get the TOC
          # can chose different books base on file_id
          put sPlaylistQueryA["file_id"] into tFileID
@@ -311,10 +302,17 @@ on playList_FetchData pQueryArray
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON
          
          --  put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
-         put the ticks into sStartTimer
+         
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         if sOnline ="true" then      
+            POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
+         else
+            dialog_CustomMsg "Offline or Low Bandwidth"
+            close this stack
+            portal_Link "Listen"
+            exit to top
+         end if
          if the result is not empty then 
             put the result into fld "audioList"
             # reveal field using the function after it is built later      
