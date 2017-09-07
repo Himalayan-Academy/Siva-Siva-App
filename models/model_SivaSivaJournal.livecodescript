@@ -233,6 +233,8 @@ command Journal_LaunchEntry pEntryID
    if it is among the items of "unhandled,passed" then
       return "journalerr, no module could handle this activity"
    end if
+
+       tracking_RecordActivity "Journal","launch/activity", tDataA
 end Journal_LaunchEntry
 
 on journalresume pDataA, pEntryA

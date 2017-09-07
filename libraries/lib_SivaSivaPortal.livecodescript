@@ -94,10 +94,11 @@ command portal_DoRowLink rowName
 end portal_DoRowLink
 
 command portal_GoUrl someURL,pJournalLabel
+   set the socketTimeoutinterval to 2000
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   if connectivity_PingServer() <> "true" then
+   if connectivity_PingServer() = "false" then
       # do nothing, inform user
       dialog_CustomMsg "Offline or Low Bandwidth"
       exit portal_GoURL
@@ -123,12 +124,6 @@ command portal_GoLandscapeUrl someURL
 end portal_GoLandscapeUrl
 
 command portal_Link portalName
-   
-  -- if connectivity_NotAvailable(portalName) is "offline" then
-   if connectivity_PingServer() is "false" then
-        dialog_CustomMsg "Offline or Low Bandwidth"
-      # do nothing
-   else
       put portalName into pTrackdata["contentTarget"]
       # our navigation will change in the future, but this is still the same thing
       # user is moving from  TOC, or Index, or Map to another
@@ -153,7 +148,6 @@ command portal_Link portalName
       unlock screen
       set the logo_Faded of portalView to true
       news_Fetch
-   end if
 end portal_Link
 
 command portal_SetCurrent portalName
@@ -202,11 +196,7 @@ end portal_GetLastLinkTitle
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
 
-command portal_GoStack cardOrStackObject 
-   
-   if connectivity_NotAvailable(cardOrStackObject) is "offline" then
-      # do nothing
-   else     
+command portal_GoStack cardOrStackObject    
       # save where we are coming from locally
       put the short name of this stack into oStackName
       put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
@@ -236,7 +226,6 @@ command portal_GoStack cardOrStackObject
       end if
       wait for 0 seconds
       go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
-   end if
 end portal_GoStack
 
 command portal_RemoveStack oStackName
@@ -245,7 +234,7 @@ command portal_RemoveStack oStackName
 	end if    
  end portal_RemoveStack
 
-------------- Loyout section -------------------
+------------- Layout section -------------------
  # BR: this whole set of handlers is really dedicated to the Portal screens "proper"
  # and could remain here .. encapsulated all Davids lay code for the portals in this
  # on script, there by separating it entirely from all other message path activity.

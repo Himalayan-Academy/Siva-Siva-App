@@ -78,6 +78,8 @@ check this first.
 */
 
 command news_Fetch
+   set the socketTimeoutInterval to 2000
+   if connectivity_PingServer() = "false" then exit news_Fetch
    # path to news 
    put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
    
@@ -292,18 +294,13 @@ end ______CONNECTIVITY
 Local sPingURL,sServerAttempts # sURLStatusLog
 
 function connectivity_PingServer   
+   set the socketTimeoutInterval to 2000
    get url "https://www.himalayanacademy.com/ping.txt"
    if it is "true" then
       return true
    else
       return false
    end if
-   --    unload URL "https://www.himalayanacademy.com/ping.txt" 
-   --   put 0 into sServerAttempts
-   --    # Logging: put empty into sURLStatusLog
-   --    put "https://www.himalayanacademy.com/ping.txt" into sPingURL
-   --    load url sPingURL
-   --    dispatch "connectivity_UpdateStatus" to stack "lib_SivaSiva"
 end connectivity_PingServer
 
 
