@@ -23,7 +23,7 @@ on journalresume pDataA
    if the keys of pDataA is not empty then
       put jsonexport(pDataA) into pDataA
    end if
-   answer "launched from journal" && pDataA
+  -- answer "launched from journal" && pDataA
 end journalresume
 
 function crlist

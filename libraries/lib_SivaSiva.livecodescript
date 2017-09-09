@@ -15,13 +15,6 @@ function isMobile
    return the environment is "mobile"
 end isMobile
 
-command sivasiva_SetStatusBarVis visBoolean
-   if visBoolean then
-      mobileShowStatusBar
-   else
-      mobileHideStatusBar
-   end if        
-end sivasiva_SetStatusBarVis
 
 command sivasiva_InitOrientation orientationType
    -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
@@ -88,18 +81,18 @@ command news_Fetch
    
    # check for the existence of news file locally
    # get date data 
-
+   put format ("<p id=\"datestamp\">") into tTargetLine
    
    if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-      set the htmltext of templateField() to url ("file:/"& tLocalNewsFile)
-      put line 1 of templateField() into tLocalNewsDate
+      put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
+      put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
+      put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
       convert tLocalNewsDate to seconds
    else
       put empty into tLocalNewsDate
    end if 
-   
-   set the htmltext of templateField() to tServerNews
-   put line 1 of templateField() into tLatestNewsDate
+   put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
+   put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
    convert tLatestNewsDate to seconds
    
    # compare dates
@@ -108,13 +101,12 @@ command news_Fetch
       put "false" into sNewNews
       # do nothing
    else 
-       # save it
+      # save it
       put tServerNews into url ("file:/"&tLocalNewsFile)
-     dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+      dispatch "dialog_CustomMsg" to the topstack with "You have news!"
       put "true" into sNewNews
    end if
-   # reset the templateField just in case
-   set the htmlText of templateField() to empty
+   send "news_Fetch" to stack "lib_SivaSiva" in 1200 seconds # every 20 minutes
 end news_Fetch
 
 function news_Check
@@ -356,6 +348,14 @@ end connectivity_NotAvailable
 on _____VISUALSandUI
 end _____VISUALSandUI
 
+command display_SetStatusBarVis visBoolean
+   if visBoolean then
+      mobileShowStatusBar
+   else
+      mobileHideStatusBar
+   end if        
+end display_SetStatusBarVis
+
 on moveGrp pGrpName, pHorz, pVert, pSpeed -- use move instead of visual effect to prevent Android issues
   -- pass 0 pHorz for vertical move and 0 to pVert to horizontal move
   put pHorz,pVert into tPt
@@ -380,6 +380,21 @@ end display_Log
     replace "'" with "" in pString
     return pString
  end removeQuotes
+ 
+ function stripHTMLTags pString
+    replace cr with empty in pString -- in case of multi-line tags
+    replace "<" with cr & "<" in pString
+    replace ">" with ">" & cr in pString
+    filter pString without "*<*"
+    filter pString without "*>*"
+    repeat for each line LNN in pString
+      put word 1 to -1 of LNN  & cr after newHtml
+   end repeat
+   filter newHtml without empty
+--now there are no leading/trailing spaces, no empty lines
+   replace cr with space in newHtml
+   return newHtml
+ end stripHTMLTags
 
 #########  ALL The FOLLOWING not in USE
 ## If something here gets active, please move up above this comment.

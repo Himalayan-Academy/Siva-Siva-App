@@ -95,10 +95,12 @@ command _old_fetchRandomMediaItem pSelectParams
    put textDecode ( aSelectedItem[1]["title"], UTF8)  into sMediaMetaA["title"]
    put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into sMediaMetaA["sub_title"] 
    put textDecode ( aSelectedItem[1]["artists"], UTF8)  into sMediaMetaA["artists"]
-   put textDecode ( aSelectedItem[1]["author"], UTF8)  into sMediaMetaA["author"]
+   put textDecode ( aSelectedItem[1]["author"], UTF8)  into tAuthor
+   # deal with extra cr in this field
+   put line 1 of tAuthor into sMediaMetaA["author"]
    put textDecode ( aSelectedItem[1]["description"], UTF8)  into sMediaMetaA["description"]
    
-  getformatData (sMediaMetaA["item_id"])
+   getformatData (sMediaMetaA["item_id"])
 end _old_fetchRandomMediaItem
 
 function fetchRandomMediaItem
@@ -442,14 +444,12 @@ function folderForAudio pMediaType
       case pMediaType="audio/inspiredtalk"
          put "inspired-talks/" after tServerPath
          put sMediaMetaA["author"] into tAuthor
+         put line 1 of tAuthor into tAuthor # handle extra EOL in some records
          put sMediaMetaA["date_created"] into tDateCreated
          set the itemdel to "-"
          put item 1 of tDateCreated into tYear
          switch tAuthor
             case "Satguru Sivaya Subramuniyaswami" 
-               put "gurudeva/" after tServerPath
-               break
-                   case "Satguru Sivaya Subramuniyaswami\n" 
                put "gurudeva/" after tServerPath
                break
             case "Satguru Bodhinatha Veylanswami" 

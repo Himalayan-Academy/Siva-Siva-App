@@ -151,6 +151,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
 end select_Play
 
 command startPlayer pURL, pTitle
+   
    if sSelectedURL contains "https" then # we need connectivity
       if connectivity_PingServer()<>"true" then
          dialog_CustomMsg "Offline or Low Bandwidth"
@@ -158,38 +159,38 @@ command startPlayer pURL, pTitle
       end if
    end if
    
-      if isMobile() then
-         if the platform is "android" then 
-            # the player is pretty ugly and covers up 120 vertical px
-            # we need to try to get it to fit nicely at the bottom:
-            put 70,570,405,679 into tRect       
-         else 
-            put empty into tRect
-         end if     
-         createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
-      else
-         set the filename of player "audioPlayer" to sSelectedURL
-      end if
-      
-      showPlayer "true", "audioPlayer"
-      if not isMobile() then 
-         start player "audioPlayer"
-      else
-         setMobileAudioPlayer "audioPlayer", "play"
-      end if
-      
-      showBusyIndicator false
-      put  sSelectedItemA["title"] into fld "currentTitleLabel"
-      # put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
-      # Android player covers it!
-      if the platform is "Android" then
-         set the bottomleft of widget "downloadSelection" to 14,657
-      else
-         set the bottom of widget "downloadSelection" to 622
-      end if
-      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
-      #set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
-   end startPlayer
+   if isMobile() then
+      if the platform is "android" then 
+         # the player is pretty ugly and covers up 120 vertical px
+         # we need to try to get it to fit nicely at the bottom:
+         put 70,570,405,679 into tRect       
+      else 
+         put empty into tRect
+      end if     
+      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
+   else
+      set the filename of player "audioPlayer" to sSelectedURL
+   end if
+   
+   showPlayer "true", "audioPlayer"
+   if not isMobile() then 
+      start player "audioPlayer"
+   else
+      setMobileAudioPlayer "audioPlayer", "play"
+   end if
+   
+   showBusyIndicator false
+   put  sSelectedItemA["title"] into fld "currentTitleLabel"
+   # put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
+   # Android player covers it!
+   if the platform is "Android" then
+      set the bottomleft of widget "downloadSelection" to 14,657
+   else
+      set the bottom of widget "downloadSelection" to 622
+   end if
+   set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+   #set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
+end startPlayer
 
 
 # V2 Link to transcript

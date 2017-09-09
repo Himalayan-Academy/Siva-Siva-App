@@ -254,17 +254,13 @@ on playList_FetchData pQueryArray
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
-         if connectivity_PingServer()="true" then
-            POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
-         else
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         if the result is not empty then 
+            put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
             close this stack
             portal_Link "Listen"
             exit to top
-         end if
-         if the result is not empty then 
-            put the result into fld "audioList"
-            # reveal field using the function after it is built later      
          else 
             put it into tRecords
             put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
@@ -286,8 +282,15 @@ on playList_FetchData pQueryArray
          # CMS is straightforward, path is consistent, no magic code required
          put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
          put URL tTocURL into tBookToc
-         put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
-         
+         if the result is not empty then 
+            put "Check your network Connections" into  fld "audioList"
+            dialog_CustomMsg "Offline or Low Bandwidth"
+            close this stack
+            portal_Link "Listen"
+            exit to top
+         else 
+            put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
+         end if
          # this should come from the local dBase,
          # but as of June 29, the local dBase is obsolete
          
@@ -298,23 +301,16 @@ on playList_FetchData pQueryArray
          
          # so we have to fetch info from the server 
          
-         put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON
-         
-         --  put "{'data': {'media_type': 'audio/book','file_id':'the-guru-chronicles-audiobook'}}" into pJSON
-         
+         put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
-         if connectivity_PingServer() ="true" then      
-            POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
-         else
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
+         if the result is not empty then 
+            put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
             close this stack
             portal_Link "Listen"
             exit to top
-         end if
-         if the result is not empty then 
-            put the result into fld "audioList"
-            # reveal field using the function after it is built later      
          else 
             put it into tRecords 
             # But the model is different for audio books. We now have metadata for the whole book

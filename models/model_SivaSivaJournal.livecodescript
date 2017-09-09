@@ -229,12 +229,13 @@ command Journal_LaunchEntry pEntryID
    catch n
       return "journalerr, data is corrupted"
    end try
+   put tEntryA["module"] into pData["returnTo"]
+   tracking_RecordActivity "Journal","resume/activity", pData
    dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
    if it is among the items of "unhandled,passed" then
       return "journalerr, no module could handle this activity"
    end if
-
-       tracking_RecordActivity "Journal","launch/activity", tDataA
+   
 end Journal_LaunchEntry
 
 on journalresume pDataA, pEntryA
