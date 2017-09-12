@@ -248,8 +248,13 @@ command setMobileAudioPlayer pPlayerName, pState,pTimeStamp --jg: control the st
       if mobileIdleTimerLocked() is true then 
          mobileUnlockIdleTimer
       end if
-   else 
+      runningAudioIndicatorVis("false")
+      # above is need to ensure we hide the icon that show audio is playing stop button/icon
+      # we set a local in the backscript lib_SivaSiva  that we query when going 
+      # to any context where this icon should appear
+   else
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
+         runningAudioIndicatorVis("true")
    end if
 end setMobileAudioPlayer
 

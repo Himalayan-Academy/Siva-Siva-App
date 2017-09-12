@@ -2,7 +2,7 @@
 ## VARS 
 
 global sConfigA
-local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews
+local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews,sStopRunningAudio
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
@@ -347,6 +347,14 @@ end connectivity_NotAvailable
 
 on _____VISUALSandUI
 end _____VISUALSandUI
+
+command runningAudioIndicatorVis visBool
+   put visBool into sStopRunningAudio
+end runningAudioIndicatorVis
+
+function runningAudioIndicatorVis
+   return sStopRunningAudio
+end runningAudioIndicatorVis
 
 command display_SetStatusBarVis visBoolean
    if visBoolean then

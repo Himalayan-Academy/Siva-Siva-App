@@ -295,12 +295,12 @@ function getMediaItemMetadata pRecords
    # Lyrics
    put "original_script,diacritical_transliteration,transliteration" into tLyricsFields 
    repeat for each item x in tLyricsFields
-      put sMediaMetaA[x]  into tLyricFld
-      if tLyricFld  not empty then 
-         put cr & cr & tLyricFld after tLyrics
+      if sMediaMetaA[x] <> empty then 
+         put cr & cr & sMediaMetaA[x] after tLyrics
       end if
-   end repeat
-   
+   end repeat 
+
+
    # data has commas so we have to use a lines as a delimiter
    put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
@@ -316,7 +316,6 @@ function getMediaItemMetadata pRecords
    
    replace "\n" with cr in tViewData
    replace "null" with "" in tViewData
-   
    return tViewData
    
 end getMediaItemMetadata
