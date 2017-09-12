@@ -136,6 +136,9 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
    
+   # Lyrics fetch is a separate function, see lib_SivaSiva Meida
+   
+   get getSongLyrics(sSelectedItemA["item_id"])
    
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
@@ -198,7 +201,7 @@ end startPlayer
 command select_ShowDetails   
    deleteMobileControl "audioList"
    if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      put textDecode (getMediaItemMetadata(),"UTF8") into fld "audioDetails"
+      put getMediaItemMetadata() into fld "audioDetails"
    else
       # its an audio book, lib media doesn't know anything, we have to pass the record here       
       put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     

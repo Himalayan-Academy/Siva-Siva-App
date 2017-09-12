@@ -166,6 +166,12 @@ command init_AppConfiguration
    put platform() into tPlatform
    put "init/launch"into tAction
    put the screenrect into pData["screenRect"]
+   put the machine into pData["device"]["hardware"]
+   if platform() = "android" then
+      put mobileBuildInfo("MODEL") into  pData["device"]["model"]
+      put mobileBuildInfo("MANUFACTURER") into  pData["device"]["madeby"]
+   end if
+   
   send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
 end init_AppConfiguration
 

@@ -85,11 +85,12 @@ on displayInfo pVis, pSubject, pBackground
 end displayInfo
 
 on sendFeedBack
-   revMail "studyhall@hindu.org",,"SivaSiva App Feedback",\
+   revMail "sivasiva@hindu.org",,"SivaSiva App Feedback",\
    ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
 end sendFeedBack
 
 on fieldLinkClicked pLink
+   hide fld "info-text" # otherwise we get new page right away with no bkgnd
    switch pLink
       case "Terms of Service, Privacy Policy, EULA"
          displayInfo 1,"tos-privacy-eula"
@@ -100,6 +101,9 @@ on fieldLinkClicked pLink
          break
       case "Credits"
          displayInfo 1,"credits"
+         break
+      case "About"
+         displayInfo 1,"about"
          break
       case "Send Feedback"
          sendFeedBack

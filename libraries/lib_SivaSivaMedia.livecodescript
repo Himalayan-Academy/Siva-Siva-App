@@ -142,6 +142,8 @@ end fetchRandomMediaItem
 ----------------------------------------------------------------------------------
 
 on metadata_SetRecord pRecordArray
+   # this only sets and array of from the item table
+   # for formats and lyrics etc you have do use a different function.
    put pRecordArray into sMediaMetaA
 end metadata_SetRecord
 
@@ -256,6 +258,19 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
    
 end getMediaURL
 
+function getSongLyrics pItemID    
+   put "SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.diacritical_transliteration,item.lyrics_id" \ 
+         &  " FROM song_lyrics JOIN  item ON item.lyrics_id= song_lyrics.lyrics_id WHERE item.item_id = " & pItemID into tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet(,tConnectionID) into tLyricsA
+   put "original_script,diacritical_transliteration,transliteration" into tLyrics
+   repeat for each item x in tLyrics
+      get textDecode (tLyricsA[1][x], UTF8) 
+      if it is not empty then put it into sMediaMetaA[x] 
+   end repeat
+end getSongLyrics
+
 function getMediaItemMetadata pRecords
    if pRecords is not empty then
       put pRecords into sMediaMetaA
@@ -277,8 +292,17 @@ function getMediaItemMetadata pRecords
       put "Transcript: " & cr & cr before tTranscript
    end if
    
+   # Lyrics
+   put "original_script,diacritical_transliteration,transliteration" into tLyricsFields 
+   repeat for each item x in tLyricsFields
+      put sMediaMetaA[x]  into tLyricFld
+      if tLyricFld  not empty then 
+         put cr & cr & tLyricFld after tLyrics
+      end if
+   end repeat
+   
    # data has commas so we have to use a lines as a delimiter
-   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript) into tFields
+   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
    repeat for each line x in tFields
       if x <> empty then
@@ -292,7 +316,7 @@ function getMediaItemMetadata pRecords
    
    replace "\n" with cr in tViewData
    replace "null" with "" in tViewData
-
+   
    return tViewData
    
 end getMediaItemMetadata
