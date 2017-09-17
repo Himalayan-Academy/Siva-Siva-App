@@ -124,30 +124,33 @@ command portal_GoLandscapeUrl someURL
 end portal_GoLandscapeUrl
 
 command portal_Link portalName
-      put portalName into pTrackdata["contentTarget"]
-      # our navigation will change in the future, but this is still the same thing
-      # user is moving from  TOC, or Index, or Map to another
-      # not actually interacting with content at all hyet.
-      tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
-      -- navigates to the "portal view" and displays the named portal
-      lock screen
-      sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-      if not (sLastStack="Siva-Siva-App") then 
-         # called from a module and not the portal stack
-         close stack sLaststack
-         portal_GoStack "Siva-Siva-Portal" 
-      end if
-      # otherwise we are already in the portal stack
-      # Either case we have to build the view:
+   put portalName into pTrackdata["contentTarget"]
+   # our navigation will change in the future, but this is still the same thing
+   # user is moving from  TOC, or Index, or Map to another
+   # not actually interacting with content at all hyet.
+   tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
+   -- navigates to the "portal view" and displays the named portal
+   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
+   lock screen
+   if not (sLastStack="Siva-Siva-Portal") then 
+      # called from a module and not the portal stack
       
-      put portal_GetHomeView() into portalView
+      portal_GoStack "Siva-Siva-Portal" 
+      --   close stack sLaststack
       
-      portal_SetCurrent portalName
-      portal_SetCurrentStack "Siva-Siva-Portal"
-      set the portal_Name of portalView to portalName
-      unlock screen
-      set the logo_Faded of portalView to true
-      news_Fetch
+   end if
+   # otherwise we are already in the portal stack
+   # Either case we have to build the view:
+   
+   put portal_GetHomeView() into portalView
+   
+   portal_SetCurrent portalName
+   portal_SetCurrentStack "Siva-Siva-Portal"
+   set the portal_Name of portalView to portalName
+   unlock screen
+   show button "home-logo"
+   hide button "home-logo" with visual effect dissolve slowly
+   news_Fetch
 end portal_Link
 
 command portal_SetCurrent portalName
@@ -197,35 +200,38 @@ end portal_GetLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject    
-      # save where we are coming from locally
-      put the short name of this stack into oStackName
-      put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-      if not  (oStackName is among the items of tNoGoBackStacks) then
-         portal_SetCurrentStack oStackName
-      end if
-      # cannot pass quotes to these strings or you willl
-      # break the JSON, BR added utilities section to lib_SivaSiva
-      
-      put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
-      # user clicks on a portal link but is going out to content
-      
-      if  oStackName is "Siva-Siva-Portal" then 
-         put "navigation/topindex" into pAction
-      else 
-         put "navigation/goContent" into pAction
-      end if
-      put oStackName into pTrackData["exitFrom"]
-      tracking_RecordActivity "Portal", pAction, pTrackdata
-      
-      if not  (oStackName= "Siva-Siva-App") then  
-         # always close.; all stacks should be set to remove window and destroy on close
-         # this is required to function properly on Android 
-         --  if isMobile() and there is a stack oStackname then # keep open on Desktop
-         close stack oStackName
-         --    end if
-      end if
-      wait for 0 seconds
-      go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems" 
+   # save where we are coming from locally
+   put the short name of this stack into oStackName
+   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   if not  (oStackName is among the items of tNoGoBackStacks) then
+      portal_SetCurrentStack oStackName
+   end if
+   # cannot pass quotes to these strings or you willl
+   # break the JSON, BR added utilities section to lib_SivaSiva
+   
+   put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
+   # user clicks on a portal link but is going out to content
+   
+   if  oStackName is "Siva-Siva-Portal" then 
+      put "navigation/topindex" into pAction
+   else 
+      put "navigation/goContent" into pAction
+   end if
+   put oStackName into pTrackData["exitFrom"]
+   tracking_RecordActivity "Portal", pAction, pTrackdata
+   
+   
+ 
+   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+     wait 200 milliseconds with messages 
+   if not  (oStackName= "Siva-Siva-App") then  
+      # always close.; all stacks should be set to remove window and destroy on close
+      # this is required to function properly on Android 
+      --  if isMobile() and there is a stack oStackname then # keep open on Desktop
+      close stack oStackName
+      --    end if
+   end if
+   
 end portal_GoStack
 
 command portal_RemoveStack oStackName

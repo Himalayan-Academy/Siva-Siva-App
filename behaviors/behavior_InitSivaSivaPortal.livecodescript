@@ -27,8 +27,10 @@ on openCard
       set the mobile_VerticalScroller of scrollingView to "portal scroller"
    end if
    
-   set the logo_Faded of portalView to true
+
    portal_SetCurrentStack "Siva-Siva-Portal"
+   show button "home-logo"
+ --  hide button "home-logo" with visual effect dissolve fast
    --pass openCard
 end openCard
 

@@ -30,7 +30,6 @@ on preopenstack
    wait 100 milliseconds with messages 
    set the fullscreenmode of this stack to "showAll"
    mobile_SetAllowedOrientation "portrait"
-   set the acceleratedRendering of this stack to "true"
 end preopenstack
  
 on openstack 
@@ -396,7 +395,7 @@ on playlist_Instantiate sTargetPlayList
    end if
    put  sTargetPlayList into pData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", pData
-   
+    set the acceleratedRendering of this stack to "true"
 end playlist_Instantiate
 
 command markCachedItems pKeys

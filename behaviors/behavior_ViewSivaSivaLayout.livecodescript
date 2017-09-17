@@ -217,26 +217,9 @@ end portal_Header
 
 
 --> Props
--
-getprop logo_Faded
-   if the long id of me is not the long id of the target then pass logo_Faded
-   put _headerView() into headerView
-   if exists (headerView) is false then return empty
-   put the logo_Faded of headerView into someBoolean
-   return someBoolean
-end logo_Faded
-
-setprop logo_Faded someBoolean
-   if the long id of me is not the long id of the target then pass logo_Faded
-   put _headerView() into headerView
-   if exists (headerView) is false then return false
-   set the logo_Faded of headerView to someBoolean
-   return true
-end logo_Faded
-
 
 --> Object
--
+
 getprop portal_View
    return the long id of grp "SivaSiva Portal Scrolling" -- me
 end portal_View

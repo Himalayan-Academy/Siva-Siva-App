@@ -22,11 +22,13 @@ local LocalArray
 on mouseUp
     put the short name of the target into cName
     switch cName
-        case "Title"
-        case "Portal Header Image"
-            put the logo_Faded of me into someBoolean
-            set the logo_Faded of me to (not someBoolean)
-            
+       case "Title"
+          if environment() = "development" then
+             toplevel "Siva-Siva-App"
+             set the vis of stack "Siva-Siva-App" to true
+          end if
+          break
+        case "Portal Header Image"     
             # use for development to check on active scripts in the msg path
             --          put init_ListStacksToUse() into stackNames
             --          replace comma with CR in stackNames
@@ -50,7 +52,6 @@ on mouseUp
                 dispatch "stack_ToggleShrink" to me
             else
                 set the portal_Name of me to "home"
-                -- set the logo_Faded of me to true
             end if
             break
         default
@@ -61,61 +62,6 @@ end mouseUp
 
 
 --> Props
--
-getprop logo_Visible
-   put _logoButton() into logoButton
-   put the blendLevel of logoButton = 0 into fadedIn
-   put fadedIn and the visible of _logoButton() into isVisible
-   return isVisible
-end logo_Visible
-
-setprop logo_Visible someBoolean
-   put _logoButton() into logoButton
-   lock screen
-   set the visible of logoButton to someBoolean
-   set the blendlevel of logoButton to 0
-   unlock screen
-end logo_Visible
-
-getprop logo_Faded
-   put _logoButton() into logoButton
-   put the blendLevel of logoButton = 100 into fadedOut
-   return fadedOut
-end logo_Faded
-
-setprop logo_Faded someBoolean
-   put _logoButton() into logoButton
-   set the visible of logoButton to true
-   put 2 into someIncrement
-   put 20 into someDelay
-   put _logoButton() into logoButton
-   
-   if someBoolean is true then
-      logo_FadeOut 0, logoButton, someIncrement, someDelay
-   else
-      logo_FadeIn 100, logoButton, someIncrement, someDelay
-   end if
-end logo_Faded
-
-command logo_FadeIn newBlendLevel, logoButton, someIncrement, someDelay
-   set the blendLevel of logoButton to newBlendLevel
-   if newBlendLevel > 0 then
-      subtract someIncrement from newBlendLevel
-      send "logo_FadeIn newBlendLevel,logoButton,someIncrement,someDelay" to me in someDelay milliseconds
-   else
-      set the blendLevel of logoButton to 0
-   end if
-end logo_FadeIn
-
-command logo_FadeOut newBlendLevel, logoButton, someIncrement, someDelay
-   set the blendLevel of logoButton to newBlendLevel
-   if newBlendLevel < 100 then
-      add someIncrement to newBlendLevel
-      send "logo_FadeOut newBlendLevel,logoButton,someIncrement,someDelay" to me in someDelay milliseconds
-   else
-      set the blendLevel of logoButton to 100
-   end if
-end logo_FadeOut
 
 getprop portal_Header
    return LocalArray ["portalName"]

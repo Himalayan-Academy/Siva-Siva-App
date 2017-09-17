@@ -189,7 +189,7 @@ end testConnection
 command openPortalStack
    open stack "Siva-Siva-Portal"
    portal_Link "home"
-   
+   hide stack "Siva-Siva-App"
    # app will halt at this point  so now is a good
    # time to check for updates on a new session
    # check for news first

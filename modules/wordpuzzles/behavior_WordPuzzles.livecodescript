@@ -77,17 +77,20 @@ on closeCard
 end closeCard
 
 on displayAbout pLevel
+   
    put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
    put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
    send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
-  set the htmltext of fld "aboutText" to tAboutText
-  set the layer of grp "aboutDisplay" to top
-  show grp "aboutDisplay"
+   set the htmltext of fld "aboutText" to tAboutText
+   set the layer of grp "aboutDisplay" to top
+   show grp "aboutDisplay"
+   set the acceleratedRendering of this stack to true
 end displayAbout
 
 on closeAbout
     deleteMobileControl "aboutText"
     hide group "aboutDisplay"
+  set the acceleratedRendering of this stack to false
 end closeAbout
 
 
