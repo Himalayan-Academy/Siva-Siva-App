@@ -257,7 +257,6 @@ on playList_FetchData pQueryArray
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            close this stack
             portal_Link "Listen"
             exit to top
          else 
@@ -284,7 +283,6 @@ on playList_FetchData pQueryArray
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            close this stack
             portal_Link "Listen"
             exit to top
          else 
@@ -307,7 +305,7 @@ on playList_FetchData pQueryArray
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            close this stack
+           -- close this stack
             portal_Link "Listen"
             exit to top
          else 
@@ -449,12 +447,11 @@ on journalResume  pDataA, pEntryA
    deleteMobileControl "audioPlayer"
    put "card " & quote &  pDataA["card"] & quote &   " of stack " && quote & pEntryA["module"] & quote into pDestination
    put pDataA["playList"] into sTargetPlayList
-   close stack "journal"
+   portal_SetLastLinkTitle sTargetPlayList  
    portal_GoStack pDestination 
    put pDataA["playSelection"] into pSelectedLine
    dispatch "playlist_Reset" to card "listen-playlist"
    dispatch "select_Play" to card "listen-playlist" with pDataA["item_id"]
-   
 end journalResume
 
 

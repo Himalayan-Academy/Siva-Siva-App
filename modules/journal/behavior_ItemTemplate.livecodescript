@@ -28,7 +28,7 @@ on mouseup
    if the short name of the target is "is favorite" then
       setFavorite
    else
-      put jsonexport(sEntryA)
+     -- put jsonexport(sEntryA)
       --    dispatch "setupView" to card "detail view" with sEntryA 
       launchActivity
    end if
@@ -162,7 +162,8 @@ end getIconForModule
 
 
 on launchActivity
-   put "should launch activity" && sEntryA["journal_id"]
+   --put "should launch activity" && sEntryA["journal_id"]
+       portal_SetCurrentStack "Journal"
    Journal_LaunchEntry sEntryA["journal_id"]
    if the result contains "err" then
       answer error the result

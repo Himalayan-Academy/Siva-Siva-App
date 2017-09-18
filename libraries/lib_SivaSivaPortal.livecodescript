@@ -203,7 +203,12 @@ command portal_GoStack cardOrStackObject
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-   if not  (oStackName is among the items of tNoGoBackStacks) then
+   if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
+      # it means we are launching activity and we are not actually going
+      # to the view the journal, in which case we have to be sure it closes
+      put "Journal" into oStackName
+   end if
+   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
       portal_SetCurrentStack oStackName
    end if
    # cannot pass quotes to these strings or you willl
@@ -220,17 +225,9 @@ command portal_GoStack cardOrStackObject
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata
    
-   
- 
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-     wait 200 milliseconds with messages 
-   if not  (oStackName= "Siva-Siva-App") then  
-      # always close.; all stacks should be set to remove window and destroy on close
-      # this is required to function properly on Android 
-      --  if isMobile() and there is a stack oStackname then # keep open on Desktop
-      close stack oStackName
-      --    end if
-   end if
+   wait 200 milliseconds with messages  
+   close stack oStackName   
    
 end portal_GoStack
 

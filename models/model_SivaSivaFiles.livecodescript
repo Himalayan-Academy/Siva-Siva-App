@@ -111,13 +111,13 @@ function sivasiva_ProjectFolder pRelativeFolderPath
    return projectFolder
 end sivasiva_ProjectFolder
 
-function project_HomeFolder homeStackName
+function project_HomeFolder
    if the environment = "mobile" then
       put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
       put slash after projectHomeFolder
    else
       set the itemdelimiter to slash
-      put the filename of stack homeStackName into projectHomeFolder
+      put the filename of stack "Siva-Siva-App" into projectHomeFolder
       put empty into item -1 of projectHomeFolder
    end if
    return projectHomeFolder

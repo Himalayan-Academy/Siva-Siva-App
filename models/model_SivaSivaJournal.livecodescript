@@ -241,7 +241,6 @@ end Journal_LaunchEntry
 on journalresume pDataA, pEntryA
    put "Error: no one could handle journalresume, going for the default behavior"
    --put "Launching" && pEntryA["module"]
-   close stack "journal"
    portal_GoStack pEntryA["module"]
 end journalresume
 

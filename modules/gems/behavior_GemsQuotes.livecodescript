@@ -49,7 +49,7 @@ on preOpenCard
       put random(3) into sCurrentRealm
    end if
    setCardTitle
-   send "fetchQuoteAndImage sCurrentRealm" to me in 200 milliseconds  
+   send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
 end preOpenCard
 
 on setCardTitle

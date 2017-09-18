@@ -38,16 +38,15 @@ on mouseUp pWhichButton
    put the short name of the target into tTarget
    if  (tTarget is among the lines of the childControlNames of me) then
       put the long id of the target into btnObject
-      put the short name of btnObject into btnName
+      put the short name  of btnObject into btnName
       if btnName = "bottomTabBkgnd" then pass mouseUp
-      
+    portal_SetCurrentStack (the short name of this stack)
       put btnName into mCommand
       replace "-" with empty in mCommand
       put "sivasiva_" before mCommand
       
       put the highlite of btnObject into someBoolean
       set the highlite of btnObject to false
-      
       dispatch mCommand with btnObject, someBoolean
       switch it
          case "handled"
