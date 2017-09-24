@@ -22,7 +22,6 @@ Here we store information about the target of the scrolling action such as:
 
 local LocalArray
 
-
 --> Working On
 -
 private command displayScroll vScrolled

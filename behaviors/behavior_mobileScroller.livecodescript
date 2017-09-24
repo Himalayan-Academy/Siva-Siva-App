@@ -18,6 +18,8 @@ command CreateScroller pName -- scrolling fields
      mobileControlSet pName, "vIndicator", true
   end if
   mobileControlSet pName, "visible",  true
+  wait 200 milliseconds
+  set the acceleratedRendering of this stack to true
 end CreateScroller
 
 on scrollerDidScroll hScrolled, vScrolled
@@ -32,7 +34,8 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
   if not isMobile() then exit deleteMobileControl -- do nothing on desktop
   repeat while pName is among the lines of mobileControls()
     mobileControlDelete pName
-  end repeat
+ end repeat
+ set the acceleratedRendering of this stack to false
 end deleteMobileControl
 
 on mouseDown

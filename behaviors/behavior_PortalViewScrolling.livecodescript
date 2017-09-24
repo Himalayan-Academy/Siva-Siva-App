@@ -21,24 +21,9 @@ local LocalArray
 --> Working on
 on preopenControl
    wait 200 milliseconds
-   set the acceleratedRendering of this stack to true
+   CreateScroller "SivaSiva Portal Scrolling"
 end preopenControl
 
-command desktop_SetScroll
-   if the mouse is down then
-      lock screen
-      if item 2 of sMouseLoc > the mouseV then
-         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
-      else
-         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
-      end if
-      put the mouseloc into sMouseLoc
-      send "desktop_SetScroll" to me in 20 millisec
-      unlock screen
-   else
-      put empty into sMouseLoc
-   end if
-end desktop_SetScroll
 
 
 --> Events
@@ -55,6 +40,9 @@ on mouseUp
    put the short name of the target into tRow
    set the itemDelimiter to "_"
    put item 1 of tRow into tLinkNo
+   if tLinkNo is not a number then
+      exit mouseup
+   end if
    put fld (tLInkNo &"_" &"portal-link-label") into tRowName
    replace cr with " " in tRowName
    # note we note referencing David labyrinth of code to get the info from the JSON
@@ -65,18 +53,18 @@ on mouseUp
    portal_DoRowLink tRowName
 end  mouseup
 
-on mouseDown
-   if the environment is "mobile" then
-      -- mobile will use stack handlers to scroll instead
-   else
-      put the mouseloc into sMouseLoc
-      put sMouseLoc into sStartLoc
-      put item 1 of sStartLoc into sStartLocX
-      put item 2 of sStartLoc into sStartLocY
-      desktop_SetScroll
-   end if
-   pass mouseDown
-end mouseDown
+--on mouseDown
+--   if the environment is "mobile" then
+--      -- mobile will use stack handlers to scroll instead
+--   else
+--      put the mouseloc into sMouseLoc
+--      put sMouseLoc into sStartLoc
+--      put item 1 of sStartLoc into sStartLocX
+--      put item 2 of sStartLoc into sStartLocY
+--      desktop_SetScroll
+--   end if
+--   pass mouseDown
+--end mouseDown
 
 private function _mouseMoved
    put abs (the mouseV - item 2 of sStartLoc) into someDistance
