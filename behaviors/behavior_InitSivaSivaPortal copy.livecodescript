@@ -1,13 +1,5 @@
 ﻿script "behavior_InitSivaSivaPortal"
-
-
-on preOpenStack
-   -- start using this stack
-   
-   -- sivasiva_InitOrientation "portrait"
-   set the fullscreenmode of this stack to "showAll" -- better for wider screens
-   mobile_SetAllowedOrientation "portrait"
-   
+on preopenstack
    put the portal_View of me into portalView
    _fixPortalBehavior portalView
    
@@ -16,10 +8,10 @@ on preOpenStack
       set the portal_Name of portalView to "home"
    end if
    
-   --pass preOpenStack
 end preOpenStack
 
 on openCard
+  set the acceleratedRendering of this stack to "true"
    put the portal_View of me into portalView
    put the scrolling_View of me into scrollingView
    

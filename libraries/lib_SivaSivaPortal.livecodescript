@@ -7,7 +7,7 @@ name: lib_SivaSivaPortal
 type: library
 version: 0.2
 Original Script by David Bovill
- 
+
 /*
 The SivaSiva portal is a self-contained group which presents a "contents view" of:
 
@@ -42,23 +42,10 @@ local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 ------------- Navigation section -------------------
 # BR: this whole set of handlers probably should move to a separate lib dedicated to navigation
 # or all the way "up" to the primary back script: lib_SivaSiva
+# Functions related to presentation that have been deprecated.
+# and moved to the end  for save keeping
+
 ------------------------------------------------------
-
-
-
-function portal_GetLinkUrl portalName, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalArray ["portalColour"] into portalColour
-   if portalColour is empty then return "255,241,208"
-   return portalColour
-end portal_GetLinkUrl
-
-command portal_SetLinkUrl portalName, portalColour, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalColour into portalArray ["portalColour"]
-   portal_SetArray portalName, portalArray, pSivasivaData
-end portal_SetLinkUrl
-
 
 
 command portal_DoRowLink rowName
@@ -92,96 +79,6 @@ command portal_DoRowLink rowName
          break
    end switch
 end portal_DoRowLink
-
-command portal_GoUrl someURL,pJournalLabel
-   set the socketTimeoutinterval to 2000
-   #the Browser is called from various contexts
-   # we need to know where we came from in order to 
-   # handle returning to the context properly.
-   if connectivity_PingServer() = "false" then
-      # do nothing, inform user
-      dialog_CustomMsg "Offline or Low Bandwidth"
-      exit portal_GoURL
-   else
-      
-      put the short name of this stack into oStackName
-      portal_SetCurrentStack(oStackName)
-      portal_GoStack "view_SivaSivaBrowser"
-      set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-      put someURL into pTrackdata["webUrl"]
-       tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   end if # closing connectivity check
-end portal_GoUrl
-
-command portal_LaunchUrl someURL
-   # leave Siva Siva app and open the native web app on the device
-    launch url someURL    
-end portal_LaunchUrl
-
-command portal_GoLandscapeUrl someURL
-   set the browser_URL [true] of stack "view_SivaSivaBrowser" to someURL
-   portal_GoStack "view_SivaSivaBrowser"
-end portal_GoLandscapeUrl
-
-command portal_Link portalName
-   put portalName into pTrackdata["contentTarget"]
-   # our navigation will change in the future, but this is still the same thing
-   # user is moving from  TOC, or Index, or Map to another
-   # not actually interacting with content at all hyet.
-   tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
-   -- navigates to the "portal view" and displays the named portal
-   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   lock screen
-   if not (sLastStack="Siva-Siva-Portal") then 
-      # called from a module and not the portal stack
-      
-      portal_GoStack "Siva-Siva-Portal" 
-      --   close stack sLaststack
-      
-   end if
-   # otherwise we are already in the portal stack
-   # Either case we have to build the view:
-   
-   put portal_GetHomeView() into portalView
-   
-   portal_SetCurrent portalName
-   portal_SetCurrentStack "Siva-Siva-Portal"
-   set the portal_Name of portalView to portalName
-   unlock screen
-   show button "home-logo"
-   hide button "home-logo" with visual effect dissolve slowly
-   news_Fetch
-end portal_Link
-
-command portal_SetCurrent portalName
-   put portalName into sCurrentPortal   
-end portal_SetCurrent
-
-function portal_GetCurrent
-    # BR: Support for tracking the portal from which
-    # a module was launched from   
-    return sCurrentPortal
-end portal_GetCurrent
-
-command portal_SetCurrentStack stackName
-    put stackName into sLastStack  
-end portal_SetCurrentStack
-
-function portal_GetLastStack
-   # BR: Support for tracking the stack from which
-   # a module was launched from   so we can go back
-   return sLastStack
-end portal_GetLastStack
-
-
-
-command  portal_SetLastLinkTitle rowName
-   put rowName into sLastLinkTitle # for use in Journal and other context to show user a label
-end portal_SetLastLinkTitle
-
-function portal_GetLastLinkTitle
-   return sLastLinkTitle
-end portal_GetLastLinkTitle
 
 -----------------------------------------------------------
 -- portal_GoStack
@@ -231,20 +128,117 @@ command portal_GoStack cardOrStackObject
    
 end portal_GoStack
 
+command portal_Link portalName
+   put portalName into pTrackdata["contentTarget"]
+   # our navigation will change in the future, but this is still the same thing
+   # user is moving from  TOC, or Index, or Map to another
+   # not actually interacting with content at all hyet.
+   tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
+   -- navigates to the "portal view" and displays the named portal
+   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
+   lock screen
+   if not (sLastStack="Siva-Siva-Portal") then 
+      # called from a module and not the portal stack
+      put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
+            portal_GoStack tPortalTarget
+   else
+      go card portalName
+   end if
+   
+   
+   portal_SetCurrent portalName
+   portal_SetCurrentStack "Siva-Siva-Portal"
+   
+   unlock screen
+   show button "home-logo"
+   hide button "home-logo" with visual effect dissolve slowly
+   news_Fetch
+   
+   # Davids  old calls to build dynamically
+   # otherwise we are already in the portal stack
+   # Either case we have to build the view:
+   -- put portal_GetHomeView() into portalView # deprecated: portals are pre-built
+   -- set the portal_Name of portalView to portalName  #Deprecated 
+end portal_Link
+
+command portal_GoUrl someURL,pJournalLabel
+   set the socketTimeoutinterval to 2000
+   #the Browser is called from various contexts
+   # we need to know where we came from in order to 
+   # handle returning to the context properly.
+   if connectivity_PingServer() = "false" then
+      # do nothing, inform user
+      dialog_CustomMsg "Offline or Low Bandwidth"
+      exit portal_GoURL
+   else
+      
+      put the short name of this stack into oStackName
+      portal_SetCurrentStack(oStackName)
+      portal_GoStack "view_SivaSivaBrowser"
+      set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+      put someURL into pTrackdata["webUrl"]
+      tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+   end if # closing connectivity check
+end portal_GoUrl
+
+command portal_LaunchUrl someURL
+   # leave Siva Siva app and open the native web app on the device
+   launch url someURL    
+end portal_LaunchUrl
+
+command portal_GoLandscapeUrl someURL
+   set the browser_URL [true] of stack "view_SivaSivaBrowser" to someURL
+   portal_GoStack "view_SivaSivaBrowser"
+end portal_GoLandscapeUrl
+
+
+
+command portal_SetCurrent portalName
+   put portalName into sCurrentPortal   
+end portal_SetCurrent
+
+function portal_GetCurrent
+   # BR: Support for tracking the portal from which
+   # a module was launched from   
+   return sCurrentPortal
+end portal_GetCurrent
+
+command portal_SetCurrentStack stackName
+   put stackName into sLastStack  
+end portal_SetCurrentStack
+
+function portal_GetLastStack
+   # BR: Support for tracking the stack from which
+   # a module was launched from   so we can go back
+   return sLastStack
+end portal_GetLastStack
+
+
+
+command  portal_SetLastLinkTitle rowName
+   put rowName into sLastLinkTitle # for use in Journal and other context to show user a label
+end portal_SetLastLinkTitle
+
+function portal_GetLastLinkTitle
+   return sLastLinkTitle
+end portal_GetLastLinkTitle
+
+
+
 command portal_RemoveStack oStackName
-	if stackName <> "Siva-Siva-Portal" then
-	close stack oStackName
-	end if    
- end portal_RemoveStack
+   if stackName <> "Siva-Siva-Portal" then
+      close stack oStackName
+   end if    
+end portal_RemoveStack
 
 ------------- Layout section -------------------
- # BR: this whole set of handlers is really dedicated to the Portal screens "proper"
- # and could remain here .. encapsulated all Davids lay code for the portals in this
- # on script, there by separating it entirely from all other message path activity.
- # in de-bugging then you could simplyl step through all these if the portals were
- # being dynamically rebuilt. 
- # buit we might need to move out the portal_GetArray and Set array and Get Set data also
- # as these can be useful else where and are not needed for layout as such.
+# BR: this whole set of handlers is really dedicated to the Portal screens "proper"
+# and could remain here .. encapsulated all Davids lay code for the portals in this
+# on script, there by separating it entirely from all other message path activity.
+# in de-bugging then you could simplyl step through all these if the portals were
+# being dynamically rebuilt. 
+# buit we might need to move out the portal_GetArray and Set array and Get Set data also
+# as these can be useful else where and are not needed for layout as such.
 ------------------------------------------------------
 
 
@@ -304,7 +298,7 @@ function portal_ListNames pListHow, pSivasivaData
    end switch
    return moduleNames
 end portal_ListNames
-    
+
 function portal_ListRowNames portalName, pSivaSectionArray
    put portal_GetArray (portalName, pSivasivaData) into   moduleArray
    put moduleArray ["rowData"] into rowData
@@ -351,6 +345,26 @@ command portal_SetRowDictionary portalRowDictionary, pSivasivaData
    put portalRowDictionary into pSivasivaData ["portalRowDictionary"]
    sivasiva_StoreData pSivasivaData
 end portal_SetRowDictionary
+
+command _DEPRECATED_________
+   -------------------------------------------------
+end _DEPRECATED_________
+
+
+function portal_GetLinkUrl portalName, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalArray ["portalColour"] into portalColour
+   if portalColour is empty then return "255,241,208"
+   return portalColour
+end portal_GetLinkUrl
+
+command portal_SetLinkUrl portalName, portalColour, pSivasivaData
+   put portal_GetArray (portalName, pSivasivaData) into portalArray
+   put portalColour into portalArray ["portalColour"]
+   portal_SetArray portalName, portalArray, pSivasivaData
+end portal_SetLinkUrl
+
+
 
 function portal_GetHeaderImage portalName, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray
@@ -419,7 +433,7 @@ function portal_GetHomeView
     #BR -- David had set this to "control 1" but it needs to be set to Control 2 which is the 
     # group above the background object... why we can't jus declare the name of the4
     # group is beyond me... but it broke after I put a large background grc on layer 1
-   put the long id of control 2 of cd 1 of stack portalHomeStackPath into portalView
+   put the long id of control 2 of cd "portal" of stack portalHomeStackPath into portalView
    -- put the portal_View of stack portalHomeStackPath into portalView
    return portalView
 end portal_GetHomeView

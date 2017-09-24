@@ -22,6 +22,25 @@ local LocalArray
 
 --> Working on
 
+on preopenControl
+
+   setUpLinksArray
+   
+end preopenControl
+
+command setUpLinksArray
+      put the name of this card into tPortal
+   # we will just load all the row names here... the pass this to David's code for now. 
+   # some of these will be deprecated completely later... as we don't go to a portal, but to cd 1 of the module
+   # the portal-link-bkgnd are number like this
+   # 1_portal_link_bkgnd  we use the mousecontra parse the number and use it in the array
+   
+   # home portal - must be in proper order!
+   put "Gems of Wisdom,Surprise Me,Listen,Look,Practice,Read,Monastery Website,Fun & Games" into HomeLinks
+   split HomeLinks with comma
+   put HomeLinks into LocalArray[HomeLinks]
+end setUpLinksArray
+
 command desktop_SetScroll
    if the mouse is down then
       lock screen
