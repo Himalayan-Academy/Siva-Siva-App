@@ -1,4 +1,7 @@
 ﻿script "behavior_PortalInit"
+on preopencard
+   set the scroll of grp "SivaSiva Portal Scrolling" to 0
+end preopencard
 on openCard
    wait 200 milliseconds
    set the acceleratedRendering of this stack to "true"
