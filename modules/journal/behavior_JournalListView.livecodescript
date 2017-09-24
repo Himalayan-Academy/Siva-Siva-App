@@ -17,10 +17,7 @@ on preopencard
 
   --loadFonts
   layoutScreen
-  if isMobile() then
-    --     hide group "JournalUITools"
-    set the acceleratedRendering of this stack to true
-  end if
+
 end preopencard
 
 on HideAuxiliaryControls

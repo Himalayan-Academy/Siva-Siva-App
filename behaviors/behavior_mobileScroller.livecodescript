@@ -39,11 +39,12 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
 end deleteMobileControl
 
 on mouseDown
-  put the mouseloc into sMouseLoc
-  put sMouseLoc into sStartLoc
-  if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
-    setScroll
-  end if
+   put the mouseloc into sMouseLoc
+   put sMouseLoc into sStartLoc
+   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
+      setScroll
+   end if
+   pass mousedown
 end mouseDown
 
 on setScroll

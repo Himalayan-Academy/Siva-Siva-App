@@ -84,13 +84,11 @@ on displayAbout pLevel
    set the htmltext of fld "aboutText" to tAboutText
    set the layer of grp "aboutDisplay" to top
    show grp "aboutDisplay"
-   set the acceleratedRendering of this stack to true
 end displayAbout
 
 on closeAbout
     deleteMobileControl "aboutText"
     hide group "aboutDisplay"
-  set the acceleratedRendering of this stack to false
 end closeAbout
 
 

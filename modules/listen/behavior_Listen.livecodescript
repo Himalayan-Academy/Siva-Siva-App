@@ -387,13 +387,11 @@ on playlist_Instantiate sTargetPlayList
    # here is where we have to check to see if any files are stored locally or not
    
    markCachedItems tKeys
-   
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
    end if
    put  sTargetPlayList into pData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", pData
-    set the acceleratedRendering of this stack to "true"
 end playlist_Instantiate
 
 command markCachedItems pKeys
