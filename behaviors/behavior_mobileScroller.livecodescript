@@ -18,7 +18,6 @@ command CreateScroller pName -- scrolling fields
      mobileControlSet pName, "vIndicator", true
   end if
   mobileControlSet pName, "visible",  true
-  wait 200 milliseconds
   set the acceleratedRendering of this stack to true
 end CreateScroller
 
