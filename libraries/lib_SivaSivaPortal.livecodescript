@@ -150,8 +150,10 @@ command portal_Link portalName
    portal_SetCurrentStack "Siva-Siva-Portal"
    
    unlock screen
-   show button "home-logo"
-   hide button "home-logo" with visual effect dissolve slowly
+   # the following introduces a non-responsive phase while the 
+   # so we are trying "very fast" 
+  --show button "home-logo"  
+ --hide button "home-logo" with visual effect dissolve very fast
    news_Fetch
    
    # Davids  old calls to build dynamically

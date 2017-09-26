@@ -2,20 +2,16 @@
 local sStartLoc
 
 on preopencard
-  set the scroll of grp "SivaSiva Portal Scrolling" to 0
+   --set the scroll of grp "SivaSiva Portal Scrolling" to 0
 end preopencard
 
 on openCard
    portal_SetCurrentStack "Siva-Siva-Portal"
    portal_SetCurrent (the short name of this stack)
-   show button "home-logo"
+   --show button "home-logo"
    put "SivaSiva Portal Scrolling" into tLinksGroup
    send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 100 milliseconds
- end openCard
- 
-on closecard
-   dispatch "deleteMobileControl" to grp "SivaSiva Portal Scrolling" with "SivaSiva Portal Scrolling"
-end closecard
+end openCard
 
 on mouseDown
   put the mouseloc into sStartLoc

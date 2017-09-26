@@ -293,11 +293,13 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    if not isMobile() then exit deleteAllMobileControls
    put mobileControls() into tList
    repeat for each line l in tList
+      # we are keeping the player running as per user requests.
+      # you need to use an explicit stop/remove in the UI/UX context
       if l contains "audioPlayer" then
-      next repeat
-   end if  
-   mobileControlDelete l
-end repeat
+         next repeat
+      end if  
+      mobileControlDelete l
+   end repeat
 end deleteAllMobileControls
 
 command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
