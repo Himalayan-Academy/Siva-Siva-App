@@ -24,7 +24,7 @@ end CreateScroller
 on scrollerDidScroll hScrolled, vScrolled
   put mobileControlTarget() into tControlID
   set the vscroll of control tControlID to vscrolled
-  pass scrollerDidScroll
+  -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 
 on deleteMobileControl pName -- jg: deletes an existing mobile control
@@ -39,7 +39,6 @@ end deleteMobileControl
 
 on mouseDown
    put the mouseloc into sMouseLoc
-   put sMouseLoc into sStartLoc
    if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
       setScroll
    end if
