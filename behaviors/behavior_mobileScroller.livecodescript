@@ -5,6 +5,7 @@ local sMouseLoc
 
 command CreateScroller pName -- scrolling fields
   if not isMobile() then exit CreateScroller
+  set the acceleratedRendering of this stack to true
   deleteMobileControl pName -- delete any existing
   put (the rect of control pName) into tRect
   mobileControlCreate "scroller", pName
@@ -15,10 +16,9 @@ command CreateScroller pName -- scrolling fields
   mobileControlSet pName, "vScroll" , 0
   mobileControlSet pName, "hIndicator" , false
   if pName = "quote" then
-     mobileControlSet pName, "vIndicator", true
+    mobileControlSet pName, "vIndicator", true
   end if
   mobileControlSet pName, "visible",  true
-  set the acceleratedRendering of this stack to true
 end CreateScroller
 
 on scrollerDidScroll hScrolled, vScrolled
@@ -33,8 +33,8 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
   if not isMobile() then exit deleteMobileControl -- do nothing on desktop
   repeat while pName is among the lines of mobileControls()
     mobileControlDelete pName
- end repeat
- set the acceleratedRendering of this stack to false
+  end repeat
+  -- set the acceleratedRendering of this stack to false --- jg: don't turn this off
 end deleteMobileControl
 
 on mouseDown
