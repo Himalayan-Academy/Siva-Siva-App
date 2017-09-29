@@ -122,7 +122,7 @@ on playlist_QuerySetUp
    switch sTargetPlayList
       
       # Go to the web server for these latest playlists
-      case "Bodhinatha's Latest Talks" 
+      case "Bodhinatha's Latest inspired Talks" 
          # Remote look up based on search criteria... 
          # this model could fetch any kid of collection, songs, curated by category or tag... 
          # again we should be using a JSON for this data, and hold the query on disk and not hard
@@ -141,7 +141,7 @@ on playlist_QuerySetUp
          break  
          
          # fetch all these form the local Jnanam dbase
-      case "Gurudeva's 1970 Audio Master Course"
+      case "Gurudeva's 1970 Audio Course"
          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
          put "inspiredtalk" into sPlaylistQueryA["media_type"]
          put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]

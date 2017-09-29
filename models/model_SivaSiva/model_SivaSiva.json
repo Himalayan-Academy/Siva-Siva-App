@@ -265,21 +265,21 @@
             "imageText": "Sanskrit\nChanting",
             "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
         },
-        "Bodhinatha's Latest Talks": {
+        "Bodhinatha's Latest Inspired Talks": {
             "link": {
                 "portal command": "portal_GoStack",
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Bodhinatha's\nLatest\nInspired Talks",
-            "shortImageFile": "thumb_latest-talk-2.jpg"
+            "shortImageFile": "thumb_latest-talk-2_new.jpg"
         },
-         "Gurudeva's 1970 Audio Master Course": {
+         "Gurudeva's 1970 Audio Course": {
             "link": {
                 "portal command": "portal_GoStack",
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Gurudeva's\n1970\nAudio Course",
-            "shortImageFile": "thumb_gurudeva-talks.jpg"
+            "shortImageFile": "thumb_gurudeva-talks_new.jpg"
         },
         "All Gurudeva Talks": {
             "link": {
@@ -287,7 +287,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All \nGurudeva\nTalks",
-            "shortImageFile": "thumb_gurudeva-talks.jpg"
+            "shortImageFile": "thumb_listen-all-gurudeva-binder-158-122_new.jpg"
         },
            "All Bodhinatha Talks": {
             "link": {
@@ -295,7 +295,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All \nBodhinatha\nTalks",
-            "shortImageFile": "thumb_latest-talk-2.jpg"
+            "shortImageFile": "thumb_listen_bd-all_new.jpg"
         },
         "Songs": {
             "link": {
@@ -319,7 +319,7 @@
                   "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All Recent\nAdditions",
-            "shortImageFile": "thumb_girl-head-phones.jpg"
+            "shortImageFile": "thumb_girl-head-phones_new.jpg"
         },
          "Gujarati Dancing With Siva": {
             "link": {
@@ -413,10 +413,10 @@
             "portalName": "listen",
             "rowData": {
                 "1": {
-                    "rowName": "Bodhinatha's Latest Talks"
+                    "rowName": "Bodhinatha's Latest Inspired Talks"
                 },
                 "2":  {
-                    "rowName": "Gurudeva's 1970 Audio Master Course"
+                    "rowName": "Gurudeva's 1970 Audio Course"
                 },
                  "3": {
                     "rowName": "The Guru Chronicles"
