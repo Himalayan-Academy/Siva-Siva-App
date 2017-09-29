@@ -123,7 +123,7 @@ command portal_GoStack cardOrStackObject
    tracking_RecordActivity "Portal", pAction, pTrackdata
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   wait 200 milliseconds with messages  
+   wait 100 milliseconds with messages  
    close stack oStackName   
    
 end portal_GoStack
