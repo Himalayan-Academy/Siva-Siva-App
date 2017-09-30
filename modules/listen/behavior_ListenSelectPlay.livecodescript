@@ -2,7 +2,8 @@
 
 ---------------------------------------------------------------------
 # behavior_ListenSelectPlay
-#
+# Assigned to card "listen-playlist" of stack "Listen"
+
 # DESCRIPTION: This script handles all interaction with a previously instantiated playlist
 # user selections of audio, display of info etc are triggered here in this script.
 #
@@ -226,10 +227,11 @@ command revealMoreActions pVis
    end if 
    if  pVis <> false  then -- show it
       set the acceleratedRendering of this stack to false
-      --jg: horiz centering for mobile screens:
+      
       set the hilitedbuttonName of grp "deity" to "All"
       set the hilitedbuttonName of grp "genre" to "All"
       set the hilitedbuttonName of grp "textColumns" to empty
+      --jg: horiz centering for mobile screens:
       set the loc of grp "moreActions" to the loc of this cd
       set the bottom of grp "moreActions" to 0
       put empty into fld "searchString" of grp "moreActions"
