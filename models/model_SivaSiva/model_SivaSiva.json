@@ -6,20 +6,20 @@
                 "portal param": "card \"surprise_video\" of stack \"surprise\""
             },
             "imageText": "Video\nWorld",
-            "shortImageFile": "thumb_gurudeva_on-iphone.jpg",
+            "shortImageFile": "thumb_gurudeva_on-iphone.png",
             "portalColor": "200,0,0"
         },
         "Affirmations": {
             "imageText": "Affirmations",
-            "shortImageFile": "thumb_affirmations.jpg"
+            "shortImageFile": "thumb_affirmations.png"
         },
         "Mantras": {
             "imageText": "Mantras",
-            "shortImageFile": "thumb_mantras_namasivaya.jpg"
+            "shortImageFile": "thumb_mantras_namasivaya.png"
         },
         "Instructions in Puja": {
             "imageText": "Instructions\nin Puja",
-            "shortImageFile": "thumb_puja.jpg"
+            "shortImageFile": "thumb_puja.png"
         },
         "About the Monastery": {
             "link": {
@@ -27,7 +27,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "About the\nMonastery",
-            "shortImageFile": "thumb_about-monastery.jpg"
+            "shortImageFile": "thumb_about-monastery.png"
         },
         "My Hindu Calendar": {
             "link": {
@@ -35,7 +35,7 @@
                 "portal param": "stack \"panchangam\""
             },
             "imageText": "My Hindu\nCalendar",
-            "shortImageFile": "thumb_calendar_shtrstk-325867559.jpg"
+            "shortImageFile": "thumb_calendar_shtrstk-325867559.png"
         },
         "Our YouTube Library": {
             "link": {
@@ -43,7 +43,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Our YouTube\nLibrary",
-            "shortImageFile": "thumb_gurudeva_on-iphone.jpg"
+            "shortImageFile": "thumb_gurudeva_on-iphone.png"
         },
         "The Master Course": {
              "link": {
@@ -51,7 +51,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "The\nMaster\nCourse",
-            "shortImageFile": "thumb_master-coures_trilogy-in-box.jpg"
+            "shortImageFile": "thumb_master-coures_trilogy-in-box.png"
         },
         "Monastery Website": {
             "link": {
@@ -59,7 +59,7 @@
                 "portal param": "website"
             },
             "imageText": "Monastery\nWebsite",
-            "shortImageFile": "thumb_website_ha-com-screenshoot.jpg"
+            "shortImageFile": "thumb_website_ha-com-screenshoot.png"
         },
         "Our Daily Blog": {
             "link": {
@@ -67,19 +67,19 @@
                 "portal param": "https://www.himalayanacademy.com/blog/taka/"
             },
             "imageText": "Our Daily\nBlog",
-            "shortImageFile": "thumb_taka.jpg"
+            "shortImageFile": "thumb_taka.png"
         },
         "Image Puzzles": {
             "imageText": "Image\nPuzzles",
-            "shortImageFile": "thumb_image-puzzles.jpg"
+            "shortImageFile": "thumb_image-puzzles.png"
         },
         "Coloring": {
             "imageText": "Coloring",
-            "shortImageFile": "thumb_coloring.jpg"
+            "shortImageFile": "thumb_coloring.png"
         },
         "Spiritual Workout": {
             "imageText": "Spiritual\nWorkout",
-            "shortImageFile": "thumb_workout_yoga-on-sand.jpg"
+            "shortImageFile": "thumb_workout_yoga-on-sand.png"
         },
         "Sacred Verses": {
             "link": {
@@ -87,7 +87,7 @@
                 "portal param": "card \"surprise_verses\" of stack \"surprise\""
             },
             "imageText": "Sacred\nVerses",
-            "shortImageFile": "thumb_verses_ola-leaf-bundles-shtrstk-323174486.jpg"
+            "shortImageFile": "thumb_verses_ola-leaf-bundles-shtrstk-323174486.png"
         },
         "Gems of Wisdom": {
             "link": {
@@ -95,7 +95,7 @@
                 "portal param": "stack \"gems\""
             },
             "imageText": "Gems of\nWisdom",
-            "shortImageFile": "thumb_gems_gd-writing-monteblanc.jpg"
+            "shortImageFile": "thumb_gems_gd-writing-monteblanc.png"
         },
         "Take a Virtual Tour": {
             "link": {
@@ -103,7 +103,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Take a\nVirtual Tour",
-            "shortImageFile": "thumb_virtual-tour.jpg"
+            "shortImageFile": "thumb_virtual-tour.png"
         },
         "History Movie": {
              "link": {
@@ -111,7 +111,7 @@
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
-            "shortImageFile": "thumb_history-movie.jpg"
+            "shortImageFile": "thumb_history-movie.png"
         },
         "Our Guru Lineage": {
             "link": {
@@ -119,7 +119,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Our Guru\nLineage",
-            "shortImageFile": "thumb_lineage.jpg"
+            "shortImageFile": "thumb_lineage.png"
         },  
         "Monthly News": {
             "link": {
@@ -127,7 +127,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Monthly\nNews",
-            "shortImageFile": "thumb_news.jpg"
+            "shortImageFile": "thumb_news.png"
         }, 
         "Lesson of the Day": {
             "link": {
@@ -135,11 +135,11 @@
                 "portal param": "stack \"daily-lesson\""
             },
             "imageText": "Lesson of\nthe Day",
-            "shortImageFile": "thumb_daily-lesson.jpg"
+            "shortImageFile": "thumb_daily-lesson.png"
         },
         "Frequently Asked Questions": {
             "imageText": "Frequently\nAsked\nQuestions",
-            "shortImageFile": "thumb_faq_shtrstk-127433528.jpg"
+            "shortImageFile": "thumb_faq_shtrstk-127433528.png"
         },
         "Educational Insights": {
             "link": {
@@ -147,7 +147,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Educational\nInsights",
-            "shortImageFile": "thumb_insight-sections.jpg"
+            "shortImageFile": "thumb_insight-sections.png"
         },
         "All Our On-Line Books": {
             "link": {
@@ -155,7 +155,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "All Our\nOn-Line\nBooks",
-            "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.jpg"
+            "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.png"
         },
         "Path to Siva: A Catechism for Youth": {
             "link": {
@@ -163,7 +163,7 @@
                 "portal param": "stack \"pathtosiva\""
             },
             "imageText": "Path to Siva:\nA Catechism\nfor Youth",
-            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.jpg"
+            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
         },
          "Hinduism Today": {
             "link": {
@@ -171,7 +171,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Hinduism Today\nMagazine",
-            "shortImageFile": "thumb_hinduism-today-cover.jpg"
+            "shortImageFile": "thumb_hinduism-today-cover.png"
         },
         "Color Meditation": {
             "link": {
@@ -179,7 +179,7 @@
                 "portal param": "stack \"color-meditation\""
             },
             "imageText": "Color\nMeditation",
-            "shortImageFile": "thumb_color-meditation.jpg"
+            "shortImageFile": "thumb_color-meditation.png"
         },
         "How to Visit": {
             "link": {
@@ -187,7 +187,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "How to Visit",
-            "shortImageFile": "thumb_visit_shtrstk-370070549.jpg"
+            "shortImageFile": "thumb_visit_shtrstk-370070549.png"
         },
         "Darshan": {
             "link": {
@@ -195,11 +195,11 @@
                 "portal param": "card \"surprise_darshan\" of stack \"surprise\""
             },
             "imageText": "Darshan",
-            "shortImageFile": "thumb_gurudeva_sharma-painting.jpg"
+            "shortImageFile": "thumb_gurudeva_sharma-painting.png"
         },
         "Humor": {
             "imageText": "Humor",
-            "shortImageFile": "thumb_humor.jpg"
+            "shortImageFile": "thumb_humor.png"
         },
         "Hindu Lexicon": {
              "link": {
@@ -207,7 +207,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Hindu\nLexicon",
-            "shortImageFile": "thumb_lexicon_shtrstk-26948821.jpg"
+            "shortImageFile": "thumb_lexicon_shtrstk-26948821.png"
         },
         "Word Puzzles": {
             "link": {
@@ -215,7 +215,7 @@
                 "portal param": "stack \"wordpuzzles\""
             },
             "imageText": "Word\nPuzzles",
-            "shortImageFile": "thumb_word-puzzles.jpg"
+            "shortImageFile": "thumb_word-puzzles.png"
         },
         "Look": {
             "link": {
@@ -223,7 +223,7 @@
                 "portal param": "look"
             },
             "imageText": "Look",
-            "shortImageFile": "thumb_look_video-in-iphone.jpg"
+            "shortImageFile": "thumb_look_video-in-iphone.png"
         },
         "Meet the Monks": {
             "link": {
@@ -231,7 +231,7 @@
                 "portal command": "portal_GoURL"
             },
             "imageText": "Meet the\nMonks",
-            "shortImageFile": "thumb_monks-by-marya.jpg"
+            "shortImageFile": "thumb_monks-by-marya.png"
         },
         "Hindu Art": {
             "link": {
@@ -239,7 +239,7 @@
                 "portal param": "card \"surprise_art\" of stack \"surprise\""
             },
             "imageText": "Hindu\nArt",
-            "shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.jpg"
+            "shortImageFile": "thumb_art_artists-hand-shtrstk-266085548.png"
         },
         "Audio World": {
             "link": {
@@ -247,7 +247,7 @@
                 "portal param": "card \"surprise_audio\" of stack \"surprise\""
             },
             "imageText": "Audio\nWorld",
-            "shortImageFile": "thumb_audio_boy-headphones-shtrstk-357641909.jpg"
+            "shortImageFile": "thumb_audio_boy-headphones-shtrstk-357641909.png"
         },
         "Listen": {
             "link": {
@@ -255,7 +255,7 @@
                 "portal param": "listen"
             },
             "imageText": "Listen",
-            "shortImageFile": "thumb_listen_dancer-headphones-shtrstk-188320250.jpg"
+            "shortImageFile": "thumb_listen_dancer-headphones-shtrstk-188320250.png"
         },
         "Sanskrit Chanting": {
              "link": {
@@ -263,7 +263,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Sanskrit\nChanting",
-            "shortImageFile": "thumb_sanskrit_shtrstk-324408260.jpg"
+            "shortImageFile": "thumb_sanskrit_shtrstk-324408260.png"
         },
         "Bodhinatha's Latest Inspired Talks": {
             "link": {
@@ -271,7 +271,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Bodhinatha's\nLatest\nInspired Talks",
-            "shortImageFile": "thumb_latest-talk-2_new.jpg"
+            "shortImageFile": "thumb_latest-talk-2_new.png"
         },
          "Gurudeva's 1970 Audio Course": {
             "link": {
@@ -279,7 +279,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Gurudeva's\n1970\nAudio Course",
-            "shortImageFile": "thumb_gurudeva-talks_new.jpg"
+            "shortImageFile": "thumb_gurudeva-talks_new.png"
         },
         "All Gurudeva Talks": {
             "link": {
@@ -287,7 +287,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All \nGurudeva\nTalks",
-            "shortImageFile": "thumb_listen-all-gurudeva-binder-158-122_new.jpg"
+            "shortImageFile": "thumb_listen-all-gurudeva-binder-158-122_new.png"
         },
            "All Bodhinatha Talks": {
             "link": {
@@ -295,7 +295,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All \nBodhinatha\nTalks",
-            "shortImageFile": "thumb_listen_bd-all_new.jpg"
+            "shortImageFile": "thumb_listen_bd-all_new.png"
         },
         "Songs": {
             "link": {
@@ -303,7 +303,7 @@
                   "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Songs",
-            "shortImageFile": "thumb_songs_shtrstk-104920397.jpg"
+            "shortImageFile": "thumb_songs_shtrstk-104920397.png"
         },
         "The Guru Chronicles": {
             "link": {
@@ -311,7 +311,7 @@
                 "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "The Guru\nChronicles",
-            "shortImageFile": "thumb_guru-chronicles.jpg"
+            "shortImageFile": "thumb_guru-chronicles.png"
         },
         "All Recent Additions": {
             "link": {
@@ -319,7 +319,7 @@
                   "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "All Recent\nAdditions",
-            "shortImageFile": "thumb_girl-head-phones_new.jpg"
+            "shortImageFile": "thumb_girl-head-phones_new.png"
         },
          "Gujarati Dancing With Siva": {
             "link": {
@@ -327,7 +327,7 @@
                   "portal param": "card \"listen-playlist\" of stack \"listen\""
             },
             "imageText": "Gujarati Dancing\nWith Siva",
-            "shortImageFile": "thumb_gujarati-dws.jpg"
+            "shortImageFile": "thumb_gujarati-dws.png"
         },
         "Gujarati Living With Siva": {
             "link": {
@@ -343,7 +343,7 @@
                 "portal param": "fun"
             },
             "imageText": "Fun &\nGames",
-            "shortImageFile": "thumb_fun-games_tablet-shtrstk-184618028.jpg"
+            "shortImageFile": "thumb_fun-games_tablet-shtrstk-184618028.png"
         },
         "Surprise Me": {
             "link": {
@@ -351,15 +351,15 @@
                 "portal param": "stack \"surprise\""
             },
             "imageText": "Surprise\nMe",
-            "shortImageFile": "thumb_surprise_boy-suitcase.jpg"
+            "shortImageFile": "thumb_surprise_boy-suitcase.png"
         },
         "Slideshows": {
             "imageText": "Slideshows",
-            "shortImageFile": "thumb_slideshows.jpg"
+            "shortImageFile": "thumb_slideshows.png"
         },
         "Preparation for Meditation": {
             "imageText": "Preparation\nfor\nMeditation",
-            "shortImageFile": "thumb_preparation_shtrstk-372104245.jpg"
+            "shortImageFile": "thumb_preparation_shtrstk-372104245.png"
         },
         "Practice": {
             "link": {
@@ -367,7 +367,7 @@
                 "portal param": "practice"
             },
             "imageText": "Practice",
-            "shortImageFile": "thumb_practice_girl-handstand-shtrstk-130057022.jpg"
+            "shortImageFile": "thumb_practice_girl-handstand-shtrstk-130057022.png"
         },
         "Read": {
             "link": {
@@ -375,15 +375,15 @@
                 "portal param": "read"
             },
             "imageText": "Read",
-            "shortImageFile": "thumb_read_mother-daughter-shtrstk-220389001.jpg"
+            "shortImageFile": "thumb_read_mother-daughter-shtrstk-220389001.png"
         },
         "A Character Building Workbook": {
             "imageText": "A Character\nBuilding\nWorkbook",
-            "shortImageFile": "thumb_character-traits.jpg"
+            "shortImageFile": "thumb_character-traits.png"
         },
         "Gurudeva's Spiritual Toolbox": {
             "imageText": "Gurudeva's\nSpiritual\nToolbox",
-            "shortImageFile": "thumb_toolbox.jpg"
+            "shortImageFile": "thumb_toolbox.png"
         }
     },
 "portalData": {
@@ -398,7 +398,7 @@
                     "rowName": "History Movie"
                 }
             },
-            "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
+            "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
         },
         "fun": {
             "portalName": "fun",
@@ -407,7 +407,7 @@
                     "rowName": "Word Puzzles"
                     }
                 },
-            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.jpg"
+            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
         },
         "listen": {
             "portalName": "listen",
@@ -443,7 +443,7 @@
                     "rowName": "Gujarati Living with Siva"
                 } 
             },
-            "headerImage": "hero_listen_girl-head-phones.jpg"
+            "headerImage": "hero_listen_girl-head-phones.png"
         },
         "surprise": {
             "portalName": "surprise",
@@ -464,7 +464,7 @@
                     "rowName": "Video World"
                 }
             },
-            "headerImage": "hero_surprise_boy-opens-suitcase.jpg"
+            "headerImage": "hero_surprise_boy-opens-suitcase.png"
         },
         "website": {
             "portalName": "website",
@@ -491,7 +491,7 @@
                     "rowName": "Our Guru Lineage"
                 }
             },
-            "headerImage": "hero_website_ha-com-home-screenshot.jpg"
+            "headerImage": "hero_website_ha-com-home-screenshot.png"
         },
         "practice": {
             "portalName": "practice",
@@ -503,7 +503,7 @@
                     "rowName": "Color Meditation"
                 }
 			},
-            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.jpg"
+            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png"
         },
         "home": {
             "portalName": "home",
@@ -533,7 +533,7 @@
                     "rowName": "Fun & Games"
                 }
             },
-            "headerImage": "hero_home_Who-Is-Siva.jpg"
+            "headerImage": "hero_home_Who-Is-Siva.png"
         },
         "read": {
             "portalName": "read",
@@ -557,7 +557,7 @@
                     "rowName": "Educational Insights"
                 }
             },
-            "headerImage": "hero_read_gurudeva-signing-book.jpg"
+            "headerImage": "hero_read_gurudeva-signing-book.png"
         }
     },
 "disabledContent": {
@@ -568,7 +568,7 @@
                     "rowName": "Slideshows"
                 }
             },
-            "headerImage": "hero_look_big-eye-shtrstk-13603590.jpg"
+            "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
         },
         "fun": {
             "portalName": "fun  & games",
@@ -586,7 +586,7 @@
                     "rowName": "Image Puzzles"
                 }
             },
-            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.jpg"
+            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
         },
         "listen": {
             "portalName": "listen",
@@ -610,7 +610,7 @@
                     "rowName": "The Guru Chronicles"
                 }
             },
-            "headerImage": "hero_listen_girl-head-phones.jpg"
+            "headerImage": "hero_listen_girl-head-phones.png"
         },
         "surprise": {
             "portalName": "surprise",
@@ -634,7 +634,7 @@
                     "rowName": "Video World"
                 }
             },
-            "headerImage": "hero_surprise_boy-opens-suitcase.jpg"
+            "headerImage": "hero_surprise_boy-opens-suitcase.png"
         },
         "website": {
             "portalName": "website",
@@ -661,7 +661,7 @@
                     "rowName": "Our Guru Lineage"
                 }
             },
-            "headerImage": "hero_website_ha-com-home-screenshot.jpg"
+            "headerImage": "hero_website_ha-com-home-screenshot.png"
         },
         "practice": {
             "portalName": "practice",
@@ -685,7 +685,7 @@
                     "rowName": "Instructions in Puja"
                 }
             },
-            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.jpg"
+            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png"
         },
         "home": {
             "portalName": "home",
@@ -715,7 +715,7 @@
                     "rowName": "Fun & Games"
                 }
             },
-            "headerImage": "hero_home_Who-Is-Siva.jpg"
+            "headerImage": "hero_home_Who-Is-Siva.png"
         },
         "read": {
             "portalName": "read",
@@ -745,7 +745,7 @@
                     "rowName": "Educational Insights"
                 }
             },
-            "headerImage": "hero_read_gurudeva-signing-book.jpg"
+            "headerImage": "hero_read_gurudeva-signing-book.png"
         }
     }   
 }

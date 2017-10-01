@@ -1,7 +1,11 @@
 ﻿script "behavior_SearchAndFilter"
 
 ###################
--- BR: 2016-10-13
+-- BR: 2017-09-30  
+-- changed "mouseup" to "executeSearch" 
+-- because "send mouseup" was failing for some reason.
+-- but "Send executeSearch" works from the mouse main group.
+-- BR: 2017-10-13
 -- DESCRIPTION:
 -- General purpose  library for searchs and filters 
 -- Assumes are that we pass three different data classes here
@@ -32,16 +36,16 @@
 
 local sSearchClass,sCallContext,sPlaylistQueryA
 
-on mouseup
-   put getTargetOwnerSegs(the target) into sCallContext
-   
+on executeSearch pTarget
+   put getTargetOwnerSegs(pTarget) into sCallContext
+   wait 500 milliseconds
    switch 
       case (sCallContext contains "listen-playlist")
          searchPlayList
          break
    end switch
    
-end mouseup
+end executeSearch
 
 ------------------------------------------------------------------------
 #  UNIQUE SEARCHES FOR DIFFERENT MODULES ARE ADDED HERE
@@ -114,3 +118,12 @@ end searchPlayList
 ------------------------------------------------------------------------
 
 
+
+on pushNotificationReceived pMessage
+   
+end pushNotificationReceived
+
+
+on nameChanged pOldName, pNewName
+   
+end nameChanged
