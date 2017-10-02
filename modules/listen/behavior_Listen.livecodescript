@@ -305,7 +305,7 @@ on playList_FetchData pQueryArray
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList"
             dialog_CustomMsg "Offline or Low Bandwidth"
-           -- close this stack
+            -- close this stack
             portal_Link "Listen"
             exit to top
          else 
@@ -327,6 +327,14 @@ on playList_FetchData pQueryArray
    # need know two things from the beginning
    put tPlaylistClass into sCurrentPlaylistA["playlistClass"]
    put sTargetPlayList into sCurrentPlayListA["playListTitle"]
+   
+   if sCurrentPlayListA["audioFiles"] is empty then 
+      put "No records for that search. Try again" into fld "audioList"
+      wait 1500 milliseconds with messages
+      put empty ito fld "audioList"
+      dispatch "revealMoreActions" to this card with "true"
+      exit to top
+   end if
    
    playlist_Instantiate sTargetPlayList
    

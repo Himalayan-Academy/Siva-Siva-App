@@ -117,13 +117,3 @@ end searchPlayList
 # dbaseRecords,listLines,fieldText
 ------------------------------------------------------------------------
 
-
-
-on pushNotificationReceived pMessage
-   
-end pushNotificationReceived
-
-
-on nameChanged pOldName, pNewName
-   
-end nameChanged

@@ -337,11 +337,4 @@ on closeCard
 end closeCard
 
 
-on mobileStandaloneSaved pTargetType, pAppBundle
 
-end mobileStandaloneSaved
-
-
-on errorDialog pExecutionError, pParseError
-
-end errorDialog
