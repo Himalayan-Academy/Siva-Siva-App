@@ -33,8 +33,7 @@ on HideAuxiliaryControls
 end HideAuxiliaryControls
 
 on closeCard
-  deleteAllMobileControls
-  set the acceleratedRendering of this stack to false
+  --deleteAllMobileControls
 end closeCard
 
 command loadFonts
@@ -206,7 +205,7 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
-   
+   set the acceleratedRendering of this stack to true
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum
