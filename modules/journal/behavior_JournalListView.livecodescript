@@ -247,11 +247,11 @@ on filterByDate
 end filterByDate
 
 on filterByFavorites
-   if  "Favorites" is in the hilitedItemNames of widget "FilterTabBar" then
+   --if  "Favorites" is in the hilitedItemNames of widget "FilterTabBar" then
       layoutScreen "Favorites"
-   else
-      layoutScreen
-   end if
+   --else
+      --layoutScreen
+   --end if
 end filterByFavorites
 
  local sListA -- array of current journal entries for filtering in next 2 handlers
