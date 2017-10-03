@@ -169,7 +169,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    -- set the bottom of fld "lbl-dialogPrompt"  to tCdHeight
    show group "bottomToast"
    move grp "BottomToast" relative 0,-tDialogHeight in 200 milliseconds
-   wait 2 seconds
+   wait 1 seconds
    move grp "BottomToast" relative 0,tDialogHeight in 200 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
