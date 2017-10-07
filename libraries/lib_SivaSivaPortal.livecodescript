@@ -139,7 +139,6 @@ command portal_GoStack cardOrStackObject
    wait 100 milliseconds with messages  
    
    close stack oStackName   
-   
    wait 100 milliseconds with messages  
    
    # now we turn on Accelerated rendering for most, but now all stack
@@ -148,9 +147,9 @@ command portal_GoStack cardOrStackObject
    # stack does not need it. If it does need it, but not at startup, Assume
    # the developer turns it on later in the process/flow of events.
    
-   put "daily-lesson,journal,view_SivaSivaBrower" into tNoGoBackStacks
+   put "daily-lesson,journal,view_SivaSivaBrower" into tDoNotAccelerate
    
-   if the shortname of the topstack is among the items of tNoGoBackStacks then
+   if the shortname of the topstack is among the items of tDoNotAccelerate then
       set the acceleratedRendering of the topstack to true
    end if
    
