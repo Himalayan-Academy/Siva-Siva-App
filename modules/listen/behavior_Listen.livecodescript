@@ -462,8 +462,7 @@ end journalResume
 
 
 on closeStack
-   set the acceleratedRendering of this stack to "false"
-   if isMobile() then 
-      deleteMobileControl "audioList"
-   end if
+   --   if isMobile() then 
+   --      deleteMobileControl "audioList"
+   --   end if
 end closeStack

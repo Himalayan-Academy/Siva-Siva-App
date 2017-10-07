@@ -183,7 +183,6 @@ end init_StoreControlsIds
 
 on testConnection
    get  connectivity_PingServer()
-   put it
 end testConnection
 
 command openPortalStack
@@ -208,7 +207,7 @@ command  init_LoadLibraries
          set the itemdel to "/"
          set the defaultFolder to item 1 to -2 of the effective filename of stack "Siva-Siva-App"
          set the itemdel to comma
-         put stackName && "loading"
+         --put stackName && "loading"
          switch
             # Always do the libraries first as the may be deps in them required by
             # other behaviors and models
