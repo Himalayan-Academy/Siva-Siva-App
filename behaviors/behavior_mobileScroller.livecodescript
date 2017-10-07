@@ -5,7 +5,6 @@ local sMouseLoc
 
 command CreateScroller pName -- scrolling fields
   if not isMobile() then exit CreateScroller
-  set the acceleratedRendering of this stack to true
   deleteMobileControl pName -- delete any existing
   put (the rect of control pName) into tRect
   mobileControlCreate "scroller", pName

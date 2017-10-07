@@ -60,12 +60,12 @@ on mouseup
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
    
-  put the target into pTarget
+   put the target into pTarget
    put the short name of the Target  into tTarget   
    
    switch tTarget
       case "AudioList"
-           put word 2 of clickline() into sSelectNum
+         put word 2 of clickline() into sSelectNum
          select_Play # will use either the line number or item id
          break  
       case "chevron-up-down" # this is simple enough to do here
@@ -80,14 +80,17 @@ on mouseup
          set the flipped of pTarget to not detailVis
          break
       case "DownloadSelection" 
-           if connectivity_PingServer() <> "true" then
-              dialog_CustomMsg "Offline or Low Bandwidth"
-             exit mouseup
-           end if
+         if connectivity_PingServer() <> "true" then
+            dialog_CustomMsg "Offline or Low Bandwidth"
+            exit mouseup
+         end if
          downloadSelection pTarget
          break
       case "revealMoreActions"
          put not (the vis of grp "moreActions") into pVis
+         deleteMobileControl "audioPlayer" 
+         # Required by Android to let the card work as expected
+         # and we assume user won't mind the player stopping if they are going to search.
          revealMoreActions pVis
          break
    end switch

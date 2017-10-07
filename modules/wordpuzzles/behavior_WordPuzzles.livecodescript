@@ -41,7 +41,6 @@ end setTileGlow
   
 on closecard
   storeCurrentLevel sCurLevel
-  set the acceleratedRendering of this stack to false
    tracking_RecordActivity "Word Puzzle", "navigation/exit", pTrackdata
 end closecard
   

@@ -97,6 +97,7 @@ end portal_DoRowLink
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject    
+   --breakpoint
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
@@ -122,9 +123,36 @@ command portal_GoStack cardOrStackObject
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata
    
+   # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
+   # but these will crash the app on start up on Android if no stack is yet loaded.
+   
+   if oStackName <> empty then # this is not the first run boot of portal
+      deleteAllMobileControls # will destroy all except audioPlayer
+      set the accelereratedRendering of the topstack to false 
+   end if
+   
+   # try to flush cache, clear buffer?
+   # this will remove acceleratedRendering for the oStackName
+   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   
    wait 100 milliseconds with messages  
+   
    close stack oStackName   
+   
+   wait 100 milliseconds with messages  
+   
+   # now we turn on Accelerated rendering for most, but now all stack
+   # just after they are opened.
+   # the acceleratedRendiner of any given stack is not trigger at all if that 
+   # stack does not need it. If it does need it, but not at startup, Assume
+   # the developer turns it on later in the process/flow of events.
+   
+   put "daily-lesson,journal,view_SivaSivaBrower" into tNoGoBackStacks
+   
+   if the shortname of the topstack is among the items of tNoGoBackStacks then
+      set the acceleratedRendering of the topstack to true
+   end if
    
 end portal_GoStack
 
