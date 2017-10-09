@@ -147,9 +147,9 @@ command portal_GoStack cardOrStackObject
    # stack does not need it. If it does need it, but not at startup, Assume
    # the developer turns it on later in the process/flow of events.
    
-   put "daily-lesson,journal,view_SivaSivaBrower" into tDoNotAccelerate
+   put "daily-lesson,journal,view_SivaSivaBrowser" into tDoNotAccelerate
    
-   if the shortname of the topstack is among the items of tDoNotAccelerate then
+   if not (the short name of the topstack is among the items of tDoNotAccelerate) then
       set the acceleratedRendering of the topstack to true
    end if
    
