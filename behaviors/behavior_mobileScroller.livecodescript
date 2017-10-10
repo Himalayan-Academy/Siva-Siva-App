@@ -4,20 +4,21 @@ local sMouseLoc
 ######### Mobile Controls ############
 
 command CreateScroller pName -- scrolling fields
-  if not isMobile() then exit CreateScroller
-  deleteMobileControl pName -- delete any existing
-  put (the rect of control pName) into tRect
-  mobileControlCreate "scroller", pName
-  mobileControlSet pName, "rect", tRect
-  put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName) into tRect
-  mobileControlSet pName, "contentRect" , tRect
-  mobileControlSet pName, "hScroll" , 0
-  mobileControlSet pName, "vScroll" , 0
-  mobileControlSet pName, "hIndicator" , false
-  if pName = "quote" then
-    mobileControlSet pName, "vIndicator", true
-  end if
-  mobileControlSet pName, "visible",  true
+   --set the acceleratedRendering of this stack to false
+   if not isMobile() then exit CreateScroller
+   deleteMobileControl pName -- delete any existing
+   put (the rect of control pName) into tRect
+   mobileControlCreate "scroller", pName
+   mobileControlSet pName, "rect", tRect
+   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName) into tRect
+   mobileControlSet pName, "contentRect" , tRect
+   mobileControlSet pName, "hScroll" , 0
+   mobileControlSet pName, "vScroll" , 0
+   mobileControlSet pName, "hIndicator" , false
+   if pName = "quote" then
+      mobileControlSet pName, "vIndicator", true
+   end if
+   mobileControlSet pName, "visible",  true
 end CreateScroller
 
 on scrollerDidScroll hScrolled, vScrolled
@@ -33,7 +34,7 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
   repeat while pName is among the lines of mobileControls()
     mobileControlDelete pName
   end repeat
-  -- set the acceleratedRendering of this stack to false --- jg: don't turn this off
+  --set the acceleratedRendering of this stack to false --- jg: don't turn this off
 end deleteMobileControl
 
 on mouseDown
