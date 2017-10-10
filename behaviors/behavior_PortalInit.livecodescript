@@ -8,11 +8,13 @@ on preopencard
 end preopencard
 
 on openCard
-  portal_SetCurrentStack "Siva-Siva-Portal"
-  portal_SetCurrent (the short name of this stack)
-  --show button "home-logo"
-  put "SivaSiva Portal Scrolling" into tLinksGroup
-  send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 100 milliseconds
+   portal_SetCurrentStack "Siva-Siva-Portal"
+   portal_SetCurrent (the short name of this stack)
+   --show button "home-logo"
+   put "SivaSiva Portal Scrolling" into tLinksGroup
+   send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 100 milliseconds
+   wait 100 milliseconds with messages
+   set the acceleratedRendering of this stack to true
 end openCard
  
 

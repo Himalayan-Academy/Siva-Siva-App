@@ -133,7 +133,6 @@ command portal_GoStack cardOrStackObject
    
    # try to flush cache, clear buffer?
    # this will remove acceleratedRendering for the oStackName
-   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    
    wait 100 milliseconds with messages  
@@ -148,9 +147,9 @@ command portal_GoStack cardOrStackObject
    # stack does not need it. If it does need it, but not at startup, Assume
    # the developer turns it on later in the process/flow of events.
    
-   put "daily-lesson,journal,view_SivaSivaBrower" into tNoGoBackStacks
+   put "daily-lesson,Siva-Siva-Portal,journal,view_SivaSivaBrower" into tDoNotAccelerate
    
-   if the shortname of the topstack is among the items of tNoGoBackStacks then
+   if not (the short name of the topstack is among the items of tDoNotAccelerate) then
       set the acceleratedRendering of the topstack to true
    end if
    
