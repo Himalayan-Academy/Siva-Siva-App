@@ -97,7 +97,6 @@ end portal_DoRowLink
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject    
-   --breakpoint
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
@@ -133,11 +132,13 @@ command portal_GoStack cardOrStackObject
    
    # try to flush cache, clear buffer?
    # this will remove acceleratedRendering for the oStackName
+   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    
    wait 100 milliseconds with messages  
    
    close stack oStackName   
+   
    wait 100 milliseconds with messages  
    
    # now we turn on Accelerated rendering for most, but now all stack
@@ -146,9 +147,8 @@ command portal_GoStack cardOrStackObject
    # stack does not need it. If it does need it, but not at startup, Assume
    # the developer turns it on later in the process/flow of events.
    
-
-   put "daily-lesson,Siva-Siva-Portal,journal,view_SivaSivaBrower" into tDoNotAccelerate
-
+   put "daily-lesson,journal,view_SivaSivaBrower" into tDoNotAccelerate
+   
    if not (the short name of the topstack is among the items of tDoNotAccelerate) then
       set the acceleratedRendering of the topstack to true
    end if
@@ -392,6 +392,7 @@ command portal_SetLinkUrl portalName, portalColour, pSivasivaData
    put portalColour into portalArray ["portalColour"]
    portal_SetArray portalName, portalArray, pSivasivaData
 end portal_SetLinkUrl
+
 
 
 function portal_GetHeaderImage portalName, pSivasivaData
