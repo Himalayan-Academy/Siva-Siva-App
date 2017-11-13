@@ -93,7 +93,7 @@ end jnanamDB
 -
 command _setupDatabase
    put jnanam_GetDatabasePath() into jnanamDatabasePath
-   if there is not a file jnanamDatabasePath or the environment is "development" then
+   if there is not a file jnanamDatabasePath  or _CheckSumDoesntMatch(jnanamDatabasePath)  then
       _copyAndDecompress
    end if
    
@@ -103,14 +103,22 @@ command _setupDatabase
    put true into sLoaded
 end _setupDatabase
 
+function _CheckSumDoesntMatch jnanamDatabasePath
+   put jnanamDatabasePath into tDbaseCheckPath
+   put ".txt" after tDbaseCheckPath
+   put url ("binfile:" & tDbaseCheckPath) into tCheckSum
+   put  the md5Digest of URL ("binfile:" & jnanam_GetCompressedFilePath()) into tLatestCheckSum
+ return tCheckSum<>tLatestCheckSum
+end _CheckSumDoesntMatch
+   
 private command _copyAndDecompress
    put jnanam_GetCompressedFilePath() into compressedFile
-   
    put the defaultfolder into tDF
    set the itemdel to "/"
    set the defaultfolder to item 1 to -2 of the effective filename of this stack
    get url ("binfile:" & compressedFile)
    put decompress(it) into url ("binfile:" & jnanam_GetDatabasePath())
+   put  the md5Digest of URL ("binfile:" & jnanam_GetCompressedFilePath()) into url ("binfile:" &jnanam_GetDatabasePath() & ".txt")
    set the defaultfolder to tDF
 end _copyAndDecompress
 
