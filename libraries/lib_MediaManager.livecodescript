@@ -46,7 +46,9 @@ function mmComputeSpaceUsedByFolder pF
    set the defaultFolder to pF
    put the detailed files into tFilesList
    repeat for each line tF in tFilesList
-      add item 2 of tF to tResult
+      put item 2 of tF into tBytesCount
+      put tBytesCount / 1024 into tMBytes
+      add tMBytes to tResult
    end repeat
    put the folders into tFoldersList
    repeat for each line tF in tFoldersList
