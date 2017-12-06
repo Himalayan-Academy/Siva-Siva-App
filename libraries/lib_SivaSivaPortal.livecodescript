@@ -135,11 +135,11 @@ command portal_GoStack cardOrStackObject
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    
-   wait 100 milliseconds with messages  
+   --wait 100 milliseconds with messages  
    
    close stack oStackName   
    
-   wait 100 milliseconds with messages  
+   --wait 100 milliseconds with messages  
    
    # now we turn on Accelerated rendering for most, but now all stack
    # just after they are opened.
