@@ -167,8 +167,10 @@ private command _copyAndDecompress
 end _copyAndDecompress
 
 private command _generateUUID
-   put the ticks & random(9999) & random(9999) into tUUID
-   put tUUID into url ("binfile:" & tracking_GetUUIDPath())
+   if not (there is a file tracking_GetUUIDPath()) then
+      put the ticks & random(9999) & random(9999) into tUUID
+      put tUUID into url ("binfile:" & tracking_GetUUIDPath())
+   end if
 end _generateUUID
 
 private command _loadDatabase
