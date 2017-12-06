@@ -371,8 +371,8 @@
         },
         "Read": {
             "link": {
-               "portal command": "portal_GoStack",
-                "portal param": "stack \"read\""          
+                "portal command": "portal_Link",
+                "portal param": "read"          
             },
             "imageText": "Read",
             "shortImageFile": "thumb_read_mother-daughter-shtrstk-220389001.png"
