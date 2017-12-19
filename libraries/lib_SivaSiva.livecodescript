@@ -184,6 +184,9 @@ end path_Modules
 -- see init script which sets up folders in /media to match
 -- the web server; CMS in app is the same:
 -- files are in a folder with the  fileID from the database.
+-- Caveat: if the entry in the dbase has bad chars this creates a folder name that will break 
+-- the data manager digger.... LC hangs on the directly walk, recursive dig through folders
+-- and subfolders
 -- if the content is unique to SivaSiva app, then it goes to
 -- /assets or /modules # the module that needs it
 -- All other content maps to DocRoot/media
@@ -211,6 +214,16 @@ end path_isFileOnDisk
 
 function path_FileFromURL pURL
    put path_Documents() into tDF
+   
+   # Clean up a bad bug in one folder name that may still exist in early installations.
+   # bad data entry with end of line in a folder name at the end
+   put "gr_1998-12-06_religious-lethargy" & cr into tBadFolderName
+   put (tDF &"/media/audio/inspired-talks/gurudeva/1998/") before tBadFolderName
+   if there is a folder  tBadFolderName then
+      delete folder tBadFolderName
+   end if
+   # the right one will be re-created later 
+   
    set the itemdel to "/"
    # make relative:
    if  item 1 of pURL contains "http" then
@@ -218,7 +231,6 @@ function path_FileFromURL pURL
    end if
    
    # later we download app unique content as a zip file here and unpack it
-   
    
    put item -1 of pURL into tFile
    

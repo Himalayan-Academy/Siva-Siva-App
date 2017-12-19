@@ -32,10 +32,10 @@
         "My Hindu Calendar": {
             "link": {
                 "portal command": "portal_GoStack",
-                "portal param": "stack \"panchangam\""
+                "portal param": "stack \"calendar\""
             },
             "imageText": "My Hindu\nCalendar",
-            "shortImageFile": "thumb_calendar_shtrstk-325867559.png"
+            "shortImageFile": "thumn_calendar_shutterstock_357641909"
         },
         "Our YouTube Library": {
             "link": {
@@ -501,6 +501,9 @@
                 },
                 "2": {
                     "rowName": "Color Meditation"
+                },
+                 "3": {
+                    "rowName": "My Hindu Calendar"
                 }
 			},
             "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png"
@@ -666,9 +669,6 @@
         "practice": {
             "portalName": "practice",
             "rowData": {
-                "3": {
-                    "rowName": "My Hindu Calendar"
-                },
                 "4": {
                     "rowName": "Mantras"
                 },

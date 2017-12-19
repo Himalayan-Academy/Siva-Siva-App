@@ -117,6 +117,8 @@ end fieldLinkClicked
 
 
 command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
+   # short notification at bottom of screen goes away of itself
+   # use the DoAnswer option for more interactions.
    
    # first instantiate the group to the local context
    put sConfigA["bottomToast"] into tDialogControl
@@ -321,12 +323,12 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    get item 2 of pBtns
    set the vis of btn "dialogCancel" of grp "answerDlgGrp" to (it <> "")
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
-   
    show grp "answerDlgGrp" -- cd must have a "doAnswerResponse" handler to read dialogData and respond
 end doAnswer
 
 
 -- To manage the response, use a "doAnswerResponse" handler like this in the card or stack script:
+--  the handler should have a name that you pass to the "pHandleAffirm"
 
 
 command doAnswerResponse -- sent from doAnswer dlg
