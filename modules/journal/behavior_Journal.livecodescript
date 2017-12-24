@@ -10,10 +10,7 @@ on backkey
    send mouseup to widget "go back"
 end backkey
 
-on preopencard
-   deleteAllMobileControls
-   pass preopencard
-end preopencard
+
 
 function getConfigForLayout pScreenIdentifier, pKey
    return sConfigA["style"][pScreenIdentifier][pKey]

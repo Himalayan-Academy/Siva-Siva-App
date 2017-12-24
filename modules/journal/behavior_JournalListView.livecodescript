@@ -7,14 +7,10 @@ TODO:
 local sLastFilter
 
 on preopencard
-  deleteAllMobileControls
   # uncomment this when you go into production:
   # i.e. leave out if you want to use the controls on the device while
   # testing
-
   --HideAuxiliaryControls
-
-
   --loadFonts
   layoutScreen
 
@@ -32,9 +28,6 @@ on HideAuxiliaryControls
    end repeat
 end HideAuxiliaryControls
 
-on closeCard
-  --deleteAllMobileControls
-end closeCard
 
 command loadFonts
    --    if the environment is mobile then

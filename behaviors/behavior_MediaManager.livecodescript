@@ -37,6 +37,9 @@ end openCard
 # without digging again. 
 
 command mmGetTopSums
+   if isMobile() then
+      mobileShowStatusBar
+   end if
    show btn "load-spinner"
    show grp "diskDataOverview"
    dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
@@ -116,18 +119,15 @@ end __UXDisplayAndDelete
 
 ###### 
 command mouseup  #UI Interactions are trapped here
-   put the short name of the target into tTarget
+   put the short name the target into tTarget
    --put the keys of sResultA
-   switch tTarget
+   switch 
       # the dataOverviewGroup has it's own mousup handler
       # except for the go settings one below
-      case "go-Settings-label"
-         break
-         # all the following apply to the datafiles group
-      case "goSettings"
+      case (the long owner of the target contains "goSettings")
          go to card "settings-home"
          break
-      case "FilesOnDisk"
+      case  tTarget = "FilesOnDisk"
          put value(the clickline) into tFile
          put the clickline into sTargetLine
          put word 2 of sTargetLine into tLineNo
@@ -138,13 +138,13 @@ command mouseup  #UI Interactions are trapped here
          put item 1 of tFile into fld "currentFilePick"
          setDeleteMode "on"
          break
-      case "DoneDeletions"  # leave the file list and return to sums
+      case  tTarget =  "DoneDeletions"  # leave the file list and return to sums
          setDeleteMode "off"
          hide grp "displayFilesSizes" 
          mmSetRootFolder (path_Documents() & "media/")
          mmGetTopSums
          break
-      case "deleteYes"
+      case  tTarget =  "deleteYes"
          set the textcolor of sTargetLine to gray
          set the textstyle of sTargetLine to strikeout
          put item 2 of sDetailedTarget into tFileSize
@@ -153,10 +153,10 @@ command mouseup  #UI Interactions are trapped here
          deleteFileOnDisk 
          setDeleteMode "Yes"
          break
-      case "deleteNo"
+      case  tTarget =  "deleteNo"
          setDeleteMode "off"
          break
-      case "deleteFile"
+      case tTarget =  "deleteFile"
          put "Cannot be undone. Crossed out files have been deleted. Download them again later." \
                into pMsg
          doAnswer pMsg,"OK"
