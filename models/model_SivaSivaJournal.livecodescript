@@ -26,12 +26,20 @@ on librarystack
    if the long id of the target is not the long id of me then
       pass librarystack
    end if
-
+   
    if sLoaded is not true then
       _setupDatabase
    end if
-
+   
 end librarystack
+
+-- function checkDBaseSetUp
+--    return sLoaded 
+-- end checkDBaseSetUp
+
+-- command setUpJournalDbase
+--     _setupDatabase
+-- end setUpJournalDbase
 
 
 --> Journal | Files
@@ -231,9 +239,14 @@ command Journal_LaunchEntry pEntryID
    end try
    put tEntryA["module"] into pData["returnTo"]
    tracking_RecordActivity "Journal","resume/activity", pData
-   dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
-   if it is among the items of "unhandled,passed" then
-      return "journalerr, no module could handle this activity"
+   if tEntryA["module"]="surprise" then
+      dialog_CustomMsg "Surprise journal entries are currently disabled."
+   else
+      portal_GoStack tEntryA["module"]
+      dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
+      if it is among the items of "unhandled,passed" then
+         return "journalerr, no module could handle this activity"
+      end if
    end if
    
 end Journal_LaunchEntry

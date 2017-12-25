@@ -113,9 +113,10 @@ command showProgress pURL, pStatus
       else
          put round(tKBreceived / tElapsedSeconds, 1) into tKBperSecond
       end if
+
+      put "Received (KB): " & tab & tKBreceived &cr & "Of Total (KB: " & tab &  tTotalKB & cr &\
+       "At KB/sec: " & tab & tKBperSecond into fld "ProgressField"
       
-      put "Received " & tKBreceived & " KB of " & tTotalKB & " KB at " into fld "ProgressField"
-      put tKBperSecond & " KB/sec" after fld "ProgressField"
    end if
 end showProgress
 

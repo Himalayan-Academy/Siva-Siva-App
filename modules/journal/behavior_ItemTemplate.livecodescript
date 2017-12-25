@@ -153,7 +153,6 @@ function getIconForModule
          return the iconPath of widget "plane-svg-icon" of card "templates"
          break
          
-         
       case "settings"
       default
          return the iconPath of widget "generic-svg-icon" of card "templates"
@@ -163,7 +162,8 @@ end getIconForModule
 
 on launchActivity
    --put "should launch activity" && sEntryA["journal_id"]
-       portal_SetCurrentStack "Journal"
+   portal_SetCurrentStack "Journal"
+   set the acceleratedRendering of this stack to false
    Journal_LaunchEntry sEntryA["journal_id"]
    if the result contains "err" then
       answer error the result

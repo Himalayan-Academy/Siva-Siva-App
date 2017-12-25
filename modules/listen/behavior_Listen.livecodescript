@@ -33,7 +33,11 @@ on preopenstack
 end preopenstack
  
 on openstack 
-   # for V1 we know we are always coming from the Listen Portal
+   if not (portal_GetLastStack()= "journal")  then
+      
+      # for V1 we know we are always coming from the Listen Portal
+      # or from the journal... if from journal then we let journalResume 
+      # initiated the UI
    # and these are basically playlists like on Spotify, though
    # some might qualify as albums, but we don't have enough to 
    # make a differentiation. So treat all as playlists  
@@ -50,6 +54,8 @@ on openstack
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
    playlist_QuerySetUp sTargetPlayList 
+end if
+
 end openstack
 
 -----------------------------------------------------
@@ -319,7 +325,7 @@ on playList_FetchData pQueryArray
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]
          break
-         
+          
    end switch
    
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
@@ -331,7 +337,7 @@ on playList_FetchData pQueryArray
    if sCurrentPlayListA["audioFiles"] is empty then 
       put "No records for that search. Try again" into fld "audioList"
       wait 1500 milliseconds with messages
-      put empty ito fld "audioList"
+      put empty into fld "audioList"
       dispatch "revealMoreActions" to this card with "true"
       exit to top
    end if
@@ -450,14 +456,17 @@ end getItemURL
 
 
 on journalResume  pDataA, pEntryA
+   -- breakpoint
    deleteMobileControl "audioPlayer"
    put "card " & quote &  pDataA["card"] & quote &   " of stack " && quote & pEntryA["module"] & quote into pDestination
    put pDataA["playList"] into sTargetPlayList
+   playlist_SetCurrent sTargetPlayList
+   playlist_QuerySetUp sTargetPlayList 
    portal_SetLastLinkTitle sTargetPlayList  
-   portal_GoStack pDestination 
-   put pDataA["playSelection"] into pSelectedLine
-   dispatch "playlist_Reset" to card "listen-playlist"
-   dispatch "select_Play" to card "listen-playlist" with pDataA["item_id"]
+   --    --portal_GoStack pDestination 
+   --    put pDataA["playSelection"] into pSelectedLine
+   --    dispatch "playlist_Reset" to card "listen-playlist"
+   --  dispatch "select_Play" to card "listen-playlist" with pDataA["item_id"]
 end journalResume
 
 

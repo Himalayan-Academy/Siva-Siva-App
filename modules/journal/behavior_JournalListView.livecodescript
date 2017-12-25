@@ -7,14 +7,25 @@ TODO:
 local sLastFilter
 
 on preopencard
-  # uncomment this when you go into production:
-  # i.e. leave out if you want to use the controls on the device while
-  # testing
-  --HideAuxiliaryControls
-  --loadFonts
-  layoutScreen
-
+   --   # uncomment this when you go into production:
+   --   # i.e. leave out if you want to use the controls on the device while
+   --   # testing
+   --   --HideAuxiliaryControls
+   --   --loadFonts
+   if there is a group "item list" then
+      delete group "item list"
+   end if
+   --layoutScreen
+   
 end preopencard
+
+on opencard
+   show image "loader-39x39.gif"
+   dialog_CustomMsg "One moment please....loading...."
+   set the acceleratedRendering of this stack to true
+   layoutScreen
+      hide image "loader-39x39.gif"
+end opencard
 
 on HideAuxiliaryControls
    if the environment is "development" then
@@ -122,7 +133,7 @@ function checkDateRange pEntryA, pDateRange
 end checkDateRange
    
 on layoutScreen pModuleFilter, pDateRange
-   lock screen
+
    log_Debug "======================"
    if (pModuleFilter, pDateRange) is sLastFilter then
       log_Debug "Do nothing, same as last filter"
@@ -171,6 +182,7 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
+      lock screen
    repeat for each element tEntryA in tEntriesA
       switch
          case pModuleFilter is  empty and pDateRange is empty
@@ -198,7 +210,7 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
-   set the acceleratedRendering of this stack to true
+
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum
