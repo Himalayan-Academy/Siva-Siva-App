@@ -15,8 +15,6 @@ on preopencard
    if there is a group "item list" then
       delete group "item list"
    end if
-   --layoutScreen
-   
 end preopencard
 
 on opencard
@@ -133,8 +131,11 @@ function checkDateRange pEntryA, pDateRange
 end checkDateRange
    
 on layoutScreen pModuleFilter, pDateRange
-
-   log_Debug "======================"
+   if there is a group "item list" then
+      delete group "item list"
+   end if
+   
+   --  log_Debug "======================"
    if (pModuleFilter, pDateRange) is sLastFilter then
       log_Debug "Do nothing, same as last filter"
       exit layoutScreen
@@ -177,12 +178,10 @@ on layoutScreen pModuleFilter, pDateRange
    set the htmltext of fld "header text" to getConfigForLayout("listView", "headerLabel")
    
    -- set item list
-   if there is a group "item list" then
-      delete group "item list"
-   end if
+   
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
-      lock screen
+   lock screen
    repeat for each element tEntryA in tEntriesA
       switch
          case pModuleFilter is  empty and pDateRange is empty
@@ -200,7 +199,6 @@ on layoutScreen pModuleFilter, pDateRange
       put the topleft of group "item list" into tTopLeft
       put the width of this card - 3, the height of this card - 10 into tBottomRight
       set the rect of group "item list" to tTopLeft, tBottomRight
-      
       set the behavior of group "item list" to (the long id of stack "behavior_mobileScroller")
       set the layerMode of grp "item list" to "scrolling"
       --if isMobile then
@@ -210,21 +208,28 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
-
+   
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum
    if there is not a group "item list" then
       new group "item list"
+      set the margins of group "item list" to 0,0,0,0
+      set the left of grp "item list" to 0
    end if
-
+   
+   
+   set the showborder of group "item list" to false
    put the long id of group "item list" into tListGroup
+   --put the rect of tListGroup
    set the lockUpdates of tListGroup to true
    copy group "item template" of card "templates" to tListGroup
+   --put the rect of grp "item List"
    put the long id of it into tListItem
+   --put the rect of tListItem
    set the journalEntry of tListItem to pEntryA
    set the itemOrder of tListItem to pEntryNum
- end createNewJournalEntry
+end createNewJournalEntry
 
  function crlist
    repeat with x = 1 to the paramcount

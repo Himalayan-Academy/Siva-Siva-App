@@ -61,7 +61,9 @@ on layoutGroup pNum
    
    processInternalFormatting -- this command sets internal group elements
    processExternalFormatting pNum -- this one sets the group itself
-   fixLayoutMistakes pNum
+   --fixLayoutMistakes pNum
+   set the lockupdates of group "item list" to false
+   set the lockupdates of me to false
 end layoutGroup
 
 on activateDebugColors
@@ -75,6 +77,7 @@ on activateDebugColors
 end activateDebugColors
 
 on processInternalFormatting
+   set the lockupdates of me to true  
    #Note: some attributes of the group are set on the template on this card
    # e.g. use the margins propety to 
    -- colors
@@ -96,26 +99,26 @@ on processInternalFormatting
    set the width of grc "horizontal rule" of me to the width of this card 
    set the width of grc "journal-item-bkgnd" of me to the width of this card
    
-   
    -- positioning
    set the right of field "timestamp" of me to (the width of this card - 20)
    set the left of grc "horizontal rule" of me to 0
    set the left of field "entry label" of me to the right of widget "module icon" of me +10
    set the left of field "tags" of me to the left of field "entry label" of me
    set the margins of me to 0,8,0,0
+   set the lockupdates of me to false  
 end processInternalFormatting
 
 on processExternalFormatting pNum
-   
+   set the lockupdates of group "item list" to true
+   set the lockupdates of me to true  
    set the height of group "item list" to formattedHeight of group "item list"
    set the top of group "item list" to the bottom of grc "header bar" + 60
-   set the left of group "item list" to 0
    set the showBorder of me to false
-   
    -- find group rect
-   set the left of me to 0
    subtract 1 from pNum
-   set the top of me to (the top of group "item list" + (the height of me * pNum))   
+   set the top of me to (the top of group "item list" + (the height of me * pNum)) 
+   set the lockupdates of group "item list" to false
+   set the lockupdates of me to false  
 end processExternalFormatting
 
 on fixLayoutMistakes pNum

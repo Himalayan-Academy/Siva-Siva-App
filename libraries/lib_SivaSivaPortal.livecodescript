@@ -96,7 +96,7 @@ end portal_DoRowLink
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
 
-command portal_GoStack cardOrStackObject    
+command portal_GoStack cardOrStackObject  
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks

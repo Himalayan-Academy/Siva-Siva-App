@@ -75,10 +75,8 @@ command fetchQuoteAndImage
    end if
    
    --toggleReadContext ("false")
-   
    # show a picture first
    ## Fetch Images
-   fetchImage sConfigA["currentRealm"]
    
    ## Fetch quote
    put line sCurrentRealm of the uRealmCats of this card into tCats
@@ -128,6 +126,8 @@ command fetchQuoteAndImage
       end if
    end if
    
+   fetchImage sConfigA["currentRealm"]
+   
 end fetchQuoteAndImage
 
 command fetchImage pRealm
@@ -141,8 +141,8 @@ command fetchImage pRealm
    put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
          into tNextImagePath
    set the filename of img "gems-image" to tNextImagePath   
-   show image "gems-Image" with visual effect dissolve very fast
-   
+   show image "gems-Image" 
+
 end fetchImage
 
 on updateImages
@@ -255,3 +255,8 @@ command resetUI
       toggleReadContext "false"
    end if
 end resetUI
+
+
+on mainStackChanged
+   
+end mainStackChanged

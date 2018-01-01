@@ -15,7 +15,7 @@ end backkey
 function getConfigForLayout pScreenIdentifier, pKey
    return sConfigA["style"][pScreenIdentifier][pKey]
 end getConfigForLayout
-
+ 
 on journalresume pDataA
    if the keys of pDataA is not empty then
       put jsonexport(pDataA) into pDataA
