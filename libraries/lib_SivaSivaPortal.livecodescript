@@ -130,13 +130,11 @@ command portal_GoStack cardOrStackObject
       set the accelereratedRendering of the topstack to false 
    end if
    
-   # try to flush cache, clear buffer?
-   # this will remove acceleratedRendering for the oStackName
-   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 100 milliseconds with messages  
    close stack oStackName   
    wait 100 milliseconds with messages  
+   --go to cardOrStackObject in window oStackName
    
    # now we turn on Accelerated rendering for most, but now all stack
    # just after they are opened.
@@ -147,7 +145,7 @@ command portal_GoStack cardOrStackObject
    #BR: 2017-12-24 Journal still fails on Android... we are trying to see if the card will build from the dbase
    # if we don't turn on acceleratedRendering first.
    
-put "journal,view_SivaSivaBrower" into tDoNotAccelerate
+   put "journal,view_SivaSivaBrower" into tDoNotAccelerate
    
    if not (the short name of the topstack is among the items of tDoNotAccelerate) then
       set the acceleratedRendering of the topstack to true
