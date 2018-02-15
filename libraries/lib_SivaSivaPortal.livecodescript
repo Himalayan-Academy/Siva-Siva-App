@@ -130,11 +130,32 @@ command portal_GoStack cardOrStackObject
       set the accelereratedRendering of the topstack to false 
    end if
    
-   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   wait 100 milliseconds with messages  
-   close stack oStackName   
-   wait 100 milliseconds with messages  
-   --go to cardOrStackObject in window oStackName
+   -->@@ Variations on  stack transition methods.
+   
+   # attempt to hide the first stack
+   # performance hit/lag
+   --    lock screen
+   --    hide stack oStackName
+   --    go to cardOrStackObject in window oStackName
+   --    close stack oStackName
+   --    show the topstack
+   --    unlock screen
+   
+   # this method is fast, but leaves artifacts on Android
+   
+   --    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   --    wait 100 milliseconds with messages  
+   --    close stack oStackName   
+   --    wait 100 milliseconds with messages  
+   
+   
+  
+  go to cardOrStackObject in window oStackName
+   hide stack oStackName
+   close stack oStackName
+   
+   
+   
    
    # now we turn on Accelerated rendering for most, but now all stack
    # just after they are opened.
@@ -193,19 +214,22 @@ command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   if connectivity_PingServer() = "false" then
-      # do nothing, inform user
-      dialog_CustomMsg "Offline or Low Bandwidth"
-      exit portal_GoURL
-   else
-      
-      put the short name of this stack into oStackName
-      portal_SetCurrentStack(oStackName)
-      portal_GoStack "view_SivaSivaBrowser"
-      set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-      put someURL into pTrackdata["webUrl"]
-      tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   end if # closing connectivity check
+   # comment out to test in airplane mode... app will just hang 
+   # so you need to be trapping network connections by other methods.
+   
+   --    if connectivity_PingServer() = "false" then
+   --       # do nothing, inform user
+   --       dialog_CustomMsg "Offline or Low Bandwidth"
+   --           exit portal_GoURL
+   --    else
+   
+   put the short name of this stack into oStackName
+   portal_SetCurrentStack(oStackName)
+   portal_GoStack "view_SivaSivaBrowser"
+   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+   put someURL into pTrackdata["webUrl"]
+   tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+   --end if # closing connectivity check
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
