@@ -100,6 +100,8 @@ command portal_GoStack cardOrStackObject
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+ 
+ 
    if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
       # it means we are launching activity and we are not actually going
       # to the view the journal, in which case we have to be sure it closes
@@ -108,19 +110,14 @@ command portal_GoStack cardOrStackObject
    if (not  (oStackName is among the items of tNoGoBackStacks) ) then
       portal_SetCurrentStack oStackName
    end if
+   
    # cannot pass quotes to these strings or you willl
    # break the JSON, BR added utilities section to lib_SivaSiva
    
    put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
    # user clicks on a portal link but is going out to content
    
-   if  oStackName is "Siva-Siva-Portal" then 
-      put "navigation/topindex" into pAction
-   else 
-      put "navigation/goContent" into pAction
-   end if
-   put oStackName into pTrackData["exitFrom"]
-   tracking_RecordActivity "Portal", pAction, pTrackdata
+ 
    
    # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
    # but these will crash the app on start up on Android if no stack is yet loaded.
@@ -132,30 +129,20 @@ command portal_GoStack cardOrStackObject
    
    -->@@ Variations on  stack transition methods.
    
-   # attempt to hide the first stack
-   # performance hit/lag
-   --    lock screen
-   --    hide stack oStackName
-   --    go to cardOrStackObject in window oStackName
-   --    close stack oStackName
-   --    show the topstack
-   --    unlock screen
    
    # this method is fast, but leaves artifacts on Android
    
-   --    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   --    wait 100 milliseconds with messages  
-   --    close stack oStackName   
-   --    wait 100 milliseconds with messages  
+   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+ --  wait 100 milliseconds with messages  
+   close stack oStackName   
+ --  wait 100 milliseconds with messages  
+
+# attempt to go in save window   
+   --   go to cardOrStackObject in window oStackName
+   --    hide stack oStackName
+   --    close stack oStackName
    
-   
-  
-  go to cardOrStackObject in window oStackName
-   hide stack oStackName
-   close stack oStackName
-   
-   
-   
+    
    
    # now we turn on Accelerated rendering for most, but now all stack
    # just after they are opened.
@@ -171,6 +158,17 @@ command portal_GoStack cardOrStackObject
    if not (the short name of the topstack is among the items of tDoNotAccelerate) then
       set the acceleratedRendering of the topstack to true
    end if
+ 
+   ### tracking at render
+     
+      if  oStackName is "Siva-Siva-Portal" then 
+      put "navigation/topindex" into pAction
+   else 
+      put "navigation/goContent" into pAction
+   end if
+   
+   put oStackName into pTrackData["exitFrom"]
+   tracking_RecordActivity "Portal", pAction, pTrackdata 
    
 end portal_GoStack
 
