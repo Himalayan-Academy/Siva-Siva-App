@@ -23,12 +23,12 @@ on mouseDown
       put the short name of btnObject into btnName
       switch btnName
          case "bottomTabBkgnd"
-            -- do nothing
+            do nothing
             break
          default
             set the hilite of btnObject to true
             if the environment is "development" then
-             #  put btnName
+               #  put btnName
             end if
       end switch
    end if
@@ -44,7 +44,7 @@ on mouseUp pWhichButton
       put btnName into mCommand
       replace "-" with empty in mCommand
       put "sivasiva_" before mCommand
-      
+
       put the highlite of btnObject into someBoolean
       set the highlite of btnObject to false
       dispatch mCommand with btnObject, someBoolean
@@ -178,35 +178,34 @@ command layout_SpreadHorizontally pRect
    put the childcontrolids of me into topControlIDs
    if topControlIDs is empty then return 0
    put the number of lines of topControlIDs into numberOfChildren
-   
+
    put the view_Spacing of me into viewSpacing
    put item 3 of pRect - item 1 of pRect into innerWidth
-   
+
    put numberOfChildren - 2 into gutterNum
    put innerWidth - (gutterNum * viewSpacing) into availableWidth
    put round (availableWidth / (numberOfChildren - 1)) into indexWidth
-   
+
    put item 1 of pRect into thisLeft
    repeat with cNum = 1 to numberOfChildren 
       put line cNum of topControlIDs into topControlID
       put the long id of control id topControlID into childView
-      
+
       if word 1 of childView = "graphic" then
          set the rect of childView to pRect
          next repeat
       end if
-      
+
       put pRect into childRect
       put thisLeft into item 1 of childRect
       put thisLeft + indexWidth into thisRight
       put thisRight into item 3 of childRect
-      
+
       set the rect of childView to childRect
-      
+
       put thisRight + viewSpacing into thisLeft
    end repeat
 end layout_SpreadHorizontally
-
 on resizeControl
    if not isMobile() then 
       put the childControlNames of me into tNavControls
