@@ -221,6 +221,9 @@ function fetchRandomImageAsset pCollection
 end fetchRandomImageAsset
 
 command getRandomVideo
+   if isMobile() then
+      deleteMobileControl "audioPlayer" # in case one is open already and playing
+   end if
     put fetchRandomMediaItem ("media_type","video") into GotIt
     # the above just fetches a record from the item table 
     # to get the path or URL we have to query the format table:

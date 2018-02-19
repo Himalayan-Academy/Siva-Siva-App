@@ -382,6 +382,8 @@ on moveGrp pGrpName, pHorz, pVert, pSpeed -- use move instead of visual effect t
   move grp pGrpName relative tPt in pSpeed milliseconds
 end moveGrp
 
+
+
 # you cannot delete a control from it's own behavior
 # so this:
 

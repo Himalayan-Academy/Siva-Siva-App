@@ -158,7 +158,8 @@ command init_AppConfiguration
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
    
    portal_SetCurrentStack "Siva-Siva-App"
-   send openPortalStack to me in 200 milliseconds
+   send openPortalStack to me in 50 milliseconds
+   set the effectrate to 500
    tsNetLibUrlReuseConnection "false"
    set the socketTimeoutInterval to 2000
 
