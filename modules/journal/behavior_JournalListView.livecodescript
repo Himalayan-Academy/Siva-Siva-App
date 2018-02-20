@@ -19,11 +19,14 @@ end preopencard
 
 on opencard
    show image "loader-39x39.gif"
-   dialog_CustomMsg "One moment please....loading...."
    set the acceleratedRendering of this stack to true
    layoutScreen
-      hide image "loader-39x39.gif"
+   hide image "loader-39x39.gif"
 end opencard
+
+on closeCard
+   set the acceleratedRendering of this stack to false
+end closeCard
 
 on HideAuxiliaryControls
    if the environment is "development" then

@@ -10,7 +10,9 @@ on backkey
    send mouseup to widget "go back"
 end backkey
 
-
+before chosestack
+   set the acceleratedRendering of this stack to false
+end chosestack
 
 function getConfigForLayout pScreenIdentifier, pKey
    return sConfigA["style"][pScreenIdentifier][pKey]

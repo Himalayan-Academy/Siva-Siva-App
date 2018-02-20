@@ -100,13 +100,13 @@ command portal_GoStack cardOrStackObject
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
- 
- 
+   
    if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
       # it means we are launching activity and we are not actually going
       # to the view the journal, in which case we have to be sure it closes
       put "Journal" into oStackName
    end if
+   
    if (not  (oStackName is among the items of tNoGoBackStacks) ) then
       portal_SetCurrentStack oStackName
    end if
@@ -117,51 +117,31 @@ command portal_GoStack cardOrStackObject
    put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
    # user clicks on a portal link but is going out to content
    
- 
-   
    # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
    # but these will crash the app on start up on Android if no stack is yet loaded.
    
-   if oStackName <> empty then # this is not the first run boot of portal
-      deleteAllMobileControls # will destroy all except audioPlayer
-      set the accelereratedRendering of the topstack to false 
-   end if
+   --    if oStackName <> empty then # this is not the first run boot of portal
+   --       deleteAllMobileControls # will destroy all except audioPlayer
+   --    end if
    
-   -->@@ Variations on  stack transition methods.
-   
+   --> Variations on  stack transition methods.
    
    # this method is fast, but leaves artifacts on Android
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
- --  wait 100 milliseconds with messages  
+   wait 100 milliseconds with messages  
    close stack oStackName   
- --  wait 100 milliseconds with messages  
-
-# attempt to go in save window   
+   wait 100 milliseconds with messages  
+   
+   # attempt to go in save window   
    --   go to cardOrStackObject in window oStackName
    --    hide stack oStackName
    --    close stack oStackName
    
-    
    
-   # now we turn on Accelerated rendering for most, but now all stack
-   # just after they are opened.
-   # the acceleratedRendiner of any given stack is not trigger at all if that 
-   # stack does not need it. If it does need it, but not at startup, Assume
-   # the developer turns it on later in the process/flow of events.
+   #BR: 2017-12-24 Journal still fails on Android... in some case 
    
-   #BR: 2017-12-24 Journal still fails on Android... we are trying to see if the card will build from the dbase
-   # if we don't turn on acceleratedRendering first.
-   
-   put "journal,view_SivaSivaBrower" into tDoNotAccelerate
-   
-   if not (the short name of the topstack is among the items of tDoNotAccelerate) then
-      set the acceleratedRendering of the topstack to true
-   end if
- 
-   ### tracking at render
-     
-      if  oStackName is "Siva-Siva-Portal" then 
+   if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
       put "navigation/goContent" into pAction
