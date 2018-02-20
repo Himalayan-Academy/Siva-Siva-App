@@ -104,3 +104,7 @@ end TimeOutCheck
 --    return "View|Browser"
 -- end view_Name
 
+
+on startup pMode
+
+end startup

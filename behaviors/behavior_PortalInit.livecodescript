@@ -36,6 +36,7 @@ on mouseUp
     end if
     put fld (tLInkNo &"_" &"portal-link-label") into tRowName
     replace cr with " " in tRowName
-    portal_DoRowLink tRowName
+    put tRowName
+     portal_DoRowLink tRowName
   end if
 end  mouseup
