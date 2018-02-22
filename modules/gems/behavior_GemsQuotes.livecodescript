@@ -256,7 +256,3 @@ command resetUI
    end if
 end resetUI
 
-
-on mainStackChanged
-   
-end mainStackChanged

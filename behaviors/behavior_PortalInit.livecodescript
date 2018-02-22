@@ -5,7 +5,7 @@ local sStartLoc
 
 on openCard
    portal_SetCurrentStack "Siva-Siva-Portal"
-   portal_SetCurrent (the short name of this stack)
+   portal_SetCurrent (the short name of this card)
 
    put "SivaSiva Portal Scrolling" into tLinksGroup
    set the acceleratedRendering of this stack to true

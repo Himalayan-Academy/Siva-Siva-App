@@ -115,11 +115,10 @@ command portal_GoStack cardOrStackObject
    # break the JSON, BR added utilities section to lib_SivaSiva
    
    put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
-   # user clicks on a portal link but is going out to content
    
    # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
    # but these will crash the app on start up on Android if no stack is yet loaded.
-   
+   # We deal with the each stack case
    --    if oStackName <> empty then # this is not the first run boot of portal
    --       deleteAllMobileControls # will destroy all except audioPlayer
    --    end if
@@ -127,16 +126,14 @@ command portal_GoStack cardOrStackObject
    --> Variations on  stack transition methods.
    
    # this method is fast, but leaves artifacts on Android
+   # attempt to go in save window  
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 100 milliseconds with messages  
    close stack oStackName   
    wait 100 milliseconds with messages  
    
-   # attempt to go in save window   
-   --   go to cardOrStackObject in window oStackName
-   --    hide stack oStackName
-   --    close stack oStackName
+   ## go to cardOrStackObject in window oStackName
    
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
@@ -160,7 +157,9 @@ command portal_Link portalName
    tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    -- navigates to the "portal view" and displays the named portal
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
-   lock screen
+   
+   --lock screen # try to regain control over android
+   
    if not (sLastStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
       put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
@@ -173,7 +172,8 @@ command portal_Link portalName
    portal_SetCurrent portalName
    portal_SetCurrentStack "Siva-Siva-Portal"
    
-   unlock screen
+ --  unlock screen
+  
    # the following introduces a non-responsive phase while the 
    # so we are trying "very fast" 
   --show button "home-logo"  
@@ -220,8 +220,6 @@ command portal_GoLandscapeUrl someURL
    portal_GoStack "view_SivaSivaBrowser"
 end portal_GoLandscapeUrl
 
-
-
 command portal_SetCurrent portalName
    put portalName into sCurrentPortal   
 end portal_SetCurrent
@@ -241,8 +239,6 @@ function portal_GetLastStack
    # a module was launched from   so we can go back
    return sLastStack
 end portal_GetLastStack
-
-
 
 command  portal_SetLastLinkTitle rowName
    put rowName into sLastLinkTitle # for use in Journal and other context to show user a label

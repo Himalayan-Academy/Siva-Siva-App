@@ -6,13 +6,13 @@ on preopenstack
    put sivasiva_GetModuleConfigArray("journal") into sConfigA
 end preopenstack
 
-on backkey
-   send mouseup to widget "go back"
-end backkey
+on openstack
+   deleteAllMobileControls
+end openstack
 
-before chosestack
-   set the acceleratedRendering of this stack to false
-end chosestack
+on backkey
+   send mouseup to btn "go back"
+end backkey
 
 function getConfigForLayout pScreenIdentifier, pKey
    return sConfigA["style"][pScreenIdentifier][pKey]

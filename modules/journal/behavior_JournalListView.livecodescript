@@ -177,7 +177,7 @@ on layoutScreen pModuleFilter, pDateRange
    set the height of fld "header text" to getConfigForLayout("listView", "headerHeight")
    set the foreColor of fld "header text" to getConfigForLayout("listView", "headerColor")
    set the topleft of fld "header text" to 0,0
-   set the left of widget "Go Back" to 12
+   set the left of btn "Go Back" to 12
    set the htmltext of fld "header text" to getConfigForLayout("listView", "headerLabel")
    
    -- set item list
