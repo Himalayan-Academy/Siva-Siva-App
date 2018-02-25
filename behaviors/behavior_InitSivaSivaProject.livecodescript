@@ -155,8 +155,9 @@ command init_AppConfiguration
    
    init_CreateLocalFolders
    
-   set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
+   init_Fonts
    
+   set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 50 milliseconds
    set the effectrate to 500
@@ -175,6 +176,12 @@ command init_AppConfiguration
    
   send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
 end init_AppConfiguration
+
+command init_Fonts
+   start using font file (path_Assets() & "fonts/NotoSans-Regular.ttf")
+   start using font file (path_Assets() & "fonts/NotoSans-Medium.ttf")
+end init_Fonts
+
 
 on init_StoreControlsIds
    put the long id of group "share-ui" of card "share-ui" of stack "lib_CustomControls" into sConfigA["shareControl"]
