@@ -115,10 +115,6 @@ to the same web page.
 
 */
 
-
-
-
-
 --> Browser | Public API
 --> BR: all the following apply to the two HapMedia viewer stacks, mostly deprecated 
 

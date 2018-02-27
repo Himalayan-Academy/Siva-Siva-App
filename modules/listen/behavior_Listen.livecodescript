@@ -46,7 +46,9 @@ on openstack
    # be sure to never save the stack with any text in the audio list
    # test assumes if the fld id blank then we have some loading to do.
 
+      # later we get just from the listen. For from what come from journal
    put portal_GetLastLinkTitle() into sTargetPlayList   
+   
    
    playlist_SetCurrent sTargetPlayList
     
@@ -195,6 +197,9 @@ on playlist_QuerySetUp
          
    end switch
    
+   # fetch the handlers one by one, after the plays list is called
+   # the date is in sPlayListQueryA
+   
    playList_FetchData 
    
 end playlist_QuerySetUp
@@ -233,7 +238,11 @@ on playList_FetchData pQueryArray
    put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
    set the filename of img "playlistPoster" to tPosterPath
    
-   put sPlaylistQueryA["playlistClass"] into tPlaylistClass
+   put sPlaylistQueryA["playlistClass"] into tPlaylistClass 
+    # get type of playlistL audio book, etc
+   
+   # we are records now, from server, or local jnanam.
+   # we are to each one based on where they come from
    
    switch tPlaylistClass
       case "latest" 
@@ -255,7 +264,7 @@ on playList_FetchData pQueryArray
          put sPlayListQueryA["recordType"] into queryData["recordType"]
          put sPlayListQueryA["recordCount"] into queryData["recordcount"]
          
-         put arrayToJson(queryData) into pJSON
+         put arrayToJson(queryData) into pJSON # from server
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
@@ -270,7 +279,7 @@ on playList_FetchData pQueryArray
             put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
-         put tPlaylistClass into sCurrentPlayListA["playlistClass"]
+         put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
          put sPlaylistQueryA into tSearchA
@@ -342,6 +351,7 @@ on playList_FetchData pQueryArray
       exit to top
    end if
    
+   # each done, switch to local handlers
    playlist_Instantiate sTargetPlayList
    
 end playList_FetchData

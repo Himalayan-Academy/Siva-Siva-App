@@ -75,18 +75,20 @@ command sivasiva_SettingsGear
 end sivasiva_SettingsGear
 
 command sivasiva_Share
-   put sConfigA["shareControl"] into tShareControl
-        if exists (widget "body") then # we are in the browser... need to move it up out of the way
-         set the top of widget "body" to -50
-      end if
+   put sConfigA["shareControl"] into tShareControl  
+   if there is widget "body" then
+      set the top of widget "body"  to -50
+   end if
+   
    if (exists(group "share-ui" of this card) ) then 
-      set the left of grp "share-ui" to 0
       # we had to get it off screen for Android 
       # here we put it a back.
       show group "share-ui" with visual dissolve very fast
    else
-      copy tShareControl to this card
+      
+      copy tShareControl to this card 
    end if
+   set bottomLeft of group "share-ui" to (0,the height of this card)
 end sivasiva_Share
 
 

@@ -170,7 +170,7 @@ command startPlayer pURL, pTitle
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
          # we need to try to get it to fit nicely at the bottom:
-         put 70,570,405,679 into tRect       
+         put 70,570,405,659 into tRect       
       else 
          put empty into tRect
       end if     
