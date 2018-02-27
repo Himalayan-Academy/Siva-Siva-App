@@ -40,11 +40,11 @@ on mouseUp pWhichButton
       put the long id of the target into btnObject
       put the short name  of btnObject into btnName
       if btnName = "bottomTabBkgnd" then pass mouseUp
-    portal_SetCurrentStack (the short name of this stack)
+    --  portal_SetCurrentStack (the short name of this stack)
       put btnName into mCommand
       replace "-" with empty in mCommand
       put "sivasiva_" before mCommand
-
+      
       put the highlite of btnObject into someBoolean
       set the highlite of btnObject to false
       dispatch mCommand with btnObject, someBoolean
@@ -53,7 +53,7 @@ on mouseUp pWhichButton
             break
          case "unhandled"
          default
-          #  _displayMouseUpCommand
+            #  _displayMouseUpCommand
       end switch
    end if
 end mouseUp
@@ -100,17 +100,17 @@ end sivasiva_Share
    # different stack may require different response to 
    # that button event
    
-   command sivasiva_GoHomePortal
-      switch (the short name of this stack)
-         case "Siva-Siva-Portal"
-            if portal_GetCurrent()="home" then
-               dialog_CustomMsg "You Are Home!"
-               else
-                  portal_Link "home"
-                  end if
-            break
-      end switch
-
+command sivasiva_GoHomePortal
+   switch (the short name of this stack)
+      case "Siva-Siva-Portal"
+         if portal_GetCurrent()="home" then
+            dialog_CustomMsg "You Are Home!"
+         else
+            portal_Link "home"
+         end if
+         break
+   end switch
+   
 end sivasiva_GoHomePortal
 
 

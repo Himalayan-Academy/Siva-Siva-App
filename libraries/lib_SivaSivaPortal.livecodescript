@@ -1,5 +1,5 @@
 ﻿script "lib_SivaSivaPortal"
-script "lib_SivaSivaPortal"
+1script "lib_SivaSivaPortal"
 --> MetaData
 -
 license: GPLv3
