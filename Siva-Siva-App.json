@@ -6,6 +6,7 @@
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal,model_SivaSivaTracking",
   "stackfiles": [  
     {"name": "calendar", "file": "modules/calendar/calendar.livecode"},
+    {"name": "listen2", "file": "modules/calendar/listen2.livecode"},
     {"name": "animationEngine", "file": "libraries/animationEngine.livecode"},
     {"name": "lib_MobileControls", "file": "libraries/lib_MobileControls.livecodescript"},
     {"name": "lib_Calendar", "file": "libraries/lib_Calendar.livecodescript"},

@@ -268,7 +268,7 @@
         "Bodhinatha's Latest Inspired Talks": {
             "link": {
                 "portal command": "portal_GoStack",
-                "portal param": "card \"listen-playlist\" of stack \"listen\""
+                "portal param": "stack \"listen\""
             },
             "imageText": "Bodhinatha's\nLatest\nInspired Talks",
             "shortImageFile": "thumb_latest-talk-2_new.png"
@@ -410,7 +410,7 @@
             "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
         },
         "listen": {
-            "portalName": "listen",
+            "portalName": "listen2",
             "rowData": {
                 "1": {
                     "rowName": "Bodhinatha's Latest Inspired Talks"
