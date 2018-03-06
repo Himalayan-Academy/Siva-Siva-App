@@ -24,6 +24,7 @@ end CreateScroller
 on scrollerDidScroll hScrolled, vScrolled
   put mobileControlTarget() into tControlID
   set the vscroll of control tControlID to vscrolled
+  set the hscroll of control tControllD to hScrolled
   -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 
@@ -46,17 +47,22 @@ on mouseDown
 end mouseDown
 
 on setScroll
-  if the mouse is down then
-    lock screen
-    if item 2 of sMouseLoc > the mouseV then
-      set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
-    else
-      set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
-    end if
-    put the mouseloc into sMouseLoc
-    send "setScroll" to me in 20 millisec
-    unlock screen
-  else
-    put empty into sMouseLoc
-  end if
+   if the mouse is down then
+      lock screen
+      if item 2 of sMouseLoc > the mouseV then
+         set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+      else
+         set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+      end if
+      --       if item 1 of sMouseLoc > the mouseH then
+      --          set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
+      --       else
+      --          set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
+      --       end if
+      put the mouseloc into sMouseLoc
+      send "setScroll" to me in 20 millisec
+      unlock screen
+   else
+      put empty into sMouseLoc
+   end if
 end setScroll

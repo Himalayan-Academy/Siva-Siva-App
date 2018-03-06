@@ -320,20 +320,20 @@ command updateCachedListings
 end updateCachedListings
 
 
-on cleanUpGUI
-   # more later but for now, so no flash of previous content 
-   put empty into fld "title" of this card
-   set the filename of img "playlistPoster" of this card to empty
-   put empty into fld "audioList" of this card
-   put empty into fld "currentTitleLabel" of this card
-   set the filename of player "audioPlayer"  of this card to empty
-   hide fld "audioDetails" of this card
-   hide widget "revealMoreActions"
-   hide widget "downloadSelection"
-   put empty into fld "audioDetails" of this card
-   showPlayer "false", "audioPlayer" 
-   ## add other mobile stuff to clear out here later
-end cleanUpGUI
+-- on cleanUpGUI
+--    # more later but for now, so no flash of previous content 
+--    put empty into fld "title" of this card
+--    set the filename of img "playlistPoster" of this card to empty
+--    put empty into fld "audioList" of this card
+--    put empty into fld "currentTitleLabel" of this card
+--    set the filename of player "audioPlayer"  of this card to empty
+--    hide fld "audioDetails" of this card
+--    hide widget "revealMoreActions"
+--    hide widget "downloadSelection"
+--    put empty into fld "audioDetails" of this card
+--    showPlayer "false", "audioPlayer" 
+--    ## add other mobile stuff to clear out here later
+-- end cleanUpGUI
 
 on closeCard
    showPlayer "false","audioPlayer"
