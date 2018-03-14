@@ -47,15 +47,15 @@ on openstack
    # test assumes if the fld id blank then we have some loading to do.
 
       # later we get just from the listen. For from what come from journal
-   put portal_GetLastLinkTitle() into sTargetPlayList   
+ --  put portal_GetLastLinkTitle() into sTargetPlayList   
    
    
-   playlist_SetCurrent sTargetPlayList
+ --  playlist_SetCurrent sTargetPlayList
     
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
-   playlist_QuerySetUp sTargetPlayList 
+ --  playlist_QuerySetUp sTargetPlayList 
 end if
 
 end openstack
