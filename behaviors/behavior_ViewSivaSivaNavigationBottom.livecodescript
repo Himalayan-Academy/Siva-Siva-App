@@ -23,7 +23,7 @@ on mouseDown
       put the short name of btnObject into btnName
       switch btnName
          case "bottomTabBkgnd"
-            do nothing
+            # do nothing
             break
          default
             set the hilite of btnObject to true

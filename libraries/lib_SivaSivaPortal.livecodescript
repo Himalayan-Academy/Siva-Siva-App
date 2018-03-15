@@ -119,14 +119,17 @@ command portal_GoStack cardOrStackObject
    # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
    # but these will crash the app on start up on Android if no stack is yet loaded.
    # We deal with the each stack case
-   --    if oStackName <> empty then # this is not the first run boot of portal
-   --       deleteAllMobileControls # will destroy all except audioPlayer
-   --    end if
+   
+   if oStackName <> empty then # this is not the first run boot of portal
+      deleteAllMobileControls # will destroy all except audioPlayer
+   end if
    
    --> Variations on  stack transition methods.
    
    # this method is fast, but leaves artifacts on Android
    # attempt to go in save window  
+   
+   set the acceleratedRendering of stack oStackName to false
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 100 milliseconds with messages  
