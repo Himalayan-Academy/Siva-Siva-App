@@ -15,10 +15,7 @@ end openCard
  
 
 on mouseDown
-   if isMobile() = "false" then 
-      # we do want to in mobile!
       put the mouseloc into sStartLoc
-   end if
 end mouseDown
 
 on mouseUp   
