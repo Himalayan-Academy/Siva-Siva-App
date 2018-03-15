@@ -4,9 +4,9 @@ local sCurLevel,sTileGlow,sCluesGiven
 
 
 
- --> Events
- -
- on preOpenCard
+--> Events
+-
+on opencard
    --clearBoard  # Always save the stack with no puzzle show
    # we don't want to issue clearBoard when the stack opens
    # only if the users calls of this.
@@ -18,7 +18,7 @@ local sCurLevel,sTileGlow,sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
    
-  end preOpenCard
+  end opencard
   
 
 command setTileGlow pSize
@@ -246,7 +246,9 @@ end fetchQuote
 end setSizeAndLocationOfQuote
 
 on createWordPuzzle
-   set the acceleratedRendering of this stack to false 
+   if (the acceleratedRendering of this stack is true ) then
+      set the acceleratedRendering of this stack to false 
+   end if
    stopTimer
    hide widget "context"
    loadNewBgImg
