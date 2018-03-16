@@ -147,47 +147,43 @@ command portal_GoStack cardOrStackObject
       put "navigation/goContent" into pAction
    end if
    
+   if the short name of this stack is "Siva-Siva-Portal" then
+      news_Fetch
+   end if
+    
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
    
 end portal_GoStack
 
 command portal_Link portalName
-   put portalName into pTrackdata["contentTarget"]
-   # our navigation will change in the future, but this is still the same thing
-   # user is moving from  TOC, or Index, or Map to another
-   # not actually interacting with content at all hyet.
-   tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
+   
    -- navigates to the "portal view" and displays the named portal
+   
    sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
    
    --lock screen # try to regain control over android
    
+   # an attempt are making Android by
+   # by other process again go card
+   # which make redundant
+   
    if not (sLastStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
-      put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
-            portal_GoStack tPortalTarget
+      portal_SetCurrent portalName
+      portal_SetCurrentStack "Siva-Siva-Portal"
+       put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
+      portal_GoStack tPortalTarget
    else
-      go card portalName
+       portal_SetCurrent portalName
+       portal_SetCurrentStack "Siva-Siva-Portal"
+       go card portalName
+    
+      put portalName into pTrackdata["contentTarget"]
+      tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
    
    
-   portal_SetCurrent portalName
-   portal_SetCurrentStack "Siva-Siva-Portal"
-   
- --  unlock screen
-  
-   # the following introduces a non-responsive phase while the 
-   # so we are trying "very fast" 
-  --show button "home-logo"  
- --hide button "home-logo" with visual effect dissolve very fast
-   news_Fetch
-   
-   # Davids  old calls to build dynamically
-   # otherwise we are already in the portal stack
-   # Either case we have to build the view:
-   -- put portal_GetHomeView() into portalView # deprecated: portals are pre-built
-   -- set the portal_Name of portalView to portalName  #Deprecated 
 end portal_Link
 
 command portal_GoUrl someURL,pJournalLabel
