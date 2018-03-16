@@ -14,7 +14,8 @@ local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL
 
 --> Events
  
-on preOpenCard
+on preOpenCard 
+   
    # Make sure our photo cache is updated   
    --  jnanam_UpdatePhotoCache
 
@@ -22,7 +23,9 @@ on preOpenCard
    # Clean the card so we don't get a flash back to previous content
    hide image "gems-image"
    put empty into fld "gems-quote"
-   
+end preOpenCard
+
+on openCard
    # Fix image path from desktop when loading on Mobile
    
    if isMobile() then
@@ -49,8 +52,9 @@ on preOpenCard
       put random(3) into sCurrentRealm
    end if
    setCardTitle
+   set the acceleratedRendering of this stack to true
    send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
-end preOpenCard
+end OpenCard
 
 on setCardTitle
    put "Realm of God,Realm of Soul,Realm of Life" into tTitles
