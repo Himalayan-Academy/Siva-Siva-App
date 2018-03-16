@@ -6,7 +6,12 @@ local sCurLevel,sTileGlow,sCluesGiven
 
 --> Events
 -
-on opencard
+on openCard
+   --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
+   send "showTitle false" to me in 800 milliseconds
+   if sCurLevel is empty then
+      put 1 into sCurLevel
+   end if
    --clearBoard  # Always save the stack with no puzzle show
    # we don't want to issue clearBoard when the stack opens
    # only if the users calls of this.
@@ -17,7 +22,6 @@ on opencard
      put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-   
   end opencard
   
 
@@ -44,13 +48,6 @@ on closecard
    tracking_RecordActivity "Word Puzzle", "navigation/exit", pTrackdata
 end closecard
   
-on openCard
-   --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
-   send "showTitle false" to me in 800 milliseconds
-   if sCurLevel is empty then
-      put 1 into sCurLevel
-   end if
-end openCard
 
  --> Working on
  -
