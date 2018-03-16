@@ -33,7 +33,7 @@ on preopenstack
 end preopenstack
  
 on openstack 
-   if not (portal_GetLastStack()= "journal")  then
+  -- if not (portal_GetLastStack()= "journal")  then
       
       # for V1 we know we are always coming from the Listen Portal
       # or from the journal... if from journal then we let journalResume 
@@ -56,7 +56,7 @@ on openstack
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
  --  playlist_QuerySetUp sTargetPlayList 
-end if
+--end if
 
 end openstack
 
