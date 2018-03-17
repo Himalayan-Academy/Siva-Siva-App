@@ -4,10 +4,9 @@ import Css exposing (..)
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, src)
-import Lexicon exposing (WordList)
-import Page.Definition
-import Page.Loading
-import Page.Search
+import Html.Styled.Events exposing (onClick)
+import Lexicon exposing (Word, WordDefinition, WordList)
+import Random
 import Theme.Colors exposing (..)
 import Theme.Elements exposing (..)
 
@@ -57,6 +56,9 @@ startApplication =
 type Msg
     = LexiconMsg Lexicon.Msg
     | Navigate PageId
+    | LoadDefinition String
+    | LoadDefinitionByInt Int
+    | LoadRandomDefinition
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -67,10 +69,36 @@ update msg model =
                 ( updateLexiconModel, lexiconCmd ) =
                     Lexicon.update subMsg model.lexiconModel
             in
-            ( { model | lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
+            case subMsg of
+                Lexicon.HandleWordDefinitionResponse _ ->
+                    ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
+
+                _ ->
+                    ( { model | lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
 
         Navigate page ->
             ( { model | currentPage = page }, Cmd.none )
+
+        LoadRandomDefinition ->
+            case model.lexiconModel.wordList of
+                Just wordList ->
+                    let
+                        lastItem =
+                            List.length wordList - 1
+
+                        gen =
+                            Random.int 1 lastItem
+                    in
+                    ( model, Random.generate LoadDefinitionByInt gen )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        LoadDefinition id ->
+            ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinition id) )
+
+        LoadDefinitionByInt id ->
+            ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinition (toString id)) )
 
 
 
@@ -86,9 +114,9 @@ pageNavigation currentPage =
             , backgroundColor theme.palette.darkGreen
             ]
         ]
-        [ navButton [] [ text "Search" ]
+        [ navButton [ onClick (Navigate SearchView) ] [ text "Search" ]
         , navButton [] [ text "My Words" ]
-        , navButton [] [ text "Surprise Me" ]
+        , navButton [ onClick LoadRandomDefinition ] [ text "Surprise Me" ]
         ]
 
 
@@ -128,18 +156,103 @@ view model =
             ]
         , case model.currentPage of
             DefinitionView ->
-                Page.Definition.view model.lexiconModel
+                definitionView model.lexiconModel
 
             LoadingView ->
-                Page.Loading.view
+                loadingView
 
             SearchView ->
-                Page.Search.view model.lexiconModel
+                searchView model.lexiconModel
 
             _ ->
                 h1 [] [ text "not implemented" ]
         , appNavigation
         ]
+
+
+definitionView : Lexicon.Model -> Html msg
+definitionView model =
+    case model.currentWord of
+        Just word ->
+            div []
+                [ h1
+                    [ css
+                        [ color theme.palette.white
+                        , textTransform capitalize
+                        , marginTop (px 125)
+                        ]
+                    ]
+                    [ text word.word ]
+                , div
+                    [ css
+                        [ displayFlex
+                        , flexDirection row
+                        , alignItems center
+                        , justifyContent center
+                        , color theme.palette.green
+                        ]
+                    ]
+                    [ wordDefinitionIcon "bookmark-o"
+                    , wordDefinitionIcon "share"
+                    ]
+                , p
+                    [ css
+                        [ color theme.palette.white
+                        , fontSize (pt 16)
+                        , textAlign left
+                        , padding (px 20)
+                        ]
+                    ]
+                    [ text word.definition ]
+                , div [ css [ height (px 60) ] ] []
+                ]
+
+        Nothing ->
+            div []
+                [ h1 [] [ text "wait..." ]
+                ]
+
+
+loadingView : Html msg
+loadingView =
+    h1
+        [ css
+            [ color theme.palette.white
+            , textTransform capitalize
+            , marginTop (px 125)
+            ]
+        ]
+        [ text "Loading" ]
+
+
+addWordItem : Word -> Html Msg
+addWordItem word =
+    li [ onClick (LoadDefinition word.id) ] [ text word.word ]
+
+
+searchView : Lexicon.Model -> Html Msg
+searchView model =
+    case model.wordList of
+        Just wordList ->
+            div []
+                [ ul
+                    [ css
+                        [ color theme.palette.white
+                        , marginTop (px 125)
+                        , fontSize (pt 18)
+                        , textAlign center
+                        , listStyle none
+                        , padding (px 20)
+                        ]
+                    ]
+                    (List.map addWordItem wordList)
+                , div [ css [ height (px 60) ] ] []
+                ]
+
+        Nothing ->
+            div []
+                [ h1 [] [ text "wait..." ]
+                ]
 
 
 
