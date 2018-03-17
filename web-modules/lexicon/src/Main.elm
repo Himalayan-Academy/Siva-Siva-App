@@ -5,6 +5,9 @@ import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, src)
 import Lexicon exposing (WordList)
+import Page.Definition
+import Page.Loading
+import Page.Search
 import Theme.Colors exposing (..)
 import Theme.Elements exposing (..)
 
@@ -30,7 +33,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { currentPage = LoadingView
+    { currentPage = SearchView
     , searchInput = Nothing
     , lexiconModel = Lexicon.initialModel
     , errorMessage = Nothing
@@ -48,11 +51,12 @@ init =
 
 startApplication : Cmd Msg
 startApplication =
-    Cmd.map LexiconMsg (Lexicon.loadWordDefinition "367")
+    Cmd.map LexiconMsg Lexicon.loadWordList
 
 
 type Msg
     = LexiconMsg Lexicon.Msg
+    | Navigate PageId
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,38 +69,16 @@ update msg model =
             in
             ( { model | lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
 
+        Navigate page ->
+            ( { model | currentPage = page }, Cmd.none )
+
 
 
 ---- VIEW ----
 
 
-header : Html Msg
-header =
-    div
-        [ css
-            [ textAlign center
-            , backgroundColor (hex "#0a4650")
-            , height (px 43)
-            , displayFlex
-            , flexDirection row
-            , alignItems center
-            , justifyContent center
-            ]
-        ]
-        [ h1
-            [ css
-                [ fontSize (pt 16)
-                , color theme.palette.cream
-                , textTransform uppercase
-                , margin zero
-                ]
-            ]
-            [ text "A Hindu World of Adventure" ]
-        ]
-
-
-pageNavigation : Html Msg
-pageNavigation =
+pageNavigation : PageId -> Html Msg
+pageNavigation currentPage =
     nav
         [ css
             [ displayFlex
@@ -131,49 +113,6 @@ appNavigation =
         ]
 
 
-definitionDisplay : Lexicon.Model -> Html Msg
-definitionDisplay model =
-    case model.currentWord of
-        Just word ->
-            div []
-                [ h1
-                    [ css
-                        [ color theme.palette.white
-                        , textTransform capitalize
-                        , marginTop (px 125)
-                        ]
-                    ]
-                    [ text word.word ]
-                , div
-                    [ css
-                        [ displayFlex
-                        , flexDirection row
-                        , alignItems center
-                        , justifyContent center
-                        , color theme.palette.green
-                        ]
-                    ]
-                    [ wordDefinitionIcon "bookmark-o"
-                    , wordDefinitionIcon "share"
-                    ]
-                , p
-                    [ css
-                        [ color theme.palette.white
-                        , fontSize (pt 16)
-                        , textAlign left
-                        , padding (px 20)
-                        ]
-                    ]
-                    [ text word.definition ]
-                , div [ css [ height (px 60) ] ] []
-                ]
-
-        Nothing ->
-            div []
-                [ h1 [] [ text "wait..." ]
-                ]
-
-
 view : Model -> Html Msg
 view model =
     div
@@ -182,15 +121,23 @@ view model =
         ]
         [ div
             [ css
-                [ position fixed
-                , top zero
-                , width (pct 100)
-                ]
+                [ headerStyle ]
             ]
-            [ header
-            , pageNavigation
+            [ headerTitle
+            , pageNavigation model.currentPage
             ]
-        , definitionDisplay model.lexiconModel
+        , case model.currentPage of
+            DefinitionView ->
+                Page.Definition.view model.lexiconModel
+
+            LoadingView ->
+                Page.Loading.view
+
+            SearchView ->
+                Page.Search.view model.lexiconModel
+
+            _ ->
+                h1 [] [ text "not implemented" ]
         , appNavigation
         ]
 

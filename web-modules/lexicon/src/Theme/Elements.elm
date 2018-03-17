@@ -38,6 +38,40 @@ bodyStyle =
         ]
 
 
+headerStyle : Style
+headerStyle =
+    Css.batch
+        [ position fixed
+        , top zero
+        , width (pct 100)
+        ]
+
+
+headerTitle : Html msg
+headerTitle =
+    div
+        [ css
+            [ textAlign center
+            , backgroundColor (hex "#0a4650")
+            , height (px 43)
+            , displayFlex
+            , flexDirection row
+            , alignItems center
+            , justifyContent center
+            ]
+        ]
+        [ h1
+            [ css
+                [ fontSize (pt 16)
+                , color theme.palette.cream
+                , textTransform uppercase
+                , margin zero
+                ]
+            ]
+            [ text "A Hindu World of Adventure" ]
+        ]
+
+
 fontAwesomeIcon : String -> String -> Html msg
 fontAwesomeIcon name size =
     i
