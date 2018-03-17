@@ -1,7 +1,7 @@
 module Lexicon exposing (..)
 
-import Http
 import Html exposing (..)
+import Http
 import Json.Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
 
@@ -23,11 +23,12 @@ type alias Word =
 type alias WordList =
     List Word
 
+
 type alias Model =
-  { wordList: Maybe WordList
-  , currentWord : Maybe WordDefinition
-  , errorMessage: Maybe String
-  }
+    { wordList : Maybe WordList
+    , currentWord : Maybe WordDefinition
+    , errorMessage : Maybe String
+    }
 
 
 initialModel : Model
@@ -36,6 +37,7 @@ initialModel =
     , currentWord = Nothing
     , errorMessage = Nothing
     }
+
 
 loadWordList : Cmd Msg
 loadWordList =
@@ -61,7 +63,9 @@ wordDecoder =
         |> required "word" Json.Decode.string
 
 
+
 --- ! WORD DEFINITION --
+
 
 loadWordDefinition : String -> Cmd Msg
 loadWordDefinition id =
@@ -80,14 +84,13 @@ responseDecoderForWordDefinition =
     decode WordDefinition
         |> required "lexicon_id" Json.Decode.string
         |> required "word" Json.Decode.string
-        |> required "definition" Json.Decode.string 
+        |> required "definition" Json.Decode.string
         |> hardcoded Nothing
 
 
 type Msg
     = HandleWordListResponse (Result Http.Error WordList)
     | HandleWordDefinitionResponse (Result Http.Error WordDefinition)
-
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -101,25 +104,23 @@ update msg model =
                 Err error ->
                     case error of
                         Http.BadPayload errMsg _ ->
-                            ( { model | errorMessage = Just errMsg}, Cmd.none )
+                            ( { model | errorMessage = Just errMsg }, Cmd.none )
 
                         _ ->
-                            ( { model | errorMessage = Just "something happened"}, Cmd.none )
+                            ( { model | errorMessage = Just "something happened" }, Cmd.none )
 
         HandleWordDefinitionResponse result ->
-                    case result of
-                        Ok results ->
-                            ( { model | currentWord = Just (Debug.log "currentWord:" results) }, Cmd.none )
+            case result of
+                Ok results ->
+                    ( { model | currentWord = Just (Debug.log "currentWord:" results) }, Cmd.none )
 
-                        Err error ->
-                            case error of
-                                Http.BadPayload errMsg _ ->
-                                    ( { model | errorMessage = Just errMsg}, Cmd.none )
+                Err error ->
+                    case error of
+                        Http.BadPayload errMsg _ ->
+                            ( { model | errorMessage = Just errMsg }, Cmd.none )
 
-                                _ ->
-                                    ( { model | errorMessage = Just "something happened"}, Cmd.none )
-
-
+                        _ ->
+                            ( { model | errorMessage = Just "something happened" }, Cmd.none )
 
 
 wordListStatusView : Model -> Html Msg
@@ -131,6 +132,7 @@ wordListStatusView model =
         Just data ->
             text "received"
 
+
 wordDefinitionView : Model -> Html Msg
 wordDefinitionView model =
     case model.currentWord of
@@ -138,7 +140,7 @@ wordDefinitionView model =
             text "no data"
 
         Just entry ->
-            ul [] 
-                [ li [] [text entry.word]
-                , li [] [text entry.definition]
+            ul []
+                [ li [] [ text entry.word ]
+                , li [] [ text entry.definition ]
                 ]
