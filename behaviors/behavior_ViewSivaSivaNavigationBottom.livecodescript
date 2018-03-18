@@ -13,7 +13,7 @@ global sConfigA
 local LocalArray
 
 --> Events
--
+
 on mouseDown
    # bug: this behavior is getting events outside the rect of the object it was assigned to
    # we have to check what's the target
@@ -44,7 +44,7 @@ on mouseUp pWhichButton
       put btnName into mCommand
       replace "-" with empty in mCommand
       put "sivasiva_" before mCommand
-      
+
       put the highlite of btnObject into someBoolean
       set the highlite of btnObject to false
       dispatch mCommand with btnObject, someBoolean

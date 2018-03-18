@@ -46,11 +46,11 @@ on mouseDown
    pass mousedown
 end mouseDown
 
-
 on setScroll
    if the mouse is down then
       lock screen
-      if abs (item 2 of sMouseLoc ) > 20 then
+    
+        if abs (item 2 of sMouseLoc ) > 20 then
          if item 2 of sMouseLoc > the mouseV then
             set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
          else
@@ -58,39 +58,9 @@ on setScroll
          end if
          put the mouseloc into sMouseLoc
       end if
-      
-      if abs (item 1 of sMouseLoc) > 20 then
-         if item 1 of sMouseLoc > the mouseH then
-            set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
-         else
-            set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
-         end if
-         put the mouseloc into sMouseLoc
-      end if
-      
       send "setScroll" to me in 20 millisec
       unlock screen
    else
       put empty into sMouseLoc
    end if
 end setScroll
-
--- on mouseMove pNewHeight, pNewWidth
---    if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
---       setScroll pNewHeight, pNewWidth
---    end if
--- end mouseMove
-
--- on setScroll pNewHeight, pNewWidth
---    lock screen
---    if abs (pNewHeight-item 2 of sMouseLoc ) > 20 then
---       set the vscroll of me to pNewHeight
---       exit to top
---    end if
---    if abs (pNewWidth-item 1 of sMouseLoc ) > 20 then
---       set the hScroll of me to pNewWidth
---       exit to top
---    end if      
---    unlock screen  
--- end setScroll
-
