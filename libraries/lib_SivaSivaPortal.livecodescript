@@ -97,6 +97,7 @@ end portal_DoRowLink
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject  
+   --breakpoint
    # save where we are coming from locally
    put the short name of this stack into oStackName
    put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks

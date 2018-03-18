@@ -3,11 +3,11 @@ local sConfigA
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
-   put sivasiva_GetModuleConfigArray("journal") into sConfigA
+   
 end preopenstack
 
 on openstack
-   deleteAllMobileControls
+   put sivasiva_GetModuleConfigArray("journal") into sConfigA
 end openstack
 
 on backkey

@@ -6,7 +6,11 @@ TODO:
 
 local sLastFilter
 
-on preopencard
+--on preopencard
+  
+--end preopencard
+
+on opencard
    --   # uncomment this when you go into production:
    --   # i.e. leave out if you want to use the controls on the device while
    --   # testing
@@ -15,18 +19,11 @@ on preopencard
    if there is a group "item list" then
       delete group "item list"
    end if
-end preopencard
-
-on opencard
-   show image "loader-39x39.gif"
+   --show image "loader-39x39.gif"
    set the acceleratedRendering of this stack to true
    layoutScreen
-   hide image "loader-39x39.gif"
+   --hide image "loader-39x39.gif"
 end opencard
-
-on closeCard
-   set the acceleratedRendering of this stack to false
-end closeCard
 
 on HideAuxiliaryControls
    if the environment is "development" then
@@ -139,14 +136,14 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    
    --  log_Debug "======================"
-   if (pModuleFilter, pDateRange) is sLastFilter then
-      log_Debug "Do nothing, same as last filter"
-      exit layoutScreen
-   end if
-   put pModuleFilter, pDateRange into sLastFilter
-   log_Debug "pModuleFilter:" && pModuleFilter
-   log_Debug "pDateRange:" && pDateRange
-   put the millisecs into tStart
+   --   if (pModuleFilter, pDateRange) is sLastFilter then
+   --      log_Debug "Do nothing, same as last filter"
+   --      exit layoutScreen
+   --   end if
+   --   put pModuleFilter, pDateRange into sLastFilter
+   --   log_Debug "pModuleFilter:" && pModuleFilter
+   --   log_Debug "pDateRange:" && pDateRange
+   --   put the millisecs into tStart
    -- set card
    set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
    
@@ -197,7 +194,6 @@ on layoutScreen pModuleFilter, pDateRange
       end switch
    end repeat
    
-   
    if there is a group "item list" then
       put the topleft of group "item list" into tTopLeft
       put the width of this card - 3, the height of this card - 10 into tBottomRight
@@ -206,12 +202,12 @@ on layoutScreen pModuleFilter, pDateRange
       set the layerMode of grp "item list" to "scrolling"
       --if isMobile then
       put "item list" into tScrollingGroup
-      dispatch "CreateScroller" to group "item list" with "item list"
       --end if
    end if
-   log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
+   --log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
-   
+   --set the lockUpdates of tListGroup to false
+   dispatch "CreateScroller" to group "item list" with "item list"
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum
