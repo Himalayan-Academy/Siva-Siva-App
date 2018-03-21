@@ -24,7 +24,7 @@ end CreateScroller
 on scrollerDidScroll hScrolled, vScrolled
    put mobileControlTarget() into tControlID
    set the vscroll of control tControlID to vscrolled
-   set the hscroll of control tControlID to hScrolled
+   --set the hscroll of control tControlID to hScrolled
    -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 

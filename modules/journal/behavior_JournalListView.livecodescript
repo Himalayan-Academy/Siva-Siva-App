@@ -206,6 +206,8 @@ on layoutScreen pModuleFilter, pDateRange
    end if
    --log_Debug "took:"&& the millisecs - tStart && "millisecs to run"
    unlock screen
+   set the acceleratedRendering of this stack to false
+   set the acceleratedRendering of this stack to true
    --set the lockUpdates of tListGroup to false
    dispatch "CreateScroller" to group "item list" with "item list"
 end layoutScreen
