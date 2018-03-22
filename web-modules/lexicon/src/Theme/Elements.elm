@@ -3,6 +3,7 @@ module Theme.Elements exposing (..)
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (classList, css)
+import Html.Styled.Events exposing (..)
 import Theme.Colors exposing (..)
 
 
@@ -62,13 +63,98 @@ headerTitle =
         ]
         [ h1
             [ css
-                [ fontSize (pt 16)
-                , color theme.palette.cream
+                [ fontSize (px 18)
+                , fontWeight bold
+                , color theme.palette.white
                 , textTransform uppercase
                 , margin zero
                 ]
             ]
             [ text "A Hindu World of Adventure" ]
+        ]
+
+
+searchHeader : Html msg
+searchHeader =
+    div
+        [ css
+            [ textAlign center
+            , fontSize (px 18)
+            ]
+        ]
+        [ span
+            [ css
+                [ color theme.palette.lightBlue
+                , display block
+                ]
+            ]
+            [ text "Enter a single word or part of a word" ]
+        , span
+            [ css
+                [ color theme.palette.lightGreen
+                , display block
+                ]
+            ]
+            [ text "Need help?" ]
+        ]
+
+
+searchBox : (String -> msg) -> Html msg
+searchBox changed =
+    div
+        [ css
+            [ marginTop (px 10) ]
+        ]
+        [ input
+            [ css
+                [ fontSize (px 30)
+                , textAlign center
+                , borderStyle none
+                , backgroundColor transparent
+                , color theme.palette.white
+                ]
+            , onInput changed
+            ]
+            []
+        , hr
+            [ css
+                [ display block
+                , height zero
+                , border zero
+                , borderTop3 (px 1) solid theme.palette.white
+                , width (pct 80)
+                ]
+            ]
+            []
+        ]
+
+
+listHeader : Html msg
+listHeader =
+    div
+        [ css
+            [ textAlign center
+            , fontSize (px 18)
+            , marginTop (px 20)
+            ]
+        ]
+        [ span
+            [ css
+                [ color theme.palette.lightBlue
+                , display block
+                ]
+            ]
+            [ text "Scroll the results and choose a word!" ]
+        , hr
+            [ css
+                [ display block
+                , height zero
+                , border zero
+                , borderTop3 (px 2) solid theme.palette.lightBlue
+                , width (pct 10)
+                ]
+            ]
+            []
         ]
 
 
@@ -99,7 +185,7 @@ wordDefinitionIcon : String -> Html msg
 wordDefinitionIcon name =
     div
         [ css
-            [ color theme.palette.greenIcon
+            [ color theme.palette.lightGreen
             , padding (px 5)
             ]
         ]
