@@ -253,7 +253,7 @@ searchView model =
                     [ marginTop (px 125) ]
                 ]
                 [ searchHeader
-                , searchBox FilterWordList
+                , searchBox FilterWordList model.query
                 , listHeader
                 , ul
                     [ css

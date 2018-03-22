@@ -43,7 +43,7 @@ loadWordList : Cmd Msg
 loadWordList =
     let
         url =
-            "http://dev.himalayanacademy.com/api/index.php/lexicon/words"
+            "https://dev.himalayanacademy.com/api/index.php/lexicon/words"
 
         request =
             Http.get url responseDecoder
@@ -71,7 +71,7 @@ loadWordDefinition : String -> Cmd Msg
 loadWordDefinition id =
     let
         url =
-            "http://dev.himalayanacademy.com/api/index.php/lexicon/word/" ++ id
+            "https://dev.himalayanacademy.com/api/index.php/lexicon/word/" ++ id
 
         request =
             Http.get url responseDecoderForWordDefinition
