@@ -2,7 +2,7 @@ module Theme.Elements exposing (..)
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (classList, css)
+import Html.Styled.Attributes exposing (classList, css, value)
 import Html.Styled.Events exposing (..)
 import Theme.Colors exposing (..)
 
@@ -99,8 +99,8 @@ searchHeader =
         ]
 
 
-searchBox : (String -> msg) -> Html msg
-searchBox changed =
+searchBox : (String -> msg) -> String -> Html msg
+searchBox changed query =
     div
         [ css
             [ marginTop (px 10) ]
@@ -114,6 +114,7 @@ searchBox changed =
                 , color theme.palette.white
                 ]
             , onInput changed
+            , value query
             ]
             []
         , hr

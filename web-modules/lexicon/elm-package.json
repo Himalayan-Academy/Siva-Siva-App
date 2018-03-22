@@ -6,6 +6,7 @@
     "source-directories": [
         "src"
     ],
+    "homepage": "https://dev.himalayanacademy.com/andre/lexicon",
     "exposed-modules": [],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
