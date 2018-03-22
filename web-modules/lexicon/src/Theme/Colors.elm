@@ -6,7 +6,7 @@ import Css exposing (..)
 type alias Palette =
     { white : Color
     , green : Color
-    , greenIcon : Color
+    , lightGreen : Color
     , darkGreen : Color
     , blue : Color
     , darkBlue : Color
@@ -33,7 +33,7 @@ theme =
     { palette =
         { white = rgb 255 255 255
         , green = rgb 122 153 27
-        , greenIcon = rgb 171 208 57
+        , lightGreen = rgb 171 208 57
         , darkGreen = hex "#03697d"
         , blue = rgb 46 153 174
         , darkBlue = rgb 10 70 80

@@ -26,6 +26,7 @@ type alias Model =
     { currentPage : PageId
     , searchInput : Maybe String
     , lexiconModel : Lexicon.Model
+    , query : String
     , errorMessage : Maybe String
     }
 
@@ -35,6 +36,7 @@ initialModel =
     { currentPage = SearchView
     , searchInput = Nothing
     , lexiconModel = Lexicon.initialModel
+    , query = ""
     , errorMessage = Nothing
     }
 
@@ -59,6 +61,15 @@ type Msg
     | LoadDefinition String
     | LoadDefinitionByInt Int
     | LoadRandomDefinition
+    | FilterWordList String
+
+
+filterWordList : String -> WordList -> WordList
+filterWordList word list =
+    if String.isEmpty word then
+        list
+    else
+        List.filter (\item -> String.contains word item.word) list
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -100,6 +111,9 @@ update msg model =
         LoadDefinitionByInt id ->
             ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinition (toString id)) )
 
+        FilterWordList wordOrPart ->
+            ( { model | query = wordOrPart }, Cmd.none )
+
 
 
 ---- VIEW ----
@@ -115,8 +129,8 @@ pageNavigation currentPage =
             ]
         ]
         [ navButton [ onClick (Navigate SearchView) ] [ text "Search" ]
+        , navButton [ onClick LoadRandomDefinition ] [ text "Surprise!" ]
         , navButton [] [ text "My Words" ]
-        , navButton [ onClick LoadRandomDefinition ] [ text "Surprise Me" ]
         ]
 
 
@@ -162,7 +176,7 @@ view model =
                 loadingView
 
             SearchView ->
-                searchView model.lexiconModel
+                searchView model
 
             _ ->
                 h1 [] [ text "not implemented" ]
@@ -230,28 +244,37 @@ addWordItem word =
     li [ onClick (LoadDefinition word.id) ] [ text word.word ]
 
 
-searchView : Lexicon.Model -> Html Msg
+searchView : Model -> Html Msg
 searchView model =
-    case model.wordList of
+    case model.lexiconModel.wordList of
         Just wordList ->
-            div []
-                [ ul
+            div
+                [ css
+                    [ marginTop (px 125) ]
+                ]
+                [ searchHeader
+                , searchBox FilterWordList
+                , listHeader
+                , ul
                     [ css
                         [ color theme.palette.white
-                        , marginTop (px 125)
                         , fontSize (pt 18)
                         , textAlign center
                         , listStyle none
                         , padding (px 20)
+                        , overflowY scroll
+                        , height (px 300)
                         ]
                     ]
-                    (List.map addWordItem wordList)
-                , div [ css [ height (px 60) ] ] []
+                    (List.map addWordItem <| filterWordList model.query wordList)
                 ]
 
         Nothing ->
-            div []
-                [ h1 [] [ text "wait..." ]
+            div
+                [ css
+                    [ marginTop (px 125) ]
+                ]
+                [ h1 [] [ text "Loading ..." ]
                 ]
 
 
