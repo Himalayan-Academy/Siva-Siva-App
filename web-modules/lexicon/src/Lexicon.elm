@@ -4,13 +4,14 @@ import Html exposing (..)
 import Http
 import Json.Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
+import Json.Encode as JE
 
 
 type alias WordDefinition =
     { id : String
     , word : String
     , definition : String
-    , seeAlso : Maybe (List String)
+    , seeAlso : List String
     }
 
 
@@ -63,8 +64,45 @@ wordDecoder =
         |> required "word" Json.Decode.string
 
 
+wordToJson : WordDefinition -> String
+wordToJson word =
+    JE.encode 4 (wordEncoder word)
+
+
+wordEncoder : WordDefinition -> JE.Value
+wordEncoder word =
+    JE.object
+        [ ( "id", JE.string word.id )
+        , ( "word", JE.string word.word )
+        , ( "definition", JE.string word.definition )
+        , ( "seeAlso", JE.list (List.map JE.string word.seeAlso) )
+        ]
+
+
 
 --- ! WORD DEFINITION --
+
+
+loadWordDefinitionByWord : String -> Maybe WordList -> Cmd Msg
+loadWordDefinitionByWord word wordList =
+    let
+        list =
+            case wordList of
+                Just l ->
+                    l
+
+                Nothing ->
+                    []
+
+        found =
+            List.head <| List.filter (\i -> i.word == word) list
+    in
+    case found of
+        Just f ->
+            loadWordDefinition f.id
+
+        Nothing ->
+            Cmd.none
 
 
 loadWordDefinition : String -> Cmd Msg
@@ -85,7 +123,7 @@ responseDecoderForWordDefinition =
         |> required "lexicon_id" Json.Decode.string
         |> required "word" Json.Decode.string
         |> required "definition" Json.Decode.string
-        |> hardcoded Nothing
+        |> optional "see_also" (Json.Decode.list Json.Decode.string) []
 
 
 type Msg

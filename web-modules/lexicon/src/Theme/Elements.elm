@@ -4,6 +4,7 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (classList, css, value)
 import Html.Styled.Events exposing (..)
+import Lexicon exposing (WordDefinition)
 import Theme.Colors exposing (..)
 
 
@@ -182,12 +183,62 @@ icon name =
         [ fontAwesomeIcon name "2x" ]
 
 
-wordDefinitionIcon : String -> Html msg
-wordDefinitionIcon name =
+wordDefinitionIcon : msg -> String -> Html msg
+wordDefinitionIcon click name =
     div
         [ css
             [ color theme.palette.lightGreen
             , padding (px 5)
             ]
+        , onClick click
         ]
         [ fontAwesomeIcon name "lg" ]
+
+
+seeAlso : msg -> String -> Html msg
+seeAlso click word =
+    if String.length word == 0 then
+        span [] []
+    else
+        button
+            [ css
+                [ backgroundColor theme.palette.lightGreen
+                , color theme.palette.white
+                , borderRadius (px 8)
+                , padding (px 10)
+                , fontSize (px 20)
+                , margin (px 10)
+                , borderStyle none
+                ]
+            , onClick click
+            ]
+            [ text word ]
+
+
+takeFurther : Html msg
+takeFurther =
+    div
+        [ css
+            [ textAlign center
+            , fontSize (px 18)
+            , marginTop (px 20)
+            ]
+        ]
+        [ span
+            [ css
+                [ color theme.palette.lightBlue
+                , display block
+                ]
+            ]
+            [ text "Take the adventure further!" ]
+        , hr
+            [ css
+                [ display block
+                , height zero
+                , border zero
+                , borderTop3 (px 2) solid theme.palette.lightBlue
+                , width (pct 10)
+                ]
+            ]
+            []
+        ]
