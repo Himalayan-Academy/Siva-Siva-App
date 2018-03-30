@@ -55,7 +55,7 @@ on openstack
    # if stack is already open, then other playlist can be called
    # using the playlist_SetCurrent command.
    # now we have our play list we set up the query next
- --  playlist_QuerySetUp sTargetPlayList 
+-- playlist_QuerySetUp sTargetPlayList 
 --end if
 
 end openstack
