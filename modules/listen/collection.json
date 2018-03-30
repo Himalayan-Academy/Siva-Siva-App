@@ -289,11 +289,11 @@
     ]
   },
   {
-    "collection-title": "Tirumurai",
-    "playListImg": "Tirumurai-Subbhalakshmi-IMG_2278_330.jpg",
+    "collection-title": "Tirumurai", 
     "playLists": [
       {
         "playListTitle": "Tirumurai",
+        "playListImg": "Tirumurai-Subbhalakshmi-IMG_2278_330.jpg",
         "playlist": "cached",
         "data_query": {
           "media_type": "audio/song",
