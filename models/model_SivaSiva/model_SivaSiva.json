@@ -251,8 +251,8 @@
         },
         "Listen": {
             "link": {
-                "portal command": "portal_Link",
-                "portal param": "listen"
+                "portal command": "portal_GoStack",
+                "portal param": "card \"listen-collection\" of stack \"listen\""
             },
             "imageText": "Listen",
             "shortImageFile": "thumb_listen_dancer-headphones-shtrstk-188320250.png"
