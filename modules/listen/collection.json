@@ -243,7 +243,7 @@
     "collection-title": "Natchintanai",
     "playLists": [
       {
-        "playListTitle": "Natchintanai - Ganesha",
+        "playListTitle": "Ganesha",
         "playListImg": "Natchintanai_330.jpg",
         "playlist": "cached",
         "data_query": {
@@ -254,7 +254,7 @@
         }
       },
       {
-        "playListTitle": "Natchintanai - Muruga",
+        "playListTitle": "Muruga",
         "playListImg": "Natchintanai_330.jpg",
         "playlist": "cached",
         "data_query": {
@@ -265,7 +265,7 @@
         }
       },
       {
-        "playListTitle": "Natchintanai - Siva",
+        "playListTitle": "Siva",
         "playListImg": "Natchintanai_330.jpg",
         "playlist": "cached",
         "data_query": {
@@ -276,7 +276,7 @@
         }
       },
       {
-        "playListTitle": "Natchintanai - Themes",
+        "playListTitle": "Themes",
         "playListImg": "Natchintanai_330.jpg",
         "playlist": "cached",
         "data_query": {
