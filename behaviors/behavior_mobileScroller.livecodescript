@@ -1,5 +1,6 @@
 ﻿script "behavior_mobileScroller"
 local sMouseLoc
+local sStacksHorizontal
 
 ######### Mobile Controls ############
 
@@ -21,10 +22,13 @@ command CreateScroller pName -- scrolling fields
    mobileControlSet pName, "visible",  true
 end CreateScroller
 
+
 on scrollerDidScroll hScrolled, vScrolled
    put mobileControlTarget() into tControlID
    set the vscroll of control tControlID to vscrolled
-   set the hscroll of control tControlID to hScrolled
+   if  short name of this stack is among the items of sStacksHorizontal then
+      set the hscroll of control tControlID to hScrolled
+   end if
    -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 
