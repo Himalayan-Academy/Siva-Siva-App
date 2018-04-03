@@ -110,7 +110,7 @@ filterWordList word list =
     if String.isEmpty word then
         list
     else
-        List.filter (\item -> String.contains word item.word) list
+        List.filter (\item -> String.contains (String.toLower word) (String.toLower item.word)) list
 
 
 isSeeAlsoEmpty : List String -> Bool
