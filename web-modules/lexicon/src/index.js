@@ -27,3 +27,12 @@ app.ports.removeSavedWord.subscribe(function(definition){
   localStorage.setItem("saved_words", JSON.stringify(list))
   app.ports.savedWordListChanged.send(list)
 });
+
+app.ports.appGoHome.subscribe(function() {
+  liveCode.goHome()
+})
+
+
+app.ports.appGoSettings.subscribe(function() {
+  liveCode.goSettings()
+})

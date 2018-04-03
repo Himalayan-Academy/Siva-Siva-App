@@ -172,13 +172,14 @@ fontAwesomeIcon name size =
         []
 
 
-icon : String -> Html msg
-icon name =
+icon : String -> msg -> Html msg
+icon name click =
     div
         [ css
             [ color theme.palette.white
             , padding (px 5)
             ]
+        , onClick click
         ]
         [ fontAwesomeIcon name "2x" ]
 

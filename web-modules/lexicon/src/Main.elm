@@ -24,6 +24,12 @@ port savedWordListChanged : (WordList -> msg) -> Sub msg
 port removeSavedWord : JE.Value -> Cmd msg
 
 
+port appGoSettings : () -> Cmd msg
+
+
+port appGoHome : () -> Cmd msg
+
+
 
 --- SUBS ---
 
@@ -103,6 +109,8 @@ type Msg
     | SaveWord WordDefinition
     | RemoveSavedWord WordDefinition
     | SavedWordListChanged WordList
+    | GoHome
+    | GoSettings
 
 
 filterWordList : String -> WordList -> WordList
@@ -126,6 +134,12 @@ isSeeAlsoEmpty list =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GoHome ->
+            ( model, appGoHome () )
+
+        GoSettings ->
+            ( model, appGoSettings () )
+
         LexiconMsg subMsg ->
             let
                 ( updateLexiconModel, lexiconCmd ) =
@@ -213,8 +227,8 @@ appNavigation =
             , boxShadow4 zero zero (px 5) (rgb 0 0 0)
             ]
         ]
-        [ icon "home"
-        , icon "cog"
+        [ icon "home" GoHome
+        , icon "cog" GoSettings
         ]
 
 
