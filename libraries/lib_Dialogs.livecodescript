@@ -36,6 +36,7 @@ on displayInfo pVis, pSubject, pBackground
    if pVis = "1" then   # We are showing the control
       lock screen
       hide widget "newNews"
+      show widget "fontResize"
       hide image "info-bkgnd-img"
       # set up background image first, if no param 
       # then use landscapes as default
@@ -80,6 +81,7 @@ on displayInfo pVis, pSubject, pBackground
       send "CreateScroller info-text" to fld "info-text"
    end if
 else 
+   hide widget "fontResize"
    put empty into fld "info-text"
    hide grp "display-info" with visual effect dissolve very fast
    hide  fld "info-text"
