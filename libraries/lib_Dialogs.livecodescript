@@ -72,14 +72,14 @@ on displayInfo pVis, pSubject, pBackground
    unlock screen
    send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
    # but for Android we had to take the field out!  It's on it's own layer on top of the card
-   
+   show widget "fontResize"
    show grp "display-info" with visual effect  dissolve very fast
    show  fld "info-text" with visual scroll down very fast
    if the formattedheight of fld "info-text" > the height of fld "info-text" then
       set the layerMode of grp "info-container" to "scrolling" -- jg
       send "CreateScroller info-text" to fld "info-text"
    end if
-   show widget "fontResize"
+   
 else 
    hide widget "fontResize"
    put empty into fld "info-text"
