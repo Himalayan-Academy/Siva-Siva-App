@@ -36,7 +36,6 @@ on displayInfo pVis, pSubject, pBackground
    if pVis = "1" then   # We are showing the control
       lock screen
       hide widget "newNews"
-      show widget "fontResize"
       hide image "info-bkgnd-img"
       # set up background image first, if no param 
       # then use landscapes as default
@@ -80,6 +79,7 @@ on displayInfo pVis, pSubject, pBackground
       set the layerMode of grp "info-container" to "scrolling" -- jg
       send "CreateScroller info-text" to fld "info-text"
    end if
+   show widget "fontResize"
 else 
    hide widget "fontResize"
    put empty into fld "info-text"
