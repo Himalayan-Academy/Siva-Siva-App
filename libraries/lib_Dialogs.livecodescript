@@ -34,9 +34,8 @@ global sConfigA
 local sShowTime
 on displayInfo pVis, pSubject, pBackground
    if pVis = "1" then   # We are showing the control
-      lock screen
+      --lock screen
       hide widget "newNews"
-      hide image "info-bkgnd-img"
       # set up background image first, if no param 
       # then use landscapes as default
       
@@ -46,6 +45,7 @@ on displayInfo pVis, pSubject, pBackground
       put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
       set the filename of img "info-bkgnd-img" to tImagePath
       show image "info-bkgnd-img"
+      
       # next insert the text we need, either stored on the app somewhere or from a web URL
       switch pSubject
          hide  widget "newNews"
@@ -69,22 +69,22 @@ on displayInfo pVis, pSubject, pBackground
          portal_GoURL someURL ## youtube of mp4 later
          bread
    end switch
-   unlock screen
-   send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
-   # but for Android we had to take the field out!  It's on it's own layer on top of the card
-   show widget "fontResize"
-   show grp "display-info" with visual effect  dissolve very fast
-   show  fld "info-text" with visual scroll down very fast
-   if the formattedheight of fld "info-text" > the height of fld "info-text" then
-      set the layerMode of grp "info-container" to "scrolling" -- jg
-      send "CreateScroller info-text" to fld "info-text"
-   end if
    
+   send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
+   
+   # but for Android we had to take the field out!  It's on it's own layer on top of the card
+   
+
+   show group "info-container" with visual effect dissolve very fast
+   show widget "fontResize"
+   show  fld "info-text" with visual scroll down very fast
+   wait 200 milliseconds with messages
+   send "CreateScroller info-text" to fld "info-text"
+
 else 
-   hide widget "fontResize"
-   put empty into fld "info-text"
-   hide grp "display-info" with visual effect dissolve very fast
+   hide widget "fontResize" 
    hide  fld "info-text"
+   hide group "info-container" with visual effect dissolve very fast
    hide image "info-bkgnd-img"
    deleteMobileControl "info-text" 
 end if
