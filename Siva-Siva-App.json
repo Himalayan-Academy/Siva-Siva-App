@@ -30,6 +30,7 @@
     {"name": "journal", "file": "modules/journal/journal.livecode"},
     {"name": "read", "file": "modules/read/read.livecode"},
     {"name": "Siva-Siva-Portal", "file": "Siva-Siva-Portal.livecode"},   
-    {"name": "SivaSivaResources","file":"assets/SivaSivaResources.livecode"}
+    {"name": "SivaSivaResources","file":"assets/SivaSivaResources.livecode"},
+    {"name": "lexicon", "file": "modules/lexicon/lexicon.livecode"}
   ]
 }

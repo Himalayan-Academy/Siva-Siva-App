@@ -203,8 +203,8 @@
         },
         "Hindu Lexicon": {
              "link": {
-                "portal param": "https://www.himalayanacademy.com/view/lexicon",
-                "portal command": "portal_GoURL"
+                "portal param": "stack \"lexicon\"",
+                "portal command": "portal_GoStack"
             },
             "imageText": "Hindu\nLexicon",
             "shortImageFile": "thumb_lexicon_shtrstk-26948821.png"
