@@ -47,6 +47,18 @@ local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 
 ------------------------------------------------------
 
+command portal_NextOrientation pStack
+   # all landscape stack must registered here
+   
+   if pStack is among the items of \
+         "wordpuzzles"  then
+      mobile_SetAllowedOrientation "landscape"
+   else # all other stacks
+      mobile_SetAllowedOrientation "portrait"
+   end if
+   
+end portal_NextOrientation 
+
 
 command portal_DoRowLink rowName
    -- safe parsing only of accepted commands
@@ -95,8 +107,36 @@ end portal_DoRowLink
 -- CHANGES:  2016-08-01 David Bovil -- created
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
+command portal_StackOrientation pStack
+   # we need to know the stack oriention for we open it
+   # we be explicit about landscape and let portrait go
+   # this means everytime were have a landscape stack 
+   # it must registered here
+   if  pStack is among items  of \
+      ("wordpuzzles") then  # list all landscape stacks here
+      mobile_SetAllowedOrientation "landscape"
+   else
+      # portrail
+      mobile_SetAllowedOrientation "portrait"
+   end if
+end portal_StackOrientation
 
 command portal_GoStack cardOrStackObject  
+  
+  # we need short name 
+   # case we call a card
+   
+   put the owner of cardOrStackObject into tNextStack
+   
+   # if it is the stack itself
+   
+   if (tNextStack = empty) then
+      put cardOrStackObject into tNextStack
+   end if
+   
+   put short name of tNextStack into tNextStack
+   
+   
    --breakpoint
    # save where we are coming from locally
    put the short name of this stack into oStackName
@@ -132,10 +172,16 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
+   -- set up orientation in advance
+   
+
+   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 100 milliseconds with messages  
    close stack oStackName   
-   wait 100 milliseconds with messages  
+   wait 100 milliseconds with messages
+   
+     -- portal_NextOrientation tNextStack  
    
    ## go to cardOrStackObject in window oStackName
    
@@ -151,7 +197,7 @@ command portal_GoStack cardOrStackObject
    if the short name of this stack is "Siva-Siva-Portal" then
       news_Fetch
    end if
-    
+   
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
    
@@ -173,13 +219,13 @@ command portal_Link portalName
       # called from a module and not the portal stack
       portal_SetCurrent portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
-       put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
-      portal_GoStack tPortalTarget
+      put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
+            portal_GoStack tPortalTarget
    else
-       portal_SetCurrent portalName
-       portal_SetCurrentStack "Siva-Siva-Portal"
-       go card portalName
-    
+      portal_SetCurrent portalName
+      portal_SetCurrentStack "Siva-Siva-Portal"
+      go card portalName
+      
       put portalName into pTrackdata["contentTarget"]
       tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
@@ -210,7 +256,10 @@ command portal_GoUrl someURL,pJournalLabel
    --end if # closing connectivity check
 end portal_GoUrl
 
-command portal_LaunchUrl someURL
+
+
+end mobile_SetAllowedOrientation 
+   command portal_LaunchUrl someURL
    # leave Siva Siva app and open the native web app on the device
    launch url someURL    
 end portal_LaunchUrl

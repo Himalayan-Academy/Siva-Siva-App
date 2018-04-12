@@ -7,19 +7,20 @@
 # this behavior is the /modules/listen/listen.livecode stack script
 # It's primary function is to handle high level calls to get play lists
 # UI consist of 2 main cards
-# listen-playlist - for show a single play list
-# listen-catalog - later: for showing multiple lists like on Spotify # not in V1
+# listen-collections - shows a catalog of songs built up on a 
+# collection.json for: it in be built from a development stack tools
+# listen-browse - Later for show in play list
 # So as not to over load this script the handlers whose scope deals with
-# user interaction with a single play list/ indivitual songs are in a separate behavior 
+# user interaction with a single play list/ indivdtual songs are in a separate behavior 
 # behavior_ListenSelectPlay
-# assigned to the listen-playlist card
+# assigned to the listen-browse card
 #
 # PARAMS: Main variable sent to this script is a string which is the name/title of a playlist
 #
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
 
-
+local sCollectionA,sCollectionChoice
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 
@@ -31,37 +32,45 @@ on preopenstack
    set the fullscreenmode of this stack to "showAll"
    mobile_SetAllowedOrientation "portrait"
 end preopenstack
- 
+
 on openstack 
-  -- if not (portal_GetLastStack()= "journal")  then
-      
-      # for V1 we know we are always coming from the Listen Portal
-      # or from the journal... if from journal then we let journalResume 
-      # initiated the UI
+   #V2 April 8, 2018
+   # 
    # and these are basically playlists like on Spotify, though
    # some might qualify as albums, but we don't have enough to 
-   # make a differentiation. So treat all as playlists  
-   # if this stack is opened from a closed state
-   # we can safely assume the portal link is the target playlist
-   # be sure to never save the stack with any text in the audio list
-   # test assumes if the fld id blank then we have some loading to do.
-
-      # later we get just from the listen. For from what come from journal
- --  put portal_GetLastLinkTitle() into sTargetPlayList   
+   # make a differentiation. So treat all as playlists 
+   # we get playlist from the json file, that is attached
+   # to the mouse down one the group number
+   #
+   # first, load the json
    
-   
- --  playlist_SetCurrent sTargetPlayList
+   set the acceleratedRendering of this stack to true
     
-   # if stack is already open, then other playlist can be called
-   # using the playlist_SetCurrent command.
-   # now we have our play list we set up the query next
--- playlist_QuerySetUp sTargetPlayList 
---end if
-
+   put url ("file://"&path_Modules()& "listen/collection.json") into sCollectionA
+   put JSONToArray(sCollectionA) into sCollectionA
+   
 end openstack
 
+on selectPlaylist pSelection
+   # use has  made choice from card 
+   # get extract JSON from sCollectionA 
+   
+   put the short name of pSelection into tPlayTarget
+ 
+   if not (tPlayTarget contains "-playlist-") then
+      exit to top
+   else
+      set the itemDelimiter to "-"
+      put item 1 of tPlayTarget into tColl
+      put item 2 of tPlayTarget into tPlay
+   end if
+   
+   playList_FetchData tColl,tPlay
+   
+end selectPlaylist
+
 -----------------------------------------------------
-# playlist_Set|GetCurrent
+# playlist_SetGetCurrent
 # DESCRIPTION:  the primary known variable is a string 
 # which is the list name, which is usually it's title
 # in V1 we are just picking this up from the portal link
@@ -73,6 +82,7 @@ end openstack
 # see /models/model_SivaSiva/model_SivaSiva.json 
 # CHANGES: Created 2017-06-22 Brahmanathaswami
 ------------------------------------------------------
+
 
 on playlist_SetCurrent pList  
    put pList into sTargetPlayList
@@ -90,158 +100,85 @@ function playlist_GetRecords  # use this to fetch data later for card behavior
    end if
 end playlist_GetRecords
 
-
------------------------------------------------------------------------
-# playlist_QuerySetUp
-# DESCRIPTION
-# we have three classes of lists based on data storage/CMS
-# each requires a different query
-# 1. Remote list: send JSON to server we send JSON for remote list
-# 2.  Audiobook: build a path string and download index. json for audio books
-# 3. query the local dbase for already cached metadata in the Local Jnanam dbase
-
-# we need max six criteria to search our metadata, not all playlists require all strings, 
-# but our query array will still have all these keys; use elements as needed
-# we will model that array into a json string or dbase query later
-# media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
-# see /system/applications/ha/controllers/API3.lc  on the server for details on the remote call
-#  structure of remote query, for reference:
-# Note we use "recordType" here instead of "playlistClass" because the API is agnostic about the type
-# of records we are fetching... it could be artwork quotes, books anything... not only audio playLists.
-#   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into tJSON
-# We have to do this "by hand"  in a switch case by case statemnt
-# hard wiring the query data in this script is
-# bad practice... later we should externalize to a playlists.json file 
-# Audio books are simpler, all we need is a path to the remote server directory, fetch the audio JSON file therein.
-# 
-# PARAMS: pass the current play list string
-# CHANGES: 2017-06-22 - BR Created
------------------------------------------------------------------------
-
-
-on playlist_QuerySetUp
-   
-   # Note: we are inserting queries strings... these are not the values of the records
-   # the entire play list
-   # aagDBLib uses "LIKE" so we only need to pass partial string for our searches
-   # again: we should store these values in modules/listen/playlists.json
-   # Add all your new playlists here in V1... assume match to a portal link for V1
-   
-   switch sTargetPlayList
-      
-      # Go to the web server for these latest playlists
-      case "Bodhinatha's Latest inspired Talks" 
-         # Remote look up based on search criteria... 
-         # this model could fetch any kid of collection, songs, curated by category or tag... 
-         # again we should be using a JSON for this data, and hold the query on disk and not hard
-         # code this here.  Later... V2
-         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
-         put "inspiredtalk" into sPlaylistQueryA["media_type"]         
-         put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
-         put "latest" into sPlaylistQueryA["recordType"]        
-         put 30 into sPlaylistQueryA["recordCount"]
-         break
-      case "All Recent Additions"
-         put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
-         put "audio" into sPlaylistQueryA["media_type"]       
-         put "latest" into sPlaylistQueryA["recordType"]   
-         put 50 into sPlaylistQueryA["recordCount"]
-         break  
-         
-         # fetch all these form the local Jnanam dbase
-      case "Gurudeva's 1970 Audio Course"
-         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
-         put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
-         put "1970" into sPlaylistQueryA["date_created"]
-         put "master-course" into sPlaylistQueryA["file_id"]
-         break
-      case "Songs" # fetches everything for now.. but nothing new
-         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
-         put "audio/song" into sPlaylistQueryA["media_type"]
-         put "YES" into sPlaylistQueryA["approved_for_public"]
-         break
-      case "All Gurudeva Talks" # fetches everything for now.. but nothing new
-         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
-         put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
-         put "YES" into sPlaylistQueryA["approved_for_public"]
-         break
-      case "All Bodhinatha Talks" # fetches everything for now.. but nothing new
-         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
-         put "inspiredtalk" into sPlaylistQueryA["media_type"]
-         put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
-         put "YES" into sPlaylistQueryA["approved_for_public"]
-         break
-      case "Sanskrit Chanting"
-         put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
-         put "audio/chant" into sPlaylistQueryA["media_type"]
-         put "YES" into sPlaylistQueryA["approved_for_public"]
-         break
-         
-         ## Audio books:
-         # for audio books; all we need to know the file ID, which is the folder name
-         # after that it is a simple path set up.
-      case "The Guru Chronicles" # Audio book
-         put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
-         put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
-         break
-      case "Gujarati Dancing with Siva" # Audio book
-         put "audiobook" into sPlaylistQueryA["playlistClass"]
-         put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
-         break   
-      case "Gujarati Living with Siva" # Audio book
-         put "audiobook" into sPlaylistQueryA["playlistClass"]
-         put "living-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
-         break
-         
-   end switch
-   
-   # fetch the handlers one by one, after the plays list is called
-   # the date is in sPlayListQueryA
-   
-   playList_FetchData 
-   
-end playlist_QuerySetUp
-
 -----------------------------------------------------------------------
 # playList_FetchData
 # DESCRIPTION: 
-# We use the values in sCurrentPlayListA  to get what we need to put on the card
-# Later when users select info on the card we will have two known values
-# the line number and the string, which will be the title of the record
-# Sorting differs by playlistClass: latest|descending by date, audiobook | per json index, cached | alpha by title or file_ID
-# usually trigger on arrival to this stack-card
-# but also from action on UI (Home card later)
-# PARAMS: everything is taken from the sCurrentPlaylistA array
+-- # all the dataquery data it in to json file under "data-query"
+-- # we have three classes of lists based on data storage/CMS
+-- # each requires a different query
+-- # 1. Remote list: send JSON to server we send JSON for remote list
+-- # 2.  Audiobook: build a path string and download index. json for audio books
+-- # 3. query the local dbase for already cached metadata in the Local Jnanam dbase
+
+-- # we need max six criteria to search our metadata, not all playlists require all strings, 
+-- # but our query array will still have all these keys; use elements as needed
+-- # we will model that array into a json string or dbase query later
+-- # media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
+-- # see /system/applications/ha/controllers/API3.lc  on the server for details on the remote call
+-- #  structure of remote query, for reference:
+-- # Note we use "recordType" here instead of "playlistClass" because the API is agnostic about the type
+-- # of records we are fetching... it could be artwork quotes, books anything... not only audio playLists.
+-- #   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into tJSON
+-- #
+-- # We keep all the data in json file now.
+
+-- # Audio books are simpler, all we need is a path to the remote server directory, fetch the audio JSON file therein.
+-- # 
+-- # Sorting differs by playlistClass: latest|descending by date, audiobook | per json index, cached | alpha by title or file_ID
+-- # usually trigger on arrival to this stack-card
+-- # but also from action on UI (Home card later)
+
+-- # PARAMS: pass numeric collection and the playlist from json file
+-- # CHANGES: 2018-04-09 - BR Created
+
+# secondary params"
+#  from json file: this is a sample. Not all playlists require all params
+--          put "playListClass" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
+--          put "inspiredtalk" into sPlaylistQueryA["media_type"]         
+--          put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
+--          put "latest" into sPlaylistQueryA["recordType"]        
+--          put 30 into sPlaylistQueryA["recordCount"] 
+--          put "master-course" into sPlaylistQueryA["file_id"]
+--          put "1970" into sPlaylistQueryA["date_created"]
+--          put "YES" into sPlaylistQueryA["approved_for_public"]
+ 
 -----------------------------------------------------------------------
 
-on playList_FetchData pQueryArray
+on playList_FetchData tColl,tPlay
+   put empty into fld "audioList" of card "listen-browse" of stack "listen"
+    
+   --  dispatch "cleanUpGui" to card "listen-browse"   
    
-   if pQueryArray is not empty then # we are passing a query from the search behavior
-      put pQueryArray into sPlaylistQueryA
-   end if
+   # we are did work before so we just set up to query array for data base
+   # from the json
+   put empty into sPlaylistQueryA 
+   --    if pQueryArray is not empty then # we are passing a query from the search behavior
+   --       put pQueryArray into sPlaylistQueryA
+   --    end if
    
-   # we can put in the title and image right away
+   put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
+   # decides is cached on device, or from server and audio book
+   # this param is used here... not sent to the database. 
+   # get type of playlistL audio book, etc
    
-   # we may have the stack already open 
-   # and switching play list so clear the card first:
+   put "recordType,recordCount" into tRecordTypeCount
    
-   dispatch "cleanUpGui" to card "listen-playlist"
+   repeat for each item RT in tRecordTypeCount
+      if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
+         put  sCollectionA[tColl]["playlists"][tPlay][RT] into sPlayListQueryA[RT]
+      end if 
+   end repeat
    
-   ## Title and thumbnail:
-   put sTargetPlayList into tTitle 
-   put tTitle into fld "title"   
+   put "media_type,file_id,approved_for_public,author,genre,deity,tag" into tDbaseColumns
    
-   put sivasiva_FetchData() into tPortalInfoA
-   put tPortalInfoA["portalRowDictionary"][tTitle][shortImageFile] into tThumbPath
-   put path_Assets() & "img/portal-screens/" & tThumbPath into tPosterPath
-   set the filename of img "playlistPoster" to tPosterPath
+   repeat for each item DC in tDbaseColumns
+      if ( sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] is not empty) then 
+         put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
+      end if
+   end repeat
    
-   put sPlaylistQueryA["playlistClass"] into tPlaylistClass 
-    # get type of playlistL audio book, etc
-   
-   # we are records now, from server, or local jnanam.
+  
+   # we get records now, from server, or local jnanam.
    # we are to each one based on where they come from
    
    switch tPlaylistClass
@@ -258,7 +195,7 @@ on playList_FetchData pQueryArray
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          # It just set the WHERE clause in the query with what ever you request. then sorts on date sends bak the request number
          # of records.
-         
+         put "Contacting server... " into fld "audioList" of card "listen-browse"
          put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into queryData["recordType"]
@@ -270,7 +207,7 @@ on playList_FetchData pQueryArray
          set the httpheaders to "content-type: application/json"
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
          if the result is not empty then 
-            put "Check your network Connections" into  fld "audioList"
+            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
             portal_Link "Listen"
             exit to top
@@ -288,6 +225,7 @@ on playList_FetchData pQueryArray
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
+           put "Contacting server... " into fld "audioList" of card "listen-browse"
          # a simple call to the server to get the TOC
          # can chose different books base on file_id
          put sPlaylistQueryA["file_id"] into tFileID
@@ -296,9 +234,8 @@ on playList_FetchData pQueryArray
          put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
          put URL tTocURL into tBookToc
          if the result is not empty then 
-            put "Check your network Connections" into  fld "audioList"
+            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            portal_Link "Listen"
             exit to top
          else 
             put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
@@ -318,10 +255,9 @@ on playList_FetchData pQueryArray
          replace "'" with quote in pJSON
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
          if the result is not empty then 
-            put "Check your network Connections" into  fld "audioList"
+            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
             -- close this stack
-            portal_Link "Listen"
             exit to top
          else 
             put it into tRecords 
@@ -334,7 +270,7 @@ on playList_FetchData pQueryArray
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]
          break
-          
+         
    end switch
    
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
@@ -344,10 +280,10 @@ on playList_FetchData pQueryArray
    put sTargetPlayList into sCurrentPlayListA["playListTitle"]
    
    if sCurrentPlayListA["audioFiles"] is empty then 
-      put "No records for that search. Try again" into fld "audioList"
+      put "No records for that search. Try again" into fld "audioList" of card "listen-browse" of stack "listen"
       wait 1500 milliseconds with messages
-      put empty into fld "audioList"
-      dispatch "revealMoreActions" to this card with "true"
+      put empty into fld "audioList" 
+     -- dispatch "revealMoreActions" to this card with "true"
       exit to top
    end if
    
@@ -371,13 +307,14 @@ end playList_FetchData
 -----------------------------------------------------------------------
 
 
-on playlist_Instantiate sTargetPlayList    
-
-   if (sTargetPlayList ="Songs" OR sTargetPlayList contains "Talks") AND  (sPlaylistQueryA["playListClass"] = "cached" ) then
-      set the vis of widget "revealMoreActions" to true
-   else
-       set the vis of widget "revealMoreActions" to false # just in case it's hanginh around visible
-    end if    
+on  playlist_Instantiate sTargetPlayList    
+   
+   
+   --    if (sTargetPlayList ="Songs" OR sTargetPlayList contains "Talks") AND  (sPlaylistQueryA["playListClass"] = "cached" ) then
+   --       set the vis of widget "revealMoreActions" to true
+   --    else
+   --        set the vis of widget "revealMoreActions" to false # just in case it's hanging around visible
+   --     end if    
    
    # using: model_SivaSiva, which has functions to get json info we need:
    
@@ -402,17 +339,20 @@ on playlist_Instantiate sTargetPlayList
          end repeat
    end switch
    
-   put tTitles into fld "audioList"  
+   go to card "listen-browse"
    
- 
+   hide fld "audioList"
+   put tTitles into fld "audioList" 
+   
    put the number of lines of tTitles into pLineCount
    addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
+   show fld "audioList"
    
    # here is where we have to check to see if any files are stored locally or not
    
-   markCachedItems tKeys
+ --  markCachedItems tKeys
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
-      send "CreateScroller audioList" to fld "audioList" of card "listen-playlist"
+      send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
    put  sTargetPlayList into pData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", pData
@@ -473,10 +413,6 @@ on journalResume  pDataA, pEntryA
    playlist_SetCurrent sTargetPlayList
    playlist_QuerySetUp sTargetPlayList 
    portal_SetLastLinkTitle sTargetPlayList  
-   --    --portal_GoStack pDestination 
-   --    put pDataA["playSelection"] into pSelectedLine
-   --    dispatch "playlist_Reset" to card "listen-playlist"
-   --  dispatch "select_Play" to card "listen-playlist" with pDataA["item_id"]
 end journalResume
 
 
@@ -485,3 +421,118 @@ on closeStack
    --      deleteMobileControl "audioList"
    --   end if
 end closeStack
+
+########### DEPRECATED
+-- ---------------------------------------------------------------------
+-- # playlist_QuerySetUp
+-- # DESCRIPTION
+-- # we have three classes of lists based on data storage/CMS
+-- # each requires a different query
+-- # 1. Remote list: send JSON to server we send JSON for remote list
+-- # 2.  Audiobook: build a path string and download index. json for audio books
+-- # 3. query the local dbase for already cached metadata in the Local Jnanam dbase
+
+-- # we need max six criteria to search our metadata, not all playlists require all strings, 
+-- # but our query array will still have all these keys; use elements as needed
+-- # we will model that array into a json string or dbase query later
+-- # media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
+-- # see /system/applications/ha/controllers/API3.lc  on the server for details on the remote call
+-- #  structure of remote query, for reference:
+-- # Note we use "recordType" here instead of "playlistClass" because the API is agnostic about the type
+-- # of records we are fetching... it could be artwork quotes, books anything... not only audio playLists.
+-- #   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into tJSON
+-- #
+-- # We keep all the data in json file now.
+
+-- # Audio books are simpler, all we need is a path to the remote server directory, fetch the audio JSON file therein.
+-- # 
+-- # PARAMS: pass the current play list string
+-- # CHANGES: 2018-04-09 - BR Created
+-- ---------------------------------------------------------------------
+
+
+-- on playlist_QuerySetUp
+
+--    # Note: we are inserting queries strings... these are not the values of the records
+--    # the entire play list
+--    # aagDBLib uses "LIKE" so we only need to pass partial string for our searches
+--    # again: we should store these values in modules/listen/playlists.json
+--    # Add all your new playlists here in V1... assume match to a portal link for V1
+
+--    switch sTargetPlayList
+
+--       # Go to the web server for these latest playlists
+--       case "Bodhinatha's Latest inspired Talks" 
+--          # Remote look up based on search criteria... 
+--          # this model could fetch any kid of collection, songs, curated by category or tag... 
+--          # again we should be using a JSON for this data, and hold the query on disk and not hard
+--          # code this here.  Later... V2
+--          put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
+--          put "inspiredtalk" into sPlaylistQueryA["media_type"]         
+--          put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
+--          put "latest" into sPlaylistQueryA["recordType"]        
+--          put 30 into sPlaylistQueryA["recordCount"]
+--          break
+--       case "All Recent Additions"
+--          put "latest" into sPlaylistQueryA["playlistClass"]  # gets metadata from remote server
+--          put "audio" into sPlaylistQueryA["media_type"]       
+--          put "latest" into sPlaylistQueryA["recordType"]   
+--          put 50 into sPlaylistQueryA["recordCount"]
+--          break  
+
+--          # fetch all these form the local Jnanam dbase
+--       case "Gurudeva's 1970 Audio Course"
+--          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+--          put "inspiredtalk" into sPlaylistQueryA["media_type"]
+--          put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
+--          put "1970" into sPlaylistQueryA["date_created"]
+--          put "master-course" into sPlaylistQueryA["file_id"]
+--          break
+--       case "Songs" # fetches everything for now.. but nothing new
+--          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+--          put "audio/song" into sPlaylistQueryA["media_type"]
+--          put "YES" into sPlaylistQueryA["approved_for_public"]
+--          break
+--       case "All Gurudeva Talks" # fetches everything for now.. but nothing new
+--          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+--          put "inspiredtalk" into sPlaylistQueryA["media_type"]
+--          put "Satguru Sivaya Subramuniyaswami" into sPlaylistQueryA["author"]
+--          put "YES" into sPlaylistQueryA["approved_for_public"]
+--          break
+--       case "All Bodhinatha Talks" # fetches everything for now.. but nothing new
+--          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+--          put "inspiredtalk" into sPlaylistQueryA["media_type"]
+--          put "Satguru Bodhinatha Veylanswami" into sPlaylistQueryA["author"]
+--          put "YES" into sPlaylistQueryA["approved_for_public"]
+--          break
+--       case "Sanskrit Chanting"
+--          put "cached" into sPlaylistQueryA["playlistClass"] # get metadata from local Jnanam
+--          put "audio/chant" into sPlaylistQueryA["media_type"]
+--          put "YES" into sPlaylistQueryA["approved_for_public"]
+--          break
+
+--          ## Audio books:
+--          # for audio books; all we need to know the file ID, which is the folder name
+--          # after that it is a simple path set up.
+--       case "The Guru Chronicles" # Audio book
+--          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
+--          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
+--          break
+--       case "Gujarati Dancing with Siva" # Audio book
+--          put "audiobook" into sPlaylistQueryA["playlistClass"]
+--          put "dancing-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
+--          break   
+--       case "Gujarati Living with Siva" # Audio book
+--          put "audiobook" into sPlaylistQueryA["playlistClass"]
+--          put "living-with-siva-audiobook-gujarati" into sPlaylistQueryA["file_id"] 
+--          break
+
+--    end switch
+
+--    # fetch the handlers one by one, after the plays list is called
+--    # the date is in sPlayListQueryA
+
+--    playList_FetchData 
+
+-- end playlist_QuerySetUp
+

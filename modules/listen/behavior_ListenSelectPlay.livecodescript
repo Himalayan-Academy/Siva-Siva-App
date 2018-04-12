@@ -214,7 +214,7 @@ command select_ShowDetails
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
-   set the rect of fld "AudioDetails" to (0,the bottom of fld "title",the width of this card,the height of this card -150) 
+   set the rect of fld "AudioDetails" to rect of fld "audioList" 
    show fld "audioDetails" with visual effect wipe up very fast
    send "CreateScroller audioDetails" to fld "audioDetails"
 end select_ShowDetails
