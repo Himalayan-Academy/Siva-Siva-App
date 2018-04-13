@@ -45,17 +45,20 @@ on openstack
    # first, load the json
    
    set the acceleratedRendering of this stack to true
-    
-   put url ("file://"&path_Modules()& "listen/collection.json") into sCollectionA
-   put JSONToArray(sCollectionA) into sCollectionA
+   
+  -- put empty into fld "log"
+   
+   put url ("binfile:" & path_Modules()& "listen/collection.json") into tJson
+  put JSONToArray(tJson) into sCollectionA
    
 end openstack
 
-on selectPlaylist pSelection
+command selectPlaylist pSelection
    # use has  made choice from card 
    # get extract JSON from sCollectionA 
    
    put the short name of pSelection into tPlayTarget
+
  
    if not (tPlayTarget contains "-playlist-") then
       exit to top
@@ -145,16 +148,13 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData tColl,tPlay
+
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
     
-   --  dispatch "cleanUpGui" to card "listen-browse"   
-   
-   # we are did work before so we just set up to query array for data base
-   # from the json
+   --  dispatch "cleanUpGui" to card "listen-browse"      
+
    put empty into sPlaylistQueryA 
-   --    if pQueryArray is not empty then # we are passing a query from the search behavior
-   --       put pQueryArray into sPlaylistQueryA
-   --    end if
+
    
    put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
    # decides is cached on device, or from server and audio book
@@ -282,12 +282,12 @@ on playList_FetchData tColl,tPlay
    if sCurrentPlayListA["audioFiles"] is empty then 
       put "No records for that search. Try again" into fld "audioList" of card "listen-browse" of stack "listen"
       wait 1500 milliseconds with messages
-      put empty into fld "audioList" 
+      put empty into fld "audioList" of card "listen-browse" of stack "listen"
      -- dispatch "revealMoreActions" to this card with "true"
       exit to top
    end if
-   
-   # each done, switch to local handlers
+  
+
    playlist_Instantiate sTargetPlayList
    
 end playList_FetchData

@@ -123,20 +123,6 @@ end portal_StackOrientation
 
 command portal_GoStack cardOrStackObject  
   
-  # we need short name 
-   # case we call a card
-   
-   put the owner of cardOrStackObject into tNextStack
-   
-   # if it is the stack itself
-   
-   if (tNextStack = empty) then
-      put cardOrStackObject into tNextStack
-   end if
-   
-   put short name of tNextStack into tNextStack
-   
-   
    --breakpoint
    # save where we are coming from locally
    put the short name of this stack into oStackName
