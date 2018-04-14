@@ -309,7 +309,7 @@ command share_Items
 end share_Items
 
 command updateCachedListings 
-
+   
    put "true" into sSelectionsA["audioFiles"][sSelectNum]["cached"]
    set the foregroundcolor of line sSelectNum of fld "audioList" to green
    # Later we need to update the myURL of the play list selection.
@@ -336,6 +336,7 @@ end updateCachedListings
 -- end cleanUpGUI
 
 on closeCard
+   set the acceleratedRendering this stack to false
    showPlayer "false","audioPlayer"
 end closeCard
 

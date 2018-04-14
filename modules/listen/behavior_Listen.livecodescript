@@ -53,6 +53,30 @@ on openstack
    
 end openstack
 
+-- on opencard
+--        # this is the script for the card, this does more that ListerSelect
+--    # 
+--    put the short name of this card into tCardName
+--    switch tCardName
+--       case "listen-collection"
+--          show grc "card-indicator-coll"
+--          hide grc "card-indicator-browse"
+--          hide grc"card-indicator-mymusic"
+--          break
+--       case "listen-browse"
+--          hide grc "card-indicator-coll"
+--          show grc "card-indicator-browse"
+--          hide grc "card-indicator-mymusic"
+--          break
+--       case "listen-my-music"
+--          hide grc "card-indicator-coll"
+--          hide grc "card-indicator-browse"
+--          show grc "card-indicator-mymusic"
+--          break
+
+--    end switch
+-- end opencard
+
 command selectPlaylist pSelection
    # use has  made choice from card 
    # get extract JSON from sCollectionA 
