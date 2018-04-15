@@ -30,6 +30,8 @@ on openCard
    # starts out with the entire play list unfiltered
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
+   -- set GUI
+   put empty  into fld "currentTitleLabel"
    playlist_Reset 
 end openCard
 
@@ -170,7 +172,7 @@ command startPlayer pURL, pTitle
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
          # we need to try to get it to fit nicely at the bottom:
-         put 70,570,405,659 into tRect       
+         put 70,625,350,659 into tRect       
       else 
          put empty into tRect
       end if     
@@ -188,15 +190,13 @@ command startPlayer pURL, pTitle
    
    showBusyIndicator false
    put  sSelectedItemA["title"] into fld "currentTitleLabel"
-   # put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
-   # Android player covers it!
+   
+   # Android player covers it! Because the controller higher that iOS one.
    if the platform is "Android" then
-      set the bottomleft of widget "downloadSelection" to 14,657
-   else
-      set the bottom of widget "downloadSelection" to 622
+      set the bottom of fld "currentTitleLabel" to 600
    end if
    set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
-   #set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
+   
 end startPlayer
 
 
