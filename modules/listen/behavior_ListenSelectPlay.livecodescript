@@ -66,6 +66,13 @@ on mouseup
    put the short name of the Target  into tTarget   
    
    switch tTarget
+      # card navigaton
+      case "collections-label"
+         go to card "listen-collection"
+         break
+      case "my-music-label"
+         go to card "listen-my-music"
+         break
       case "AudioList"
          put word 2 of clickline() into sSelectNum
          select_Play # will use either the line number or item id
@@ -167,6 +174,11 @@ command startPlayer pURL, pTitle
          exit startPlayer
       end if
    end if
+   
+   --    if there is a group  "share-ui" then
+   --       delete group "share-ui"
+   --    end if
+   
    
    if isMobile() then
       if the platform is "android" then 

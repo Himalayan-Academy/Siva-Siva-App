@@ -78,12 +78,21 @@ end openstack
 -- end opencard
 
 command selectPlaylist pSelection
+
    # use has  made choice from card 
    # get extract JSON from sCollectionA 
    
    put the short name of pSelection into tPlayTarget
-
- 
+   
+   # first - card navigition
+   
+   if tPlaytarget contains "my-music" then
+      go to card "listen-my-music"
+      exit selectPlayList
+   end if
+   
+   # other wise we are select a collection:
+   
    if not (tPlayTarget contains "-playlist-") then
       exit to top
    else
@@ -538,7 +547,19 @@ end closeStack
 --          ## Audio books:
 --          # for audio books; all we need to know the file ID, which is the folder name
 --          # after that it is a simple path set up.
---       case "The Guru Chronicles" # Audio book
+--       case "Thon preopencard
+   # tweak the header for collections
+   repeat for each line z in (the childControlNames of group "listen-header") 
+      set the foregroundcolor of control z to 240,240,240
+   end repeat
+    set the width of grc "card-indicator" to  the width of fld "collections-label"
+   set the foregroundcolor of fld "collections-label"  to 218,217,255
+   put item 1 of the loc of fld "collections-label" into tIndHorz
+   put item 2 of the loc of grc "card-indicator" into tIndVert
+   set the loc of grc "card-indicator" to tIndHorz,tIndVert
+   hide fld "browse-label"
+end preopencard
+e Guru Chronicles" # Audio book
 --          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
 --          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
 --          break
