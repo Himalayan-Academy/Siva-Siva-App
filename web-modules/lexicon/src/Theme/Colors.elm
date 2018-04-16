@@ -41,8 +41,8 @@ theme =
         , lightBlue = rgb 140 230 250
         }
     , button =
-        { background = rgb 148 192 15
-        , active = rgb 101 130 9
+        { background = rgb  90 158 0 ---148 192 15
+        , active = rgb 57 101 0 --101 130 9
         , text = rgb 237 237 237
         }
     }

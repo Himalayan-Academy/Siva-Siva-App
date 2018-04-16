@@ -198,6 +198,18 @@ update msg model =
 
 pageNavigation : PageId -> Html Msg
 pageNavigation currentPage =
+    let
+        activePage =
+            case currentPage of
+                SearchView ->
+                    "search"
+
+                MyWordsView ->
+                    "mywords"
+
+                _ ->
+                    "other"
+    in
     nav
         [ css
             [ displayFlex
@@ -205,9 +217,9 @@ pageNavigation currentPage =
             , backgroundColor theme.palette.darkGreen
             ]
         ]
-        [ navButton [ onClick (Navigate SearchView) ] [ text "Search" ]
-        , navButton [ onClick LoadRandomDefinition ] [ text "Surprise!" ]
-        , navButton [ onClick (Navigate MyWordsView) ] [ text "My Words" ]
+        [ navButton (activePage == "search") [ onClick (Navigate SearchView) ] [ text "Search" ]
+        , navButton False [ onClick LoadRandomDefinition ] [ text "Surprise!" ]
+        , navButton (activePage == "mywords") [ onClick (Navigate MyWordsView) ] [ text "My Words" ]
         ]
 
 
@@ -382,7 +394,7 @@ searchView model =
                 [ css
                     [ marginTop (px 125) ]
                 ]
-                [ h1 [] [ text "Loading ..." ]
+                [ h1 [ css [ color theme.palette.white ] ] [ text "Loading ..." ]
                 ]
 
 
@@ -416,7 +428,7 @@ myWordsView model =
                 [ css
                     [ marginTop (px 125) ]
                 ]
-                [ h1 [] [ text "You can click on the bookmark icon on word definitions to save them!" ]
+                [ h1 [ css [ color theme.palette.white ] ] [ text "You can click on the bookmark icon on word definitions to save them!" ]
                 ]
 
 

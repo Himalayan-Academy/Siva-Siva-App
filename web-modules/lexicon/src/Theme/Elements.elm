@@ -4,18 +4,24 @@ import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (classList, css, value)
 import Html.Styled.Events exposing (..)
-import Lexicon exposing (WordDefinition)
 import Theme.Colors exposing (..)
 
 
-navButton : List (Attribute msg) -> List (Html msg) -> Html msg
-navButton =
+navButton : Bool -> List (Attribute msg) -> List (Html msg) -> Html msg
+navButton isCurrentPage =
+    let
+        bgColor =
+            if isCurrentPage then
+                theme.button.active
+            else
+                theme.button.background
+    in
     styled button
         [ flex (int 1)
         , margin (px 2)
         , height (px 57)
         , fontSize (px 18)
-        , backgroundColor theme.button.background
+        , backgroundColor bgColor
         , borderStyle none
         , color theme.button.text
         , hover
@@ -71,7 +77,7 @@ headerTitle =
                 , margin zero
                 ]
             ]
-            [ text "A Hindu World of Adventure" ]
+            [ text "A Hindu Lexicon" ]
         ]
 
 
@@ -231,15 +237,5 @@ takeFurther =
                 , display block
                 ]
             ]
-            [ text "Take the adventure further!" ]
-        , hr
-            [ css
-                [ display block
-                , height zero
-                , border zero
-                , borderTop3 (px 2) solid theme.palette.lightBlue
-                , width (pct 10)
-                ]
-            ]
-            []
+            [ text "Go for a word adventure:" ]
         ]
