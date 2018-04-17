@@ -53,29 +53,6 @@ on openstack
    
 end openstack
 
--- on opencard
---        # this is the script for the card, this does more that ListerSelect
---    # 
---    put the short name of this card into tCardName
---    switch tCardName
---       case "listen-collection"
---          show grc "card-indicator-coll"
---          hide grc "card-indicator-browse"
---          hide grc"card-indicator-mymusic"
---          break
---       case "listen-browse"
---          hide grc "card-indicator-coll"
---          show grc "card-indicator-browse"
---          hide grc "card-indicator-mymusic"
---          break
---       case "listen-my-music"
---          hide grc "card-indicator-coll"
---          hide grc "card-indicator-browse"
---          show grc "card-indicator-mymusic"
---          break
-
---    end switch
--- end opencard
 
 command selectPlaylist pSelection
 
@@ -190,6 +167,7 @@ on playList_FetchData tColl,tPlay
 
    
    put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
+   put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
    # decides is cached on device, or from server and audio book
    # this param is used here... not sent to the database. 
    # get type of playlistL audio book, etc
@@ -233,7 +211,7 @@ on playList_FetchData tColl,tPlay
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into queryData["recordType"]
          put sPlayListQueryA["recordCount"] into queryData["recordcount"]
-         
+          
          put arrayToJson(queryData) into pJSON # from server
          
          put the ticks into sStartTimer
@@ -279,7 +257,8 @@ on playList_FetchData tColl,tPlay
          --put sPlaylistQueryA into tSearchA
          -- delete variable tSearchA["playlistClass"]  # don't pass this to the query
          --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
-         -- put tPlaylistClass into sCurrentPlayList["playlistClass"] 
+         
+          put tPlaylistClass into sCurrentPlayList["playlistClass"] 
          
          # so we have to fetch info from the server 
          
@@ -342,15 +321,7 @@ end playList_FetchData
 
 on  playlist_Instantiate sTargetPlayList    
    
-   
-   --    if (sTargetPlayList ="Songs" OR sTargetPlayList contains "Talks") AND  (sPlaylistQueryA["playListClass"] = "cached" ) then
-   --       set the vis of widget "revealMoreActions" to true
-   --    else
-   --        set the vis of widget "revealMoreActions" to false # just in case it's hanging around visible
-   --     end if    
-   
    # using: model_SivaSiva, which has functions to get json info we need:
-   
    
    switch sPlaylistQueryA["playlistClass"] 
       case "audiobook"
@@ -375,15 +346,14 @@ on  playlist_Instantiate sTargetPlayList
    go to card "listen-browse"
    
    hide fld "audioList"
-   put tTitles into fld "audioList" 
-   
+   put tTitles into fld "audioList"  
    put the number of lines of tTitles into pLineCount
    addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    show fld "audioList"
    
    # here is where we have to check to see if any files are stored locally or not
    
-  markCachedItems tKeys
+   markCachedItems tKeys
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
@@ -547,19 +517,7 @@ end closeStack
 --          ## Audio books:
 --          # for audio books; all we need to know the file ID, which is the folder name
 --          # after that it is a simple path set up.
---       case "Thon preopencard
-   # tweak the header for collections
-   repeat for each line z in (the childControlNames of group "listen-header") 
-      set the foregroundcolor of control z to 240,240,240
-   end repeat
-    set the width of grc "card-indicator" to  the width of fld "collections-label"
-   set the foregroundcolor of fld "collections-label"  to 218,217,255
-   put item 1 of the loc of fld "collections-label" into tIndHorz
-   put item 2 of the loc of grc "card-indicator" into tIndVert
-   set the loc of grc "card-indicator" to tIndHorz,tIndVert
-   hide fld "browse-label"
-end preopencard
-e Guru Chronicles" # Audio book
+--       case "The Guru Chronicles" # Audio book
 --          put "audiobook" into sPlaylistQueryA["playlistClass"] # from remote server
 --          put "the-guru-chronicles-audiobook" into sPlaylistQueryA["file_id"]
 --          break

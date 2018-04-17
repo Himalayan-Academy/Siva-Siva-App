@@ -217,7 +217,7 @@
     "collection-title": "Audio Book",
     "playLists": [
       {
-        "playListTitle": "The Guru Chroncles",
+        "playListTitle": "The Guru Chronicles",
         "playListImg": "audio-book_Guru_Chronicles_330.jpg",
         "playlistClass": "audiobook",
         "data_query": {
