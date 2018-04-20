@@ -6,16 +6,20 @@
 # DESCRIPTION
 # this behavior is the /modules/listen/listen.livecode stack script
 # It's primary function is to handle high level calls to get play lists
-# UI consist of 2 main cards
+# UI consist of 3 main cards
 # listen-collections - shows a catalog of songs built up on a 
 # collection.json for: it in be built from a development stack tools
 # listen-browse - Later for show in play list
+# listen-my-music  # for music that is no loaded
+#
 # So as not to over load this script the handlers whose scope deals with
 # user interaction with a single play list/ indivdtual songs are in a separate behavior 
+#
 # behavior_ListenSelectPlay
 # assigned to the listen-browse card
 #
-# PARAMS: Main variable sent to this script is a string which is the name/title of a playlist
+# PARAMS: Main variable sent to this script is a string JSONl list 
+#  which is the name/title of all the collections
 #
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
@@ -58,6 +62,10 @@ command selectPlaylist pSelection
 
    # use has  made choice from card 
    # get extract JSON from sCollectionA 
+   # which is an array that contain all collections
+   # the data we need to 
+   # the title and path to img file.
+   # you can rebuild the UI from the SivaSivaDec Tool.livecode stacks
    
    put the short name of pSelection into tPlayTarget
    
@@ -78,6 +86,8 @@ command selectPlaylist pSelection
       put item 2 of tPlayTarget into tPlay
    end if
    
+   # Link each separate process to a 
+   # specific handler
    playList_FetchData tColl,tPlay
    
 end selectPlaylist
@@ -85,18 +95,16 @@ end selectPlaylist
 -----------------------------------------------------
 # playlist_SetGetCurrent
 # DESCRIPTION:  the primary known variable is a string 
-# which is the list name, which is usually it's title
-# in V1 we are just picking this up from the portal link
-# as the Audio UI develops we can create more in this module space
-# we don't know later how this will develop, But regardless 
-# in any scenario we will want to be able to set and get this variable:
-# PARAMS: pass the playlist string, which should also serve as it's title (at least in V1)
-# Must be an exact match for the item in the portal dictionary: 
+# which taken from the json list on mouseup (see selectPlayList above
+#
+# PARAMS: pass the playlist string, which should also serve as it's title 
+# See the JSON for more detail on what is on the aray
 # see /models/model_SivaSiva/model_SivaSiva.json 
 # CHANGES: Created 2017-06-22 Brahmanathaswami
 ------------------------------------------------------
 
-
+# more need to set the playListLater
+# what we have a setter/getter here
 on playlist_SetCurrent pList  
    put pList into sTargetPlayList
 end playlist_SetCurrent
@@ -105,7 +113,12 @@ function playlist_GetCurrent
    return sCurrentPlayListA["playListTitle"]
 end playlist_GetCurrent
 
-function playlist_GetRecords  # use this to fetch data later for card behavior
+# we may need to fetch files later
+# so another function return the key listen to build everything
+# includes the metadata from the date base, the lyrics and the URL
+# use this to fetch data later for card behavior
+
+function playlist_GetRecords  
    if sCurrentPlayListA["audioFiles"] is empty then
       put "No records Fetched!"
    else
@@ -122,7 +135,8 @@ end playlist_GetRecords
 -- # 1. Remote list: send JSON to server we send JSON for remote list
 -- # 2.  Audiobook: build a path string and download index. json for audio books
 -- # 3. query the local dbase for already cached metadata in the Local Jnanam dbase
-
+-- # These are merged into a sPlaylistQueryA   array the we use pass date to the 
+-- # dbase handlers
 -- # we need max six criteria to search our metadata, not all playlists require all strings, 
 -- # but our query array will still have all these keys; use elements as needed
 -- # we will model that array into a json string or dbase query later
@@ -164,15 +178,26 @@ on playList_FetchData tColl,tPlay
    --  dispatch "cleanUpGui" to card "listen-browse"      
 
    put empty into sPlaylistQueryA 
-
+   
    
    put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
+
+   
    put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
+   
    # decides is cached on device, or from server and audio book
    # this param is used here... not sent to the database. 
+   # but use to determine how the query show go: the server, audio book, in the jnanam (local dbase_
    # get type of playlistL audio book, etc
-   
+  
+   # first we need action the array from the json able 
+   # everyhing in needs to create a query
+    
    put "recordType,recordCount" into tRecordTypeCount
+   
+   # remember: tColl and tPlay are drawn from the mouseups
+   # see the nomenclature for what the mouseup delivers on the objects
+   # in the project browers
    
    repeat for each item RT in tRecordTypeCount
       if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
@@ -188,19 +213,20 @@ on playList_FetchData tColl,tPlay
       end if
    end repeat
    
+   # now 
   
    # we get records now, from server, or local jnanam.
    # we are to each one based on where they come from
    
    switch tPlaylistClass
       case "latest" 
-         # we do a JSON Call  Hard wiring as a test for now. but we should later 
+         # we do a JSON Call  to the server
          # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
-         # we need because we can then use for different play lists on demand.. 
-         
+         # we need because we can then use for different play lists on demand..          
          # the sPlayListQueryA  has the values needed for the API... 
-         # API requires odd construct data: set the query;  recordtype/Count set up how many to return which are 
-         # different function in the API, SQL
+         # API requires construct data: set the query;  recordtype/Count  (we have set an number if the return
+         # set up how many to return which are 
+         # different function in the API, SQL ; Note look at the API2.livecode ; getItemRecords handler
          # e.g. required format need single quotes to go thru the API
          #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
@@ -253,15 +279,15 @@ on playList_FetchData tColl,tPlay
          end if
          # this should come from the local dBase,
          # but as of June 29, the local dBase is obsolete
-         
-         --put sPlaylistQueryA into tSearchA
-         -- delete variable tSearchA["playlistClass"]  # don't pass this to the query
-         --  put fetchMediaItems(tSearchA) into sCurrentPlayListA
+        
+         # we need pass the audio list of the main array
          
           put tPlaylistClass into sCurrentPlayList["playlistClass"] 
          
          # so we have to fetch info from the server 
-         
+          # this does not include a data base query other than the file id
+          # which get the URL and pull to TOC.json for the audio book.
+          
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
@@ -269,7 +295,6 @@ on playList_FetchData tColl,tPlay
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            -- close this stack
             exit to top
          else 
             put it into tRecords 
@@ -366,7 +391,7 @@ command markCachedItems pKeys
       # this as good a place as any to check for the existence of files  
       # and get the URL for every one in the play list... so we only do this once.
       put getItemURL(x) into pURL
-     # Check and create folders here
+      # Check and create folders here
       put path_isFileOnDisk(pURL) into tLocalStatus
       put item 1 of tLocalStatus into tIsCached
       put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
@@ -378,9 +403,11 @@ command markCachedItems pKeys
          put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
       end if
    end repeat
-   repeat for each line y in tCachedFiles
-      set the foregroundcolor of line y of fld "audioList" to green
-   end repeat
+   if the short name of this card is "listen-browse" then
+      repeat for each line y in tCachedFiles
+         set the foregroundcolor of line y of fld "audioList" to green
+      end repeat
+   end if
 end markCachedItems
 
 function getItemURL pRecordNum

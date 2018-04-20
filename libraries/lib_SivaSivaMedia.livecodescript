@@ -5,105 +5,24 @@ name: lib_SivaSivaMedia
 type: library
 version: 0.2
 
-/*
-Moved from frontscript
-*/
-
 --> Variables
 -
 local sMediaMetaA,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
 
-command checkThisScriptIsInMsgPath
-   answer "Yes, I'm here. You found me" with "OK"
-end checkThisScriptIsInMsgPath
- 
- 
- --> FETCH RANDOM
- -
- # MODEL FOR CALL TO API
- 
- #the httpheaders to "content-type: application/json"
- #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
- 
- 
-command _old_fetchRandomMediaItem pSelectParams
-   
-   --   #The selection Params are passed down from the calling command as quoted strings 
-   --   # each set of two = column + value
-   --   # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
-   --   # assuming there is a match.. check HAPMAN for criteria you can use
-   --   # TBD: categories?  how to pass one to the API?
-   --   # the CURL call wants to pass this as JSON in a single "data" object like this:
-   --   # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
-   --   # so we have to build that from incoming params
-   
-   --   repeat with x = 1 to the number of items of pSelectParams
-   --     if (x mod 2) <> 0 then next repeat
-   --     put  item (x -1) of pSelectParams into y
-   --     put item x of pSelectParams  into pSelect["data"][y]
-   --   end repeat
-   --   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
-   --   set the httpheaders to "content-type: application/json"
-   
-   --   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
-   --   --put the result
-   --   put it into tMediaMeta
-   --   if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
-   --      put empty into sMediaMetaA
-   --   end if
-   
-   --   # if you want to see what you are getting
-   --   # uncomment this line:
-   --   # put tMediaMeta
-   
-   --   try
-   --     put jsonImport(tMediaMeta) into sMediaMetaA
-   --   catch tErr
-   --     logError tErr
-   --   end try
-   -- end fetchRandomMediaItem
-   
-   #### ABOVE CALLS THE API ON THE SERVER
-   #### BELOW WE USE THE LOCAL DATABASE
-   
-   
-   put char 2 to -2 of word 2 of the params into tColumn
-   
-   put item 2 of params() into tValue
-   put "%" after char 1 of tValue
-   put "%" before char -1 of tValue
-   
-   # very bad form... need something better!
-   # problem is I am hard wiring a single SQL query option here
-   # with only as single column/value pair
-   # model for SQL
-   # this only takes one column/value pair... media type
-   
-   put format ("SELECT  * FROM item WHERE :1 LIKE :2  ORDER BY RANDOM() LIMIT 1") into tSQL
-   replace ":1" with tColumn in tSQL
-   replace ":2" with tValue in tSQL
-   put  JnanamDB() into tConnectionID
-   dbSetSQL tSQL
-   put dbGet("item", tConnectionID) into aSelectedItem
-   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into sMediaMetaA["item_id"]
-   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into sMediaMetaA["approved_for_public"] 
-   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into sMediaMetaA["file_id"]
-   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into sMediaMetaA["media_type"]
-   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into sMediaMetaA["date_created"]
-   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into sMediaMetaA["genre"]
-   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into sMediaMetaA["deity"]
-   put textDecode ( aSelectedItem[1]["title"], UTF8)  into sMediaMetaA["title"]
-   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into sMediaMetaA["sub_title"] 
-   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into sMediaMetaA["artists"]
-   put textDecode ( aSelectedItem[1]["author"], UTF8)  into tAuthor
-   # deal with extra cr in this field
-   put line 1 of tAuthor into sMediaMetaA["author"]
-   put textDecode ( aSelectedItem[1]["description"], UTF8)  into sMediaMetaA["description"]
-   
-   getformatData (sMediaMetaA["item_id"])
-end _old_fetchRandomMediaItem
+on ___LOCAL_Dbase
+end ___LOCAL_Dbase
 
-function fetchRandomMediaItem
+##################### 
+--> FETCH RANDOM
+-- the local "sMediaMetaA"
+-- will always have the last record 
+-- will check in data base for
+-- This handler depending to param
+--  PARAMETERS
+-- users are double pair such as "media_type,audio,artist,Manivelu"
+-- assume the pair match columns the dbase
+
+command fetchRandomMediaItem
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -125,30 +44,10 @@ function fetchRandomMediaItem
    put tRetValA into sMediaMetaA
 end fetchRandomMediaItem
 
-----------------------------------------------------------------------------------
-# metadata_SetRecord
-#
-# DESCRIPTION: This library model data related to media
-# It want primarily an array of records or an array for a single record
-# from the item Table
-# this could come froma function that fetches remote data
-# it could come from the local dbase
-# once we have it, then we can model it and return as needed from this library
-#
-# PARAMS: Pass an item record array here from another stack
-# 
-# CHANGES: CREATED, 2017-06-22. Brahmanathaswami
+############################
+--> FETCHMEDIAITEM
+-- all record the match a query
 
-----------------------------------------------------------------------------------
-
-on metadata_SetRecord pRecordArray
-   # this only sets and array of from the item table
-   # for formats and lyrics etc you have do use a different function.
-   put pRecordArray into sMediaMetaA
-end metadata_SetRecord
-
---> FETCH ALL RECORDS THAT MATCH
-# 
 function fetchMediaItems tSearchA
    #Typically we are no passing and explicitlist
    # but a pre-set array   
@@ -160,36 +59,8 @@ function fetchMediaItems tSearchA
       end if
    end repeat
    put dbGet("item", tConnectionID) into selectedItemsA
-   -- put selectedItemsA[1] into tRetValA
-   --    repeat for each key k in tRetValA
-   --       put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
-   --    end repeat
-   --    put tRetValA into sMediaMetaA
-   --  return sMediaMetaA
    return selectedItemsA
 end fetchMediaItems
-
-
-
-function fetchRemoteMediaItems
-   if the paramcount mod 2 is not 0 then
-      return "err: param count needs to be even"
-   end if
-   
-   # we need to pass params to the API on the server to look up 
-   # a record that we know has  not have yet been bundled with the app in the Jnanam dbase
-   # mostly this is for most recent additions of audio and video, or book additions
-   # for major collections we should be updating the app with a fresh dump of the dbase
-   
-   # need a function to check latest date in local Jnanam sqlLite dbase.
-   
-   
-   
-   #the httpheaders to "content-type: application/json"
-   #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
-   
-   
-end fetchRemoteMediaItems
 
 -----------------------------------------------------------
 -- fetchRandomImageAsset
@@ -220,25 +91,27 @@ function fetchRandomImageAsset pCollection
    return tPath
 end fetchRandomImageAsset
 
-command getRandomVideo
-   if isMobile() then
-      deleteMobileControl "audioPlayer" # in case one is open already and playing
-   end if
-    put fetchRandomMediaItem ("media_type","video") into GotIt
-    # the above just fetches a record from the item table 
-    # to get the path or URL we have to query the format table:
-    put getMediaURL ("url") into sURL
-    portal_GoUrl sURL
-end getRandomVideo
+
+#############
+--> GETMEDIAURL
+-- assume we have the sMediaMetaA set
+-- this function fetch to remote base on our CMS
+-- if it audio book, we will go the folder
+-- the case local URL, we just use specialPathDocuments()
+-- the replaces the absolute URL
+-- AS of April 20 with had only audio, art, vidoe
+-- eventually need to do books.
+-- the URL targets  the item.formats table
+-- these function call the CMS folder functions beow.
 
 function getMediaURL pFormat # usually 1... but extract as item to in case more are passed
    if pFormat = "audioBook" then
       return "https://www.himalayanacademy.com/media/audio/books/"
       exit getMediaURL
    end if
-   
       
    put sMediaMetaA["media_type"] into pMediaType
+   
    getformatData (sMediaMetaA["item_id"])
    # each media type will entail a different path on the /media directory 
    switch 
@@ -273,6 +146,15 @@ function getSongLyrics pItemID
       if it is not empty then put it into sMediaMetaA[x] 
    end repeat
 end getSongLyrics
+
+
+#########################
+--> GETMEDIAITEMMETADATA
+-- the local sMediaMetaA has all the data from the data base
+-- here turn into individual varible to display
+-- this is primarily used to the audio model
+-- the return a string that has all data referring to the MP3
+-- which we show when use to read of.
 
 function getMediaItemMetadata pRecords
    if pRecords is not empty then
@@ -323,6 +205,15 @@ function getMediaItemMetadata pRecords
    
 end getMediaItemMetadata
   
+#############
+# GetFormatData
+## use this to get the format for records
+## the format depend on media type: 
+## Art:  you are dimensions
+## Books: get you the different epubs
+## audio: get the name of the audio file
+## study the data base  design to find our more  
+
 command getformatData pItemID
    put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL
    put  JnanamDB() into tConnectionID
@@ -330,120 +221,70 @@ command getformatData pItemID
    put dbGet("item_format", tConnectionID) into aSelectedItemFormats   
 end getformatData
 
-   
-   # the whole html text thing is breaking everything!
-   
-   --   repeat for each item x in tFields
-   --      if x <> empty then
-   --         switch 
-   --            case x = tTitle
-   --               put (htmlTagger (bold,tTitle) ) &"<br>" & cr after tViewData
-   --               break
-   --            case x = tSubTitle
-   --               put (htmlTagger (bold,tSubTitle) ) &"<br>" & cr after tViewData
-   --               break
-   --            case x = tArtists
-   --               put (htmlTagger (bold,tArtists) ) &"<br>" & cr after tViewData
-   --               break
-   --            case  x= tAuthor
-   --               put (htmlTagger (bold,tAuthor) ) &"<br>" & cr after tViewData
-   --               break
-   --            case x = tDateCreated
-   --               put (htmlTagger (bold,tDateCreated) ) &"<br><br >" & cr after tViewData
-   --               break
-   --            case  x= tDescription
-   --               put tDescription  & cr after tViewData # plain text
-   --         end switch
-   --      end if
-   --      end repeat
-   --      put "</p>" & cr& cr after tViewData
-   
-function htmlTagger pStyle,  pText
-   put "<#S#>#T#</#S#>" into tMarkedUp
-   switch pStyle
-      case "bold"
-         put "b" into tTag
-         break
-      case "italic"
-         put "i" into tTag
-         break
-      case "h1"
-         put "h1" into tTag
-         break
-      case "h2"
-         put "h2" into tTag
-         break
-      case "h3"
-         put "h3" into tTag
-         break
-   end switch
-   replace "#S#" with tTag in tMarkedup
-   replace "#T#" with pText in tMarkedUp
-   return tMarkedUp
-   
-end htmlTagger
+# metadata_SetRecord
+#
+# DESCRIPTION: This library model data related to media
+# It want primarily an array of records or an array for a single record
+# from the item Table
+# this could come froma function that fetches remote data
+# it could come from the local dbase
+# once we have it, then we can model it and return as needed from this library
+#
+# PARAMS: Pass an item record array here from another stack
+# 
+# CHANGES: CREATED, 2017-06-22. Brahmanathaswami
 
-## Need a better function here.. this method loses data
-## we need to just target the tags and leave enclosed strings.
+----------------------------------------------------------------------------------
 
-function stripHTML pText
-   set the htmlText of the templateField to pText
-   put the text of the  templateField into tPlainText
-   reset the templateField
-   return tPlainText
-end stripHTML
+on metadata_SetRecord pRecordArray
+   # this only sets and array of from the item table
+   # for formats and lyrics etc you have do use a different function.
+   put pRecordArray into sMediaMetaA
+end metadata_SetRecord
 
 
+#################
 
----> ## ART PATHFINDER
+on ___VIDEO
+end ___VIDEO
 
-## need a switch here for top level media type
+##########################################################
+## VIDEO PRESENTATION UTILITIES
+##########################################################
 
+# this just get a video URL as passed it directly to the view stack
 
-function folderForArt pBestFormat
-   
-   put "media/art/" into pServerPath
-   
-   # Art is divided into categories represented by sub-directories on the server
-   # we need to parse the media_type to get the folder
-   
-   set the itemdel to "/" 
-   put item 2 of sMediaMetaA["media_type"] into tArtDirectory
-   put tArtDirectory & "/" after pServerPath
-   
-   # unlike audio, there are no further sub-directories so we can go directly to the fileID
-   put  sMediaMetaA["file_id"]  &"/" after pServerPath
-   
-   # "pBestformat" species the size, typically we just want either med or large
-   # pass this from your card script based on your view requirements
-   # this script must be agnostic.
-   # lots of the art varies 
-   # and many use cases will use it very small
-   # you need to know your collection to make the right choise
-   # sml and thm have been cropped to a small horizontal format, even for native portrait orientation
-   #sml is useful because the ratio is always the same: 
-   
-   
-   repeat for each key x in aSelectedItemFormats
-      put aSelectedItemFormats[x]["filename"] into tFilename
-      if  tFilename contains ("_" & pBestFormat) then
-         put tFilename after pServerPath
-         exit repeat
-      end if
-      end repeat
-      return pServerPath
-   end  folderForArt
+command getRandomVideo
+   if isMobile() then
+      deleteMobileControl "audioPlayer" # in case one is open already and playing
+   end if
+    put fetchRandomMediaItem ("media_type","video") into GotIt
+    # the above just fetches a record from the item table 
+    # to get the path or URL we have to query the format table:
+    put getMediaURL ("url") into sURL
+    portal_GoUrl sURL
+ end getRandomVideo
+ 
+ 
+# convert incoming URL from the formats table in the Jnanam database
+# URL are stored in this form:
+# "http://www.youtube.com/watch?v=T6mwoO9sXPI&feature=youtube_gdata_player"
 
-command insertImageDimensions pImage
-   put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
-end insertImageDimensions
+function convertYouTubeURL pURL
+    set the itemdel to "?"
+    put item 2 of pURL into tQueryString
+    split tQueryString with "&" and "="
+    return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
+end convertYouTubeURL
 
 
+####################
+on ___UTILITIES
+end ___UTILITIES
 
-function getRectOfCurrentGrc
-  return sCurrentGraphicRect
-end getRectOfCurrentGrc
-
+----------------------------------------------------------------------------------
+## Here are handlers which know our CMS
+## and can return for proper folder with media lives
 
 ---> AUDIO PATHFINDER
 
@@ -484,12 +325,60 @@ function folderForAudio pMediaType
          end switch
          put tYear & "/" after tServerPath	
          break	
-
+         
    end switch
    put sMediaMetaA["file_id"] & "/" after tServerPath
-put aSelectedItemFormats["1"]["filename"] after tServerPath
+   put aSelectedItemFormats["1"]["filename"] after tServerPath
    return tServerPath
 end folderForAudio
+
+
+---> ## ART PATHFINDER
+
+function folderForArt pBestFormat
+   
+   put "media/art/" into pServerPath
+   
+   # Art is divided into categories represented by sub-directories on the server
+   # we need to parse the media_type to get the folder
+   
+   set the itemdel to "/" 
+   put item 2 of sMediaMetaA["media_type"] into tArtDirectory
+   put tArtDirectory & "/" after pServerPath
+   
+   # unlike audio, there are no further sub-directories so we can go directly to the fileID
+   put  sMediaMetaA["file_id"]  &"/" after pServerPath
+   
+   # "pBestformat" species the size, typically we just want either med or large
+   # pass this from your card script based on your view requirements
+   # this script must be agnostic.
+   # lots of the art varies 
+   # and many use cases will use it very small
+   # you need to know your collection to make the right choise
+   # sml and thm have been cropped to a small horizontal format, even for native portrait orientation
+   #sml is useful because the ratio is always the same: 
+   
+   
+   repeat for each key x in aSelectedItemFormats
+      put aSelectedItemFormats[x]["filename"] into tFilename
+      if  tFilename contains ("_" & pBestFormat) then
+         put tFilename after pServerPath
+         exit repeat
+      end if
+      end repeat
+      return pServerPath
+   end  folderForArt
+
+command insertImageDimensions pImage
+   put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
+end insertImageDimensions
+
+
+function getRectOfCurrentGrc
+  return sCurrentGraphicRect
+end getRectOfCurrentGrc
+
+
 
 ##########################################################
 ## IMAGE PROCESSING METHODS
@@ -571,20 +460,8 @@ on toggleImgSize pImage, pFullSize, pTargetSize
 
 end toggleImgSize
 
-##########################################################
-## VIDEO PRESENTATION UTILITIES
-##########################################################
 
-# convert incoming URL from the formats table in the Jnanam database
-# URL are stored in this form:
-# "http://www.youtube.com/watch?v=T6mwoO9sXPI&feature=youtube_gdata_player"
 
-function convertYouTubeURL pURL
-    set the itemdel to "?"
-    put item 2 of pURL into tQueryString
-    split tQueryString with "&" and "="
-    return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
-end convertYouTubeURL
 
 command checkMetaBackScript pMsg
    answer "got it" with pMsg
@@ -682,4 +559,151 @@ on addSpaceBelowListLines pField, pLineCount, pSpace
    unlock screen
 end addSpaceBelowListLines
 
+  
+function htmlTagger pStyle,  pText
+   put "<#S#>#T#</#S#>" into tMarkedUp
+   switch pStyle
+      case "bold"
+         put "b" into tTag
+         break
+      case "italic"
+         put "i" into tTag
+         break
+      case "h1"
+         put "h1" into tTag
+         break
+      case "h2"
+         put "h2" into tTag
+         break
+      case "h3"
+         put "h3" into tTag
+         break
+   end switch
+   replace "#S#" with tTag in tMarkedup
+   replace "#T#" with pText in tMarkedUp
+   return tMarkedUp
+   
+end htmlTagger
 
+## Need a better function here.. this method loses data
+## we need to just target the tags and leave enclosed strings.
+
+function stripHTML pText
+   set the htmlText of the templateField to pText
+   put the text of the  templateField into tPlainText
+   reset the templateField
+   return tPlainText
+end stripHTML
+
+
+
+command checkThisScriptIsInMsgPath
+   answer "Yes, I'm here. You found me" with "OK"
+end checkThisScriptIsInMsgPath
+ 
+#####################
+on _____Deprecated
+end _____Deprecated
+
+function fetchRemoteMediaItems
+   if the paramcount mod 2 is not 0 then
+      return "err: param count needs to be even"
+   end if
+   
+   # we need to pass params to the API on the server to look up 
+   # a record that we know has  not have yet been bundled with the app in the Jnanam dbase
+   # mostly this is for most recent additions of audio and video, or book additions
+   # for major collections we should be updating the app with a fresh dump of the dbase
+   
+   # need a function to check latest date in local Jnanam sqlLite dbase.
+   
+   
+   
+   #the httpheaders to "content-type: application/json"
+   #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   
+   
+end fetchRemoteMediaItems
+
+ # MODEL FOR CALL TO API
+ 
+ #the httpheaders to "content-type: application/json"
+ #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
+ 
+ 
+command _old_fetchRandomMediaItem pSelectParams
+   
+   --   #The selection Params are passed down from the calling command as quoted strings 
+   --   # each set of two = column + value
+   --   # e.g. "media_type", "audio", "tags","Bodhinatha"  the API uses %LIKE% so partial strings work
+   --   # assuming there is a match.. check HAPMAN for criteria you can use
+   --   # TBD: categories?  how to pass one to the API?
+   --   # the CURL call wants to pass this as JSON in a single "data" object like this:
+   --   # "data": {"media_type": "art/photography","tags":"Bodhinatha"}
+   --   # so we have to build that from incoming params
+   
+   --   repeat with x = 1 to the number of items of pSelectParams
+   --     if (x mod 2) <> 0 then next repeat
+   --     put  item (x -1) of pSelectParams into y
+   --     put item x of pSelectParams  into pSelect["data"][y]
+   --   end repeat
+   --   put JsonExport(pSelect) into tJsonQuery # now properly formed for the POST
+   --   set the httpheaders to "content-type: application/json"
+   
+   --   POST tJsonQuery to URL "http://dev.himalayanacademy.com/api3/getrandomitem/json"
+   --   --put the result
+   --   put it into tMediaMeta
+   --   if (tMediaMeta is empty) OR (tMediaMeta contains "Internal Server Error") then
+   --      put empty into sMediaMetaA
+   --   end if
+   
+   --   # if you want to see what you are getting
+   --   # uncomment this line:
+   --   # put tMediaMeta
+   
+   --   try
+   --     put jsonImport(tMediaMeta) into sMediaMetaA
+   --   catch tErr
+   --     logError tErr
+   --   end try
+   -- end fetchRandomMediaItem
+   
+   #### ABOVE CALLS THE API ON THE SERVER
+   #### BELOW WE USE THE LOCAL DATABASE
+   
+   
+   put char 2 to -2 of word 2 of the params into tColumn
+   
+   put item 2 of params() into tValue
+   put "%" after char 1 of tValue
+   put "%" before char -1 of tValue
+   
+   # very bad form... need something better!
+   # problem is I am hard wiring a single SQL query option here
+   # with only as single column/value pair
+   # model for SQL
+   # this only takes one column/value pair... media type
+   
+   put format ("SELECT  * FROM item WHERE :1 LIKE :2  ORDER BY RANDOM() LIMIT 1") into tSQL
+   replace ":1" with tColumn in tSQL
+   replace ":2" with tValue in tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet("item", tConnectionID) into aSelectedItem
+   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into sMediaMetaA["item_id"]
+   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into sMediaMetaA["approved_for_public"] 
+   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into sMediaMetaA["file_id"]
+   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into sMediaMetaA["media_type"]
+   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into sMediaMetaA["date_created"]
+   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into sMediaMetaA["genre"]
+   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into sMediaMetaA["deity"]
+   put textDecode ( aSelectedItem[1]["title"], UTF8)  into sMediaMetaA["title"]
+   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into sMediaMetaA["sub_title"] 
+   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into sMediaMetaA["artists"]
+   put textDecode ( aSelectedItem[1]["author"], UTF8)  into tAuthor
+   # deal with extra cr in this field
+   put line 1 of tAuthor into sMediaMetaA["author"]
+   put textDecode ( aSelectedItem[1]["description"], UTF8)  into sMediaMetaA["description"]
+   
+   getformatData (sMediaMetaA["item_id"])
+end _old_fetchRandomMediaItem
