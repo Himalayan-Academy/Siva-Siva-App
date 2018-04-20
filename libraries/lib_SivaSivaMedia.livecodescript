@@ -22,7 +22,7 @@ end ___LOCAL_Dbase
 -- users are double pair such as "media_type,audio,artist,Manivelu"
 -- assume the pair match columns the dbase
 
-command fetchRandomMediaItem
+function fetchRandomMediaItem
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -605,31 +605,6 @@ end checkThisScriptIsInMsgPath
 on _____Deprecated
 end _____Deprecated
 
-function fetchRemoteMediaItems
-   if the paramcount mod 2 is not 0 then
-      return "err: param count needs to be even"
-   end if
-   
-   # we need to pass params to the API on the server to look up 
-   # a record that we know has  not have yet been bundled with the app in the Jnanam dbase
-   # mostly this is for most recent additions of audio and video, or book additions
-   # for major collections we should be updating the app with a fresh dump of the dbase
-   
-   # need a function to check latest date in local Jnanam sqlLite dbase.
-   
-   
-   
-   #the httpheaders to "content-type: application/json"
-   #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
-   
-   
-end fetchRemoteMediaItems
-
- # MODEL FOR CALL TO API
- 
- #the httpheaders to "content-type: application/json"
- #POST "{'data': {'media_type': 'art/photography','tags':'Bodhinatha'}}" to URL #\"http://dev.himalayanacademy.com/api3/getrandomitem/json"
- 
  
 command _old_fetchRandomMediaItem pSelectParams
    
