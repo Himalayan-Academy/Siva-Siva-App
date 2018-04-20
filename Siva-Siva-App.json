@@ -24,6 +24,7 @@
     {"name": "behavior_GemsQuotes", "file": "modules/gems/behavior_GemsQuotes.livecodescript"},
     {"name": "behavior_ListenSelectPlay", "file": "modules/listen/behavior_ListenSelectPlay.livecodescript"},
     {"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
+    {"name": "behavior_MyAudio", "file": "modules/listen/behavior_MyAudio.livecodescript"},
     {"name": "behavior_Journal", "file": "modules/journal/behavior_Journal.livecodescript"},
     {"name": "behavior_JournalListView", "file": "modules/journal/behavior_JournalListView.livecodescript"},
     {"name": "behavior_ItemTemplate", "file": "modules/journal/behavior_ItemTemplate.livecodescript"},

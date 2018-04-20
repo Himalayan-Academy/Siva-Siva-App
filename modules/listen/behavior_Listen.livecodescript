@@ -71,8 +71,8 @@ command selectPlaylist pSelection
    
    # first - card navigition
    
-   if tPlaytarget contains "my-music" then
-      go to card "listen-my-music"
+   if tPlaytarget contains "my-audio" then
+      go to card "listen-my-audio"
       exit selectPlayList
    end if
    

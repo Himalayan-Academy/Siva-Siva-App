@@ -70,8 +70,8 @@ on mouseup
       case "collections-label"
          go to card "listen-collection"
          break
-      case "my-music-label"
-         go to card "listen-my-music"
+      case "my-audio-label"
+         go to card "listen-my-audio"
          break
       case "AudioList"
          put word 2 of clickline() into sSelectNum
