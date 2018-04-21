@@ -14,7 +14,7 @@ on mouseUp
       case "audioList"
          put word 2 of clickline() into sSelectNum
          put value(the clickline) into pTitle
-          passAudioSelection(sSelectNum, pTitle)
+          passAudioSelection sSelectNum, pTitle
          break
    end switch
 end mouseUp
