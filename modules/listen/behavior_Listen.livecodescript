@@ -369,8 +369,8 @@ on  playlist_Instantiate sTargetPlayList
    
    hide fld "audioList"
    put tTitles into fld "audioList"  
-   put the number of lines of tTitles into pLineCount
-   addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
+  -- put the number of lines of tTitles into pLineCount
+ --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    show fld "audioList"
    
    # here is where we have to check to see if any files are stored locally or not

@@ -585,16 +585,17 @@ function htmlTagger pStyle,  pText
    
 end htmlTagger
 
-function normalizeFiletoTitle pFile
+function normalizeFiletoTitle  pTitle
    set the itemdel to "."
-   delete item -1 of pFile
-   replace "-" with space in pFile
-   replace "_" with ", " in pFile
-   --    repeat with x  = 1 to (the number of words in pFile)
-   --     put  toUpper(char 1 of word x in pFile) after tTitle
-   --    end repeat
-   return pFile
-   
+   if the number items in pTitle > 1 then 
+      delete item -1 of  pTitle
+   end if
+   replace "-" with space in  pTitle
+   replace "_" with ", " in  pTitle
+   repeat with i  = 1 to (the number of truewords in  pTitle)
+      put toupper(char 1 of trueword i of pTitle) into char 1 of trueword  i of  pTitle
+   end repeat
+   return  pTitle
 end normalizeFiletoTitle
 
 ## Need a better function here.. this method loses data

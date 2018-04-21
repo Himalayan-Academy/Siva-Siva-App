@@ -1,17 +1,15 @@
-﻿script "behavior_MyAudio"
+﻿script "behavior_MyAudio" with behavior "behavior_ListenUI"
 local sDownloadedAudioA
-
-
-on preopencard
-
-end preopencard
 
 on openCard
    getDownloadedAudio
 end openCard
 
+on passAudioSelection pLine,pTitle
+   startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
+end passAudioSelection
+
 command getDownloadedAudio
-   hide fld "audioList"
    put empty into sDownloadedAudioA
    # do directory walk of the media/audio folder
    
@@ -41,7 +39,8 @@ command getDownloadedAudio
       end if
       put sDownloadedAudioA[x][metadata][1]["title"] into aTitle
       if aTitle is empty then 
-         put sDownloadedAudioA[x][file_id] after sTitles
+         put sDownloadedAudioA[x][file_id] into aTitle
+         put normalizeFileToTitle(aTitle) after sTitles
       else 
          put aTitle after sTitles
       end if
@@ -66,11 +65,8 @@ end getDownloadedAudio
 
 
 command loadtitles sTitles
-
    put sTitles into fld "audioList"  
    put the number of lines of sTitles into pLineCount
-   addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
-   show fld "audioList"
 end loadtitles
 
 #  ======

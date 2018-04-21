@@ -1,4 +1,4 @@
-﻿script "behavior_ListenSelectPlay"
+﻿script "behavior_ListenSelectPlay" with behavior "behavior_ListenUI"
 
 ---------------------------------------------------------------------
 # behavior_ListenSelectPlay
@@ -160,57 +160,11 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       showBusyIndicator false
       exit to top
    end if
-   startPlayer
+   startPlayer sSelectedURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
    Journal_AddEntry  sSelectedItemA["item_id"]
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
-
-command startPlayer pURL, pTitle
-   
-   if sSelectedURL contains "https" then # we need connectivity
-      if connectivity_PingServer()<>"true" then
-         dialog_CustomMsg "Offline or Low Bandwidth"
-         exit startPlayer
-      end if
-   end if
-   
-   --    if there is a group  "share-ui" then
-   --       delete group "share-ui"
-   --    end if
-   
-   
-   if isMobile() then
-      if the platform is "android" then 
-         # the player is pretty ugly and covers up 120 vertical px
-         # we need to try to get it to fit nicely at the bottom:
-         put 70,625,350,659 into tRect       
-      else 
-         put empty into tRect
-      end if     
-      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
-   else
-      set the filename of player "audioPlayer" to sSelectedURL
-   end if
-   
-   showPlayer "true", "audioPlayer"
-   if not isMobile() then 
-      start player "audioPlayer"
-   else
-      setMobileAudioPlayer "audioPlayer", "play"
-   end if
-   
-   showBusyIndicator false
-   put  sSelectedItemA["title"] into fld "currentTitleLabel"
-   
-   # Android player covers it! Because the controller higher that iOS one.
-   if the platform is "Android" then
-      set the bottom of fld "currentTitleLabel" to 600
-   end if
-   set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
-   
-end startPlayer
-
 
 # V2 Link to transcript
 
