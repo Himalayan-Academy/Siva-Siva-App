@@ -30,14 +30,22 @@ command getDownloadedAudio
    
    # first look in the dates base
    
-   repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)
+   repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)  
+      if  sDownloadedAudioA[x][file_id] contains "-audiobook" then
+         # get in from file names
+         set the itemdel to "/"
+         put  item -1 of sDownloadedAudioA[x][localURL] into aTitle
+         put normalizeFileToTitle(aTitle) after sTitles
+         put cr after sTitles
+         next repeat
+      end if
       put sDownloadedAudioA[x][metadata][1]["title"] into aTitle
       if aTitle is empty then 
          put sDownloadedAudioA[x][file_id] after sTitles
       else 
          put aTitle after sTitles
       end if
-      put cr after sTitles
+        put cr after sTitles
       
    end repeat
    

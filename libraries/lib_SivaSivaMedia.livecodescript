@@ -585,6 +585,18 @@ function htmlTagger pStyle,  pText
    
 end htmlTagger
 
+function normalizeFiletoTitle pFile
+   set the itemdel to "."
+   delete item -1 of pFile
+   replace "-" with space in pFile
+   replace "_" with ", " in pFile
+   --    repeat with x  = 1 to (the number of words in pFile)
+   --     put  toUpper(char 1 of word x in pFile) after tTitle
+   --    end repeat
+   return pFile
+   
+end normalizeFiletoTitle
+
 ## Need a better function here.. this method loses data
 ## we need to just target the tags and leave enclosed strings.
 
