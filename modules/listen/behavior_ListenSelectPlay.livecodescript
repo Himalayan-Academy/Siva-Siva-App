@@ -19,7 +19,7 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-
+global sConfigA
 local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget
 
 on preopencard
@@ -54,6 +54,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
+   --answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
    # all logic for user interaction with the GUI is handled here.
@@ -74,35 +75,45 @@ on mouseup
          go to card "listen-my-audio"
          break
       case "AudioList"
+         repeat with x=1 to (the number lines of fld "audioList")
+            set the textcolor of line x of fld "audioList" to "white"
+         end repeat
          put word 2 of clickline() into sSelectNum
-         select_Play # will use either the line number or item id
-         break  
-      case "chevron-up-down" # this is simple enough to do here
-         put the vis of fld "audioDetails" into detailVis
-         if detailVis then
-            deleteMobileControl "audioDetails"
-            hide fld "audioDetails" with visual effect wipe down very fast
-            send  "CreateScroller audioList" to fld "audioList"
-         else
-            select_ShowDetails 
+         put sSelectNum into tLineNum
+         if (tLineNum mod 2) = 0 then
+            subtract 1 from tLineNum
          end if
-         set the flipped of pTarget to not detailVis
-         break
-      case "DownloadSelection" 
-         if connectivity_PingServer() <> "true" then
-            dialog_CustomMsg "Offline or Low Bandwidth"
-            exit mouseup
-         end if
-         downloadSelection pTarget
-         break
-      case "revealMoreActions"
-         put not (the vis of grp "moreActions") into pVis
-         deleteMobileControl "audioPlayer" 
-         # Required by Android to let the card work as expected
-         # and we assume user won't mind the player stopping if they are going to search.
-         revealMoreActions pVis
-         break
-   end switch
+      set the textcolor of line tLineNum of fld "audiolist" to "green"
+      put round(sSelectNum/2) into sSelectNum      
+      select_Play # will use either the line number or item id
+      break  
+   case "chevron-up-down" # this is simple enough to do here
+      put the vis of fld "audioDetails" into detailVis
+      if detailVis then
+         deleteMobileControl "audioDetails"
+         hide fld "audioDetails" with visual effect wipe down very fast
+         send  "CreateScroller audioList" to fld "audioList"
+      else
+         select_ShowDetails 
+      end if
+      set the flipped of pTarget to not detailVis
+      break
+   case "DownloadSelection" 
+      if connectivity_PingServer() <> "true" then
+         dialog_CustomMsg "Offline or Low Bandwidth"
+         exit mouseup
+      end if
+      downloadSelection pTarget
+      break
+   case "revealMoreActions"
+      put not (the vis of grp "moreActions") into pVis
+      deleteMobileControl "audioPlayer" 
+      # Required by Android to let the card work as expected
+      # and we assume user won't mind the player stopping if they are going to search.
+      revealMoreActions pVis
+      break
+end switch
+-- pass mouseUp
 end mouseup
 
 ---------------------------------------------
@@ -136,7 +147,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if pItemID is empty then # search from the click line
       put getItemURL(sSelectNum) into sRemoteURL
       Put "Connecting..." into fld "currentTitleLabel"
-      playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+ --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
       put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
@@ -156,7 +167,6 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
-      send mouseUp to widget "chevron-up-down"
       showBusyIndicator false
       exit to top
    end if
@@ -246,6 +256,8 @@ command downloadAffirmed
    else
       put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
+   put "listen" into sConfigA[last_stack]
+   hide stack "listen"
    go stack "view_Download"
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
 end downloadAffirmed

@@ -1,9 +1,7 @@
 ﻿script "behavior_ListenUI"
 
 on mouseUp 
-   put the target into pTarget
-   put the short name of the Target  into tTarget   
-   
+   put the short name of the target into tTarget
    switch tTarget
       case "collections-label"
          go to card "listen-collection"
@@ -12,12 +10,31 @@ on mouseUp
          go to card "listen-browse"
          break
       case "audioList"
+         repeat with x=1 to (the number lines of fld "audioList")
+            set the textcolor of line x of fld "audioList" to "white"
+         end repeat
          put word 2 of clickline() into sSelectNum
+         put sSelectNum into tLineNum
+         if (tLineNum mod 2) = 0 then
+            subtract 1 from tLineNum
+         end if
+         set the textcolor of line tLineNum of fld "audiolist" to "green"
          put value(the clickline) into pTitle
-          passAudioSelection sSelectNum, pTitle
+         put round(sSelectNum/2) into sSelectNum 
+         passAudioSelection sSelectNum, pTitle
+         
+         
+         --          repeat with x=1 to (the number lines of fld "audioList")
+         --             set the textcolor of line x of fld "audioList" to "white"
+         --          end repeat
+         --          put word 2 of clickline() into sSelectNum
+         --          set the textcolor of line sSelectNum of fld "audiolist" to "green"
+         --          put value(the clickline) into pTitle
+         --          passAudioSelection sSelectNum, pTitle
          break
    end switch
 end mouseUp
+
 
 command startPlayer  sSelectedURL, pTitle
    
@@ -33,7 +50,7 @@ command startPlayer  sSelectedURL, pTitle
       if the platform is "android" then 
          # the player is pretty ugly and covers up 120 vertical px
          # we need to try to get it to fit nicely at the bottom:
-         put 70,625,350,659 into tRect       
+         put 70,625,350,659 into tRect    #90,630,340,675  
       else 
          put empty into tRect
       end if     

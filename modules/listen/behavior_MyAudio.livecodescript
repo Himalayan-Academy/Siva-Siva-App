@@ -34,38 +34,47 @@ command getDownloadedAudio
          set the itemdel to "/"
          put  item -1 of sDownloadedAudioA[x][localURL] into aTitle
          put normalizeFileToTitle(aTitle) after sTitles
-         put cr after sTitles
+         put cr & cr after sTitles
          next repeat
       end if
       put sDownloadedAudioA[x][metadata][1]["title"] into aTitle
+      
       if aTitle is empty then 
          put sDownloadedAudioA[x][file_id] into aTitle
          put normalizeFileToTitle(aTitle) after sTitles
-      else 
-         put aTitle after sTitles
+      else
+          put aTitle after sTitles
       end if
-        put cr after sTitles
-      
-   end repeat
+      put cr after sTitles
+      if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
+         put sDownloadedAudioA[x][metadata][1]["artists"] after sTitles  
+      end if
+      put cr after sTitles
    
-   loadTitles sTitles
-   
-   # If file_id not into data base  register a message that the 
-   #  transcription/Lyrics  for this file is not available.
-   
-   #  get a URL locally for the files
-   
-   # If the metadata for the files  is available then the get from database
-   
-   #  ======
-   
-   # display titles and 
-   
+end repeat
+
+
+loadTitles sTitles
+
+# If file_id not into data base  register a message that the 
+#  transcription/Lyrics  for this file is not available.
+
+#  get a URL locally for the files
+
+# If the metadata for the files  is available then the get from database
+
+#  ======
+
+# display titles and 
+
 end getDownloadedAudio
 
 
 command loadtitles sTitles
-   put sTitles into fld "audioList"  
+   hide fld "audioList"
+   put sTitles into fld "audioList"
+   typeSetAudioList
+   show fld "audioList"
    put the number of lines of sTitles into pLineCount
 end loadtitles
 

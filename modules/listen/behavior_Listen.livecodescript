@@ -350,7 +350,7 @@ on  playlist_Instantiate sTargetPlayList
          put the keys of sCurrentPlayListA["audioFiles"]["toc"] into tKeys
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
-            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr after tTitles
+            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr & cr after tTitles
          end repeat
          break
       default
@@ -358,30 +358,54 @@ on  playlist_Instantiate sTargetPlayList
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
             put sCurrentPlayListA["audioFiles"] [x]["Title"] after tTitles
+           
             if sCurrentPlayListA["audioFiles"] [x]["media_type"] ="audio/song" then
-               put ", " &sCurrentPlayListA["audioFiles"] [x]["artists"] after tTitles
+               put cr &sCurrentPlayListA["audioFiles"] [x]["artists"] after tTitles
+            else
+               put cr after tTitles
             end if
             put cr after tTitles
+            
          end repeat
    end switch
+     markCachedItems tKeys
       put  playlist_GetCurrent() into fld "title-label" of card "listen-browse"
    go to card "listen-browse"
    
    hide fld "audioList"
    put tTitles into fld "audioList"  
+   typesetAudioList
   -- put the number of lines of tTitles into pLineCount
  --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    show fld "audioList"
    
    # here is where we have to check to see if any files are stored locally or not
    
-   markCachedItems tKeys
+
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
    put  sTargetPlayList into pData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", pData
 end playlist_Instantiate
+
+
+command typeSetAudioList
+ put 0 into tX
+   repeat with x =1 to the number lines  in fld "audioList"
+      add 1 to tX
+      if (tX mod 2) = 0 then
+         set the leftIndent of line x of fld "audioList" to 10
+         if  line x of fld "audioList" <> empty then
+            set the spaceBelow of line x of fld "audioList" to 10
+         end if   
+         set the textSize of line x of fld "audioList" to 15
+      else
+               set the textSize of line x of fld "audioList" to 17
+      end if
+   end repeat 
+ 
+end typeSetAudioList
 
 command markCachedItems pKeys
    repeat for each line x in pKeys
@@ -400,11 +424,6 @@ command markCachedItems pKeys
          put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
       end if
    end repeat
-   if the short name of this card is "listen-browse" then
-      repeat for each line y in tCachedFiles
-         set the foregroundcolor of line y of fld "audioList" to green
-      end repeat
-   end if
 end markCachedItems
 
 function getItemURL pRecordNum
@@ -448,6 +467,7 @@ on closeStack
    --      deleteMobileControl "audioList"
    --   end if
 end closeStack
+
 
 
 
