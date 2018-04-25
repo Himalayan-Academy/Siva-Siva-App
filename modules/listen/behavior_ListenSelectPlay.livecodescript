@@ -23,7 +23,11 @@ global sConfigA
 local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget
 
 on preopencard
+   repeat with x=1 to (the number lines of fld "audioList")
+      set the textcolor of line x of fld "audioList" to "251,240,200"
+   end repeat
    hide player "audioPlayer"
+   pass preopencard
 end preopencard
 
 on openCard
@@ -76,7 +80,7 @@ on mouseup
          break
       case "AudioList"
          repeat with x=1 to (the number lines of fld "audioList")
-            set the textcolor of line x of fld "audioList" to "white"
+            set the textcolor of line x of fld "audioList" to "251,240,200"
          end repeat
          put word 2 of clickline() into sSelectNum
          put sSelectNum into tLineNum

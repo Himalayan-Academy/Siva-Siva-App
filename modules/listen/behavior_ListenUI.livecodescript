@@ -1,4 +1,7 @@
 ﻿script "behavior_ListenUI"
+on preopencard
+   put empty into fld "CurrentTitleLabel"   
+end preopencard
 
 on mouseUp 
    put the short name of the target into tTarget
@@ -11,7 +14,7 @@ on mouseUp
          break
       case "audioList"
          repeat with x=1 to (the number lines of fld "audioList")
-            set the textcolor of line x of fld "audioList" to "white"
+            set the textcolor of line x of fld "audioList" to "251,240,200"
          end repeat
          put word 2 of clickline() into sSelectNum
          put sSelectNum into tLineNum
@@ -19,7 +22,7 @@ on mouseUp
             subtract 1 from tLineNum
          end if
          set the textcolor of line tLineNum of fld "audiolist" to "green"
-         put value(the clickline) into pTitle
+         put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum 
          passAudioSelection sSelectNum, pTitle
          
