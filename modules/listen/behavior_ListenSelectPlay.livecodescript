@@ -180,24 +180,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
 
-# V2 Link to transcript
 
-command select_ShowDetails   
-   deleteMobileControl "audioList"
-   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      put getMediaItemMetadata() into fld "audioDetails"
-   else
-      # its an audio book, lib media doesn't know anything, we have to pass the record here       
-      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
-   end if
-   
-   set the textsize of line 1 of fld "audioDetails" to 22
-   set the textstyle of line 1 of fld "audioDetails" to "bold"
-   set the textstyle of line 3 of fld "audioDetails" to "italic"
-   set the rect of fld "AudioDetails" to rect of fld "audioList" 
-   show fld "audioDetails" with visual effect wipe up very fast
-   send "CreateScroller audioDetails" to fld "audioDetails"
-end select_ShowDetails
 
 command revealMoreActions pVis
    
@@ -298,29 +281,31 @@ command updateCachedListings
    # but for now we assume if they have enough bandwidth to download
    # let them stream... when they come back later the list will be updated
    
-   
 end updateCachedListings
 
-
--- on cleanUpGUI
---    # more later but for now, so no flash of previous content 
---    put empty into fld "title" of this card
---    set the filename of img "playlistPoster" of this card to empty
---    put empty into fld "audioList" of this card
---    put empty into fld "currentTitleLabel" of this card
---    set the filename of player "audioPlayer"  of this card to empty
---    hide fld "audioDetails" of this card
---    hide widget "revealMoreActions"
---    hide widget "downloadSelection"
---    put empty into fld "audioDetails" of this card
---    showPlayer "false", "audioPlayer" 
---    ## add other mobile stuff to clear out here later
--- end cleanUpGUI
 
 on closeCard
    set the acceleratedRendering this stack to false
    showPlayer "false","audioPlayer"
 end closeCard
+
+command select_ShowDetails   pSelectSong
+   deleteMobileControl "audioList"
+   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+      put getMediaItemMetadata() into fld "audioDetails"
+   else
+      # its an audio book, lib media doesn't know anything, we have to pass the record here       
+      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
+   end if
+   
+   set the textsize of line 1 of fld "audioDetails" to 22
+   set the textstyle of line 1 of fld "audioDetails" to "bold"
+   set the textstyle of line 3 of fld "audioDetails" to "italic"
+   set the rect of fld "AudioDetails" to rect of fld "audioList" 
+   show fld "audioDetails" with visual effect wipe up very fast
+   send "CreateScroller audioDetails" to fld "audioDetails"
+end select_ShowDetails
+
 
 
 
