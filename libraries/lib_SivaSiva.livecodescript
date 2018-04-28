@@ -388,15 +388,15 @@ on revealSearchControls pVis --jg: combined reveal/hide handlers
     --jg: horiz centering for mobile screens:
     set the loc of grp "searchControls" to the loc of this cd
     set the bottom of grp "searchControls" to 0
-    put empty into fld "searchString" of card "Main-view"
+    put empty into fld "searchString" -- of card "Main-view"
     set the vis of group "searchControls" to true
-    moveGrp "searchControls", the height of grp "searchControls", cMoveSpeed
+    moveGrp "searchControls",0, the height of grp "searchControls", cMoveSpeed
     focus on fld "searchString" --jg: force mobile keyboard
     select after fld "searchString"
    -- highlightSelectedTab "search" # from gurudeva app, not implements
   else -- hide it
     focus on nothing
-    moveGrp "searchControls", -(the height of grp "searchControls"), cMoveSpeed
+    moveGrp "searchControls",0, -(the height of grp "searchControls"), cMoveSpeed
     hide group "SearchControls"
     put empty into fld "searchString" 
    -- clearTabHighlights # from gurudeva app, not implements
