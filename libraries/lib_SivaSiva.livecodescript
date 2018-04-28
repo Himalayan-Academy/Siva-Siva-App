@@ -7,7 +7,8 @@ local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews,sStopRunningAudio
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
-
+constant cMoveSpeed = 400 -- DTB
+constant cGroupMoveDistance = 400 -- DTB
 
 --> GENERIC GLOBAL MOBILE
 
@@ -346,6 +347,62 @@ on moveGrp pGrpName, pHorz, pVert, pSpeed -- use move instead of visual effect t
   put pHorz,pVert into tPt
   move grp pGrpName relative tPt in pSpeed milliseconds
 end moveGrp
+
+
+# adopted from Gurudeva app by jacqueline land,am gay
+on setGrpVis pGrpName,pLabel, pVis --jg: manages favorites and share groups with one handler
+   -- Uses "move" which eliminates visual effect issues on Android
+   -- pGrpName = short name of target grp 
+   -- pLabel = message label
+   -- pVis = boolean
+   
+   set the layerMode of grp pGrpName to "dynamic"
+   if pVis then -- show it
+      set the top of grp pGrpName to the height of this cd
+      put pLabel into fld "app-messages" 
+      set the vis of grp pGrpName to true
+      put the height of grp "baseControls" + the height of grp pGrpName into tVDist
+      set the blendlevel of group "quoteControl" of card "main-view" to 60
+      moveGrp pGrpName, -tVDist, cMoveSpeed
+      highlightSelectedTab pLabel
+      set the vis of grp "statusMessageControls" to pVis --jg: do it last on show, first on hide
+   else -- hide it
+      set the vis of grp "statusMessageControls" to pVis
+      put the height of this cd - the top of grp pGrpName into tVDist
+      set the blendlevel of group "quoteControl" of card "main-view" to 0
+      moveGrp pGrpName, tVDist, cMoveSpeed
+      set the vis of grp pGrpName to false
+      clearTabHighlights
+   end if
+   set the layerMode of grp pGrpName to "static"
+end setGrpVis
+
+on revealSearchControls pVis --jg: combined reveal/hide handlers
+  -- pVis = boolean
+  
+  if there is no grp "searchControls" then -- unplaced on current cd; just set vis & exit
+    set the vis of bg "searchControls" to pVis
+    exit revealSearchControls
+  end if 
+  if  pVis <> false  then -- show it
+    --jg: horiz centering for mobile screens:
+    set the loc of grp "searchControls" to the loc of this cd
+    set the bottom of grp "searchControls" to 0
+    put empty into fld "searchString" of card "Main-view"
+    set the vis of group "searchControls" to true
+    moveGrp "searchControls", the height of grp "searchControls", cMoveSpeed
+    focus on fld "searchString" --jg: force mobile keyboard
+    select after fld "searchString"
+   -- highlightSelectedTab "search" # from gurudeva app, not implements
+  else -- hide it
+    focus on nothing
+    moveGrp "searchControls", -(the height of grp "searchControls"), cMoveSpeed
+    hide group "SearchControls"
+    put empty into fld "searchString" 
+   -- clearTabHighlights # from gurudeva app, not implements
+  end if  
+end revealSearchControls
+
 
 
 
