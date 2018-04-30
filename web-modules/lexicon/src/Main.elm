@@ -49,6 +49,7 @@ type PageId
     | SurpriseView
     | MyWordsView
     | DefinitionView
+    | HelpView
 
 
 type alias Model =
@@ -270,6 +271,9 @@ view model =
             MyWordsView ->
                 myWordsView model
 
+            HelpView ->
+                helpView (LoadDefinitionByWord "karma")
+
             _ ->
                 h1 [] [ text "not implemented" ]
         , appNavigation
@@ -359,6 +363,35 @@ loadingView =
         [ text "Loading" ]
 
 
+helpView : msg -> Html msg
+helpView karma =
+    div []
+        [ h1
+            [ css
+                [ color theme.palette.white
+                , textTransform capitalize
+                , marginTop (px 125)
+                ]
+            ]
+            [ text "Help" ]
+        , p
+            [ css
+                [ color theme.palette.white
+                , textAlign justify
+                , fontSize (px 20)
+                , padding (px 15)
+                ]
+            ]
+            [ text "Welcome the Hindu Lexicon! Type the characters that you know are in a word. All the possible choices will appear. Use less characters if you do not know to the spelling of a word. Use more if want to limit the choices."
+            , text " Gurudeva recommended study of one word and associated words. Take:"
+            , br [] []
+            , div [ css [ textAlign center ] ] [ seeAlso karma "karma" ]
+            , br [] []
+            , text " and go a word adventure clicking the other that pop up. You can a word to my word, but click the bookmark. When you are in My Word, clicking the bookmark will delete word. "
+            ]
+        ]
+
+
 addWordItem : Word -> Html Msg
 addWordItem word =
     li [ onClick (LoadDefinition word.id) ] [ text word.word ]
@@ -372,7 +405,7 @@ searchView model =
                 [ css
                     [ marginTop (px 125) ]
                 ]
-                [ searchHeader
+                [ searchHeader (Navigate HelpView)
                 , searchBox FilterWordList model.query
                 , listHeader
                 , ul
@@ -406,7 +439,7 @@ myWordsView model =
                 [ css
                     [ marginTop (px 125) ]
                 ]
-                [ searchHeader
+                [ searchHeader (Navigate HelpView)
                 , searchBox FilterWordList model.query
                 , listHeader
                 , ul

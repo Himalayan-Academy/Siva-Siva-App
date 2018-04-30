@@ -81,8 +81,8 @@ headerTitle =
         ]
 
 
-searchHeader : Html msg
-searchHeader =
+searchHeader : msg -> Html msg
+searchHeader click =
     div
         [ css
             [ textAlign center
@@ -101,6 +101,7 @@ searchHeader =
                 [ color theme.palette.lightGreen
                 , display block
                 ]
+            , onClick click
             ]
             [ text "Need help?" ]
         ]
