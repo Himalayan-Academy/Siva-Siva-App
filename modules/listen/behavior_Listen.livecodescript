@@ -52,8 +52,8 @@ on openstack
    
   -- put empty into fld "log"
    
-   put url ("binfile:" & path_Modules()& "listen/collection.json") into tJson
-  put JSONToArray(tJson) into sCollectionA
+   put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
+  put JSONToArray(tContainer) into sCollectionA
    
 end openstack
 
@@ -62,7 +62,7 @@ command selectPlaylist pSelection
 
    # use has  made choice from card 
    
-   showBusyIndicator true,"Loading"
+
    
    # get extract JSON from sCollectionA 
    # which is an array that contain all collections
@@ -92,6 +92,7 @@ command selectPlaylist pSelection
    
    # Link each separate process to a 
    # specific handler
+      showBusyIndicator true,"Loading"
    playList_FetchData tColl,tPlay
    
 end selectPlaylist
@@ -505,6 +506,64 @@ on closeStack
    --      deleteMobileControl "audioList"
    --   end if
 end closeStack
+
+------------- 
+on __ListenUtilities
+end __ListenUtilities
+
+command setAudioListColors pColor
+   repeat with x=1 to (the number lines of fld "audioList")
+      set the backgroundcolor of line x of fld "audioList" to pColor
+   end repeat
+end setAudioListColors
+
+on preopencard
+   # tweak the header for collections
+   
+   --deleteMobileControl "audioList"  
+   
+   -- set up the header 
+   put the short name of this card into tMode
+   switch tMode
+      case "listen-collection" 
+         put the location of fld "collections-label" into tLabelLoc
+         put the width of fld "collections-label" into tLabelWidth
+         set the width of grc "modeIndicator" to tLabelWidth
+         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         hide fld "browse-label"
+         put "Listen" into fld "title-label"
+         break
+      case "listen-my-audio"
+         setAudioListcolors
+         put the location of fld "my-audio-label" into tLabelLoc
+         put the width of fld "my-audio-label" into tLabelWidth
+         set the width of grc "modeIndicator" to tLabelWidth
+         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         show fld "browse-label"
+         put "Downloaded Audio" into fld "title-label"
+         put empty into fld "audioList"
+         break
+      case "listen-browse"
+         setAudioListcolors
+         put the location of fld "browse-label" into tLabelLoc
+         put the width of fld "browse-label" into tLabelWidth
+         set the width of grc "modeIndicator" to tLabelWidth
+         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         show fld "browse-label"
+         put playlist_GetCurrent() into fld "title-label"
+         break
+      case "listen-search"
+          put the location of fld "title-label" into tLabelLoc
+         put the width of fld "title-label" into tLabelWidth
+         set the width of grc "modeIndicator" to tLabelWidth
+         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         put "Search and Filter" into fld "title-label"
+         set the textsize of fld "title-label" to 18
+         break
+   end switch   
+end preopencard
+   
+  
 
 
 

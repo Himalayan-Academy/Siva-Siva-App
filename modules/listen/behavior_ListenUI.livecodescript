@@ -3,11 +3,6 @@
 local sSelectNum, sSingleAudioA,sCached
 
 
-on preopencard
-   put empty into fld "CurrentTitleLabel"
-end preopencard
-
-
 on mouseUp
 
    put the short name of the target into pTarget
@@ -20,13 +15,14 @@ on mouseUp
          break
       case "audioList"
          repeat with x=1 to (the number lines of fld "audioList")
-            set the textcolor of line x of fld "audioList" to "251,240,200"
+            set the backgroundcolor of line x of fld "audioList" to empty
          end repeat
          put word 2 of clickline() into sSelectNum
          put sSelectNum into tLineNum
          if (tLineNum mod 2) = 0 then
             subtract 1 from tLineNum
          end if
+          set the backgroundcolor of line tLineNum of fld "audioList" to 176,30,66
          put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
@@ -67,6 +63,7 @@ command startPlayer  sSelectedURL, pTitle
    --  local sSelectedURL, tRect
    
    if sSelectedURL contains "https" then # we need connectivity
+    showBusyIndicator true,"Loading"
       if connectivity_PingServer()<>"true" then
          dialog_CustomMsg "Offline or Low Bandwidth"
          exit startPlayer
@@ -103,6 +100,7 @@ command startPlayer  sSelectedURL, pTitle
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
    end if
+   showBusyIndicator false
 end startPlayer
 
 
