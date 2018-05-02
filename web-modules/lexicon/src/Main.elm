@@ -36,7 +36,10 @@ port appGoHome : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    savedWordListChanged (\wl -> SavedWordListChanged wl)
+    Sub.batch
+        [ savedWordListChanged (\wl -> SavedWordListChanged wl)
+        , Sub.map LexiconMsg Lexicon.subscriptions
+        ]
 
 
 
@@ -147,7 +150,7 @@ update msg model =
                     Lexicon.update subMsg model.lexiconModel
             in
             case subMsg of
-                Lexicon.HandleWordDefinitionResponse _ ->
+                Lexicon.WordDefinitionReceived _ ->
                     ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
 
                 _ ->

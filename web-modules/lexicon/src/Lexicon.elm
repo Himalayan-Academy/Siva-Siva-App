@@ -1,10 +1,22 @@
-module Lexicon exposing (..)
+port module Lexicon exposing (..)
 
 import Html exposing (..)
 import Http
 import Json.Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
 import Json.Encode as JE
+
+
+port wordListReceived : (WordList -> msg) -> Sub msg
+
+
+port wordDefinitionReceived : (WordDefinition -> msg) -> Sub msg
+
+
+port getWordDefinition : String -> Cmd msg
+
+
+port getWordList : () -> Cmd msg
 
 
 type alias WordDefinition =
@@ -42,14 +54,14 @@ initialModel =
 
 loadWordList : Cmd Msg
 loadWordList =
-    let
-        url =
-            "https://dev.himalayanacademy.com/api/index.php/lexicon/words"
-
-        request =
-            Http.get url responseDecoder
-    in
-    Http.send HandleWordListResponse request
+    -- let
+    --     url =
+    --         "https://dev.himalayanacademy.com/api/index.php/lexicon/words"
+    --     request =
+    --         Http.get url responseDecoder
+    -- in
+    -- Http.send HandleWordListResponse request
+    getWordList ()
 
 
 responseDecoder : Decoder WordList
@@ -107,14 +119,14 @@ loadWordDefinitionByWord word wordList =
 
 loadWordDefinition : String -> Cmd Msg
 loadWordDefinition id =
-    let
-        url =
-            "https://dev.himalayanacademy.com/api/index.php/lexicon/word/" ++ id
-
-        request =
-            Http.get url responseDecoderForWordDefinition
-    in
-    Http.send HandleWordDefinitionResponse request
+    -- let
+    --     url =
+    --         "https://dev.himalayanacademy.com/api/index.php/lexicon/word/" ++ id
+    --     request =
+    --         Http.get url responseDecoderForWordDefinition
+    -- in
+    -- Http.send HandleWordDefinitionResponse request
+    getWordDefinition id
 
 
 responseDecoderForWordDefinition : Decoder WordDefinition
@@ -129,11 +141,19 @@ responseDecoderForWordDefinition =
 type Msg
     = HandleWordListResponse (Result Http.Error WordList)
     | HandleWordDefinitionResponse (Result Http.Error WordDefinition)
+    | WordListReceived WordList
+    | WordDefinitionReceived WordDefinition
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        WordListReceived wl ->
+            ( { model | wordList = Just wl }, Cmd.none )
+
+        WordDefinitionReceived w ->
+            ( { model | currentWord = Just w }, Cmd.none )
+
         HandleWordListResponse result ->
             case result of
                 Ok results ->
@@ -182,3 +202,11 @@ wordDefinitionView model =
                 [ li [] [ text entry.word ]
                 , li [] [ text entry.definition ]
                 ]
+
+
+subscriptions : Sub Msg
+subscriptions =
+    Sub.batch
+        [ wordListReceived (\wl -> WordListReceived wl)
+        , wordDefinitionReceived (\w -> WordDefinitionReceived w)
+        ]
