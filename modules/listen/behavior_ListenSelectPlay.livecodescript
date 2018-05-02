@@ -87,7 +87,7 @@ on mouseup
          if (tLineNum mod 2) = 0 then
             subtract 1 from tLineNum
          end if
-      set the textcolor of line tLineNum of fld "audiolist" to "green"
+    --  set the textcolor of line tLineNum of fld "audiolist" to "174,30,6644"
       put round(sSelectNum/2) into sSelectNum      
       select_Play # will use either the line number or item id
       break  

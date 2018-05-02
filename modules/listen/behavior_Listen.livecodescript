@@ -27,7 +27,7 @@
 local sCollectionA,sCollectionChoice
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-
+local sCached
 
 on preopenstack
    # may be fixed in recent versions Android crashed on stack swaps
@@ -61,11 +61,15 @@ end openstack
 command selectPlaylist pSelection
 
    # use has  made choice from card 
+   
+   showBusyIndicator true,"Loading"
+   
    # get extract JSON from sCollectionA 
    # which is an array that contain all collections
    # the data we need to 
    # the title and path to img file.
    # you can rebuild the UI from the SivaSivaDec Tool.livecode stacks
+   
    
    put the short name of pSelection into tPlayTarget
    
@@ -125,7 +129,11 @@ end playlist_GetCurrent
 
 function playlist_GetRecords  
    if sCurrentPlayListA["audioFiles"] is empty then
-      put "No records Fetched!"
+   
+      if isMobile() is false then
+         put "No records Fetched!"
+      end if
+      
    else
       return sCurrentPlaylistA
    end if
@@ -344,7 +352,7 @@ end playList_FetchData
 on  playlist_Instantiate sTargetPlayList    
    
    # using: model_SivaSiva, which has functions to get json info we need:
-
+   
    switch sPlaylistQueryA["playlistClass"] 
       case "audiobook"
          put the keys of sCurrentPlayListA["audioFiles"]["toc"] into tKeys
@@ -358,7 +366,7 @@ on  playlist_Instantiate sTargetPlayList
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
             put sCurrentPlayListA["audioFiles"] [x]["Title"] after tTitles
-           
+            
             if sCurrentPlayListA["audioFiles"] [x]["media_type"] ="audio/song" then
                put cr &sCurrentPlayListA["audioFiles"] [x]["artists"] after tTitles
             else
@@ -368,20 +376,32 @@ on  playlist_Instantiate sTargetPlayList
             
          end repeat
    end switch
-     markCachedItems tKeys
-      put  playlist_GetCurrent() into fld "title-label" of card "listen-browse"
+   put empty into sCached
+   markCachedItems tKeys
+   put  playlist_GetCurrent() into fld "title-label" of card "listen-browse"
+    
+    showBusyIndicator false
+  
    go to card "listen-browse"
+   
+  
    
    hide fld "audioList"
    put tTitles into fld "audioList"  
    typesetAudioList
-  -- put the number of lines of tTitles into pLineCount
- --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
+   -- put the number of lines of tTitles into pLineCount
+   --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
+ 
+    repeat for each line x in sCached
+      set the foregroundcolor line (x*2-1) of fld "audioList" to green
+   end repeat
+   
    show fld "audioList"
+  
    
    # here is where we have to check to see if any files are stored locally or not
    
-
+   
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
@@ -436,7 +456,7 @@ command markCachedItems pKeys
       put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
       if tIsCached then  # need to colored cached files on theUI
          # store line numbers
-         put x & cr after tCachedFiles
+         put x & cr after sCached
          put item 2 of tLocalStatus into  sCurrentPlayListA["audioFiles"][x]["myURL"]
       else
          put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]

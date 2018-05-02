@@ -1,6 +1,6 @@
 ﻿script "behavior_ListenUI"
 //>LOCALS
-local sSelectNum, sSingleAudioA
+local sSelectNum, sSingleAudioA,sCached
 
 
 on preopencard
@@ -27,7 +27,6 @@ on mouseUp
          if (tLineNum mod 2) = 0 then
             subtract 1 from tLineNum
          end if
-         set the textcolor of line tLineNum of fld "audiolist" to "green"
          put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
@@ -131,3 +130,22 @@ command select_ShowDetails
       set the flipped of widget "chevron-up-down" to not detailVis
    end if
 end select_ShowDetails
+
+command markCachedItems pKeys
+   repeat for each line x in pKeys
+      # this as good a place as any to check for the existence of files  
+      # and get the URL for every one in the play list... so we only do this once.
+      put getItemURL(x) into pURL
+      # Check and create folders here
+      put path_isFileOnDisk(pURL) into tLocalStatus
+      put item 1 of tLocalStatus into tIsCached
+      put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
+      if tIsCached then  # need to colored cached files on theUI
+         # store line numbers
+         put x & cr after sCached
+         put item 2 of tLocalStatus into  sCurrentPlayListA["audioFiles"][x]["myURL"]
+      else
+         put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
+      end if
+   end repeat
+end markCachedItems
