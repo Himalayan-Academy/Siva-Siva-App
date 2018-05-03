@@ -40,7 +40,7 @@ on executeSearch pTarget
    put getTargetOwnerSegs(pTarget) into sCallContext
    wait 500 milliseconds
    switch 
-      case (sCallContext contains "listen-playlist")
+      case (sCallContext contains "filterAudio")
          searchPlayList
          break
    end switch
