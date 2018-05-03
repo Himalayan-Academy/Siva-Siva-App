@@ -394,7 +394,7 @@ on  playlist_Instantiate sTargetPlayList
    --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
  
     repeat for each line x in sCached
-      set the foregroundcolor line (x*2-1) of fld "audioList" to green
+      set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
    end repeat
    
    show fld "audioList"
