@@ -38,7 +38,6 @@ local sSearchClass,sCallContext,sPlaylistQueryA
 
 on executeSearch pTarget
    put getTargetOwnerSegs(pTarget) into sCallContext
-   wait 500 milliseconds
    switch 
       case (sCallContext contains "filterAudio")
          searchPlayList
@@ -55,40 +54,44 @@ end executeSearch
 # all we need to do is pass a new query up to behavior_Listen.playList_FetchData
 ------------------------------------------------------------------------
 
-command searchPlayList
-   put "cached" into tFilterListQueryA["playListClass"]   
-   put playlist_GetCurrent() into tPlayList
-      put "YES" into tFilterListQueryA["approved_for_public"]
+command searchPlayList  # Search Audio
+   # we must get the original collection data
+   # determine whether to it is an Inspired Talk or if it in a Songs or chant
+   # We not do search audio books.
+   put  getCollectionsJson() into tAllCollections
+   put the hilitedbuttonname of grp "collectionChoice" into pWhichClass
+   
+   put "cached" into tColl
+   put "YES" into pFilterListQueryA["approved_for_public"]
    switch
-      case  (tPlayList= "Songs") # unique seach criteria:
-         put "audio/song" into tFilterListQueryA["media_type"]
+      case  (pWhichClass= "Songs") # unique seach criteria:
+         put "audio/song" into pFilterListQueryA["media_type"]
          put the hilitedbuttonname of grp "deity"  into tDeity
          if tDeity is not "All" then
-            put tDeity into tFilterListQueryA["deity"]
+            put tDeity into pFilterListQueryA["deity"]
          end if
          put the hilitedbuttonname of grp "genre" into tGenre
          if tGenre is not "All" then
-            put tGenre into tFilterListQueryA["genre"]
+            put tGenre into pFilterListQueryA["genre"]
          end if
          put fld "searchstring" into tStringToFind  
          put the hilitedButtonName of grp "textColumns" into tTextTarget
          if (tStringToFind is not empty) AND (tTextTarget is empty) then
             put "Pick Title, Description or Artist" into fld "searchString"
-            wait 1 second
             put tstringToFind into fld "searchstring"
             exit to top
          else
-            put tStringToFind into tFilterListQueryA[tTextTarget]         
+            put tStringToFind into pFilterListQueryA[tTextTarget]         
          end if
          break
-      case (tPlayList contains "Talks")
+      case (pWhichClass contains "Inspired Talks")
          
-         put "inspiredtalk" into tFilterListQueryA["media_type"]
+         put "inspiredtalk" into pFilterListQueryA["media_type"]
          if tPlayList contains "Gurudeva" then 
-            put  "Satguru Sivaya Subramuniyaswami" into tFilterListQueryA["author"]
+            put  "Satguru Sivaya Subramuniyaswami" into pFilterListQueryA["author"]
          end if
          if tPlayList contains "Bodhinatha" then 
-            put  "Satguru Bodhinatha Veylanswami" into tFilterListQueryA["author"]
+            put  "Satguru Bodhinatha Veylanswami" into pFilterListQueryA["author"]
          end if
          put fld "searchstring" into tStringToFind  
          put the hilitedButtonName of grp "textColumns" into tTextTarget
@@ -101,14 +104,14 @@ command searchPlayList
             put tstringToFind into fld "searchstring"
             exit to top
          else
-            put tStringToFind into tFilterListQueryA[tTextTarget]         
+            put tStringToFind into pFilterListQueryA[tTextTarget]         
          end if
          
    end switch
    
-   revealMoreActions "false"
-   playList_fetchData tFilterListQueryA
-   show widget "revealMoreActions"
+   --  revealMoreActions "false"
+   playList_fetchData pFilterListQueryA
+  -- show widget "revealMoreActions"
    
 end searchPlayList
 

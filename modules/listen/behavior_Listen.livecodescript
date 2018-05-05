@@ -57,6 +57,11 @@ on openstack
    
 end openstack
 
+# return JSON for other handlers as needed
+function getCollectionsJson
+   return sCollectionA
+end getCollectionsJson
+
 
 command selectPlaylist pSelection
 
@@ -185,49 +190,60 @@ end playlist_GetRecords
  
 -----------------------------------------------------------------------
 
-on playList_FetchData tColl,tPlay
-
+on playList_FetchData tColl,tPlay,pFilterListQueryA
+   
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
-    
+   
    --  dispatch "cleanUpGui" to card "listen-browse"      
-
+   
    put empty into sPlaylistQueryA 
    
+   # if pFilterListQueryA is empty, it means we are coming in
+   # the Search and Filter filter screen
+   # if not, we coming of the main collection screen
    
-   put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
-   put sCollectionA[tColl]["playlists"][tPlay]["playListTitle"]  into  sCurrentPlayListA["playListTitle"]
+   if pFilterListQueryA = empty then 
+      
+      put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
+      put sCollectionA[tColl]["playlists"][tPlay]["playListTitle"]  into  sCurrentPlayListA["playListTitle"]
+      
+      
+      put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
+      
+      # decides is cached on device, or from server and audio book
+      # this param is used here... not sent to the database. 
+      # but use to determine how the query show go: the server, audio book, in the jnanam (local dbase_
+      # get type of playlistL audio book, etc
+      
+      # first we need action the array from the json able 
+      # everyhing in needs to create a query
+      
+      put "recordType,recordCount" into tRecordTypeCount
+      
+      # remember: tColl and tPlay are drawn from the mouseups
+      # see the nomenclature for what the mouseup delivers on the objects
+      # in the project browers
+      
+      repeat for each item RT in tRecordTypeCount
+         if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
+            put  sCollectionA[tColl]["playlists"][tPlay][RT] into sPlayListQueryA[RT]
+         end if 
+      end repeat
+      
+      put "media_type,file_id,approved_for_public,author,genre,deity,tag" into tDbaseColumns
+      
+      repeat for each item DC in tDbaseColumns
+         if ( sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] is not empty) then 
+            put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
+         end if
+      end repeat
+     
+      # use the queries from the Search Screen
+   else
+      
+   end if
    
-   put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
    
-   # decides is cached on device, or from server and audio book
-   # this param is used here... not sent to the database. 
-   # but use to determine how the query show go: the server, audio book, in the jnanam (local dbase_
-   # get type of playlistL audio book, etc
-  
-   # first we need action the array from the json able 
-   # everyhing in needs to create a query
-    
-   put "recordType,recordCount" into tRecordTypeCount
-   
-   # remember: tColl and tPlay are drawn from the mouseups
-   # see the nomenclature for what the mouseup delivers on the objects
-   # in the project browers
-   
-   repeat for each item RT in tRecordTypeCount
-      if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
-         put  sCollectionA[tColl]["playlists"][tPlay][RT] into sPlayListQueryA[RT]
-      end if 
-   end repeat
-   
-   put "media_type,file_id,approved_for_public,author,genre,deity,tag" into tDbaseColumns
-   
-   repeat for each item DC in tDbaseColumns
-      if ( sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] is not empty) then 
-         put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
-      end if
-   end repeat
-   
-
    # we get records now, from server, or local jnanam.
    # we are to each one based on where they come from
    
@@ -250,7 +266,7 @@ on playList_FetchData tColl,tPlay
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into queryData["recordType"]
          put sPlayListQueryA["recordCount"] into queryData["recordcount"]
-          
+         
          put arrayToJson(queryData) into pJSON # from server
          
          put the ticks into sStartTimer
@@ -275,7 +291,7 @@ on playList_FetchData tColl,tPlay
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
-           put "Contacting server... " into fld "audioList" of card "listen-browse"
+         put "Contacting server... " into fld "audioList" of card "listen-browse"
          # a simple call to the server to get the TOC
          # can chose different books base on file_id
          put sPlaylistQueryA["file_id"] into tFileID
@@ -292,11 +308,11 @@ on playList_FetchData tColl,tPlay
          end if
          # this should come from the local dBase,
          # but as of June 29, the local dBase is obsolete
-        
+         
          # so we have to fetch info from the server 
-          # this does not include a data base query other than the file id
-          # which get the URL and pull to TOC.json for the audio book.
-          
+         # this does not include a data base query other than the file id
+         # which get the URL and pull to TOC.json for the audio book.
+         
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
@@ -312,7 +328,7 @@ on playList_FetchData tColl,tPlay
             # We need this later:
             put jsonToArray (tRecords) into sCurrentPlayListA["audioBookMetadata"]
          end if
-           
+         
          break
          
    end switch
@@ -326,11 +342,11 @@ on playList_FetchData tColl,tPlay
       put "No records for that search. Try again" into fld "audioList" of card "listen-browse" of stack "listen"
       wait 1500 milliseconds with messages
       put empty into fld "audioList" of card "listen-browse" of stack "listen"
-     -- dispatch "revealMoreActions" to this card with "true"
+      -- dispatch "revealMoreActions" to this card with "true"
       exit to top
    end if
-  
-
+   
+   
    playlist_Instantiate sTargetPlayList
    
 end playList_FetchData
