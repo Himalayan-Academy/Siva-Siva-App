@@ -39,7 +39,8 @@ local sSearchClass,sCallContext,sPlaylistQueryA
 on executeSearch pTarget
    put getTargetOwnerSegs(pTarget) into sCallContext
    switch 
-      case (sCallContext contains "filterAudio")
+      case (sCallContext contains "listen-search")
+         # it means search comes from the audio filter card
          searchPlayList
          break
    end switch
@@ -94,7 +95,7 @@ command searchPlayList  # Search Audio
             put  "Satguru Bodhinatha Veylanswami" into pFilterListQueryA["author"]
          end if
          put fld "searchstring" into tStringToFind  
-         put the hilitedButtonName of grp "textColumns" into tTextTarget
+         put the hilitedButtonName of grp "titleDescription" into tTextTarget
          if tTextTarget = "Subtitle" then
             put "sub_title" into tTextTarget # has to match the dBase column name
          end if
