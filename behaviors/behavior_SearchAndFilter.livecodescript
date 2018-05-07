@@ -69,6 +69,8 @@ command searchPlayList  # Search Audio
    put the hilitedbuttonname of grp "collectionChoice" into pWhichClass
    put "YES" into pFilterListQueryA["approved_for_public"]
    switch
+      
+      # songs
       case  (pWhichClass= "Songs") # unique seach criteria:
          put "audio/song" into pFilterListQueryA["media_type"]
          put the hilitedbuttonname of grp "deity"  into tDeity
@@ -80,23 +82,25 @@ command searchPlayList  # Search Audio
             put tGenre into pFilterListQueryA["genre"]
          end if
          put the hilitedButtonName of grp "titleDescription" into tTextTarget
-         if (sStringToFind is empty) AND (tTextTarget is empty) then
+         if tTextTarget = "Subtitle" then
+            put "sub_title" into tTextTarget # has to match the dBase column name
+         end if
+         if the hilite of btn "artists" is true then 
+            put "artists" into tTextTarget
+         end if
+         if (sStringToFind is empty) OR (tTextTarget is empty) then
             put "Pick Title, Description or Artist" into fld "searchString"
             wait 2 seconds
             put empty into fld "searchString"
             exit to top
-         else
-            put the hilitedButtonName of grp "titleDescription" into tTextTarget
-            if tTextTarget = "Subtitle" then
-               put "sub_title" into tTextTarget # has to match the dBase column name
-            end if
-            if the hilite of btn "artists" is true then 
-               put "artists" into tTextTarget
-            end if
-            put sStringToFind into pFilterListQueryA[tTextTarget]    
-            put sStringToFind &&tDeity && tGenre into pBrowseHeader
          end if
+  
+         put sStringToFind into pFilterListQueryA[tTextTarget]    
+         put sStringToFind &&tDeity && tGenre into pBrowseHeader
+         
          break
+         
+         # Talks
       case (pWhichClass contains "Inspired Talks")
          put the hilitedbuttonname of grp "author"  into tAuthor
          put "inspiredtalk" into pFilterListQueryA["media_type"]
@@ -110,14 +114,14 @@ command searchPlayList  # Search Audio
          if tTextTarget = "Subtitle" then
             put "sub_title" into tTextTarget # has to match the dBase column name
          end if
-         if (sStringToFind is empty)  then
-            put "Enter Search?" into fld "searchString"
+         if (sStringToFind is empty) OR (tTextTarget is empty) then
+            put "Enter search, title, subtitle..." into fld "searchString"
             wait 2 seconds
             put empty into fld "searchString"
             exit to top
          else
             put sStringToFind into pFilterListQueryA[tTextTarget]     
-   
+            
          end if
          
    end switch

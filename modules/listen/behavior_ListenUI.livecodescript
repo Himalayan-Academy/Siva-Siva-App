@@ -1,10 +1,10 @@
 ﻿script "behavior_ListenUI"
 //>LOCALS
 local sSelectNum, sSingleAudioA,sCached
+local sAudioUI
 
 
 on mouseUp
-
    put the short name of the target into pTarget
    switch pTarget
       case "collections-label"
@@ -12,6 +12,9 @@ on mouseUp
          break
       case  "browse-label"
          go to card "listen-browse"
+         break
+      case  "my-audio-label"
+         go to card "listen-my-audio"
          break
       case "audioList"
          repeat with x=1 to (the number lines of fld "audioList")
@@ -22,7 +25,7 @@ on mouseUp
          if (tLineNum mod 2) = 0 then
             subtract 1 from tLineNum
          end if
-          set the backgroundcolor of line tLineNum of fld "audioList" to 176,30,66
+         set the backgroundcolor of line tLineNum of fld "audioList" to 176,30,66
          put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
@@ -43,6 +46,42 @@ on mouseUp
    end switch
 end mouseUp
 
+
+
+command switchAudioUi sAudioUI
+   if sAudioUI is empty then
+      put "hideUI" into sAudioUI
+   end if
+   # talks UI
+   put empty into fld "searchString"
+   put sAudioUI into pUI
+   switch pUI
+      case "hideUI"
+         hide grp "titleDescription"
+         hide grp "author"
+         hide grp "songproperties"
+         hide grp "searchControls"
+         break
+      case  "Inspired Talks" 
+         hide grp "songProperties"
+         show grp "author" 
+         set the top of grp "titleDescription" to 295
+         show grp "titleDescription"   
+         show grp "searchControls"
+         break
+         
+         # song UI   
+      case  "songs" 
+         
+         hide grp "author"
+         set the top of  grp "titleDescription" to 157
+         show grp "titleDescription"
+         show grp "songProperties"
+         set the hilitedButton of group "titleDescription" to empty
+         set the hilited of btn "Artists" to false
+         show grp "searchControls"
+   end switch
+end switchAudioUi
 
 command getAudioList
    local tContext

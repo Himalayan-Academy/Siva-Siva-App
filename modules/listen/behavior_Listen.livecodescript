@@ -35,6 +35,7 @@ on preopenstack
    wait 100 milliseconds with messages 
    set the fullscreenmode of this stack to "showAll"
    mobile_SetAllowedOrientation "portrait"
+   
 end preopenstack
 
 on openstack 
@@ -50,11 +51,11 @@ on openstack
    
    set the acceleratedRendering of this stack to true
    
-  -- put empty into fld "log"
+   -- put empty into fld "log"
    
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
-  put JSONToArray(tContainer) into sCollectionA
-   
+   put JSONToArray(tContainer) into sCollectionA   
+ 
 end openstack
 
 # return JSON for other handlers as needed
@@ -64,10 +65,10 @@ end getCollectionsJson
 
 
 command selectPlaylist pSelection
-
+   
    # use has  made choice from card 
    
-
+   
    
    # get extract JSON from sCollectionA 
    # which is an array that contain all collections
@@ -97,7 +98,7 @@ command selectPlaylist pSelection
    
    # Link each separate process to a 
    # specific handler
-      showBusyIndicator true,"Loading"
+   showBusyIndicator true,"Loading"
    playList_FetchData tColl,tPlay
    
 end selectPlaylist
@@ -135,10 +136,10 @@ end playlist_GetCurrent
 
 function playlist_GetRecords  
    if sCurrentPlayListA["audioFiles"] is empty then
-   
-      if isMobile() is false then
-         put "No records Fetched!"
-      end if
+      
+      --       if isMobile() is false then
+      --          put "No records Fetched!"
+      --       end if
       
    else
       return sCurrentPlaylistA
@@ -333,8 +334,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             put jsonToArray (tRecords) into sCurrentPlayListA["audioBookMetadata"]
          end if
          
-         break
-         
+         break      
    end switch
    
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
@@ -343,10 +343,9 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    put tPlaylistClass into sCurrentPlaylistA["playlistClass"]
    
    if sCurrentPlayListA["audioFiles"] is empty then 
-      put "No records for that search. Try again" into fld "audioList" of card "listen-browse" of stack "listen"
+    doAnswer "No records for that search. Try again","Cancel"
       wait 1500 milliseconds with messages
       put empty into fld "audioList" of card "listen-browse" of stack "listen"
-      -- dispatch "revealMoreActions" to this card with "true"
       exit to top
    end if
    
@@ -546,12 +545,16 @@ on preopencard
    put the short name of this card into tMode
    switch tMode
       case "listen-collection" 
+         
          put the location of fld "collections-label" into tLabelLoc
          put the width of fld "collections-label" into tLabelWidth
          set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
          hide fld "browse-label"
          put "Listen" into fld "title-label"
+         # have nav bar
+         show widget "share"
+         show widget "add-favorites" 
          break
       case "listen-my-audio"
          setAudioListcolors
@@ -562,6 +565,9 @@ on preopencard
          show fld "browse-label"
          put "Downloaded Audio" into fld "title-label"
          put empty into fld "audioList"
+          # have nav bar
+         show widget "share"
+         show widget "add-favorites" 
          break
       case "listen-browse"
          setAudioListcolors
@@ -571,6 +577,9 @@ on preopencard
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
          show fld "browse-label"
          put playlist_GetCurrent() into fld "title-label"
+          # have nav bar
+         show widget "share"
+         show widget "add-favorites" 
          break
       case "listen-search"
           put the location of fld "title-label" into tLabelLoc
@@ -579,12 +588,11 @@ on preopencard
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
          put "Search" into fld "title-label"
          set the textsize of fld "title-label" to 18
+          # have nav bar
+         hide widget "share"
+         hide widget "add-favorites" 
          break
    end switch   
 end preopencard
    
   
-
-
-
-
