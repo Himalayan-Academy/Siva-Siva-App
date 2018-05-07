@@ -27,7 +27,7 @@
 local sCollectionA,sCollectionChoice
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-local sCached
+local sCached, sBrowseHeader
 
 on preopenstack
    # may be fixed in recent versions Android crashed on stack swaps
@@ -190,7 +190,7 @@ end playlist_GetRecords
  
 -----------------------------------------------------------------------
 
-on playList_FetchData tColl,tPlay,pFilterListQueryA
+on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
@@ -237,9 +237,13 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA
             put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
          end if
       end repeat
-     
+         put sCurrentPlayListA["playListTitle"] into sBrowseHeader
       # use the queries from the Search Screen
    else
+      
+      put "cached" into tPlayListClass
+      put pFilterListQueryA into sPlaylistQueryA
+      put pBrowseHeader into sBrowseHeader
       
    end if
    
@@ -395,8 +399,7 @@ on  playlist_Instantiate sTargetPlayList
    end switch
    put empty into sCached
    markCachedItems tKeys
-   put  playlist_GetCurrent() into fld "title-label" of card "listen-browse"
-    
+   
     showBusyIndicator false
   
    go to card "listen-browse"
@@ -412,7 +415,8 @@ on  playlist_Instantiate sTargetPlayList
     repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
    end repeat
-   
+   put sBrowseHeader into fld "title-label" of card "listen-browse"
+
    show fld "audioList"
   
    
@@ -573,7 +577,7 @@ on preopencard
          put the width of fld "title-label" into tLabelWidth
          set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         put "Search and Filter" into fld "title-label"
+         put "Search" into fld "title-label"
          set the textsize of fld "title-label" to 18
          break
    end switch   

@@ -33,7 +33,8 @@
 -- just keep original data in a var; search that var; use results and reset as needed.
 
 ###################
-
+# There short always be string to finder 
+local  sStringToFind  
 local sSearchClass,sCallContext,sPlaylistQueryA
 
 on executeSearch pTarget
@@ -47,6 +48,10 @@ on executeSearch pTarget
    
 end executeSearch
 
+command setFindString
+   put fld "searchstring" into sStringToFind  
+end setFindString
+
 ------------------------------------------------------------------------
 #  UNIQUE SEARCHES FOR DIFFERENT MODULES ARE ADDED HERE
 # there is a diversity of requirements and use cases 
@@ -56,63 +61,73 @@ end executeSearch
 ------------------------------------------------------------------------
 
 command searchPlayList  # Search Audio
+   setFindString
    # we must get the original collection data
    # determine whether to it is an Inspired Talk or if it in a Songs or chant
    # We not do search audio books.
-   put  getCollectionsJson() into tAllCollections
+   put  getCollectionsJson() into tAllCollection
    put the hilitedbuttonname of grp "collectionChoice" into pWhichClass
-   
-   put "cached" into tColl
    put "YES" into pFilterListQueryA["approved_for_public"]
    switch
       case  (pWhichClass= "Songs") # unique seach criteria:
          put "audio/song" into pFilterListQueryA["media_type"]
          put the hilitedbuttonname of grp "deity"  into tDeity
-         if tDeity is not "All" then
+         if tDeity is not "All Collections" then
             put tDeity into pFilterListQueryA["deity"]
          end if
          put the hilitedbuttonname of grp "genre" into tGenre
-         if tGenre is not "All" then
+         if tGenre is not "All Genres" then
             put tGenre into pFilterListQueryA["genre"]
          end if
-         put fld "searchstring" into tStringToFind  
-         put the hilitedButtonName of grp "textColumns" into tTextTarget
-         if (tStringToFind is not empty) AND (tTextTarget is empty) then
+         put the hilitedButtonName of grp "titleDescription" into tTextTarget
+         if (sStringToFind is empty) AND (tTextTarget is empty) then
             put "Pick Title, Description or Artist" into fld "searchString"
-            put tstringToFind into fld "searchstring"
+            wait 2 seconds
+            put empty into fld "searchString"
             exit to top
          else
-            put tStringToFind into pFilterListQueryA[tTextTarget]         
+            put the hilitedButtonName of grp "titleDescription" into tTextTarget
+            if tTextTarget = "Subtitle" then
+               put "sub_title" into tTextTarget # has to match the dBase column name
+            end if
+            if the hilite of btn "artists" is true then 
+               put "artists" into tTextTarget
+            end if
+            put sStringToFind into pFilterListQueryA[tTextTarget]    
+            put sStringToFind &&tDeity && tGenre into pBrowseHeader
          end if
          break
       case (pWhichClass contains "Inspired Talks")
-         
+         put the hilitedbuttonname of grp "author"  into tAuthor
          put "inspiredtalk" into pFilterListQueryA["media_type"]
-         if tPlayList contains "Gurudeva" then 
+         if tAuthor contains "Gurudeva" then 
             put  "Satguru Sivaya Subramuniyaswami" into pFilterListQueryA["author"]
          end if
-         if tPlayList contains "Bodhinatha" then 
+         if tAuthor contains "Bodhinatha" then 
             put  "Satguru Bodhinatha Veylanswami" into pFilterListQueryA["author"]
          end if
-         put fld "searchstring" into tStringToFind  
          put the hilitedButtonName of grp "titleDescription" into tTextTarget
          if tTextTarget = "Subtitle" then
             put "sub_title" into tTextTarget # has to match the dBase column name
          end if
-         if (tStringToFind is not empty) AND (tTextTarget is empty) then
-            put "Pick Search In" into fld "searchString"
-            wait 1 second
-            put tstringToFind into fld "searchstring"
+         if (sStringToFind is empty)  then
+            put "Enter Search?" into fld "searchString"
+            wait 2 seconds
+            put empty into fld "searchString"
             exit to top
          else
-            put tStringToFind into pFilterListQueryA[tTextTarget]         
+            put sStringToFind into pFilterListQueryA[tTextTarget]     
+   
          end if
          
    end switch
    
-   --  revealMoreActions "false"
-   playList_fetchData pFilterListQueryA
-  -- show widget "revealMoreActions"
+   ## those call in coming from search
+   # still need to set two parameter for the collection and play list, every though
+   # will not access these in the search
+   # we use "none" to be explicit
+   put "Search:" && sStringToFind into pBrowseHeader
+   playList_fetchData "none","none", pFilterListQueryA,pBrowseHeader
    
 end searchPlayList
 
