@@ -20,6 +20,9 @@ on passAudioSelection pLine,pTitle
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
 end passAudioSelection
 
+on select_Play pLine,pTitle
+   startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
+end select_Play
 
 command getDownloadedAudio
    local tList, tSearchA, tURL

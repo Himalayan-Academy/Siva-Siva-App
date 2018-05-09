@@ -29,6 +29,7 @@ on mouseUp
          put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
+       -- select_Play  sSelectNum, pTitle
          break
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
