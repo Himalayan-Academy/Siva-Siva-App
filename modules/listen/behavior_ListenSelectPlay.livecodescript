@@ -86,6 +86,9 @@ on mouseup
          put round(sSelectNum/2) into sSelectNum      
          select_Play # will use either the line number or item id
          break  
+         
+         # this if for showing lyric, artist or transcript
+         # add appears in 
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
          if detailVis then
@@ -104,13 +107,13 @@ on mouseup
          end if
          downloadSelection pTarget
          break
-      case "revealMoreActions"
-         put not (the vis of grp "moreActions") into pVis
-         deleteMobileControl "audioPlayer" 
-         # Required by Android to let the card work as expected
-         # and we assume user won't mind the player stopping if they are going to search.
-         revealMoreActions pVis
-         break
+         --       case "revealMoreActions"
+         --          put not (the vis of grp "moreActions") into pVis
+         --          deleteMobileControl "audioPlayer" 
+         --          # Required by Android to let the card work as expected
+         --          # and we assume user won't mind the player stopping if they are going to search.
+         --          revealMoreActions pVis
+         --          break
    end switch
    -- pass mouseUp
 end mouseup
@@ -177,52 +180,52 @@ end select_Play
 
 
 
-command revealMoreActions pVis
-   
-   
-   --pVis = boolean
-   
-   if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
-      set the vis of bg "moreActions" to pVis
-      exit revealMoreActions
-   end if 
-   if  pVis <> false  then -- show it
-      set the acceleratedRendering of this stack to false
-      
-      set the hilitedbuttonName of grp "deity" to "All"
-      set the hilitedbuttonName of grp "genre" to "All"
-      set the hilitedbuttonName of grp "textColumns" to empty
-      --jg: horiz centering for mobile screens:
-      set the loc of grp "moreActions" to the loc of this cd
-      set the bottom of grp "moreActions" to 0
-      put empty into fld "searchString" of grp "moreActions"
-      # Set up the form ahead of time
-      # we hide everything not needed for talks
-      if sSelectionsA["playListTitle"] contains "Talks" then
-         hide grp "songProperties"
-         hide button "artists" of grp "textColumns"
-         show button "Subtitle" of grp "textColumns"
-      end if
-      if sSelectionsA["playListTitle"] = "Songs" then
-         show grp "songProperties" 
-         hide button "Subtitle" of grp "textColumns"
-         show button "Artists" of grp "textColumns"
-      end if
-      set the vis of group "moreActions" to true
-      moveGrp "moreActions", 0, the height of grp "moreActions", 500
-      put "Leave All Empty to Reset" into fld "searchString"
-      wait 1 second; put empty into fld "searchString"
-      focus on fld "searchString" --jg: force mobile keyboard
-      select after fld "searchString"
-   else -- hide it
-      set the acceleratedRendering of this stack to true
-      focus on nothing
-      moveGrp "moreActions", 0, -(the height of grp "moreActions"), 500
-      hide group "moreActions"
-      put empty into fld "searchString"
-   end if  
-   
-end revealMoreActions
+-- command revealMoreActions pVis
+
+
+--    pVis = boolean
+
+--    if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
+--       set the vis of bg "moreActions" to pVis
+--       exit revealMoreActions
+--    end if 
+--    if  pVis <> false  then -- show it
+--       set the acceleratedRendering of this stack to false
+
+--       set the hilitedbuttonName of grp "deity" to "All"
+--       set the hilitedbuttonName of grp "genre" to "All"
+--       set the hilitedbuttonName of grp "textColumns" to empty
+--       jg: horiz centering for mobile screens:
+--       set the loc of grp "moreActions" to the loc of this cd
+--       set the bottom of grp "moreActions" to 0
+--       put empty into fld "searchString" of grp "moreActions"
+--       # Set up the form ahead of time
+--       # we hide everything not needed for talks
+--       if sSelectionsA["playListTitle"] contains "Talks" then
+--          hide grp "songProperties"
+--          hide button "artists" of grp "textColumns"
+--          show button "Subtitle" of grp "textColumns"
+--       end if
+--       if sSelectionsA["playListTitle"] = "Songs" then
+--          show grp "songProperties" 
+--          hide button "Subtitle" of grp "textColumns"
+--          show button "Artists" of grp "textColumns"
+--       end if
+--       set the vis of group "moreActions" to true
+--       moveGrp "moreActions", 0, the height of grp "moreActions", 500
+--       put "Leave All Empty to Reset" into fld "searchString"
+--       wait 1 second; put empty into fld "searchString"
+--       focus on fld "searchString" --jg: force mobile keyboard
+--       select after fld "searchString"
+--    else -- hide it
+--       set the acceleratedRendering of this stack to true
+--       focus on nothing
+--       moveGrp "moreActions", 0, -(the height of grp "moreActions"), 500
+--       hide group "moreActions"
+--       put empty into fld "searchString"
+--    end if  
+
+-- end revealMoreActions
 
 
 --------------
@@ -268,20 +271,9 @@ command share_Items
    return sShareItemsA
 end share_Items
 
-command updateCachedListings 
-   
-   put "true" into sSelectionsA["audioFiles"][sSelectNum]["cached"]
-   set the foregroundcolor of line sSelectNum of fld "audioList" to green
-   # Later we need to update the myURL of the play list selection.
-   # but for now we assume if they have enough bandwidth to download
-   # let them stream... when they come back later the list will be updated
-   
-end updateCachedListings
-
-
 on closeCard
-   set the acceleratedRendering this stack to false
    showPlayer "false","audioPlayer"
+    deleteAllMobileControls 
 end closeCard
 
 command select_ShowDetails   pSelectSong

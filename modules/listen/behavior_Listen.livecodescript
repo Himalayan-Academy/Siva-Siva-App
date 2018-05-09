@@ -35,7 +35,6 @@ on preopenstack
    wait 100 milliseconds with messages 
    set the fullscreenmode of this stack to "showAll"
    mobile_SetAllowedOrientation "portrait"
-   
 end preopenstack
 
 on openstack 
@@ -238,12 +237,14 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
          end if
       end repeat
-         put sCurrentPlayListA["playListTitle"] into sBrowseHeader
-      # use the queries from the Search Screen
+      put sCurrentPlayListA["playListTitle"] into sBrowseHeader
+      replace cr with " " in sBrowseHeader
    else
+      # use the queries from the Search Screen
       
       put "cached" into tPlayListClass
       put pFilterListQueryA into sPlaylistQueryA
+      # the query is sent a param for the header
       put pBrowseHeader into sBrowseHeader
       
    end if
@@ -399,11 +400,16 @@ on  playlist_Instantiate sTargetPlayList
    put empty into sCached
    markCachedItems tKeys
    
-    showBusyIndicator false
-  
-   go to card "listen-browse"
    
   
+    # Now we switch cards, 
+    
+   go to card "listen-browse"
+  
+   showBusyIndicator false
+   
+   
+   
    
    hide fld "audioList"
    put tTitles into fld "audioList"  

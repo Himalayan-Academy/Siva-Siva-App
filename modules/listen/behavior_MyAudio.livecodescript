@@ -90,6 +90,9 @@ command loadtitles sTitles
    put the number of lines of sTitles into pLineCount
 end loadtitles
 
+on closecard
+     deleteAllMobileControls 
+end closecard
 
 #  ======
 # Consider pre-loading datebase info for the recent talks
