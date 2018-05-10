@@ -247,7 +247,7 @@
     "playLists": [
       {
         "playListTitle": "Ganesha",
-        "playListImg": "Natchintanai_330.jpg",
+        "playListImg": "Natchintanai_330_ganesha.jpg",
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
@@ -258,7 +258,7 @@
       },
       {
         "playListTitle": "Muruga",
-        "playListImg": "Natchintanai_330.jpg",
+        "playListImg": "Natchintanai_330_vel.jpg",
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
@@ -269,7 +269,7 @@
       },
       {
         "playListTitle": "Siva",
-        "playListImg": "Natchintanai_330.jpg",
+        "playListImg": "Natchintanai_330_siva.jpg",
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
@@ -280,7 +280,7 @@
       },
       {
         "playListTitle": "Affirm\nThe Truth",
-        "playListImg": "Natchintanai_330.jpg",
+        "playListImg": "Natchintanai_330_affirm-truth.jpg",
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
