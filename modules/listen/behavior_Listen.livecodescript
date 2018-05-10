@@ -402,17 +402,12 @@ on  playlist_Instantiate sTargetPlayList
    put empty into sCached
    markCachedItems tKeys
    
+      showBusyIndicator false
    
-  
     # Now we switch cards, 
     
    go to card "listen-browse"
   
-   showBusyIndicator false
-   
-   
-   
-   
    hide fld "audioList"
    put tTitles into fld "audioList"  
    typesetAudioList
@@ -422,6 +417,7 @@ on  playlist_Instantiate sTargetPlayList
     repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
    end repeat
+     replace cr with " " in sBrowseHeader
    put sBrowseHeader into fld "title-label" of card "listen-browse"
 
    show fld "audioList"
@@ -584,7 +580,9 @@ on preopencard
          set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
          show fld "browse-label"
-         put playlist_GetCurrent() into fld "title-label"
+         put playlist_GetCurrent() into  tBrowseHeader
+         replace cr with " " in tBrowseHeader
+         put tBrowseHeader into fld "title-label"
           # have nav bar
          show widget "share"
          show widget "add-favorites" 
