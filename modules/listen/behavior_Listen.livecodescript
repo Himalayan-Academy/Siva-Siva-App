@@ -281,6 +281,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+              showBusyIndicator false
             portal_Link "Listen"
             exit to top
          else 
@@ -326,6 +327,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+             showBusyIndicator false
             exit to top
          else 
             put it into tRecords 

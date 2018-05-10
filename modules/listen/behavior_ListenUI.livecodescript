@@ -62,6 +62,7 @@ command switchAudioUi sAudioUI
          hide grp "author"
          hide grp "songproperties"
          hide grp "searchControls"
+         set the hilitedButton of group "collectionChoice" to empty
          break
       case  "Inspired Talks" 
          hide grp "songProperties"
