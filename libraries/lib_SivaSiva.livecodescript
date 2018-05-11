@@ -449,6 +449,10 @@ on backkey # need for android
    end if
 end backkey
 
+command  sentBackKeyToEngine
+   backkey
+end sentBackKeyToEngine
+
 --> ### GLOBAL CATEGORY AND REALM TRACKING
 -- use of the journal requires we know certain things about
 -- what the user did before and it is often related to some category
