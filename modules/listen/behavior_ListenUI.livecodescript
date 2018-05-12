@@ -1,5 +1,5 @@
 ﻿script "behavior_ListenUI"
-//>LOCALS
+passAudioSelection//>LOCALS
 local sSelectNum, sSingleAudioA,sCached
 local sAudioUI
 
@@ -128,6 +128,7 @@ command startPlayer  sSelectedURL, pTitle
    showPlayer "true", "audioPlayer"
    if not isMobile() then
       start player "audioPlayer"
+      runningAudioIndicatorVis("true")
    else
       setMobileAudioPlayer "audioPlayer", "play"
    end if

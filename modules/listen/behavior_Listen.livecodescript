@@ -99,7 +99,6 @@ command selectPlaylist pSelection
    # specific handler
    showBusyIndicator true,"Loading"
    playList_FetchData tColl,tPlay
-   
 end selectPlaylist
 
 -----------------------------------------------------
@@ -134,12 +133,10 @@ end playlist_GetCurrent
 # use this to fetch data later for card behavior
 
 function playlist_GetRecords  
-   if sCurrentPlayListA["audioFiles"] is empty then
-      
+   if sCurrentPlayListA["audioFiles"] is empty then     
       --       if isMobile() is false then
       --          put "No records Fetched!"
-      --       end if
-      
+      --       end if   
    else
       return sCurrentPlaylistA
    end if
@@ -191,7 +188,7 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
-   
+   showBusyIndicator true,"Loading"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
    --  dispatch "cleanUpGui" to card "listen-browse"      
@@ -309,6 +306,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+                  showBusyIndicator false
             exit to top
          else 
             put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]

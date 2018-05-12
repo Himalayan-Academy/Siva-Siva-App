@@ -26,6 +26,7 @@ on preOpenCard
 end preOpenCard
 
 on openCard
+   
    # Fix image path from desktop when loading on Mobile
    
    if isMobile() then
@@ -54,6 +55,7 @@ on openCard
    setCardTitle
    set the acceleratedRendering of this stack to true
    send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
+   pass opencard
 end OpenCard
 
 on setCardTitle

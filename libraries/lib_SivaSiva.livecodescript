@@ -326,13 +326,27 @@ end connectivity_NotAvailable
 on _____VISUALSandUI
 end _____VISUALSandUI
 
-command runningAudioIndicatorVis visBool
-   put visBool into sStopRunningAudio
-end runningAudioIndicatorVis
-
-function runningAudioIndicatorVis
+function runningAudioIndicatorVis visBool
+   if isMobile() then
+      put mobileControls() into tList
+      if tList contains "audioPlayer" then 
+         put "true" into sStopRunningAudio
+      else
+         put "false" into sStopRunningAudio
+      end if
+   end if
    return sStopRunningAudio
 end runningAudioIndicatorVis
+
+function audioIsRunning
+   return sStopRunningAudio
+end audioIsRunning
+
+command turnOffAudio
+   deleteMobileControl "audioPlayer"
+   put "false" into sStopRunningAudio
+end turnOffAudio
+
 
 command display_SetStatusBarVis visBoolean
    if visBoolean then
@@ -417,6 +431,12 @@ end display_Log
  on _____Utilities
  end _____Utilities
  
+ function isAudioPlay
+     repeat while pName is among the lines of mobileControls()
+      mobileControlDelete pName
+   end repeat
+  
+ end isAudioPlay
  function removeQuotes pString
     # Needed when passing some raw string to json for some functions like analytics
     # quotes will break theAPI/Jdon
@@ -441,17 +461,21 @@ end display_Log
  end stripHTMLTags
 
 on backkey # need for android
-   if the short name of this stack is "journal" then
-      send mouseup to widget "go-back"
-   else
-      
-      send mouseup to widget "go-home-portal"
+   put the effective working screenrect into tScreen
+   if (item 4 of tScreen-item 2 of tScreen) < 650 then
+      # assume board if up
+      pass backKey
+   else 
+      if the short name of this stack is "journal" then
+         send mouseup to widget "go-back"
+      else
+         
+         send mouseup to widget "go-home-portal"
+      end if
    end if
 end backkey
 
-command  sentBackKeyToEngine
-   backkey
-end sentBackKeyToEngine
+
 
 --> ### GLOBAL CATEGORY AND REALM TRACKING
 -- use of the journal requires we know certain things about
