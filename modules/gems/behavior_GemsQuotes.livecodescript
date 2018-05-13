@@ -55,7 +55,7 @@ on openCard
    setCardTitle
    set the acceleratedRendering of this stack to true
    send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
-   pass opencard
+   pass opencard # there are things that should happen on all cards
 end OpenCard
 
 on setCardTitle

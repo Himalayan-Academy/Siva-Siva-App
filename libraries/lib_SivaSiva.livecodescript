@@ -338,11 +338,16 @@ function runningAudioIndicatorVis visBool
    return sStopRunningAudio
 end runningAudioIndicatorVis
 
-function audioIsRunning
-   return sStopRunningAudio
+command audioIsRunning  
+   # show global speaker when it installed  on a card
+   # inside group audioGlobalControl 
+ if runningAudioIndicatorVis() = "true" then
+      show widget "turnOffAudio" 
+   end if
 end audioIsRunning
 
-command turnOffAudio
+command turnOffAudio 
+   # called by the speaker "widget" if it is showing
    deleteMobileControl "audioPlayer"
    put "false" into sStopRunningAudio
 end turnOffAudio

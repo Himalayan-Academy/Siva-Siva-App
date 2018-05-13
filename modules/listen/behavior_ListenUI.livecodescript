@@ -104,7 +104,6 @@ command startPlayer  sSelectedURL, pTitle
    --  local sSelectedURL, tRect
    
    if sSelectedURL contains "https" then # we need connectivity
-    showBusyIndicator true,"Loading"
       if connectivity_PingServer()<>"true" then
          dialog_CustomMsg "Offline or Low Bandwidth"
          exit startPlayer
@@ -132,8 +131,6 @@ command startPlayer  sSelectedURL, pTitle
    else
       setMobileAudioPlayer "audioPlayer", "play"
    end if
-   
-   showBusyIndicator false
    put  pTitle into fld "currentTitleLabel"
    # Android player covers it! Because the controller higher that iOS one.
    if the platform is "Android" then
@@ -142,7 +139,6 @@ command startPlayer  sSelectedURL, pTitle
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
    end if
-   showBusyIndicator false
 end startPlayer
 
 
