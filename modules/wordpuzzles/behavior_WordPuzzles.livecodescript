@@ -18,12 +18,13 @@ on openCard
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
-    loadNewBgImg
-    setTileGlow "small"
-     put 0 into sCluesGiven
+   loadNewBgImg
+   setTileGlow "small"
+   put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-  end opencard
+   pass opencard
+end opencard
   
 
 command setTileGlow pSize
@@ -679,6 +680,3 @@ command checkTileGlow
    set the outerGlow of image "word_5" to sTileGlow
 end checkTileGlow
 
-on startup pMode
-
-end startup
