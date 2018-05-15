@@ -51,7 +51,7 @@ end fetchRandomMediaItem
 function fetchMediaItems tSearchA
    #Typically we are no passing and explicitlist
    # but a pre-set array   
-
+   
    put  JnanamDB() into tConnectionID
    repeat for each key x in tSearchA
       if tSearchA[x]is not empty then
@@ -117,7 +117,7 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
       return "https://www.himalayanacademy.com/media/audio/books/"
       exit getMediaURL
    end if
-      
+   
    put sMediaMetaA["media_type"] into pMediaType
    
    getformatData (sMediaMetaA["item_id"])
@@ -192,8 +192,8 @@ function getMediaItemMetadata pRecords
          put cr & cr & sMediaMetaA[x] after tLyrics
       end if
    end repeat 
-
-
+   
+   
    # data has commas so we have to use a lines as a delimiter
    put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
@@ -212,7 +212,7 @@ function getMediaItemMetadata pRecords
    return tViewData
    
 end getMediaItemMetadata
-  
+
 #############
 # GetFormatData
 ## use this to get the format for records
@@ -224,7 +224,7 @@ end getMediaItemMetadata
 
 command getformatData pItemID
    put format ("SELECT  * FROM item_format WHERE item_id  = \"%s\"", pItemID) into tSQL
-   put  JnanamDB() into tConnectionID
+         put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet("item_format", tConnectionID) into aSelectedItemFormats   
 end getformatData
@@ -266,23 +266,23 @@ command getRandomVideo
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if
-    put fetchRandomMediaItem ("media_type","video") into GotIt
-    # the above just fetches a record from the item table 
-    # to get the path or URL we have to query the format table:
-    put getMediaURL ("url") into sURL
-    portal_GoUrl sURL
- end getRandomVideo
- 
- 
+   put fetchRandomMediaItem ("media_type","video") into GotIt
+   # the above just fetches a record from the item table 
+   # to get the path or URL we have to query the format table:
+   put getMediaURL ("url") into sURL
+   portal_GoUrl sURL
+end getRandomVideo
+
+
 # convert incoming URL from the formats table in the Jnanam database
 # URL are stored in this form:
 # "http://www.youtube.com/watch?v=T6mwoO9sXPI&feature=youtube_gdata_player"
 
 function convertYouTubeURL pURL
-    set the itemdel to "?"
-    put item 2 of pURL into tQueryString
-    split tQueryString with "&" and "="
-    return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
+   set the itemdel to "?"
+   put item 2 of pURL into tQueryString
+   split tQueryString with "&" and "="
+   return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
 end convertYouTubeURL
 
 
@@ -373,9 +373,9 @@ function folderForArt pBestFormat
          put tFilename after pServerPath
          exit repeat
       end if
-      end repeat
-      return pServerPath
-   end  folderForArt
+   end repeat
+   return pServerPath
+end  folderForArt
 
 command insertImageDimensions pImage
    put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
@@ -383,7 +383,7 @@ end insertImageDimensions
 
 
 function getRectOfCurrentGrc
-  return sCurrentGraphicRect
+   return sCurrentGraphicRect
 end getRectOfCurrentGrc
 
 
@@ -401,20 +401,11 @@ end getRectOfCurrentGrc
 # We copied some already good methods from the gurudeva app. and modified from there.
 ##########################################################
 
-on manualTestFetch pimage
-   # just fror development... 
-   # use a temp button on the UI to check for image resolution behavior etc
-     answer file "Chose an image"
-   put it into sURL
-   set the filename of pImage to sURL
-        put the formattedWidth of  pImage into tFWd
-     put the formattedHeight of  pImage into tFHt
-     put (tFWd & "x" & tFHt) into sCurrentGraphicRect
-   resizeToHeight pimage, 736
-   set the loc of pimage to the loc of this card
-   show control "quoteControl"
-   put sCurrentGraphicRect
-end manualTestFetch
+command setRectOfCurrentGrc pimage
+   put the formattedWidth of  pImage into tFWd
+   put the formattedHeight of  pImage into tFHt
+   put (tFWd & "x" & tFHt) into sCurrentGraphicRect
+end setRectOfCurrentGrc
 
 ## NOTE: for the following handlers to work you must pass
 ## the rect in the form of  width x height  this this form ("736x552")
