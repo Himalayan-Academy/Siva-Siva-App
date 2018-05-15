@@ -341,8 +341,10 @@ end runningAudioIndicatorVis
 command audioIsRunning  
    # show global speaker when it installed  on a card
    # inside group audioGlobalControl 
- if runningAudioIndicatorVis() = "true" then
-      show widget "turnOffAudio" 
+   if runningAudioIndicatorVis() = "true" then
+      if there is a widget "turnOffAudio"  then 
+         show widget "turnOffAudio" 
+      end if
    end if
 end audioIsRunning
 

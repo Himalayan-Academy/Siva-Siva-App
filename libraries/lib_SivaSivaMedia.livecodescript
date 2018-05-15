@@ -85,9 +85,17 @@ end fetchMediaItems
 --------------------------------------------------------------
 
 function fetchRandomImageAsset pCollection
+   # if it in photography, each image has a folder
+   
    put   (path_Assets()&"img/")  & pCollection into tPath
-   put files (tPath) into tImageList
-   put line (random (the number of lines of tImageList)) of tImageList after tPath
+   If pCollection="photography" then
+      put folders(tPath) into tFolderList
+      put line(random (the number of lines of tFolderList))of tFolderList into tImageID
+      put "/"& tImageID & "/"  & tImageID &"_med.jpg" after tPath
+   else   
+      put files(tPath) into tImageList
+      put "/"&line (random (the number of lines of tImageList)) of tImageList after tPath
+   end if
    return tPath
 end fetchRandomImageAsset
 
