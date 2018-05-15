@@ -1,4 +1,4 @@
-﻿script "behavior_ListenSelectPlay"
+﻿script "behavior_ListenSelectPlay" with behavior "behavior_ListenUI"
 
 ---------------------------------------------------------------------
 # behavior_ListenSelectPlay
@@ -19,17 +19,20 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-
+global sConfigA
 local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget
 
 on preopencard
    hide player "audioPlayer"
+   pass preopencard
 end preopencard
 
 on openCard
    # starts out with the entire play list unfiltered
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
+   -- set GUI
+   put empty  into fld "currentTitleLabel"
    playlist_Reset 
 end openCard
 
@@ -52,6 +55,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
+   --answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
    # all logic for user interaction with the GUI is handled here.
@@ -64,10 +68,27 @@ on mouseup
    put the short name of the Target  into tTarget   
    
    switch tTarget
+      # card navigaton
+      case "collections-label"
+         go to card "listen-collection"
+         break
+      case "my-audio-label"
+         go to card "listen-my-audio"
+         break
       case "AudioList"
+         setAudioListColors
          put word 2 of clickline() into sSelectNum
+         put sSelectNum into tLineNum
+         if (tLineNum mod 2) = 0 then
+            subtract 1 from tLineNum
+         end if
+         set the backgroundcolor of line tLineNum of fld "audiolist" to "174,30,66"
+         put round(sSelectNum/2) into sSelectNum      
          select_Play # will use either the line number or item id
          break  
+         
+         # this if for showing lyric, artist or transcript
+         # add appears in 
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
          if detailVis then
@@ -86,14 +107,8 @@ on mouseup
          end if
          downloadSelection pTarget
          break
-      case "revealMoreActions"
-         put not (the vis of grp "moreActions") into pVis
-         deleteMobileControl "audioPlayer" 
-         # Required by Android to let the card work as expected
-         # and we assume user won't mind the player stopping if they are going to search.
-         revealMoreActions pVis
-         break
    end switch
+   -- pass mouseUp
 end mouseup
 
 ---------------------------------------------
@@ -127,7 +142,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if pItemID is empty then # search from the click line
       put getItemURL(sSelectNum) into sRemoteURL
       Put "Connecting..." into fld "currentTitleLabel"
-      playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+ --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
       put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
@@ -147,125 +162,14 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if sSelectedURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
-      send mouseUp to widget "chevron-up-down"
       showBusyIndicator false
       exit to top
    end if
-   startPlayer
+   startPlayer sSelectedURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
    Journal_AddEntry  sSelectedItemA["item_id"]
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
-
-command startPlayer pURL, pTitle
-   
-   if sSelectedURL contains "https" then # we need connectivity
-      if connectivity_PingServer()<>"true" then
-         dialog_CustomMsg "Offline or Low Bandwidth"
-         exit startPlayer
-      end if
-   end if
-   
-   if isMobile() then
-      if the platform is "android" then 
-         # the player is pretty ugly and covers up 120 vertical px
-         # we need to try to get it to fit nicely at the bottom:
-         put 70,570,405,659 into tRect       
-      else 
-         put empty into tRect
-      end if     
-      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
-   else
-      set the filename of player "audioPlayer" to sSelectedURL
-   end if
-   
-   showPlayer "true", "audioPlayer"
-   if not isMobile() then 
-      start player "audioPlayer"
-   else
-      setMobileAudioPlayer "audioPlayer", "play"
-   end if
-   
-   showBusyIndicator false
-   put  sSelectedItemA["title"] into fld "currentTitleLabel"
-   # put  sSelectionsA["audioFiles"][sSelectNum]["title"] into fld "currentTitleLabel"
-   # Android player covers it!
-   if the platform is "Android" then
-      set the bottomleft of widget "downloadSelection" to 14,657
-   else
-      set the bottom of widget "downloadSelection" to 622
-   end if
-   set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
-   #set the vis of widget "DownloadSelection" to not (sSelectionsA["audioFiles"][sSelectNum]["cached"] )
-end startPlayer
-
-
-# V2 Link to transcript
-
-command select_ShowDetails   
-   deleteMobileControl "audioList"
-   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      put getMediaItemMetadata() into fld "audioDetails"
-   else
-      # its an audio book, lib media doesn't know anything, we have to pass the record here       
-      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
-   end if
-   
-   set the textsize of line 1 of fld "audioDetails" to 22
-   set the textstyle of line 1 of fld "audioDetails" to "bold"
-   set the textstyle of line 3 of fld "audioDetails" to "italic"
-   set the rect of fld "AudioDetails" to (0,the bottom of fld "title",the width of this card,the height of this card -150) 
-   show fld "audioDetails" with visual effect wipe up very fast
-   send "CreateScroller audioDetails" to fld "audioDetails"
-end select_ShowDetails
-
-command revealMoreActions pVis
-   
-   
-   --pVis = boolean
-   
-   if there is no grp "moreActions" then -- unplaced on current cd; just set vis & exit
-      set the vis of bg "moreActions" to pVis
-      exit revealMoreActions
-   end if 
-   if  pVis <> false  then -- show it
-      set the acceleratedRendering of this stack to false
-      
-      set the hilitedbuttonName of grp "deity" to "All"
-      set the hilitedbuttonName of grp "genre" to "All"
-      set the hilitedbuttonName of grp "textColumns" to empty
-      --jg: horiz centering for mobile screens:
-      set the loc of grp "moreActions" to the loc of this cd
-      set the bottom of grp "moreActions" to 0
-      put empty into fld "searchString" of grp "moreActions"
-      # Set up the form ahead of time
-      # we hide everything not needed for talks
-      if sSelectionsA["playListTitle"] contains "Talks" then
-         hide grp "songProperties"
-         hide button "artists" of grp "textColumns"
-         show button "Subtitle" of grp "textColumns"
-      end if
-      if sSelectionsA["playListTitle"] = "Songs" then
-         show grp "songProperties" 
-         hide button "Subtitle" of grp "textColumns"
-         show button "Artists" of grp "textColumns"
-      end if
-      set the vis of group "moreActions" to true
-      moveGrp "moreActions", 0, the height of grp "moreActions", 500
-      put "Leave All Empty to Reset" into fld "searchString"
-      wait 1 second; put empty into fld "searchString"
-      focus on fld "searchString" --jg: force mobile keyboard
-      select after fld "searchString"
-   else -- hide it
-      set the acceleratedRendering of this stack to true
-      focus on nothing
-      moveGrp "moreActions", 0, -(the height of grp "moreActions"), 500
-      hide group "moreActions"
-      put empty into fld "searchString"
-   end if  
-   
-end revealMoreActions
-
 
 --------------
 
@@ -280,6 +184,8 @@ command downloadAffirmed
    else
       put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
+   put "listen" into sConfigA[last_stack]
+   hide stack "listen"
    go stack "view_Download"
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
 end downloadAffirmed
@@ -308,36 +214,28 @@ command share_Items
    return sShareItemsA
 end share_Items
 
-command updateCachedListings 
-
-   put "true" into sSelectionsA["audioFiles"][sSelectNum]["cached"]
-   set the foregroundcolor of line sSelectNum of fld "audioList" to green
-   # Later we need to update the myURL of the play list selection.
-   # but for now we assume if they have enough bandwidth to download
-   # let them stream... when they come back later the list will be updated
-   
-   
-end updateCachedListings
-
-
--- on cleanUpGUI
---    # more later but for now, so no flash of previous content 
---    put empty into fld "title" of this card
---    set the filename of img "playlistPoster" of this card to empty
---    put empty into fld "audioList" of this card
---    put empty into fld "currentTitleLabel" of this card
---    set the filename of player "audioPlayer"  of this card to empty
---    hide fld "audioDetails" of this card
---    hide widget "revealMoreActions"
---    hide widget "downloadSelection"
---    put empty into fld "audioDetails" of this card
---    showPlayer "false", "audioPlayer" 
---    ## add other mobile stuff to clear out here later
--- end cleanUpGUI
-
 on closeCard
    showPlayer "false","audioPlayer"
+    deleteAllMobileControls 
 end closeCard
+
+command select_ShowDetails   pSelectSong
+   deleteMobileControl "audioList"
+   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
+      put getMediaItemMetadata() into jai
+      put jai into fld "audioDetails"
+   else
+      # its an audio book, lib media doesn't know anything, we have to pass the record here       
+      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
+   end if   
+   set the textsize of line 1 of fld "audioDetails" to 22
+   set the textstyle of line 1 of fld "audioDetails" to "bold"
+   set the textstyle of line 3 of fld "audioDetails" to "italic"
+   set the rect of fld "AudioDetails" to rect of fld "audioList" 
+   show fld "audioDetails" with visual effect wipe up very fast
+   send "CreateScroller audioDetails" to fld "audioDetails"
+end select_ShowDetails
+
 
 
 

@@ -1,16 +1,16 @@
 [
-  {
+    {
     "collection-title": "All Recent - Bodhinatha",
     "playLists": [
       {
-        "playListTitle": "Recent Addition",
+        "playListTitle": "Recent Additions",
         "playListImg": "recent_additions_audio_330.jpg",
         "playlistClass": "latest",
         "recordType": "latest",
         "recordCount": "50",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "approved_for_public": "YES"
+			"media_type": "inspiredtalk",
+			"approved_for_public": "YES"
         }
       },
       {
@@ -20,9 +20,9 @@
         "recordType": "latest",
         "recordCount": "30",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "author": "Satguru Bodhinatha Veylanswami",
-          "approved_for_public": "YES"
+			"media_type": "inspiredtalk",
+			"author": "Satguru Bodhinatha Veylanswami",
+			"approved_for_public": "YES"
         }
       },
       {
@@ -30,20 +30,21 @@
         "playListImg": "bodhinatha_all-talks_DSC_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "author": "Satguru Bodhinatha Veylanswami",
-          "approved_for_public": "YES"
-        }
+			"media_type": "inspiredtalk",
+			"author": "Satguru Bodhinatha Veylanswami",
+			"approved_for_public": "YES"		
+		}
       },
       {
         "playListTitle": "Bodhinatha\nPath to Siva",
         "playListImg": "bodhinatha_path-to-siva_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "author": "Satguru Bodhinatha Veylanswami",
-          "file_id": "path-to-siva",
-          "approved_for_public": "YES"
+			"media_type": "inspiredtalk",
+			"author": "Satguru Bodhinatha Veylanswami",
+			"file_id": "path-to-siva",
+			"approved_for_public": "YES"
+				
         }
       }
     ]
@@ -54,7 +55,7 @@
       {
         "playListTitle": "Ganesha Bhajans",
         "playListImg": "bhajan-Ganesha_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "bhajan",
@@ -65,18 +66,19 @@
       {
         "playListTitle": "Muruga Bhajans",
         "playListImg": "bhajan_muruga_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
-          "media_type": "audio/song",
-          "genre": "bhajan",
-          "deity": "Muruga",
-          "approved_for_public": "YES"
+         	"media_type": "audio/song",
+			"genre": "bhajan",
+			"deity": "Muruga",
+			"approved_for_public": "YES"
+
         }
       },
       {
         "playListTitle": "Siva Bhajans",
         "playListImg": "bhajan_Siva_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "bhajan",
@@ -87,7 +89,7 @@
       {
         "playListTitle": "Guru Bhajans",
         "playListImg": "bhajan_guru_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "bhajan",
@@ -98,17 +100,18 @@
       {
         "playListTitle": "Gitam\n(Longer Songs)",
         "playListImg": "gitam-shutterstock_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "gitam",
+          "deity": "",
           "approved_for_public": "YES"
         }
       },
       {
         "playListTitle": "Other Bhajans",
         "playListImg": "profession-curated-collections_shutterstock_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "bhajan",
@@ -137,9 +140,9 @@
         "playListImg": "gurudeva_taka_QA_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "author": "Satguru Sivaya Subramuniyaswami",
-          "approved_for_public": "YES"
+			"media_type": "inspiredtalk",
+			"author": "Satguru Sivaya Subramuniyaswami",
+			"approved_for_public": "YES"
         }
       },
       {
@@ -147,16 +150,16 @@
         "playListImg": "gurudeva_MWS_readings_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "inspiredtalk",
-          "author": "Satguru Sivaya Subramuniyaswami",
-          "file_id": "mws",
-          "approved_for_public": "YES"
+			"media_type": "inspiredtalk",
+			"author": "Satguru Sivaya Subramuniyaswami",
+			"file_id": "mws",
+			"approved_for_public": "YES"
         }
       }
     ]
   },
   {
-    "collection-title": "Sankrit Chanting ",
+    "collection-title": "Sanskrit Chanting ",
     "playLists": [
       {
         "playListTitle": "Ganesha Puja",
@@ -174,7 +177,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "tag": "three chant",
+          "tag": "three chants",
           "approved_for_public": "YES"
         }
       },
@@ -214,7 +217,7 @@
     "collection-title": "Audio Book",
     "playLists": [
       {
-        "playListTitle": "The Guru Chroncles",
+        "playListTitle": "The Guru Chronicles",
         "playListImg": "audio-book_Guru_Chronicles_330.jpg",
         "playlistClass": "audiobook",
         "data_query": {
@@ -244,8 +247,8 @@
     "playLists": [
       {
         "playListTitle": "Ganesha",
-        "playListImg": "Natchintanai_330.jpg",
-        "playlist": "cached",
+        "playListImg": "Natchintanai_330_ganesha.png",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "natchintanai",
@@ -255,8 +258,8 @@
       },
       {
         "playListTitle": "Muruga",
-        "playListImg": "Natchintanai_330.jpg",
-        "playlist": "cached",
+        "playListImg": "Natchintanai_330_vel.png",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "natchintanai",
@@ -266,8 +269,8 @@
       },
       {
         "playListTitle": "Siva",
-        "playListImg": "Natchintanai_330.jpg",
-        "playlist": "cached",
+        "playListImg": "Natchintanai_330_siva.png",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "natchintanai",
@@ -276,9 +279,9 @@
         }
       },
       {
-        "playListTitle": "Themes",
-        "playListImg": "Natchintanai_330.jpg",
-        "playlist": "cached",
+        "playListTitle": "Affirm\nThe Truth",
+        "playListImg": "Natchintanai_330_affirm-truth.png",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "natchintanai",
@@ -294,7 +297,7 @@
       {
         "playListTitle": "Tirumurai",
         "playListImg": "Tirumurai-Subbhalakshmi-IMG_2278_330.jpg",
-        "playlist": "cached",
+        "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
           "genre": "tirumurai",
@@ -303,4 +306,4 @@
       }
     ]
   }
-]
+  ]

@@ -31,7 +31,7 @@ path_FileForUrl  # will creae a folder if needed for the request URL
 
 -------------------------------
 -- vars
-
+global sConfigA
 local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 
 ---------------------------------
@@ -165,4 +165,6 @@ on closestack
    put empty into fld "ProgressTitle"
    put empty into fld "progressField"
    hide scrollbar "progressbar"
+   open stack sConfigA[last_stack]
+   show stack sConfigA[last_stack]
 end closestack

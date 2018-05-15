@@ -8,7 +8,8 @@ local sCurLevel,sTileGlow,sCluesGiven
 -
 on openCard
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
-   send "showTitle false" to me in 800 milliseconds
+   showTitle true
+   send "showTitle false" to me in 1 second
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
@@ -17,12 +18,13 @@ on openCard
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
-    loadNewBgImg
-    setTileGlow "small"
-     put 0 into sCluesGiven
+   loadNewBgImg
+   setTileGlow "small"
+   put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-  end opencard
+   pass opencard
+end opencard
   
 
 command setTileGlow pSize
@@ -44,7 +46,7 @@ command setTileGlow pSize
 end setTileGlow
   
 on closecard
-  storeCurrentLevel sCurLevel
+   storeCurrentLevel sCurLevel
    tracking_RecordActivity "Word Puzzle", "navigation/exit", pTrackdata
 end closecard
   
@@ -69,7 +71,9 @@ on checkLevel
 end checkLevel
 
 on closeCard
-    deleteMobileControl "aboutText"
+   showTitle true
+   wait 200 milliseconds
+   deleteMobileControl "aboutText"
 end closeCard
 
 on displayAbout pLevel
@@ -388,7 +392,7 @@ on distributeWords
 end distributeWords
 
 on clearBoard
-   set the acceleratedRendering  of this stack to false
+   --set the acceleratedRendering  of this stack to false
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
    hide group "prefsSelectorGrp"
@@ -668,7 +672,6 @@ end test
 command resetUI
    showTitle True
    clearBoard
-   set the acceleratedRendering of this stack to false
 end resetUI
 
 command checkTileGlow
@@ -677,6 +680,3 @@ command checkTileGlow
    set the outerGlow of image "word_5" to sTileGlow
 end checkTileGlow
 
-on startup pMode
-
-end startup
