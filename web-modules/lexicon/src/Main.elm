@@ -150,6 +150,9 @@ update msg model =
                     Lexicon.update subMsg model.lexiconModel
             in
             case subMsg of
+                Lexicon.WordListReceived _ ->
+                    ( { model | currentPage = SearchView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
+
                 Lexicon.WordDefinitionReceived _ ->
                     ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
 
@@ -250,6 +253,27 @@ appNavigation =
 
 view : Model -> Html Msg
 view model =
+    let
+        activeView =
+            case model.currentPage of
+                DefinitionView ->
+                    definitionView model
+
+                LoadingView ->
+                    loadingView
+
+                SearchView ->
+                    searchView model
+
+                MyWordsView ->
+                    myWordsView model
+
+                HelpView ->
+                    helpView (LoadDefinitionByWord "karma")
+
+                _ ->
+                    h1 [] [ text "not implemented" ]
+    in
     div
         [ css
             [ bodyStyle ]
@@ -261,24 +285,7 @@ view model =
             [ headerTitle
             , pageNavigation model.currentPage
             ]
-        , case model.currentPage of
-            DefinitionView ->
-                definitionView model
-
-            LoadingView ->
-                loadingView
-
-            SearchView ->
-                searchView model
-
-            MyWordsView ->
-                myWordsView model
-
-            HelpView ->
-                helpView (LoadDefinitionByWord "karma")
-
-            _ ->
-                h1 [] [ text "not implemented" ]
+        , activeView
         , appNavigation
         ]
 
