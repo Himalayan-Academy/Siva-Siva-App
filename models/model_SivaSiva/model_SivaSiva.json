@@ -120,7 +120,15 @@
             },
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.png"
-        },  
+        }, 
+          "Cœur de l’hindouisme": {
+            "link": {
+                "portal param": "https://www.hindouisme.org/",
+                "portal command": "portal_GoURL"
+            },
+            "imageText": "Cœur de\nl’hindouisme",
+            "shortImageFile": "thumb_french-website-kada-outside-ganesha.png"
+        },   
         "Monthly News": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/newsletter",
@@ -472,22 +480,25 @@
                 "1": {
                     "rowName": "Our Daily Blog"
                 },
-                "2": {
-                    "rowName": "Meet the Monks"
+                 "2": {
+                    "rowName": "Cœur de l’hindouisme"
                 },
                 "3": {
-                    "rowName": "Monthly News"
+                    "rowName": "Meet the Monks"
                 },
                 "4": {
-                    "rowName": "How to Visit"
+                    "rowName": "Monthly News"
                 },
                 "5": {
-                    "rowName": "Take a Virtual Tour"
+                    "rowName": "How to Visit"
                 },
                 "6": {
-                    "rowName": "About the Monastery"
+                    "rowName": "Take a Virtual Tour"
                 },
                 "7": {
+                    "rowName": "About the Monastery"
+                },
+                "8": {
                     "rowName": "Our Guru Lineage"
                 }
             },
