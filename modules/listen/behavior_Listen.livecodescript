@@ -304,7 +304,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-                  showBusyIndicator false
+            showBusyIndicator false
             exit to top
          else 
             put jsonToArray(tBookToc) into sCurrentPlayListA["audioFiles"]
@@ -323,7 +323,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-             showBusyIndicator false
+            showBusyIndicator false
             exit to top
          else 
             put it into tRecords 
@@ -342,8 +342,8 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    put tPlaylistClass into sCurrentPlaylistA["playlistClass"]
    
    if sCurrentPlayListA["audioFiles"] is empty then 
-    doAnswer "No records for that search. Try again","Cancel"
-      wait 1500 milliseconds with messages
+      doAnswer "No records for that search. Try again","Cancel"
+      showBusyIndicator false
       put empty into fld "audioList" of card "listen-browse" of stack "listen"
       exit to top
    end if
