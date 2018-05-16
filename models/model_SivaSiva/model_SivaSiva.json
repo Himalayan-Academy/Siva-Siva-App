@@ -121,12 +121,12 @@
             "imageText": "Our Guru\nLineage",
             "shortImageFile": "thumb_lineage.png"
         }, 
-          "Cœur de l’hindouisme": {
+          "Aller au coeur de l'hindouisme": {
             "link": {
                 "portal param": "https://www.hindouisme.org/",
                 "portal command": "portal_GoURL"
             },
-            "imageText": "Cœur de\nl’hindouisme",
+            "imageText": "Aller\nau coeur de\nl'hindouisme",
             "shortImageFile": "thumb_french-website-kada-outside-ganesha.png"
         },   
         "Monthly News": {
@@ -481,7 +481,7 @@
                     "rowName": "Our Daily Blog"
                 },
                  "2": {
-                    "rowName": "Cœur de l’hindouisme"
+                    "rowName": "Aller au coeur de l'hindouisme"
                 },
                 "3": {
                     "rowName": "Meet the Monks"
