@@ -50,6 +50,7 @@ end executeSearch
 
 command setFindString
    put fld "searchstring" into sStringToFind  
+   put (line 1 of sStringToFind) into sStringToFind 
 end setFindString
 
 ------------------------------------------------------------------------
@@ -115,7 +116,7 @@ command searchPlayList  # Search Audio
             put "sub_title" into tTextTarget # has to match the dBase column name
          end if
          if (sStringToFind is empty) OR (tTextTarget is empty) then
-            put "Enter search, title, subtitle..." into fld "searchString"
+            put "Enter title, subtitle..." into fld "searchString"
             wait 2 seconds
             put empty into fld "searchString"
             exit to top

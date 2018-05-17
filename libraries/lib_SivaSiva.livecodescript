@@ -467,18 +467,12 @@ end display_Log
    return newHtml
  end stripHTMLTags
 
-on backkey # need for android
-   put the effective working screenrect into tScreen
-   if (item 4 of tScreen-item 2 of tScreen) < 650 then
-      # assume keyboard if up
-      pass backKey
-   else 
+ on backkey # need for android
       if the short name of this stack is "journal" then
          send mouseup to widget "go-back"
       else
          send mouseup to widget "go-home-portal"
       end if
-   end if
 end backkey
 
 

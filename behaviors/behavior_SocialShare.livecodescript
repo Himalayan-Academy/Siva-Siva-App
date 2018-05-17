@@ -84,7 +84,13 @@ command Share_Email sShareItemsA
    put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
    put  cr & cr & "------------------------------------" & cr & \
          "Get the SivaSivaApp today! Go to:" & cr & "https://www.himalayanacademy.com/view/sivasiva" after tBody
-   revMail tAddress,,tSubject,tBody
+   
+   if isMobile() = "true" then
+      mobileComposeMail tSubject,tAddress,,, tBody
+   else
+      revMail tAddress,,tSubject,tBody
+   end if
+   
 end share_Email
 
 command twitter_TweetItems sShareItemsA
