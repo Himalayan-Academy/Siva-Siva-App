@@ -2,7 +2,6 @@
     "version": "1.0.0",
     "summary": "helpful summary of your project, less than 80 characters",
     "repository": "https://github.com/user/project.git",
-    "homepage": ".",
     "license": "BSD3",
     "source-directories": [
         "src"
@@ -13,9 +12,11 @@
         "elm-community/json-extra": "2.7.0 <= v < 3.0.0",
         "elm-community/random-extra": "2.0.0 <= v < 3.0.0",
         "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "elm-lang/dom": "1.1.1 <= v < 2.0.0",
         "elm-lang/html": "2.0.0 <= v < 3.0.0",
         "elm-lang/http": "1.0.0 <= v < 2.0.0",
         "elm-lang/svg": "2.0.0 <= v < 3.0.0",
+        "elm-lang/window": "1.0.1 <= v < 2.0.0",
         "rtfeldman/elm-css": "13.1.1 <= v < 14.0.0",
         "rtfeldman/elm-css-helpers": "2.1.0 <= v < 3.0.0"
     },

@@ -1,91 +1,70 @@
-try {
-  let list = []
+function boot() {
 
-  let app = Elm.Main.embed(document.getElementById('root'), list);
+  let list = JSON.parse(localStorage.getItem("saved_words")) || []
 
-  if (typeof liveCode !== "undefined") {
-    console.log("livecode present in window")
-    console.log(JSON.stringify(Object.keys(window.liveCode)))
-  } else {
-    console.log("livecode not present in window")
+  // proxy for web api
+  if (typeof liveCode === "undefined") {
+    liveCode = {
+      debug: (d) => console.log(d),
+      getWordDefinition: (d) => fetch("https://dev.himalayanacademy.com/api/index.php/lexicon/word/" + d)
+        .then(response => response.json())
+        .then(data => {
+          data.id = data.lexicon_id
+          data.seeAlso = data.see_also
+          window.app.ports.wordDefinitionReceived.send(data)
+        })
+    }
   }
 
+  window.app = Elm.Main.embed(document.getElementById('root'), list)
 
   // Ports related code below
 
-  app.ports.saveWord.subscribe(function (definition) {
-    console.log("saving word", definition)
+  window.app.ports.saveWord.subscribe(function (definition) {
+    liveCode.debug("saving word", definition)
     list.push({ word: definition.word, id: definition.id })
-    //localStorage.setItem("saved_words", JSON.stringify(list))
-    app.ports.savedWordListChanged.send(list)
+    localStorage.setItem("saved_words", JSON.stringify(list))
+    window.app.ports.savedWordListChanged.send(list)
   });
 
 
-  app.ports.removeSavedWord.subscribe(function (definition) {
-    console.log("removing word", definition.word)
+  window.app.ports.removeSavedWord.subscribe(function (definition) {
+    liveCode.debug("removing word", definition.word)
     list = list.filter((item) => item.word !== definition.word)
-    //localStorage.setItem("saved_words", JSON.stringify(list))
-    app.ports.savedWordListChanged.send(list)
+    localStorage.setItem("saved_words", JSON.stringify(list))
+    window.app.ports.savedWordListChanged.send(list)
   });
 
-  app.ports.appGoHome.subscribe(function () {
+  window.app.ports.appGoHome.subscribe(function () {
     liveCode.goHome()
   })
 
 
-  app.ports.appGoSettings.subscribe(function () {
+  window.app.ports.appGoSettings.subscribe(function () {
     liveCode.goSettings()
   })
 
-  app.ports.getWordList.subscribe(function (d) {
-    console.log("getting word list")
-    if (typeof liveCode !== "undefined" && typeof liveCode.getWordList == "function") {
+  window.app.ports.getWordList.subscribe(function () {
+    liveCode.debug("getting word list")
+    if (wordlist) {
+      liveCode.debug("using saved one")
+      window.app.ports.wordListReceived.send(wordlist)
+    } else {
       liveCode.getWordList()
-    } else {
-      console.log("liveCode not working, switching to online API")
-      fetch('http://dev.himalayanacademy.com/api/index.php/lexicon/words')
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (words) {
-          console.log("received words", words)
-          let n = words.map(o => { return { id: o.lexicon_id, word: o.word } })
-          try {
-            app.ports.wordListReceived.send(n)
-          } catch (n) {
-            console.log("problem sending promise to port")
-            console.error(n)
-          }
-        });
     }
   })
 
 
-  app.ports.getWordDefinition.subscribe(function (d) {
-    console.log("getting word definition for " + d)
-    if (false) {
-      liveCode.getWordDefinition(d)
-    } else {
-      console.log("liveCode not working, switching to online API")
-      try {
-        fetch('http://dev.himalayanacademy.com/api/index.php/lexicon/word/' + d)
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (word) {
-            console.log("received word", word);
-            word.id = word.lexicon_id
-            word.seeAlso = word.see_also
+  window.app.ports.getWordDefinition.subscribe(function (d) {
+    liveCode.debug("getting word definition for " + d)
 
-            app.ports.wordDefinitionReceived.send(word)
+    liveCode.getWordDefinition(d)
 
-          });
-      } catch (n) {
-        console.log("problem sending promise to port")
-        console.error(n)
-      }
-    }
   })
-} catch (n) {
-  console.error(n);
+
+  window.app.ports.lcDebug.subscribe(function (data) {
+    liveCode.debug("[ELM] " + data)
+  })
 }
+
+setTimeout(boot, 200)
