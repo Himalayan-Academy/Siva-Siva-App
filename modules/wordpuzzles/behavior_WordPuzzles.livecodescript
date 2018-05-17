@@ -1,6 +1,6 @@
 ﻿script "behavior_WordPuzzles"
 local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
-local sCurLevel,sTileGlow,sCluesGiven
+local sCurLevel,sTileGlow,sCluesGiven,sRendering
 
 
 
@@ -77,7 +77,8 @@ on closeCard
 end closeCard
 
 on displayAbout pLevel
-   
+  put the acceleratedRendering of this stack into sRendering
+  set the acceleratedRendering of this stack to true
    put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
    put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
    send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
@@ -87,6 +88,7 @@ on displayAbout pLevel
 end displayAbout
 
 on closeAbout
+   set the acceleratedRendering of this stack to sRendering
     deleteMobileControl "aboutText"
     hide group "aboutDisplay"
 end closeAbout
