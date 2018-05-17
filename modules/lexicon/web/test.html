@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+
+<head>
+  <style>
+    body {
+      height: 100%;
+      font-family: verdana, sans-serif;
+      margin: 0px;
+      padding: 0px 25px 0px 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Demo Chromium bug</h2>
+  <img src="http://www.hh.on-rev.com/TEST/LCClogo1024x1024.png" width=200 height=200>
+  <button id="test">test</button>
+  <script>
+    function test() {
+      console.log("before test from file")
+
+      liveCode.getWordList()
+
+    }
+    document.getElementById('test').addEventListener('click', test)
+  </script>
+</body>
+
+</html>

@@ -1,18 +1,23 @@
 port module Main exposing (..)
 
 import Css exposing (..)
+import Dom.Scroll as Scroll
 import Html
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (css, href, src)
+import Html.Styled.Attributes exposing (css, href, id, src)
 import Html.Styled.Events exposing (onClick)
 import Json.Encode as JE
 import Lexicon exposing (Word, WordDefinition, WordList)
 import Random
+import Task
 import Theme.Colors exposing (..)
 import Theme.Elements exposing (..)
 
 
 --- PORTS ---
+
+
+port lcDebug : String -> Cmd msg
 
 
 port saveWord : JE.Value -> Cmd msg
@@ -36,6 +41,10 @@ port appGoHome : () -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
+    let
+        d =
+            lcDebug "subscription arrived"
+    in
     Sub.batch
         [ savedWordListChanged (\wl -> SavedWordListChanged wl)
         , Sub.map LexiconMsg Lexicon.subscriptions
@@ -115,6 +124,7 @@ type Msg
     | SavedWordListChanged WordList
     | GoHome
     | GoSettings
+    | NoOp
 
 
 filterWordList : String -> WordList -> WordList
@@ -154,7 +164,12 @@ update msg model =
                     ( { model | currentPage = SearchView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
 
                 Lexicon.WordDefinitionReceived _ ->
-                    ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
+                    ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }
+                    , Cmd.batch
+                        [ Cmd.map LexiconMsg lexiconCmd
+                        , Task.attempt (always NoOp) <| Scroll.toTop "top"
+                        ]
+                    )
 
                 _ ->
                     ( { model | lexiconModel = updateLexiconModel }, Cmd.map LexiconMsg lexiconCmd )
@@ -197,6 +212,9 @@ update msg model =
 
         SavedWordListChanged swl ->
             ( { model | savedWords = Just swl }, Cmd.none )
+
+        NoOp ->
+            ( model, Cmd.none )
 
 
 
@@ -314,7 +332,8 @@ definitionView : Model -> Html Msg
 definitionView model =
     case model.lexiconModel.currentWord of
         Just word ->
-            div []
+            div
+                []
                 [ h1
                     [ css
                         [ color theme.palette.white
@@ -426,7 +445,7 @@ searchView model =
                         , listStyle none
                         , padding (px 20)
                         , overflowY scroll
-                        , height (px 300)
+                        , height (px 250)
                         ]
                     ]
                     (List.map addWordItem <| filterWordList model.query wordList)
