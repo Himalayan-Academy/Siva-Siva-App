@@ -16096,7 +16096,7 @@ var _user$project$Theme_Elements$seeAlso = F2(
 				_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
 					{
 						ctor: '::',
-						_0: _rtfeldman$elm_css$Css$backgroundColor(_user$project$Theme_Colors$theme.palette.lightGreen),
+						_0: _rtfeldman$elm_css$Css$backgroundColor(_user$project$Theme_Colors$theme.button.background),
 						_1: {
 							ctor: '::',
 							_0: _rtfeldman$elm_css$Css$color(_user$project$Theme_Colors$theme.palette.white),
@@ -16853,6 +16853,11 @@ var _user$project$Main$appGoHome = _elm_lang$core$Native_Platform.outgoingPort(
 	function (v) {
 		return null;
 	});
+var _user$project$Main$scrollTop = _elm_lang$core$Native_Platform.outgoingPort(
+	'scrollTop',
+	function (v) {
+		return null;
+	});
 var _user$project$Main$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {currentPage: a, searchInput: b, lexiconModel: c, savedWords: d, query: e, errorMessage: f};
@@ -16972,25 +16977,7 @@ var _user$project$Main$definitionView = function (model) {
 		var _p3 = _p2._0;
 		return A2(
 			_rtfeldman$elm_css$Html_Styled$div,
-			{
-				ctor: '::',
-				_0: _rtfeldman$elm_css$Html_Styled_Attributes$id('definition'),
-				_1: {
-					ctor: '::',
-					_0: _rtfeldman$elm_css$Html_Styled_Attributes$css(
-						{
-							ctor: '::',
-							_0: _rtfeldman$elm_css$Css$height(
-								_rtfeldman$elm_css$Css$px(600)),
-							_1: {
-								ctor: '::',
-								_0: _rtfeldman$elm_css$Css$overflowY(_rtfeldman$elm_css$Css$scroll),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
-			},
+			{ctor: '[]'},
 			{
 				ctor: '::',
 				_0: A2(
@@ -17637,10 +17624,8 @@ var _user$project$Main$update = F2(
 									_0: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Main$LexiconMsg, lexiconCmd),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$core$Task$attempt,
-											_elm_lang$core$Basics$always(_user$project$Main$NoOp),
-											_elm_lang$dom$Dom_Scroll$toTop('definition')),
+										_0: _user$project$Main$scrollTop(
+											{ctor: '_Tuple0'}),
 										_1: {ctor: '[]'}
 									}
 								})

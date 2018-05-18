@@ -54,6 +54,10 @@ function boot() {
     }
   })
 
+  window.app.ports.scrollTop.subscribe(function () {
+    window.scrollTo(0, 0)
+  })
+
 
   window.app.ports.getWordDefinition.subscribe(function (d) {
     liveCode.debug("getting word definition for " + d)

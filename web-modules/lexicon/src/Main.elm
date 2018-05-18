@@ -35,6 +35,9 @@ port appGoSettings : () -> Cmd msg
 port appGoHome : () -> Cmd msg
 
 
+port scrollTop : () -> Cmd msg
+
+
 
 --- SUBS ---
 
@@ -167,7 +170,7 @@ update msg model =
                     ( { model | currentPage = DefinitionView, lexiconModel = updateLexiconModel }
                     , Cmd.batch
                         [ Cmd.map LexiconMsg lexiconCmd
-                        , Task.attempt (always NoOp) <| Scroll.toTop "top"
+                        , scrollTop ()
                         ]
                     )
 
