@@ -54,7 +54,7 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
     end try
     --   PUT THE MILLISECONDS INTO TSTART
     put vObjectSplit("VEvent", tICSPath)  into tCalendarArrayA -- much faster to read file directly
-    if tCalendarArrayA[1] contains "http:" then -- web 404 or redirect
+    if tCalendarArrayA[1] contains "https:" then -- web 404 or redirect
       doAnswer "Could not retrieve calendar file.","OK"
       delete file tICSPath
       exit to top
@@ -106,7 +106,10 @@ function convertCityToURL pCityName,pYearRange
     put "usa/" after tURL
   else
     put "world/" after tURL
-  end if
+ end if
+ if pCityName contains "Kapaa" then
+    put "Hawaii" into pCityName
+ end if 
   replace space with "_" in pCityName
   put pCityName & ".ics" after tURL
   put toLower(tURL) into tURL

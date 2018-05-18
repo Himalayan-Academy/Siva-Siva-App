@@ -90,8 +90,16 @@ on displayInfo pVis, pSubject, pBackground
 end displayInfo
 
 on sendFeedBack
-   revMail "sivasiva@hindu.org",,"SivaSiva App Feedback",\
-   ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.") 
+   put "sivasiva@hindu.org" into tRecipient
+   put "SivaSiva App Feedback" into tSubject
+   put ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr \
+   & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr \
+         & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.")  into tBody
+   if isMobile() then
+     mobileComposeMail tSubject, tRecipient,,,tBody 
+  else
+     revMail tRecipient,,tSubject,tBody
+     end if
 end sendFeedBack
 
 on fieldLinkClicked pLink
@@ -137,7 +145,6 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    # the guideline is to only offer a single choice, no icons
    # for now we keep the button Hidden
    
-   --    put the long id of group "bottomToast" of card "dialog_CustomMsg" of stack "lib_CustomControls" into sConfigA["bottomToast   put "This is a message to the user. You have some really marvelous news!" into tMsg
    if pBtn is empty then
       hide btn "DIALOGAFFIRM"  
       set the textalign of fld "lbl-dialogPrompt" to center
@@ -183,95 +190,10 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
 end dialog_CustomMsg
 
 
-on closeMsg pControl
-
-end closeMsg
 
 
-#Scott Rossi older option, deprecated...
--- on dialog_CustomMsg   pShow,pMsg,pShowtime
---    if pShowtime is not empty then
---       put pShowtime into sShowtime
---    else
---       put 1500 into sShowTime
---    end if
 
---    -- pShow = boolean, show or hide msg grp
 
---    -- pMsg = text to display, defaults to "Please wait..."; 
---    -- height of msg displaychanges based on length
-
---    if pShow <> "false" then -- show it
---       if pMsg = "" then put "Please wait..." into pMsg 
---       # assume some generic process; normally not advised to send empty
---       put "350" into pWidth # locked to this width
---       put the height of this cd into tV
---       put tV - (tV div 4) into tV
---       put (item 1 of the loc of this cd),tV into pLoc
---       buildMsgDisplay pLoc,pMsg,pWidth  
---       # we do not pass height; it is determined later based on formatted height of msg
---    else -- clear all
---       set the defaultstack to the topstack
---       if there is a fld "alphaDisplayFld" then
---          repeat until there is no fld "alphaDisplayFld"
---             delete fld "alphaDisplayFld"
---          end repeat
---       end if
---       if there is a grc "alphabkgnd" then
---          repeat until there is no grc "alphabkgnd"
---             delete grc "alphabkgnd"
---          end repeat
---       end if
---    end if
--- end dialog_CustomMsg
-
--- on buildMsgDisplay pLoc,pMsg,pWidth-- revised from open source by Scott Rossi
---    try 
---       set the name of the templateGraphic to "alphabkgnd"
---       set the backColor of the templateGraphic to black
---       set the lineSize of the templateGraphic to 0
---       set the style of the templateGraphic to roundrect
---       set the opaque of the templateGraphic to true
---       set the width of the templateGraphic to 400 
---       set the blendLevel of the templateGraphic to 50
---       set the loc of the templateGraphic to pLoc
---       set the vis of the templateGraphic to false
---       create grc
-
---       reset the templateGraphic
-
---       set the name of the templateField to "alphaDisplayFld"
---       set the vis of the templateField to false # show later after resizeing backgroun d
---       set the borderWidth of the templateField to 0
---       set the opaque of the templateField to false
---       set the traversalOn of the templateField to false
---       set the locktext of the templateField to true
---       set the autohilite of the templateField to false
---       set the textFont of the templateField to "verdana"
---       set the textSize of the templateField to 24
---       set the textheight of the templateField to 36
---       set the textColor of the templateField to white
---       set the textAlign of the templateField to center
---       set the text of the templateField to pMsg
---       set the width of the templateField to 400
---       set the loc of the templateField to pLoc
---       create fld
-
---       put the formattedHeight of fld "alphaDisplayFld"  into pHeight 
---       set the height of fld "alphaDisplayFld"  to pHeight
---       reset the templateField
-
---       # adjust background and show
---       set the height of grc "alphabkgnd" to (pHeight + 16)
---       show grc "alphabkgnd"
---       show fld "alphaDisplayFld"
-
---    catch tErr
---       put "Result:" && the result && "Error:" && tErr
---       -- log tErr
---    end try
---    send "closeMsg" to this stack in sShowTime milliseconds 
--- end buildMsgDisplay
 
 -----------------------------------
 # BY Jacqueline Landman Gay
