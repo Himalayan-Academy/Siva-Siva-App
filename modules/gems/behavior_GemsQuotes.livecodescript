@@ -69,7 +69,6 @@ end setCardTitle
 
 on closecard
    resetUI
-
 end closecard
 
 command fetchQuoteAndImage

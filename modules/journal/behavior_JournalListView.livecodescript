@@ -209,7 +209,9 @@ on layoutScreen pModuleFilter, pDateRange
    set the acceleratedRendering of this stack to false
    set the acceleratedRendering of this stack to true
    --set the lockUpdates of tListGroup to false
-   dispatch "CreateScroller" to group "item list" with "item list"
+   if there is a group "item list" then
+      dispatch "CreateScroller" to group "item list" with "item list"
+   end if
 end layoutScreen
 
 on createNewJournalEntry pEntryA, pEntryNum

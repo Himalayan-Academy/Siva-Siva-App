@@ -84,7 +84,7 @@ command news_Fetch
    # check for the existence of news file locally
    # get date data 
    put format ("<p id=\"datestamp\">") into tTargetLine
-   
+         
    if ( there is a file( tLocalNewsFile) ) then # parse it for the date
       put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
       put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
@@ -99,16 +99,16 @@ command news_Fetch
    
    # compare dates
    
-   if tLocalNewsDate = tLatestNewsDate then
-      put "false" into sNewNews
-      # do nothing
-   else 
-      # save it
-      put tServerNews into url ("file:/"&tLocalNewsFile)
-      dispatch "dialog_CustomMsg" to the topstack with "You have news!"
-      put "true" into sNewNews
-   end if
-   send "news_Fetch" to stack "lib_SivaSiva" in 1200 seconds # every 20 minutes
+   --   if tLocalNewsDate = tLatestNewsDate then
+   --      put "false" into sNewNews
+   --      # do nothing
+   --   else 
+   # save it
+   put tServerNews into url ("file:/"&tLocalNewsFile)
+   dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+   put "true" into sNewNews
+   --end if
+   send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 
 function news_Check
