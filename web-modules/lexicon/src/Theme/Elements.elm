@@ -210,7 +210,7 @@ seeAlso click word =
     else
         button
             [ css
-                [ backgroundColor theme.palette.lightGreen
+                [ backgroundColor theme.button.background
                 , color theme.palette.white
                 , borderRadius (px 8)
                 , padding (px 10)

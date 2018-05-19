@@ -161,7 +161,8 @@ command init_AppConfiguration
    portal_SetCurrentStack "Siva-Siva-App"
    send openPortalStack to me in 50 milliseconds
    set the effectrate to 500
-   tsNetLibUrlReuseConnection "false"
+   
+   tsNetLibUrlReuseConnection false
    set the socketTimeoutInterval to 2000
 
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
