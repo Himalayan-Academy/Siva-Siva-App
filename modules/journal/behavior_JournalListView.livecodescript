@@ -11,18 +11,19 @@ local sLastFilter
 --end preopencard
 
 on opencard
-   --   # uncomment this when you go into production:
-   --   # i.e. leave out if you want to use the controls on the device while
-   --   # testing
-   --   --HideAuxiliaryControls
-   --   --loadFonts
-   if there is a group "item list" then
-      delete group "item list"
-   end if
-   --show image "loader-39x39.gif"
-   set the acceleratedRendering of this stack to true
-   layoutScreen
-   --hide image "loader-39x39.gif"
+   audioIsRunning  
+--   # uncomment this when you go into production:
+--   # i.e. leave out if you want to use the controls on the device while
+--   # testing
+--   --HideAuxiliaryControls
+--   --loadFonts
+if there is a group "item list" then
+   delete group "item list"
+end if
+--show image "loader-39x39.gif"
+set the acceleratedRendering of this stack to true
+layoutScreen
+--hide image "loader-39x39.gif"
 end opencard
 
 on HideAuxiliaryControls

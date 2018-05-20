@@ -10,6 +10,7 @@ on openstack
    put sivasiva_GetModuleConfigArray("journal") into sConfigA
 end openstack
 
+
 on backkey
    send mouseup to btn "go back"
 end backkey

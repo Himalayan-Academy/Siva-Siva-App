@@ -261,6 +261,7 @@ end setMobileAudioPlayer
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
    mobileControlDelete pPlayerName
+   get runningAudioIndicatorVis("false")
 end playerFinished
 
 --on playStopped -- sent on desktop when audio is done
@@ -293,6 +294,9 @@ end deleteMobileControl
 on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
    if not isMobile() then exit deleteAllMobileControls
    put mobileControls() into tList
+   if not (tList contains "audioPlayer") then # play we terminated
+      get runningAudioIndicatorVis("false")
+   end if
    repeat for each line l in tList
       # we are keeping the player running as per user requests.
       # you need to use an explicit stop/remove in the UI/UX context

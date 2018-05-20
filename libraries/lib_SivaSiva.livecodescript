@@ -350,9 +350,25 @@ command audioIsRunning
 end audioIsRunning
 
 command turnOffAudio 
+   breakpoint
    # called by the speaker "widget" if it is showing
-   deleteMobileControl "audioPlayer"
-   put "false" into sStopRunningAudio
+   if  sStopRunningAudio is "true" then
+      
+      # the audioPlayer exists, if may be paused.
+      # we will start is again.  
+      
+      mobileControlDo "audioPlayer", "play"
+      put "pause" into sStopRunningAudio
+      
+   else
+      # delete it
+      
+      deleteMobileControl "audioPlayer"
+      put "false" into sStopRunningAudio
+      if exists (widget "turnOffAudio") then
+         hide widget "turnOffAudio"
+      end if
+   end if
 end turnOffAudio
 
 
