@@ -73,6 +73,7 @@ check this first.
 */
 
 command news_Fetch
+   --breakpoint
    set the socketTimeoutInterval to 2000
    if connectivity_PingServer() = "false" then exit news_Fetch
    # path to news 
@@ -99,15 +100,15 @@ command news_Fetch
    
    # compare dates
    
-   --   if tLocalNewsDate = tLatestNewsDate then
-   --      put "false" into sNewNews
-   --      # do nothing
-   --   else 
-   # save it
-   put tServerNews into url ("file:/"&tLocalNewsFile)
-   dispatch "dialog_CustomMsg" to the topstack with "You have news!"
-   put "true" into sNewNews
-   --end if
+   if tLocalNewsDate = tLatestNewsDate then
+      put "false" into sNewNews
+      # do nothing
+   else 
+      # save it
+      put tServerNews into url ("file:/"&tLocalNewsFile)
+      dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+      put "true" into sNewNews
+   end if
    send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 

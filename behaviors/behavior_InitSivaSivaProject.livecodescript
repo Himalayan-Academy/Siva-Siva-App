@@ -208,8 +208,10 @@ command openPortalStack
    newcontent_Check
 end openPortalStack
 
-command  init_LoadLibraries  
+command  init_LoadLibraries 
+   --breakpoint 
    put init_ListStacksToUse() into stackNames   
+   filter items of stackNames without"animationEngine*" # should loaded when need an offload when note
    repeat for each item stackName in stackNames
       if there is a stack stackName then
          start using stack stackName
@@ -223,7 +225,7 @@ command  init_LoadLibraries
          switch
             # Always do the libraries first as the may be deps in them required by
             # other behaviors and models
-              case ("lib" is in stackName)
+            case ("lib" is in stackName)
                put "libraries/" & stackName & ".livecodescript" into stackName
                break
             case ("behavior" is in stackName)
@@ -232,7 +234,7 @@ command  init_LoadLibraries
             case ("model" is in stackName)
                put "models/" & stackName & ".livecodescript" into stackName
                break  
-           default
+            default
                put "modules/" & stackName & ".livecode" into stackName
                break   
          end switch   
