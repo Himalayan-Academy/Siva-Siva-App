@@ -177,7 +177,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "tag": "three chants",
+          "tags": "three chants",
           "approved_for_public": "YES"
         }
       },
@@ -187,7 +187,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "tag": "Vedic chant",
+          "tags": "Vedic chant",
           "approved_for_public": "YES"
         }
       },

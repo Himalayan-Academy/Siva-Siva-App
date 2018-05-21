@@ -225,8 +225,8 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             put  sCollectionA[tColl]["playlists"][tPlay][RT] into sPlayListQueryA[RT]
          end if 
       end repeat
-      
-      put "media_type,file_id,approved_for_public,author,genre,deity,tag" into tDbaseColumns
+      # you must declare all columns you are searching in the data base.
+      put "media_type,file_id,approved_for_public,author,genre,deity,tags" into tDbaseColumns
       
       repeat for each item DC in tDbaseColumns
          if ( sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] is not empty) then 
