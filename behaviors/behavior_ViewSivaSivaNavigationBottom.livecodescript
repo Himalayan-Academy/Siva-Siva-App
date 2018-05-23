@@ -27,9 +27,9 @@ on mouseDown
             break
          default
             set the hilite of btnObject to true
-            if the environment is "development" then
-               #  put btnName
-            end if
+            --            --if the environment is "development" then
+            --              put btnName
+            --            --end if
       end switch
    end if
 end mouseDown
