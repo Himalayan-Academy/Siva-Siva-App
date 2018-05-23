@@ -9,6 +9,7 @@ constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
+constant cRemoteNewsFile="siva-app-news_1-2.html"
 
 --> GENERIC GLOBAL MOBILE
 
@@ -80,7 +81,7 @@ command news_Fetch
    put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
    
    # fetch the latest news on server
-   put url "https://www.himalayanacademy.com/media/apps/sivasiva/siva-app-news.html" into tServerNews
+   put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
    
    # check for the existence of news file locally
    # get date data 
