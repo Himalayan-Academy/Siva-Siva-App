@@ -387,6 +387,18 @@ on moveGrp pGrpName, pHorz, pVert, pSpeed -- use move instead of visual effect t
   move grp pGrpName relative tPt in pSpeed milliseconds
 end moveGrp
 
+command showLoaderGIF pBool
+   if exists (img "loader.gif") then
+      if pBool is true then 
+         show img "loader.gif"   
+         set the repeatCount of img "loader.gif" to -1
+      else 
+         set the repeatCount of img "loader.gif" to 0    
+         hide img "loader.gif"
+      end if 
+   end if 
+end showLoaderGIF
+
 
 # adopted from Gurudeva app by jacqueline land,am gay
 on setGrpVis pGrpName,pLabel, pVis --jg: manages favorites and share groups with one handler
