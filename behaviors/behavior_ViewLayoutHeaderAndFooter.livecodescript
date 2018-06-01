@@ -14,7 +14,10 @@ local LocalArray
 --> Events
 -
 on preOpenControl
-   fixBehaviors
+   hide widget "body"
+   show image "randomPhoto"  # just in case there conflict in pixel space.
+   show field "loadingLabel"
+   showLoaderGIF true
 end preOpenControl
 
 command fixBehaviors
