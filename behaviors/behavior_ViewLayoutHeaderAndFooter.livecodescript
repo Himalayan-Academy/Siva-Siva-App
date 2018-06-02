@@ -12,13 +12,6 @@ local LocalArray
 
 
 --> Events
--
-on preOpenControl
-   hide widget "body"
-   show image "randomPhoto" 
-   show field "loadingLabel"
-   showLoaderGIF true
-end preOpenControl
 
 command fixBehaviors
    _fixBehavior _headerView()
