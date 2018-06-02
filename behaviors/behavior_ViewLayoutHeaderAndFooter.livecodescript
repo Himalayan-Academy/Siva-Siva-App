@@ -15,7 +15,7 @@ local LocalArray
 -
 on preOpenControl
    hide widget "body"
-   show image "randomPhoto"  # just in case there conflict in pixel space.
+   show image "randomPhoto" 
    show field "loadingLabel"
    showLoaderGIF true
 end preOpenControl
