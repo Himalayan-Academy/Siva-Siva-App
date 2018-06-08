@@ -435,8 +435,8 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
    send "CreateScroller tMainCalendar" to fld "current_days"
    
    scrollToDate tRequestDate -- exits if not current display month
-   
-   /*
+   set the acceleratedRendering of this stack to "true"
+      /*
    # uDayTemplate custom prop of the field: -- jg: the ##metadata## placeholder contains the day number for array lookups 
    <p metadata="##metadata##" spacebelow="4"><b>##moonday##&#9;##LongDate##</b></p>
    <p metadata="##metadata##" leftindent="8">##nakshatra##</p>
