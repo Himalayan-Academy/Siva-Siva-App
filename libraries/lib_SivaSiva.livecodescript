@@ -351,7 +351,6 @@ command audioIsRunning
 end audioIsRunning
 
 command turnOffAudio 
-   breakpoint
    # called by the speaker "widget" if it is showing
    if  sStopRunningAudio is "true" then
       

@@ -34,6 +34,7 @@ on openCard
    -- set GUI
    put empty  into fld "currentTitleLabel"
    playlist_Reset 
+   audioIsRunning
 end openCard
 
 
