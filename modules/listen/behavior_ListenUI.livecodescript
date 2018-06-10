@@ -79,7 +79,7 @@ command switchAudioUi sAudioUI
          set the top of  grp "titleDescription" to 157
          show grp "titleDescription"
          show grp "songProperties"
-         set the hilitedButton of group "titleDescription" to empty
+         set the hilited of btn "Title" to true -- group "titleDescription" to empty
          set the hilited of btn "Artists" to false
          show grp "searchControls"
    end switch

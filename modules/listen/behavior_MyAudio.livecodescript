@@ -8,6 +8,8 @@ on openCard
    if (fld "audioList" is empty) then
       doAnswer "You have not downloaded any audio", "OK","downloadAffirmed"
    end if
+   
+   audioIsRunning
   
 end openCard
 

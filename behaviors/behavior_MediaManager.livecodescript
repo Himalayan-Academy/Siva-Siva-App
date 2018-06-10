@@ -29,14 +29,15 @@ on openCard
 end openCard
 
 
---> recursive directory walk/digger and storing data handlers and functions
-
-# we get sums for separate top level folders, 
-# but we since we have to do the dig we save all files to the array
-# we can use this later to present files with their sizes and allow the user to delete 
-# without digging again. 
-
-command mmGetTopSums
+   
+   --> recursive directory walk/digger and storing data handlers and functions
+   
+   # we get sums for separate top level folders, 
+   # but we since we have to do the dig we save all files to the array
+   # we can use this later to present files with their sizes and allow the user to delete 
+   # without digging again. 
+   
+   command mmGetTopSums
    if isMobile() then
       mobileShowStatusBar
    end if

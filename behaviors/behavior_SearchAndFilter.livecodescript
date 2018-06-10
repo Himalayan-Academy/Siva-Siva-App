@@ -90,7 +90,7 @@ command searchPlayList  # Search Audio
             put "artists" into tTextTarget
          end if
          if (sStringToFind is empty) OR (tTextTarget is empty) then
-            put "Pick Title, Description or Artist" into fld "searchString"
+            put "Pick Title, Subtitle, Artists..." into fld "searchString"
             wait 2 seconds
             put empty into fld "searchString"
             exit to top
