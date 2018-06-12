@@ -129,7 +129,7 @@ command downloadComplete pURL, pStatus
    
    -- check if there was a problem with the download
    if pStatus = "error" or pStatus = "timeout" then
-      put error  &cr& "The file could not be downloaded. Try later." into fld "Progress Title"
+      put error  &cr& "The file could not be downloaded. Try later." into fld "ProgressTitle"
       wait 1 second with messages
            put removeQuotes(sRequestedBy) into tModule     
    tracking_RecordActivity tModule,"download/failed"

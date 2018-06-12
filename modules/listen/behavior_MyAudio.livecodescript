@@ -1,4 +1,8 @@
 ﻿script "behavior_MyAudio" with behavior "behavior_ListenUI"
+
+//> This script has attached behavior
+//> behavior_ListenUI
+
 //>LOCALS
 local sDownloadedAudioA
 
@@ -14,12 +18,13 @@ on openCard
 end openCard
 
 
-function getSelection pLine
+function getSelection pLine  
    return sDownloadedAudioA[pLine]
 end getSelection
 
 on passAudioSelection pLine,pTitle
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
+   metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1]) 
 end passAudioSelection
 
 on select_Play pLine,pTitle
