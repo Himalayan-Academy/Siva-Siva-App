@@ -324,6 +324,16 @@ function connectivity_NotAvailable cardOrStackObject
    # risking queuing up multiple requests
 end connectivity_NotAvailable
 
+function checkURLAvailable pSelectedURL
+   get url pSelectedURL
+   if  not (it contains "404 Page Not") then
+      return true
+   else
+      return false
+   end if
+end checkURLAvailable
+
+
 
 on _____VISUALSandUI
 end _____VISUALSandUI

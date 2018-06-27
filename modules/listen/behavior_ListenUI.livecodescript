@@ -1,4 +1,5 @@
 ﻿script "behavior_ListenUI"
+
 passAudioSelection//>LOCALS
 local sSelectNum, sSingleAudioA,sCached
 local sAudioUI
@@ -142,6 +143,30 @@ command startPlayer  sSelectedURL, pTitle
       set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
    end if
 end startPlayer
+
+on stopPlayer
+   if not isMobile() then
+      stop player "audioPlayer"
+      set the filename of player "audioPlayer"  to empty
+   else 
+      setMobileAudioPlayer "audioPlayer", false
+      deleteMobileControl "audioPlayer"
+   end if
+end stopPlayer
+
+on clearPlayer
+   showPlayer false, "audioPlayer"
+   put empty into fld "currentTitleLabel" 
+end clearPlayer
+   
+   
+   command doAnswerResponse -- sent from doAnswer dlg
+   get the dialogData
+   if it contains "OK" then
+      exit to top
+   end if
+end doAnswerResponse
+
 
 
 # V2 Link to transcript, we will have to show OFFLINE when the user come

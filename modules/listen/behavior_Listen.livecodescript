@@ -505,7 +505,14 @@ function getItemURL pRecordNum
       put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
       put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
    end if
-   return sSelectedURL
+   put checkURLAvailable(sSelectedURL) into tAvailable
+   if tAvailable = "true" then
+      return sSelectedURL
+   else 
+      put "The file is not available on the server. Please send feedback with details so that we can fix it." into pMsg
+     doAnswer pMsg,"OK"
+      exit to top
+   end if
 end getItemURL
 
 

@@ -1,6 +1,8 @@
 ﻿script "behavior_ListenSelectPlay" with behavior "behavior_ListenUI"
 
----------------------------------------------------------------------
+-----------------------------
+# This behavior has a parent behavior "behavior_ListenUI"
+-----------------------------
 # behavior_ListenSelectPlay
 # Assigned to card "listen-playlist" of stack "Listen"
 
@@ -77,6 +79,8 @@ on mouseup
          go to card "listen-my-audio"
          break
       case "AudioList"
+         stopPlayer # make sure previous player, if there is one, is deleted.
+         clearPlayer # in parent Listen_UI
          setAudioListColors
          put word 2 of clickline() into sSelectNum
          put sSelectNum into tLineNum
@@ -109,7 +113,10 @@ on mouseup
          downloadSelection pTarget
          break
    end switch
-   -- pass mouseUp
+   
+   -- there a mouseup on the parent behavior also, if you need to use it: 
+   -- pass mouseUp   
+   
 end mouseup
 
 ---------------------------------------------

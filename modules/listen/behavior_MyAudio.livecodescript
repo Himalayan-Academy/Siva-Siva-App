@@ -1,6 +1,6 @@
 ﻿script "behavior_MyAudio" with behavior "behavior_ListenUI"
 
-//> This script has attached behavior
+//> This script has parent behavior
 //> behavior_ListenUI
 
 //>LOCALS
