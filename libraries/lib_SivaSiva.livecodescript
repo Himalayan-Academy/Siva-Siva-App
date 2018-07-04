@@ -326,7 +326,7 @@ end connectivity_NotAvailable
 
 function checkURLAvailable pSelectedURL
    get url pSelectedURL
-   if  not (it contains "404 Page Not") then
+   if  not (it contains "404 Not Found") then
       return true
    else
       return false

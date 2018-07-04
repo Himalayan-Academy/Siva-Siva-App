@@ -103,7 +103,7 @@ end getAudioList
 
 
 command startPlayer  sSelectedURL, pTitle
-  
+   
    --  local sSelectedURL, tRect
    
    if sSelectedURL contains "https" then # we need connectivity
@@ -111,8 +111,7 @@ command startPlayer  sSelectedURL, pTitle
          dialog_CustomMsg "Offline or Low Bandwidth"
          exit startPlayer
       end if
-   end if
-   
+   end if 
    
    if isMobile() then
       if the platform is "android" then
@@ -160,7 +159,7 @@ on clearPlayer
 end clearPlayer
    
    
-   command doAnswerResponse -- sent from doAnswer dlg
+command doAnswerResponse -- sent from doAnswer; see lib_Dialogs
    get the dialogData
    if it contains "OK" then
       exit to top

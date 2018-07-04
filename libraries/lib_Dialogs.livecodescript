@@ -146,7 +146,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    # for now we keep the button Hidden
    
    if pBtn is empty then
-      hide btn "DIALOGAFFIRM"  
+      hide btn "DIALOGAFFIRM"
       set the textalign of fld "lbl-dialogPrompt" to center
       set the textalign of line 1 of fld "lbl-dialogPrompt" to center
    else
@@ -231,7 +231,7 @@ This library dispatches that back to the calling handler.
 local sHandleAffirm
 
 command doAnswer pMsg,pBtns,pHandleAffirm
-       put pHandleAffirm into sHandleAffirm
+   put pHandleAffirm into sHandleAffirm
    # first instantiate the group to the local context
    put sConfigA["answerDialog"] into tDialogControl
    if (exists(group "answerDlgGrp" of this card) ) then 
@@ -239,8 +239,7 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    else
       copy tDialogControl to this card
    end if
-   -- pMsg = prompt
-   -- pBtns = comma-delimited names of up to 2 btns to show;
+   --set the location of grp "answerDigGrp" of this card  to the location of this card
    if there is no grp "answerDlgGrp" then
       exit doAnswer
    end if
@@ -250,6 +249,7 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    get item 2 of pBtns
    set the vis of btn "dialogCancel" of grp "answerDlgGrp" to (it <> "")
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
+   set the vis of grc "cover" to true
    show grp "answerDlgGrp" -- cd must have a "doAnswerResponse" handler to read dialogData and respond
 end doAnswer
 

@@ -396,7 +396,10 @@ on  playlist_Instantiate sTargetPlayList
          end repeat
    end switch
    put empty into sCached
-   markCachedItems tKeys
+   
+   getPlayListURLs tKeys
+   
+   --markCachedItems tKeys
    
       showBusyIndicator false
    
@@ -465,6 +468,13 @@ command typeSetAudioList
  
 end typeSetAudioList
 
+command getPlayListURLs pKeys
+   repeat for each line x in pKeys
+      put getItemURL(x) into pURL
+      put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
+   end repeat   
+end getPlayListURLs
+
 command markCachedItems pKeys
    repeat for each line x in pKeys
       # this as good a place as any to check for the existence of files  
@@ -504,14 +514,6 @@ function getItemURL pRecordNum
       put getMediaURL("audioBook") into sSelectedURL
       put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
       put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
-   end if
-   put checkURLAvailable(sSelectedURL) into tAvailable
-   if tAvailable = "true" then
-      return sSelectedURL
-   else 
-      put "The file is not available on the server. Please send feedback with details so that we can fix it." into pMsg
-     doAnswer pMsg,"OK"
-      exit to top
    end if
 end getItemURL
 

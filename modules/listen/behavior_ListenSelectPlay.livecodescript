@@ -58,7 +58,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
-   --answer "hello" with "OK"
+  -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
    # all logic for user interaction with the GUI is handled here.
@@ -150,7 +150,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if pItemID is empty then # search from the click line
       put getItemURL(sSelectNum) into sRemoteURL
       Put "Connecting..." into fld "currentTitleLabel"
- --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+      --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
       put sSelectionsA["audioFiles"][sSelectNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
@@ -161,6 +161,13 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
+   end if
+   
+   if checkURLAvailable(sSelectedURL) is "false" then 
+      clearPlayer
+      put "Sound file unavailable. Please send feedback with the name song and artist so that we can fix it." into pMsg
+      doAnswer pMsg,"Cancel,OK",doAnswerResponse 
+      exit to top
    end if
    
    # Lyrics fetch is a separate function, see lib_SivaSiva Meida
