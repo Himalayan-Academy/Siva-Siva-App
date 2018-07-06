@@ -4,8 +4,12 @@ passAudioSelection//>LOCALS
 local sSelectNum, sSingleAudioA,sCached
 local sAudioUI
 
-
-on mouseUp
+on opencard
+   audioIsRunning
+end opencard
+  
+  
+  on mouseUp
    put the short name of the target into pTarget
    switch pTarget
       case "collections-label"

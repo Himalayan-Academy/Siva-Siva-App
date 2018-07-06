@@ -79,6 +79,7 @@ on mouseup
          go to card "listen-my-audio"
          break
       case "AudioList"
+         hide widget "turnOffAudio"
          stopPlayer # make sure previous player, if there is one, is deleted.
          clearPlayer # in parent Listen_UI
          setAudioListColors

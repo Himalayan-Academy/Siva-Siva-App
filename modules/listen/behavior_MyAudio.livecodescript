@@ -23,6 +23,7 @@ function getSelection pLine
 end getSelection
 
 on passAudioSelection pLine,pTitle
+   hide widget "turnOffAudio"
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
    metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1]) 
 end passAudioSelection
