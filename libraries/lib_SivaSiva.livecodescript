@@ -324,9 +324,11 @@ function connectivity_NotAvailable cardOrStackObject
    # risking queuing up multiple requests
 end connectivity_NotAvailable
 
-function checkURLAvailable pSelectedURL
-   get url pSelectedURL
-   if  not (it contains "404 Not Found") then
+function checkURLAvailable pSelectedURL     
+ put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
+  
+   ## get url pSelectedURL
+   if  (tResult < 400) then
       return true
    else
       return false
