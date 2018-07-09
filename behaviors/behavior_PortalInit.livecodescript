@@ -24,7 +24,9 @@ on mouseUp
    # 1_portal-link-image
    # we need to pass the text string in the label back 
    # to the navigation controller: lib_SivaSivaPortal 
-   mobileClearTouches
+   if isMobile() then
+      mobileClearTouches
+   end if
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
       portal_setCurrent (the short name of this card)
       put the short name of the target into tRow

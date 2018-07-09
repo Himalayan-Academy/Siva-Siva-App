@@ -235,23 +235,4 @@ on closeCard
     deleteAllMobileControls 
 end closeCard
 
-command select_ShowDetails   pSelectSong
-   deleteMobileControl "audioList"
-   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      put getMediaItemMetadata() into jai
-      put jai into fld "audioDetails"
-   else
-      # its an audio book, lib media doesn't know anything, we have to pass the record here       
-      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
-   end if   
-   set the textsize of line 1 of fld "audioDetails" to 22
-   set the textstyle of line 1 of fld "audioDetails" to "bold"
-   set the textstyle of line 3 of fld "audioDetails" to "italic"
-   set the rect of fld "AudioDetails" to rect of fld "audioList" 
-   show fld "audioDetails" with visual effect wipe up very fast
-   send "CreateScroller audioDetails" to fld "audioDetails"
-end select_ShowDetails
-
-
-
 

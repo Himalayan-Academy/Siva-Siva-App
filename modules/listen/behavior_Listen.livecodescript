@@ -30,6 +30,7 @@ local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTim
 local sCached, sBrowseHeader
 
 on preopenstack
+   put empty into sCurrentPlayListA
    # may be fixed in recent versions Android crashed on stack swaps
    # this little wait helped 
    wait 100 milliseconds with messages 
@@ -281,6 +282,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             exit to top
          else 
             put it into tRecords
+        
             put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
@@ -470,10 +472,35 @@ end typeSetAudioList
 
 command getPlayListURLs pKeys
    repeat for each line x in pKeys
-      put getItemURL(x) into pURL
-      put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
+    --  put getItemURL(x) into sSelectedURL
+      put getItemURL(x) into sCurrentPlayListA["audioFiles"][x]["myURL"]
    end repeat   
 end getPlayListURLs
+
+function getItemURL pRecordNum
+   # send of to lib_SivaSivaMedia, which knows all about our media CMS
+   # but Audio books are completely different CMS: they have no item records for their audio files
+   
+   if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
+      # everything happens via Jnanam table structure record array
+      put  sCurrentPlayListA["audioFiles"][pRecordNum] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA
+      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
+      
+      # but lib_SivaSivaMedia won't have string for the latest item
+      # fortunately there is easily solution for audio:
+      if char -1 of sSelectedURL = "/" then
+         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
+         -- put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" into sCurrentPlayListA["audioFiles"][pRecordNum]["myURL"]
+      end if      
+   else
+      # its an audio book
+      put getMediaURL("audioBook") into sSelectedURL
+      put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
+      put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
+   end if
+   return sSelectedURL
+end getItemURL
 
 command markCachedItems pKeys
    repeat for each line x in pKeys
@@ -493,30 +520,6 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
-
-function getItemURL pRecordNum
-   # send of to lib_SivaSivaMedia, which knows all about our media CMS
-   # but Audio books are completely different CMS: they have no item records for their audio files
-   
-   if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
-      # everything happens via Jnanam table structure record array
-      put  sCurrentPlayListA["audioFiles"][pRecordNum] into sSelectedItemA
-      metadata_SetRecord sSelectedItemA
-      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
-      
-      # but lib_SivaSivaMedia won't have string for the latest item
-      # fortunately there is easily solution for audio:
-      if char -1 of sSelectedURL = "/" then
-         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
-      end if      
-   else
-      # its an audio book
-      put getMediaURL("audioBook") into sSelectedURL
-      put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
-      put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
-   end if
-end getItemURL
-
 
 on journalResume  pDataA, pEntryA
    -- breakpoint
