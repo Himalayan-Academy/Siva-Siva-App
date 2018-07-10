@@ -30,7 +30,7 @@ local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTim
 local sCached, sBrowseHeader
 
 on preopenstack
-   put empty into sCurrentPlayListA
+  -- put empty into sCurrentPlayListA
    # may be fixed in recent versions Android crashed on stack swaps
    # this little wait helped 
    wait 100 milliseconds with messages 
@@ -436,19 +436,30 @@ end playlist_Instantiate
 
 # V2 Link to transcript
 
-command select_ShowDetails   
+command select_ShowDetails  pSelection, pRecord
    deleteMobileControl "audioList"
-   if (sSelectionsA["playlistClass"] = "latest")  OR (sSelectionsA["playlistClass"] ="cached") then
-      put getMediaItemMetadata() into fld "audioDetails"
-   else
-      # its an audio book, lib media doesn't know anything, we have to pass the record here       
-      put  getMediaItemMetadata(sSelectionsA["audioBookMetadata"][1]) into  fld "audioDetails"     
-   end if
+   
+   switch
+      case (sCurrentPlayListA["playlistClass"] = "latest")  OR (sCurrentPlayListA["playlistClass"] ="cached")
+         put getMediaItemMetadata() into fld "audioDetails"
+         break
+         
+         # its an audio book, lib media doesn't know anything, we have to pass the record here   
+      case sCurrentPlayListA["playlistClass"]= "audioBook"
+         put "Transcripts for audio books are available here." &cr & cr &  "Read the original book." into fld "audioDetails"
+         break        
+         
+         # or its from a downloaded file in My Audio
+      case (pSelection="downloaded")
+         put  getMediaItemMetadata(pRecord) into  fld "audioDetails"   
+         break   
+   end switch
    
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
    set the rect of fld "AudioDetails" to rect of fld "audioList" 
+   
    show fld "audioDetails" with visual effect wipe up very fast
    send "CreateScroller audioDetails" to fld "audioDetails"
 end select_ShowDetails

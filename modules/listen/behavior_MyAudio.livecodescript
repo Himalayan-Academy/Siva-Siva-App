@@ -6,6 +6,11 @@
 //>LOCALS
 local sDownloadedAudioA
 
+on preopencard
+    hide player "audioPlayer"
+    put empty into fld  "currentTitleLabel"
+    put "Listen Off Line" into fld "title-label"
+end preopencard
 
 on openCard
    getDownloadedAudio
@@ -17,7 +22,6 @@ on openCard
   
 end openCard
 
-
 function getSelection pLine  
    return sDownloadedAudioA[pLine]
 end getSelection
@@ -25,12 +29,21 @@ end getSelection
 on passAudioSelection pLine,pTitle
    hide widget "turnOffAudio"
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
-   metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1]) 
+   metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1])
 end passAudioSelection
 
-on select_Play pLine,pTitle
-   startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
-end select_Play
+on passAudioDetails sSelectNum,pTarget
+     put the vis of fld "audioDetails" into detailVis
+         if detailVis then
+            deleteMobileControl "audioDetails"
+            hide fld "audioDetails" with visual effect wipe down very fast
+            send  "CreateScroller audioList" to fld "audioList"
+         else
+            select_ShowDetails  "downloaded",(sDownloadedAudioA[sSelectNum][metadata][1])
+         end if
+         set the flipped of widget pTarget to not detailVis
+         break 
+end passAudioDetails
 
 command getDownloadedAudio
    local tList, tSearchA, tURL

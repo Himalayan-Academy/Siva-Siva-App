@@ -115,9 +115,7 @@ on mouseup
          break
    end switch
    
-   -- there a mouseup on the parent behavior also, if you need to use it: 
-   -- pass mouseUp   
-   
+
 end mouseup
 
 ---------------------------------------------
@@ -205,6 +203,8 @@ command downloadAffirmed
    go stack "view_Download"
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
 end downloadAffirmed
+
+
 
 on Journal_AddEntry pItemID
    put  sSelectionsA["playlistTitle"] into tPlayList

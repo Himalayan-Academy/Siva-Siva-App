@@ -37,18 +37,7 @@ end opencard
          -- select_Play  sSelectNum, pTitle
          break
       case "chevron-up-down" # this is simple enough to do here
-         passAudioDetails
-         
-         --          put the vis of fld "audioDetails" into detailVis
-         --          if detailVis then
-         --             deleteMobileControl "audioDetails"
-         --             hide fld "audioDetails" with visual effect wipe down very fast
-         --             send  "CreateScroller audioList" to fld "audioList"
-         --          else
-         --             getAudioList
-         --             select_ShowDetails (getDownloaded[sSelectNum])
-         --          end if
-         --          set the flipped of widget pTarget to not detailVis
+         passAudioDetails sSelectNum,pTarget
          break
          
    end switch
@@ -162,15 +151,6 @@ on clearPlayer
    put empty into fld "currentTitleLabel" 
 end clearPlayer
    
-   
-command doAnswerResponse -- sent from doAnswer; see lib_Dialogs
-   get the dialogData
-   if it contains "OK" then
-      exit to top
-   end if
-end doAnswerResponse
-
-
 
 # V2 Link to transcript, we will have to show OFFLINE when the user come
 # we have no functions to go back the internet for recents talks
