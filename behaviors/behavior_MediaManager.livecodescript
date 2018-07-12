@@ -16,18 +16,27 @@ testing this stuff, I think it might be working now.
 constant kMediaFolder= "/Users/Brahmanathaswami/Documents/SivaSivaApp/media"  # use for dev outside SivaSivaApp.
 local sMediaFolder,sTopFolder,sTopFolderList,sSpaceTotal,sResultA,sTargetFile,sTargetLine,sDetailedTarget
 
-on libraryStack
-   if the short name of this stack is among the lines of the stacksinuse then
-      pass libraryStack
-   end if  
-   mmSetRootFolder (path_Documents() & "media/")
-end libraryStack
+
+--on libraryStack
+--   if the short name of this stack is among the lines of the stacksinuse then
+--      pass libraryStack
+--   end if  
+--   mmSetRootFolder (path_Documents() & "media/")
+--end libraryStack
 
 on openCard
-   mmSetRootFolder (path_Documents() & "media/")
-   mmGetTopSums
+   audioIsRunning  
+   getSums
 end openCard
 
+on closeCard
+   clearSums
+end closeCard
+
+on GetSums
+   mmSetRootFolder (path_Documents() & "media/")
+   mmGetTopSums
+end GetSums
 
    
    --> recursive directory walk/digger and storing data handlers and functions
@@ -37,10 +46,10 @@ end openCard
    # we can use this later to present files with their sizes and allow the user to delete 
    # without digging again. 
    
-   command mmGetTopSums
+command mmGetTopSums
    if isMobile() then
       mobileShowStatusBar
-   end if
+   end if 
    show btn "load-spinner"
    show grp "diskDataOverview"
    dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
@@ -208,6 +217,22 @@ command displayTargetFiles pDataType
    show grp "displayFilesSizes" with dissolve very fast
 end displayTargetFiles
 
+on clearSums
+   # sometime we want to set the sum of each media to 0
+   # for example, when to leave the card.
+   put "audio,books,art,total" into tFields # add more later 
+   repeat for each item x in tFields
+      put empty into fld (x &"-data") 
+      try
+         set the width of graphic (x &"-bar")  to 0
+         set the left of graphic (x &"-bar") to 24
+      end try
+      
+   end repeat
+   
+   put empty  into fld "FilesOnDisk" 
+   put empty into fld "currentTotal"
+end clearSums
 
 # deletion routines
 
@@ -224,6 +249,3 @@ command deleteFileOnDisk
 end deleteFileOnDisk
 
 
-on mouseDoubleDown pButtonNumber
-   
-end mouseDoubleDown
