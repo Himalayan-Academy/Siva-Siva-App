@@ -275,8 +275,6 @@ function connectivity_PingServer
    end if
 end connectivity_PingServer
 
-
-
 -- ## Deprecated
 
 function connectivity_GetStatus
@@ -340,6 +338,18 @@ end checkURLAvailable
 on _____VISUALSandUI
 end _____VISUALSandUI
 
+
+
+command audioIsRunning  
+   # show global speaker when it installed  on a card
+   # inside group audioGlobalControl 
+   if runningAudioIndicatorVis() = "true" then
+      if there is a widget "turnOffAudio"  then 
+         show widget "turnOffAudio" 
+      end if
+   end if
+end audioIsRunning
+
 function runningAudioIndicatorVis visBool
    if isMobile() then
       put mobileControls() into tList
@@ -351,16 +361,6 @@ function runningAudioIndicatorVis visBool
    end if
    return sStopRunningAudio
 end runningAudioIndicatorVis
-
-command audioIsRunning  
-   # show global speaker when it installed  on a card
-   # inside group audioGlobalControl 
-   if runningAudioIndicatorVis() = "true" then
-      if there is a widget "turnOffAudio"  then 
-         show widget "turnOffAudio" 
-      end if
-   end if
-end audioIsRunning
 
 command turnOffAudio 
    # called by the speaker "widget" if it is showing

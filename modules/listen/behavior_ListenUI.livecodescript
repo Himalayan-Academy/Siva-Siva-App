@@ -34,7 +34,6 @@ end opencard
          put line tLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
-         -- select_Play  sSelectNum, pTitle
          break
       case "chevron-up-down" # this is simple enough to do here
          passAudioDetails sSelectNum,pTarget
@@ -98,13 +97,6 @@ end getAudioList
 command startPlayer  sSelectedURL, pTitle
    
    --  local sSelectedURL, tRect
-   
-   if sSelectedURL contains "https" then # we need connectivity
-      if connectivity_PingServer()<>"true" then
-         dialog_CustomMsg "Offline or Low Bandwidth"
-         exit startPlayer
-      end if
-   end if 
    
    if isMobile() then
       if the platform is "android" then

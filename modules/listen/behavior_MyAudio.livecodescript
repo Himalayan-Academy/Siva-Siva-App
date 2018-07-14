@@ -115,7 +115,8 @@ command loadtitles sTitles
 end loadtitles
 
 on closecard
-     deleteAllMobileControls 
+   deleteAllMobileControls 
+   clearPlayer # see the stack script
 end closecard
 
 #  ======

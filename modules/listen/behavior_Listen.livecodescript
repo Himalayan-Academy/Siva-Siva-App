@@ -619,5 +619,23 @@ on preopencard
          break
    end switch   
 end preopencard
-   
-  
+
+
+command __UXHandlers
+end __UXHandlers
+
+on stopPlayer
+   if not isMobile() then
+      stop player "audioPlayer"
+      set the filename of player "audioPlayer"  to empty
+   else 
+      setMobileAudioPlayer "audioPlayer", false
+      deleteMobileControl "audioPlayer"
+   end if
+end stopPlayer
+
+on clearPlayer
+   showPlayer false, "audioPlayer"
+   put empty into fld "currentTitleLabel" 
+end clearPlayer
+
