@@ -81,28 +81,6 @@ command scroller_SetRect idOrName, groupRect, pFormattedRect
 end scroller_SetRect
 
 
---> Mobile | Scroller | Events
---David's method
-## jg: removing this, it interferes:
-----on scrollerDidScroll hScrolled, vScrolled
-----   -- this message is sent to the same object that created the mobile scroller (this library)
-----   -- would prefer to move it to a behavior that an be used in multiple places
-
-----   -- put mobileControlTarget() into idOrName
-----   -- if idOrName = "portal scroller" then
-----   -- put the scrolling_View of cd 1 of stack "sivasivahome" into scrollingView
-----   -- displayScroll (idOrName &CR& vScrolled)
-
-----   put LocalArray ["scrollerView"] into scrollingView
-----   if exists (scrollingView) is false then
-----      answer scrollingView
-----      return empty
-----   end if
-
-----   set the vscroll of scrollingView to vScrolled
-----   pass scrollerDidScroll
-----end scrollerDidScroll
-
 --> Mobile | Scroller
 --
 setprop mobile_VerticalScroller [fRect] mobileScrollerName
@@ -264,9 +242,6 @@ on playerFinished -- sent on mobile when audio is done
    get runningAudioIndicatorVis("false")
 end playerFinished
 
---on playStopped -- sent on desktop when audio is done
---  if there is a grp "soundIsPlaying" then hide grp "soundIsPlaying"
---end playStopped
 
 command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
    -- if audio is playing, player is shown on audio card, hidden elsewhere;

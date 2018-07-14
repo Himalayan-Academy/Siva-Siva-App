@@ -128,21 +128,7 @@ command startPlayer  sSelectedURL, pTitle
    end if
 end startPlayer
 
-on stopPlayer
-   if not isMobile() then
-      stop player "audioPlayer"
-      set the filename of player "audioPlayer"  to empty
-   else 
-      setMobileAudioPlayer "audioPlayer", false
-      deleteMobileControl "audioPlayer"
-   end if
-end stopPlayer
 
-on clearPlayer
-   showPlayer false, "audioPlayer"
-   put empty into fld "currentTitleLabel" 
-end clearPlayer
-   
 
 # V2 Link to transcript, we will have to show OFFLINE when the user come
 # we have no functions to go back the internet for recents talks
