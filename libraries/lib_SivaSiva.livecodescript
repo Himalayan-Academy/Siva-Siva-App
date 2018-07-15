@@ -18,35 +18,6 @@ function isMobile
 end isMobile
 
 
-command sivasiva_InitOrientation orientationType
-   -- try to avoid and specifically set fullscreenmode and mobile_SetAllowedOrientation for each module
-   
-   if the environment is not "mobile" then
-      return false
-   else
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      mobile_SetAllowedOrientation orientationType
-   end if
-end sivasiva_InitOrientation
-
-command mobile_SetAllowedOrientation orientationType
-   if the environment is not "mobile" then return empty
-   
-   switch orientationType
-      case "portrait"
-         put "portrait,portrait upside down" into allowedOrientations
-         break
-      case "landscape"
-         put "landscape left,landscape right" into allowedOrientations
-         break
-      default -- allow all, ignoring face up/down
-         put "portrait,portrait upside down,landscape left,landscape right" into allowedOrientations
-   end switch
-   mobileSetAllowedOrientations allowedOrientations
-   --mobileSetFullScreenRectForOrientations allowedOrientations
-   return allowedOrientations
-end mobile_SetAllowedOrientation
-
 
 --> POST INSTALL CONTENT DOWNLOAD HANDLERS
 --

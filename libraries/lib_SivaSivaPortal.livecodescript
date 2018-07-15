@@ -192,8 +192,11 @@ end portal_GoStack
 command portal_Link portalName
    
    -- navigates to the "portal view" and displays the named portal
+  
+if isMobile() then    
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
    
-   sivasiva_InitOrientation "portrait" ## Needed if we are returning from a landscape stack
    
    --lock screen # try to regain control over android
    

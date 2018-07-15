@@ -30,12 +30,11 @@ local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTim
 local sCached, sBrowseHeader
 
 on preopenstack
-  -- put empty into sCurrentPlayListA
-   # may be fixed in recent versions Android crashed on stack swaps
-   # this little wait helped 
-   wait 100 milliseconds with messages 
    set the fullscreenmode of this stack to "showAll"
-   mobile_SetAllowedOrientation "portrait"
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down" 
+   end if
+   
 end preopenstack
 
 on openstack 
