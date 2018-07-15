@@ -129,32 +129,6 @@ command startPlayer  sSelectedURL, pTitle
 end startPlayer
 
 
-
-# V2 Link to transcript, we will have to show OFFLINE when the user come
-# we have no functions to go back the internet for recents talks
-# there the key "metadata" will be empty they return
-# V2 which fetch data, installed in the data base
-
-
--- command select_ShowDetails 
-
---    put the flipped of widget "chevron-up-down" into detailVis
---    deleteMobileControl "audioList"
---    put sSingleAudioA[metadata][1] into pRecord
---    if pRecord <> empty then
---       put getMediaItemMetadata(pRecord) into fld "audioDetails"
---       set the textsize of line 1 of fld "audioDetails" to 22
---       set the textstyle of line 1 of fld "audioDetails" to "bold"
---       set the textstyle of line 3 of fld "audioDetails" to "italic"
---       set the rect of fld "AudioDetails" to rect of fld "audioList"
---       show fld "audioDetails" with visual effect wipe up very fast
---       send "CreateScroller audioDetails" to fld "audioDetails"
---    else
---       doAnswer "Metadata is not available for recent talks you have downloaded.", "OK","downloadAffirmed"
---       set the flipped of widget "chevron-up-down" to not detailVis
---    end if
--- end select_ShowDetails
-
 command markCachedItems pKeys
    repeat for each line x in pKeys
       # this as good a place as any to check for the existence of files  
