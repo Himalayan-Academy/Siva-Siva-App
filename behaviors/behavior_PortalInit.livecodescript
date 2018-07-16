@@ -3,15 +3,14 @@
 
 local sStartLoc
 
-on openCard
+on openCard 
    portal_SetCurrentStack "Siva-Siva-Portal"
    portal_SetCurrent (the short name of this card)
-   put "SivaSiva Portal Scrolling" into tLinksGroup
-   send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" -- in 100 milliseconds
    audioIsRunning
+   put "SivaSiva Portal Scrolling" into tLinksGroup
+   send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 120 milliseconds
 end openCard
  
-
 on mouseDown
       put the mouseloc into sStartLoc
 end mouseDown
