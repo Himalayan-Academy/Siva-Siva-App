@@ -157,9 +157,9 @@ command portal_GoStack cardOrStackObject
    set the acceleratedRendering of stack oStackName to false
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   wait 50 milliseconds with messages  
+   wait 20 milliseconds with messages  
    close stack oStackName   
-   wait 50 milliseconds with messages
+   wait 20 milliseconds with messages
    
    ## go to cardOrStackObject in window oStackName
    
