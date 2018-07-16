@@ -15,10 +15,11 @@ local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL
 --> Events
  
 on preOpenCard 
-   
+   # ideally we only call this in start up   
+
    # Make sure our photo cache is updated   
    --  jnanam_UpdatePhotoCache
-
+   
    
    # Clean the card so we don't get a flash back to previous content
    hide image "gems-image"
@@ -37,8 +38,7 @@ on openCard
       set the filename of img "gems-image" to tNextImagePath 
    end if 
    
-   # ideally we only call this in start up   
-   mobile_SetAllowedOrientation "portrait"
+   
    
    put 0 into sViewState
    

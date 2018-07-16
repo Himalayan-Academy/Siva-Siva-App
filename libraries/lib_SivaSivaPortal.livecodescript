@@ -1,5 +1,4 @@
 ﻿script "lib_SivaSivaPortal"
-1script "lib_SivaSivaPortal"
 --> MetaData
 -
 license: GPLv3
@@ -52,9 +51,9 @@ command portal_NextOrientation pStack
    
    if pStack is among the items of \
          "wordpuzzles"  then
-      mobile_SetAllowedOrientation "landscape"
+      mobileSetAllowedOrientations "landscape, left, landscape right"
    else # all other stacks
-      mobile_SetAllowedOrientation "portrait"
+      mobileSetAllowedOrientations "portrait, portrait upside down"
    end if
    
 end portal_NextOrientation 
@@ -113,11 +112,11 @@ command portal_StackOrientation pStack
    # this means everytime were have a landscape stack 
    # it must registered here
    if  pStack is among items  of \
-      ("wordpuzzles") then  # list all landscape stacks here
-      mobile_SetAllowedOrientation "landscape"
+         ("wordpuzzles") then  # list all landscape stacks here
+      mobileSetAllowedOrientations "landscape left, landscaper right"
    else
       # portrail
-      mobile_SetAllowedOrientation "portrait"
+      mobileSetAllowedOrientations"portrait, portrait upside down"
    end if
 end portal_StackOrientation
 
@@ -158,19 +157,12 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   -- set up orientation in advance
-   
-
-   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   wait 100 milliseconds with messages  
+   wait 50 milliseconds with messages  
    close stack oStackName   
-   wait 100 milliseconds with messages
-   
-     -- portal_NextOrientation tNextStack  
+   wait 50 milliseconds with messages
    
    ## go to cardOrStackObject in window oStackName
-   
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
    
@@ -192,17 +184,6 @@ end portal_GoStack
 command portal_Link portalName
    
    -- navigates to the "portal view" and displays the named portal
-  
-if isMobile() then    
-      mobileSetAllowedOrientations "portrait,portrait upside down"
-   end if
-   
-   
-   --lock screen # try to regain control over android
-   
-   # an attempt are making Android by
-   # by other process again go card
-   # which make redundant
    
    if not (sLastStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
@@ -219,7 +200,6 @@ if isMobile() then
       tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
    
-   
 end portal_Link
 
 command portal_GoUrl someURL,pJournalLabel
@@ -227,28 +207,18 @@ command portal_GoUrl someURL,pJournalLabel
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-   # comment out to test in airplane mode... app will just hang 
-   # so you need to be trapping network connections by other methods.
-   
-   --    if connectivity_PingServer() = "false" then
-   --       # do nothing, inform user
-   --       dialog_CustomMsg "Offline or Low Bandwidth"
-   --           exit portal_GoURL
-   --    else
-   
+  
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
    portal_GoStack "view_SivaSivaBrowser"
    set the browser_URL of stack "view_SivaSivaBrowser" to someURL
    put someURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   --end if # closing connectivity check
+  
 end portal_GoUrl
 
 
-
-end mobile_SetAllowedOrientation 
-   command portal_LaunchUrl someURL
+command portal_LaunchUrl someURL
    # leave Siva Siva app and open the native web app on the device
    launch url someURL    
 end portal_LaunchUrl
