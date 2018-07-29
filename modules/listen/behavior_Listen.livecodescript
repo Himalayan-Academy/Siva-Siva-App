@@ -34,7 +34,7 @@ on preopenstack
    if isMobile() then
       mobileSetAllowedOrientations "portrait,portrait upside down" 
    end if
-   
+ 
 end preopenstack
 
 on openstack 
@@ -48,16 +48,17 @@ on openstack
    #
    # first, load the json
    
-   set the acceleratedRendering of this stack to true
-   
    -- put empty into fld "log"
+   
+   set the acceleratedRendering of this stack to true
    
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA   
- 
+   
 end openstack
 
 # return JSON for other handlers as needed
+
 function getCollectionsJson
    return sCollectionA
 end getCollectionsJson

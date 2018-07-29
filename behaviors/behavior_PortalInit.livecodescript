@@ -8,8 +8,7 @@ on openCard
    portal_SetCurrent (the short name of this card)
    audioIsRunning
    put "SivaSiva Portal Scrolling" into tLinksGroup
-   send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 120 milliseconds
-   set the acceleratedRendering of this stack to true
+   send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 0 milliseconds
 end openCard
  
 on mouseDown

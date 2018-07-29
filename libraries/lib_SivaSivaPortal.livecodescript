@@ -151,8 +151,6 @@ command portal_GoStack cardOrStackObject
    
    --> Variations on  stack transition methods.
    
-   # this method is fast, but leaves artifacts on Android
-   # attempt to go in save window  
    
    set the acceleratedRendering of stack oStackName to false
    
@@ -161,6 +159,7 @@ command portal_GoStack cardOrStackObject
    close stack oStackName   
    wait 20 milliseconds with messages
    
+   ## the does not work! --
    ## go to cardOrStackObject in window oStackName
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
@@ -201,19 +200,20 @@ command portal_Link portalName
    
 end portal_Link
 
-command portal_GoUrl someURL,pJournalLabel
+command portal_GoUrl pURL,pJournalLabel
    set the socketTimeoutinterval to 2000
    #the Browser is called from various contexts
    # we need to know where we came from in order to 
    # handle returning to the context properly.
-  
+   
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
    portal_GoStack "view_SivaSivaBrowser"
-   set the browser_URL of stack "view_SivaSivaBrowser" to someURL
-   put someURL into pTrackdata["webUrl"]
+   send "setBrowserURL pURL" to cd 1 of stack "view_SivaSivaBrowser" in 100 milliseconds
+   --set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+   put pURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-  
+   
 end portal_GoUrl
 
 
