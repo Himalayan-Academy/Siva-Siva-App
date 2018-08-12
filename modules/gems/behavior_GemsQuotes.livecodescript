@@ -58,67 +58,71 @@ on openCard
       put random(3) into sCurrentRealm
    end if
    
-   send "comingFromJournal" to me in 50 milliseconds
+   send "comingFrom" to me in 50 milliseconds
 
 end opencard
    
-On comingFromJournal
-   if getJournalFlag() = 1 then
+on comingFrom
+   if  portal_GetLastStack() = "Journal" then
       put getJournalData() into pJournalData
       set the filename of img "gems-image" to pJournalData["lastImage"]
-      put pJournalData["lastQuote"] into fld "gems-quote"
+      show img "gems-image"
+      put pJournalData["lastQuote"] into pQuoteID    
    else
-      setUpCard
+      put empty into pQuoteID
    end if
-end comingFromJournal
-
-on setUpCard
+   
    setCardTitle
    set the acceleratedRendering of this stack to true
-   fetchQuoteAndImage sCurrentRealm
-end setUpCard
-
+   fetchQuoteAndImage pQuoteID,pJournalData
+   
+end comingFrom
 
 on setCardTitle
    put "Realm of God,Realm of Soul,Realm of Life" into tTitles
    put item sCurrentRealm of tTitles into tRealm
    put tRealm into fld "title"     
-   put tRealm into pData["switchRealm"]
-   tracking_RecordActivity "Gems", "navigation/realms", pData
+   --put tRealm into pData["switchRealm"]
+   --tracking_RecordActivity "Gems", "navigation/realms", pData
 end setCardTitle
 
 on closecard
    resetUI
 end closecard
 
-command fetchQuoteAndImage
+command fetchQuoteAndImage pQuoteID,pJournalData
    hide widget "loadContext"
    set the uSourceURL of widget "loadContext" to empty
+   put JnanamDB() into tConnectionID
    
-   if sCurrentRealm is empty then
-      put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
+   if pJournalData is empty  then # coming portal stack, we want random quote
+      
+      if sCurrentRealm is empty then
+         put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
+      end if
+      
+      ## Fetch quote a randon quote from same category
+      
+      put line sCurrentRealm of the uRealmCats of this card into tCats
+      put _getRandomSQL() into tQuoteSQL
+      replace ":1" with tCats in tQuoteSQL
+      
+      dbSetSQL tQuoteSQL
+      put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      # store the quote id. see lib_SivaSivaMedia
+      
+      put dbGet("quote", tConnectionID) into aSelectedQuotes
+      put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
+      setLastQuoteID (aSelectedQuotes[1]["quote_id"])
+      --put getLastQuoteID() # check
+   else 
+      dbLike "quote_id",pQuoteID
+      put dbGet("quote", tConnectionID) into aSelectedQuotes
+      put textDecode  (aSelectedQuotes[1]["content"],UTF8)  into tQuote
    end if
    
-   --toggleReadContext ("false")
-   # show a picture first
-   ## Fetch Images
-   
-   ## Fetch quote
-   put line sCurrentRealm of the uRealmCats of this card into tCats
-   put _getRandomSQL() into tQuoteSQL
-   replace ":1" with tCats in tQuoteSQL
-   put JnanamDB() into tConnectionID
-   dbSetSQL tQuoteSQL
-   put dbGet("quote", tConnectionID) into aSelectedQuotes
-   put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
    replace "\n" with cr in tQuote
-   
    put tQuote into fld "gems-quote"
-   put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
-   
-   # store the quote id. see lib_SivaSivaMedia
-   setLastQuoteID (aSelectedQuotes[1]["quote_id"])
-   --put getLastQuoteID() # check
    
    if isMobile() then
       

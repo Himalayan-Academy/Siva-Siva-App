@@ -165,6 +165,7 @@ end getIconForModule
 
 on launchActivity
    --put "should launch activity" && sEntryA["journal_id"]
+   setJournalFlag 1
    portal_SetCurrentStack "Journal"
    set the acceleratedRendering of this stack to false
    Journal_LaunchEntry sEntryA["journal_id"]

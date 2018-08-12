@@ -108,9 +108,9 @@ end newcontent_IsThere
 
 
 
-on ______PATHS_NAV
-end ______PATHS_NAV
-   
+on ____PATHS_NAV
+end ____PATHS_NAV
+
 --> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
 function path_HomeLocal
@@ -180,7 +180,7 @@ end path_Modules
 # /media (from public_html) or /assets, /modules (from /media/apps/sivasiva)
 
 function path_isFileOnDisk pURL  
-  put path_FileFromURL(pURL) into tFilePath
+   put path_FileFromURL(pURL) into tFilePath
    if there is a file tFilePath then
       return (true,tFilePath)
    end if
@@ -232,7 +232,7 @@ constant kONLINECONTENT= "surprise,website,look,view_SivaSivaBrowser"
 
 on ______CONNECTIVITY HANDLERS   
 end ______CONNECTIVITY
-   
+
 
 Local sPingURL,sServerAttempts # sURLStatusLog
 
@@ -294,8 +294,8 @@ function connectivity_NotAvailable cardOrStackObject
 end connectivity_NotAvailable
 
 function checkURLAvailable pSelectedURL     
- put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
-  
+   put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
+   
    ## get url pSelectedURL
    if  (tResult < 400) then
       return true
@@ -305,9 +305,48 @@ function checkURLAvailable pSelectedURL
 end checkURLAvailable
 
 
+##################################
+on ___GETTERandSETTERS
+end ___GETTERandSETTERS
 
-on _____VISUALSandUI
-end _____VISUALSandUI
+
+# Description: 
+# Frequenly there is a common  need to have a variable be set 
+# that is available when on stack closes - where you sets a variable
+# and when an next stack opens. 
+# you have three choices, Get a global
+# So set prop, getprop
+# set "Getters" and "Setters"
+
+<-------------------------------------
+#  Description: Sometime though
+
+
+local sJournalFlag,sJournalData
+
+command setJournalFlag pFlag
+   put pFlag into sJournalFlag
+end setJournalFlag
+
+function getJournalFlag
+   return sJournalFlag
+end getJournalFlag
+
+command setJournalData pData
+   put pData into sJournalData
+end setJournalData
+
+function getJournalData
+   return sJournalData
+end getJournalData
+
+
+
+
+##################################
+
+on ___VISUALSandUI
+end ___VISUALSandUI
 
 
 
@@ -447,10 +486,10 @@ command display_Log
 end display_Log
  
  
- on _____Utilities
- end _____Utilities
- 
- function isAudioPlay
+on ___UTILITIES
+end ___UTILITIES
+
+function isAudioPlay
      repeat while pName is among the lines of mobileControls()
       mobileControlDelete pName
    end repeat
@@ -518,8 +557,8 @@ function text_TitleCase pString
    
 end text_TitleCase
 
-on _____FILE_MANIPULATION
-end _____FILE_MANIPULATION
+on ___FILE_MANIPULATION
+end ___FILE_MANIPULATION
 
 # Returns a list of files with the full paths
 function listFilesWithPaths pFolder, pRecurse
