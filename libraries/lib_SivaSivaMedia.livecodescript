@@ -6,8 +6,9 @@ type: library
 version: 0.2
 
 --> Variables
--
+
 local sMediaMetaA,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
+local  sLastQuoteID, sLastImagePath
 
 on ___LOCAL_Dbase
 end ___LOCAL_Dbase
@@ -250,6 +251,34 @@ on metadata_SetRecord pRecordArray
    put pRecordArray into sMediaMetaA
 end metadata_SetRecord
 
+#################
+
+on ___QUOTEMANAGEMENT
+end ___QUOTEMANAGEMENT
+
+########### Globable Management Quotes
+
+
+# we save the quote it from Gem with img path, 
+# the way we can go back to it if the user Saves it as a Favorites
+# in Journal, we maybe able to use this elsewhere when crossing stack
+# the library has the data 
+
+command setLastQuoteID pQuoteID
+   put pQuoteID into sLastQuoteID
+end setLastQuoteID
+
+function getLastQuoteID 
+   return sLastQuoteID
+end getLastQuoteID
+
+command setLastImagePath pImagePath
+   put pImagePath into sLastImagePath
+end setLastImagePath
+
+function getLastImagePath
+   return sLastImagePath
+end getLastImagePath
 
 #################
 

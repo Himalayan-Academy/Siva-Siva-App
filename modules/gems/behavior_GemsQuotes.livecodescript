@@ -9,11 +9,11 @@ This script  is the behavior assigned to card 1
 # sCurrentRealm is an  integer 1, 2 or 3  not a string!
 
 global sConfigA
-local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL
+local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL,sTruncFirstLine
 
 
 --> Events
- 
+
 on preOpenCard 
    # ideally we only call this in start up   
 
@@ -26,8 +26,10 @@ on preOpenCard
    put empty into fld "gems-quote"
 end preOpenCard
 
+
+
 on openCard
-   
+   audioIsRunning  
    # Fix image path from desktop when loading on Mobile
    
    if isMobile() then
@@ -39,8 +41,11 @@ on openCard
    end if 
    
    
-   
    put 0 into sViewState
+   
+   # wait want to get journal information it it exist
+   # put to set up the card
+   
    
    put connectivity_PingServer() into sOnline
    
@@ -52,17 +57,32 @@ on openCard
    if sCurrentRealm = 0 then 
       put random(3) into sCurrentRealm
    end if
+   
+   send "comingFromJournal" to me in 50 milliseconds
+
+end opencard
+   
+On comingFromJournal
+   if getJournalFlag() = 1 then
+      put getJournalData() into pJournalData
+      set the filename of img "gems-image" to pJournalData["lastImage"]
+      put pJournalData["lastQuote"] into fld "gems-quote"
+   else
+      setUpCard
+   end if
+end comingFromJournal
+
+on setUpCard
    setCardTitle
    set the acceleratedRendering of this stack to true
-   send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
-   pass opencard # there are things that should happen on all cards
-end OpenCard
+   fetchQuoteAndImage sCurrentRealm
+end setUpCard
+
 
 on setCardTitle
    put "Realm of God,Realm of Soul,Realm of Life" into tTitles
    put item sCurrentRealm of tTitles into tRealm
    put tRealm into fld "title"     
-   AddJournalEntry pReadQuote
    put tRealm into pData["switchRealm"]
    tracking_RecordActivity "Gems", "navigation/realms", pData
 end setCardTitle
@@ -94,6 +114,11 @@ command fetchQuoteAndImage
    replace "\n" with cr in tQuote
    
    put tQuote into fld "gems-quote"
+   put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+   
+   # store the quote id. see lib_SivaSivaMedia
+   setLastQuoteID (aSelectedQuotes[1]["quote_id"])
+   --put getLastQuoteID() # check
    
    if isMobile() then
       
@@ -146,8 +171,10 @@ command fetchImage pRealm
    put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
          into tNextImagePath
    set the filename of img "gems-image" to tNextImagePath   
+   setLastImagePath tNextImagePath  
+  -- put getLastImagePath()  #check
    show image "gems-Image" 
-
+   
 end fetchImage
 
 on updateImages
@@ -218,7 +245,9 @@ on addJournalEntry pContext
          put "images-quotes" into pDataA["card"]
          put tRealm into sConfigA["currentRealm"]
          put tRealm into pDataA["realm"]
-         Journal_RecordEntry "gems", ("Reading" && tRealm && "Quotes" ), pDataA
+         put getLastImagePath() into pDataA["lastImage"]
+         put getLastQuoteID() into pDataA["lastQuote"]
+         Journal_RecordEntry "gems", sTruncFirstLine, pDataA
          break
       case "pBookPage"        
          put browser_GetLastURL() into pData["weburl"]

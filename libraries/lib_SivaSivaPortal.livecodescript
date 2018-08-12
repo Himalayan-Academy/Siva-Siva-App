@@ -124,7 +124,7 @@ command portal_GoStack cardOrStackObject
   
    # save where we are coming from locally
    put the short name of this stack into oStackName
-   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   put "Siva-Siva-App,view_SivaSivaBrowser"  into tNoGoBackStacks
    
    if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
       # it means we are launching activity and we are not actually going
