@@ -24,12 +24,12 @@ setprop journalEntry pEntryA
    
 end journalEntry
 
-on mouseup
+on Mouseup
    if the short name of the target is "is favorite" then
       setFavorite
    else
-     -- put jsonexport(sEntryA)
-      --    dispatch "setupView" to card "detail view" with sEntryA 
+      put JSONtoArray(sEntryA["data"]) into pData
+      setJournalData pData
       launchActivity
    end if
 end mouseup
@@ -174,7 +174,3 @@ on launchActivity
    end if
 end launchActivity
 
-
-on localNotificationReceived pMessage
-
-end localNotificationReceived
