@@ -29,6 +29,7 @@
 	{"name": "behavior_Listen", "file": "modules/listen/behavior_Listen.livecodescript"},
 	{"name": "behavior_MyAudio", "file": "modules/listen/behavior_MyAudio.livecodescript"},
 	{"name": "behavior_ListenUI", "file": "modules/listen/behavior_ListenUI.livecodescript"},
+	{"name": "behavior_Look", "file": "modules/look/behavior_Look.livecodescript"},
 	{"name": "behavior_Journal", "file": "modules/journal/behavior_Journal.livecodescript"},
 	{"name": "behavior_JournalListView", "file": "modules/journal/behavior_JournalListView.livecodescript"},
 	{"name": "behavior_ItemTemplate", "file": "modules/journal/behavior_ItemTemplate.livecodescript"},
