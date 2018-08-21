@@ -24,19 +24,73 @@ on preopenstack
    set the fullscreenmode of this stack to "showAll"
    if isMobile() then
       mobileSetAllowedOrientations "portrait,portrait upside down" 
+   else
+     --show the vscrollbar of group "ytCollections" 
    end if
  
 end preopenstack
 
+--on mouseDown
+--      put the mouseloc into sStartLoc
+--end mouseDown
+
+--on mouseUp   
+--   # the text fld and image of each row are both disabled 
+--   # but have the naming convention of
+--   # 1_portal-link-bkgnd
+--   # 1_portal-link-label
+--   # 1_portal-link-image
+--   # we need to pass the text string in the label back 
+--   # to the navigation controller: lib_SivaSivaPortal 
+--   if isMobile() then
+--      mobileClearTouches
+--   end if
+--   if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+--      portal_setCurrent (the short name of this card)
+--      put the short name of the target into tRow
+--      set the itemDelimiter to "_"
+--      put item 1 of tRow into tLinkNo
+--      if tLinkNo is not a number then
+--         exit mouseup
+--      end if
+--      put fld (tLInkNo &"_" &"portal-link-label") into tRowName
+--      replace cr with " " in tRowName
+--      --  put tRowName
+--      portal_DoRowLink tRowName
+--   end if
+--end  mouseup
+
+
 on openstack 
   
-
-   # first, load the json for predefined collections
+# first, load the json for predefined collections
    
-   
+   populateDataGrid
    
    
 end openstack
+
+
+on populateDataGrid
+   put the uVideoTestList of this card into aSetUp
+   split aSetup by cr
+   set itemdel to "|"
+   Repeat for each line x in (the keys of  aSetup)
+      put item 1 of aSetUp[x] into aDataArray[x][collectionTitle]
+      put extractYtID (item 2 of aSetUp[x]) into  aDataArray[x][ytThumb]
+   end repeat
+   set the dgData of group "ytCollections" to aDataArray
+end populateDataGrid
+
+
+function extractYtID pURL
+   #http://www.youtube.com/watch?v=C3Sv_1aljC0&amp;feature=youtube_gdata_player
+   set the lineDel to "=" 
+   set the itemDel to "&"
+   put item 1 of line 2 of pURL into tID
+   return "https://i.ytimg.com/vi/" & tID & "/hqdefault.jpg"
+end extractYtID
+
 
 
 function getCollectionsJson
@@ -48,6 +102,8 @@ command selectViewlist pSelection
    
   
 end selectViewlist
+
+####### duplicate of listen scrip
 
 -----------------------------------------------------
 # playlist_SetGetCurrent
