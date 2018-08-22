@@ -9,11 +9,12 @@ This script  is the behavior assigned to card 1
 # sCurrentRealm is an  integer 1, 2 or 3  not a string!
 
 global sConfigA
-local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL
+local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL,sTruncFirstLine
+local sJournalData
 
 
 --> Events
- 
+
 on preOpenCard 
    # ideally we only call this in start up   
 
@@ -27,8 +28,15 @@ on preOpenCard
 end preOpenCard
 
 on openCard
-   
+   audioIsRunning  
    # Fix image path from desktop when loading on Mobile
+   
+   # determine is a return from Journal
+   if  portal_GetLastStack() = "Journal" then
+      put getJournalData() into sJournalData
+   else
+      put empty into sJournalData
+   end if
    
    if isMobile() then
       put the filename of image "gems-Image" into tImageFile
@@ -38,61 +46,74 @@ on openCard
       set the filename of img "gems-image" to tNextImagePath 
    end if 
    
-   
-   
    put 0 into sViewState
    
+   # determine if you can show online context icon
    put connectivity_PingServer() into sOnline
    
-   --play (localPath() &"shared/audio/aum.mp3")
-   -- create vertical scroller on top of field after all other layout has 
-   -- complete and the card is rendered
+   setCardTitle 
    
-   put itemOffset(sConfigA["currentRealm"],"God,Soul,Life")  into sCurrentRealm
-   if sCurrentRealm = 0 then 
-      put random(3) into sCurrentRealm
-   end if
-   setCardTitle
-   set the acceleratedRendering of this stack to true
-   send "fetchQuoteAndImage sCurrentRealm" to me in 10 milliseconds  
-   pass opencard # there are things that should happen on all cards
-end OpenCard
-
+   fetchQuote 
+   fetchImage
+   
+end opencard
+   
 on setCardTitle
-   put "Realm of God,Realm of Soul,Realm of Life" into tTitles
-   put item sCurrentRealm of tTitles into tRealm
+   if sJournalData is empty then 
+      put itemOffset(sConfigA["currentRealm"],"God,Soul,Life")  into sCurrentRealm
+      if sCurrentRealm = 0 then 
+         put random(3) into sCurrentRealm
+      end if
+      put "Realm of God,Realm of Soul,Realm of Life" into tTitles
+      put item sCurrentRealm of tTitles into tRealm
+   else
+      put sJournalData["realm"] into tRealm
+   end if
    put tRealm into fld "title"     
-   AddJournalEntry pReadQuote
-   put tRealm into pData["switchRealm"]
-   tracking_RecordActivity "Gems", "navigation/realms", pData
+   set the acceleratedRendering of this stack to true
 end setCardTitle
 
 on closecard
    resetUI
 end closecard
 
-command fetchQuoteAndImage
+command fetchQuote
    hide widget "loadContext"
-   set the uSourceURL of widget "loadContext" to empty
    
-   if sCurrentRealm is empty then
-      put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
+   
+   set the uSourceURL of widget "loadContext" to empty
+   put JnanamDB() into tConnectionID
+   
+   if sJournalData is empty  then # coming portal stack, we want random quote
+      
+      if sCurrentRealm is empty then
+         put itemOffset(sConfigA["currentRealm"],"God,Soul,Life") into sCurrentRealm
+      end if
+      
+      ## Fetch quote a randon quote from same category
+      
+      put line sCurrentRealm of the uRealmCats of this card into tCats
+      put _getRandomSQL() into tQuoteSQL
+      replace ":1" with tCats in tQuoteSQL
+      
+      dbSetSQL tQuoteSQL
+      put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      # store the quote id. see lib_SivaSivaMedia
+      
+      put dbGet("quote", tConnectionID) into aSelectedQuotes
+      put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
+      setLastQuoteID (aSelectedQuotes[1]["quote_id"])
+      replace "\n" with cr in tQuote
+      put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      --put getLastQuoteID() # check
+   else 
+       put sJournalData["lastQuote"] into pQuoteID 
+      dbLike "quote_id",pQuoteID
+      put dbGet("quote", tConnectionID) into aSelectedQuotes
+      put textDecode  (aSelectedQuotes[1]["content"],UTF8)  into tQuote
    end if
    
-   --toggleReadContext ("false")
-   # show a picture first
-   ## Fetch Images
-   
-   ## Fetch quote
-   put line sCurrentRealm of the uRealmCats of this card into tCats
-   put _getRandomSQL() into tQuoteSQL
-   replace ":1" with tCats in tQuoteSQL
-   put JnanamDB() into tConnectionID
-   dbSetSQL tQuoteSQL
-   put dbGet("quote", tConnectionID) into aSelectedQuotes
-   put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
    replace "\n" with cr in tQuote
-   
    put tQuote into fld "gems-quote"
    
    if isMobile() then
@@ -131,23 +152,28 @@ command fetchQuoteAndImage
       end if
    end if
    
-   fetchImage sConfigA["currentRealm"]
-   
-end fetchQuoteAndImage
+end fetchQuote
 
-command fetchImage pRealm
+command fetchImage
+   if sJournalData = empty then
+      put sConfigA["currentRealm"] into pRealm
+      put _getRandomImageSQL() into tImgSQL
+      replace ":1" with pRealm in tImgSQL
+      put JnanamDB() into tConnectionID
+      dbSetSQL tImgSQL
+      put dbGet ("file_id", tConnectionID) into tImageFileID
+      put textDecode ( tImageFileID[1]["file_id"], UTF8)  into tImageFileID     
+      put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
+            into tNextImagePath
+   else
+      put sJournalData["lastImage"] into tNextImagePath   
+   end if
    
-   put _getRandomImageSQL() into tImgSQL
-   replace ":1" with pRealm in tImgSQL
-   put JnanamDB() into tConnectionID
-   dbSetSQL tImgSQL
-   put dbGet ("file_id", tConnectionID) into tImageFileID
-   put textDecode ( tImageFileID[1]["file_id"], UTF8)  into tImageFileID     
-   put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
-         into tNextImagePath
    set the filename of img "gems-image" to tNextImagePath   
+   setLastImagePath tNextImagePath  
+   -- put getLastImagePath()  #check
    show image "gems-Image" 
-
+   
 end fetchImage
 
 on updateImages
@@ -218,7 +244,9 @@ on addJournalEntry pContext
          put "images-quotes" into pDataA["card"]
          put tRealm into sConfigA["currentRealm"]
          put tRealm into pDataA["realm"]
-         Journal_RecordEntry "gems", ("Reading" && tRealm && "Quotes" ), pDataA
+         put getLastImagePath() into pDataA["lastImage"]
+         put getLastQuoteID() into pDataA["lastQuote"]
+         Journal_RecordEntry "gems", sTruncFirstLine, pDataA
          break
       case "pBookPage"        
          put browser_GetLastURL() into pData["weburl"]
