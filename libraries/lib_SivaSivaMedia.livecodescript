@@ -6,8 +6,9 @@ type: library
 version: 0.2
 
 --> Variables
--
+
 local sMediaMetaA,aQuoteData,sCurrentGraphicRect,tMediaMeta,aSelectedItemFormats
+local  sLastQuoteID, sLastImagePath
 
 on ___LOCAL_Dbase
 end ___LOCAL_Dbase
@@ -250,6 +251,34 @@ on metadata_SetRecord pRecordArray
    put pRecordArray into sMediaMetaA
 end metadata_SetRecord
 
+#################
+
+on ___QUOTEMANAGEMENT
+end ___QUOTEMANAGEMENT
+
+########### Globable Management Quotes
+
+
+# we save the quote it from Gem with img path, 
+# the way we can go back to it if the user Saves it as a Favorites
+# in Journal, we maybe able to use this elsewhere when crossing stack
+# the library has the data 
+
+command setLastQuoteID pQuoteID
+   put pQuoteID into sLastQuoteID
+end setLastQuoteID
+
+function getLastQuoteID 
+   return sLastQuoteID
+end getLastQuoteID
+
+command setLastImagePath pImagePath
+   put pImagePath into sLastImagePath
+end setLastImagePath
+
+function getLastImagePath
+   return sLastImagePath
+end getLastImagePath
 
 #################
 
@@ -377,6 +406,27 @@ function folderForArt pBestFormat
    return pServerPath
 end  folderForArt
 
+########### LAYOUT ############
+
+on layout_getCardRect
+   --     put "stack: " & the width of this stack into tDims
+   --     put "; card: " & the width of this card after tDims
+   --     put "; screen: " & the screenRect after tDims
+end layout_getCardREct
+
+command checkThisScriptIsInMsgPath
+   answer "Yes, I'm here. You found me" with "OK"
+end checkThisScriptIsInMsgPath
+
+####################
+on ___IMAGEManipulation
+end ___IMAGEManipulation
+
+----------------------------------------------------------------------------------
+# we typically have the some requirement
+# change image by height, width.
+# the loc to img frame lolc
+
 command insertImageDimensions pImage
    put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
 end insertImageDimensions
@@ -411,6 +461,37 @@ end setRectOfCurrentGrc
 ## the rect in the form of  width x height  this this form ("736x552")
 ## and the long ID of the target image to "pImage" 
 
+on toggleImgSize pImage, pFullSize, pTargetSize,pLocation 
+   # we may not always this rect of the images from  the metadata
+   # May as well just find out what it is right here.
+   # pImage is the long ID of the image
+   # you do not use "img ## to refer to it... just "pImage"
+   
+   -- if second param is empty we toggle it; otherwise set it as specified;
+   -- called from main img script when tapped and when main cd closes to reset
+   
+   if pFullSize = "" then -- calculate if it's already full size
+      put (the width of  pImage > the width of this cd) into pFullSize
+      # true for landscape (width is greater); false for portrait (height is greater)
+   end if
+   put the formattedWidth of  pImage into tFWd
+   put the formattedHeight of  pImage into tFHt
+   
+   if pFullSize then -- reduce to fit
+      resizeToWidth pImage,pTargetSize
+   else -- return to full size
+      resizeToHeight pImage,tFHt
+   end if
+   
+   # set the location of image, 
+   # it is empty, assume to card rect
+   if pLocation = empty then
+      set the loc of  pImage to the loc of this cd
+   else
+      set the loc of  pImage to pLocation
+   end if
+end toggleImgSize
+
 on resizeToHeight pImage,pSize
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
@@ -418,59 +499,61 @@ on resizeToHeight pImage,pSize
    # it may not be necessary
    if pSize > tOrigImgHeight then exit resizeToHeight
    put (pSize)/tOrigImgHeight  into tRatio
-  put (tOrigImgWidth * tRatio) into tNewWidth
-  put (tOrigImgHeight * tRatio) into tNewHeight
-  set the rect of pImage to 0,0,tNewWidth,tNewHeight  
+   put (tOrigImgWidth * tRatio) into tNewWidth
+   put (tOrigImgHeight * tRatio) into tNewHeight
+   set the rect of pImage to 0,0,tNewWidth,tNewHeight  
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 
-      set the itemdel to "x"
+   set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
    # it may not be necessary
-      if pSize > tOrigImgWidth then exit resizeToWidth
-  put pSize/tOrigImgWidth into tRatio 
-  put (tOrigImgWidth * tRatio) into tNewWidth
-  put (tOrigImgHeight * tRatio) into tNewHeight
-  set the rect of  pImage to 0,0,tNewWidth,tNewHeight
+   if pSize > tOrigImgWidth then exit resizeToWidth
+   put pSize/tOrigImgWidth into tRatio 
+   put (tOrigImgWidth * tRatio) into tNewWidth
+   put (tOrigImgHeight * tRatio) into tNewHeight
+   set the rect of  pImage to 0,0,tNewWidth,tNewHeight
 end resizeToWidth
 
-on toggleImgSize pImage, pFullSize, pTargetSize 
-   # we may not always this rect of the images from  the metadata
-   # May as well just find out what it is right here.
-   # pImage is the long ID of the image
-   # you do not use "img ## to refer to it... just "pImage"
-
-   -- if second param is empty we toggle it; otherwise set it as specified;
-   -- called from main img script when tapped and when main cd closes to reset
-   
-   if pFullSize = "" then -- calculate if it's already full size
-      put (the width of  pImage > the width of this cd) into pFullSize
-  end if
-  put the formattedWidth of  pImage into tFWd
-     put the formattedHeight of  pImage into tFHt
-
-  if pFullSize then -- reduce to fit
-    resizeToWidth pImage,pTargetSize
-  else -- return to full size
-    resizeToHeight pImage,tFHt
-  end if
-  set the loc of  pImage to the loc of this cd
-
-end toggleImgSize
 
 
-
-
-command checkMetaBackScript pMsg
-   answer "got it" with pMsg
-end checkMetaBackScript
+on ___VISUALEFFECTS
+END ___VISUALEFFECTS
 
 ##########################################################
 ## VISUAL EFFECTS
 ##########################################################
 
+--> GRAPHIC EFFECTS
 
+## OuterGlow
+
+function OuterglowA pTint,pColor,pBlendMode,pOpacity,pFilter,pSize,pSpread
+   if pTint is empty then
+      put pColor into outerglow["color"]
+      put pBlendMode into  outerglow["blendMode"]
+      put pOpacity into  outerglow["opacity"] 
+      put pFilter into  outerglow["filter"]
+      put pSize into  outerglow["size"]
+      put pSpread into outerglow["spread"]
+      returnouterglow
+      exit outerGlowA
+   end if
+   put "color|blendMode|opacity|filter|size|spread" into pParams
+   switch pTint
+      case "softBrown"
+         put "255,255,0|normal|255|box3Pass|30|50" into pValues
+         break
+   end switch
+   set itemDel to "|"
+   repeat with x =1 to 6
+      put item x of pParams into pParam
+      put item x of pValues into outerglow[pParam]
+   end repeat
+   return outerglow
+   
+end OuterglowA
 
 --> GRADIENT SETTINGS
 
@@ -494,9 +577,9 @@ end setGradient
 --> FADE WITH BLENDLEVEL
 -- Better to use dissolve.
 
-   # BR note that hide and show with visual effect "dissolve" also works, 
-   # tends to run very fast on mobile
-   
+# BR note that hide and show with visual effect "dissolve" also works, 
+# tends to run very fast on mobile
+
 command object_FadeIn  pEffectsTarget, newBlendLevel, someIncrement, someDelay
    set the blendLevel of  pEffectsTarget  to newBlendLevel
    if newBlendLevel > 0 then
@@ -517,15 +600,9 @@ command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
    end if
 end object_FadeOut
 
-########### LAYOUT ############
 
-on layout_getCardRect
-   --     put "stack: " & the width of this stack into tDims
-   --     put "; card: " & the width of this card after tDims
-   --     put "; screen: " & the screenRect after tDims
-end layout_getCardREct
-
-
+on ___TYPESETTING
+END ___TYPESETTING
 
 ########### TYPESETTING UTILITIES  #############
 # We frequently need to apply formatting to type in fields.
@@ -608,10 +685,6 @@ function stripHTML pText
 end stripHTML
 
 
-
-command checkThisScriptIsInMsgPath
-   answer "Yes, I'm here. You found me" with "OK"
-end checkThisScriptIsInMsgPath
  
 #####################
 on _____Deprecated
