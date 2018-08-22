@@ -107,7 +107,7 @@
         },
         "History Movie": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?rel=0",
+                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
