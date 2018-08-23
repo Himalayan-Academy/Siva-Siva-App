@@ -22,7 +22,7 @@
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
 global sConfigA
-local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget
+local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 
 on preopencard
    hide player "audioPlayer"
@@ -58,7 +58,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
-  -- answer "hello" with "OK"
+   -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
    # all logic for user interaction with the GUI is handled here.
@@ -82,13 +82,12 @@ on mouseup
          hide widget "turnOffAudio"
          stopPlayer # make sure previous player, if there is one, is deleted.
          clearPlayer # in parent Listen_UI
-         setAudioListColors
-         put word 2 of clickline() into sSelectNum
-         put sSelectNum into tLineNum
-         if (tLineNum mod 2) = 0 then
-            subtract 1 from tLineNum
+         if sLineNum <> empty then
+            setAudioListColors sLineNum,"0,0,0"
          end if
-         set the backgroundcolor of line tLineNum of fld "audiolist" to "174,30,66"
+         put word 2 of clickline() into sSelectNum
+         put getLineNumber(sSelectNum) into sLineNum
+         set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          put round(sSelectNum/2) into sSelectNum      
          select_Play # will use either the line number or item id
          break  
@@ -115,8 +114,17 @@ on mouseup
          break
    end switch
    
-
+   
 end mouseup
+
+
+function getLineNumber sSelectNum
+   put sSelectNum into tLineNum
+   if (tLineNum mod 2) = 0 then
+      subtract 1 from tLineNum
+   end if
+   return tLinenum
+end getLineNumber
 
 ---------------------------------------------
 # Select, Play, Listen, Stop UI interactions

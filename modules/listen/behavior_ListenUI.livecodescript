@@ -1,7 +1,7 @@
 ﻿script "behavior_ListenUI"
 
 passAudioSelection//>LOCALS
-local sSelectNum, sSingleAudioA,sCached
+local sSelectNum, sSingleAudioA,sCached,sLineNum
 local sAudioUI
 
 on opencard
@@ -22,16 +22,16 @@ end opencard
          go to card "listen-my-audio"
          break
       case "audioList"
-         repeat with x=1 to (the number lines of fld "audioList")
-            set the backgroundcolor of line x of fld "audioList" to empty
-         end repeat
+         if sLineNum <> empty then
+            set the backgroundcolor of line sLineNum of fld "audioList" to empty
+        end if
          put word 2 of clickline() into sSelectNum
-         put sSelectNum into tLineNum
-         if (tLineNum mod 2) = 0 then
-            subtract 1 from tLineNum
+         put sSelectNum into sLineNum
+         if (sLineNum mod 2) = 0 then
+            subtract 1 from sLineNum
          end if
-         set the backgroundcolor of line tLineNum of fld "audioList" to 176,30,66
-         put line tLineNum fld "audioList" into pTitle
+         set the backgroundcolor of line sLineNum of fld "audioList" to 176,30,66
+         put line sLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
          passAudioSelection sSelectNum, pTitle
          break
