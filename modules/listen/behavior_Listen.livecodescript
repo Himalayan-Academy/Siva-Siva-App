@@ -553,10 +553,8 @@ end closeStack
 on __ListenUtilities
 end __ListenUtilities
 
-command setAudioListColors pColor
-   repeat with x=1 to (the number lines of fld "audioList")
-      set the backgroundcolor of line x of fld "audioList" to pColor
-   end repeat
+command setAudioListColors tLineNum,pColor
+   set the backgroundcolor of line tLineNum of fld "audioList" to pColor
 end setAudioListColors
 
 on preopencard
