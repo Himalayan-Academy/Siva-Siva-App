@@ -82,30 +82,19 @@ on populateDataGrid
    set the dgData of group "ytCollections" to aDataArray
 end populateDataGrid
 
---put pDataArray["ytThumb"]  into tURL
---set the itemdel to "/";  put item -2 of tURL into tImageName
---if exists(img  tImageName ) = false then
---   clone img "ytBtnIconTemplate" as tImageName
---   set the filename of  img tImageName  to pDataArray["ytThumb"]
---end if
---set the icon of button "ytThumb"of me to (the id img tImageName)
---set the text of field "collectionTitle" of me to pDataArray["collectionTitle"]
-
-
 function extractYtID pURL
-   #http://www.youtube.com/watch?v=C3Sv_1aljC0&amp;feature=youtube_gdata_player
+   # NOTE http://www.youtube.com/watch?v=C3Sv_1aljC0&amp;feature=youtube_gdata_player
    set the lineDel to "=" 
    set the itemDel to "&"
    put item 1 of line 2 of pURL into tID
-   return "https://i.ytimg.com/vi/" & tID & "/hqdefault.jpg"
+   # return "https://i.ytimg.com/vi/" & tID & "/default.jpg"  # from YT: 120X90
+    return "https://i.ytimg.com/vi/" & tID & "/mqdefault.jpg"  # from YT: 320X180
+   # return "https://i.ytimg.com/vi/" & tID & "/hqdefault.jpg"  # from YT: 480X300
 end extractYtID
-
-
 
 function getCollectionsJson
    return sCollectionA
 end getCollectionsJson
-
 
 command selectViewlist pSelection
    
