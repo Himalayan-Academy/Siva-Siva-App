@@ -11,6 +11,11 @@ constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
 constant cRemoteNewsFile="siva-app-news_1-2.html"
 
+
+on libraryStack
+  mobileRectSet
+end libraryStack
+
 --> GENERIC GLOBAL MOBILE
 
 function isMobile
@@ -318,9 +323,6 @@ end ___GETTERandSETTERS
 # So set prop, getprop
 # set "Getters" and "Setters"
 
-<-------------------------------------
-#  Description: Sometime though
-
 
 local sJournalFlag,sJournalData
 
@@ -340,6 +342,15 @@ function getJournalData
    return sJournalData
 end getJournalData
 
+local sMobileRect
+
+command mobileRectSet
+   put the screenRect into sMobileRect
+end mobileRectSet
+
+function mobileRectGet
+   return sMobileRect
+end mobileRectGet
 
 
 
