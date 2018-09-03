@@ -629,7 +629,143 @@ function filteredFolders
 end filteredFolders
 
 
-    
+##################################
+
+on ___GEOMETRY
+end ___GEOMETRY
+
+/* Thanks to Ralph DiMola ! for this function
+
+ This function does a lot but takes care of the bad screen rect on startup.
+It also allows for either sliding up the screen or shrinking the screen. It
+also allows for the iPhone X safe area. If you get the aspect ratio in the
+IDE like the iPhone X you can see how the app will look in the safe area. I
+roll my own control placement using getCardRect to define the screen area. I
+also always set the pixelScale to 1. This was written on day 2 of using
+LiveCode so it's not pretty. The nuts and bolts of the bad rect on startup
+is the line==> "if R2<0 and not the KeyboardOffset of this stack is a number
+then */
+*/The bad rect thing started way back in the middle of the version 6s I think
+This might not help if you use the built in geometry tools, but for what
+it's worth getCardRect has never failed me .... */
+
+
+function getCardRect
+   
+   /* Hi all ... if this is helpful to anyone, I've been able to work out 
+   the exact pixel values for the safe area for iPhone X using Xcode 9.0
+   
+   iPhone X overall dimensions
+   2436 x 1125 pixels
+   
+   Overall safe area
+   2172 x 1062 pixels
+   
+   Left & right insets (accounts for the notch and curved corners, plus a margin)
+   132 pixels each
+   
+   Bottom inset (accounts for the bottom nav bar)
+   63 pixels
+   
+   Top inset zero pixels
+   
+   Portrait dimensions	Landscape dimensions
+   1125px ◊ 2436px (375pt ◊ 812pt @3x)	2436px ◊ 1125px (812pt ◊ 375pt @3x)
+   
+   Portrait right side up:
+   Left: 0
+   Top: 44 Pts 132 Pixels
+   Right: 0
+   Bottom: 34 Pts 102 Pixels
+   
+   Portrait upside down: NOT SUPPORTED
+   
+   Landscape left and right:
+   Left: 16 Pts 48 Pixels
+   Top: 32 Pts 96 Pixels
+   Right: 16 Pts 48 Pixels
+   Bottom: 23 Pts 69 Pixels
+   
+   
+   */
+   
+   local R1 , R2 , R3 , R4 , tR2 , tR4
+   
+   --return the rect of this card
+   if the environment is not "mobile" then
+      put item 1 of the rect of this card into R1
+      put item 2 of the rect of this card into R2
+      put item 3 of the rect of this card into R3
+      put item 4 of the rect of this card into R4
+   else -- Mobile
+      --put the screenrect into tRectTemp
+      if the ignorekeyboard of this stack then
+         put item 1 of the rect of this card into R1
+         put item 2 of the rect of this card into R2
+         put item 3 of the rect of this card into R3
+         put item 4 of the rect of this card into R4
+         --answer "Here 1"
+      else -- Dont Ignore Keyboard
+         --answer "Here 2"
+         put 0 into R1
+         put item 3 of the effective working screenrect - item 1 of the effective working screenrect into R3
+         if the ShrinkKeyboard of this stack then
+            --answer "Here 3"
+            put 0 into R2
+            put item 4 of the effective working screenrect - item 2 of the effective working screenrect into R4
+         else -- Dont Shrink Keyboard Slide Up if Instructed
+            --answer "Here 4"
+            put item 2 of the rect of this card into R2
+            put item 4 of the rect of this card into R4
+            if the KeyboardOffset of this stack is not empty and the KeyboardOffset of this stack is a number then -- Slide Up
+               --answer "Here 5"
+               --put (item 2 of the effective working screenrect - the KeyboardOffet of this stack) into tR2
+               --put (item 4 of the effective working screenrect - the KeyboardOffet of this stack) into tR4
+               put R2 - the KeyboardOffset of this stack into tR2
+               put R4 - the KeyboardOffset of this stack into tR4
+               if tR4 > tR2 then
+                  --answer "Here 6",tR2,tR4
+                  put tR2 into R2
+                  put tR4 into R4
+               end if -- Offset out of range
+            end if -- Keyboard Offset
+         end if -- Shrink Keyboard
+      end if --Ignore Keyboard
+   end if -- Mobile
+   if R2<0 and not the KeyboardOffset of this stack is a number then
+      --answer "Here 7",R2,R4
+      put abs(R2) + R4 into R4
+      put 0 into R2
+   end if
+   --return (R1,R2,R3,R4)
+   if the platform = "iPhone" or Dev () then
+      switch
+         case the width of this card = 1125 and the height of this card = 2436 -- Portrait iPhone X
+            return (R1,R2+132,R3,R4-102)
+            break
+         case the width of this card = 2436 and the height of this card = 1125  -- Landscape iPhone X
+            return (R1+48,R2+96,R3-48,R4-69)
+            break
+         case Dev() and the width of this card / the height of this card >= .455 and  \
+               the width of this card / the height of this card <= .467  -- Portrait iPhone X
+         return (R1,R2+(132*(the height of this card / 2436)),R3,R4-(102*(the height of this card / 2436)))
+         break
+      case Dev() and the height of this card / the width of this card >= .455 and  \
+            the height of this card / the width of this card <= .467  -- Landscape iPhone X
+      return (R1+(48*(the width of this card / 2436)),R2+(96*(the height of this card /1125)),R3-(48*(the width of this card / 2436)),R4-(69*(the height of this card / 1125)))
+      break
+   default
+      return (R1,R2,R3,R4)
+end switch
+else
+   return (R1,R2,R3,R4)
+end if
+
+end getCardRect
+
+function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
+   return the environment is "development"
+end dev
 
 
 
