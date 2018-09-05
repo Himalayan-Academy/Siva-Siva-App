@@ -3,7 +3,9 @@ local sConfigA
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
-   
+   if isMobile() then
+         mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
 end preopenstack
 
 on openstack

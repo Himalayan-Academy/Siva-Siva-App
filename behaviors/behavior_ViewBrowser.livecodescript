@@ -1,19 +1,20 @@
 ﻿script "behavior_ViewBrowser"
--- --> MetaData
--- -
--- license: GPLv3
--- name: behavior_ViewBrowser
--- type: behavior 
-# parent of child browser widget "body" of cd 1 of stack "view_SivaSivaBrowser"
--- version: 0.1
+Local sStartLoadTime,sTimePassed,sLoadSuccessFlag,
 
-local sStartLoadTime,sTimePassed,sLoadSuccessFlag,
+# BUG iOS does not respond with this command  "browserDocumentLoadBegin"
+# the loading Spinner and cancel command remain of screen.
+# it work on android. This is need in case the URL does load
+# and the user wants leave the connection.
+
+on browserDocumentLoadBegin pURL
+   hide field "cancel" 
+   hide widget "Spinner"
+   show widget "Body"
+   show group "footer"
+end browserDocumentLoadBegin
 
 on browserDocumentLoadComplete pURL
    put "true" into sLoadSuccessFlag
    browser_SetLastURL pURL
    journal_AddEntry
 end browserDocumentLoadComplete
-
-
-
