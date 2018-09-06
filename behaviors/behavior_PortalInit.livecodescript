@@ -1,12 +1,14 @@
 ﻿script "behavior_PortalInit"
 # behavior for each portal card
 
-local sStartLoc
+local sStartLoc,sScreenRect
 
 on openCard 
+   put getCardRect() into sScreenRect
    portal_SetCurrentStack "Siva-Siva-Portal"
    portal_SetCurrent (the short name of this card)
    audioIsRunning
+   layoutNavBar
    put "SivaSiva Portal Scrolling" into tLinksGroup
    send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 0 milliseconds
 end openCard
@@ -40,3 +42,32 @@ on mouseUp
       portal_DoRowLink tRowName
    end if
 end  mouseup
+
+command layoutNavBar
+   put item 3 of sScreenRect into tWidth
+   put item 4 of sScreenRect-25 into tBottom
+   
+   
+   put round(tWidth/8) into tHorzFour
+   put round(tWidth/6) into tHorzThree
+   put round(tWidth/4) into tHorzTwo
+   
+   Switch (the short name of this card)
+      case "Home"
+         # hide home
+         hide widget "go-home-portal"
+         set the loc of widget "add-favorites" to tHorzThree,tBottom
+         set the loc of widget "share" to tHorzThree*3,tBottom
+         set the loc of widget "settings-gear" to tHorzThree*5,tBottom
+         break
+      default
+         show widget "go-home-portal"
+         set the loc of widget "go-home-portal" to tHorzFour,tBottom
+         set the loc of widget "add-favorites" to tHorzFour*3,tBottom
+         set the loc of widget "share" to tHorzFour*5,tBottom
+         set the loc of widget "settings-gear" to tHorzFour*7,tBottom
+   end switch
+   
+end  layoutNavBar
+
+
