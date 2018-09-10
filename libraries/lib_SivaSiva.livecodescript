@@ -529,12 +529,14 @@ function isAudioPlay
    return newHtml
  end stripHTMLTags
 
- on backkey # need for android
-      if the short name of this stack is "journal" then
-         send mouseup to widget "go-back"
-      else
+on backkey # need for android
+   if the short name of this stack is "journal" then
+      send mouseup to widget "go-back"
+   else
+      if there is a widget "go-home-portal" then
          send mouseup to widget "go-home-portal"
       end if
+   end if
 end backkey
 
 
