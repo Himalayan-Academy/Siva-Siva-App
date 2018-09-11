@@ -6,24 +6,26 @@ TODO:
 
 local sLastFilter
 
---on preopencard
-  
---end preopencard
+on preopencard
+   if there is a group "item list" then
+      delete group "item list"
+   end if
+end preopencard
 
 on opencard
    audioIsRunning  
---   # uncomment this when you go into production:
---   # i.e. leave out if you want to use the controls on the device while
---   # testing
---   --HideAuxiliaryControls
---   --loadFonts
-if there is a group "item list" then
-   delete group "item list"
-end if
---show image "loader-39x39.gif"
-set the acceleratedRendering of this stack to true
-layoutScreen
---hide image "loader-39x39.gif"
+   --   # uncomment this when you go into production:
+   --   # i.e. leave out if you want to use the controls on the device while
+   --   # testing
+   --   --HideAuxiliaryControls
+   --   --loadFonts
+   --   if there is a group "item list" then
+   --      delete group "item list"
+   --   end if
+   --show image "loader-39x39.gif"
+   
+   set the acceleratedRendering of this stack to true
+   layoutScreen
 end opencard
 
 on HideAuxiliaryControls
@@ -178,8 +180,8 @@ on layoutScreen pModuleFilter, pDateRange
    set the left of btn "Go Back" to 12
    set the htmltext of fld "header text" to getConfigForLayout("listView", "headerLabel")
    
-   -- set item list
-   
+ -- set item list
+   breakpoint
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
    lock screen

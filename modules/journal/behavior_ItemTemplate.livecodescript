@@ -6,6 +6,12 @@ setprop itemOrder pNum
    --    put jsonexport(sEntryA)
 end itemOrder
 
+# TODO: We are hacking the field tags, which do not contain "tags" 
+# from the journal data base, this cost me hour of head ache.
+# tags of the  Browser with
+# we should normalize going forward with self-definitive nomenclature.
+
+
 setprop journalEntry pEntryA
    put pEntryA into sEntryA
    --
@@ -15,7 +21,21 @@ setprop journalEntry pEntryA
       put "Siva Siva App" into tTitle
    end if
    set the htmltext of field "entry label" of me to textDecode(sEntryA["label"], "utf8")
+   
+   # TODO not the field "tags" if set the title of the module
+   # have to fix this for YouTube, And Swap out video the 
+   # View Web Page
+   # Leter we have to get filter by activity to distinquish between
+   # the two "Videos" "View a web page"
+   
+   put JSONtoArray(sEntryA["data"]) into pData
+   
+   if pData["weburl"] contains "youtube" then
+      put "Videos" into tTitle
+   end if
+   
    set the htmltext of field "tags" of me to textDecode(tTitle, "utf8")
+   
    put sEntryA["date"] into tDate
    put timeutils_ISOtoSeconds(tDate) into tDate
    put timeutils_elapsedTime(tDate) into tHumanReadableElapsedTime

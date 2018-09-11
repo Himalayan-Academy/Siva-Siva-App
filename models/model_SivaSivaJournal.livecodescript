@@ -74,8 +74,8 @@ function journal_convertDate pDateTime
       convert tDate to long date
       put word 2 to 3 of pDateTime into tTime
       convert tTime to long time
-      set the itemDel to ":"
-      if item 1 of tTime < 10 then
+      set the itemDel to ":" 
+      if  length(item 1 of tTime)=1 then
          put "0" before tTime
       end if
    end if
@@ -203,7 +203,8 @@ function Journal_GetEntries pOffset
    else
       dbLimit 100, pOffset
    end if
-   dbOrderBy "date DESC"
+   dbOrderBy "journal_id DESC"
+   --dbOrderBy "date DESC"
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
 end Journal_GetEntries
