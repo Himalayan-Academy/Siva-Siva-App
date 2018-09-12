@@ -134,10 +134,7 @@ function checkDateRange pEntryA, pDateRange
 end checkDateRange
    
 on layoutScreen pModuleFilter, pDateRange
-   if there is a group "item list" then
-      delete group "item list"
-   end if
-   
+ 
    --  log_Debug "======================"
    --   if (pModuleFilter, pDateRange) is sLastFilter then
    --      log_Debug "Do nothing, same as last filter"
@@ -148,6 +145,7 @@ on layoutScreen pModuleFilter, pDateRange
    --   log_Debug "pDateRange:" && pDateRange
    --   put the millisecs into tStart
    -- set card
+   
    set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
    
    -- set header
@@ -180,8 +178,8 @@ on layoutScreen pModuleFilter, pDateRange
    set the left of btn "Go Back" to 12
    set the htmltext of fld "header text" to getConfigForLayout("listView", "headerLabel")
    
- -- set item list
-   breakpoint
+   -- set item list
+   
    put Journal_GetEntries() into tEntriesA
    put 1 into tEntryNum
    lock screen
