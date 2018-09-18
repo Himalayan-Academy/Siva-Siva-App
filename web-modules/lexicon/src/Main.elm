@@ -1,7 +1,37 @@
-port module Main exposing (..)
+port module Main exposing
+    ( Model
+    , Msg(..)
+    , PageId(..)
+    , addWordItem
+    , appGoHome
+    , appGoSettings
+    , appNavigation
+    , bookmarkIconView
+    , definitionView
+    , filterWordList
+    , helpView
+    , init
+    , initialModel
+    , isSeeAlsoEmpty
+    , isWordSaved
+    , lcDebug
+    , loadingView
+    , main
+    , myWordsView
+    , pageNavigation
+    , removeSavedWord
+    , saveWord
+    , savedWordListChanged
+    , scrollTop
+    , searchView
+    , startApplication
+    , subscriptions
+    , update
+    , view
+    )
 
 import Css exposing (..)
-import Dom.Scroll as Scroll
+-- import Dom.Scroll as Scroll
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css, href, id, src)
@@ -12,6 +42,8 @@ import Random
 import Task
 import Theme.Colors exposing (..)
 import Theme.Elements exposing (..)
+import Browser
+
 
 
 --- PORTS ---
@@ -92,6 +124,7 @@ init : WordList -> ( Model, Cmd Msg )
 init wl =
     if List.isEmpty wl then
         ( initialModel, startApplication )
+
     else
         ( { initialModel | savedWords = Just wl }, startApplication )
 
@@ -134,6 +167,7 @@ filterWordList : String -> WordList -> WordList
 filterWordList word list =
     if String.isEmpty word then
         list
+
     else
         List.filter (\item -> String.contains (String.toLower word) (String.toLower item.word)) list
 
@@ -202,7 +236,7 @@ update msg model =
             ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinitionByWord word model.lexiconModel.wordList) )
 
         LoadDefinitionByInt id ->
-            ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinition (toString id)) )
+            ( model, Cmd.map LexiconMsg (Lexicon.loadWordDefinition (String.fromInt id)) )
 
         FilterWordList wordOrPart ->
             ( { model | query = wordOrPart }, Cmd.none )
@@ -327,6 +361,7 @@ bookmarkIconView definition wordlist =
     in
     if isSaved then
         wordDefinitionIcon (SaveWord definition) "bookmark-o"
+
     else
         wordDefinitionIcon (RemoveSavedWord definition) "bookmark"
 
@@ -369,6 +404,7 @@ definitionView model =
                     [ text word.definition ]
                 , if isSeeAlsoEmpty word.seeAlso then
                     div [] []
+
                   else
                     div []
                         [ takeFurther
@@ -503,7 +539,7 @@ myWordsView model =
 
 main : Program WordList Model Msg
 main =
-    Html.programWithFlags
+    Browser.element
         { view = view >> toUnstyled
         , init = init
         , update = update
