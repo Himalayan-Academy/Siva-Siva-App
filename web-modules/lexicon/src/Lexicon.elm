@@ -157,7 +157,7 @@ update msg model =
         HandleWordListResponse result ->
             case result of
                 Ok results ->
-                    ( { model | wordList = Just (Debug.log "wordlist:" results) }, Cmd.none )
+                    ( { model | wordList = Just results }, Cmd.none )
 
                 Err error ->
                     case error of
@@ -170,7 +170,7 @@ update msg model =
         HandleWordDefinitionResponse result ->
             case result of
                 Ok results ->
-                    ( { model | currentWord = Just (Debug.log "currentWord:" results) }, Cmd.none )
+                    ( { model | currentWord = Just results }, Cmd.none )
 
                 Err error ->
                     case error of

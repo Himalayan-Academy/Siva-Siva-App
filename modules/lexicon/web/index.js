@@ -16,7 +16,10 @@ function boot() {
     }
   }
 
-  window.app = Elm.Main.embed(document.getElementById('root'), list)
+  window.app = Elm.Main.init({
+    node: document.getElementById('root'),
+    flags: list
+  })
 
   // Ports related code below
 
