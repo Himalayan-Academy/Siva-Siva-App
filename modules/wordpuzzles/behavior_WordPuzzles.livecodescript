@@ -23,36 +23,119 @@ on openCard
    put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-   pass opencard
+
 end opencard
   
-
-command setTileGlow pSize
-   put "255,255,255" into sTileGlow["color"]
-   put "normal" into sTileGlow["blendMode"]
-   put "255" into sTileGlow["opacity"]
-   put "box1pass" into sTileGlow["filter"]
+ --> CREATE THE PUZZLE
+ 
+on createWordPuzzle
+   if (the acceleratedRendering of this stack is true ) then
+      set the acceleratedRendering of this stack to false 
+   end if
+   stopTimer
+   hide widget "context"
+   loadNewBgImg
+   if sCurLevel < 1 then pickLevel -- not yet initialized, should never happen
+   --getPixieList # deprecated for now... 
+   put empty into sQuote
+   fetchQuote # get a different one -- random for now dbase
+   ## uncomment the option to get from local custom prop 
+   ## if distributing without dbase  and comment out the jnanam fetch
    
-   switch pSize
-      case "small"    
-         put "20" into sTileGlow["size"] 
-         put "40" into sTileGlow["spread"]  
-         break
-      case "large"
-          put "80" into sTileGlow["size"] 
-         put " 100" into sTileGlow["spread"]  
-         break
-   end switch
-end setTileGlow
-  
-on closecard
-   storeCurrentLevel sCurLevel
-   tracking_RecordActivity "Word Puzzle", "navigation/exit", pTrackdata
-end closecard
-  
+   put empty into sWordCount
+   put 0 into sCluesGiven
+   clearBoard
+   startTimer
+   
+   put getColors() into tColors
+   put line 1 of tColors into tRGB
+   put line 2 of tColors into tTileBkgndRGB
+   set the foregroundcolor of fld _Quote to tRGB
+   set the backgroundColor of grc quoteBkgnd to tTileBkgndRGB
+   
+   lock screen
+   put (the number of words of sQuote) into sWordCount
+   put sQuote into fld "_quote"
+   setSizeAndLocationOfQuote sQuote
+   
+   set the blendlevel of fld "_quote" to 0  
+   show grp "quoteGroup"
+   show fld "_quote"
+   
+   import snapshot from   grp "quoteGroup"
+   
+   
+   # need to save it because we are going to crop each word in a loop
+   # put it away for safe keeping
+   set the name of the last image to "currentPuzzle" 
+   set the loc of image "currentPuzzle"  to -1000,-1000
+   
+   repeat with x = 1 to the number of words of fld "_quote"  
+      copy img "CurrentPuzzle" to this card
+      set the name of the last image to "tempForCrop"
+      set the rect of the last image to the rect of fld _quote"
+      put the formattedRect of word x of fld "_quote" into tNextWordRect  
+      
+      subtract 8 from item 1 of tNextWordRect
+      add 2 to item 2 of tNextWordRect
+      add 6 to item 3 of tNextWordRect
+      add 4 to item 4 of tNextWordRect
+      
+      
+      put getLocation (tNextWordRect) into tWordLocation
+      put word x of fld "_quote" into tNextWord
+      
+      if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
+         put tNextWord into tWordCantBeTileName
+         replace "---" with quote in tWordCantBeTileName
+         put  ("_" & tNextWord) into tNextWord
+         crop image "tempForCrop" to tNextWordRect
+         set the  name of image "tempForCrop"  to tWordCantBeTileName
+      else
+         crop image "tempForCrop" to tNextWordRect
+         set the  name of image "tempForCrop"  to tNextWord
+      end if
+      
+      put ("word_"&x) into tTileName
+      put tTileName & cr after tWordList
+      set the name of the last image to tTileName
+      set the showborder of the last image to true
+      set the behavior of the last image to the long id of btn "behavior_tileScript"
+      set the uWordLocation of the last image to tWordLocation
+      set the cWord of last image to word x of fld "_quote"
+      set the loc of the last image to  -200,-200
+      set the borderwidth of the last image to "4"
+      set the topcolor of the last image to tRGB
+      set the layermode of the last image to "dynamic"
+      set the alwaysbuffer of the last image to true
+      -- jg: required for smooth movment on slower devices
+   end repeat
+   set the acceleratedRendering  of this stack to true
+   delete char -1 of tWordList
+   set the uWordList of this card to tWordList
+   --distributeWords
+   arrangeWords # Jacque's Method
+   # set start indicator to the beginning of the first word
+   put the  uWordLocation of image "word_1"  into tFirstWordPosition
+   subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
+   put tFirstWordPosition into tStartIconPosition
+   add 4 to item 1 of tStartIconPosition
+   set the loc of grc "startHere" to tStartIconPosition
+   set the vis of grc "startHere" to true
+   --set the blendlevel of fld "_quote" to 50
+   
+   hide grp "quoteGroup"
+   hide fld "_quote" -- comment this out to see the quote during dev
+   unlock screen
+   send hideSubjectFld to me in 200 milliseconds
+   
+   send "clueGoHome" to image "word_1" in 500 milliseconds
+   
+   put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
+   tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
+end createWordPuzzle
 
- --> Working on
- -
+
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
 
@@ -69,30 +152,6 @@ end loadNewBgImg
 on checkLevel
    put sCurlevel
 end checkLevel
-
-on closeCard
-   showTitle true
-   wait 200 milliseconds
-   deleteMobileControl "aboutText"
-end closeCard
-
-on displayAbout pLevel
-  put the acceleratedRendering of this stack into sRendering
-  set the acceleratedRendering of this stack to true
-   put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
-   put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
-   send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
-   set the htmltext of fld "aboutText" to tAboutText
-   set the layer of grp "aboutDisplay" to top
-   show grp "aboutDisplay"
-end displayAbout
-
-on closeAbout
-   set the acceleratedRendering of this stack to sRendering
-    deleteMobileControl "aboutText"
-    hide group "aboutDisplay"
-end closeAbout
-
 
 command showTitle pBool
   if pBool then -- show title
@@ -248,112 +307,7 @@ end fetchQuote
    
 end setSizeAndLocationOfQuote
 
-on createWordPuzzle
-   if (the acceleratedRendering of this stack is true ) then
-      set the acceleratedRendering of this stack to false 
-   end if
-   stopTimer
-   hide widget "context"
-   loadNewBgImg
-   if sCurLevel < 1 then pickLevel -- not yet initialized, should never happen
-   --getPixieList # deprecated for now... 
-   put empty into sQuote
-   fetchQuote # get a different one -- random for now dbase
-   ## uncomment the option to get from local custom prop 
-   ## if distributing without dbase  and comment out the jnanam fetch
-   
-   put empty into sWordCount
-   put 0 into sCluesGiven
-   clearBoard
-   startTimer
-   
-   put getColors() into tColors
-   put line 1 of tColors into tRGB
-   put line 2 of tColors into tTileBkgndRGB
-   set the foregroundcolor of fld _Quote to tRGB
-   set the backgroundColor of grc quoteBkgnd to tTileBkgndRGB
-   
-   lock screen
-   put (the number of words of sQuote) into sWordCount
-   put sQuote into fld "_quote"
-   setSizeAndLocationOfQuote sQuote
-   
-   set the blendlevel of fld "_quote" to 0  
-   show grp "quoteGroup"
-   show fld "_quote"
-   
-   import snapshot from   grp "quoteGroup"
-   
-   
-   # need to save it because we are going to crop each word in a loop
-   # put it away for safe keeping
-   set the name of the last image to "currentPuzzle" 
-   set the loc of image "currentPuzzle"  to -1000,-1000
-   
-   repeat with x = 1 to the number of words of fld "_quote"  
-      copy img "CurrentPuzzle" to this card
-      set the name of the last image to "tempForCrop"
-      set the rect of the last image to the rect of fld _quote"
-      put the formattedRect of word x of fld "_quote" into tNextWordRect  
-      
-      subtract 8 from item 1 of tNextWordRect
-      add 2 to item 2 of tNextWordRect
-      add 6 to item 3 of tNextWordRect
-      add 4 to item 4 of tNextWordRect
-      
-      
-      put getLocation (tNextWordRect) into tWordLocation
-      put word x of fld "_quote" into tNextWord
-      
-      if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
-         put tNextWord into tWordCantBeTileName
-         replace "---" with quote in tWordCantBeTileName
-         put  ("_" & tNextWord) into tNextWord
-         crop image "tempForCrop" to tNextWordRect
-         set the  name of image "tempForCrop"  to tWordCantBeTileName
-      else
-         crop image "tempForCrop" to tNextWordRect
-         set the  name of image "tempForCrop"  to tNextWord
-      end if
-      
-      put ("word_"&x) into tTileName
-      put tTileName & cr after tWordList
-      set the name of the last image to tTileName
-      set the showborder of the last image to true
-      set the behavior of the last image to the long id of btn "behavior_tileScript"
-      set the uWordLocation of the last image to tWordLocation
-      set the cWord of last image to word x of fld "_quote"
-      set the loc of the last image to  -200,-200
-      set the borderwidth of the last image to "4"
-      set the topcolor of the last image to tRGB
-      set the layermode of the last image to "dynamic"
-      set the alwaysbuffer of the last image to true
-      -- jg: required for smooth movment on slower devices
-   end repeat
-   set the acceleratedRendering  of this stack to true
-   delete char -1 of tWordList
-   set the uWordList of this card to tWordList
-   --distributeWords
-   arrangeWords # Jacque's Method
-   # set start indicator to the beginning of the first word
-   put the  uWordLocation of image "word_1"  into tFirstWordPosition
-   subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
-   put tFirstWordPosition into tStartIconPosition
-   add 4 to item 1 of tStartIconPosition
-   set the loc of grc "startHere" to tStartIconPosition
-   set the vis of grc "startHere" to true
-   --set the blendlevel of fld "_quote" to 50
-   
-   hide grp "quoteGroup"
-   hide fld "_quote" -- comment this out to see the quote during dev
-   unlock screen
-   send hideSubjectFld to me in 200 milliseconds
-   
-   send "clueGoHome" to image "word_1" in 500 milliseconds
-   
-   put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
-   tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
-end createWordPuzzle
+
 
 on movestopped
    answer "Move stopped" with "OK"
@@ -648,7 +602,27 @@ on showClues
 end showClues
 
 
--- DEV _- 
+-- SMALL UTILITIES
+ 
+
+on displayAbout pLevel
+  put the acceleratedRendering of this stack into sRendering
+  set the acceleratedRendering of this stack to true
+   put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
+   put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
+   send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
+   set the htmltext of fld "aboutText" to tAboutText
+   set the layer of grp "aboutDisplay" to top
+   show grp "aboutDisplay"
+end displayAbout
+
+on closeAbout
+   set the acceleratedRendering of this stack to sRendering
+   deleteMobileControl "aboutText"
+   hide group "aboutDisplay"
+end closeAbout
+
+
 ## This makes a list of color sets for the custom cd prop
 
 on makeColorSets pList -- usually I pass the clipboarddata
@@ -671,14 +645,41 @@ on test -- use this to test correct dimensions
  dialog_CustomMsg tPrompt
 end test
 
-command resetUI
-   showTitle True
-   clearBoard
-end resetUI
+
+command setTileGlow pSize
+   put "255,255,255" into sTileGlow["color"]
+   put "normal" into sTileGlow["blendMode"]
+   put "255" into sTileGlow["opacity"]
+   put "box1pass" into sTileGlow["filter"]
+   
+   switch pSize
+      case "small"    
+         put "20" into sTileGlow["size"] 
+         put "40" into sTileGlow["spread"]  
+         break
+      case "large"
+         put "80" into sTileGlow["size"] 
+         put " 100" into sTileGlow["spread"]  
+         break
+   end switch
+end setTileGlow
 
 command checkTileGlow
    setTileGlow "small"
    put sTileGlow["size"]
    set the outerGlow of image "word_5" to sTileGlow
 end checkTileGlow
+
+
+command resetUI
+   showTitle True
+   clearBoard
+end resetUI
+
+on closeCard
+   storeCurrentLevel sCurLevel
+   showTitle true
+   wait 100 milliseconds
+   deleteMobileControl "aboutText"
+end closeCard
 
