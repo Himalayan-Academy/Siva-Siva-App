@@ -1,10 +1,10 @@
-port module Lexicon exposing (..)
+port module Lexicon exposing (Model, Msg(..), Word, WordDefinition, WordList, getWordDefinition, getWordList, initialModel, loadWordDefinition, loadWordDefinitionByWord, loadWordList, responseDecoder, responseDecoderForWordDefinition, subscriptions, update, wordDecoder, wordDefinitionReceived, wordDefinitionView, wordEncoder, wordListReceived, wordListStatusView, wordToJson)
 
 import Html exposing (..)
 import Http
-import Json.Decode exposing (Decoder)
+import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
-import Json.Encode as JE
+import Json.Encode as Encode
 
 
 port wordListReceived : (WordList -> msg) -> Sub msg
@@ -66,28 +66,28 @@ loadWordList =
 
 responseDecoder : Decoder WordList
 responseDecoder =
-    Json.Decode.list wordDecoder
+    Decode.list wordDecoder
 
 
 wordDecoder : Decoder Word
 wordDecoder =
-    decode Word
-        |> required "lexicon_id" Json.Decode.string
-        |> required "word" Json.Decode.string
+    Decode.succeed Word
+        |> required "lexicon_id" Decode.string
+        |> required "word" Decode.string
 
 
 wordToJson : WordDefinition -> String
 wordToJson word =
-    JE.encode 4 (wordEncoder word)
+    Encode.encode 4 (wordEncoder word)
 
 
-wordEncoder : WordDefinition -> JE.Value
+wordEncoder : WordDefinition -> Encode.Value
 wordEncoder word =
-    JE.object
-        [ ( "id", JE.string word.id )
-        , ( "word", JE.string word.word )
-        , ( "definition", JE.string word.definition )
-        , ( "seeAlso", JE.list (List.map JE.string word.seeAlso) )
+    Encode.object
+        [ ( "id", Encode.string word.id )
+        , ( "word", Encode.string word.word )
+        , ( "definition", Encode.string word.definition )
+        , ( "seeAlso", Encode.list Encode.string word.seeAlso )
         ]
 
 
@@ -131,11 +131,11 @@ loadWordDefinition id =
 
 responseDecoderForWordDefinition : Decoder WordDefinition
 responseDecoderForWordDefinition =
-    decode WordDefinition
-        |> required "lexicon_id" Json.Decode.string
-        |> required "word" Json.Decode.string
-        |> required "definition" Json.Decode.string
-        |> optional "see_also" (Json.Decode.list Json.Decode.string) []
+    Decode.succeed WordDefinition
+        |> required "lexicon_id" Decode.string
+        |> required "word" Decode.string
+        |> required "definition" Decode.string
+        |> optional "see_also" (Decode.list Decode.string) []
 
 
 type Msg
@@ -157,7 +157,7 @@ update msg model =
         HandleWordListResponse result ->
             case result of
                 Ok results ->
-                    ( { model | wordList = Just (Debug.log "wordlist:" results) }, Cmd.none )
+                    ( { model | wordList = Just results }, Cmd.none )
 
                 Err error ->
                     case error of
@@ -170,7 +170,7 @@ update msg model =
         HandleWordDefinitionResponse result ->
             case result of
                 Ok results ->
-                    ( { model | currentWord = Just (Debug.log "currentWord:" results) }, Cmd.none )
+                    ( { model | currentWord = Just results }, Cmd.none )
 
                 Err error ->
                     case error of

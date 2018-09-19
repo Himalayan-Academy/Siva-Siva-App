@@ -1,4 +1,4 @@
-module Theme.Colors exposing (..)
+module Theme.Colors exposing (ButtonTheme, Palette, Theme, theme)
 
 import Css exposing (..)
 

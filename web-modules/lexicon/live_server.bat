@@ -1,3 +1,3 @@
 @echo off
 
-elm-live src/Main.elm --output=build/bundle.js --dir=build/ --open
+elm-live src/Main.elm --dir=build/ --open -- --output=build/bundle.js --debug
