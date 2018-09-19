@@ -24,7 +24,7 @@ function boot() {
   // Ports related code below
 
   window.app.ports.saveWord.subscribe(function (definition) {
-    liveCode.debug("saving word", definition)
+    console.log("saving word", definition)
     list.push({ word: definition.word, id: definition.id })
     localStorage.setItem("saved_words", JSON.stringify(list))
     window.app.ports.savedWordListChanged.send(list)
@@ -32,7 +32,7 @@ function boot() {
 
 
   window.app.ports.removeSavedWord.subscribe(function (definition) {
-    liveCode.debug("removing word", definition.word)
+    console.log("removing word", definition.word)
     list = list.filter((item) => item.word !== definition.word)
     localStorage.setItem("saved_words", JSON.stringify(list))
     window.app.ports.savedWordListChanged.send(list)
@@ -48,9 +48,9 @@ function boot() {
   })
 
   window.app.ports.getWordList.subscribe(function () {
-    liveCode.debug("getting word list")
+    console.log("getting word list")
     if (wordlist) {
-      liveCode.debug("using saved one")
+      console.log("using saved one")
       window.app.ports.wordListReceived.send(wordlist)
     } else {
       liveCode.getWordList()
@@ -63,14 +63,14 @@ function boot() {
 
 
   window.app.ports.getWordDefinition.subscribe(function (d) {
-    liveCode.debug("getting word definition for " + d)
+    console.log("getting word definition for " + d)
 
     liveCode.getWordDefinition(d)
 
   })
 
   window.app.ports.lcDebug.subscribe(function (data) {
-    liveCode.debug("[ELM] " + data)
+    console.log("[ELM] " + data)
   })
 }
 
