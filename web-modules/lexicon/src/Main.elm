@@ -43,6 +43,7 @@ import Task
 import Theme.Colors exposing (..)
 import Theme.Elements exposing (..)
 import Browser
+import Browser.Dom as Dom
 
 
 
@@ -161,6 +162,7 @@ type Msg
     | GoHome
     | GoSettings
     | NoOp
+    | Search
 
 
 filterWordList : String -> WordList -> WordList
@@ -252,6 +254,9 @@ update msg model =
 
         NoOp ->
             ( model, Cmd.none )
+
+        Search ->
+            ( model, unfocusSearchBox) 
 
 
 
@@ -465,6 +470,11 @@ addWordItem word =
     li [ onClick (LoadDefinition word.id) ] [ text word.word ]
 
 
+
+unfocusSearchBox : Cmd Msg
+unfocusSearchBox =
+  Task.attempt (\_ -> NoOp) (Dom.blur "search-box")
+
 searchView : Model -> Html Msg
 searchView model =
     case model.lexiconModel.wordList of
@@ -474,7 +484,7 @@ searchView model =
                     [ marginTop (px 125) ]
                 ]
                 [ searchHeader (Navigate HelpView)
-                , searchBox FilterWordList model.query
+                , searchBox FilterWordList Search model.query 
                 , listHeader
                 , ul
                     [ css
@@ -508,7 +518,7 @@ myWordsView model =
                     [ marginTop (px 125) ]
                 ]
                 [ searchHeader (Navigate HelpView)
-                , searchBox FilterWordList model.query
+                , searchBox FilterWordList Search  model.query
                 , listHeader
                 , ul
                     [ css

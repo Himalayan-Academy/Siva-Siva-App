@@ -2,10 +2,23 @@ module Theme.Elements exposing (bodyStyle, fontAwesomeIcon, headerStyle, headerT
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (classList, css, value)
+import Html.Styled.Attributes exposing (classList, css, value, id)
 import Html.Styled.Events exposing (..)
 import Theme.Colors exposing (..)
+import Json.Decode as Decode
 
+
+
+onEnter : msg -> Attribute msg
+onEnter msg =
+    let
+        isEnter code =
+            if code == 13 then
+                Decode.succeed msg
+            else
+                Decode.fail "not ENTER"
+    in
+    on "keydown" (Decode.andThen isEnter keyCode)
 
 navButton : Bool -> List (Attribute msg) -> List (Html msg) -> Html msg
 navButton isCurrentPage =
@@ -108,8 +121,8 @@ searchHeader click =
         ]
 
 
-searchBox : (String -> msg) -> String -> Html msg
-searchBox changed query =
+searchBox : (String -> msg) -> msg -> String -> Html msg
+searchBox changed search query =
     div
         [ css
             [ marginTop (px 10) ]
@@ -123,7 +136,9 @@ searchBox changed query =
                 , color theme.palette.white
                 ]
             , onInput changed
+            , onEnter search
             , value query
+            , id "search-box"
             ]
             []
         , hr
