@@ -9,7 +9,7 @@ constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
-constant cRemoteNewsFile="siva-app-news_1-2.html"
+constant cRemoteNewsFile="siva-app-news_1-2-2.html"
 
 
 on libraryStack
