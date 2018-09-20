@@ -164,7 +164,7 @@ command init_AppConfiguration
    
    tsNetLibUrlReuseConnection false
    set the socketTimeoutInterval to 2000
-
+   
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
    put platform() into tPlatform
    put "init/launch"into tAction
@@ -174,8 +174,8 @@ command init_AppConfiguration
       put mobileBuildInfo("MODEL") into  pData["device"]["model"]
       put mobileBuildInfo("MANUFACTURER") into  pData["device"]["madeby"]
    end if
-   
-  send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
+   mobileRectSet
+   send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
 end init_AppConfiguration
 
 command init_Fonts

@@ -345,7 +345,7 @@ end getJournalData
 local sMobileRect
 
 command mobileRectSet
-   put the screenRect into sMobileRect
+   put the effective working screenRect into sMobileRect
 end mobileRectSet
 
 function mobileRectGet
