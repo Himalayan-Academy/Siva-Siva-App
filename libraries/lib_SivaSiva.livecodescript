@@ -344,7 +344,7 @@ end getJournalData
 
 local sMobileRect
 
-command mobileRectSet
+command mobileRectSet # called after init
    put the effective working screenRect into sMobileRect
 end mobileRectSet
 
