@@ -83,11 +83,26 @@ command news_Fetch
    else 
       # save it
       put tServerNews into url ("file:/"&tLocalNewsFile)
-      dispatch "dialog_CustomMsg" to the topstack with "You have news!"
       put "true" into sNewNews
+      if exists(fld "UpdateToUser") then
+         put  "You have news!" into fld "UpdateToUser"
+         visMessageToUser "true"
+      end if
+      
+      --dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+      
    end if
    send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
+
+command visMessageToUser pBool
+   if pBool then
+      show fld "UpdateToUser"
+      send "visMessageToUser false" to the topstack in 2 second
+   else
+      hide fld "UpdateToUser" 
+   end if
+end visMessageToUser
 
 function news_Check
    return sNewNews
@@ -96,6 +111,8 @@ end news_Check
 command news_UserReadNews
    put "false" into sNewNews
 end news_UserReadNews
+
+
 
 command newcontent_Check
    # Ping server for updates?
