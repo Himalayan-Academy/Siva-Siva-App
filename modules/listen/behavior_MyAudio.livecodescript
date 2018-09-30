@@ -10,6 +10,9 @@ on preopencard
     hide player "audioPlayer"
     put empty into fld  "currentTitleLabel"
     put "Listen Off Line" into fld "title-label"
+    pass preopencard 
+    # the handler the work of them mode indicator are there
+    #  (the red underline showing you  what tab  you are in)
 end preopencard
 
 on openCard

@@ -110,7 +110,7 @@ on mouseup
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
          end if
-         downloadSelection pTarget
+            downloadSelection pTarget
          break
    end switch
    
@@ -196,8 +196,14 @@ end select_Play
 --------------
 
 command downloadSelection pTarget
-   put the long ID of pTarget into sLastTarget
-   doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
+   put the long id of pTarget into sLastTarget 
+   # NOTE: we need this because the down stack will need to come back where
+   # it and we pass this to pRequestBy
+   if sLineNum <> empty then  # we have a selection
+      doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
+   else
+      put "Pick a Title to Download It." into fld "currentTitleLabel"
+   end if
 end downloadSelection
 
 command downloadAffirmed   
@@ -210,6 +216,7 @@ command downloadAffirmed
    hide stack "listen"
    go stack "view_Download"
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
+   # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 
 
@@ -240,7 +247,8 @@ end share_Items
 
 on closeCard
    showPlayer "false","audioPlayer"
-    deleteAllMobileControls 
+   deleteAllMobileControls 
+   put empty into sLineNum
 end closeCard
 
 
