@@ -9,11 +9,11 @@ constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
-constant cRemoteNewsFile="siva-app-news_1-2.html"
+constant cRemoteNewsFile="siva-app-news_1-2-2.html"
 
 
 on libraryStack
-  mobileRectSet
+   mobileRectSet
 end libraryStack
 
 --> GENERIC GLOBAL MOBILE
@@ -49,45 +49,65 @@ check this first.
 
 */
 
-command news_Fetch
-   --breakpoint
-   set the socketTimeoutInterval to 2000
-   if connectivity_PingServer() = "false" then exit news_Fetch
-   # path to news 
-   put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
-   
-   # fetch the latest news on server
-   put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
-   
-   # check for the existence of news file locally
-   # get date data 
-   put format ("<p id=\"datestamp\">") into tTargetLine
-         
-   if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-      put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
-      put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
-      put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
-      convert tLocalNewsDate to seconds
-   else
-      put empty into tLocalNewsDate
-   end if 
-   put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
-   put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
-   convert tLatestNewsDate to seconds
-   
-   # compare dates
-   
-   if tLocalNewsDate = tLatestNewsDate then
-      put "false" into sNewNews
-      # do nothing
-   else 
-      # save it
-      put tServerNews into url ("file:/"&tLocalNewsFile)
-      dispatch "dialog_CustomMsg" to the topstack with "You have news!"
-      put "true" into sNewNews
+command News_Fetch
+--breakpoint
+set the socketTimeoutInterval to 2000
+if connectivity_PingServer() = "false" then exit news_Fetch
+# path to news 
+put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
+
+# fetch the latest news on server
+put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
+
+# check for the existence of news file locally
+# get date data 
+put format ("<p id=\"datestamp\">") into tTargetLine
+      
+if ( there is a file( tLocalNewsFile) ) then # parse it for the date
+   put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
+   put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
+   put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
+   convert tLocalNewsDate to seconds
+else
+   put empty into tLocalNewsDate
+end if 
+put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
+put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
+convert tLatestNewsDate to seconds
+
+# compare dates
+
+if tLocalNewsDate = tLatestNewsDate then
+   # do nothing
+   # we don't want the user to see the message ever time they open app.
+   # even if they not read it. 
+   # TODO We should set a pref that tells that app of they did read the news
+   # from the Setting Statck
+   # otherwise to leave the flat the true
+   news_UserReadNews
+else 
+   # save it
+   put tServerNews into url ("file:/"&tLocalNewsFile)
+   put "true" into sNewNews
+   if exists(fld "UpdateToUser") then
+      put  "You have news!" into fld "UpdateToUser"
+      visMessageToUser "true"
    end if
-   send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
+   
+   --dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+   
+end if
+send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
+
+command visMessageToUser pBool
+   if pBool then
+      show fld "UpdateToUser"
+      send "visMessageToUser false" to the topstack in 2 second
+   else
+      hide fld "UpdateToUser" 
+   end if
+end visMessageToUser
 
 function news_Check
    return sNewNews
@@ -96,6 +116,8 @@ end news_Check
 command news_UserReadNews
    put "false" into sNewNews
 end news_UserReadNews
+
+
 
 command newcontent_Check
    # Ping server for updates?
@@ -344,8 +366,8 @@ end getJournalData
 
 local sMobileRect
 
-command mobileRectSet
-   put the screenRect into sMobileRect
+command mobileRectSet # called after init
+   put the effective working screenRect into sMobileRect
 end mobileRectSet
 
 function mobileRectGet

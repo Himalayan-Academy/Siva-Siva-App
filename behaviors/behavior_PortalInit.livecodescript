@@ -4,7 +4,7 @@
 local sStartLoc,sScreenRect
 
 on openCard 
-   put getCardRect() into sScreenRect
+  put getCardRect() into sScreenRect
    portal_SetCurrentStack "Siva-Siva-Portal"
    portal_SetCurrent (the short name of this card)
    audioIsRunning
@@ -44,9 +44,12 @@ on mouseUp
 end  mouseup
 
 command layoutNavBar
-   put item 3 of sScreenRect into tWidth
-   put item 4 of sScreenRect-25 into tBottom
+   put item 3 of (the rect of this card)  into tWidth
+   put item 4 of (the rect of this card)-25 into tBottom
    
+   --put item 3 of sScreenRect into tWidth
+   --put item 4 of sScreenRect-25 into tBottom
+   --
    
    put round(tWidth/8) into tHorzFour
    put round(tWidth/6) into tHorzThree
