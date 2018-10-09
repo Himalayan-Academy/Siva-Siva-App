@@ -250,15 +250,17 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    set the vis of btn "dialogCancel" of grp "answerDlgGrp" to (it <> "")
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
    set the vis of grc "cover" to true
-   show grp "answerDlgGrp" -- cd must have a "doAnswerResponse" handler to read dialogData and respond
+   show grp "answerDlgGrp"
+   -- cd must have a "[doAnswerResponse]" (eg.) handler to read dialogData and respond
+   -- it can be any name as it passed through param "pHandleAffirm"
 end doAnswer
 
 
--- To manage the response, use a "doAnswerResponse" handler like this in the card or stack script:
---  the handler should have a name that you pass to the "pHandleAffirm"
+-- To manage the response, use a "doAnswerResponse"  is passed by mouseup on the group "answerDigGrp"
+--  It triggers either "cancel" or does whatever the handler passed  to the "pHandleAffirm"
+-- which must in the card script or stack up that all the dialong.
 
-
-command doAnswerResponse -- sent from doAnswer dlg
+command doAnswerResponse -- sent from  ""answerDigGrp"
    get the dialogData
    if it contains "cancel" then
       exit to top
