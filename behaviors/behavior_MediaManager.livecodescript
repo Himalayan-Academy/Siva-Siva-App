@@ -187,7 +187,7 @@ command setDeleteMode pOnOff
       set the backgroundColor of fld "deleteFile" to red
       show grc "deleteYes"
       show grc "deleteNo"
-      put "Delete?" into fld "deleteFile"
+      put "Delete:" into fld "deleteFile"
    end if
 end setDeleteMode
 
@@ -196,6 +196,7 @@ private command insertTopresults sResultA
 end insertTopResults
   
 command displayTargetFiles pDataType
+   lock screen
    put empty into fld "FilesOnDisk" 
    put sResultA["files"] into tDetailedFiles
    put  ("*media/"&pDataType&"/*") into tFilter
@@ -211,6 +212,7 @@ command displayTargetFiles pDataType
       set the itemdel to comma
    end repeat
    put tFileList into fld "FilesOnDisk"
+   unlock screen
    hide grp "GoSettings"
    hide grp "diskDataOverview" with dissolve very fast
    put sResultA[pDataType][categorySum] into fld "currentTotal"
