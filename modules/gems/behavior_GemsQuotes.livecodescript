@@ -12,8 +12,11 @@ global sConfigA
 local sOnLine,sCurrentRealm,sViewState,sCurrentSourceURL,sTruncFirstLine
 local sJournalData
 
-
 --> Events
+
+on restoreFromJournalEntry pDataA
+   put pDataA into sJournalData
+end restoreFromJournalEntry
 
 on preOpenCard 
    # ideally we only call this in start up   
@@ -32,11 +35,11 @@ on openCard
    # Fix image path from desktop when loading on Mobile
    
    # determine is a return from Journal
-   if  portal_GetLastStack() = "Journal" then
-      put getJournalData() into sJournalData
-   else
-      put empty into sJournalData
-   end if
+   --   if  portal_GetLastStack() = "Journal" then
+   --      put getJournalData() into sJournalData
+   --   else
+   --      put empty into sJournalData
+   --   end if
    
    if isMobile() then
       put the filename of image "gems-Image" into tImageFile
