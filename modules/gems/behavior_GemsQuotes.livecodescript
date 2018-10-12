@@ -15,7 +15,11 @@ local sJournalData
 --> Events
 
 on restoreFromJournalEntry pDataA
+   lock screen
    put pDataA into sJournalData
+   preOpenCard
+   wait 80 millisecs with messages
+   OpenCard
 end restoreFromJournalEntry
 
 on preOpenCard 
@@ -31,6 +35,7 @@ on preOpenCard
 end preOpenCard
 
 on openCard
+   lock screen
    audioIsRunning  
    # Fix image path from desktop when loading on Mobile
    
