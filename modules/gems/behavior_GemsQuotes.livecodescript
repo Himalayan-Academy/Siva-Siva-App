@@ -16,7 +16,9 @@ local sJournalData
 
 on restoreFromJournalEntry pDataA
    lock screen
+   ntInfo "restoring from journal"
    put pDataA into sJournalData
+   put sJournalData["realm"] into sConfigA["currentRealm"]
    preOpenCard
    wait 80 millisecs with messages
    OpenCard
@@ -36,15 +38,8 @@ end preOpenCard
 
 on openCard
    lock screen
-   audioIsRunning  
-   # Fix image path from desktop when loading on Mobile
-   
-   # determine is a return from Journal
-   --   if  portal_GetLastStack() = "Journal" then
-   --      put getJournalData() into sJournalData
-   --   else
-   --      put empty into sJournalData
-   --   end if
+   ntInfo "gems opencard"
+   audioIsRunning     
    
    if isMobile() then
       put the filename of image "gems-Image" into tImageFile
@@ -57,13 +52,17 @@ on openCard
    put 0 into sViewState
    
    # determine if you can show online context icon
-   put connectivity_PingServer() into sOnline
+   --   put connectivity_PingServer() into sOnline
+   put true into sOnline
    
+   ntInfo "setCardTitle"
    setCardTitle 
    
+   ntInfo "fetchQuote"
    fetchQuote 
+   ntInfo "fetchImage"
    fetchImage
-   
+   ntInfo "done"
 end opencard
    
 on setCardTitle
@@ -163,23 +162,32 @@ command fetchQuote
 end fetchQuote
 
 command fetchImage
+   // AAG: Tip, folders in Android change every time the application
+   // is launched. So storing a full path (assets) for the image
+   // will break the next time the app launches. Below
+   // there is a paste from adb logcat showing the difference:
+   //
+   //
+   // gems image /data/app/com.himalayanacademy.com.sivasiva-PoonAnie94UgFQSw4WAasg==/base.apk/assets/img/photography/app-img_shutterstock_3322947_736h-landscape/app-img_shutterstock_3322947_736h-landscape_med.jpg  
+   // gems image /data/app/com.himalayanacademy.com.sivasiva-5cEvxO85YuYpwj-Vi3VIyg==/base.apk/assets/img/photography/app-img_13_hatha_736h-landscape/app-img_13_hatha_736h-landscape_med.jpg 
+   // 
+   // Notice that the package changes between launches.
+   //                       
    if sJournalData = empty then
-      put sConfigA["currentRealm"] into pRealm
+      put sConfigA["currentRealm"] into tRealm
       put _getRandomImageSQL() into tImgSQL
-      replace ":1" with pRealm in tImgSQL
-      put JnanamDB() into tConnectionID
+      replace ":1" with tRealm in tImgSQL
       dbSetSQL tImgSQL
-      put dbGet ("file_id", tConnectionID) into tImageFileID
+      put dbGet ("file_id", JnanamDB()) into tImageFileID
       put textDecode ( tImageFileID[1]["file_id"], UTF8)  into tImageFileID     
-      put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
-            into tNextImagePath
+      put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tNextImagePath
    else
       put sJournalData["lastImage"] into tNextImagePath   
    end if
+   ntInfo "gems image" && tNextImagePath
    
-   set the filename of img "gems-image" to tNextImagePath   
+   set the filename of img "gems-image" to sivasiva_AssetFolder() & tNextImagePath   
    setLastImagePath tNextImagePath  
-   -- put getLastImagePath()  #check
    show image "gems-Image" 
    
 end fetchImage
