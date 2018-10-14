@@ -16,17 +16,24 @@ local sJournalData
 
 on restoreFromJournalEntry pDataA
    lock screen
-   ntInfo "restoring from journal"
+   --ntInfo "restoring from journal"
    put pDataA into sJournalData
    put sJournalData["realm"] into sConfigA["currentRealm"]
    preOpenCard
+   --dispatch "set_sJournalData" to this card with pDataA
    wait 80 millisecs with messages
    OpenCard
 end restoreFromJournalEntry
 
-on preOpenCard 
-   # ideally we only call this in start up   
+command set_sJournalData  pDataA
+   put pDataA in sJournalData
+end set_sJournalData
 
+on preOpenCard 
+   --breakpoint
+   
+   # ideally we only call this in start up   
+   
    # Make sure our photo cache is updated   
    --  jnanam_UpdatePhotoCache
    
@@ -38,7 +45,7 @@ end preOpenCard
 
 on openCard
    lock screen
-   ntInfo "gems opencard"
+   --ntInfo "gems opencard"
    audioIsRunning     
    
    if isMobile() then
@@ -55,14 +62,14 @@ on openCard
    --   put connectivity_PingServer() into sOnline
    put true into sOnline
    
-   ntInfo "setCardTitle"
+   --ntInfo "setCardTitle"
    setCardTitle 
    
-   ntInfo "fetchQuote"
+   --ntInfo "fetchQuote"
    fetchQuote 
-   ntInfo "fetchImage"
+   --ntInfo "fetchImage"
    fetchImage
-   ntInfo "done"
+   --ntInfo "done"
 end opencard
    
 on setCardTitle
@@ -184,11 +191,14 @@ command fetchImage
    else
       put sJournalData["lastImage"] into tNextImagePath   
    end if
-   ntInfo "gems image" && tNextImagePath
+   --ntInfo "gems image" && tNextImagePath
    
    set the filename of img "gems-image" to sivasiva_AssetFolder() & tNextImagePath   
    setLastImagePath tNextImagePath  
    show image "gems-Image" 
+   
+   put empty into sJournalData
+   # other wise you get the same quote over and over again!
    
 end fetchImage
 
