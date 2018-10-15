@@ -25,10 +25,6 @@ on restoreFromJournalEntry pDataA
    OpenCard
 end restoreFromJournalEntry
 
-command set_sJournalData  pDataA
-   put pDataA in sJournalData
-end set_sJournalData
-
 on preOpenCard 
    --breakpoint
    
@@ -112,6 +108,7 @@ command fetchQuote
       
       dbSetSQL tQuoteSQL
       put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      put textEncode(sTruncFirstLine,"UTF-8") into sTruncFirstLine
       # store the quote id. see lib_SivaSivaMedia
       
       put dbGet("quote", tConnectionID) into aSelectedQuotes
@@ -121,7 +118,7 @@ command fetchQuote
       put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
       --put getLastQuoteID() # check
    else 
-       put sJournalData["lastQuote"] into pQuoteID 
+      put sJournalData["lastQuote"] into pQuoteID 
       dbLike "quote_id",pQuoteID
       put dbGet("quote", tConnectionID) into aSelectedQuotes
       put textDecode  (aSelectedQuotes[1]["content"],UTF8)  into tQuote
