@@ -209,8 +209,7 @@ command portal_GoUrl pURL,pJournalLabel
    put the short name of this stack into oStackName
    portal_SetCurrentStack(oStackName)
    portal_GoStack "view_SivaSivaBrowser"
-   send "setBrowserURL pURL" to cd 1 of stack "view_SivaSivaBrowser" in 100 milliseconds
-   --set the browser_URL of stack "view_SivaSivaBrowser" to someURL
+   send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
    put pURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
    
