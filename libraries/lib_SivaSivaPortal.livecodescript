@@ -202,16 +202,24 @@ end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
    set the socketTimeoutinterval to 2000
-   #the Browser is called from various contexts
-   # we need to know where we came from in order to 
-   # handle returning to the context properly.
    
-   put the short name of this stack into oStackName
-   portal_SetCurrentStack(oStackName)
-   portal_GoStack "view_SivaSivaBrowser"
-   send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
-   put pURL into pTrackdata["webUrl"]
-   tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+   # must have a net connection to proceed;
+   if not connectivity_PingServer() then 
+      dialog_CustomMsg "Offline or Low Bandwidth"
+      exit to top
+   else
+      
+      #the Browser is called from various contexts
+      # we need to know where we came from in order to 
+      # handle returning to the context properly.
+      
+      put the short name of this stack into oStackName
+      portal_SetCurrentStack(oStackName)
+      portal_GoStack "view_SivaSivaBrowser"
+      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+      put pURL into pTrackdata["webUrl"]
+      tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+   end if
    
 end portal_GoUrl
 

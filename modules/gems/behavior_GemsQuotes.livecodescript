@@ -112,6 +112,7 @@ command fetchQuote
       # store the quote id. see lib_SivaSivaMedia
       
       put dbGet("quote", tConnectionID) into aSelectedQuotes
+      ntInfo "Quote from dbase"
       put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
       setLastQuoteID (aSelectedQuotes[1]["quote_id"])
       replace "\n" with cr in tQuote

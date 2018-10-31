@@ -1,6 +1,6 @@
 ﻿script "behavior_ListenUI"
 
-passAudioSelection//>LOCALS
+ //>LOCALS
 local sSelectNum, sSingleAudioA,sCached,sLineNum
 local sAudioUI
 
@@ -9,8 +9,14 @@ on opencard
 end opencard
   
   
-  on mouseUp
+on mouseUp
    put the short name of the target into pTarget
+   if pTarget is not "my-audio-label" then 
+      if connectivity_PingServer() is "true" then  
+         dialog_CustomMsg "Offline or Low Bandwidth. Going to downloaded library."
+         go card "listen-my-audio"
+      end if
+   end if
    switch pTarget
       case "collections-label"
          go to card "listen-collection"
@@ -24,7 +30,7 @@ end opencard
       case "audioList"
          if sLineNum <> empty then
             set the backgroundcolor of line sLineNum of fld "audioList" to empty
-        end if
+         end if
          put word 2 of clickline() into sSelectNum
          put sSelectNum into sLineNum
          if (sLineNum mod 2) = 0 then
@@ -33,12 +39,12 @@ end opencard
          set the backgroundcolor of line sLineNum of fld "audioList" to 176,30,66
          put line sLineNum fld "audioList" into pTitle
          put round(sSelectNum/2) into sSelectNum
-         passAudioSelection sSelectNum, pTitle
+         # pass it back the cd script which has the main handlers
+         passAudioSelection sSelectNum, pTitle 
          break
       case "chevron-up-down" # this is simple enough to do here
          passAudioDetails sSelectNum,pTarget
          break
-         
    end switch
 end mouseUp
 

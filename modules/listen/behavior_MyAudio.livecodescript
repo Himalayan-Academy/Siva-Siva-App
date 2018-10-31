@@ -10,7 +10,7 @@ on preopencard
     hide player "audioPlayer"
     put empty into fld  "currentTitleLabel"
     put "Listen Off Line" into fld "title-label"
-    pass preopencard 
+    pass preopencard i
     # the handler the work of them mode indicator are there
     #  (the red underline showing you  what tab  you are in)
 end preopencard
@@ -18,12 +18,18 @@ end preopencard
 on openCard
    getDownloadedAudio
    if (fld "audioList" is empty) then
-      doAnswer "You have not downloaded any audio", "OK","downloadAffirmed"
+      doAnswer "You have not downloaded any audio", "OK","doAnswerAffirmed"
    end if
    
    audioIsRunning
   
 end openCard
+
+command doAnswerAffirmed
+   hide grp "AnswerDlgGrp"
+end doAnswerAffirmed
+
+
 
 function getSelection pLine  
    return sDownloadedAudioA[pLine]

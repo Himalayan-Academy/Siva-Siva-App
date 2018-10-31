@@ -93,13 +93,13 @@ on sendFeedBack
    put "sivasiva@hindu.org" into tRecipient
    put "SivaSiva App Feedback" into tSubject
    put ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr \
-   & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr \
+         & "What happened: " & cr &cr & "What you expected to happen: " & cr &cr &cr \
          & "Feature requests: Describe your idea in as much detail as possible." &cr &"Thank you.")  into tBody
    if isMobile() then
-     mobileComposeMail tSubject, tRecipient,,,tBody 
-  else
-     revMail tRecipient,,tSubject,tBody
-     end if
+      mobileComposeMail tSubject, tRecipient,,,tBody 
+   else
+      revMail tRecipient,,tSubject,tBody
+   end if
 end sendFeedBack
 
 on fieldLinkClicked pLink
@@ -138,6 +138,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    if (exists(group "bottomToast" of this card) ) then 
       #  do nothing... assume vis of the group is off...
    else
+      lock screen
       copy tDialogControl to this card
    end if
    
@@ -179,21 +180,15 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    put ((the formattedHeight of fld "lbl-dialogPrompt") + tBtnHeight) into tDialogHeight
    set the height of fld "lbl-dialogPrompt" to tDialogHeight
    set the bottomright of btn "DIALOGAFFIRM" to tCdwidth-24,tCdheight-8
-   set the top of  group "bottomToast" to tCdHeight+300  # make sure it off screen
-   -- set the bottom of fld "lbl-dialogPrompt"  to tCdHeight
+   set the top of  group "bottomToast" to tCdHeight+400  # make sure it off screen
+   unlock screen
    show group "bottomToast"
-   move grp "BottomToast" relative 0,-(tDialogHeight+300) in 800 milliseconds
-   wait 1 seconds
-   move grp "BottomToast" relative 0,tDialogHeight+300 in 800 milliseconds
+   move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
+   wait 2 seconds
+   move grp "BottomToast" relative 0,tDialogHeight+400 in 800 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
 end dialog_CustomMsg
-
-
-
-
-
-
 
 -----------------------------------
 # BY Jacqueline Landman Gay
@@ -239,7 +234,7 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    else
       copy tDialogControl to this card
    end if
-   --set the location of grp "answerDigGrp" of this card  to the location of this card
+   
    if there is no grp "answerDlgGrp" then
       exit doAnswer
    end if
@@ -251,12 +246,14 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
    set the vis of grc "cover" to true
    show grp "answerDlgGrp"
+   show btn "dialogAffirm"
    -- cd must have a "[doAnswerResponse]" (eg.) handler to read dialogData and respond
    -- it can be any name as it passed through param "pHandleAffirm"
 end doAnswer
 
 
--- To manage the response, use a "doAnswerResponse"  is passed by mouseup on the group "answerDigGrp"
+-- To manage the response, use a [doAnswerResponse] { it can have any name) is passed by 
+-- mouseup on the group "answerDigGrp"
 --  It triggers either "cancel" or does whatever the handler passed  to the "pHandleAffirm"
 -- which must in the card script or stack up that all the dialong.
 

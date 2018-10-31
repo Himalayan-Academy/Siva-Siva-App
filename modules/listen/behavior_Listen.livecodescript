@@ -55,7 +55,17 @@ on openstack
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA   
    
+   # must have net connection, otherwise take to My Audio
+  checkConnection
 end openstack
+
+# we should put this a common library, but the are too many sceneros per moldule
+command checkConnection
+   if not connectivity_PingServer() then 
+      dialog_CustomMsg "No net connection? Going to off-line library."
+      go card "listen-my-audio" of this stack
+   end if
+end checkConnection
 
 # return JSON for other handlers as needed
 

@@ -264,8 +264,7 @@ end ______CONNECTIVITY
 Local sPingURL,sServerAttempts # sURLStatusLog
 
 function connectivity_PingServer   
-   set the socketTimeoutInterval to 2000
-   get url "https://www.himalayanacademy.com/ping.txt"
+   get url "https://www.himalayanacademy.com/ping.txt"v
    if it is "true" then
       return true
    else
