@@ -1,14 +1,14 @@
 ﻿script "behavior_InitSivaSivaProject"
 --> MetaData
-
+/*
 license: GPLv3
 name: behavior_InitSivaSivaProject
 type: behavior
 version: 0.2
 by: David Bovill
 but radically refactored by BR and Andre
- 
-/*
+
+
 Here we keep all initilisation code for the Siva-Siva-App.
 This code originates from the Siva-Siva-App home card script.
 We therefore set the behavior of the home card (first card) to this stacks script.
@@ -176,6 +176,13 @@ command init_AppConfiguration
    end if
    mobileRectSet
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
+   
+   -- AAG enable or disable network tracer
+   if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
+      ntEnableNetworkTracer
+   else
+      ntDisableNetworkTracer
+   end if
 end init_AppConfiguration
 
 command init_Fonts
@@ -192,10 +199,6 @@ on init_StoreControlsIds
    put the long id of group "searchControls" of card "search" of stack "lib_CustomControls" into sConfigA["search"]
    put the long id of group "sound-is-playing" of card "sound-is-playing" of stack "lib_CustomControls" into sConfigA["soundIsPlaying"]
 end init_StoreControlsIds
-
-on testConnection
-   get  connectivity_PingServer()
-end testConnection
 
 command openPortalStack
    open stack "Siva-Siva-Portal"

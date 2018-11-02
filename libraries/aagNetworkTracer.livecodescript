@@ -1,5 +1,12 @@
 ﻿script "aagNetworkTracer"
+/*
+aagNetworkTracer
+by: Andre Garzia <andre@andregarzia.com>
+version: 2.0
 
+- Changes v2.0:
+* Adding ADB support
+*/
 constant kDefaultPort = 8001
 local sConfigA
 local sMessagesA
@@ -69,6 +76,7 @@ command ntBroadcast pDataA, pContextA
       open datagram socket to _ntListeningSocket()
       write tData to socket _ntListeningSocket() --with message "_ntUDPFinishedBroadcasting"
       close socket _ntListeningSocket()
+      put tData
    end if
 end ntBroadcast
 
@@ -138,7 +146,7 @@ on errorDialog p1
       end repeat
       
       
-      put p1 into tDataA["content"]
+      put line 1 of p1 into tDataA["content"]
       put "error" into tDataA["type"]
       
       --   answer error p1

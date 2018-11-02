@@ -112,6 +112,8 @@ function sivasiva_ProjectFolder pRelativeFolderPath
 end sivasiva_ProjectFolder
 
 function project_HomeFolder
+   // AAG: had to hop from three different places until I've reached this one
+   // this is too convoluted.
    if the environment = "mobile" then
       put specialFolderPath ("resources") into projectHomeFolder -- jg: works on desktop & mobile
       put slash after projectHomeFolder

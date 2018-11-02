@@ -1,5 +1,4 @@
 ﻿script "lib_SivaSiva"
-## VARS 
 
 global sConfigA
 local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews,sStopRunningAudio
@@ -101,11 +100,13 @@ send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 
 command visMessageToUser pBool
-   if pBool then
-      show fld "UpdateToUser"
-      send "visMessageToUser false" to the topstack in 2 second
-   else
-      hide fld "UpdateToUser" 
+   if there is a fld "UpdateToUser" then
+      if pBool then
+         show fld "UpdateToUser"
+         send "visMessageToUser false" to the topstack in 2 second
+      else
+         hide fld "UpdateToUser" 
+      end if
    end if
 end visMessageToUser
 
@@ -133,10 +134,6 @@ function newcontent_IsThere
 end newcontent_IsThere
 
 
-
-
-on ____PATHS_NAV
-end ____PATHS_NAV
 
 --> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
@@ -257,10 +254,6 @@ end  path_FileFromURL
 constant kONLINECONTENT= "surprise,website,look,view_SivaSivaBrowser"
 
 
-on ______CONNECTIVITY HANDLERS   
-end ______CONNECTIVITY
-
-
 Local sPingURL,sServerAttempts # sURLStatusLog
 
 function connectivity_PingServer   
@@ -268,37 +261,14 @@ function connectivity_PingServer
    if it is "true" then
       return true
    else
+      ntInfo "offline!"
       return false
    end if
 end connectivity_PingServer
 
 -- ## Deprecated
 
-function connectivity_GetStatus
-   return sOnLineStatus
-end connectivity_GetStatus
 
--- on connectivity_UpdateStatus
---    if URLStatus(sPingURL) = "cached" then
---       put "true" into sOnLinestatus
---    else
---       put URLStatus(sPingURL)  into tURLStatus
---       if (sServerAttempts > 10) and URLStatus(sPingURL)<> "cached" then
---          put tURLStatus into sOnLinestatus
---          dialog_CustomMsg "Offline or Low Bandwidth"     
---          # do stuff here to block access  or show indicators.
---          # keep checking but don't hog the CPU... 
---          send "connectivity_PingServer" to stack "lib_SivaSiva" in 1 seconds
---       else
---          # Logging
---                put URLStatus(sPingURL) & cr after sURLStatusLog
---                put sURLStatusLog
---          add 1 to sServerAttempts
---           dialog_CustomMsg "Connecting"
---          send "connectivity_UpdateStatus" to stack "lib_SivaSiva" in 800 milliseconds
---       end if
---    end if
--- end connectivity_UpdateStatus
 
 # Use this in the module so we don't ping the server constantly.
 
@@ -323,17 +293,17 @@ function checkURLAvailable pSelectedURL
    put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
    
    ## get url pSelectedURL
-   if  (tResult < 400) then
+   if  (tResult is 200) then
       return true
    else
+      ntInfo tResult && pSelectedURL
       return false
    end if
 end checkURLAvailable
 
 
 ##################################
-on ___GETTERandSETTERS
-end ___GETTERandSETTERS
+
 
 
 # Description: 
@@ -376,9 +346,6 @@ end mobileRectGet
 
 
 ##################################
-
-on ___VISUALSandUI
-end ___VISUALSandUI
 
 
 
@@ -516,10 +483,7 @@ end revealSearchControls
 command display_Log
    portal_GoStack "Log"
 end display_Log
- 
- 
-on ___UTILITIES
-end ___UTILITIES
+
 
 function isAudioPlay
      repeat while pName is among the lines of mobileControls()
@@ -591,8 +555,6 @@ function text_TitleCase pString
    
 end text_TitleCase
 
-on ___FILE_MANIPULATION
-end ___FILE_MANIPULATION
 
 # Returns a list of files with the full paths
 function listFilesWithPaths pFolder, pRecurse
@@ -654,8 +616,6 @@ end filteredFolders
 
 ##################################
 
-on ___GEOMETRY
-end ___GEOMETRY
 
 /* Thanks to Ralph DiMola ! for this function
 

@@ -155,6 +155,7 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    put journal_convertDate(the date && the time) into tDataA["date"]
 
    put dbInsert("journal", tDataA, JournalDB()) into tResult
+   ntInfo "saving journal entry for" && pModule
    return tResult
 end Journal_RecordEntry
 
@@ -240,9 +241,11 @@ command Journal_LaunchEntry pEntryID
    end try
    put tEntryA["module"] into pData["returnTo"]
    tracking_RecordActivity "Journal","resume/activity", pData
+   -- AAG: BUG: This should be in surprise not in journal.
    if tEntryA["module"]="surprise" then
       dialog_CustomMsg "Surprise journal entries are currently disabled."
    else
+      ntInfo "resuming journal activity for" && tEntryA["module"]
       portal_GoStack tEntryA["module"]
       dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
       if it is among the items of "unhandled,passed" then

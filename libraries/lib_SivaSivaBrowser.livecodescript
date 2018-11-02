@@ -131,6 +131,7 @@ end launchBook
 
 
 command launchURL pOrientation, pURL
+   ntInfo pURL
    if pOrientation = "" then -- try to determine based on media type
       put getOrientationByType(pURL) into tViewerType
    end if
