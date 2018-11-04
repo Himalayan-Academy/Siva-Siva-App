@@ -272,7 +272,7 @@ end connectivity_PingServer
 
 # Use this in the module so we don't ping the server constantly.
 
-function connectivity_CheckResult pResultVariable, pDataReceived
+function connectivity_CheckResult pResultVariable
    
    if pResultVariable is not empty then
       ntInfo "HTTP error:" && pResultVariable
