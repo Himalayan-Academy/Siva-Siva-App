@@ -76,7 +76,9 @@ command ntBroadcast pDataA, pContextA
       open datagram socket to _ntListeningSocket()
       write tData to socket _ntListeningSocket() --with message "_ntUDPFinishedBroadcasting"
       close socket _ntListeningSocket()
-      put tData
+      if the environment is not "development" then
+         put tData
+      end if
    end if
 end ntBroadcast
 

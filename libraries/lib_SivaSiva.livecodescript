@@ -273,13 +273,14 @@ end connectivity_PingServer
 # Use this in the module so we don't ping the server constantly.
 
 function connectivity_CheckResult pResultVariable, pDataReceived
-   if word -2 of line 1 of libURLLastRHHeaders() is not 200 then
-      ntInfo "Last HTTP code:" && word -2 of line 1 of libURLLastRHHeaders()
-      return false
-   end if
    
    if pResultVariable is not empty then
       ntInfo "HTTP error:" && pResultVariable
+      return false
+   end if
+   
+   if word -2 of line 1 of libURLLastRHHeaders() is not 200 then
+      ntInfo "Last HTTP code:" && word -2 of line 1 of libURLLastRHHeaders()
       return false
    end if
    
