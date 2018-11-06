@@ -164,11 +164,12 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    put pMsg into fld "lbl-dialogPrompt"
    put the number of lines of the formattedText of fld "lbl-dialogPrompt" into tmsgLines
    
-   if tMsgLines > 1 then
-      set the margins of fld "lbl-dialogPrompt" to 24,20,24,24
-   else
-      set the margins of fld "lbl-dialogPrompt" to 24,19,24,27
-   end if
+   --   if tMsgLines > 1 then
+   --      set the margins of fld "lbl-dialogPrompt" to 24,20,24,24
+   --   else
+   --      set the margins of fld "lbl-dialogPrompt" to 24,19,24,27
+   --   end if
+   
    set the width of fld "lbl-dialogPrompt" to tCdWidth
    set the left of fld "lbl-dialogPrompt" to 0
    
@@ -226,7 +227,11 @@ This library dispatches that back to the calling handler.
 local sHandleAffirm
 
 command doAnswer pMsg,pBtns,pHandleAffirm
+   
    put pHandleAffirm into sHandleAffirm
+   
+   # copy the control
+   
    # first instantiate the group to the local context
    put sConfigA["answerDialog"] into tDialogControl
    if (exists(group "answerDlgGrp" of this card) ) then 
@@ -235,20 +240,38 @@ command doAnswer pMsg,pBtns,pHandleAffirm
       copy tDialogControl to this card
    end if
    
+   
+   #  case there is some problem, exit without hanging
    if there is no grp "answerDlgGrp" then
       exit doAnswer
    end if
-   set the dialogData to empty -- init
+   
+   # set  up text and buttons
    put pMsg into fld "lbl-dialogPrompt" of grp "answerDlgGrp"
+   set the dialogData to empty -- init
    set the label of btn "dialogAffirm" of grp "answerDlgGrp" to toUpper(item 1 of pBtns)
-   get item 2 of pBtns
+   get item 2 of pBtns 
+   # you leave out "Cancel"
    set the vis of btn "dialogCancel" of grp "answerDlgGrp" to (it <> "")
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
+   
+   #geometry
+   put the width of this card into  tWidth
+   put the height of this card into tHeight
+   set the rect of grc "cover" to 0,0,tWidth+25,tHeight+25
+   set the loc of grc "cover" to location of this card
+   set height fld "lbl-dialogPrompt" to (the formattedHeight of fld "lbl-dialogPrompt" +40)
+   set the bottom of btn "dialogAffirm" to bottom of fld "lbl-dialogPrompt"
+   set the bottom of btn "dialogCancel" to bottom of fld "lbl-dialogPrompt"
+   
+   # show it
    set the vis of grc "cover" to true
    show grp "answerDlgGrp"
    show btn "dialogAffirm"
-   -- cd must have a "[doAnswerResponse]" (eg.) handler to read dialogData and respond
-   -- it can be any name as it passed through param "pHandleAffirm"
+   
+   # cd must have a "[pHandleAffirm]" (eg.) handler to read dialogData and respond
+   # it can be any name as it passed through param "pHandleAffirm" to 
+   # via local sHandleAffirm
 end doAnswer
 
 
@@ -257,7 +280,8 @@ end doAnswer
 --  It triggers either "cancel" or does whatever the handler passed  to the "pHandleAffirm"
 -- which must in the card script or stack up that all the dialong.
 
-command doAnswerResponse -- sent from  ""answerDigGrp"
+command doAnswerResponse 
+   # send by the buttons of   "answerDigGrp"
    get the dialogData
    if it contains "cancel" then
       exit to top
@@ -265,3 +289,12 @@ command doAnswerResponse -- sent from  ""answerDigGrp"
      dispatch sHandleAffirm to this card
    end if
 end doAnswerResponse
+
+
+on libraryStack
+   
+end libraryStack
+
+on mouseRelease pButtonNumber
+   
+end mouseRelease

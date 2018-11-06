@@ -175,11 +175,12 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    if checkURLAvailable(sSelectedURL) is "false" then 
       clearPlayer
       put "Sound file unavailable. Do you have a connections? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
-      doAnswer pMsg,"Cancel,OK",doAnswerResponse 
+      doAnswer pMsg,"OK", answerURLunavailable
       exit to top
    end if
    
-   # Lyrics fetch is a separate function, see lib_SivaSiva Meida
+   
+   # Lyrics fetch is a separate function, see lib_SivaSiva Media
    
    get getSongLyrics(sSelectedItemA["item_id"])
    
@@ -189,12 +190,16 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       showBusyIndicator false
       exit to top
    end if
+   
    startPlayer sSelectedURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
    Journal_AddEntry  sSelectedItemA["item_id"]
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
 
+command answerURLunavailable
+   hide group "AnswerDlgGrp"
+end answerURLunavailable
 --------------
 
 command downloadSelection pTarget

@@ -46,6 +46,7 @@ local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 
 ------------------------------------------------------
 
+
 command portal_NextOrientation pStack
    # all landscape stack must registered here
    
@@ -187,13 +188,20 @@ command portal_Link portalName
       # called from a module and not the portal stack
       portal_SetCurrent portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
+      if requiresConnection(portalName)  = "false" then
+         dialog_CustomMsg "Connection required. Going Home"
+         put "Home" into portalName
+      end if
       put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
             portal_GoStack tPortalTarget
    else
       portal_SetCurrent portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
+      if requiresConnection(portalName) = "false" then
+         dialog_CustomMsg "Connection required."
+         put "Home" into portalName
+      end if
       go card portalName
-      
       put portalName into pTrackdata["contentTarget"]
       tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
@@ -201,19 +209,18 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
-   
-   
-   
-   put the short name of this stack into oStackName
-   portal_SetCurrentStack(oStackName)
-   portal_GoStack "view_SivaSivaBrowser"
-   send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
-   put pURL into pTrackdata["webUrl"]
-   tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   
-   
+   if requiresConnection(sLastLinkTitle) = "false" then
+      dialog_CustomMsg "Connection required."
+      exit to top
+   else
+      put the short name of this stack into oStackName
+      portal_SetCurrentStack(oStackName)
+      portal_GoStack "view_SivaSivaBrowser"
+      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+      put pURL into pTrackdata["webUrl"]
+      tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+   end if
 end portal_GoUrl
-
 
 command portal_LaunchUrl someURL
    # leave Siva Siva app and open the native web app on the device

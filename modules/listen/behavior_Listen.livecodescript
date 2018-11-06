@@ -56,16 +56,8 @@ on openstack
    put JSONToArray(tContainer) into sCollectionA   
    
    # must have net connection, otherwise take to My Audio
-  checkConnection
 end openstack
 
-# we should put this a common library, but the are too many sceneros per moldule
-command checkConnection
-   if not connectivity_PingServer() then 
-      dialog_CustomMsg "No net connection? Going to off-line library."
-      go card "listen-my-audio" of this stack
-   end if
-end checkConnection
 
 # return JSON for other handlers as needed
 
@@ -101,6 +93,14 @@ command selectPlaylist pSelection
    if not (tPlayTarget contains "-playlist-") then
       exit to top
    else
+      # we should put this a common library, but the are too many sceneros per moldule
+      
+      if not connectivity_PingServer() then 
+         dialog_CustomMsg "Connection Required. Go to My Audio"
+         go to card "listen-my-audio" 
+         exit to top
+      end if
+      
       set the itemDelimiter to "-"
       put item 1 of tPlayTarget into tColl
       put item 2 of tPlayTarget into tPlay

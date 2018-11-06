@@ -17,12 +17,13 @@ end preopencard
 
 on openCard
    getDownloadedAudio
+   
    if (fld "audioList" is empty) then
-      doAnswer "You have not downloaded any audio", "OK","doAnswerAffirmed"
+      dialog_CustomMsg "You have not downloaded any audio"
    end if
    
    audioIsRunning
-  
+   
 end openCard
 
 command doAnswerAffirmed

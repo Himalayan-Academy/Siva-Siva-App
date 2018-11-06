@@ -308,8 +308,6 @@ end share_Items
 command resetUI
    set the uSourceURL of widget "loadContext" to empty
    put empty into sCurrentSourceURL
-   if the vis of widget "readContext" then
-      toggleReadContext "false"
-   end if
+   toggleReadContext "false"
 end resetUI
 

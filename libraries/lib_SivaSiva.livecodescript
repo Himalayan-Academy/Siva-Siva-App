@@ -11,6 +11,9 @@ constant cGroupMoveDistance = 400 -- DTB
 constant cRemoteNewsFile="siva-app-news_1-2-2.html"
 
 
+ON ___INIT
+end ___INIT
+
 on libraryStack
    mobileRectSet
 end libraryStack
@@ -48,67 +51,64 @@ check this first.
 
 */
 
+########################
+ON ___FETCH_NEWS
+end ___FETCH_NEWS
+
 command News_Fetch
---breakpoint
-set the socketTimeoutInterval to 2000
-if connectivity_PingServer() = "false" then exit news_Fetch
-# path to news 
-put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
-
-# fetch the latest news on server
-put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
-
-# check for the existence of news file locally
-# get date data 
-put format ("<p id=\"datestamp\">") into tTargetLine
-      
-if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-   put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
-   put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
-   put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
-   convert tLocalNewsDate to seconds
-else
-   put empty into tLocalNewsDate
-end if 
-put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
-put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
-convert tLatestNewsDate to seconds
-
-# compare dates
-
-if tLocalNewsDate = tLatestNewsDate then
-   # do nothing
-   # we don't want the user to see the message ever time they open app.
-   # even if they not read it. 
-   # TODO We should set a pref that tells that app of they did read the news
-   # from the Setting Statck
-   # otherwise to leave the flat the true
-   news_UserReadNews
-else 
-   # save it
-   put tServerNews into url ("file:/"&tLocalNewsFile)
-   put "true" into sNewNews
-   if exists(fld "UpdateToUser") then
-      put  "You have news!" into fld "UpdateToUser"
-      visMessageToUser "true"
+   --breakpoint
+   set the socketTimeoutInterval to 2000
+   if connectivity_PingServer() = "false" then 
+      exit news_Fetch
    end if
    
-   --dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+   # path to news 
+   put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
    
-end if
-send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
+   # fetch the latest news on server
+   put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
+   
+   # check for the existence of news file locally
+   # get date data 
+   put format ("<p id=\"datestamp\">") into tTargetLine
+         
+   if ( there is a file( tLocalNewsFile) ) then # parse it for the date
+      put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
+      put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
+      put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
+      convert tLocalNewsDate to seconds
+   else
+      put empty into tLocalNewsDate
+   end if 
+   put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
+   put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
+   convert tLatestNewsDate to seconds
+   
+   # compare dates
+   
+   if tLocalNewsDate = tLatestNewsDate then
+      # do nothing
+      # we don't want the user to see the message ever time they open app.
+      # even if they not read it. 
+      # TODO We should set a pref that tells that app of they did read the news
+      # from the Setting Statck
+      # otherwise to leave the flat the true
+      news_UserReadNews
+   else 
+      # save it
+      put tServerNews into url ("file:/"&tLocalNewsFile)
+      put "true" into sNewNews
+      if exists(fld "UpdateToUser") then
+         put  "You have news!" into fld "UpdateToUser"
+         visMessageToUser "true"
+      end if
+      
+      --dispatch "dialog_CustomMsg" to the topstack with "You have news!"
+      
+   end if
+   send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 
-command visMessageToUser pBool
-   if there is a fld "UpdateToUser" then
-      if pBool then
-         show fld "UpdateToUser"
-         send "visMessageToUser false" to the topstack in 2 second
-      else
-         hide fld "UpdateToUser" 
-      end if
-   end if
-end visMessageToUser
 
 function news_Check
    return sNewNews
@@ -133,7 +133,9 @@ function newcontent_IsThere
    return sThereIsNewContent
 end newcontent_IsThere
 
-
+##########################
+on ___PATHS
+end ___PATHS
 
 --> ### GLOBAL PATHS  GET AND SET / NAVIGATON
 
@@ -247,11 +249,17 @@ end  path_FileFromURL
 
 
 
+######################
+on ___CONNECTIVITY
+end ___CONNECTIVITY
 
+constant kRequiresConnection="Website,Look,The Master Course,All Our On-line Books,Hinduism Today Magazine,Educational Insights"
 
-# relates to navigation shoulf move with these handlers later:
-# handles both stacks and portal names
-constant kONLINECONTENT= "surprise,website,look,view_SivaSivaBrowser"
+function requiresConnection pLink
+   if pLink is among the items of kRequiresConnection then
+      return connectivity_PingServer()
+      end if
+end requiresConnection
 
 
 Local sPingURL,sServerAttempts # sURLStatusLog
@@ -265,9 +273,6 @@ function connectivity_PingServer
       return false
    end if
 end connectivity_PingServer
-
--- ## Deprecated
-
 
 
 # Use this in the module so we don't ping the server constantly.
@@ -287,22 +292,6 @@ function connectivity_CheckResult pResultVariable
    return true
 end connectivity_CheckResult
 
-function connectivity_NotAvailable cardOrStackObject
-   if sOnlineStatus = "true" then # nothing to do here.. no checks required
-      return "true"
-   else
-      repeat for each item x in kONLINECONTENT
-         if (cardOrStackObject contains x) then
-            dialog_CustomMsg "Offline or Low Bandwidth"
-            return "offline"
-            # FYI we are letting users open the "Listen" stack even though
-            exit repeat
-         end if
-      end repeat
-   end if
-   # risking queuing up multiple requests
-end connectivity_NotAvailable
-
 function checkURLAvailable pSelectedURL     
    put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
    
@@ -315,10 +304,30 @@ function checkURLAvailable pSelectedURL
    end if
 end checkURLAvailable
 
+## Deprecated:
+
+--function connectivity_NotAvailable cardOrStackObject
+--   if sOnlineStatus = "true" then # nothing to do here.. no checks required
+--      return "true"
+--   else
+--      repeat for each item x in kONLINECONTENT
+--         if (cardOrStackObject contains x) then
+--            dialog_CustomMsg "Offline or Low Bandwidth"
+--            return "offline"
+--            # FYI we are letting users open the "Listen" stack even though
+--            exit repeat
+--         end if
+--      end repeat
+--   end if
+--   # risking queuing up multiple requests
+--end connectivity_NotAvailable
+
+
+
 
 ##################################
-
-
+ON ___SETTERS_GETTERS
+end ___SETTERS_GETTERS
 
 # Description: 
 # Frequenly there is a common  need to have a variable be set 
@@ -360,7 +369,19 @@ end mobileRectGet
 
 
 ##################################
+ON ___GLOBAL_UI
+end ___GLOBAL_UI
 
+command visMessageToUser pBool
+   if there is a fld "UpdateToUser" then
+      if pBool then
+         show fld "UpdateToUser"
+         send "visMessageToUser false" to the topstack in 2 second
+      else
+         hide fld "UpdateToUser" 
+      end if
+   end if
+end visMessageToUser
 
 
 command audioIsRunning  
@@ -504,7 +525,14 @@ function isAudioPlay
       mobileControlDelete pName
    end repeat
   
- end isAudioPlay
+end isAudioPlay
+
+
+#################
+ON ___UTILITIES
+end ___UTILITIES
+
+
  function removeQuotes pString
     # Needed when passing some raw string to json for some functions like analytics
     # quotes will break theAPI/Jdon
