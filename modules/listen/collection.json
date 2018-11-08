@@ -9,7 +9,7 @@
         "recordType": "latest",
         "recordCount": "50",
         "data_query": {
-			"media_type": "inspiredtalk",
+			"media_type": "audio",
 			"approved_for_public": "YES"
         }
       },
