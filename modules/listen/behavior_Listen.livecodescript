@@ -94,21 +94,16 @@ command selectPlaylist pSelection
       exit to top
    else
       # we should put this a common library, but the are too many sceneros per moldule
-      
-      if not connectivity_PingServer() then 
-         dialog_CustomMsg "Connection Required. Go to My Audio"
-         go to card "listen-my-audio" 
-         exit to top
-      end if
-      
-      set the itemDelimiter to "-"
-      put item 1 of tPlayTarget into tColl
-      put item 2 of tPlayTarget into tPlay
+      offLineGoMyAudio
    end if
    
-   # Link each separate process to a 
-   # specific handler
-   playList_FetchData tColl,tPlay
+   set the itemDelimiter to "-"
+   put item 1 of tPlayTarget into tColl
+   put item 2 of tPlayTarget into tPlay
+
+# Link each separate process to a 
+# specific handler
+playList_FetchData tColl,tPlay
 end selectPlaylist
 
 -----------------------------------------------------
@@ -567,6 +562,10 @@ command setAudioListColors tLineNum,pColor
    set the backgroundcolor of line tLineNum of fld "audioList" to pColor
 end setAudioListColors
 
+command clearAudioListColor
+   set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
+end clearAudioListColor
+
 on preopencard
    # tweak the header for collections
    
@@ -646,4 +645,12 @@ on clearPlayer
    showPlayer false, "audioPlayer"
    put empty into fld "currentTitleLabel" 
 end clearPlayer
+
+command offLineGoMyAudio
+   if not connectivity_PingServer() then 
+      dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
+      go to card "listen-my-audio" 
+      exit to top
+   end if
+end offLineGoMyAudio
 

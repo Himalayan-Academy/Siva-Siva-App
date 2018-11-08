@@ -57,8 +57,8 @@ end ___FETCH_NEWS
 
 command News_Fetch
    --breakpoint
-   set the socketTimeoutInterval to 2000
    if connectivity_PingServer() = "false" then 
+      news_UserReadNews # user has read then news, but is off line...
       exit news_Fetch
    end if
    
@@ -117,7 +117,6 @@ end news_Check
 command news_UserReadNews
    put "false" into sNewNews
 end news_UserReadNews
-
 
 
 command newcontent_Check

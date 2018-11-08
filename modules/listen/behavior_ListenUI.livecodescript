@@ -11,12 +11,7 @@ end opencard
   
 on mouseUp
    put the short name of the target into pTarget
-   if pTarget is not "my-audio-label" then 
-      if connectivity_PingServer() is "true" then  
-         dialog_CustomMsg "Offline or Low Bandwidth. Going to downloaded library."
-         go card "listen-my-audio"
-      end if
-   end if
+   
    switch pTarget
       case "collections-label"
          go to card "listen-collection"
@@ -28,6 +23,10 @@ on mouseUp
          go to card "listen-my-audio"
          break
       case "audioList"
+       
+         if the short name of this card <> "listen-my-audio" then 
+            offLineGoMyAudio
+         end if
          if sLineNum <> empty then
             set the backgroundcolor of line sLineNum of fld "audioList" to empty
          end if

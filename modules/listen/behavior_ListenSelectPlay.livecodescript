@@ -198,6 +198,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
 end select_Play
 
 command answerURLunavailable
+   clearAudioListColor
    hide group "AnswerDlgGrp"
 end answerURLunavailable
 --------------
@@ -253,6 +254,7 @@ command share_Items
 end share_Items
 
 on closeCard
+   clearAudioListColor
    showPlayer "false","audioPlayer"
    deleteAllMobileControls 
    put empty into sLineNum
