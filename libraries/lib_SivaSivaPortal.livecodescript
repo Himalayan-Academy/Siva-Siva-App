@@ -155,6 +155,7 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
+   ntInfo "about to change stacks!"
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 20 milliseconds with messages  
    close stack oStackName   
@@ -181,6 +182,7 @@ command portal_GoStack cardOrStackObject
 end portal_GoStack
 
 command portal_Link portalName
+   ntInfo "Portal link"
    
    -- navigates to the "portal view" and displays the named portal
    
@@ -194,6 +196,7 @@ command portal_Link portalName
       end if
       put format ("card \"%s\" of stack \"Siva-Siva-Portal\"",portalName) into tPortalTarget
             portal_GoStack tPortalTarget
+      
    else
       portal_SetCurrent portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
@@ -237,12 +240,14 @@ command portal_SetCurrent portalName
 end portal_SetCurrent
 
 function portal_GetCurrent
+   ntInfo "portal_GetCurrent"
    # BR: Support for tracking the portal from which
    # a module was launched from   
    return sCurrentPortal
 end portal_GetCurrent
 
 command portal_SetCurrentStack stackName
+   ntInfo "portal_GetCurrent"
    put stackName into sLastStack  
 end portal_SetCurrentStack
 

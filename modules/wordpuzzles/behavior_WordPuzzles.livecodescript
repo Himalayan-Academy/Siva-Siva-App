@@ -679,7 +679,6 @@ end resetUI
 on closeCard
    storeCurrentLevel sCurLevel
    showTitle true
-   wait 100 milliseconds
-   deleteMobileControl "aboutText"
+   ntInfo "closing word puzzle card"
 end closeCard
 
