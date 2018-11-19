@@ -35,11 +35,12 @@ on preOpenCard
    
    
    # Clean the card so we don't get a flash back to previous content
-   hide image "gems-image"
+   
    put empty into fld "gems-quote"
 end preOpenCard
 
 on openCard
+   wait 500 milliseconds with messages
    lock screen
    --ntInfo "gems opencard"
    audioIsRunning     
