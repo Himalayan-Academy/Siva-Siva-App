@@ -27,7 +27,8 @@ on openCard
 end opencard
   
  --> CREATE THE PUZZLE
- 
+local tWordLoc
+
 on createWordPuzzle
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
@@ -81,8 +82,13 @@ on createWordPuzzle
       add 6 to item 3 of tNextWordRect
       add 4 to item 4 of tNextWordRect
       
+      if aWordLocations is empty then
+         put 0 into tWordLoc     
+      else
+         add 1 to tWordLoc
+      end if
       
-      put getLocation (tNextWordRect) into tWordLocation
+      put getLocation (tNextWordRect) into tWordLocations[tWordLoc]
       put word x of fld "_quote" into tNextWord
       
       if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
@@ -101,7 +107,7 @@ on createWordPuzzle
       set the name of the last image to tTileName
       set the showborder of the last image to true
       set the behavior of the last image to the long id of btn "behavior_tileScript"
-      set the uWordLocation of the last image to tWordLocation
+      set the uWordLocations of the last image to aWordLocations[tWordLoc]
       set the cWord of last image to word x of fld "_quote"
       set the loc of the last image to  -200,-200
       set the borderwidth of the last image to "4"
@@ -118,7 +124,7 @@ on createWordPuzzle
    # set start indicator to the beginning of the first word
    put the  uWordLocation of image "word_1"  into tFirstWordPosition
    subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
-   put tFirstWordPosition into tStartIconPosition
+   put tFirstWordPosition[1] into tStartIconPosition
    add 4 to item 1 of tStartIconPosition
    set the loc of grc "startHere" to tStartIconPosition
    set the vis of grc "startHere" to true
