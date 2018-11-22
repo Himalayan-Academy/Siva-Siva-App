@@ -55,6 +55,9 @@ on createWordPuzzle
    set the backgroundColor of grc quoteBkgnd to tTileBkgndRGB
    
    lock screen
+   
+   
+   -- Set the quote in a field
    put (the number of words of sQuote) into sWordCount
    put sQuote into fld "_quote"
    setSizeAndLocationOfQuote sQuote
@@ -63,6 +66,10 @@ on createWordPuzzle
    show grp "quoteGroup"
    show fld "_quote"
    
+   
+   set the acceleratedRendering  of this stack to true
+   
+   -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "quoteGroup"
    
    
@@ -71,25 +78,24 @@ on createWordPuzzle
    set the name of the last image to "currentPuzzle" 
    set the loc of image "currentPuzzle"  to -1000,-1000
    
+   
+   -- copy the image to the same location/rect as the quote
+   
+   put empty into tLoc  # set the extents of loc array to 0 each iterations
+   
    repeat with x = 1 to the number of words of fld "_quote"  
+      
       copy img "CurrentPuzzle" to this card
       set the name of the last image to "tempForCrop"
       set the rect of the last image to the rect of fld _quote"
+      
+      --make individual word tiles
       put the formattedRect of word x of fld "_quote" into tNextWordRect  
       
       subtract 8 from item 1 of tNextWordRect
       add 2 to item 2 of tNextWordRect
       add 6 to item 3 of tNextWordRect
       add 4 to item 4 of tNextWordRect
-      
-      if aWordLocations is empty then
-         put 0 into tWordLoc     
-      else
-         add 1 to tWordLoc
-      end if
-      
-      put getLocation (tNextWordRect) into tWordLocations[tWordLoc]
-      put word x of fld "_quote" into tNextWord
       
       if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
          put tNextWord into tWordCantBeTileName
@@ -102,33 +108,53 @@ on createWordPuzzle
          set the  name of image "tempForCrop"  to tNextWord
       end if
       
+      -- name the tiles and apply the name as custom prop of the tile
       put ("word_"&x) into tTileName
       put tTileName & cr after tWordList
       set the name of the last image to tTileName
       set the showborder of the last image to true
       set the behavior of the last image to the long id of btn "behavior_tileScript"
-      set the uWordLocations of the last image to aWordLocations[tWordLoc]
+      
       set the cWord of last image to word x of fld "_quote"
+      put word x of fld "_quote" into tNextWord
+      
+      --Store tiles of screen, ready to distribute
+      
       set the loc of the last image to  -200,-200
       set the borderwidth of the last image to "4"
       set the topcolor of the last image to tRGB
       set the layermode of the last image to "dynamic"
       set the alwaysbuffer of the last image to true
       -- jg: required for smooth movment on slower devices
+      
+      -- set up an array of the location(x) of a word.
+      
+      if   ( item 2 of the extents of tWordLocationsA[tNextWord] is empty ) OR \
+            (tNextWord is among the keys of tWordLocationsA[tNextWord]) then
+         put (item 2 of the extents of tWordLocationsA[tNextWord]) + 1 into tLoc
+         put getLocation (tNextWordRect) into tWordLocationsA[tNextWord][tLoc]
+         set the uWordLocations of the last image to tWordLocationsA[tNextWord]
+      end if
    end repeat
-   set the acceleratedRendering  of this stack to true
+   
+   
+   
    delete char -1 of tWordList
    set the uWordList of this card to tWordList
-   --distributeWords
+   
+   
    arrangeWords # Jacque's Method
+   
    # set start indicator to the beginning of the first word
-   put the  uWordLocation of image "word_1"  into tFirstWordPosition
+   put the cWord of image "word_1" into pWord
+   --put the  uWordLocation of image "word_1"  into tFirstWordPosition
+   put tWordLocationsA[pWord][1] into tFirstWordPosition
    subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
-   put tFirstWordPosition[1] into tStartIconPosition
+   put tFirstWordPosition into tStartIconPosition
    add 4 to item 1 of tStartIconPosition
    set the loc of grc "startHere" to tStartIconPosition
    set the vis of grc "startHere" to true
-   --set the blendlevel of fld "_quote" to 50
+   
    
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
@@ -368,6 +394,8 @@ on clearBoard
    hide widget "context"
    --set the vis of grc "startHere" to false
    put empty into fld "_Quote" of me
+   hide  fld "_Quote" of me
+   hide group "quoteGroup"
    if the uwordlist of me = "" then exit clearBoard -- assume imgs are gone
    repeat with x = the number of imgs of me down to 1
       if the short name of img x of me begins with "word_"

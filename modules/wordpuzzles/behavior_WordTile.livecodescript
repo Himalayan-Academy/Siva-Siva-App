@@ -1,15 +1,15 @@
 ﻿script "behavior_WordTile"
 
-local sDragging
+local sDragging,sMyHomes,sOneHome
 
 On MouseDown
-  # don't let user drag an image that was placed successfully:
-  
-  if the uInPlace of me <> "true" then
-    set the layer of me to top
-    --     grab me
-    put true into sDragging
-  end if
+   # don't let user drag an image that was placed successfully:
+   put the uWordLocations of me into sMyHomes
+   if the uInPlace of me <> "true" then
+      set the layer of me to top
+      --     grab me
+      put true into sDragging
+   end if
 end MouseDown
 
 
@@ -30,6 +30,7 @@ end minMax
 
 
 on mouseUp
+   
    put me into tWhatControl
    -- outOfFrame
    put false into sDragging
@@ -42,13 +43,12 @@ end mouseUp
 
 command lockInPlace
    put the long id of me into pTile
-   set the loc of me to the uWordLocation of me 
-   --  set the topleft of me to word 2 of tIsHome  
+   set the loc of me to sMyHomes[sOneHome]
    set the uInPlace  of me to "true" 
    set the showborder of me to "false"
    relayer me after grc "startHere"
    --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
-      glowtile me, false
+   glowtile me, false
 end lockInPlace
 
 command clueGoHome
@@ -56,7 +56,7 @@ command clueGoHome
    dispatch "setGlowTile" to this card with  "large" 
    relayer me to front of card "word-puzzle"
    move me to the effective  points of grc "MoveClue1" in 1 seconds
-   move me to the uWordLocaton of me in 1 second
+   move me to the uWordLocation of me in 1 second
    lockInPlace
    glowtile me, true
    wait 700 milliseconds
@@ -109,14 +109,17 @@ end outOfFrame
 
 function checkHomeProximity # Cause tile to snap to location if close
    
-   put the uWordLocation of me into tMyHome
-   put the abs of  (item 1 of the loc of me - item 1 of tMyHome) into tLeftDistance
-   put the abs of  (item 2 of the loc of me - item 2 of tMyHome) into tTopDistance
-   
-   if (the abs of  (item 1 of the loc of me - item 1 of tMyHome)  < 30) AND \
-         (the abs of  (item 2 of the loc of me - item 2 of tMyHome) <30) then
-      return "true" 
-   end if
+   repeat for each key pLoc in sMyHomes
+      put the abs of  (item 1 of the loc of me - item 1 of sMyHomes[pLoc]) into tLeftDistance
+      put the abs of  (item 2 of the loc of me - item 2 of sMyHomes[pLoc]) into tTopDistance
+      
+      if (the abs of  (item 1 of the loc of me - item 1 of of sMyHomes[pLoc])  < 30) AND \
+            (the abs of  (item 2 of the loc of me - item 2 of  of sMyHomes[pLoc]) <30) then
+         put pLoc into sOneHome
+         return true
+         exit repeat
+      end if
+   end repeat
    
    return false  
 end checkHomeProximity
@@ -156,3 +159,7 @@ end checkHomeProximity
 --   return true
 -- end spaceOpen
 
+
+on mouseDoubleDown pButtonNumber
+   
+end mouseDoubleDown
