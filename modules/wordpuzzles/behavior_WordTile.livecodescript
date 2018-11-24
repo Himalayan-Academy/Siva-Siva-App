@@ -1,9 +1,9 @@
 ﻿script "behavior_WordTile"
-
 local sDragging,sMyHomes,sOneHome
 
 On MouseDown
-   # don't let user drag an image that was placed successfully: put the uWordLocations of me into sMyHomes
+   # don't let user drag an image that was placed successfully
+    put the uWordLocations of me into sMyHomes
    
    if the uInPlace of me <> "true" then
       set the layer of me to top
@@ -34,7 +34,9 @@ on mouseUp
    -- outOfFrame
    put false into sDragging
    put checkHomeProximity() into tIsHome
-   lockInPlace
+   if word 1 of tIsHome = true then
+      lockInPlace
+   end if
    checkCompletion
 end mouseUp
 
@@ -42,17 +44,21 @@ command lockInPlace
    put the long id of me into pTile
    set the loc of me to sMyHomes[sOneHome]
    set the uInPlace  of me to "true" 
+   
    delete variable sMyHomes[sOneHome]
    set the uWordLocations of me to sMyHomes
+   
    set the showborder of me to "false"
    relayer me after grc "startHere"
+   
    --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
+   
    glowtile me, false
 end lockInPlace
 
 command clueGoHome
    put the uWordLocations of me into sMyHomes
-   dispatch "setGlowTile" to this card with  "large" 
+   setTileGlow "large" 
    relayer me to front of card "word-puzzle"
    glowtile me, true
 end clueGoHome
@@ -105,11 +111,9 @@ function checkHomeProximity # Cause tile to snap to location if close
    repeat for each key pLoc in sMyHomes
       put the abs of  (item 1 of the loc of me - item 1 of sMyHomes[pLoc]) into tLeftDistance
       put the abs of  (item 2 of the loc of me - item 2 of sMyHomes[pLoc]) into tTopDistance
-      
       if (the abs of  (item 1 of the loc of me - item 1 of of sMyHomes[pLoc])  < 30) AND \
             (the abs of  (item 2 of the loc of me - item 2 of  of sMyHomes[pLoc]) <30) then
-         --put pLoc into sOneHome
-         lockInPlace
+         put pLoc into sOneHome
          return true
          exit repeat
       end if
