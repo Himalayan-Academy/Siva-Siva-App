@@ -1,6 +1,6 @@
 ﻿script "behavior_WordPuzzles"
 local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
-local sCurLevel,sTileGlow,sCluesGiven,sRendering
+local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA
 
 
 
@@ -33,13 +33,21 @@ on createWordPuzzle
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
    end if
+   
+   --Reset
+   put empty into sWordLocationsA
    stopTimer
    hide widget "context"
    loadNewBgImg
    if sCurLevel < 1 then pickLevel -- not yet initialized, should never happen
    --getPixieList # deprecated for now... 
    put empty into sQuote
-   fetchQuote # get a different one -- random for now dbase
+   
+   --fetchQuote # get a different one -- random for now dbase
+   # for testing. comment the above an uncomment this quote
+   
+   put "The group helps the individual and the individual helps the group." into sQuote
+   
    ## uncomment the option to get from local custom prop 
    ## if distributing without dbase  and comment out the jnanam fetch
    
@@ -126,29 +134,22 @@ on createWordPuzzle
       set the layermode of the last image to "dynamic"
       set the alwaysbuffer of the last image to true
       -- jg: required for smooth movment on slower devices
-      
-      -- set up an array of the location(x) of a word.
-      
-      if   ( item 2 of the extents of tWordLocationsA[tNextWord] is empty ) OR \
-            (tNextWord is among the keys of tWordLocationsA[tNextWord]) then
-         put (item 2 of the extents of tWordLocationsA[tNextWord]) + 1 into tLoc
-         put getLocation (tNextWordRect) into tWordLocationsA[tNextWord][tLoc]
-         set the uWordLocations of the last image to tWordLocationsA[tNextWord]
-      end if
+      set the caseSensitive to true
+      getLocations tNextWord,tNextWordRect 
+     
    end repeat
    
-   
+   assignHomeLocations 
    
    delete char -1 of tWordList
    set the uWordList of this card to tWordList
-   
    
    arrangeWords # Jacque's Method
    
    # set start indicator to the beginning of the first word
    put the cWord of image "word_1" into pWord
    --put the  uWordLocation of image "word_1"  into tFirstWordPosition
-   put tWordLocationsA[pWord][1] into tFirstWordPosition
+   put sWordLocationsA[pWord][1] into tFirstWordPosition
    subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
    put tFirstWordPosition into tStartIconPosition
    add 4 to item 1 of tStartIconPosition
@@ -167,10 +168,33 @@ on createWordPuzzle
    tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
 end createWordPuzzle
 
+command getLocations tNextWord,tNextWordRect
+   set the caseSensitive to true
+   -- set up an array of the location(x) of a word.
+   put tNextWordRect into  tCoords
+   if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
+         tNextWord is among the keys of sWordLocationsA then
+      --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
+      put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
+      put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
+      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+      put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
+      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
+   end if
+end getLocations
 
+command assignHomeLocations
+   set the casesensitive to true
+   repeat with x = 1 to ( the number of images on this card)
+      if the short name of image x contains "word" then
+         set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
+      end if
+   end repeat
+end assignHomeLocations
+   
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
-
+   
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
@@ -364,20 +388,20 @@ function getLocation tCoords
       return (theX,theY)
 end getLocation
 
-on distributeWords
-   put the uWordList of this card into tWords
-   repeat for each line x in tWords
-      # set up random locations that fall inside card window bounds
-      # left position at least 100 pixels from the edge for long words 
-      put (the width of fld _Quote) - 50 into  tMaxRight
-      put   random (tMaxRight - 170 ) + 220   into tX
-      put 350 into  tMaxBottom
-      --put (the height of fld _Quote) - 100 into  tMaxBottom
-      put   random (tMaxBottom - 100+ 1) + 100-1  into tY
-      set the loc of img x to tX,tY
-      set the uInPlace  of img x to "false"
-   end repeat
-end distributeWords
+--on distributeWords
+--   put the uWordList of this card into tWords
+--   repeat for each line x in tWords
+--      # set up random locations that fall inside card window bounds
+--      # left position at least 100 pixels from the edge for long words 
+--      put (the width of fld _Quote) - 50 into  tMaxRight
+--      put   random (tMaxRight - 170 ) + 220   into tX
+--      put 350 into  tMaxBottom
+--      --put (the height of fld _Quote) - 100 into  tMaxBottom
+--      put   random (tMaxBottom - 100+ 1) + 100-1  into tY
+--      set the loc of img x to tX,tY
+--      set the uInPlace  of img x to "false"
+--   end repeat
+--end distributeWords
 
 on clearBoard
    --set the acceleratedRendering  of this stack to false
@@ -401,10 +425,12 @@ on clearBoard
       if the short name of img x of me begins with "word_"
       then delete img x of me
    end repeat
-   try
+   repeat 10 times
+      try
       delete image "currentPuzzle" of me
       delete image "tempForCrop" of me
    end try
+   end repeat
    set the uWordList of me to empty
    unlock screen
 end clearBoard 

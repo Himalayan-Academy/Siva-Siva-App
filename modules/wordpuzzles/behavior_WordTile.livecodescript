@@ -3,8 +3,8 @@
 local sDragging,sMyHomes,sOneHome
 
 On MouseDown
-   # don't let user drag an image that was placed successfully:
-   put the uWordLocations of me into sMyHomes
+   # don't let user drag an image that was placed successfully: put the uWordLocations of me into sMyHomes
+   
    if the uInPlace of me <> "true" then
       set the layer of me to top
       --     grab me
@@ -20,24 +20,21 @@ on mouseMove x,y
 end mouseMove
 
 function minMax pRect -- get a point within bounds
-  if pRect = "" then
-    put the rect of this card into pRect
-  end if
-  put max(item 1 of pRect,min(item 3 of pRect,the mouseh)) into x
-  put max(item 2 of pRect,min(item 4 of pRect,the mousev)) into y
-  return x,y
+   if pRect = "" then
+      put the rect of this card into pRect
+   end if
+   put max(item 1 of pRect,min(item 3 of pRect,the mouseh)) into x
+   put max(item 2 of pRect,min(item 4 of pRect,the mousev)) into y
+   return x,y
 end minMax
 
 
 on mouseUp
-   
    put me into tWhatControl
    -- outOfFrame
    put false into sDragging
    put checkHomeProximity() into tIsHome
-   if word 1 of tIsHome = true then
-      lockInPlace
-   end if
+   lockInPlace
    checkCompletion
 end mouseUp
 
@@ -45,6 +42,8 @@ command lockInPlace
    put the long id of me into pTile
    set the loc of me to sMyHomes[sOneHome]
    set the uInPlace  of me to "true" 
+   delete variable sMyHomes[sOneHome]
+   set the uWordLocations of me to sMyHomes
    set the showborder of me to "false"
    relayer me after grc "startHere"
    --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
@@ -52,16 +51,10 @@ command lockInPlace
 end lockInPlace
 
 command clueGoHome
-   setTileGlow "large"
+   put the uWordLocations of me into sMyHomes
    dispatch "setGlowTile" to this card with  "large" 
    relayer me to front of card "word-puzzle"
-   move me to the effective  points of grc "MoveClue1" in 1 seconds
-   move me to the uWordLocation of me in 1 second
-   lockInPlace
    glowtile me, true
-   wait 700 milliseconds
-   set the outerglow of me to empty
-   setTileGlow "small"
 end clueGoHome
 
 
@@ -115,7 +108,8 @@ function checkHomeProximity # Cause tile to snap to location if close
       
       if (the abs of  (item 1 of the loc of me - item 1 of of sMyHomes[pLoc])  < 30) AND \
             (the abs of  (item 2 of the loc of me - item 2 of  of sMyHomes[pLoc]) <30) then
-         put pLoc into sOneHome
+         --put pLoc into sOneHome
+         lockInPlace
          return true
          exit repeat
       end if
@@ -163,3 +157,8 @@ end checkHomeProximity
 on mouseDoubleDown pButtonNumber
    
 end mouseDoubleDown
+
+
+on mouseEnter
+   
+end mouseEnter
