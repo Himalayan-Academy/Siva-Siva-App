@@ -43,10 +43,10 @@ on createWordPuzzle
    --getPixieList # deprecated for now... 
    put empty into sQuote
    
-   --fetchQuote # get a different one -- random for now dbase
-   # for testing. comment the above an uncomment this quote
+   fetchQuote # get a different one -- random for now dbase
    
-   put "The group helps the individual and the individual helps the group." into sQuote
+   # for testing. comment the above an uncomment this quote:
+   --put "The group helps the individual and the individual helps the group." into sQuote
    
    ## uncomment the option to get from local custom prop 
    ## if distributing without dbase  and comment out the jnanam fetch
