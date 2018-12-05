@@ -42,6 +42,10 @@
       "file": "behaviors/behavior_PortalViewScrolling.livecodescript"
     },
     {
+      "name": "behavior_globalNavControl",
+      "file": "behaviors/behavior_globalNavControl.livecodescript"
+    },
+    {
       "name": "behavior_SearchAndFilter",
       "file": "behaviors/behavior_SearchAndFilter.livecodescript"
     },
