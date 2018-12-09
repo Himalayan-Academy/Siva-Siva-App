@@ -53,12 +53,12 @@
             "imageText": "The\nMaster\nCourse",
             "shortImageFile": "thumb_master-coures_trilogy-in-box.png"
         },
-        "Monastery Website": {
+        "Websites": {
             "link": {
                 "portal command": "portal_Link",
-                "portal param": "website"
+                "portal param": "websites"
             },
-            "imageText": "Monastery\nWebsite",
+            "imageText": "Websites",
             "shortImageFile": "thumb_website_ha-com-screenshoot.png"
         },
         "Our Daily Blog": {
@@ -474,8 +474,8 @@
             },
             "headerImage": "hero_surprise_boy-opens-suitcase.png"
         },
-        "website": {
-            "portalName": "website",
+        "websites": {
+            "portalName": "websites",
             "rowData": {
                 "1": {
                     "rowName": "Our Daily Blog"
@@ -541,7 +541,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Monastery Website"
+                    "rowName": "Websites"
                 },
                 "8": {
                     "rowName": "Fun & Games"
@@ -650,8 +650,8 @@
             },
             "headerImage": "hero_surprise_boy-opens-suitcase.png"
         },
-        "website": {
-            "portalName": "website",
+        "websites": {
+            "portalName": "websites",
             "rowData": {
                 "1": {
                     "rowName": "Our Daily Blog"
@@ -720,7 +720,7 @@
                     "rowName": "Read"
                 },
                 "7": {
-                    "rowName": "Monastery Website"
+                    "rowName": "Websites"
                 },
                 "8": {
                     "rowName": "Fun & Games"

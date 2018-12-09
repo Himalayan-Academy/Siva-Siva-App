@@ -2,6 +2,7 @@
 
 global sConfigA
 local sThereIsNewContent,sOnlineStatus,sLoaderImage,sNewNews,sStopRunningAudio
+local sSivaSivaNavigation
 
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
@@ -16,6 +17,7 @@ end ___INIT
 
 on libraryStack
    mobileRectSet
+   fetchNavigationMap
 end libraryStack
 
 --> GENERIC GLOBAL MOBILE
@@ -147,6 +149,7 @@ function path_HomeLocal
    end if
 end path_HomeLocal
 
+
 function path_Documents
    put specialFolderPath("documents") into  tPath
    put "/" after tPath 
@@ -175,6 +178,18 @@ function path_Modules
    put "modules/" after tPath
    return tPath
 end path_Modules
+
+command fetchNavigationMap
+   put path_HomeLocal() into tPath
+   put "models/model_SivaSiva/model_SivaSiva.json" after tPath
+   put url ("file://" & tPath) into pJson
+   put JSONToArray(pJSON) into sSivaSivaNavigation
+end fetchNavigationMap
+
+function getNavigationMap
+   return sSivaSivaNavigation
+end getNavigationMap
+
 
 --------------------------------
 -- path_IsFileOnDisk/path_FileForURL

@@ -18,18 +18,24 @@ end openControl
 
 on mouseup
    put the short name of the target into sRowName
+ 
    switch sRowname
-      put sRowname
-   case "globalNavBack"
-      Answer "Would to close SivaSiva?" with "Yes" or "No"
-      break
-   case "closeGlobalNav"
-      hide me
-      show widget "openGlobalNav"
-      break
-   default
-      portal_DoRowLink sRowName
-end switch
+      # Cases where we to a stake with no secondary navigation
+      case "Gems"
+      case "Surprise"
+      case "listen"
+         portal_GoStack sRowname
+         break
+      case "globalNavBack"
+         Answer "Would to close SivaSiva?" with "Yes" or "No"
+         break
+      case "closeGlobalNav"
+         hide me
+         show widget "openGlobalNav"
+         break
+      default
+         portal_DoRowLink RowName
+   end switch
 end mouseup
 
 

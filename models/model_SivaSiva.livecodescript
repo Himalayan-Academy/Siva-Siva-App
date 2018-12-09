@@ -24,6 +24,14 @@ local LocalArray
 
 --> SivaSiva | Model
 
+
+
+
+####################################
+-- the following David "too complex" models, 
+--above are much simpler model to the save the same information.
+
+
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
    put stackName & ".json" into shortFile-- could use ".array"
