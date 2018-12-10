@@ -75,7 +75,7 @@ command setControlUI pState
 end setControlUI
 
 command reSizeDataGrid pNumOfRows
-   set the height of group "navMap" of me to (45*pNumOfRows)
+   set the height of group "navMap" of me to ( (45*pNumOfRows) + 20 )
    set top of group "navMap" of me to 200
 end reSizeDataGrid
 
