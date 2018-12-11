@@ -10,7 +10,11 @@
 -- on the portals labels. 
 -- not the string does now have a space. 
 
-local sRowName, sMa
+local sRowName, sMap
+
+on preopencontrol
+   setControlUI "baseLevel"
+end preopencontrol
 
 on mouseup
    
@@ -22,6 +26,7 @@ on mouseup
          case "Gems"
          case "Surprise"
          case "listen"
+         case "look"
          case "Journal"
          case "Settings-Gear"
             portal_GoStack tTarget
@@ -79,35 +84,8 @@ command reSizeDataGrid pNumOfRows
    set top of group "navMap" of me to 100
 end reSizeDataGrid
 
---         # case which have a 1st level navigation
---         --put the dgHilitedLines of group "navMap" into theLine
---         --put the dgDataOfLine[theLine] of group "navMap" into theDataA
-
---         put pMap[portalData][sRowname][rowdata] into pRowdata
---         put extents(pRowData) 
---         set dgData of grp "navMap"  to pRowdata
-
---dispatch "ResetList" to group "navMap" 
-
-
---on mouseUp -- pBtnNum
---   --if pBtnNum is 1 then
---      put the dgHilitedLines of group "navMap" into theLine
---      put the dgDataOfLine[theLine] of group "navMap" into theDataA
---      ## theDataA is now an array variable.
---      ## In the case of the Data Grid pictured above the keys of the array are id, FirstName, LastName and Title.
-
---      ## This answer dialog will display: Dusty Bottoms
---      answer theDataA["rowName"] with "OK"
-
---end mouseUp
-
-
-
-
-
-
-
-on savingMobileStandalone pTargetType, pAppBundle
-   
-end savingMobileStandalone
+command firstLevelNavigation 
+   put the dgHilitedLines of group "navMap" into theLine
+   put the dgDataOfLine[theLine] of group "navMap" into theDataA
+   portal_DoRowLink theDataA["rowName"]
+end firstLevelNavigation
