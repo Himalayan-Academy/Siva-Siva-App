@@ -40,7 +40,7 @@ on preOpenCard
 end preOpenCard
 
 on openCard
-   wait 500 milliseconds with messages
+   wait 200 milliseconds with messages
    lock screen
    --ntInfo "gems opencard"
    audioIsRunning     
@@ -67,6 +67,14 @@ on openCard
    --ntInfo "fetchImage"
    fetchImage
    --ntInfo "done"
+end opencard
+
+after opencard
+   put sConfigA[globalNavControl] into tGlobalNavControl
+   if not (exists(group "globalNav" of this card) ) then
+      copy tGlobalNavControl to this card 
+      hide grp "globalNav"
+   end if
 end opencard
    
 on setCardTitle
