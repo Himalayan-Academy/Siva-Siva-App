@@ -69,14 +69,14 @@ on openCard
    --ntInfo "done"
 end opencard
 
-after opencard
-   put sConfigA[globalNavControl] into tGlobalNavControl
-   if not (exists(group "globalNav" of this card) ) then
-      copy tGlobalNavControl to this card 
-      hide grp "globalNav"
-   end if
-end opencard
-   
+--after opencard
+--   put sConfigA[globalNavControl] into tGlobalNavControl
+--   if not (exists(group "globalNav" of this card) ) then
+--      copy tGlobalNavControl to this card 
+--      hide grp "globalNav"
+--   end if
+--end opencard
+
 on setCardTitle
    if sJournalData is empty then 
       put itemOffset(sConfigA["currentRealm"],"God,Soul,Life")  into sCurrentRealm

@@ -19,7 +19,7 @@ end preopencontrol
 on mouseup
    
    put the short name of the target into tTarget
-   if tTarget is among the items of "gem,surprise,listen,look,practice,read,websites,fun,journal,my home,settings-gear" then
+   if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home,settings-gear" then
       put getNavigationMap() into sMap 
       switch tTarget
          # Cases where we to a stake with no secondary navigation
@@ -34,10 +34,11 @@ on mouseup
             
             # Cases  where we access to toolbar
          default
-            setControlUI "level1"
+            
             put sMap[portalData][tTarget][rowdata] into tRowdataA
-            reSizeDataGrid (item 2 of extents(tRowdataA) )
-            set dgData of grp "navMap"  to tRowdataA
+            set dgData of grp "navMap" of me to tRowdataA
+            reSizeDataGrid 
+            setControlUI "level1"
       end switch
       
    else #toolbar items
@@ -63,25 +64,28 @@ end mouseup
 command setControlUI pState
    switch pState
       case "close"
-         set the blendlevel of grp "globalNavTopLayer" to 0
+         set the blendlevel of grp "globalNavTopLayer" of me to 0
          hide me
-         hide grp "navMap"
+         hide grp "navMap" of me
          break
       case "baseLevel"
-         hide grp "navMap"
-         set the blendlevel of grp "globalNavTopLayer" to 0
-         show grp "globalNavTopLayer"
+         hide grp "navMap" of me
+         set the blendlevel of grp "globalNavTopLayer"  of me to 0
+         show grp "globalNavTopLayer" of me
          break
       case "level1"
-         set the blendlevel of grp "globalNavTopLayer" to 80
-         show grp "navMap"
+         set the blendlevel of grp "globalNavTopLayer"  of me to 80
+         show grp "navMap" of me
          break
    end switch
 end setControlUI
 
 command reSizeDataGrid pNumOfRows
-   set the height of group "navMap" of me to ( (67*pNumOfRows) )
-   set top of group "navMap" of me to 100
+   put the dgNumberOfRecords of group "navMap" of me into tNumberOfRecords
+   put the dgProp ["row height"] of group "navMap" of me into tRowHeight
+   Set the height of group "navMap" of me to min(12, tNumberOfRecords) * (tRowHeight) + 36 -- account for header and scrollbar
+   --set the height of group "navMap" of me to ( (67*pNumOfRows) )
+   --set top of group "navMap" of me to 100
 end reSizeDataGrid
 
 command firstLevelNavigation 

@@ -157,6 +157,9 @@ command portal_GoStack cardOrStackObject
    
    --ntInfo "about to change stacks!"
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   if  (oStackName <>"Siva-Siva-Portal")  AND  (cardOrStackObject contains "home") then 
+      show grp "globalNav"
+   end if
    wait 20 milliseconds with messages  
    close stack oStackName   
    wait 20 milliseconds with messages
@@ -205,6 +208,7 @@ command portal_Link portalName
          put "Home" into portalName
       end if
       go card portalName
+      show grp "globalNav"
       put portalName into pTrackdata["contentTarget"]
       tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
