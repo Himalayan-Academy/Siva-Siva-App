@@ -10,31 +10,33 @@
 -- on the portals labels. 
 -- not the string does now have a space. 
 
-local sRowName, sMap
+local sRowName, sMap, sFavoritesA
 
 on preopencontrol
    setControlUI "baseLevel"
 end preopencontrol
 
 on mouseup
-   
+   put empty into sFavoritesA
    put the short name of the target into tTarget
-   if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home,settings-gear" then
-      put getNavigationMap() into sMap 
+   if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
+      
       switch tTarget
-         # Cases where we to a stake with no secondary navigation
+         # Cases where we to go to stake with no secondary navigation
          case "Gems"
          case "Surprise"
          case "listen"
          case "look"
          case "Journal"
-         case "Settings-Gear"
             portal_GoStack tTarget
             break
-            
-            # Cases  where we access to toolbar
+         case "My home"
+            # we need to get the napMap item 
+            # from the the journal
+            loadFavoritesToMyHome
+            break
          default
-            
+            put getNavigationMap() into sMap 
             put sMap[portalData][tTarget][rowdata] into tRowdataA
             set dgData of grp "navMap" of me to tRowdataA
             reSizeDataGrid 
@@ -44,6 +46,9 @@ on mouseup
    else #toolbar items
       
       switch tTarget
+         case "Settings-Gear"
+            portal_GoStack "settings"
+            break
          case "globalNavBack"
             if (the vis of grp "navMap" is true)then
                setControlUI "baseLevel"
@@ -60,6 +65,23 @@ on mouseup
    end if
    
 end mouseup
+
+command  loadFavoritesToMyHome
+   
+   put Journal_GetEntries() into tJournalEntriesA
+   repeat for each key x in tJournalEntriesA
+      if tJournalEntriesA[x]["is_favorite"] = 1 then
+         add 1 to y
+         put tJournalEntriesA[x]  into sFavoritesA[y]
+         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
+      end if
+   end repeat
+   set dgData of grp "navMap" of me to sFavoritesA
+   reSizeDataGrid 
+   setControlUI "level1"
+   
+  
+end  loadFavoritesToMyHome
 
 command setControlUI pState
    switch pState
@@ -88,8 +110,12 @@ command reSizeDataGrid pNumOfRows
    --set top of group "navMap" of me to 100
 end reSizeDataGrid
 
-command firstLevelNavigation 
+command launchModule
    put the dgHilitedLines of group "navMap" into theLine
    put the dgDataOfLine[theLine] of group "navMap" into theDataA
-   portal_DoRowLink theDataA["rowName"]
-end firstLevelNavigation
+   if  theDataA["is_favorite"] is a number then
+      Journal_LaunchEntry theDataA["journal_id"]
+   else
+      portal_DoRowLink theDataA["rowName"]
+   end if
+end launchModule
