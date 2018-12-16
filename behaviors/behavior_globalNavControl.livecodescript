@@ -13,7 +13,7 @@
 local sRowName, sMap, sFavoritesA
 
 on preopencontrol
-   setControlUI "baseLevel"
+   setControlUI "displayPortals"
 end preopencontrol
 
 on mouseup
@@ -38,9 +38,9 @@ on mouseup
          default
             put getNavigationMap() into sMap 
             put sMap[portalData][tTarget][rowdata] into tRowdataA
-            set dgData of grp "navMap" of me to tRowdataA
+            set dgData of grp "modulesList" of me to tRowdataA
             reSizeDataGrid 
-            setControlUI "level1"
+            setControlUI "displayModulesList"
       end switch
       
    else #toolbar items
@@ -50,13 +50,7 @@ on mouseup
             portal_GoStack "settings"
             break
          case "globalNavBack"
-            if (the vis of grp "navMap" is true)then
-               setControlUI "baseLevel"
-            else
-               if the short name of this card = "home" then
-                  Answer "Would to close SivaSiva?" with "Yes" or "No"
-               end if
-            end if
+            setControlUI "displayPortals"
             break
          case "closeGlobalNav"
             setControlUI "close"
@@ -67,7 +61,6 @@ on mouseup
 end mouseup
 
 command  loadFavoritesToMyHome
-   
    put Journal_GetEntries() into tJournalEntriesA
    repeat for each key x in tJournalEntriesA
       if tJournalEntriesA[x]["is_favorite"] = 1 then
@@ -76,43 +69,43 @@ command  loadFavoritesToMyHome
          put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
       end if
    end repeat
-   set dgData of grp "navMap" of me to sFavoritesA
+   set dgData of grp "modulesList" of me to sFavoritesA
    reSizeDataGrid 
-   setControlUI "level1"
-   
-  
+   setControlUI "modulesList"
 end  loadFavoritesToMyHome
 
 command setControlUI pState
    switch pState
       case "close"
-         set the blendlevel of grp "globalNavTopLayer" of me to 0
+         set the blendlevel of grp "globalPortalMap" of me to 0
          hide me
-         hide grp "navMap" of me
+         hide grp "modulesList" of me
          break
-      case "baseLevel"
-         hide grp "navMap" of me
-         set the blendlevel of grp "globalNavTopLayer"  of me to 0
-         show grp "globalNavTopLayer" of me
+      case "displayPortals"
+         hide grp "modulesList" of me
+         hide widget "globalNavBack"
+         set the blendlevel of grp "globalPortalMap"  of me to 0
+         show grp "globalPortalMap" of me
          break
-      case "level1"
-         set the blendlevel of grp "globalNavTopLayer"  of me to 80
-         show grp "navMap" of me
+      case "displayModulesList"
+         set the blendlevel of grp "globalPortalMap"  of me to 80
+         show grp "modulesList" of me
+         show widget "globalNavBack"
          break
    end switch
 end setControlUI
 
 command reSizeDataGrid pNumOfRows
-   put the dgNumberOfRecords of group "navMap" of me into tNumberOfRecords
-   put the dgProp ["row height"] of group "navMap" of me into tRowHeight
-   Set the height of group "navMap" of me to min(12, tNumberOfRecords) * (tRowHeight) + 36 -- account for header and scrollbar
-   --set the height of group "navMap" of me to ( (67*pNumOfRows) )
-   --set top of group "navMap" of me to 100
+   put the dgNumberOfRecords of group "modulesList" of me into tNumberOfRecords
+   put the dgProp ["row height"] of group "modulesList" of me into tRowHeight
+   Set the height of group "modulesList" of me to min(12, tNumberOfRecords) * (tRowHeight) + 36 -- account for header and scrollbar
+   --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
+   --set top of group "modulesList" of me to 100
 end reSizeDataGrid
 
 command launchModule
-   put the dgHilitedLines of group "navMap" into theLine
-   put the dgDataOfLine[theLine] of group "navMap" into theDataA
+   put the dgHilitedLines of group "modulesList" into theLine
+   put the dgDataOfLine[theLine] of group "modulesList" into theDataA
    if  theDataA["is_favorite"] is a number then
       Journal_LaunchEntry theDataA["journal_id"]
    else
