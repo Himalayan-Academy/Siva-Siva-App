@@ -123,9 +123,9 @@ end portal_StackOrientation
 
 command portal_GoStack cardOrStackObject  
    
-   # save where we are coming from locally
+   
    put the short name of this stack into oStackName
-   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   
    
    if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
       # it means we are launching activity and we are not actually going
@@ -133,6 +133,8 @@ command portal_GoStack cardOrStackObject
       put "Journal" into oStackName
    end if
    
+   # save where we are coming from locally
+   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
    if (not  (oStackName is among the items of tNoGoBackStacks) ) then
       portal_SetCurrentStack oStackName
    end if
@@ -164,8 +166,11 @@ command portal_GoStack cardOrStackObject
    close stack oStackName   
    wait 20 milliseconds with messages
    
-   ## the does not work! --
-   ## go to cardOrStackObject in window oStackName
+   # save where we are coming from locally
+   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
+      portal_SetCurrentStack oStackName
+   end if
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
    
@@ -243,12 +248,12 @@ command portal_SetCurrent portalName
    put portalName into sCurrentPortal   
 end portal_SetCurrent
 
-function portal_GetCurrent
+function portal_GetCurrentPortal
    --ntInfo "portal_GetCurrent"
    # BR: Support for tracking the portal from which
    # a module was launched from   
    return sCurrentPortal
-end portal_GetCurrent
+end portal_GetCurrentPortal
 
 command portal_SetCurrentStack stackName
    --ntInfo "portal_GetCurrent"

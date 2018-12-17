@@ -17,6 +17,7 @@ on preopencontrol
 end preopencontrol
 
 on mouseup
+   portal_SetCurrentStack "Siva-Siva-Portal"
    put empty into sFavoritesA
    put the short name of the target into tTarget
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
@@ -57,7 +58,7 @@ on mouseup
             break
       end switch
    end if
-   
+   portal_SetCurrentStack "Siva-Siva-Portal"
 end mouseup
 
 command  loadFavoritesToMyHome

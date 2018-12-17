@@ -180,7 +180,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    
    put ((the formattedHeight of fld "lbl-dialogPrompt") + tBtnHeight) into tDialogHeight
    set the height of fld "lbl-dialogPrompt" to tDialogHeight
-   set the bottomright of btn "DIALOGAFFIRM" to tCdwidth-24,tCdheight-8
+   set the bottomright of btn "DIALOGAFFIRM" to tCdwidth-24,tCdheight-15
    set the top of  group "bottomToast" to tCdHeight+400  # make sure it off screen
    unlock screen
    show group "bottomToast"
