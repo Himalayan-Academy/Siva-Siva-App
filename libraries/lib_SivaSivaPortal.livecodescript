@@ -47,17 +47,67 @@ local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 ------------------------------------------------------
 
 
-command portal_NextOrientation pStack
-   # all landscape stack must registered here
+
+
+
+-----------------------------------------------------------
+-- portal_GoStack
+-- DESCRIPTION
+--  This is the main navigation command that switch stacks on demand
+--   it is set to close all stacks other than the loader stack
+--    so you will need to be careful about addressing scripts in the hierarchy if the 
+--    stack is already closed. 
+--  to "go back" this handler set the last module traversed by the user expect for 
+-- SivaSivaApp, Journal, and Browser (unless from Journal)
+-- PARAMETERS
+-- this can be simply the short name of the stack  or a string like
+-- "card 1 of  stack  tSomeStackName" 
+-- CHANGES:  2016-08-01 David Bovil -- created
+-- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
+--------------------------------------------------------------
+
+command portal_GoStack cardOrStackObject  
    
-   if pStack is among the items of \
-         "wordpuzzles"  then
-      mobileSetAllowedOrientations "landscape, left, landscape right"
-   else # all other stacks
-      mobileSetAllowedOrientations "portrait, portrait upside down"
+   put the short name of this stack into oStackName
+   
+   # cannot pass quotes to these strings or you willl
+   # break the JSON, BR added utilities section to lib_SivaSiva
+   
+   put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
+   
+   if oStackName <> empty then # this is not the first run boot of portal
+      deleteAllMobileControls # will destroy all except audioPlayer
    end if
    
-end portal_NextOrientation 
+   --> Variations on  stack transition methods.
+   
+   set the acceleratedRendering of stack oStackName to false
+   
+   --ntInfo "about to change stacks!"
+   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   
+   
+   wait 20 milliseconds with messages  
+   close stack oStackName   
+   wait 20 milliseconds with messages
+  
+   
+   #BR: 2017-12-24 Journal still fails on Android... in some case 
+   
+   if  oStackName is "Siva-Siva-Portal" then 
+      put "navigation/topindex" into pAction
+   else 
+      put "navigation/goContent" into pAction
+   end if
+   
+   if the short name of this stack is "Siva-Siva-Portal" then
+      news_Fetch
+   end if
+   
+   put oStackName into pTrackData["exitFrom"]
+   tracking_RecordActivity "Portal", pAction, pTrackdata 
+   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
+end portal_GoStack
 
 
 command portal_DoRowLink rowName
@@ -92,96 +142,74 @@ command portal_DoRowLink rowName
    end switch
 end portal_DoRowLink
 
------------------------------------------------------------
--- portal_GoStack
--- DESCRIPTION
---  This is the main navigation command that switch stacks on demand
---   it is set to close all stacks other than the loader stack
---    so you will need to be careful about addressing scripts in the hierarchy if the 
---    stack is already closed. 
---  to "go back" this handler set the last module traversed by the user expect for 
--- SivaSivaApp, Journal, and Browser (unless from Journal)
--- PARAMETERS
--- this can be simply the short name of the stack  or a string like
--- "card 1 of  stack  tSomeStackName" 
--- CHANGES:  2016-08-01 David Bovil -- created
--- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
---------------------------------------------------------------
-command portal_StackOrientation pStack
-   # we need to know the stack oriention for we open it
-   # we be explicit about landscape and let portrait go
-   # this means everytime were have a landscape stack 
-   # it must registered here
-   if  pStack is among items  of \
-         ("wordpuzzles") then  # list all landscape stacks here
-      mobileSetAllowedOrientations "landscape left, landscaper right"
-   else
-      # portrail
-      mobileSetAllowedOrientations"portrait, portrait upside down"
-   end if
-end portal_StackOrientation
 
-command portal_GoStack cardOrStackObject  
-   
-   put the short name of this stack into oStackName
-   
-   if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
-      # it means we are launching activity and we are not actually going
-      # to the view the journal, in which case we have to be sure it closes
-      put "Journal" into oStackName
-   end if
-   
-   
-   # cannot pass quotes to these strings or you willl
-   # break the JSON, BR added utilities section to lib_SivaSiva
-   
-   put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
-   
-   # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
-   # but these will crash the app on start up on Android if no stack is yet loaded.
-   # We deal with the each stack case
-   
-   if oStackName <> empty then # this is not the first run boot of portal
-      deleteAllMobileControls # will destroy all except audioPlayer
-   end if
-   
-   --> Variations on  stack transition methods.
-   
-   
-   set the acceleratedRendering of stack oStackName to false
-   
-   --ntInfo "about to change stacks!"
-   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   if  (oStackName <>"Siva-Siva-Portal")  AND  (cardOrStackObject contains "home") then 
-      show grp "globalNav"
-   end if
-   wait 20 milliseconds with messages  
-   close stack oStackName   
-   wait 20 milliseconds with messages
-   
-   # save where we are coming from locally
-   --put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-   put "Siva-Siva-App,view_SivaSivaBrowser"  into tNoGoBackStacks
-   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
-      portal_SetCurrentStack oStackName
-   end if
-   
-   #BR: 2017-12-24 Journal still fails on Android... in some case 
-   
-   if  oStackName is "Siva-Siva-Portal" then 
-      put "navigation/topindex" into pAction
-   else 
-      put "navigation/goContent" into pAction
-   end if
-   
-   if the short name of this stack is "Siva-Siva-Portal" then
-      news_Fetch
-   end if
-   
-   put oStackName into pTrackData["exitFrom"]
-   tracking_RecordActivity "Portal", pAction, pTrackdata 
-   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
-end portal_GoStack
+
+
+
+--command portal_GoStack cardOrStackObject  
+
+--   put the short name of this stack into oStackName
+
+--   --   if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
+--   --      # it means we are launching activity and we are not actually going
+--   --      # to the view the journal, in which case we have to be sure it closes
+--   --      put "Journal" into oStackName
+--   --   end if
+
+
+--   # cannot pass quotes to these strings or you willl
+--   # break the JSON, BR added utilities section to lib_SivaSiva
+
+--   put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
+
+--   # Attempt to fix Android by dealing with mobile controls and Accelereated Rendering from here
+--   # but these will crash the app on start up on Android if no stack is yet loaded.
+--   # We deal with the each stack case
+
+--   if oStackName <> empty then # this is not the first run boot of portal
+--      deleteAllMobileControls # will destroy all except audioPlayer
+--   end if
+
+--   --> Variations on  stack transition methods.
+
+
+--   set the acceleratedRendering of stack oStackName to false
+
+--   --ntInfo "about to change stacks!"
+--   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+
+--   --   if  ((oStackName <>"Siva-Siva-Portal")  AND  (cardOrStackObject contains "home")  ) \
+--   --         OR (sLastStack="Journal")  then 
+--   --   show grp "globalNav"
+--   --end
+
+--   wait 20 milliseconds with messages  
+--   close stack oStackName   
+--   wait 20 milliseconds with messages
+
+--   # save where we are coming from locally
+--   --put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+--   put "Siva-Siva-App,view_SivaSivaBrowser"  into tNoGoBackStacks
+--   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
+--      portal_SetCurrentStack oStackName
+--   end if
+
+--   #BR: 2017-12-24 Journal still fails on Android... in some case 
+
+--   if  oStackName is "Siva-Siva-Portal" then 
+--      put "navigation/topindex" into pAction
+--   else 
+--      put "navigation/goContent" into pAction
+--   end if
+
+--   if the short name of this stack is "Siva-Siva-Portal" then
+--      news_Fetch
+--   end if
+
+--   put oStackName into pTrackData["exitFrom"]
+--   tracking_RecordActivity "Portal", pAction, pTrackdata 
+--   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
+--end portal_GoStack
 
 command portal_Link portalName
    --ntInfo "Portal link"
@@ -395,6 +423,31 @@ command _DEPRECATED_________
    -------------------------------------------------
 end _DEPRECATED_________
 
+command portal_StackOrientation pStack
+   # we need to know the stack oriention for we open it
+   # we be explicit about landscape and let portrait go
+   # this means everytime were have a landscape stack 
+   # it must registered here
+   if  pStack is among items  of \
+         ("wordpuzzles") then  # list all landscape stacks here
+      mobileSetAllowedOrientations "landscape left, landscaper right"
+   else
+      # portrail
+      mobileSetAllowedOrientations"portrait, portrait upside down"
+   end if
+end portal_StackOrientation
+
+command portal_NextOrientation pStack
+   # all landscape stack must registered here
+   
+   if pStack is among the items of \
+         "wordpuzzles"  then
+      mobileSetAllowedOrientations "landscape, left, landscape right"
+   else # all other stacks
+      mobileSetAllowedOrientations "portrait, portrait upside down"
+   end if
+   
+end portal_NextOrientation 
 
 function portal_GetLinkUrl portalName, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray
