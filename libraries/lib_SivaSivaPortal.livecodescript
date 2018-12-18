@@ -123,9 +123,7 @@ end portal_StackOrientation
 
 command portal_GoStack cardOrStackObject  
    
-   
    put the short name of this stack into oStackName
-   
    
    if (sLastStack="Journal") AND (cardOrStackObject <> "Journal") then 
       # it means we are launching activity and we are not actually going
@@ -133,11 +131,6 @@ command portal_GoStack cardOrStackObject
       put "Journal" into oStackName
    end if
    
-   # save where we are coming from locally
-   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
-   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
-      portal_SetCurrentStack oStackName
-   end if
    
    # cannot pass quotes to these strings or you willl
    # break the JSON, BR added utilities section to lib_SivaSiva
@@ -167,7 +160,8 @@ command portal_GoStack cardOrStackObject
    wait 20 milliseconds with messages
    
    # save where we are coming from locally
-   put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   --put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
+   put "Siva-Siva-App,view_SivaSivaBrowser"  into tNoGoBackStacks
    if (not  (oStackName is among the items of tNoGoBackStacks) ) then
       portal_SetCurrentStack oStackName
    end if
@@ -196,7 +190,7 @@ command portal_Link portalName
    
    if not (sLastStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
-      portal_SetCurrent portalName
+      portal_SetCurrentPortal portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
       if requiresConnection(portalName)  = "false" then
          dialog_CustomMsg "Connection required. Going Home"
@@ -206,7 +200,7 @@ command portal_Link portalName
             portal_GoStack tPortalTarget
       
    else
-      portal_SetCurrent portalName
+      portal_SetCurrentPortal portalName
       portal_SetCurrentStack "Siva-Siva-Portal"
       if requiresConnection(portalName) = "false" then
          dialog_CustomMsg "Connection required."
@@ -244,9 +238,9 @@ command portal_GoLandscapeUrl someURL
    portal_GoStack "view_SivaSivaBrowser"
 end portal_GoLandscapeUrl
 
-command portal_SetCurrent portalName
+command portal_SetCurrentPortal portalName
    put portalName into sCurrentPortal   
-end portal_SetCurrent
+end portal_SetCurrentPortal
 
 function portal_GetCurrentPortal
    --ntInfo "portal_GetCurrent"

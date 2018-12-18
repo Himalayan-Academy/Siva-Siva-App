@@ -6,7 +6,7 @@ local sStartLoc,sScreenRect
 on openCard 
   put getCardRect() into sScreenRect
    portal_SetCurrentStack "Siva-Siva-Portal"
-   portal_SetCurrent (the short name of this card)
+   portal_SetCurrentPortal (the short name of this card)
    audioIsRunning
    layoutNavBar
    put "SivaSiva Portal Scrolling" into tLinksGroup
@@ -29,7 +29,7 @@ on mouseUp
       mobileClearTouches
    end if
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
-      portal_setCurrent (the short name of this card)
+      portal_setCurrentPortal(the short name of this card)
       put the short name of the target into tRow
       set the itemDelimiter to "_"
       put item 1 of tRow into tLinkNo
