@@ -34,7 +34,7 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 
 --> Variables
 -
-local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
+local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 
 
 
@@ -68,6 +68,7 @@ local LocalArray, sCurrentPortal,sLastStack,sLastLinkTitle
 
 command portal_GoStack cardOrStackObject  
    
+   
    put the short name of this stack into oStackName
    
    # cannot pass quotes to these strings or you willl
@@ -83,14 +84,22 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   --ntInfo "about to change stacks!"
+   ntInfo "about to change stacks!"
+   put "Journal,view_SivaSivaBrowser" into tNoGoBackStacks
+   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   wait 20 milliseconds with messages 
    
+   --if cardOrStackObject is not among the items of tNoGoBackStacks then
+      portal_SetLaunchStack cardOrStackObject
+   --end if
    
-   wait 20 milliseconds with messages  
    close stack oStackName   
    wait 20 milliseconds with messages
-  
+   
+   if (oStackName is not among the items of tNoGoBackStacks) AND (portal_GetLaunchStack() <>oStackName)  then
+      portal_SetLastStack oStackName
+   end if
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
    
@@ -106,7 +115,8 @@ command portal_GoStack cardOrStackObject
    
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
-   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
+   ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
+   ntInfo "Launch:" && portal_GetLaunchStack()  && "LastStack:" && portal_GetLastStack() 
 end portal_GoStack
 
 
@@ -191,7 +201,7 @@ end portal_DoRowLink
 --   --put "Siva-Siva-App,Journal,view_SivaSivaBrowser"  into tNoGoBackStacks
 --   put "Siva-Siva-App,view_SivaSivaBrowser"  into tNoGoBackStacks
 --   if (not  (oStackName is among the items of tNoGoBackStacks) ) then
---      portal_SetCurrentStack oStackName
+--      portal_SetLastStack oStackName
 --   end if
 
 --   #BR: 2017-12-24 Journal still fails on Android... in some case 
@@ -216,10 +226,9 @@ command portal_Link portalName
    
    -- navigates to the "portal view" and displays the named portal
    
-   if not (sLastStack="Siva-Siva-Portal") then 
+   if not (sLaunchStack="Siva-Siva-Portal") then 
       # called from a module and not the portal stack
       portal_SetCurrentPortal portalName
-      portal_SetCurrentStack "Siva-Siva-Portal"
       if requiresConnection(portalName)  = "false" then
          dialog_CustomMsg "Connection required. Going Home"
          put "Home" into portalName
@@ -229,13 +238,12 @@ command portal_Link portalName
       
    else
       portal_SetCurrentPortal portalName
-      portal_SetCurrentStack "Siva-Siva-Portal"
+      portal_SetLastStack "Siva-Siva-Portal"
       if requiresConnection(portalName) = "false" then
          dialog_CustomMsg "Connection required."
          put "Home" into portalName
       end if
       go card portalName
-      show grp "globalNav"
       put portalName into pTrackdata["contentTarget"]
       tracking_RecordActivity "Portal", "navigation/topindex", pTrackdata
    end if
@@ -248,7 +256,6 @@ command portal_GoUrl pURL,pJournalLabel
       exit to top
    else
       put the short name of this stack into oStackName
-      portal_SetCurrentStack(oStackName)
       portal_GoStack "view_SivaSivaBrowser"
       send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
       put pURL into pTrackdata["webUrl"]
@@ -277,16 +284,38 @@ function portal_GetCurrentPortal
    return sCurrentPortal
 end portal_GetCurrentPortal
 
-command portal_SetCurrentStack stackName
-   --ntInfo "portal_GetCurrent"
+command portal_SetLastStack stackName
+   # every time a stack is closed, it is registered as the last stack
+   # we  go back "sLastStack" on "global" navigation.
+   # like returning from Chennai to London;
+   --ntInfo "portal_SetLastStack"
    put stackName into sLastStack  
-end portal_SetCurrentStack
+end portal_SetLastStack
 
 function portal_GetLastStack
    # BR: Support for tracking the stack from which
-   # a module was launched from   so we can go back
+   # a module came from  so we can go back
    return sLastStack
 end portal_GetLastStack
+
+command portal_SetLaunchStack stackName
+   # every time a stack is opened,  it is save as the "sLaunchStack"
+   # Some stacks need to go to "substacks" 
+   # Like going from Wailua Homesteads to the Lihue Airport
+   # the substack, Journal, or the Browser need to return
+   # this stack and then don't return to a global node/stack
+   # We call it the "slaunchStack"
+   --ntInfo "portal_setLaunchStackk"
+   put stackName into sLaunchStack  
+end portal_setLaunchStack
+
+function portal_GetLaunchStack stackName
+   # we  go back "sLaunchStack" of a local navigation.
+   # like returning from Lihue Airport to Wailua Homesteads
+   --ntInfo "portal_setLaunchStack"
+   return sLaunchStack  
+end portal_GetLaunchStack
+
 
 command  portal_SetLastLinkTitle rowName
    put rowName into sLastLinkTitle # for use in Journal and other context to show user a label

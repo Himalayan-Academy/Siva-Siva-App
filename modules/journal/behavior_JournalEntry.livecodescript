@@ -7,7 +7,7 @@ end mouseUp
 
 on launchActivity pA
    setJournalFlag 1
-   portal_SetCurrentStack "journal"
+   --portal_SetCurrentStack "journal"
    set the acceleratedRendering of this stack to false
    Journal_LaunchEntry pA["journal_id"]
    

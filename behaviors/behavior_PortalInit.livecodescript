@@ -5,7 +5,6 @@ local sStartLoc,sScreenRect
 
 on openCard 
   put getCardRect() into sScreenRect
-   portal_SetCurrentStack "Siva-Siva-Portal"
    portal_SetCurrentPortal (the short name of this card)
    audioIsRunning
    layoutNavBar

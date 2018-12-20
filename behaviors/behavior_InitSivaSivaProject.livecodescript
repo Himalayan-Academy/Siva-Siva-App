@@ -158,7 +158,7 @@ command init_AppConfiguration
    init_Fonts
    
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
-   portal_SetCurrentStack "Siva-Siva-App"
+   portal_SetLastStack "Siva-Siva-App"
    send openPortalStack to me in 50 milliseconds
    set the effectrate to 500
    

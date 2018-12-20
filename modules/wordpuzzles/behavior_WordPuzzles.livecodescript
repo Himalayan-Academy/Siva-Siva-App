@@ -39,7 +39,7 @@ on createWordPuzzle
    stopTimer
    hide widget "context"
    loadNewBgImg
-   if sCurLevel < 1 then pickLevel -- not yet initialized, should never happen
+   if sCurLevel < 1 then difficultyPicker-- not yet initialized, should never happen
    --getPixieList # deprecated for now... 
    put empty into sQuote
    
@@ -507,8 +507,7 @@ on setTilesBlendLevel pLevel
     put pLevel into sCurLevel
  end setLevel
  
-command pickLevel  pAction, pValue
-   
+command difficultyPicker pAction, pValue
    switch pAction
       case "pickLevel"  # group is hidden... user want to select now.
          put the uLevels of me into fld "prefsSelector"  # hard wire to 1 for now
@@ -537,30 +536,7 @@ command pickLevel  pAction, pValue
          
    end switch
    
-   -- display the mobile picker
-   
-   # BR: Dec 1, 2016... mobile picker looks horrible
-   # switching to native group/field
-   
-   
-   # the rest is done in the fld itself
-   
-   
-   # deprecated: 
-   --   if isMobile() then 
-   --     put max(sCurLevel,1) into tLevel
-   --     put the uLevels of me into tLevelList -- easier to store these in a prop
-   --     mobilePick tLevelList, tLevel
-   --     put the result into tLevel
-   --     if tLevel > 0 then -- it's been changed
-   --       put tLevel into sCurLevel
-   --       ## SAVE PREF HERE
-   --     end if
-   --   else -- for desktop testing
-   --     answer "Choose a level:" with 4 or 3 or 2 or 1
-   --     put it into sCurLevel
-   --   end if
-end pickLevel
+end difficultyPicker
 
 on arrangeWords
    -- alternate distribution method; not sure it's much better but there will be no hidden overlaps

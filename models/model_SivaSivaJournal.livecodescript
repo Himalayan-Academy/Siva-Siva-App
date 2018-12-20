@@ -245,7 +245,7 @@ command Journal_LaunchEntry pEntryID
    if tEntryA["module"]="surprise" then
       dialog_CustomMsg "Surprise journal entries are currently disabled."
    else
-      --ntInfo "resuming journal activity for" && tEntryA["module"]
+      ntInfo "resuming journal activity for" && tEntryA["module"]
       portal_GoStack tEntryA["module"]
       dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
       if it is among the items of "unhandled,passed" then
