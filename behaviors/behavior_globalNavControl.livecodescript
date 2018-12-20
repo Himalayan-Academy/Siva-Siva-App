@@ -34,6 +34,7 @@ on mouseup
             # we need to get the napMap item 
             # from the the journal
             loadFavoritesToMyHome
+            setControlUI "displayModulesList"
             break
          default
             put getNavigationMap() into sMap 
@@ -60,6 +61,7 @@ on mouseup
 end mouseup
 
 command  loadFavoritesToMyHome
+   
    put Journal_GetEntries() into tJournalEntriesA
    repeat for each key x in tJournalEntriesA
       if tJournalEntriesA[x]["is_favorite"] = 1 then
@@ -68,6 +70,10 @@ command  loadFavoritesToMyHome
          put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
       end if
    end repeat
+   if sFavoritesA is empty then
+      answer "Noe Favorites yet"  with "OK"
+      exit to top
+   end if
    set dgData of grp "modulesList" of me to sFavoritesA
    reSizeDataGrid 
    setControlUI "modulesList"

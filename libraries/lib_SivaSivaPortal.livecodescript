@@ -66,8 +66,7 @@ local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
 
-command portal_GoStack cardOrStackObject  
-   
+command portal_GoStack cardOrStackObject
    
    put the short name of this stack into oStackName
    
@@ -90,15 +89,15 @@ command portal_GoStack cardOrStackObject
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 20 milliseconds with messages 
    
-   --if cardOrStackObject is not among the items of tNoGoBackStacks then
+   if cardOrStackObject is not among the items of tNoGoBackStacks then
       portal_SetLaunchStack cardOrStackObject
-   --end if
+   end if
    
    close stack oStackName   
    wait 20 milliseconds with messages
    
-   if (oStackName is not among the items of tNoGoBackStacks) AND (portal_GetLaunchStack() <>oStackName)  then
-      portal_SetLastStack oStackName
+   if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
+      portal_SetLastStack "Siva-Siva-Portal"
    end if
    
    #BR: 2017-12-24 Journal still fails on Android... in some case 
