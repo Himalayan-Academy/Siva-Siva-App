@@ -540,12 +540,24 @@ end markCachedItems
 on journalResume  pDataA, pEntryA
    -- breakpoint
    deleteMobileControl "audioPlayer"
-   put "card " & quote &  pDataA["card"] & quote &   " of stack " && quote & pEntryA["module"] & quote into pDestination
-   put pDataA["playList"] into sTargetPlayList
-   playlist_SetCurrent sTargetPlayList
-   playlist_QuerySetUp sTargetPlayList 
-   portal_SetLastLinkTitle sTargetPlayList  
+   go to card "listen-my-audio"
+   --go "card " & quote &  pDataA["card"]
+   --put pDataA["playList"] into sTargetPlayList
+   --selectPlayList sTargetPlayList
+   
 end journalResume
+
+--on Journal_AddEntry pItemID
+--   put  sSelectionsA["playlistTitle"] into tPlayList
+--   put tPlayList into pDataA["playlist"]
+--   put "listen-browser" into pDataA["card"]
+--   put pItemID into pDataA["item_id"]
+--   put sSelectedItemA["title"] into pDataA["playSelection"]
+--   put sSelectedURL into pDataA["audioURL"]
+--   put  sSelectedItemA["title"] into tPlayFileLabel
+--   put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
+--   Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
+--end Journal_AddEntry
 
 
 on closeStack
@@ -592,7 +604,7 @@ on preopencard
          put the width of fld "my-audio-label" into tLabelWidth
          set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         show fld "browse-label"
+         hide fld "browse-label"
          put "Downloaded Audio" into fld "title-label"
          put empty into fld "audioList"
           # have nav bar

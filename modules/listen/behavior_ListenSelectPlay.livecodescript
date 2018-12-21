@@ -6,7 +6,7 @@
 
 -----------------------------
 # behavior_ListenSelectPlay
-# Assigned to card "listen-playlist" of stack "Listen"
+# Assigned to card "listen-Browse" of stack "Listen"
 
 # DESCRIPTION: This script handles all interaction with a previously instantiated playlist
 # user selections of audio, display of info etc are triggered here in this script.
@@ -232,13 +232,13 @@ end downloadAffirmed
 on Journal_AddEntry pItemID
    put  sSelectionsA["playlistTitle"] into tPlayList
    put tPlayList into pDataA["playlist"]
-   put "listen-playlist" into pDataA["card"]
+   put "listen-my-audio" into pDataA["card"]
    put pItemID into pDataA["item_id"]
    put sSelectedItemA["title"] into pDataA["playSelection"]
    put sSelectedURL into pDataA["audioURL"]
    put  sSelectedItemA["title"] into tPlayFileLabel
    put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
-   Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
+   Journal_RecordEntry "listen",( "My Downloaded Audio"), pDataA
 end Journal_AddEntry
 
 command share_Items 

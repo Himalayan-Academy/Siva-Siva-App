@@ -71,7 +71,7 @@ command  loadFavoritesToMyHome
       end if
    end repeat
    if sFavoritesA is empty then
-      answer "Noe Favorites yet"  with "OK"
+      tellUserToGetFavorites
       exit to top
    end if
    set dgData of grp "modulesList" of me to sFavoritesA
