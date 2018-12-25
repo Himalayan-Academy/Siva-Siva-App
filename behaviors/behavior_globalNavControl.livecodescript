@@ -84,9 +84,11 @@ command setControlUI pState
       case "close"
          set the blendlevel of grp "globalPortalMap" of me to 0
          hide me
+         hide btn "modulesOverlay"
          hide grp "modulesList" of me
          break
       case "displayPortals"
+         hide btn "modulesOverlay"
          hide grp "modulesList" of me
          hide widget "globalNavBack"
          set the blendlevel of grp "globalPortalMap"  of me to 0
@@ -94,6 +96,7 @@ command setControlUI pState
          break
       case "displayModulesList"
          set the blendlevel of grp "globalPortalMap"  of me to 80
+         show btn "modulesOverlay"
          show grp "modulesList" of me
          show widget "globalNavBack"
          break
