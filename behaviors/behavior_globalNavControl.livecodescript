@@ -22,6 +22,7 @@ on mouseup
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
       
       switch tTarget
+         lock screen
          # Cases where we to go to stake with no secondary navigation
          case "Gems"
          case "Surprise"
@@ -82,25 +83,25 @@ end  loadFavoritesToMyHome
 command setControlUI pState
    switch pState
       case "close"
-         set the blendlevel of grp "globalPortalMap" of me to 0
          hide me
-         hide btn "modulesOverlay"
-         hide grp "modulesList" of me
+         --hide btn "globalNavOverlay"
+         --hide  grp "globalPortalMap" 
+         --hide grp "modulesList" of me
          break
       case "displayPortals"
-         hide btn "modulesOverlay"
+         --show btn "globalNavOverlay"
+         show grp "globalPortalMap" of me
          hide grp "modulesList" of me
          hide widget "globalNavBack"
-         set the blendlevel of grp "globalPortalMap"  of me to 0
-         show grp "globalPortalMap" of me
          break
       case "displayModulesList"
-         set the blendlevel of grp "globalPortalMap"  of me to 80
-         show btn "modulesOverlay"
+         --show btn "globalNavOverlay"
+         hide  grp "globalPortalMap"
          show grp "modulesList" of me
          show widget "globalNavBack"
          break
    end switch
+   unlock Screen
 end setControlUI
 
 command reSizeDataGrid pNumOfRows
