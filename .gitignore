@@ -5,6 +5,6 @@ zArchives
 .idea
 node_modules
 *.sublime*
-zDevReference
+_DevSivaSivaReference alias
 zBuilds Alias
 
