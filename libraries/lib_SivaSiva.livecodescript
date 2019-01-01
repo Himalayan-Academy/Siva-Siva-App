@@ -179,6 +179,12 @@ function path_Modules
    return tPath
 end path_Modules
 
+function path_Models
+   put path_HomeLocal() into  tPath
+   put "models/" after tPath
+   return tPath
+end path_Models
+
 command fetchNavigationMap
    put path_HomeLocal() into tPath
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
@@ -805,6 +811,7 @@ end getCardRect
 function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
    return the environment is "development"
 end dev
+
 
 
 

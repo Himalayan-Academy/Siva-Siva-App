@@ -213,7 +213,7 @@ command openPortalStack
 end openPortalStack
 
 command  init_LoadLibraries 
-   --breakpoint 
+   
    put init_ListStacksToUse() into stackNames   
    filter items of stackNames without"animationEngine*" # should loaded when need an offload when note
    repeat for each item stackName in stackNames

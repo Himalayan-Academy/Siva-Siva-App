@@ -5,7 +5,7 @@ license: GPLv3
 name: model_SivaSiva
 type: model
 version: 0.2
-Original script by David Bovil
+
 /*
 The SivaSiva model is an enhanced version of the older config.json model structure.
 The array is stored in a file "Siva-Siva-App/models/model_SivaSiva/model_SivaSiva.array"
@@ -16,7 +16,7 @@ Currently working on standardising the model handlers used here in "model_Librar
 
 --> Variables
 -
-local LocalArray
+local LocalArray,sSQLQueriesA
 
 
 --> Working on
@@ -31,6 +31,15 @@ local LocalArray
 -- the following David "too complex" models, 
 --above are much simpler model to the save the same information.
 
+on libraryStack
+
+# instead of stories SQL queries as custom Props of various stack or card.
+#  a single text file stores on SQL queries we need in app.
+# the way we can easily on them, create more and use them
+# They are loaded into an array on startup sSQLQueriesA
+
+   loadSQLQueries  
+end libraryStack
 
 function sivasiva_FetchData
    put "model_SivaSiva" into stackName
@@ -93,6 +102,43 @@ end sivasiva_LoadCachedData
 command sivasiva_ClearCachedData
    delete variable LocalArray ["sivasivaData"]
 end sivasiva_ClearCachedData
+
+function getTargetOwnerSegs
+   # expects the long ID of a control
+   put the long owner of the target into tOwner
+   split tOwner with " of "
+   put the keys of tOwner into tKeys
+   sort tKeys ascending numeric
+   repeat for each line x in tKeys
+      put the short name of tOwner[x] & comma after tSegs
+   end repeat
+   delete char -1 of tSegs
+   return tSegs
+   # item 1 will be  the name of the target control
+   # item -1 =  the stack name
+   # item -2- the card name
+   # Other keys in between will be group names.   
+end getTargetOwnerSegs
+
+########### Models 
+
+command loadSQLQueries
+   put path_Models() & "sqlQueries.txt" into tURL
+   put URL ("file:/"&tURL) into tSqlQueries
+   set the itemdelimiter to "|"
+   put 0 into y
+   repeat for each item x in tSqlQueries
+      add 1 to y
+      put line 2 of x into sSQLQueriesA[y][queryName]
+      put line 4 to  -1 of x into  sSQLQueriesA[y][sqlQuery]
+   end repeat
+end loadSQLQueries
+
+function getSQLQueries
+   return sSQLQueriesA
+end getSQLQueries
+
+
 
 
 --> Model | Library
@@ -281,23 +327,3 @@ getprop stack_Folder
 end stack_Folder
 
 
---------------------------------
-on UTILITIES
-end UTILITIES
-
-function getTargetOwnerSegs
-   # expects the long ID of a control
-   put the long owner of the target into tOwner
-   split tOwner with " of "
-   put the keys of tOwner into tKeys
-   sort tKeys ascending numeric
-   repeat for each line x in tKeys
-      put the short name of tOwner[x] & comma after tSegs
-   end repeat
-   delete char -1 of tSegs
-   return tSegs
-   # item 1 will be  the name of the target control
-   # item -1 =  the stack name
-   # item -2- the card name
-   # Other keys in between will be group names.   
-end getTargetOwnerSegs
