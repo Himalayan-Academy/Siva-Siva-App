@@ -7,3 +7,8 @@ WHERE media_type = "art/photography"
 AND `tags` LIKE "%Deities%"
 AND `cached_on_disk` ="true"
 |
+selectQuotesCollection
+
+SELECT  *
+FROM quote
+WHERE subject = "#####"

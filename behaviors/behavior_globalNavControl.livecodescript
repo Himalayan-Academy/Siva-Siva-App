@@ -84,9 +84,7 @@ command setControlUI pState
    switch pState
       case "close"
          hide me
-         --hide btn "globalNavOverlay"
-         --hide  grp "globalPortalMap" 
-         --hide grp "modulesList" of me
+         show widget "goNext"
          break
       case "displayPortals"
          --show btn "globalNavOverlay"

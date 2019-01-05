@@ -27,12 +27,33 @@ function randomDietyPhotos
    
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into pDietyPhotoFileIDA
-   repeat for each key x in pDietyPhotoFileIDA
-      put returnAssetPath("photography",pDietyPhotoFileIDA[x]["file_id"]) & cr after pImageList
+   put dbGet(,tConnectionID) into pDeityPhotoFileIDA
+   repeat for each key x in pDeityPhotoFileIDA
+      put returnAssetPath("photography",pDeityPhotoFileIDA[x]["file_id"]) & cr after pImageList
    end repeat
    return pImageList
 end randomDietyPhotos 
+
+function fetchQuotesCollection pCollection
+   put getSQLQueries() into tQueriesA
+   repeat for each key x in tQueriesA
+      if tQueriesA[x]["queryName"] = "selectQuotesCollection" then
+         put tQueriesA[x]["sqlQuery"] into tSQL
+         exit repeat
+      end if
+   end repeat
+   
+   replace "#####" with pCollection in tSQL
+   
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet(,tConnectionID) into pQuotesDataA
+   repeat for each key x in pQuotesDataA
+      put pQuotesDataA[x]["content"] &cr & "|" after pQuotes
+   end repeat
+   return pQuotes
+end fetchQuotesCollection 
+
 
 function returnAssetPath pAssets,pFileID
    switch pAssets
@@ -78,3 +99,7 @@ end returnAssetPath
 
 
 
+
+on mouseStillDown pButtonNumber
+   
+end mouseStillDown
