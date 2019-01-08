@@ -8,6 +8,12 @@ assign to group "HomeStory"
 global sConfigA,sDefaultImage,sMainImage
 local  sStopRequested,sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
+
+command initializeNarrative
+   put the long id of img "homeStoryMainImage" into sMainImage
+   setDefaultImage
+end initializeNarrative
+
 on mouseUp
    toggleNarrative
 end mouseUp
@@ -37,6 +43,11 @@ command  getContent pPhotos,pText
    end switch
    switch pText
       case "Words of Our Master"
+         put "Words of Our Master" & cr  & "By Siva Yogaswami" into fld "HomeNotification"
+         put the long id of fld "HomeNotification" into pField
+         fitFieldToContent pField
+         show pField
+         send  "hideShowField pField,FALSE" to me in 3 seconds
          put FetchQuotesCollection(pText) into sQuoteList
          break
    end switch
@@ -44,9 +55,7 @@ end getContent
 
 command startNarrative
    
-   
    getContent "Deities","Words of Our Master"
-   put the long id of img "homeStoryMainImage" into sMainImage
    if sLastImage is 0 then add 1 to sLastImage
    
    #during development we have set this flag.
@@ -63,32 +72,32 @@ command startNarrative
          # load an image
          dispatch "loadNewImage" to me with pPath
          --------------
-         # development : fast show
-         repeat 1 times
-            if sStopRequested then exit repeat
-            wait 20 millisecond with messages
-         end repeat -- for the number of seconds
-         -------------
-         # Production
-         --         repeat 2 times
+         --         # development : fast show
+         --         repeat 1 times
          --            if sStopRequested then exit repeat
-         --            wait 1 second with messages
+         --            wait 20 millisecond with messages
          --         end repeat -- for the number of seconds
          -------------
+         # Production
+         repeat 4 times
+            if sStopRequested then exit repeat
+            wait 1 second with messages
+         end repeat -- for the number of seconds
+         -----------
          # loadNextQuote stuff here 
          dispatch "loadNextQuote" to me  with pQuoteNo-- to me with pPath
          put the number of words in fld "homeStoryText" into tTimetoRead
          
          --------------
-         # development : fast show
-         repeat  1 times
-            wait 50 milliseconds with messages
-         end repeat
-         -------------
-         # Production
-         --         repeat  tTimetoRead times
+         --         # development : fast show
+         --         repeat  1 times
          --            wait 50 milliseconds with messages
          --         end repeat
+         -------------
+         # Production
+         repeat  tTimetoRead times
+            wait 375 milliseconds with messages
+         end repeat
          add 1 to sLastImage
          
       end repeat
@@ -122,6 +131,7 @@ end loadNextQuote
 
 command  setDefaultImage
    # store brand image 
+   put the long id of img "homeStoryMainImage" into sMainImage
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
    set the filename of sMainImage to  sDefaultImage
    show sMainImage
@@ -140,5 +150,13 @@ command setImageLoc
    resizeToHeight sMainImage,(the height of this card -58)
    set the loc sMainImage to tLoc
 end setImageLoc
+
+command fitFieldToContent  pField
+   set the height of pField to the formattedHeight of pField
+end fitFieldToContent
+
+command hideShowField pField,pBool
+   set the vis of pField to pBool
+end hideShowField
 
 
