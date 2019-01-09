@@ -85,6 +85,7 @@ command setControlUI pState
       case "close"
          hide me
          show widget "goNext"
+         dispatch "toggleNarrative"  to grp "homeStory"
          break
       case "displayPortals"
          --show btn "globalNavOverlay"

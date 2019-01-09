@@ -16,7 +16,7 @@
 # starting by building it locally in the stack
 # to see how it flows.
 
-function randomDietyPhotos
+function randomDeityPhotos
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
       if tQueriesA[x]["queryName"] = "selectCachedDeityPhotos" then
@@ -32,7 +32,7 @@ function randomDietyPhotos
       put returnAssetPath("photography",pDeityPhotoFileIDA[x]["file_id"]) & cr after pImageList
    end repeat
    return pImageList
-end randomDietyPhotos 
+end randomDeityPhotos 
 
 function fetchQuotesCollection pCollection
    put getSQLQueries() into tQueriesA

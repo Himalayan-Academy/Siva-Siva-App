@@ -26,6 +26,7 @@ end SetStopRequested
 command toggleNarrative
    if (sStopRequested = empty) OR (sStopRequested= "TRUE") then 
       put FALSE into sStopRequested
+      put sConfigA["narrativeScene"] into sLastImage
       startNarrative
    else
       put TRUE into sStopRequested 
@@ -37,17 +38,12 @@ command  getContent pPhotos,pText
    # functions from  model_Narrative:
    switch pPhotos
       case "Deities"
-         put randomDietyPhotos() into sImageList 
+         put randomDeityPhotos() into sImageList 
          put the number of lines of sImageList into sImageCount
          break
    end switch
    switch pText
       case "Words of Our Master"
-         put "Words of Our Master" & cr  & "By Siva Yogaswami" into fld "HomeNotification"
-         put the long id of fld "HomeNotification" into pField
-         fitFieldToContent pField
-         show pField
-         send  "hideShowField pField,FALSE" to me in 3 seconds
          put FetchQuotesCollection(pText) into sQuoteList
          break
    end switch
@@ -56,6 +52,9 @@ end getContent
 command startNarrative
    
    getContent "Deities","Words of Our Master"
+   put empty into fld "HomeStoryText"
+   showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
+   
    if sLastImage is 0 then add 1 to sLastImage
    
    #during development we have set this flag.
@@ -64,6 +63,7 @@ command startNarrative
    
    if  sStopRequested = "FALSE"  then
       repeat with x = sLastImage to sImageCount
+         put sLastImage into sConfigA["narrativeScene"]
          ntinfo ("repeat again" & x)
          if sStopRequested then exit repeat
          hide widget "goNext"
@@ -130,7 +130,9 @@ command loadNextQuote pQuoteNo
 end loadNextQuote
 
 command  setDefaultImage
-   # store brand image 
+   # store brand image; set stage to screen to1
+   put 0 into sLastImage
+   put  empty into sConfigA["narrativeScene"]
    put the long id of img "homeStoryMainImage" into sMainImage
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
    set the filename of sMainImage to  sDefaultImage
@@ -142,6 +144,12 @@ command stopShow
    put TRUE into sStopRequested
    setDefaultImage
 end stopShow
+
+command showAttribution pAttribution
+   hide sMainImage
+   put pAttribution into fld "homeStoryText"
+   wait 2 seconds
+end showAttribution
 
 command setImageLoc
    setRectOfCurrentGrc sMainImage
