@@ -75,7 +75,7 @@ command News_Fetch
    put format ("<p id=\"datestamp\">") into tTargetLine
          
    if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-      put  url ("file:/"& tLocalNewsFile) into tLocalNewsDate
+      put  url ("file:"& tLocalNewsFile) into tLocalNewsDate
       put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
       put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
       convert tLocalNewsDate to seconds
@@ -98,7 +98,7 @@ command News_Fetch
       news_UserReadNews
    else 
       # save it
-      put tServerNews into url ("file:/"&tLocalNewsFile)
+      put tServerNews into url ("file:"&tLocalNewsFile)
       put "true" into sNewNews
       if exists(fld "Notificaton") then
          put  "You have news!" into fld "Notification"
@@ -188,8 +188,9 @@ end path_Models
 command fetchNavigationMap
    put path_HomeLocal() into tPath
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
-   put url ("file://" & tPath) into pJson
+   put url ("file:" & tPath) into pJson
    put JSONToArray(pJSON) into sSivaSivaNavigation
+   put pJson
 end fetchNavigationMap
 
 function getNavigationMap
