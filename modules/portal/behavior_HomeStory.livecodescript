@@ -53,8 +53,10 @@ command startNarrative
    
    getContent "Deities","Words of Our Master"
    put empty into fld "HomeStoryText"
-   showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
-   
+   if sConfigA["narrationScene"] = 0  then
+      # it means we have start or a starting again
+      showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
+   end if
    if sLastImage is 0 then add 1 to sLastImage
    
    #during development we have set this flag.
@@ -85,6 +87,7 @@ command startNarrative
          end repeat -- for the number of seconds
          -----------
          # loadNextQuote stuff here 
+         
          dispatch "loadNextQuote" to me  with pQuoteNo-- to me with pPath
          put the number of words in fld "homeStoryText" into tTimetoRead
          
@@ -124,9 +127,11 @@ command loadNewImage pPath
 end loadNewImage
 
 command loadNextQuote pQuoteNo
+
    set the itemdel to "|"
    put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    hide sMainImage with effect "dissolve" to black
+
 end loadNextQuote
 
 command  setDefaultImage
