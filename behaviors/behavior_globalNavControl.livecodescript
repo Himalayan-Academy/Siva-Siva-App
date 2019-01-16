@@ -83,9 +83,8 @@ end  loadFavoritesToMyHome
 command setControlUI pState
    switch pState
       case "close"
-         hide me
-         show widget "goNext"
-         dispatch "toggleNarrative"  to grp "homeStory"
+         go to card "home"
+         dispatch "toggleNarrative"  to grp "homeStory" of card "home"
          break
       case "displayPortals"
          --show btn "globalNavOverlay"
