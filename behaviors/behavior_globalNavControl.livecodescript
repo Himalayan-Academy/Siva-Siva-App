@@ -12,22 +12,20 @@
 
 local sRowName, sMap, sFavoritesA
 
-on preopencontrol
-   setControlUI "displayPortals"
-end preopencontrol
-
 on mouseup
    put empty into sFavoritesA
    put the short name of the target into tTarget
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
-      
       switch tTarget
          lock screen
          # Cases where we to go to stake with no secondary navigation
+         
+      case "look"
+         go to card "Look"
+         break
       case "Gems"
       case "Surprise"
       case "listen"
-      case "look"
       case "Journal"
          portal_GoStack tTarget
          break
@@ -43,20 +41,6 @@ on mouseup
          set dgData of grp "modulesList" of me to tRowdataA
          reSizeDataGrid 
          setControlUI "displayModulesList"
-   end switch
-   
-else #toolbar items
-   
-   switch tTarget
-      case "Settings-Gear"
-         portal_GoStack "settings"
-         break
-      case "globalNavBack"
-         setControlUI "displayPortals"
-         break
-      case "closeGlobalNav"
-         setControlUI "close"
-         break
    end switch
 end if
 end mouseup
@@ -80,26 +64,6 @@ command  loadFavoritesToMyHome
    setControlUI "modulesList"
 end  loadFavoritesToMyHome
 
-command setControlUI pState
-   switch pState
-      case "close"
-         go to card "home"
-         dispatch "toggleNarrative"  to grp "homeStory" of card "home"
-         break
-      case "displayPortals"
-         --show btn "globalNavOverlay"
-         show grp "globalPortalMap" of me
-         hide grp "modulesList" of me
-         hide widget "globalNavBack"
-         break
-      case "displayModulesList"
-         --show btn "globalNavOverlay"
-         hide  grp "globalPortalMap"
-         show grp "modulesList" of me
-         show widget "globalNavBack"
-         break
-   end switch
-end setControlUI
 
 command reSizeDataGrid pNumOfRows
    put the dgNumberOfRecords of group "modulesList" of me into tNumberOfRecords
