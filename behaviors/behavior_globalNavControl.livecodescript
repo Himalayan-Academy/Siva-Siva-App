@@ -12,6 +12,11 @@
 
 local sRowName, sMap, sFavoritesA
 
+on preOpenCard
+   put the short name of this card into pCard
+   setUpUi pCard
+end preOpenCard
+
 on mouseup
    put empty into sFavoritesA
    put the short name of the target into tTarget
@@ -33,17 +38,49 @@ on mouseup
          # we need to get the napMap item 
          # from the the journal
          loadFavoritesToMyHome
-         setControlUI "displayModulesList"
+         go to card "modulesList"
          break
       default
-         put getNavigationMap() into sMap 
-         put sMap[portalData][tTarget][rowdata] into tRowdataA
-         set dgData of grp "modulesList" of me to tRowdataA
-         reSizeDataGrid 
-         setControlUI "displayModulesList"
+         # we this on behavior on cards "MainNav"  and card "modulesList"
+         # so have to dispatch from one to the other 
+         # ...we refactor then to two card
+         go to card "modulesList"
+         dispatch "loadModulesList" to card "modulesList" with tTarget 
    end switch
 end if
 end mouseup
+
+on setUpUi pCard
+   # we hide some controls on one are or another
+   # this behavior it in both cards
+   # Be sure to pass to preopencard handle
+   switch pCard
+      case "Home"
+         # maybe use later....
+         --hide widget "goHome".
+         break 
+      case "modulesList"
+         hide widget "GoHome"
+         show widget "goToMainNav"
+         break
+      case "mainNav"
+         show widget "GoHome"
+         hide widget "goToMainNav"
+         break
+         break
+   end switch
+   
+end setUpUi
+
+
+
+on loadModulesList tTarget
+   put getNavigationMap() into sMap 
+   put sMap[portalData][tTarget][rowdata] into tRowdataA
+   set dgData of grp "modulesList" of me to tRowdataA
+   reSizeDataGrid 
+
+end loadModulesList
 
 command  loadFavoritesToMyHome
    
@@ -63,7 +100,6 @@ command  loadFavoritesToMyHome
    reSizeDataGrid 
    setControlUI "modulesList"
 end  loadFavoritesToMyHome
-
 
 command reSizeDataGrid pNumOfRows
    put the dgNumberOfRecords of group "modulesList" of me into tNumberOfRecords

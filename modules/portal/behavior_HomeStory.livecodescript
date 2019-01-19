@@ -56,7 +56,7 @@ command goNextScene
    if not (the vis of sMainImage) then
       if sLastImage > sImageCount then 
          put 0 into sLastImage
-         put empty to sConfigA["narrationScene"] 
+         put empty into sConfigA["narrationScene"] 
          answer "The End. Start Again?" with  "Yes" or "No"
          exit goNextScene
       end if
