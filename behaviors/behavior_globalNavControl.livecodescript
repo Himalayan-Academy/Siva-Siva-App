@@ -24,41 +24,41 @@ on mouseup
       switch tTarget
          lock screen
          # Cases where we to go to stake with no secondary navigation
-         case "Gems"
-         case "Surprise"
-         case "listen"
-         case "look"
-         case "Journal"
-            portal_GoStack tTarget
-            break
-         case "My home"
-            # we need to get the napMap item 
-            # from the the journal
-            loadFavoritesToMyHome
-            setControlUI "displayModulesList"
-            break
-         default
-            put getNavigationMap() into sMap 
-            put sMap[portalData][tTarget][rowdata] into tRowdataA
-            set dgData of grp "modulesList" of me to tRowdataA
-            reSizeDataGrid 
-            setControlUI "displayModulesList"
-      end switch
-      
-   else #toolbar items
-      
-      switch tTarget
-         case "Settings-Gear"
-            portal_GoStack "settings"
-            break
-         case "globalNavBack"
-            setControlUI "displayPortals"
-            break
-         case "closeGlobalNav"
-            setControlUI "close"
-            break
-      end switch
-   end if
+      case "Gems"
+      case "Surprise"
+      case "listen"
+      case "look"
+      case "Journal"
+         portal_GoStack tTarget
+         break
+      case "My home"
+         # we need to get the napMap item 
+         # from the the journal
+         loadFavoritesToMyHome
+         setControlUI "displayModulesList"
+         break
+      default
+         put getNavigationMap() into sMap 
+         put sMap[portalData][tTarget][rowdata] into tRowdataA
+         set dgData of grp "modulesList" of me to tRowdataA
+         reSizeDataGrid 
+         setControlUI "displayModulesList"
+   end switch
+   
+else #toolbar items
+   
+   switch tTarget
+      case "Settings-Gear"
+         portal_GoStack "settings"
+         break
+      case "globalNavBack"
+         setControlUI "displayPortals"
+         break
+      case "closeGlobalNav"
+         setControlUI "close"
+         break
+   end switch
+end if
 end mouseup
 
 command  loadFavoritesToMyHome
@@ -99,7 +99,6 @@ command setControlUI pState
          show widget "globalNavBack"
          break
    end switch
-   unlock Screen
 end setControlUI
 
 command reSizeDataGrid pNumOfRows

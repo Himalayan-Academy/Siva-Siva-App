@@ -118,6 +118,10 @@ command portal_GoStack cardOrStackObject
    ntInfo "Launch:" && portal_GetLaunchStack()  && "LastStack:" && portal_GetLastStack() 
 end portal_GoStack
 
+function navString pCard,pStack
+   #should 
+end navString
+
 
 command portal_DoRowLink rowName
    -- safe parsing only of accepted commands

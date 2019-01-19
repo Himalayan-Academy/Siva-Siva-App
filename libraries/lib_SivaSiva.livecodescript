@@ -190,7 +190,6 @@ command fetchNavigationMap
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
    put url ("file:" & tPath) into pJson
    put JSONToArray(pJSON) into sSivaSivaNavigation
-   put pJson
 end fetchNavigationMap
 
 function getNavigationMap
