@@ -37,8 +37,8 @@ on mouseup
       case "My home"
          # we need to get the napMap item 
          # from the the journal
-         loadFavoritesToMyHome
          go to card "modulesList"
+         dispatch "loadFavoritesToMyHome" to card "modulesList" with tTarget 
          break
       default
          # we this on behavior on cards "MainNav"  and card "modulesList"
@@ -56,17 +56,12 @@ on setUpUi pCard
    # Be sure to pass to preopencard handle
    switch pCard
       case "Home"
-         # maybe use later....
-         --hide widget "goHome".
          break 
       case "modulesList"
-         hide widget "GoHome"
          show widget "goToMainNav"
          break
       case "mainNav"
-         show widget "GoHome"
          hide widget "goToMainNav"
-         break
          break
    end switch
    
@@ -96,14 +91,13 @@ command  loadFavoritesToMyHome
       tellUserToGetFavorites
       exit to top
    end if
-   set dgData of grp "modulesList" of me to sFavoritesA
+   set dgData of grp "modulesList"  of card "modulesList"  to sFavoritesA
    reSizeDataGrid 
-   setControlUI "modulesList"
 end  loadFavoritesToMyHome
 
 command reSizeDataGrid pNumOfRows
-   put the dgNumberOfRecords of group "modulesList" of me into tNumberOfRecords
-   put the dgProp ["row height"] of group "modulesList" of me into tRowHeight
+   put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
+   put the dgProp ["row height"] of group "modulesList" into tRowHeight
    Set the height of group "modulesList" of me to min(12, tNumberOfRecords) * (tRowHeight) + 36 -- account for header and scrollbar
    --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
    --set top of group "modulesList" of me to 100
