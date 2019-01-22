@@ -27,7 +27,9 @@ command  getContent pPhotos,pText
    switch pPhotos
       case "Deities"
          put randomDeityPhotos() into sImageList 
+    
          put the number of lines of sImageList into sImageCount
+         ntInfo ("image list: " & line 1 of sImageList)
          break
    end switch
    switch pText
@@ -39,7 +41,7 @@ end getContent
 
 
 command goNextScene
-   
+   ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
    if sConfigA["narrationScene"] = empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content

@@ -17,6 +17,7 @@
 # to see how it flows.
 
 function randomDeityPhotos
+   ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
       if tQueriesA[x]["queryName"] = "selectCachedDeityPhotos" then
@@ -24,14 +25,16 @@ function randomDeityPhotos
          exit repeat
       end if
    end repeat
-   
+   ntinfo tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet(,tConnectionID) into pDeityPhotoFileIDA
    repeat for each key x in pDeityPhotoFileIDA
       put returnAssetPath("photography",pDeityPhotoFileIDA[x]["file_id"]) & cr after pImageList
    end repeat
+   ntinfo ("put line 10: " & (line 10 of pImageList))
    return pImageList
+   
 end randomDeityPhotos 
 
 function fetchQuotesCollection pCollection
@@ -58,12 +61,15 @@ end fetchQuotesCollection
 function returnAssetPath pAssets,pFileID
    switch pAssets
       case "photography"
+         ntinfo ("Accessingphotography folder")
          # photographs are always in a folder which is same same as the fileID
          # from the data base.
+         ntinfo (path_Assets())
          put (path_Assets()&"img/photography/")  &  \
                pFileID & "/"  & pFileID &"_med.jpg" after tPath
          break
    end switch
+   ntinfo ("the Path: " & tPath)
    return tPath
 end returnAssetPath
 
@@ -103,3 +109,8 @@ end returnAssetPath
 on mouseStillDown pButtonNumber
    
 end mouseStillDown
+
+
+on mouseRelease pButtonNumber
+   
+end mouseRelease

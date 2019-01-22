@@ -124,7 +124,7 @@ end getTargetOwnerSegs
 
 command loadSQLQueries
    put path_Models() & "sqlQueries.txt" into tURL
-   put URL ("file:/"&tURL) into tSqlQueries
+   put URL ("file:"&tURL) into tSqlQueries
    set the itemdelimiter to "|"
    put 0 into y
    repeat for each item x in tSqlQueries

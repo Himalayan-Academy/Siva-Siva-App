@@ -85,7 +85,7 @@ command portal_GoStack cardOrStackObject
    
    --ntInfo "about to change stacks!"
    put "Journal,view_SivaSivaBrowser" into tNoGoBackStacks
-   
+   if not (the lockscreen) then lock screen
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 20 milliseconds with messages 
    
@@ -95,6 +95,7 @@ command portal_GoStack cardOrStackObject
    
    close stack oStackName   
    wait 20 milliseconds with messages
+   if  (the lockscreen) then unlock screen
    
    if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
       portal_SetLastStack "Siva-Siva-Portal"
@@ -114,8 +115,8 @@ command portal_GoStack cardOrStackObject
    
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
-   ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
-   ntInfo "Launch:" && portal_GetLaunchStack()  && "LastStack:" && portal_GetLastStack() 
+   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
+   --ntInfo "Launch:" && portal_GetLaunchStack()  && "LastStack:" && portal_GetLastStack() 
 end portal_GoStack
 
 function navString pCard,pStack
