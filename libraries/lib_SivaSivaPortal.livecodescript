@@ -84,7 +84,7 @@ command portal_GoStack cardOrStackObject
    set the acceleratedRendering of stack oStackName to false
    
    --ntInfo "about to change stacks!"
-   put "Journal,view_SivaSivaBrowser" into tNoGoBackStacks
+   put "view_SivaSivaBrowser" into tNoGoBackStacks
    if not (the lockscreen) then lock screen
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 20 milliseconds with messages 

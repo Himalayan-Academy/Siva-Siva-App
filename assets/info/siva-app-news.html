@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SivaSiva App News</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+  <style type="text/css">
+  body {
+    background: url(https://www.himalayanacademy.com/media/art/photography/app-img_01-lotus1_736h-landscape/app-img_01-lotus1_736h-landscape_med.jpg) repeat;
+  }
+    p {
+      font-size: 105%;
+    }
+  #container {
+  margin:10px auto;
+  width:85%;
+  padding:20px 20px 100px 20px;
+  background:rgba(255,255,255,.8);
+  color:rgb(76,15,7);
+  }
+  #datestamp {
+text-align:center;
+font-weight: 120%;"
+ }
+ .center {
+  text-align:center;
+ }
+ .buttons {
+  width: 120px;
+  margin-bottom: 10px;
+  font-weight: bold;"
+    font-size: 120%;"
+color:  rgb(70,16,2);
+background-color:  rgb(106,204,110);
+border: 2px solid black;
+border-radius: 8px;
+}
+.float-right {
+  float:right;
+}
+.float-left {
+  float:left;
+}
+  </style>
+}
+}
+</head>
+
+<body>
+<div id="container">
+<p id="datestamp">Mon, 25 Dec 2017 15:29:11 -1000</p>
+<h2 class="center">SivaSivaApp News</h2>
+<p><b>Version 1.1 now runs on Android!</b></p>
+<p>Version 1.1 bring the Android version to the Google Play store. This version also includes a new data manager. If you are downloading audio (and in the future books and other modules) you can check the total data on your phone and delete any files to regain hard drive space on your phone. Future versions of SivaSiva app will allow you to download entire books and the new "My Data" manager will allow you to remove them when you are finished reading.</p>
+<hr />
+<p>Welcome to the SivaSivaApp, dedicated to carrying Saiva Dharma to the world and the next generation. This in-app news channel will keep you informed on updates, changes, new content and occasional fun posts from headquarters or users.</p>
+<p>We need your participation in on-going development by sending us bug reports and ideas for features via our feedback option.</p>
+<p>Tips for Newcomers:</p>
+<ul>
+  <li>In the Gems of Wisdom Module you can tap on the photo behind the quote to see the whole photo</li>
+  <li>As you traverse the app your history is recorded in the journal. (But not the Surprise  items) use the Star button the left of items you want to return to.</li>
+    <li>When listening to audio, use the small download button to download the audio to your phone for listening off line. The small arrow will reveal the lyrics or transcript of the audio (when available).</li>
+  <li>Satguru Bodhinatha's weekly discourses are available if you are on line. Use the "Most Recent Talks" option in the Listen Module.</li>
+  <li>When you download audio, the title will be set to a green color. You can later listen to these audios off line.</li>
+</ul>
+
+<p>Known Issues:</p>
+<ul>
+  <li><b>Internet Delays: </b>Much of the content on the SivaSiva app is delivered via the internet. You may see a white screen temporarily as content is loaded. This depends entirely on your available bandwidth and connection speed.</li>
+  <li><b>Landscape Mode on Android: </b>Current on Android, if you view a view streamed from our YouTube channel, if you rotate your phone, it may not appear if you rotate too soon. Please also the video to load and start playing. Then you may rotate your phone to view the video in landscape mode.
+  <li><b>App Stopping (crashes): </b></li>We are continuing to improve performance and stability. The SivaSiva app is a "mega app" with many components and modules. As such traversing the content may occasionally cause the app to disappear. Restart to continue. If you can reproduce a series of steps that always leads to the app stopping, we will appreciate if you can file a bug report using using the Feedback option under settings.</li>
+
+</ul>
+
+<p>Aum Namasivaya!</p>
+
+<button  class="buttons float-left" id="goPortal">Listen</button>
+
+<!--<button class="buttons float-left" id="goStack">Uplifting Quotes</button>
+<button  class="buttons float-right" id="goWeb">Visit Apple</button>
+<button  class="buttons float-right" id="goBrowser">Visit TAKA</button> -->
+
+</div>
+
+<script>
+document.querySelector("#goWeb")
+   .addEventListener("click",  
+      function() {
+           liveCode.portal_LaunchURL("https://www.apple.com") 
+      });
+</script>
+<script>
+document.querySelector("#goPortal")
+   .addEventListener("click",  
+      function() {
+           liveCode.browserButton("listen") 
+      });
+</script>
+<script>
+document.querySelector("#goBrowser")
+   .addEventListener("click",  
+      function() {
+           liveCode.portal_GoURL("https://www.himalayanacademy.com/taka") 
+      });
+</script>
+</body>
+</html>
