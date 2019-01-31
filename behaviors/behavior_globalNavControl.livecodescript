@@ -23,32 +23,40 @@ on mouseup
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
       switch tTarget
          lock screen
-         # Cases where we to go to stake with no secondary navigation
          
-      case "look"
-         go to card "Look"
-         break
+         # Cases where we to go to stacks directly with no secondary navigation
       case "Gems"
       case "Surprise"
-      case "listen"
+      case "Listen"
       case "Journal"
          portal_GoStack tTarget
          break
-      case "My home"
-         # we need to get the napMap item 
-         # from the the journal
-         go to card "modulesList"
-         dispatch "loadFavoritesToMyHome" to card "modulesList" with tTarget 
+         
+         # cases require connectivity
+      case "Look"
+      case "Websites"
+         if checkConnectionStop() then
+            getModuleList tTarget
+         end if
          break
-      default
-         # we this on behavior on cards "MainNav"  and card "modulesList"
-         # so have to dispatch from one to the other 
-         # ...we refactor then to two card
-         go to card "modulesList"
-         dispatch "loadModulesList" to card "modulesList" with tTarget 
+         
+         # we need to get the modules, not connection required
+      case "Fun"
+      case "Practice"
+      case "Read"
+      case "My home"
+         getModuleList tTarget
+         break
    end switch
 end if
 end mouseup
+
+on getModuleList tTarget
+   # we this on behavior on cards "MainNav"  and card "modulesList"
+   # so have to dispatch from one common behavior to the card name, specifically 
+   go to card "modulesList"
+   dispatch "loadModulesList" to card "modulesList" with tTarget 
+end getModuleList
 
 on setUpUi pCard
    # we hide some controls on one are or another
@@ -66,6 +74,16 @@ on setUpUi pCard
    end switch
    
 end setUpUi
+
+function checkConnectionStop
+   if connectivity_PingServer() = "false" then
+      dialog_CustomMsg "Connection required."
+      return "false"
+      exit to top
+   else
+      return "true"
+   end if
+end checkConnectionStop
 
 
 

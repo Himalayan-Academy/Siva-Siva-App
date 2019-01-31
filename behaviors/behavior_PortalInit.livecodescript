@@ -10,6 +10,7 @@ on openCard
    layoutNavBar
    put "SivaSiva Portal Scrolling" into tLinksGroup
    send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 0 milliseconds
+   if (the lockscreen) then unlock Screen
 end openCard
  
 on mouseDown

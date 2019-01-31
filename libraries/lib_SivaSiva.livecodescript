@@ -284,6 +284,8 @@ end requiresConnection
 
 Local sPingURL,sServerAttempts # sURLStatusLog
 
+
+
 function connectivity_PingServer   
    get url "https://www.himalayanacademy.com/ping.txt"
    if it is "true" then
