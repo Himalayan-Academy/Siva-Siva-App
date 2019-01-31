@@ -106,11 +106,3 @@ end returnAssetPath
 
 
 
-on mouseStillDown pButtonNumber
-   
-end mouseStillDown
-
-
-on mouseRelease pButtonNumber
-   
-end mouseRelease
