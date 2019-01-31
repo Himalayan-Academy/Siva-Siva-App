@@ -44,8 +44,13 @@ on mouseup
       case "Fun"
       case "Practice"
       case "Read"
-      case "My home"
          getModuleList tTarget
+         break
+         # oad Journal Entries to My Home
+      case "My home"
+         go to card "modulesList"
+         loadFavoritesToMyHome
+         
          break
    end switch
 end if
@@ -54,8 +59,9 @@ end mouseup
 on getModuleList tTarget
    # we this on behavior on cards "MainNav"  and card "modulesList"
    # so have to dispatch from one common behavior to the card name, specifically 
-   go to card "modulesList"
+   
    dispatch "loadModulesList" to card "modulesList" with tTarget 
+   go to card "modulesList"
 end getModuleList
 
 on setUpUi pCard
@@ -116,7 +122,7 @@ end  loadFavoritesToMyHome
 command reSizeDataGrid pNumOfRows
    put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
    put the dgProp ["row height"] of group "modulesList" into tRowHeight
-   Set the height of group "modulesList" of me to min(12, tNumberOfRecords) * (tRowHeight) + 36 -- account for header and scrollbar
+   Set the height of group "modulesList"  to min(12, tNumberOfRecords) * (tRowHeight) + 10 -- account for header and scrollbar
    --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
    --set top of group "modulesList" of me to 100
 end reSizeDataGrid
