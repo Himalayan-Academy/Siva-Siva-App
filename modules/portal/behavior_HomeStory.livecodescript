@@ -95,7 +95,7 @@ command  setDefaultImage
    set the filename of sMainImage to  sDefaultImage
    show sMainImage
    setImageLoc
-   show widget "goNext"
+   show btn "goNext"
 end  setDefaultImage
 
 

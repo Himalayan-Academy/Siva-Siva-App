@@ -60,8 +60,9 @@ on getModuleList tTarget
    # we this on behavior on cards "MainNav"  and card "modulesList"
    # so have to dispatch from one common behavior to the card name, specifically 
    
-   dispatch "loadModulesList" to card "modulesList" with tTarget 
    go to card "modulesList"
+   dispatch "loadModulesList" to card "modulesList" with tTarget 
+   
 end getModuleList
 
 on setUpUi pCard

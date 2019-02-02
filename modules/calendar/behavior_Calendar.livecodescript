@@ -95,27 +95,40 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
 end parseUserICSfile
 
 function convertCityToURL pCityName,pYearRange
-  put "https://www.minimela.com/panchangam/" into tURL
-  if pYearRange = "" then -- use a range that includes today
-    put calcYearRange() into pYearRange
-  end if
-  put pYearRange & slash after tURL
-  get last word of pCityName
-  set the casesensitive to true
-  if len(it) = 2 and toUpper(it) = it then
-    put "usa/" after tURL
-  else
-    put "world/" after tURL
- end if
- if pCityName contains "Kapaa" then
-    put "Hawaii" into pCityName
- end if 
-  replace space with "_" in pCityName
-  put pCityName & ".ics" after tURL
-  put toLower(tURL) into tURL
-  return tURL
+   put "https://www.minimela.com/panchangam/" into tURL
+   if pYearRange = "" then -- use a range that includes today
+      put calcYearRange() into pYearRange
+   end if
+   put pYearRange & slash after tURL
+   get last word of pCityName
+   set the casesensitive to true
+   if len(it) = 2 and toUpper(it) = it then
+      put "usa/" after tURL
+   else
+      put "world/" after tURL
+   end if
+   
+   # there is where we can place a 
+   # special your for Kadaval
+   
+   if pCityName contains "Kapaa" then
+      put "Hawaii" into pCityName
+   end if 
+   # nickname for kadavul is kealia
+   if pCityName contains "Kealia" then
+      replace "https://www.minimela.com/panchangam/" with "http://dev.himalayanacademy.com/media/apps/panchangam/" in tURL
+   end if
+   replace space with "_" in pCityName
+   put pCityName & ".ics" after tURL
+   put toLower(tURL) into tURL
+   return tURL
 end convertCityToURL
 
+
+# the range is always from month of April which is Tamil New Years
+# The data items has the month item 2, eg.  2019,2,1,0,0
+# if the selected date in ahead of the range, 
+# we offer to download the next year.
 function calcYearRange pDate -- get the year range that contains pDate; if empty, use today
   if pDate = "" then put the date into pDate
   convert pDate to dateitems
@@ -407,7 +420,7 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
       end if
       exit insertDayInfo
    end if
-   
+   # TO DO add retreat day "Siddhanta" and "Tour" with we get Kealia = Panchangam
    put the uDayTemplate of fld "current_days" into tOneDayTemplate 
    --  if sUserCalendarA = "" then loadUserArray -- DEFERRED
    repeat with tDayNum = pStartDay to pStartDay+31
@@ -558,6 +571,7 @@ function crunchDescription tRawDescriptionn
    replace "\n" with "; " in tRawDescription
    return tRawDescription
 end crunchDescription
+
 
 function crunchSummary tSummary
    
