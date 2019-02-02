@@ -94,6 +94,11 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
   end if
 end parseUserICSfile
 
+function getCityList 
+   put path_Modules() & "calendar/latestCityList.txt" into tCitiesListFile
+   return ( url ("file:" & tCitiesListFile ))
+end getCityList
+
 function convertCityToURL pCityName,pYearRange
    put "https://www.minimela.com/panchangam/" into tURL
    if pYearRange = "" then -- use a range that includes today

@@ -1,0 +1,289 @@
+Albany NY
+Albuquerque NM
+Alsea OR
+Amarillo TX
+Anchorage AK
+Asheville NC
+Athens GA
+Atlanta GA
+Auburn AL
+Austin TX
+Baltimore MD
+Baton Rouge LA
+Bettendorf IA
+Birmingham AL
+Bixby OK
+Bloomfield NJ
+Bloomington IL
+Bloomington IN
+Boca Raton FL
+Boise ID
+Boone NC
+Boston MA
+Bowling Green KY
+Branchville NJ
+Broomfield CO
+Buffalo NY
+Cary NC
+Champaign IL
+Chantilly VA
+Chapel Hill NC
+Charlotte NC
+Charlottesville VA
+Chicago IL
+Cincinnati OH
+Cleveland OH
+Columbia SC
+Columbus OH
+Dallas TX
+Davenport IA
+Denver CO
+Des Moines IA
+Detroit MI
+Downers Grove IL
+Easton MD
+Edison NJ
+El Paso TX
+Eugene OR
+Fairfax VA
+Flemington NJ
+Fort Lauderdale FL
+Fort Wayne IN
+Frederick MD
+Fresno CA
+Gainesville FL
+Greenville SC
+Hartford CT
+Hattiesburg MS
+Kapaa HI
+Honolulu HI
+Houston TX
+Indianapolis IN
+Irvine CA
+Jacksonville FL
+Kansas City KS
+Knoxville TN
+Lanham MD
+Lansing MI
+Las Vegas NV
+Los Angeles CA
+Louisville KY
+Madison WI
+Memphis TN
+Miami FL
+Michigan City IN
+Midland TX
+Milwaukee WI
+Minneapolis St Paul MN
+Mobile AL
+Modesto CA
+Monroe NJ
+Montpelier VT
+Nashville TN
+New Orleans LA
+New York City NY
+Newport Beach CA
+Normal IL
+Norman OK
+Nutley NJ
+Omaha NE
+Orlando FL
+Peoria IL
+Philadelphia PA
+Phoenix AZ
+Phoenixville PA
+Pittsburgh PA
+Pleasanton CA
+Portland ME
+Portland OR
+Rapid City SD
+Reno NV
+Richmond VA
+Rochester NY
+Sacramento CA
+Salt Lake City UT
+San Antonio TX
+San Diego CA
+San Francisco CA
+San Jose CA
+San Ramon CA
+Santa Barbara CA
+Santa Clara CA
+Santa Fe NM
+Scottsdale AZ
+Seattle WA
+Spokane WA
+Springfield OR
+St Helena CA
+St Louis MO
+Stamford CT
+Syracuse NY
+Tampa FL
+Volcano HI
+Walnut Creek CA
+Washington DC
+Wheaton IL
+Whittier CA
+Winter Garden FL
+Kealia HI
+Abu Dhabi Ae
+Abu Road India
+Adana Turkey
+Adelaide S Australia
+Ahmedabad India
+Al-Khubar Saudi Arabia
+Almaty Kazakhstan
+Ambala India
+Amsterdam Netherlands
+Athens Greece
+Auckland New Zealand
+Bali Indonesia
+Bangalore India
+Bangkok Thailand
+Barcelona Spain
+Beijing China
+Berlin Germany
+Birming Uk
+Bordeaux France
+Bradford Uk
+Bremen Germany
+Brisbane Australia
+Brunei
+Brussels Belgium
+Bucaramanga Columbia
+Budapest Hungary
+Cairo Egypt
+Calgary Ab Canada
+Canberra Australia
+Cape Town South Africa
+Carcare Switzerland
+Chandigarh India
+Chennai India
+Chernigov Ukraine
+Chidambaram India
+Cologne Germany
+Colombo Sri Lanka
+Copenhagen Denmark
+Darwin Australia
+Doha Qatar
+Dubai Ae
+Dublin Ire
+Durban South Africa
+Dushanbe Tajikastan
+Dwarka India
+Edmonton Canada
+Ellora India
+Gaborone Botswana
+Galway Ireland
+Gatineau Canada
+Geneva Switzerland
+Georgetown Guyana
+Gosnells Aust
+Grevenbroich Germany
+Gunzburg Germany
+Halifax Canada
+Hamm Germany
+Ho Chi Minh
+Hobart Tasmania
+Hong Kong China
+Hyderabad India
+Imphal India
+Istanbul Turkey
+Jakarta Indonesia
+Jalandhar India
+Johannesburg Za
+Kandy Sri Lanka
+Karachi Pakistan
+Kathmandu Nepal
+Kedarnath India
+Kharagpur India
+Kiev Ukraine
+Kingston Jamaica
+Kinshasa Zaire
+Kl Malaysia
+Kolkata India
+Kottayam India
+Kuwait City Kuwait
+Lelystad Netherlands
+Lima Peru
+Ljubljana Solvenia
+London Uk
+Lucknow India
+Lusaka Zambia
+Madrid Spain
+Madurai India
+Malmo Sweden
+Manama Bahrain
+Manokwari Indonesia
+Medellin Colombia
+Melbourne Aust
+Mexico City Mexico
+Milan Italy
+Moncton Nb Canada
+Montevideo Uruguay
+Montreal Canada
+Moscow Russia
+Mosul Iraq
+Mumbai India
+Mundare Canada
+Munich Germany
+Muscat Oman
+Nadi Fiji Islands
+Nairobi Kenya
+Nasik India
+New Delhi India
+Oslo Norway
+Padua Italy
+Paramaribo Suriname
+Paris France
+Perth Aust
+Pietermaritzburg Za
+Poortugaal Netherlands
+Port Harcourt Nigeria
+Port Louis Mauritius
+Port-Of-Spain Trinidad And Tobago
+Porto Portugal
+Pune India
+Pyinmana Myanmar
+Pyrenees-Orientales France
+Quebec Canada
+Rameswaram India
+Ranikhet India
+Regina Sk Canada
+Riga Latvia
+Rio De Janeiro Brazil
+Riyadh Saudi Arabia
+Rome Italy
+Saint-Denis Reunion
+Santiago Chile
+Sao Paulo Brazil
+Saskatoon Canada
+Seoul Korea
+Shanghai China
+Singapore
+Somerset West Za
+Sri Sailam India
+Stockholm Sweden
+Surabaya Indonesia
+Suva Fiji Islands
+Sydney Australia
+Tallinn Estonia
+Tehran Iran
+Thane Maharashtra In
+Tirupati India
+Tokyo Japan
+Toronto Canada
+Trichirappalli India
+Trieste Italy
+Trivandrum India
+Udaipur India
+Vancouver Canada
+Varanasi India
+Vienna Austria
+Vizianagaram India
+Warsaw Poland
+Winnipeg Mb Canada
+Winterthur Switzerland
+Yangon Myanmar
+Yogyakarta Indonesia
+Zagreb Croatia
