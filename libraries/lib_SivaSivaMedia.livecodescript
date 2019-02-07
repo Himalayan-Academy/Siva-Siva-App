@@ -504,6 +504,7 @@ on resizeToHeight pImage,pSize
    set the rect of pImage to 0,0,tNewWidth,tNewHeight  
 end resizeToHeight
 
+
 on resizeToWidth pImage,pSize 
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
@@ -515,6 +516,25 @@ on resizeToWidth pImage,pSize
    put (tOrigImgHeight * tRatio) into tNewHeight
    set the rect of  pImage to 0,0,tNewWidth,tNewHeight
 end resizeToWidth
+
+
+#  when we want a background in to fill the screen
+# but leave room for footer we can this
+#  You must pass  the long id of the image, pOrientation,otherwise fails
+# you do have to pass footer, 
+
+
+command setImageToFullCardLoc pImage, pOrientation, pFooterHeight
+   setRectOfCurrentGrc pImage
+   put the loc of this card into tLoc
+   
+   if pOrientation="portrait" then
+      resizeToHeight pImage,(the height of this card - pFooterHeight)
+   else
+      resizeTowidth pImage,(the height of this card - pFooterHeight)
+   end if
+   set the loc pImage to (item 1 of tLoc, item 2 of tLoc-(pFooterHeight/2) )
+end setImageToFullCardLoc
 
 
 

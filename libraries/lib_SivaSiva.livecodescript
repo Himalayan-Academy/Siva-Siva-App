@@ -550,6 +550,17 @@ function isAudioPlay
 end isAudioPlay
 
 
+command updateUI  pControlsToPositionA
+   --breakpoint 
+   put the long id of this card into tCard
+   put the rect of tCard into sCardRect
+   put item 3 of sCardRect into tWidth
+   put item 4 of sCardRect - item 2 of sCardRect into tHeight
+   put the loc of tCard into tCardLoc
+   set the loc of pControlsToPositionA[pBottom] to ( round(tWidth/2),tHeight - 25)
+end updateUI
+
+
 #################
 ON ___UTILITIES
 end ___UTILITIES

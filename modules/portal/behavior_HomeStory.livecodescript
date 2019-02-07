@@ -10,11 +10,15 @@ local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
 
 command initializeNarrative
+   put the long id of img "homeSplashImage" into pSplash
+   setImageToFullCardLoc pSplash,"portrait",50
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
       getContent "Deities","Words of Our Master"   # make random later
    end if
    if sConfigA["narrationScene"] = empty then
+      # it means this a brand new session, start of the app.
+      #  or, the user finished to story and back at a new beginning
       setDefaultImage
    else
       goNextScene
@@ -51,7 +55,7 @@ command goNextScene
       exit goNextScene
    end if
    put sConfigA["narrationScene"] into sLastImage 
-      # this keeps the screne position when we leave that stack and come back
+      # this keeps the Scene position when we leave this stack and come back
    put empty into fld "HomeStoryText"
    # load an image
    if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
@@ -75,7 +79,7 @@ command loadNewImage pPath
    hide sMainImage with effect "dissolve" to black
    lock screen
    set the filename of sMainImage to pPath
-   setImageLoc
+   setImageToFullCardLoc sMainImage, "portrait", 50
    show sMainImage
    unlock screen with visual effect "dissolve" 
 end loadNewImage
@@ -94,23 +98,16 @@ command  setDefaultImage
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
    set the filename of sMainImage to  sDefaultImage
    show sMainImage
-   setImageLoc
+   setImageToFullCardLoc sMainImage,"portrait",50
    show btn "goNext"
 end  setDefaultImage
 
-
 command showAttribution pAttribution
+   lock screen
    hide sMainImage
    put pAttribution into fld "homeStoryText"
+   unlock screen
 end showAttribution
-
-command setImageLoc
-   setRectOfCurrentGrc sMainImage
-   put the loc of this card into tLoc
-   subtract 27 from item 2 of tLoc
-   resizeToHeight sMainImage,(the height of this card -58)
-   set the loc sMainImage to tLoc
-end setImageLoc
 
 command fitFieldToContent  pField
    set the height of pField to the formattedHeight of pField
@@ -121,3 +118,7 @@ command hideShowField pField,pBool
 end hideShowField
 
 
+
+on relaunch pCommandLineArguments
+   
+end relaunch
