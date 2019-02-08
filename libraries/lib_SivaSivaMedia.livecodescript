@@ -423,6 +423,27 @@ on ___IMAGEManipulation
 end ___IMAGEManipulation
 
 ----------------------------------------------------------------------------------
+command imageDecompressAndCache pImageList
+   repeat for each line x in pImageList
+      prepare image x
+   end repeat
+end imageDecompressAndCache
+
+command cacheGlobalNavImages
+   --breakpoint
+   # image are on card 4 of Siva-Siva-App
+   # we want them in card 
+   put the long id of card "Global Image Resource 1" of stack "Siva-Siva-App" into tCard
+   put path_Assets() into tAssetPath
+   repeat with x = 1 to (the number of images of tCard)
+      put (tAssetPath& "img/nav-global-icons/" & the short Name  of img x of tCard) into y
+      put y & cr after pImageList
+      prepare image file  y
+   end repeat
+
+end cacheGlobalNavImages
+
+
 # we typically have the some requirement
 # change image by height, width.
 # the loc to img frame lolc
@@ -504,7 +525,6 @@ on resizeToHeight pImage,pSize
    set the rect of pImage to 0,0,tNewWidth,tNewHeight  
 end resizeToHeight
 
-
 on resizeToWidth pImage,pSize 
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
@@ -533,7 +553,7 @@ command setImageToFullCardLoc pImage, pOrientation, pFooterHeight
    else
       resizeTowidth pImage,(the height of this card - pFooterHeight)
    end if
-   set the loc pImage to (item 1 of tLoc, item 2 of tLoc-(pFooterHeight/2) )
+   set the loc pImage to (item 1 of tLoc, item 2 of tLoc- (pFooterHeight/2))
 end setImageToFullCardLoc
 
 

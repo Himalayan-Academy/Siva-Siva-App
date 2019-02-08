@@ -10,6 +10,7 @@ local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
 
 command initializeNarrative
+
    put the long id of img "homeSplashImage" into pSplash
    setImageToFullCardLoc pSplash,"portrait",50
    put the long id of img "homeStoryMainImage" into sMainImage
@@ -22,6 +23,7 @@ command initializeNarrative
       setDefaultImage
    else
       goNextScene
+      if (the lockscreen) then unlock screen
    end if
 end initializeNarrative
 
@@ -94,12 +96,11 @@ command  setDefaultImage
    # store brand image; set stage to screen to1
    put 0 into sLastImage
    put  empty into sConfigA["narrativeScene"]
-   put the long id of img "homeStoryMainImage" into sMainImage
+   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
    set the filename of sMainImage to  sDefaultImage
    show sMainImage
    setImageToFullCardLoc sMainImage,"portrait",50
-   show btn "goNext"
 end  setDefaultImage
 
 command showAttribution pAttribution
@@ -118,7 +119,3 @@ command hideShowField pField,pBool
 end hideShowField
 
 
-
-on relaunch pCommandLineArguments
-   
-end relaunch

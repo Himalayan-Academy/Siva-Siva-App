@@ -555,9 +555,10 @@ command updateUI  pControlsToPositionA
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
    put item 3 of sCardRect into tWidth
-   put item 4 of sCardRect - item 2 of sCardRect into tHeight
+   put item 4 of sCardRect into tHeight
    put the loc of tCard into tCardLoc
-   set the loc of pControlsToPositionA[pBottom] to ( round(tWidth/2),tHeight - 25)
+   set the loc of pControlsToPositionA[pBottom] to ( round(tWidth/2),tHeight)
+   set the bottom of pControlsToPositionA[pBottom] to tHeight
 end updateUI
 
 

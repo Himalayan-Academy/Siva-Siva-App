@@ -157,6 +157,8 @@ command init_AppConfiguration
    
    init_Fonts
    
+   cacheGlobalNavImages
+   
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
    portal_SetLastStack "Siva-Siva-App"
    send openPortalStack to me in 50 milliseconds
