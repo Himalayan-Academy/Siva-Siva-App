@@ -417,10 +417,15 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
          parseUserICSfile sCityname,tDateRange -- load the script local
          send "insertDayInfo tRequestDate" to me in 0 seconds
       else  -- downloads calendar if requested and in range
-         if inRange(tRequestDate) then -- current year or next year
-            doAnswer tDisplayMonth && "is not in the current calendar. Download the next year?","OK,Cancel","calendarDownload"
-         else -- date is not within 2 year range
-            doAnswer "Dates must be in the current or next calendar year.","OK"
+         if not connectivity_PingServer() then
+            dialog_CustomMsg "Next year's data is unavailable. Please enable network/internet connection."
+            exit insertDayInfo
+         else
+            if inRange(tRequestDate) then -- current year or next year
+               doAnswer tDisplayMonth && "is not in the current calendar. Download the next year?","OK,Cancel","calendarDownload"
+            else -- date is not within 2 year range
+               doAnswer "Dates must be in the current or next calendar year.","OK"
+            end if
          end if
       end if
       exit insertDayInfo
@@ -454,7 +459,7 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
    
    scrollToDate tRequestDate -- exits if not current display month
    set the acceleratedRendering of this stack to "true"
-      /*
+   /*
    # uDayTemplate custom prop of the field: -- jg: the ##metadata## placeholder contains the day number for array lookups 
    <p metadata="##metadata##" spacebelow="4"><b>##moonday##&#9;##LongDate##</b></p>
    <p metadata="##metadata##" leftindent="8">##nakshatra##</p>
