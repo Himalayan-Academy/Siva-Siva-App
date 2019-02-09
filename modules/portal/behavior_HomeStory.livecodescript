@@ -65,7 +65,9 @@ command goNextScene
       if sLastImage > sImageCount then 
          put 0 into sLastImage
          put empty into sConfigA["narrationScene"] 
+         setDefaultImage
          answer "The End. Start Again?" with  "Yes" or "No"
+         if it is "Yes" then goNextScene
          exit goNextScene
       end if
       put line  sLastImage of sImageList into pPath
@@ -99,8 +101,8 @@ command  setDefaultImage
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
    set the filename of sMainImage to  sDefaultImage
-   show sMainImage
    setImageToFullCardLoc sMainImage,"portrait",50
+   show sMainImage
 end  setDefaultImage
 
 command showAttribution pAttribution
