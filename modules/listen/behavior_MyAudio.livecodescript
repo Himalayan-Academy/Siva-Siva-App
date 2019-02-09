@@ -43,16 +43,17 @@ on passAudioSelection pLine,pTitle
 end passAudioSelection
 
 on passAudioDetails sSelectNum,pTarget
-     put the vis of fld "audioDetails" into detailVis
-         if detailVis then
-            deleteMobileControl "audioDetails"
-            hide fld "audioDetails" with visual effect wipe down very fast
-            send  "CreateScroller audioList" to fld "audioList"
-         else
-            select_ShowDetails  "downloaded",(sDownloadedAudioA[sSelectNum][metadata][1])
-         end if
-         set the flipped of widget pTarget to not detailVis
-         break 
+   put the vis of fld "audioDetails" into detailVis
+   if detailVis then
+      deleteMobileControl "audioDetails"
+      hide fld "audioDetails" with visual effect wipe down very fast
+      send  "CreateScroller audioList" to fld "audioList"
+   else
+      select_ShowDetails  "downloaded",(sDownloadedAudioA[sSelectNum][metadata][1])
+   end if
+   
+   set the flipped of widget pTarget to not detailVis
+   break 
 end passAudioDetails
 
 command getDownloadedAudio

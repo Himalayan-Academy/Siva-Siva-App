@@ -23,7 +23,7 @@ on mouseUp
          go to card "listen-my-audio"
          break
       case "audioList"
-       
+         
          if the short name of this card <> "listen-my-audio" then 
             offLineGoMyAudio
          end if
@@ -42,7 +42,7 @@ on mouseUp
          passAudioSelection sSelectNum, pTitle 
          break
       case "chevron-up-down" # this is simple enough to do here
-         passAudioDetails sSelectNum,pTarget
+            passAudioDetails sSelectNum,pTarget
          break
    end switch
 end mouseUp

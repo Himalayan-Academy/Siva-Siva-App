@@ -445,6 +445,9 @@ command select_ShowDetails  pSelection, pRecord
    deleteMobileControl "audioList"
    
    switch
+      case (fld "audioList" is empty)
+         Put "You have not downloaded any audio yet." into  fld "audioDetails" 
+         break
       case (sCurrentPlayListA["playlistClass"] = "latest")  OR (sCurrentPlayListA["playlistClass"] ="cached")
          put getMediaItemMetadata() into fld "audioDetails"
          break
@@ -659,9 +662,16 @@ on clearPlayer
 end clearPlayer
 
 command offLineGoMyAudio
-   if not connectivity_PingServer() then 
-      dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
-      go to card "listen-my-audio" 
+   if not connectivity_PingServer() then
+      put (path_Documents() & "media/audio") into pFolder
+      put listFilesWithPaths(pFolder, "true")  into tList
+      if tList is empty then
+         dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
+         exit to top
+      else
+         dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
+         go to card "listen-my-audio" 
+      end if
       exit to top
    end if
 end offLineGoMyAudio
