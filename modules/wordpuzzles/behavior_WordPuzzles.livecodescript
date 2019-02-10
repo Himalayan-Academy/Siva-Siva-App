@@ -3,7 +3,11 @@ local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA
 
 
-
+// 
+The important handles for the tiles are  located in the script
+behavior_WordTile, which apply each tile, this were we post to the 
+array that keeps the track tile locations.
+//
 --> Events
 -
 on openCard
@@ -558,13 +562,24 @@ on arrangeWords
 end arrangeWords
 
 function anyIntersect pPt,pObjName
-  repeat for each line l in the uWordList of this cd
-    if l = pObjName then next repeat
-    if pPt is within the rect of img l then return true
-  end repeat
-  return false
+   repeat for each line l in the uWordList of this cd
+      if l = pObjName then next repeat
+      if pPt is within the rect of img l then return true
+   end repeat
+   return false
 end anyIntersect
- 
+
+on deleteOccupiedLocation sOneHome,pWord
+   put  the uWordList of this card into tWords 
+   repeat for each line x in tWords
+      if the cWord  of image x = pWord then
+      put the uWordLocations of image x into sMyHomes
+      delete variable sMyHomes[sOneHome]
+      set the uWordLocations of image x to sMyHomes
+      end if
+   end repeat
+end deleteOccupiedLocation
+
 command triggercompletion
   if sTimerOnFlag <> true then exit triggercompletion -- already finished
   stopTimer

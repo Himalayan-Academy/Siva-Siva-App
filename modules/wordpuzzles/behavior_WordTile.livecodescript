@@ -41,15 +41,15 @@ on mouseUp
 end mouseUp
 
 command lockInPlace
-   put the long id of me into pTile
+   # lock in place
    set the loc of me to sMyHomes[sOneHome]
    set the uInPlace  of me to "true" 
-   
-   delete variable sMyHomes[sOneHome]
-   set the uWordLocations of me to sMyHomes
-   
    set the showborder of me to "false"
    relayer me after grc "startHere"
+   
+   # delete coords
+   put the cWord of me into pWord
+   deleteOccupiedLocation  sOneHome, pWord
    
    --  runpixie  # deprecated for now... was in stack script... may resurrect in v2
    
