@@ -10,9 +10,6 @@ local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
 
 command initializeNarrative
-
-   put the long id of img "homeSplashImage" into pSplash
-   setImageToFullCardLoc pSplash,"portrait",50
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
       getContent "Deities","Words of Our Master"   # make random later
@@ -57,7 +54,7 @@ command goNextScene
       exit goNextScene
    end if
    put sConfigA["narrationScene"] into sLastImage 
-      # this keeps the Scene position when we leave this stack and come back
+   # this keeps the Scene position when we leave this stack and come back
    put empty into fld "HomeStoryText"
    # load an image
    if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
@@ -65,7 +62,8 @@ command goNextScene
       if sLastImage > sImageCount then 
          put 0 into sLastImage
          put empty into sConfigA["narrationScene"] 
-         setDefaultImage
+         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
+         setDefaultImage pImage
          answer "The End. Start Again?" with  "Yes" or "No"
          if it is "Yes" then goNextScene
          exit goNextScene
@@ -94,17 +92,6 @@ command loadNextQuote pQuoteNo
    hide sMainImage with effect "dissolve" to black
 end loadNextQuote
 
-command  setDefaultImage
-   # store brand image; set stage to screen to1
-   put 0 into sLastImage
-   put  empty into sConfigA["narrativeScene"]
-   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
-   put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into sDefaultImage
-   set the filename of sMainImage to  sDefaultImage
-   setImageToFullCardLoc sMainImage,"portrait",50
-   show sMainImage
-end  setDefaultImage
-
 command showAttribution pAttribution
    lock screen
    hide sMainImage
@@ -119,5 +106,15 @@ end fitFieldToContent
 command hideShowField pField,pBool
    set the vis of pField to pBool
 end hideShowField
+
+command  setDefaultImage pImage
+   # store brand image; set stage to screen to1
+   put 0 into sLastImage
+   put  empty into sConfigA["narrativeScene"]
+   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   set the filename of sMainImage to  pImage
+   setImageToFullCardLoc sMainImage,"portrait",50
+   show sMainImage
+end  setDefaultImage
 
 

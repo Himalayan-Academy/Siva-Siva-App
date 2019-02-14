@@ -1,6 +1,6 @@
 {
   "launch_module": "home",
-  "libraries": "animationEngine,lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls,aagNetworkTracer",
+  "libraries": "animationEngine,lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls,aagNetworkTracer,lib_UIHandlers",
   "log_file": "sivasiva.log",
   "log_level": "info,error,fatal",
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal,model_SivaSivaTracking,model_Narratives",
@@ -36,6 +36,10 @@
     {
       "name": "lib_MobileControls",
       "file": "libraries/lib_MobileControls.livecodescript"
+    },
+    {
+      "name": "lib_UIHandlers",
+      "file": "libraries/lib_UIHandlers.livecodescript"
     },
     {
       "name": "lib_Calendar",
@@ -92,6 +96,10 @@
     {
       "name": "behavior_GemsQuotes",
       "file": "modules/gems/behavior_GemsQuotes.livecodescript"
+    },
+    {
+      "name": "behavior_updateUIPortal",
+      "file": "modules/portal/behavior_updateUIPortal.livecodescript"
     },
     {
       "name": "behavior_ListenSelectPlay",

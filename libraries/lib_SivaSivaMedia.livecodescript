@@ -280,6 +280,34 @@ function getLastImagePath
    return sLastImagePath
 end getLastImagePath
 
+
+************************
+
+####################
+on ___IMAGEManipulation
+end ___IMAGEManipulation
+
+command imageDecompressAndCache pImageList
+   repeat for each line x in pImageList
+      prepare image x
+   end repeat
+end imageDecompressAndCache
+
+command cacheGlobalNavImages
+   --breakpoint
+   # image are on card 4 of Siva-Siva-App
+   # we want them in card 
+   put the long id of card "Global Image Resource 1" of stack "Siva-Siva-App" into tCard
+   put path_Assets() into tAssetPath
+   repeat with x = 1 to (the number of images of tCard)
+      put (tAssetPath& "img/nav-global-icons/" & the short Name  of img x of tCard) into y
+      put y & cr after pImageList
+      prepare image file  y
+   end repeat
+   
+end cacheGlobalNavImages
+
+
 #################
 
 on ___VIDEO
@@ -418,227 +446,7 @@ command checkThisScriptIsInMsgPath
    answer "Yes, I'm here. You found me" with "OK"
 end checkThisScriptIsInMsgPath
 
-####################
-on ___IMAGEManipulation
-end ___IMAGEManipulation
 
-----------------------------------------------------------------------------------
-command imageDecompressAndCache pImageList
-   repeat for each line x in pImageList
-      prepare image x
-   end repeat
-end imageDecompressAndCache
-
-command cacheGlobalNavImages
-   --breakpoint
-   # image are on card 4 of Siva-Siva-App
-   # we want them in card 
-   put the long id of card "Global Image Resource 1" of stack "Siva-Siva-App" into tCard
-   put path_Assets() into tAssetPath
-   repeat with x = 1 to (the number of images of tCard)
-      put (tAssetPath& "img/nav-global-icons/" & the short Name  of img x of tCard) into y
-      put y & cr after pImageList
-      prepare image file  y
-   end repeat
-
-end cacheGlobalNavImages
-
-
-# we typically have the some requirement
-# change image by height, width.
-# the loc to img frame lolc
-
-command insertImageDimensions pImage
-   put ( (the formattedwidth of pImage) & "x" & (the formattedheight of pImage) ) into sCurrentGraphicRect
-end insertImageDimensions
-
-
-function getRectOfCurrentGrc
-   return sCurrentGraphicRect
-end getRectOfCurrentGrc
-
-
-
-##########################################################
-## IMAGE PROCESSING METHODS
-##########################################################
-# Br: July 15th, 2016
-# Images arriving from the server need to fit the screen
-# the general use case will almost always be a portrait screen
-# landscape orientation will be used in specific cases for games or graphic stories
-# As of today (July 15) these handlers to do not addess landscape 
-# but we will pass a landscape param anyway so that we can implement later
-# "pOrientation"
-# We copied some already good methods from the gurudeva app. and modified from there.
-##########################################################
-
-command setRectOfCurrentGrc pimage
-   put the formattedWidth of  pImage into tFWd
-   put the formattedHeight of  pImage into tFHt
-   put (tFWd & "x" & tFHt) into sCurrentGraphicRect
-end setRectOfCurrentGrc
-
-## NOTE: for the following handlers to work you must pass
-## the rect in the form of  width x height  this this form ("736x552")
-## and the long ID of the target image to "pImage" 
-
-on toggleImgSize pImage, pFullSize, pTargetSize,pLocation 
-   # we may not always this rect of the images from  the metadata
-   # May as well just find out what it is right here.
-   # pImage is the long ID of the image
-   # you do not use "img ## to refer to it... just "pImage"
-   
-   -- if second param is empty we toggle it; otherwise set it as specified;
-   -- called from main img script when tapped and when main cd closes to reset
-   
-   if pFullSize = "" then -- calculate if it's already full size
-      put (the width of  pImage > the width of this cd) into pFullSize
-      # true for landscape (width is greater); false for portrait (height is greater)
-   end if
-   put the formattedWidth of  pImage into tFWd
-   put the formattedHeight of  pImage into tFHt
-   
-   if pFullSize then -- reduce to fit
-      resizeToWidth pImage,pTargetSize
-   else -- return to full size
-      resizeToHeight pImage,tFHt
-   end if
-   
-   # set the location of image, 
-   # it is empty, assume to card rect
-   if pLocation = empty then
-      set the loc of  pImage to the loc of this cd
-   else
-      set the loc of  pImage to pLocation
-   end if
-end toggleImgSize
-
-on resizeToHeight pImage,pSize
-   set the itemdel to "x"
-   put item 1 of sCurrentGraphicRect into tOrigImgWidth
-   put item 2 of sCurrentGraphicRect into tOrigImgHeight
-   # it may not be necessary
-   if pSize > tOrigImgHeight then exit resizeToHeight
-   put (pSize)/tOrigImgHeight  into tRatio
-   put (tOrigImgWidth * tRatio) into tNewWidth
-   put (tOrigImgHeight * tRatio) into tNewHeight
-   set the rect of pImage to 0,0,tNewWidth,tNewHeight  
-end resizeToHeight
-
-on resizeToWidth pImage,pSize 
-   set the itemdel to "x"
-   put item 1 of sCurrentGraphicRect into tOrigImgWidth
-   put item 2 of sCurrentGraphicRect into tOrigImgHeight
-   # it may not be necessary
-   if pSize > tOrigImgWidth then exit resizeToWidth
-   put pSize/tOrigImgWidth into tRatio 
-   put (tOrigImgWidth * tRatio) into tNewWidth
-   put (tOrigImgHeight * tRatio) into tNewHeight
-   set the rect of  pImage to 0,0,tNewWidth,tNewHeight
-end resizeToWidth
-
-
-#  when we want a background in to fill the screen
-# but leave room for footer we can this
-#  You must pass  the long id of the image, pOrientation,otherwise fails
-# you do have to pass footer, 
-
-
-command setImageToFullCardLoc pImage, pOrientation, pFooterHeight
-   setRectOfCurrentGrc pImage
-   put the loc of this card into tLoc
-   
-   if pOrientation="portrait" then
-      resizeToHeight pImage,(the height of this card - pFooterHeight)
-   else
-      resizeTowidth pImage,(the height of this card - pFooterHeight)
-   end if
-   set the loc pImage to (item 1 of tLoc, item 2 of tLoc- (pFooterHeight/2))
-end setImageToFullCardLoc
-
-
-
-on ___VISUALEFFECTS
-END ___VISUALEFFECTS
-
-##########################################################
-## VISUAL EFFECTS
-##########################################################
-
---> GRAPHIC EFFECTS
-
-## OuterGlow
-
-function OuterglowA pTint,pColor,pBlendMode,pOpacity,pFilter,pSize,pSpread
-   if pTint is empty then
-      put pColor into outerglow["color"]
-      put pBlendMode into  outerglow["blendMode"]
-      put pOpacity into  outerglow["opacity"] 
-      put pFilter into  outerglow["filter"]
-      put pSize into  outerglow["size"]
-      put pSpread into outerglow["spread"]
-      returnouterglow
-      exit outerGlowA
-   end if
-   put "color|blendMode|opacity|filter|size|spread" into pParams
-   switch pTint
-      case "softBrown"
-         put "255,255,0|normal|255|box3Pass|30|50" into pValues
-         break
-   end switch
-   set itemDel to "|"
-   repeat with x =1 to 6
-      put item x of pParams into pParam
-      put item x of pValues into outerglow[pParam]
-   end repeat
-   return outerglow
-   
-end OuterglowA
-
---> GRADIENT SETTINGS
-
-command setGradient pObject
-   # Param "pObject" works locally with simple object reference like  graphic "header"
-   # otherwise you should  pass the long ID of the object
-   
-   local tNewGradientArray
-   
-   # be careful when cutting and paste to and from email
-   # tabs may get replace by spaces:
-   
-   put "from	208,-201|mirror	false|quality	good|ramp	0.13000,255,255,255,0" & return into tNewGradientArray
-   put "0.62001,60,11,9,212|repeat	1|to	208,-304|type	linear|via	536,-201|wrap	true" after tNewGradientArray
-   
-   split tNewGradientArray by "|" and tab
-   set the fillGradient of pObject to tNewGradientArray
-   
-end setGradient
-
---> FADE WITH BLENDLEVEL
--- Better to use dissolve.
-
-# BR note that hide and show with visual effect "dissolve" also works, 
-# tends to run very fast on mobile
-
-command object_FadeIn  pEffectsTarget, newBlendLevel, someIncrement, someDelay
-   set the blendLevel of  pEffectsTarget  to newBlendLevel
-   if newBlendLevel > 0 then
-      subtract someIncrement from newBlendLevel
-      send "object_FadeIn pEffectsTarget, newBlendLevel,someIncrement,someDelay" to me in someDelay milliseconds
-   else
-      set the blendLevel of pEffectsTarget to 0
-   end if
-end object_FadeIn
-
-command object_FadeOut  pEffectsTarget, newBlendLevel, someIncrement, someDelay
-   set the blendLevel of  pEffectsTarget  to newBlendLevel
-   if newBlendLevel <100 then
-      add someIncrement to newBlendLevel
-      send "object_FadeOut pEffectsTarget, newBlendLevel,someIncrement,someDelay" to me in someDelay milliseconds
-   else
-      set the blendLevel of pEffectsTarget to 100
-   end if
-end object_FadeOut
 
 
 on ___TYPESETTING
