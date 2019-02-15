@@ -45,11 +45,7 @@ command updateUIPortal
          topCenterMe pControl,55
          break
          
-      case "moduleList"
-         put the long id of grp "modulesList" into pControl
-         centerMe pControl
-         topCenterMe pControl,100
-         break
+  
    end switch
    
 end updateUIPortal

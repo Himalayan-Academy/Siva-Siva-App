@@ -52,17 +52,8 @@ end vertCenter
 -- it is depend on whether you choose to "think" about it as 
 -- relation to top of the card, of the bottom of the card
 
-command centerMe pControl tL, tT, tR, tB
-   #  choose an offset using any one  
-   # you use one, then must sent all four params!
-   #  eg. centerMe pControl,0,100,0,0
-   # if you set none, it  default to the card loc
-   
+command centerMe pControl
    set the loc of pControl to cardLoc()
-   set the left of pControl to tl
-   set the top of pControl to tT
-   set the right of pControl to tR
-   set the bottom of pControl to tB
 end centerMe
 
 
