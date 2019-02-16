@@ -12,6 +12,115 @@
 # CHANGES: 2018-20-2018 CREATED Brahmanathaswami
 -----
 
+command showNarrative pNarrativeA
+   dispatch "showNarrative" to stack "narrative" with pNarrativeA
+end showNarrative
+
+function loadNarrativeFromDisk pID 
+   put sivasiva_AssetFolder() & "narratives/" & pID & ".xml" into tPath 
+   
+   if there is not a file tPath then 
+      return "xmlerr: file doesn't exist"
+   end if 
+
+   put revXMLCreateTreeFromFile(tPath, false, true, false) into tXML
+   
+   if tXML is not a number then 
+      return tXML
+   end if 
+   
+   put tXML into tNarrativeA["xml document id"]
+   put revXMLRootNode(tXML) into tNarrativeA["xml root node"]
+   put revXMLNumberOfChildren(tXML,tNarrativeA["xml root node"],,0) into tNarrativeA["number of scenes"]
+   put revxmlfirstchild(tXML, tNarrativeA["xml root node"]) into tFirstChild
+   put 1 into i
+   put narrativeExtractScene(tXML, tFirstChild) into tNarrativeA["scenes"][i]
+   put tFirstChild into tNextSibling
+   
+   repeat while tNextSibling is not empty
+      put revXMLNextSibling(tXML,tNextSibling) into tNextSibling
+      if "xmlerr" is in tNextSibling or tNextSibling is empty then
+         exit repeat
+      end if
+      add 1 to i 
+      put narrativeExtractScene(tXML, tNextSibling) into tNarrativeA["scenes"][i]
+   end repeat
+   
+   return tNarrativeA
+end loadNarrativeFromDisk
+
+function narrativeExtractScene pXML, pPath 
+   put revxmlfirstchild(pXML, pPath) into tFirstItem
+   put 1 into i
+   put narrativeExtractItem(pXML, tFirstItem) into tSceneA[i]
+   put tFirstItem into tNextItem
+   
+   repeat while tNextItem is not empty
+      put revXMLNextSibling(pXML,tNextItem) into tNextItem
+      if "xmlerr" is in tNextItem or tNextItem is empty then
+         exit repeat
+      end if
+      add 1 to i 
+      put narrativeExtractItem(pXML, tNextItem) into tSceneA[i]
+   end repeat
+   
+   return tSceneA
+end narrativeExtractScene
+
+
+function narrativeExtractItem pXML, pPath 
+   put pPath
+   put revXMLAttributes(pXML, pPath, tab, cr) into tAttributesA
+   split tAttributesA by cr and tab 
+   put revxmlnodecontents(pXML, pPath) into tContents
+   set the itemdel to "/"
+   put item -1 of pPath into tNodeName
+   set the itemdel to "["
+   put item 1 of tNodeName into tNodeName
+   if the keys of tAttributesA is not empty then
+      put tAttributesA into tR["attributes"]
+   end if
+   if tContents is not empty then 
+      put tContents into tR["contents"]
+   end if
+   put tNodeName into tR["type"]
+   
+   switch tNodeName
+      case "image"
+         narrativeItemLoadImage tR
+         break
+      case "text"
+         break
+   end switch
+   
+   return tR
+end narrativeExtractItem
+
+on narrativeItemLoadImage @pItemA
+   if pItemA["attributes"]["file-id"] is not empty then
+     put jnanamGetItem(pItemA["attributes"]["file-id"]) into tRecordA 
+     # AAG: BROKEN! Files on disk doesn't match media folder on hap. 
+   end if
+
+   if pItemA["attributes"]["path"] is not empty then
+      put sivasiva_AssetFolder() & "img/" & pItemA["attributes"]["path"] into tPath
+      if there is a file tPath then 
+         put tPath into pItemA["path"]
+      end if
+   end if
+
+end narrativeItemLoadImage
+
+
+
+
+
+
+
+
+
+
+
 # for now this a proof of conceptI have just a little kale left to last me 5 days. 
 # starting by building it locally in the stack
 # to see how it flows.
