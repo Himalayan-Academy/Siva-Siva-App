@@ -138,7 +138,7 @@ private command updateCache pMediaType
       switch pMediaType
          case "art/photography"
             put sivasiva_AssetFolder() & "/img/photography/" into tPathToPhotos
-            put folders (tPathToPhotos) into tFileIDs
+            put folders(tPathToPhotos) into tFileIDs
             delete line 1 of tFileIDs# .. listing
             replace cr with comma in tFileIDs
             put format ("UPDATE item SET cached_on_disk=\"true\" WHERE file_id IN" ) into pSQL
@@ -152,21 +152,21 @@ private command updateCache pMediaType
    -- all items on disk should have their "cached_on_disk" updated to "true
  
    dbWhere "media_type", pMediaType
-   put dbGet ("item") into tItemsA
+   put dbGet("item") into tItemsA
    
    put the number of lines in the keys of tItemsA into tTotal
    repeat with x = 1 to tTotal
       put tItemsA [x] into itemArray
-      put asset_GetFileFromItemArray (itemArray) into tFilePath
+      put asset_GetFileFromItemArray(itemArray) into tFilePath
       
       if there is a file tFilePath then    
          put tItemsA [x]["file_id"] into fileID
          dbWhere "file_id", fileID
          
           ## put true into tNewDataA["email"] --Br "email"?
-         put "true" into tNewDataA ["cached_on_disk"] -- BR still doesn't work
+         put "true" into tNewDataA["cached_on_disk"] -- BR still doesn't work
         
-         put dbUpdate ("item", tNewDataA) into tResult
+         put dbUpdate("item", tNewDataA) into tResult
          answer tResult
          breakpoint
       end if
@@ -186,3 +186,8 @@ function quoteValuesforSQLparam pValueList
    return tQuotedList
 end quoteValuesforSQLparam
 
+function jnanam_GetItem pFileID 
+   dbWhere "file_id", pFileID 
+   put dbGet("item") into tA 
+   return tA[1]
+end jnanam_GetItem
