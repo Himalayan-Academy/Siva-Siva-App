@@ -234,9 +234,9 @@ command  init_LoadLibraries
             case ("lib" is in stackName)
                put "libraries/" & stackName & ".livecodescript" into stackName
                break
-            case ("behavior" is in stackName)
-               put "behaviors/" & stackName & ".livecodescript" into stackName
-               break
+            --case ("behavior" is in stackName)
+               --put "behaviors/" & stackName & ".livecodescript" into stackName
+               --break
             case ("model" is in stackName)
                put "models/" & stackName & ".livecodescript" into stackName
                break  

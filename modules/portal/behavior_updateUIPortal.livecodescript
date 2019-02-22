@@ -23,18 +23,29 @@ command updateUIPortal
    switch (the short name of this card)
       case "Home"
          
+         # Backgrond
+         
          put the long id of image "backgroundOverlay" into pControl
          centerMe pControl
+         
+         # Main Image
+         # Opens SivaSiva Brand Image, which we locate
+         # subsequent in image of content and managed 
+         # from the home 
+         
          
          put long Id of img "HomeStoryMainImage" into pControl
          put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tBrandImage
          set filename of pControl to tBrandImage
          setImageToFullCardLoc pControl, "portrait", 50
-         topCenterMe pControl
+         centerMe pControl,0,50
+         
+         # the footer
          
          put the long id of btn "goNext" into pControl
          bottomRightMe pControl,25,75 
          break
+         
          
       case  "mainNav"
          
@@ -45,7 +56,7 @@ command updateUIPortal
          topCenterMe pControl,55
          break
          
-  
+         
    end switch
    
 end updateUIPortal

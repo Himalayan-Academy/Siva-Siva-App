@@ -17,11 +17,15 @@ command initializeNarrative
    if sConfigA["narrationScene"] = empty then
       # it means this a brand new session, start of the app.
       #  or, the user finished to story and back at a new beginning
-      setDefaultImage
+      put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
+      setDefaultImage pImage
    else
       goNextScene
       if (the lockscreen) then unlock screen
    end if
+   # responsive for the qute
+   
+   
 end initializeNarrative
 
 
@@ -82,6 +86,7 @@ command loadNewImage pPath
    lock screen
    set the filename of sMainImage to pPath
    setImageToFullCardLoc sMainImage, "portrait", 50
+   centerMe sMainImage,0,50
    show sMainImage
    unlock screen with visual effect "dissolve" 
 end loadNewImage
@@ -89,6 +94,8 @@ end loadNewImage
 command loadNextQuote pQuoteNo
    set the itemdel to "|"
    put item pQuoteNo  of sQuoteList into fld "homeStoryText"
+   put the long id of fld "homeStoryText" into pControl
+   centerMe pControl,0,5
    hide sMainImage with effect "dissolve" to black
 end loadNextQuote
 
@@ -114,6 +121,7 @@ command  setDefaultImage pImage
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    set the filename of sMainImage to  pImage
    setImageToFullCardLoc sMainImage,"portrait",50
+   centerMe sMainImage,0,50
    show sMainImage
 end  setDefaultImage
 

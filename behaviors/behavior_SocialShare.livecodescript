@@ -26,6 +26,9 @@ These handlers override handlers in the stack "Gurudeva" script.
 In the long term they should replace the ones in the stack script.
 We attempt to avoid global variables and use parameters tomake all handlers in the rest of the code portable.
 */
+on preOpenControl
+   hide me
+end preOpenControl
 
 command share_MouseEvent
    dispatch "share_Items" to this card
@@ -57,21 +60,21 @@ command share_MouseEvent
    
    put the short name of the target into pShareChoice
    if  pShareChoice ="close-sharing" then
-      if exists (widget "body" of this card) then
-         set the top of widget "body" to 0
-      end if    
-      set the left of grp "share-ui" to -2000
-      hide group "share-ui"
+      hideSharing
    else
       switch pShareChoice         
-         case "facebook"         
+         case "facebook"   
+            hideSharing      
             put merge("https://www.facebook.com/dialog/share?app_id=767840830064772&display=page&href=[[tURLEncodedUrl]]&redirect_uri=[[tURLEncodedUrl]]")  into tShareURL
+            
             launch url tShareURL
             break
          case "tweet"
+            hideSharing
             twitter_TweetItems sShareItemsA
             break
          Case "email"
+            hideSharing
             share_Email sShareItemsA
             break
       end switch
@@ -605,3 +608,11 @@ end utf8encode
       return unidecode(uniencode(pString,"UTF8"))
    end if
 end utf8decode
+
+command hideSharing
+   if exists (widget "body" of this card) then
+      set the top of widget "body" to 0
+   end if    
+   set the left of grp "share-ui" to -2000
+   hide group "share-ui"
+end hideSharing

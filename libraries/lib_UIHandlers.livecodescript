@@ -52,8 +52,14 @@ end vertCenter
 -- it is depend on whether you choose to "think" about it as 
 -- relation to top of the card, of the bottom of the card
 
-command centerMe pControl
-   set the loc of pControl to cardLoc()
+command centerMe pControl pHeaderHeight,pFooterHeight
+   # use to center on screen, if the is a foot and header
+   # you send those params and pcontrol center in remaining space.
+   # This only handles vertical space
+   
+   put (cardHeight()-pHeaderHeight-pFooterHeight) /2 into tYaxis
+   set the loc of pControl to ( horizCenter(),tYaxis )
+   
 end centerMe
 
 
@@ -152,9 +158,8 @@ end resizeToWidth
 # you do have to pass footer, 
 
 command setImageToFullCardLoc pImage, pOrientation, x,y
-   # param x = if you to short short with heighten image,
+   # param x = if you to want a shorter image
    setRectOfCurrentGrc pImage
-   put the loc of this card into tLoc
    if pOrientation="portrait" then
       resizeToHeight pImage,(the height of this card - x)
    else
