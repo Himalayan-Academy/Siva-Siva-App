@@ -67,6 +67,19 @@ local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject
+   --   put "wordpuzzles" into tLandscapeStacks
+   --   put "Siva-Siva-Portal" into tNoFullScreenModeStacks
+   --   repeat for each item tLands in tLandscapeStacks 
+   --      if cardOrStackObject contains tLands then
+   --         set the fullscreenmode of this stack to "showAll"  
+   --      end if
+   --   end repeat
+   
+   --   repeat for each item tNoFull in tNoFullScreenModeStacks 
+   --      if cardOrStackObject contains tNoFull then
+   --         set the fullscreenmode of this stack to  empty
+   --      end if
+   --   end repeat
    
    put the short name of this stack into oStackName
    
@@ -86,6 +99,7 @@ command portal_GoStack cardOrStackObject
    --ntInfo "about to change stacks!"
    put "view_SivaSivaBrowser" into tNoGoBackStacks
    if not (the lockscreen) then lock screen
+   
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    wait 20 milliseconds with messages 
    

@@ -11,6 +11,7 @@ array that keeps the track tile locations.
 --> Events
 -
 on openCard
+   setCardCoords
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
    showTitle true
    send "showTitle false" to me in 1 second
@@ -27,7 +28,7 @@ on openCard
    put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-
+   
 end opencard
   
  --> CREATE THE PUZZLE
@@ -198,15 +199,16 @@ end assignHomeLocations
    
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
-   
+   put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
    set the filename of img "bgImage" to tFolderPath&tImgPath
-   put the width of this cd/the width of img "bgImage" into tRatio
+   put ((the width of this cd)+150 )/the width of img "bgImage" into tRatio
    set the width of img "bgImage" to the width of img "bgImage" * tRatio
    set the height of img "bgImage" to the height of img "bgImage" * tRatio
-   set the loc of img "bgImage" to the loc of this cd
+   centerMe pControl
+   --set the loc of img "bgImage" to the loc of this cd
 end loadNewBgImg
 
 on checkLevel

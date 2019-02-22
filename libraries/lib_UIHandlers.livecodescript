@@ -92,6 +92,15 @@ command bottomRightMe pControl, x, y
    
 end bottomRightMe
 
+command bottomLeftMe pControl, x, y
+   # for a control whose bounds are fully inside the card
+   # use X to offset from the left  of the card
+   # and y to from the bottom.
+   
+   set  bottomleft of pControl to (0+x,CardHeight()-y)
+   
+end bottomLeftMe
+
 command bottomCenterMe pControl, y
    # place a control at the bottom of the screen
    # can be any width, even beyond the width the card.

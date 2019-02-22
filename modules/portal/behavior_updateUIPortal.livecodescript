@@ -4,17 +4,10 @@ command updateUIPortal
    
    # background group of all cards
    
-   put the long id of grp "footer" into pControl
-   bottomCenterMe pControl
    
    put the long id of group "audioGlobalControl" of me  into pControl
    topRightMe pControl,40,30
    
-   put the long id of button "brandLogo" of me into pControl
-   topCenterMe pControl,20
-   
-   put the long id of fld "homeNotification" of me into pControl
-   topCenterMe pControl,150
    
    put the long id of fld "homeNotification" of me into pControl
    topCenterMe pControl,150
@@ -25,13 +18,16 @@ command updateUIPortal
          
          # Backgrond
          
-         put the long id of image "backgroundOverlay" into pControl
+         put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
          
          # Main Image
          # Opens SivaSiva Brand Image, which we locate
          # subsequent in image of content and managed 
          # from the home 
+         
+         put the long id of button "brandLogo" of me into pControl
+         topCenterMe pControl,20
          
          
          put long Id of img "HomeStoryMainImage" into pControl
@@ -40,14 +36,21 @@ command updateUIPortal
          setImageToFullCardLoc pControl, "portrait", 50
          centerMe pControl,0,50
          
-         # the footer
          
          put the long id of btn "goNext" into pControl
          bottomRightMe pControl,25,75 
+         
+         ntInfo ("Go Next loc: " & location of  btn "goNext" )
+         
+         put the long id of widget "openGlobalNav" into pControl
+         bottomLeftMe pControl,0,8 
+         
          break
          
          
       case  "mainNav"
+         put the long id of grp "footer" into pControl
+         bottomCenterMe pControl,8
          
          put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
@@ -60,3 +63,4 @@ command updateUIPortal
    end switch
    
 end updateUIPortal
+
