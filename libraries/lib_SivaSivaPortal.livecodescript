@@ -96,7 +96,11 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   --ntInfo "about to change stacks!"
+   /*
+   ##################
+   -- preopen the next stack and was 20 milli 
+   -- and close the other one
+   ntInfo "about to change stacks!"
    put "view_SivaSivaBrowser" into tNoGoBackStacks
    if not (the lockscreen) then lock screen
    
@@ -109,13 +113,37 @@ command portal_GoStack cardOrStackObject
    
    close stack oStackName   
    wait 20 milliseconds with messages
-   if  (the lockscreen) then unlock screen
    
    if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
       portal_SetLastStack "Siva-Siva-Portal"
    end if
    
-   #BR: 2017-12-24 Journal still fails on Android... in some case 
+   */
+   
+   ##################
+   -- close the last stack and wait
+   -- open the next one.
+   
+   ntInfo "about to change stacks close one open the next"
+   put "view_SivaSivaBrowser" into tNoGoBackStacks
+   if not (the lockscreen) then lock screen
+   
+   close stack oStackName   
+   wait 100 milliseconds with messages
+   
+   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   
+   if cardOrStackObject is not among the items of tNoGoBackStacks then
+      portal_SetLaunchStack cardOrStackObject
+   end if
+   
+   
+   
+   if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
+      portal_SetLastStack "Siva-Siva-Portal"
+   end if
+   
+   
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction

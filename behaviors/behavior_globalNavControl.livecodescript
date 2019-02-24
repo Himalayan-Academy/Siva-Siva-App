@@ -14,7 +14,7 @@ local sRowName, sMap, sFavoritesA
 
 on preOpenCard
    put the short name of this card into pCard
-   setUpUi pCard
+   setUpUI pCard
 end preOpenCard
 
 on mouseup
@@ -65,7 +65,7 @@ on getModuleList tTarget
    
 end getModuleList
 
-on setUpUi pCard
+on setUpUI pCard
    # we hide some controls on one are or another
    # this behavior it in both cards
    # Be sure to pass to preopencard handle
