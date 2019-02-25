@@ -3,11 +3,11 @@ local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA
 
 
-// 
+/*
 The important handles for the tiles are  located in the script
 behavior_WordTile, which apply each tile, this were we post to the 
 array that keeps the track tile locations.
-//
+*/
 --> Events
 -
 on openCard
@@ -40,7 +40,7 @@ on createWordPuzzle
    --Reset
    put empty into sWordLocationsA
    stopTimer
-   hide widget "context"
+   --hide widget "context"
    loadNewBgImg
    if sCurLevel < 1 then difficultyPicker-- not yet initialized, should never happen
    --getPixieList # deprecated for now... 
@@ -204,14 +204,6 @@ command loadNewBgImg -- change img for each new puzzle
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
    set the filename of img "bgImage" to tFolderPath&tImgPath
-   --   SetRectOfCurrentGrc pControl
-   --   ntinfo ("The bgimg rect:" & getRectOfCurrentGrc() )
-   --   resizeToWidth pControl,900
-   --   ntinfo ("The card rect at newbgimage:"& (the rect of this card) )    
-   --   set the loc of img "bgImage" to the loc of this cd
-   --   ntinfo ("The loc of this card:"& (  the loc of this cd ) )   
-   --   ntinfo ("The bgimg rect:"& ( the rect of pControl ) )    
-   --   ntinfo ("The card rect :"& (the rect of this card) )    
    unlock screen
 end loadNewBgImg
 
@@ -242,23 +234,23 @@ command fetchQuote
    put textDecode ( aSelectedQuotes[tNo]["content"], UTF8)  into sQuote
    put textDecode ( aSelectedQuotes[tNo]["subject"], UTF8)  into fld "wordPuzzleSubject"
    put textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
-   if sSourceURL <> empty then
-      set  the uSourceURL of widget "Context" to sSourceURL
-   else
-      set  the uSourceURL of widget "Context" to empty # wipe an old link
-   end if
+   --   if sSourceURL <> empty then
+   --      set  the uSourceURL of widget "Context" to sSourceURL
+   --   else
+   --      set  the uSourceURL of widget "Context" to empty # wipe an old link
+   --   end if
    
    show fld "wordPuzzleSubject"
    #hack to deal with endline bug
    replace "\n" with space in sQuote
    
-   if connectivity_PingServer() ="true"  then
-      ## Source URL may or may not there
-      put   textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
-      replace "http:" with "https:" in sSourceURL
-      set the uSourceURL of widget "context" to sSourceURL
-      ## could be somethign else, if connectivity is bad... will check that on completion
-   end if
+   --   if connectivity_PingServer() ="true"  then
+   --      ## Source URL may or may not there
+   --      put   textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
+   --      replace "http:" with "https:" in sSourceURL
+   --      set the uSourceURL of widget "context" to sSourceURL
+   --      ## could be somethign else, if connectivity is bad... will check that on completion
+   --   end if
    
    # fix  strings with straight quotes, which are word delimiters in LC
    # change to curly's when they are included with the word 
@@ -418,14 +410,14 @@ on clearBoard
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
    hide group "prefsSelectorGrp"
-   set the url of widget "readContext" to empty # otherwise old content appears next time
-   send hideSubjectFld to me in 2 seconds
-   hide widget "readContext"
+   --set the url of widget "readContext" to empty # otherwise old content appears next time
+   send hideSubjectFld to me in 1 seconds
+   --hide widget "readContext"
    stopTimer
    lock screen
    put empty into fld "Minutes" of me
    put empty into fld "seconds" of me
-   hide widget "context"
+   --hide widget "context"
    --set the vis of grc "startHere" to false
    put empty into fld "_Quote" of me
    hide  fld "_Quote" of me
@@ -589,7 +581,7 @@ end deleteOccupiedLocation
 command triggercompletion
   if sTimerOnFlag <> true then exit triggercompletion -- already finished
   stopTimer
-  if the uSourceURL of widget "context" <> empty then show widget "context"
+  -- if the uSourceURL of widget "context" <> empty then show widget "context"
   put the number of lines in the uWordList of this card into tNumWords
   get fld "Minutes"
   if (word 1 of it) > 0 then
