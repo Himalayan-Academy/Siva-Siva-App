@@ -40,7 +40,15 @@ on passAudioSelection pLine,pTitle
    hide widget "turnOffAudio"
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
    metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1])
+   Journal_AddEntry 
 end passAudioSelection
+
+on Journal_AddEntry 
+   if the short name of this card =  "listen-my-audio"  then
+      put "listen-my-audio" into pDataA["card"]
+      Journal_RecordEntry "listen",( "My Downloaded Audio"), pDataA
+   end if
+end Journal_AddEntry
 
 on passAudioDetails sSelectNum,pTarget
    put the vis of fld "audioDetails" into detailVis

@@ -192,7 +192,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    end if
    
    startPlayer sSelectedURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
-   Journal_AddEntry  sSelectedItemA["item_id"]
+   --Journal_AddEntry  sSelectedItemA["item_id"]
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
@@ -229,17 +229,7 @@ end downloadAffirmed
 
 
 
-on Journal_AddEntry pItemID
-   put  sSelectionsA["playlistTitle"] into tPlayList
-   put tPlayList into pDataA["playlist"]
-   put "listen-my-audio" into pDataA["card"]
-   put pItemID into pDataA["item_id"]
-   put sSelectedItemA["title"] into pDataA["playSelection"]
-   put sSelectedURL into pDataA["audioURL"]
-   put  sSelectedItemA["title"] into tPlayFileLabel
-   put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
-   Journal_RecordEntry "listen",( "My Downloaded Audio"), pDataA
-end Journal_AddEntry
+
 
 command share_Items 
    if sRemoteURL is empty then

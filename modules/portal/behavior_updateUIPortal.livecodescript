@@ -9,7 +9,7 @@ command updateUIPortal
    topRightMe pControl,40,30
    
    
-   put the long id of fld "homeNotification" of me into pControl
+   put the long id of fld "Notification" of me into pControl
    topCenterMe pControl,150
    
    

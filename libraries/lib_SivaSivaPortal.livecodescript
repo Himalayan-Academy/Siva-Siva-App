@@ -129,7 +129,7 @@ command portal_GoStack cardOrStackObject
    if not (the lockscreen) then lock screen
    
    close stack oStackName   
-   wait 20 milliseconds with messages
+   -- wait 20 milliseconds with messages
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    

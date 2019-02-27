@@ -544,30 +544,9 @@ on journalResume  pDataA, pEntryA
    -- breakpoint
    deleteMobileControl "audioPlayer"
    go to card "listen-my-audio"
-   --go "card " & quote &  pDataA["card"]
-   --put pDataA["playList"] into sTargetPlayList
-   --selectPlayList sTargetPlayList
    
 end journalResume
 
---on Journal_AddEntry pItemID
---   put  sSelectionsA["playlistTitle"] into tPlayList
---   put tPlayList into pDataA["playlist"]
---   put "listen-browser" into pDataA["card"]
---   put pItemID into pDataA["item_id"]
---   put sSelectedItemA["title"] into pDataA["playSelection"]
---   put sSelectedURL into pDataA["audioURL"]
---   put  sSelectedItemA["title"] into tPlayFileLabel
---   put (char 1 to 15 of tPlayFileLabel)  & "..."  into tPlayFileLabel
---   Journal_RecordEntry "listen",( tPlayList &": " & tPlayFileLabel), pDataA
---end Journal_AddEntry
-
-
-on closeStack
-   --   if isMobile() then 
-   --      deleteMobileControl "audioList"
-   --   end if
-end closeStack
 
 ------------- 
 on __ListenUtilities
