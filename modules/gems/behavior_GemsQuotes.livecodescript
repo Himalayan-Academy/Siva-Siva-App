@@ -15,13 +15,12 @@ local sJournalData
 --> Events
 
 on restoreFromJournalEntry pDataA
-   lock screen
+   --lock screen
    --ntInfo "restoring from journal"
    put pDataA into sJournalData
    put sJournalData["realm"] into sConfigA["currentRealm"]
    preOpenCard
    --dispatch "set_sJournalData" to this card with pDataA
-   wait 80 millisecs with messages
    OpenCard
 end restoreFromJournalEntry
 
@@ -40,8 +39,6 @@ on preOpenCard
 end preOpenCard
 
 on openCard
-   wait 200 milliseconds with messages
-   lock screen
    --ntInfo "gems opencard"
    audioIsRunning     
    
@@ -59,7 +56,7 @@ on openCard
    --   put connectivity_PingServer() into sOnline
    put true into sOnline
    
-   ntInfo "GEMS: " & portal_GetLaunchStack()
+   ntInfo "GEMS: " & portal_GetLastStack()
    setCardTitle 
    
    --ntInfo "fetchQuote"
@@ -67,15 +64,9 @@ on openCard
    --ntInfo "fetchImage"
    fetchImage
    --ntInfo "done"
+   ntinfo "Open cards gems: lockscreen is: " & the lockscreen
 end opencard
 
---after opencard
---   put sConfigA[globalNavControl] into tGlobalNavControl
---   if not (exists(group "globalNav" of this card) ) then
---      copy tGlobalNavControl to this card 
---      hide grp "globalNav"
---   end if
---end opencard
 
 on setCardTitle
    if sJournalData is empty then 

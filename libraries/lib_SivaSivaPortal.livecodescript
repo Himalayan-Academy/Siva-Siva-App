@@ -88,9 +88,9 @@ command portal_GoStack cardOrStackObject
    --   end if
    
    
-   
+   ntInfo "before closing that stack, lockscreen is: " & the lockscreen
    if not (the lockscreen) then lock screen
-   
+   ntInfo  "about to close stack, the lock screen: " & the lockscreen
    close stack oStackName   
    
    ntInfo portal_GetLastStack() 
