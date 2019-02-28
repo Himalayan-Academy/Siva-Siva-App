@@ -655,3 +655,6 @@ command offLineGoMyAudio
    end if
 end offLineGoMyAudio
 
+on closeStack
+   portal_SetLastStack "Listen"
+end closeStack

@@ -67,19 +67,6 @@ local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject
-   --   put "wordpuzzles" into tLandscapeStacks
-   --   put "Siva-Siva-Portal" into tNoFullScreenModeStacks
-   --   repeat for each item tLands in tLandscapeStacks 
-   --      if cardOrStackObject contains tLands then
-   --         set the fullscreenmode of this stack to "showAll"  
-   --      end if
-   --   end repeat
-   
-   --   repeat for each item tNoFull in tNoFullScreenModeStacks 
-   --      if cardOrStackObject contains tNoFull then
-   --         set the fullscreenmode of this stack to  empty
-   --      end if
-   --   end repeat
    
    put the short name of this stack into oStackName
    
@@ -92,57 +79,24 @@ command portal_GoStack cardOrStackObject
       deleteAllMobileControls # will destroy all except audioPlayer
    end if
    
-   --> Variations on  stack transition methods.
-   
    set the acceleratedRendering of stack oStackName to false
    
-   /*
-   ##################
-   -- preopen the next stack and was 20 milli 
-   -- and close the other one
-   ntInfo "about to change stacks!"
-   put "view_SivaSivaBrowser" into tNoGoBackStacks
-   if not (the lockscreen) then lock screen
+   --   put "view_SivaSivaBrowser,Journal" into tNoGoBackStacks
    
-   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   wait 20 milliseconds with messages 
+   --   if oStackName is not among the items of tNoGoBackStacks then
+   --      portal_SetLaunchStack oStackName
+   --   end if
    
-   if cardOrStackObject is not among the items of tNoGoBackStacks then
-      portal_SetLaunchStack cardOrStackObject
-   end if
    
-   close stack oStackName   
-   wait 20 milliseconds with messages
    
-   if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
-      portal_SetLastStack "Siva-Siva-Portal"
-   end if
-   
-   */
-   
-   ##################
-   -- close the last stack and wait
-   -- open the next one.
-   
-   ntInfo "about to change stacks close one open the next"
-   put "view_SivaSivaBrowser" into tNoGoBackStacks
    if not (the lockscreen) then lock screen
    
    close stack oStackName   
-   -- wait 20 milliseconds with messages
+   
+   ntInfo portal_GetLastStack() 
+   ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   
-   if cardOrStackObject is not among the items of tNoGoBackStacks then
-      portal_SetLaunchStack cardOrStackObject
-   end if
-   
-   
-   
-   if (cardOrStackObject is not among the items of tNoGoBackStacks) OR (portal_GetLaunchStack() <>oStackName)  then
-      portal_SetLastStack "Siva-Siva-Portal"
-   end if
-   
    
    
    if  oStackName is "Siva-Siva-Portal" then 
@@ -157,8 +111,7 @@ command portal_GoStack cardOrStackObject
    
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
-   --ntInfo "from:" && oStackName && "to:" && cardOrStackObject 
-   --ntInfo "Launch:" && portal_GetLaunchStack()  && "LastStack:" && portal_GetLastStack() 
+   
 end portal_GoStack
 
 function navString pCard,pStack
@@ -335,6 +288,9 @@ command portal_SetLastStack stackName
    # we  go back "sLastStack" on "global" navigation.
    # like returning from Chennai to London;
    --ntInfo "portal_SetLastStack"
+   if stackname = "Siva-Siva-App" then
+      put "Siva-Siva-Portal" into stackName
+   end if
    put stackName into sLastStack  
 end portal_SetLastStack
 
