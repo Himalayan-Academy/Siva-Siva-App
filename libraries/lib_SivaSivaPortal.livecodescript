@@ -81,20 +81,22 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-    ntInfo "before closing that stack, lockscreen is: " & the lockscreen
+   ntInfo "before closing that stack, lockscreen is: " & the lockscreen
    
-   if not (the lockscreen) then lock screen
+   --if not (the lockscreen) then lock screen
    
-    ntInfo  "about to close stack, the lock screen: " & the lockscreen
+   ntInfo  "about to close stack, the lock screen: " & the lockscreen
    
-   close stack oStackName   
+   --   close stack oStackName   
    
-   ntInfo portal_GetLastStack() 
-   ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
+   --   ntInfo portal_GetLastStack() 
+   --   ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
    
-   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
+   --   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    
-  unlock screen
+   --unlock screen
+   visual effect "wipe right "
+   go cardOrStackObject in stack oStackName
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
@@ -325,12 +327,6 @@ function portal_GetLastLinkTitle
 end portal_GetLastLinkTitle
 
 
-
-command portal_RemoveStack oStackName
-   if stackName <> "Siva-Siva-Portal" then
-      close stack oStackName
-   end if    
-end portal_RemoveStack
 
 ------------- Layout section -------------------
 # BR: this whole set of handlers is really dedicated to the Portal screens "proper"
