@@ -68,6 +68,8 @@ local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 
 command portal_GoStack cardOrStackObject
    
+   put "wordpuzzles" into tLandScapeModeStacks
+   
    put the short name of this stack into oStackName
    
    # cannot pass quotes to these strings or you willl
@@ -81,22 +83,15 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   ntInfo "before closing that stack, lockscreen is: " & the lockscreen
+   ntInfo portal_GetLastStack() 
+   ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
    
-   --if not (the lockscreen) then lock screen
-   
-   ntInfo  "about to close stack, the lock screen: " & the lockscreen
-   
-   --   close stack oStackName   
-   
-   --   ntInfo portal_GetLastStack() 
-   --   ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
-   
-   --   go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
-   
-   --unlock screen
-   visual effect "wipe right "
-   go cardOrStackObject in stack oStackName
+   if isMobile() then
+      go cardOrStackObject in stack oStackName
+   else
+      close stack oStackName
+      go cardOrStackObject
+   end if
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction

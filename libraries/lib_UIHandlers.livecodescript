@@ -326,6 +326,7 @@ command display_SetStatusBarVis visBoolean
       mobileHideStatusBar
    end if        
 end display_SetStatusBarVis
+
 command showLoaderGIF pBool
    if exists (img "loader.gif") then
       if pBool is true then 

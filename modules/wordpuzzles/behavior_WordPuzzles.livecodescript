@@ -11,6 +11,7 @@ array that keeps the track tile locations.
 --> Events
 -
 on openCard
+   if not (the lockscreen)  then lock screen
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
    showTitle true
    send "showTitle false" to me in 1 second
@@ -197,14 +198,14 @@ end assignHomeLocations
    
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
-   lock screen
+   if not (the lockscreen)  then lock screen
    ntInfo ("lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
    set the filename of img "bgImage" to tFolderPath&tImgPath
-   unlock screen
+   if (the lockscreen)  then unlock screen
 end loadNewBgImg
 
 on checkLevel
