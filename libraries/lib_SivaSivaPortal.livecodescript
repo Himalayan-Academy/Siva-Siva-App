@@ -81,16 +81,12 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   --   put "view_SivaSivaBrowser,Journal" into tNoGoBackStacks
+    ntInfo "before closing that stack, lockscreen is: " & the lockscreen
    
-   --   if oStackName is not among the items of tNoGoBackStacks then
-   --      portal_SetLaunchStack oStackName
-   --   end if
-   
-   
-   ntInfo "before closing that stack, lockscreen is: " & the lockscreen
    if not (the lockscreen) then lock screen
-   ntInfo  "about to close stack, the lock screen: " & the lockscreen
+   
+    ntInfo  "about to close stack, the lock screen: " & the lockscreen
+   
    close stack oStackName   
    
    ntInfo portal_GetLastStack() 
@@ -98,6 +94,7 @@ command portal_GoStack cardOrStackObject
    
    go  cardOrStackObject  # e.g   go "gems" (or this string)  go card 3 of "gems"   
    
+  unlock screen
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
