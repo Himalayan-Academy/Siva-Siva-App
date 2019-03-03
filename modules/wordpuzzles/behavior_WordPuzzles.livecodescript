@@ -225,11 +225,21 @@ end showTitle
 command fetchQuote
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
+   
+   --   ## for testing specific quote from the datebase
+   --   put the uFetchOneQuote of this stack into tSQL
+   --   ## You must supply the quote_id manually here
+   --   replace ":1" with  "5428" in tSQL
+   
+   # production routine, comment out the above
+   #  and use this for a runtime random selection
    put the uFetchSQL of this stack into tSQL
    put line sCurLevel of the uLevelRanges of this cd into tCurRange
    replace ":1" with  (trueword 1 of tCurRange) in tSQL
    replace ":2" with  (trueword 2 of tCurRange) in tSQL
+   
    dbSetSQL tSQL
+   
    put dbGet("quote", tConnectionID) into aSelectedQuotes
    put random (the number of lines of the keys of aSelectedQuotes) into tNo
    put textDecode ( aSelectedQuotes[tNo]["content"], UTF8)  into sQuote
