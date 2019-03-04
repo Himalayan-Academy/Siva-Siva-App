@@ -100,7 +100,7 @@ command News_Fetch
       # save it
       put tServerNews into url ("file:"&tLocalNewsFile)
       put "true" into sNewNews
-      if exists(fld "Notificaton") then
+      if exists(fld "Notification") then
          put  "You have news!" into fld "Notification"
          visMessageToUser "true"
       end if

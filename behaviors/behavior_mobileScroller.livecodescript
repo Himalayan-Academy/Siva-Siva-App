@@ -11,7 +11,7 @@ command CreateScroller pName -- scrolling fields
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
-   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName) into tRect
+   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName + 20) into tRect
    mobileControlSet pName, "contentRect" , tRect
    mobileControlSet pName, "hScroll" , 0
    mobileControlSet pName, "vScroll" , 0
