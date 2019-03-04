@@ -289,28 +289,27 @@ command portal_SetLastStack stackName
 end portal_SetLastStack
 
 function portal_GetLastStack
-   # BR: Support for tracking the stack from which
    # a module came from  so we can go back
    return sLastStack
 end portal_GetLastStack
 
-command portal_SetLaunchStack stackName
-   # every time a stack is opened,  it is save as the "sLaunchStack"
-   # Some stacks need to go to "substacks" 
-   # Like going from Wailua Homesteads to the Lihue Airport
-   # the substack, Journal, or the Browser need to return
-   # this stack and then don't return to a global node/stack
-   # We call it the "slaunchStack"
-   --ntInfo "portal_setLaunchStackk"
-   put stackName into sLaunchStack  
-end portal_setLaunchStack
+--command portal_SetLaunchStack stackName
+--   # every time a stack is opened,  it is save as the "sLaunchStack"
+--   # Some stacks need to go to "substacks" 
+--   # Like going from Wailua Homesteads to the Lihue Airport
+--   # the substack, Journal, or the Browser need to return
+--   # this stack and then don't return to a global node/stack
+--   # We call it the "slaunchStack"
+--   --ntInfo "portal_setLaunchStackk"
+--   put stackName into sLaunchStack  
+--end portal_setLaunchStack
 
-function portal_GetLaunchStack stackName
-   # we  go back "sLaunchStack" of a local navigation.
-   # like returning from Lihue Airport to Wailua Homesteads
-   --ntInfo "portal_setLaunchStack"
-   return sLaunchStack  
-end portal_GetLaunchStack
+--function portal_GetLaunchStack stackName
+--   # we  go back "sLaunchStack" of a local navigation.
+--   # like returning from Lihue Airport to Wailua Homesteads
+--   --ntInfo "portal_setLaunchStack"
+--   return sLaunchStack  
+--end portal_GetLaunchStack
 
 
 command  portal_SetLastLinkTitle rowName

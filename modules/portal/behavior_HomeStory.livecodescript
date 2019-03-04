@@ -17,8 +17,7 @@ command initializeNarrative
    if sConfigA["narrationScene"] = empty then
       # it means this a brand new session, start of the app.
       #  or, the user finished to story and back at a new beginning
-      put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
-      setDefaultImage pImage
+      setDefaultImage  # on the card script
    else
       goNextScene
       if (the lockscreen) then unlock screen
@@ -82,13 +81,12 @@ command goNextScene
 end goNextScene
 
 command loadNewImage pPath
-   hide sMainImage with effect "dissolve" to black
-   lock screen
+   --lock screen for visual effect
    set the filename of sMainImage to pPath
    setImageToFullCardLoc sMainImage, "portrait", 50
    centerMe sMainImage,0,50
-   show sMainImage
-   unlock screen with visual effect "dissolve" 
+   show sMainImage with visual effect "dissolve" 
+   --unlock screen with visual effect "dissolve" 
 end loadNewImage
 
 command loadNextQuote pQuoteNo
@@ -96,7 +94,7 @@ command loadNextQuote pQuoteNo
    put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into pControl
    centerMe pControl,0,5
-   hide sMainImage with effect "dissolve" to black
+   hide sMainImage with effect "dissolve" 
 end loadNextQuote
 
 command showAttribution pAttribution
@@ -114,15 +112,5 @@ command hideShowField pField,pBool
    set the vis of pField to pBool
 end hideShowField
 
-command  setDefaultImage pImage
-   # store brand image; set stage to screen to1
-   put 0 into sLastImage
-   put  empty into sConfigA["narrativeScene"]
-   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
-   set the filename of sMainImage to  pImage
-   setImageToFullCardLoc sMainImage,"portrait",50
-   centerMe sMainImage,0,50
-   show sMainImage
-end  setDefaultImage
 
 
