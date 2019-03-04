@@ -95,13 +95,13 @@ command News_Fetch
       # TODO We should set a pref that tells that app of they did read the news
       # from the Setting Statck
       # otherwise to leave the flat the true
-      news_UserReadNews
+      news_NoNews
    else 
       # save it
       put tServerNews into url ("file:"&tLocalNewsFile)
       put "true" into sNewNews
-      if exists(fld "Notification") then
-         put  "You have news!" into fld "Notification"
+      if exists(fld "notification") then
+         put  "You have news!" into fld "notification"
          visMessageToUser "true"
       end if
       
@@ -116,9 +116,9 @@ function news_Check
    return sNewNews
 end news_Check
 
-command news_UserReadNews
+command news_NoNews
    put "false" into sNewNews
-end news_UserReadNews
+end news_NoNews
 
 
 command newcontent_Check

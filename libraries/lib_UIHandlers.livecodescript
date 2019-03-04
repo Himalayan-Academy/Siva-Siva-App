@@ -309,12 +309,12 @@ on _STATUS_INDICATORS
 end _STATUS_INDICATORS
 
 command visMessageToUser pBool
-   if there is a fld "UpdateToUser" then
+   if there is a fld "notification" then
       if pBool then
-         show fld "UpdateToUser"
+         show fld "notification"
          send "visMessageToUser false" to the topstack in 2 second
       else
-         hide fld "UpdateToUser" 
+         hide fld "notification" 
       end if
    end if
 end visMessageToUser
