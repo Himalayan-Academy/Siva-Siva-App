@@ -455,12 +455,12 @@ helpView karma =
                 , padding (px 15)
                 ]
             ]
-            [ text "Welcome the Hindu Lexicon! Type the characters that you know are in a word. All the possible choices will appear. Use less characters if you do not know to the spelling of a word. Use more if want to limit the choices."
-            , text " Gurudeva recommended study of one word and associated words. Take:"
+            [ text "Welcome the Hindu Lexicon! Type any contiguous characters that you know are in a word. All the possible choices will appear. Use fewer characters if you do not know exactly how to spell the word. Use more if want to limit the choices. Gurudeva recommended studying a word by exploring its associated words. For example, take the word:"
             , br [] []
             , div [ css [ textAlign center ] ] [ seeAlso karma "karma" ]
             , br [] []
-            , text " and go a word adventure clicking the other that pop up. You can a word to my word, but click the bookmark. When you are in My Word, clicking the bookmark will delete word. "
+            , text "and go on a word adventure by clicking other words that pop up."
+            , text "You can permanently add word to My Words by clicking on the small bookmark. When you are in My Word, clicking the bookmark will delete that word from your saved list. To see all the words in the My Words list, you must empty the search field."
             ]
         ]
 

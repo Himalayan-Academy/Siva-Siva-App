@@ -8655,8 +8655,7 @@ var author$project$Main$helpView = function (karma) {
 					]),
 				_List_fromArray(
 					[
-						rtfeldman$elm_css$Html$Styled$text('Welcome the Hindu Lexicon! Type the characters that you know are in a word. All the possible choices will appear. Use less characters if you do not know to the spelling of a word. Use more if want to limit the choices.'),
-						rtfeldman$elm_css$Html$Styled$text(' Gurudeva recommended study of one word and associated words. Take:'),
+						rtfeldman$elm_css$Html$Styled$text('Welcome the Hindu Lexicon! Type any contiguous characters that you know are in a word. All the possible choices will appear. Use fewer characters if you do not know exactly how to spell the word. Use more if want to limit the choices. Gurudeva recommended studying a word by exploring its associated words. For example, take the word:'),
 						A2(rtfeldman$elm_css$Html$Styled$br, _List_Nil, _List_Nil),
 						A2(
 						rtfeldman$elm_css$Html$Styled$div,
@@ -8673,7 +8672,8 @@ var author$project$Main$helpView = function (karma) {
 								A2(author$project$Theme$Elements$seeAlso, karma, 'karma')
 							])),
 						A2(rtfeldman$elm_css$Html$Styled$br, _List_Nil, _List_Nil),
-						rtfeldman$elm_css$Html$Styled$text(' and go a word adventure clicking the other that pop up. You can a word to my word, but click the bookmark. When you are in My Word, clicking the bookmark will delete word. ')
+						rtfeldman$elm_css$Html$Styled$text('and go on a word adventure by clicking other words that pop up.'),
+						rtfeldman$elm_css$Html$Styled$text('You can permanently add word to My Words by clicking on the small bookmark. When you are in My Word, clicking the bookmark will delete that word from your saved list. To see all the words in the My Words list, you must empty the search field.')
 					]))
 			]));
 };
@@ -8731,21 +8731,6 @@ var author$project$Main$filterWordList = F2(
 			},
 			list);
 	});
-var rtfeldman$elm_css$Css$border = rtfeldman$elm_css$Css$prop1('border');
-var rtfeldman$elm_css$Css$prop3 = F4(
-	function (key, argA, argB, argC) {
-		return A2(
-			rtfeldman$elm_css$Css$property,
-			key,
-			A2(
-				elm$core$String$join,
-				' ',
-				_List_fromArray(
-					[argA.B, argB.B, argC.B])));
-	});
-var rtfeldman$elm_css$Css$borderTop3 = rtfeldman$elm_css$Css$prop3('border-top');
-var rtfeldman$elm_css$Css$solid = {q: 0, X: 0, B: 'solid'};
-var rtfeldman$elm_css$Html$Styled$hr = rtfeldman$elm_css$Html$Styled$node('hr');
 var author$project$Theme$Elements$listHeader = A2(
 	rtfeldman$elm_css$Html$Styled$div,
 	_List_fromArray(
@@ -8776,27 +8761,7 @@ var author$project$Theme$Elements$listHeader = A2(
 			_List_fromArray(
 				[
 					rtfeldman$elm_css$Html$Styled$text('Scroll the results and choose a word!')
-				])),
-			A2(
-			rtfeldman$elm_css$Html$Styled$hr,
-			_List_fromArray(
-				[
-					rtfeldman$elm_css$Html$Styled$Attributes$css(
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$block),
-							rtfeldman$elm_css$Css$height(rtfeldman$elm_css$Css$zero),
-							rtfeldman$elm_css$Css$border(rtfeldman$elm_css$Css$zero),
-							A3(
-							rtfeldman$elm_css$Css$borderTop3,
-							rtfeldman$elm_css$Css$px(2),
-							rtfeldman$elm_css$Css$solid,
-							author$project$Theme$Colors$theme.s.b0),
-							rtfeldman$elm_css$Css$width(
-							rtfeldman$elm_css$Css$pct(10))
-						]))
-				]),
-			_List_Nil)
+				]))
 		]));
 var elm$json$Json$Decode$fail = _Json_fail;
 var elm$json$Json$Decode$int = _Json_decodeInt;
@@ -8810,9 +8775,9 @@ var author$project$Theme$Elements$onEnter = function (msg) {
 		'keydown',
 		A2(elm$json$Json$Decode$andThen, isEnter, rtfeldman$elm_css$Html$Styled$Events$keyCode));
 };
-var rtfeldman$elm_css$Css$transparent = {y: 0, B: 'transparent'};
 var rtfeldman$elm_css$Html$Styled$input = rtfeldman$elm_css$Html$Styled$node('input');
 var rtfeldman$elm_css$Html$Styled$Attributes$id = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
+var rtfeldman$elm_css$Html$Styled$Attributes$placeholder = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('placeholder');
 var rtfeldman$elm_css$Html$Styled$Attributes$value = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('value');
 var rtfeldman$elm_css$Html$Styled$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -8869,35 +8834,19 @@ var author$project$Theme$Elements$searchBox = F3(
 								[
 									rtfeldman$elm_css$Css$fontSize(
 									rtfeldman$elm_css$Css$px(30)),
-									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left),
 									rtfeldman$elm_css$Css$borderStyle(rtfeldman$elm_css$Css$none),
-									rtfeldman$elm_css$Css$backgroundColor(rtfeldman$elm_css$Css$transparent),
-									rtfeldman$elm_css$Css$color(author$project$Theme$Colors$theme.s.C)
+									rtfeldman$elm_css$Css$backgroundColor(
+									A3(rtfeldman$elm_css$Css$rgb, 10, 70, 80)),
+									rtfeldman$elm_css$Css$color(author$project$Theme$Colors$theme.s.C),
+									rtfeldman$elm_css$Css$width(
+									rtfeldman$elm_css$Css$pct(80))
 								])),
 							rtfeldman$elm_css$Html$Styled$Events$onInput(changed),
 							author$project$Theme$Elements$onEnter(search),
 							rtfeldman$elm_css$Html$Styled$Attributes$value(query),
-							rtfeldman$elm_css$Html$Styled$Attributes$id('search-box')
-						]),
-					_List_Nil),
-					A2(
-					rtfeldman$elm_css$Html$Styled$hr,
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Html$Styled$Attributes$css(
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$block),
-									rtfeldman$elm_css$Css$height(rtfeldman$elm_css$Css$zero),
-									rtfeldman$elm_css$Css$border(rtfeldman$elm_css$Css$zero),
-									A3(
-									rtfeldman$elm_css$Css$borderTop3,
-									rtfeldman$elm_css$Css$px(1),
-									rtfeldman$elm_css$Css$solid,
-									author$project$Theme$Colors$theme.s.C),
-									rtfeldman$elm_css$Css$width(
-									rtfeldman$elm_css$Css$pct(80))
-								]))
+							rtfeldman$elm_css$Html$Styled$Attributes$id('search-box'),
+							rtfeldman$elm_css$Html$Styled$Attributes$placeholder('🔍')
 						]),
 					_List_Nil)
 				]));

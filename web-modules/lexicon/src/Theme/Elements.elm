@@ -2,7 +2,7 @@ module Theme.Elements exposing (bodyStyle, fontAwesomeIcon, headerStyle, headerT
 
 import Css exposing (..)
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (classList, css, value, id)
+import Html.Styled.Attributes exposing (classList, css, value, id, placeholder)
 import Html.Styled.Events exposing (..)
 import Theme.Colors exposing (..)
 import Json.Decode as Decode
@@ -130,27 +130,20 @@ searchBox changed search query =
         [ input
             [ css
                 [ fontSize (px 30)
-                , textAlign center
+                , textAlign left
                 , borderStyle none
-                , backgroundColor transparent
+                , backgroundColor (rgb 10 70 80)
                 , color theme.palette.white
+                , width (pct 80)
                 ]
             , onInput changed
             , onEnter search
             , value query
             , id "search-box"
+            ,  placeholder "🔍"
             ]
             []
-        , hr
-            [ css
-                [ display block
-                , height zero
-                , border zero
-                , borderTop3 (px 1) solid theme.palette.white
-                , width (pct 80)
-                ]
-            ]
-            []
+        
         ]
 
 
@@ -170,16 +163,7 @@ listHeader =
                 ]
             ]
             [ text "Scroll the results and choose a word!" ]
-        , hr
-            [ css
-                [ display block
-                , height zero
-                , border zero
-                , borderTop3 (px 2) solid theme.palette.lightBlue
-                , width (pct 10)
-                ]
-            ]
-            []
+        
         ]
 
 
