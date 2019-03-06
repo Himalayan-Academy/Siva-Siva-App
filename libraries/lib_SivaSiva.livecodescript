@@ -60,7 +60,7 @@ end ___FETCH_NEWS
 command News_Fetch
    --breakpoint
    if connectivity_PingServer() = "false" then 
-      news_UserReadNews # user has read then news, but is off line...
+      news_NoNews # user has read the news, but is off line...
       exit news_Fetch
    end if
    
