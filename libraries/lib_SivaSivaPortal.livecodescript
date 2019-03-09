@@ -83,10 +83,12 @@ command portal_GoStack cardOrStackObject
    
    set the acceleratedRendering of stack oStackName to false
    
-   ntInfo portal_GetLastStack() 
    ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
+   ntInfo portal_GetLastStack() 
    
-   if isMobile() then
+   put "view_SivaSivaBrowser" into tSeparateWindow
+   
+   if isMobile() AND (cardOrStackObject <> "view_SivaSivaBrowser") then
       go cardOrStackObject in stack oStackName
    else
       close stack oStackName

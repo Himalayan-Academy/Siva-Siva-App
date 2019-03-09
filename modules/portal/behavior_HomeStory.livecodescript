@@ -81,20 +81,23 @@ command goNextScene
 end goNextScene
 
 command loadNewImage pPath
-   --lock screen for visual effect
+lock screen for visual effect
    set the filename of sMainImage to pPath
    setImageToFullCardLoc sMainImage, "portrait", 50
    centerMe sMainImage,0,50
-   show sMainImage with visual effect "dissolve" 
-   --unlock screen with visual effect "dissolve" 
+   show sMainImage --with visual effect "dissolve" 
+unlock screen with visual effect "dissolve" 
 end loadNewImage
 
 command loadNextQuote pQuoteNo
+   
+   lock screen for visual effect
    set the itemdel to "|"
    put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into pControl
    centerMe pControl,0,5
-   hide sMainImage with effect "dissolve" 
+   hide sMainImage -- with effect "dissolve" 
+   unlock screen with visual effect "dissolve" 
 end loadNextQuote
 
 command showAttribution pAttribution

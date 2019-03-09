@@ -96,21 +96,22 @@ command News_Fetch
       # from the Setting Statck
       # otherwise to leave the flat the true
       news_NoNews
+      
    else 
       # save it
       put tServerNews into url ("file:"&tLocalNewsFile)
       put "true" into sNewNews
-      if exists(fld "notification") then
-         put  "You have news!" into fld "notification"
-         visMessageToUser "true"
-      end if
-      
-      --dispatch "dialog_CustomMsg" to the topstack with "You have news!"
-      
    end if
+   showNewNotification sNewNews
    send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 
+command showNewNotification pBool
+   if exists(fld "notification") then
+      visMessageToUser pBool
+      put  "You have news!" into fld "notification"
+   end if
+end showNewNotification
 
 function news_Check
    return sNewNews
