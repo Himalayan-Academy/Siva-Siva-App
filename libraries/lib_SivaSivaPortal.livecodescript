@@ -67,9 +67,7 @@ local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject
-   
-   put "wordpuzzles" into tLandScapeModeStacks
-   
+   --breakpoint
    put the short name of this stack into oStackName
    
    # cannot pass quotes to these strings or you willl
@@ -84,13 +82,24 @@ command portal_GoStack cardOrStackObject
    set the acceleratedRendering of stack oStackName to false
    
    ntInfo "about to change stacks from: " & portal_GetLastStack() & " to " & cardOrStackObject
-   ntInfo portal_GetLastStack() 
+   ntInfo "sLastStack: " & portal_GetLastStack() 
    
-   put "view_SivaSivaBrowser" into tSeparateWindow
+   # it doesn't work to go in window from a Portrait to Landscape.
+   # need to use the old go stack
+   put "wordpuzzles,view_BrowserLandscape" into tLandScapeModeStacks
    
-   if isMobile() AND (cardOrStackObject <> "view_SivaSivaBrowser") then
+   # we need to from landscape to portrait and backagain 
+   # closing one and open the other
+   
+   --if isMobile() AND \
+   
+   if ((cardOrStackObject is not among the items of  tLandScapeModeStacks)  AND \
+         (oStackName is not among the items of  tLandScapeModeStacks) )
+   then
+      ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
    else
+      ntInfo "close one; open next"
       close stack oStackName
       go cardOrStackObject
    end if
@@ -246,13 +255,27 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
+   
+   put ("youtube.com") into tRequiresLandscape
+   
    if requiresConnection(sLastLinkTitle) = "false" then
       dialog_CustomMsg "Connection required."
       exit to top
    else
       put the short name of this stack into oStackName
-      portal_GoStack "view_SivaSivaBrowser"
-      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+      repeat for each item x  in tRequiresLandscape
+         if  pURL contains x then
+            put "goLandscape" into tBrowserView
+         end if
+      end repeat
+      if  tBrowserView = "goLandscape" then
+         portal_GoStack "view_BrowserLandscape"
+         send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
+      else
+         portal_GoStack "view_SivaSivaBrowser"     
+         send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+      end if
+      
       put pURL into pTrackdata["webUrl"]
       tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
    end if
@@ -285,6 +308,7 @@ command portal_SetLastStack stackName
    # like returning from Chennai to London;
    --ntInfo "portal_SetLastStack"
    if stackname = "Siva-Siva-App" then
+      ntinfo "Launch from SivaSivaApp"
       put "Siva-Siva-Portal" into stackName
    end if
    put stackName into sLastStack  
@@ -443,31 +467,7 @@ command _DEPRECATED_________
    -------------------------------------------------
 end _DEPRECATED_________
 
-command portal_StackOrientation pStack
-   # we need to know the stack oriention for we open it
-   # we be explicit about landscape and let portrait go
-   # this means everytime were have a landscape stack 
-   # it must registered here
-   if  pStack is among items  of \
-         ("wordpuzzles") then  # list all landscape stacks here
-      mobileSetAllowedOrientations "landscape left, landscaper right"
-   else
-      # portrail
-      mobileSetAllowedOrientations"portrait, portrait upside down"
-   end if
-end portal_StackOrientation
 
-command portal_NextOrientation pStack
-   # all landscape stack must registered here
-   
-   if pStack is among the items of \
-         "wordpuzzles"  then
-      mobileSetAllowedOrientations "landscape, left, landscape right"
-   else # all other stacks
-      mobileSetAllowedOrientations "portrait, portrait upside down"
-   end if
-   
-end portal_NextOrientation 
 
 function portal_GetLinkUrl portalName, pSivasivaData
    put portal_GetArray (portalName, pSivasivaData) into portalArray

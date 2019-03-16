@@ -84,14 +84,10 @@ on createWordPuzzle
    -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "quoteGroup"
    
-   
    # need to save it because we are going to crop each word in a loop
    # put it away for safe keeping
    set the name of the last image to "currentPuzzle" 
    set the loc of image "currentPuzzle"  to -1000,-1000
-   
-   
-   -- copy the image to the same location/rect as the quote
    
    put empty into tLoc  # set the extents of loc array to 0 each iterations
    
@@ -182,7 +178,11 @@ command getLocations tNextWord,tNextWordRect
       put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
       put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
       put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+      
+      ntInfo tNextWord && (theX,theY)
+      
       put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
+      
       --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
    end if
 end getLocations
@@ -193,6 +193,7 @@ command assignHomeLocations
       if the short name of image x contains "word" then
          set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
       end if
+      ntInfo (the cWord  of image x)
    end repeat
 end assignHomeLocations
    

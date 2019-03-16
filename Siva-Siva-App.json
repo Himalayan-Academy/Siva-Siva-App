@@ -122,6 +122,10 @@
       "file": "views/behavior_view_SivaSivaBrowser.livecodescript"
     },
     {
+      "name": "view_BrowserLandscape",
+      "file": "views/view_BrowserLandscape.livecode"
+    },
+    {
       "name": "Journal",
       "file": "modules/journal/journal.livecode"
     },
