@@ -136,9 +136,9 @@ on createWordPuzzle
       -- jg: required for smooth movment on slower devices
       set the caseSensitive to true
       getLocations tNextWord,tNextWordRect 
-     
+      
    end repeat
-   
+   unlock screen
    assignHomeLocations 
    
    delete char -1 of tWordList
@@ -159,7 +159,7 @@ on createWordPuzzle
    
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
-   unlock screen
+   --unlock screen
    send hideSubjectFld to me in 200 milliseconds
    
    send "clueGoHome" to image "word_1" in 500 milliseconds
@@ -178,12 +178,7 @@ command getLocations tNextWord,tNextWordRect
       put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
       put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
       put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
-      
-      ntInfo tNextWord && (theX,theY)
-      
       put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
-      
-      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
    end if
 end getLocations
 
@@ -193,8 +188,17 @@ command assignHomeLocations
       if the short name of image x contains "word" then
          set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
       end if
-      ntInfo (the cWord  of image x)
    end repeat
+   repeat with x = 1 to ( the number of images on this card)
+
+      put the cWord of image x  ; wait 1 second--into pLocations
+      
+      --      repeat for each element z in pLocations
+      --         put pLocations[z];wait 1 second
+      --         ntInfo (pLocations[z])
+      --      end repeat
+   end repeat
+   
 end assignHomeLocations
    
 command loadNewBgImg -- change img for each new puzzle
