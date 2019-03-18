@@ -189,16 +189,6 @@ command assignHomeLocations
          set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
       end if
    end repeat
-   repeat with x = 1 to ( the number of images on this card)
-
-      put the cWord of image x  ; wait 1 second--into pLocations
-      
-      --      repeat for each element z in pLocations
-      --         put pLocations[z];wait 1 second
-      --         ntInfo (pLocations[z])
-      --      end repeat
-   end repeat
-   
 end assignHomeLocations
    
 command loadNewBgImg -- change img for each new puzzle
