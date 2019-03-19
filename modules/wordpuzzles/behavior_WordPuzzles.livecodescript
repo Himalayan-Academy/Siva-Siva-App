@@ -138,9 +138,9 @@ on createWordPuzzle
       set the layermode of the last image to "dynamic"
       set the alwaysbuffer of the last image to true
       -- jg: required for smooth movment on slower devices
-    
+      
       getLocations tNextWord,tNextWordRect 
-     
+      
    end repeat
    
    assignHomeLocations 
@@ -166,7 +166,11 @@ on createWordPuzzle
    unlock screen
    send hideSubjectFld to me in 200 milliseconds
    
-   send "clueGoHome" to image "word_1" in 500 milliseconds
+   --send "clueGoHome" to image "word_1" in 500 milliseconds
+  put the long id of image "word_1" into pTile
+   setTileGlow "large" 
+   relayer  pTile to front of card "word-puzzle"
+   glowtile pTile, true
    
    put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
    tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata

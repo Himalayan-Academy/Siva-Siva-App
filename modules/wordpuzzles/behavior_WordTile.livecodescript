@@ -61,6 +61,9 @@ command clueGoHome
    setTileGlow "large" 
    relayer me to front of card "word-puzzle"
    glowtile me, true
+   put sMyHomes[1] into tLoc
+   move me from (the loc of  me) to  tLoc in 1500 milliseconds without messages
+   glowtile me, false
 end clueGoHome
 
 
