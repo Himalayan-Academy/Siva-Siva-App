@@ -84,10 +84,14 @@ on createWordPuzzle
    -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "quoteGroup"
    
+   
    # need to save it because we are going to crop each word in a loop
    # put it away for safe keeping
    set the name of the last image to "currentPuzzle" 
    set the loc of image "currentPuzzle"  to -1000,-1000
+   
+   
+   -- copy the image to the same location/rect as the quote
    
    put empty into tLoc  # set the extents of loc array to 0 each iterations
    
@@ -134,11 +138,11 @@ on createWordPuzzle
       set the layermode of the last image to "dynamic"
       set the alwaysbuffer of the last image to true
       -- jg: required for smooth movment on slower devices
-      set the caseSensitive to true
+    
       getLocations tNextWord,tNextWordRect 
-      
+     
    end repeat
-   unlock screen
+   
    assignHomeLocations 
    
    delete char -1 of tWordList
@@ -148,7 +152,7 @@ on createWordPuzzle
    
    # set start indicator to the beginning of the first word
    put the cWord of image "word_1" into pWord
-   --put the  uWordLocation of image "word_1"  into tFirstWordPosition
+   put the  uWordLocation of image "word_1"  into tFirstWordPosition
    put sWordLocationsA[pWord][1] into tFirstWordPosition
    subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
    put tFirstWordPosition into tStartIconPosition
@@ -159,7 +163,7 @@ on createWordPuzzle
    
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
-   --unlock screen
+   unlock screen
    send hideSubjectFld to me in 200 milliseconds
    
    send "clueGoHome" to image "word_1" in 500 milliseconds
@@ -169,7 +173,6 @@ on createWordPuzzle
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
-   set the caseSensitive to true
    -- set up an array of the location(x) of a word.
    put tNextWordRect into  tCoords
    if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
@@ -179,11 +182,11 @@ command getLocations tNextWord,tNextWordRect
       put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
       put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
       put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
+      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
    end if
 end getLocations
 
 command assignHomeLocations
-   set the casesensitive to true
    repeat with x = 1 to ( the number of images on this card)
       if the short name of image x contains "word" then
          set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
