@@ -32,9 +32,10 @@ local sCached, sBrowseHeader
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
    if isMobile() then
-      mobileSetAllowedOrientations "portrait,portrait upside down" 
+      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+      set the fullscreenmode of this stack to "showAll"
    end if
- 
+   
 end preopenstack
 
 on openstack 
