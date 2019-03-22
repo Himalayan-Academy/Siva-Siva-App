@@ -11,6 +11,10 @@ end __RESPONSIVE
 ########################
 -- Get card geometry 
 
+command gotUILibrary
+   answer "Go UIHandler Lib" with "OK"
+end gotUILibrary
+
 command setCardCoords
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
