@@ -1,6 +1,6 @@
 ﻿script "behavior_WordPuzzles"
 local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
-local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA
+local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues
 
 
 /*
@@ -626,32 +626,30 @@ command hideSubjectFld
 end hideSubjectFld
 
 on showClues
-   put the uWordList of me into tTiles
+   put the uWordList of me into sClues
    if tTiles is empty then
       dialog_CustomMsg "Start a puzzle first."
       exit to top
    end if
    
-   put the number of lines of tTiles into tWordCount
+   sort lines of sClues by random(the number of lines of sClues)
+   
+   
    if sCluesGiven is empty then
       put 0 into sCluesGiven
    end if
    
    switch sCluesGiven
       case 0 
-         if tWordCount <16 then
-            send "clueGoHome" to image (line tWordCount of tTiles)
-         else
-            send "clueGoHome" to image (line 15 of tTiles)
-         end if  
+         send "clueGoHome" to image (line 1 of sClues)
          add 1 to sCluesGiven
          break
       case 1
-           send "clueGoHome" to image (line tWordCount of tTiles)
+         send "clueGoHome" to image (line 2 of sClues)
          add 1 to sCluesGiven
          break
-         case 2
-          send "clueGoHome" to image (line tWordCount of tTiles)
+      case 2
+         send "clueGoHome" to image (line 3 of sClues)
          add 1 to sCluesGiven
          break
       case 3 
@@ -660,6 +658,35 @@ on showClues
          put 0 into sCluesGiven
          break       
    end switch
+   
+   --   put the number of lines of tTiles into tWordCount
+   --   if sCluesGiven is empty then
+   --      put 0 into sCluesGiven
+   --   end if
+   
+   --   switch sCluesGiven
+   --      case 0 
+   --         if tWordCount <16 then
+   --            send "clueGoHome" to image (line tWordCount of tTiles)
+   --         else
+   --            send "clueGoHome" to image (line 15 of tTiles)
+   --         end if  
+   --         add 1 to sCluesGiven
+   --         break
+   --      case 1
+   --           send "clueGoHome" to image (line tWordCount of tTiles)
+   --         add 1 to sCluesGiven
+   --         break
+   --         case 2
+   --          send "clueGoHome" to image (line tWordCount of tTiles)
+   --         add 1 to sCluesGiven
+   --         break
+   --      case 3 
+   --         put "No more clues. You are on your own!" into pMsg
+   --         dialog_customMsg pMsg
+   --         put 0 into sCluesGiven
+   --         break       
+   --   end switch
    
 end showClues
 
