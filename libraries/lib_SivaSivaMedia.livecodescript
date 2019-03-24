@@ -532,6 +532,13 @@ function stripHTML pText
    return tPlainText
 end stripHTML
 
+ 
+function truncateText pText,pNumChars,pEllipsisBool  # last parameter is "true" or "false"
+   put char 1 to  pNumChars of pText into tTruncatedText
+   if pEllipsisBool then put "..." after tTruncatedText
+   return tTruncatedText
+end truncateText
+
 
  
 #####################
