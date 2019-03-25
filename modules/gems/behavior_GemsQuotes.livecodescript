@@ -56,7 +56,7 @@ on openCard
    --   put connectivity_PingServer() into sOnline
    put true into sOnline
    
-   ntInfo "GEMS: " & portal_GetLastStack()
+  
    setCardTitle 
    
    --ntInfo "fetchQuote"
