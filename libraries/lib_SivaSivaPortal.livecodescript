@@ -90,15 +90,19 @@ command portal_GoStack cardOrStackObject
    # we need to from landscape to portrait and backagain 
    # closing one and open the other
    
-
+   
    if (cardOrStackObject  is not among the items of tLandScapeModeStacks) AND  \
          (trueword 2 of cardOrStackObject  is not among the items of tLandScapeModeStacks) AND \
-       (oStackName is not among the items of  tLandScapeModeStacks) then
+         (oStackName is not among the items of  tLandScapeModeStacks) then
       ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
    else
       ntInfo "close one; open next"
       close stack oStackName
+      # this will be called 
+      --      if isMobile() then
+      --         mobileSetAllowedOrientations "portrait,portrait upside down"
+      --      end if
       go cardOrStackObject
    end if
    
