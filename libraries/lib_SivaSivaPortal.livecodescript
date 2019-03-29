@@ -74,7 +74,7 @@ command portal_GoStack cardOrStackObject
    # break the JSON, BR added utilities section to lib_SivaSiva
    
    put removeQuotes(cardOrStackObject) into pTrackdata["contentTarget"]
-   
+   ntinfo "nothing"
    if oStackName <> empty then # this is not the first run boot of portal
       deleteAllMobileControls # will destroy all except audioPlayer
    end if
@@ -96,6 +96,7 @@ command portal_GoStack cardOrStackObject
          (oStackName is not among the items of  tLandScapeModeStacks) then
       ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
+      close stack oStackName
    else
       ntInfo "close one; open next"
       close stack oStackName

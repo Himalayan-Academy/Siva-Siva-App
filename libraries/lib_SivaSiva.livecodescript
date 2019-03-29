@@ -20,6 +20,11 @@ on libraryStack
    fetchNavigationMap
 end libraryStack
 
+# disable ntinfo
+command ntInfo
+   # nothing	
+end ntInfo
+
 --> GENERIC GLOBAL MOBILE
 
 function isMobile

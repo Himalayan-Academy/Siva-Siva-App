@@ -1,6 +1,6 @@
 {
   "launch_module": "home",
-  "libraries": "animationEngine,lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls,aagNetworkTracer,lib_UIHandlers",
+  "libraries": "animationEngine,lib_MobileControls,lib_SivaSiva,lib_SivaSivaBookmark,lib_SivaSivaBrowser,lib_SivaSivaMedia,lib_SivaSivaPortal,lib_Dialogs,lib_timeUtilities,lib_CustomControls,lib_UIHandlers",
   "log_file": "sivasiva.log",
   "log_level": "info,error,fatal",
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal,model_SivaSivaTracking,model_Narratives",

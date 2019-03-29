@@ -36,7 +36,7 @@ We can now experiment with:
 --> Variables
 
 global  sConfigA
-local LocalArray,sOnlineStatus
+local LocalArray,sOnlineStatus,sNow,sThen
 global sConfigA
 
 --> Events
@@ -45,60 +45,101 @@ on preOpenStack
    set the fullscreenmode of this stack to "showAll"
    -- start using this stack
    # duplicates what's on the lib_SivaSiva, but we need to fire right away
+   --breakpoint
+   put the seconds into sThen
+   logging "init_AppConfiguration"
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
 end preOpenStack
 
-function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
-   return the environment is "development"
-end dev
-
-function isMobile -- jg, for convenience
-   return the environment is "mobile"
-end isMobile
-
-command testBehavior 
-   put specialFolderPath("resources")
-end testBehavior
-
- 
---> SivaSiva | Init | Logging
-
-/*
-We aim to remove the need for this section eventually.
-When the code is tested and stable we can stop loggin the initialisation routines
-*/
-
-command init_Logging
-   --  relies on stack names so ensure the stackfiles is set properly
-   -- we have to ensure the general purpose logging handlers are loaded first
-   start using stack "model_SivaSivaLog"
-   log_Clear
+command init_AppConfiguration
+   -- called by the "preOpenStack" of the Siva-Siva-App's first card script
+   -- if init_GetStatus() is true then return false
+   -- the first thing we must do is know where the top-level project is
    
-   /*
-   -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
-   -- we could remove this step if we move this code back to the card script
-   log_Append "Before behavior_SivaSivaLogging"
-   put exists (stack "behavior_SivaSivaLogging") into stackExists
-   if stackExists then
-      put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
-      set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
-      log_Append "Set behaviors"
+   logging "start using model_SivaSivaFile"
+   
+   start using stack "model_SivaSivaFiles"
+   
+   
+   -- then
+   --init_Logging
+   
+   -- due to bug in the files on Android we must use config to load libraries
+   
+   logging "start using model_SivaSivaConfig: " 
+   
+   start using stack "model_SivaSivaConfig"
+   
+   put "load config: "  &  the seconds & cr after sConfigA["log"]
+   
+   init_LoadJsonConfig
+   
+   logging "finish loading json"
+   -- reload the stackfiles property
+   init_LoadStackFilesFromConfiguration
+   logging "LoadStackFilesFromConfiguration"
+   
+   -- then start using all required libraries
+   logging "start loading libraries"
+   
+   init_LoadLibraries
+   
+   logging "end loading libraries"
+   
+   -- set things up for mobile geometry
+   --   if the environment is "mobile" then 
+   --      init_MobileGeometry
+   --   end if
+   
+   -- get long id's for global custom controls on card "custom-controls
+   logging "start StoreControlsIds"
+   init_StoreControlsIds
+   logging "end StoreControlsIds"
+   # now create local data and media hierachy
+   
+   logging "start CreateLocalFolders"
+   init_CreateLocalFolders
+   logging "end CreateLocalFolders"
+   
+   logging "start Fonts"
+   init_Fonts
+   logging "end  Fonts"
+   
+   -- cacheGlobalNavImages
+   
+   set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
+   
+   portal_SetLastStack "Siva-Siva-App"
+   
+   logging "open Portal Stack"
+   send openPortalStack to me in 50 milliseconds
+   set the effectrate to 500
+   
+   tsNetLibUrlReuseConnection false
+   set the socketTimeoutInterval to 2000
+   
+   send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
+   put platform() into tPlatform
+   put "init/launch"into tAction
+   put the screenrect into pData["screenRect"]
+   put the machine into pData["device"]["hardware"]
+   if platform() = "android" then
+      put mobileBuildInfo("MODEL") into  pData["device"]["model"]
+      put mobileBuildInfo("MANUFACTURER") into  pData["device"]["madeby"]
    end if
-   log_Append stackExists
-   */
+   mobileRectSet
+   send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
-   log_SetLevelList "all"
-   log_Append "End of init_Logging"
-end init_Logging
+   -- AAG enable or disable network tracer
+   --   if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
+   --      ntEnableNetworkTracer
+   --   else
+   --      ntDisableNetworkTracer
+   --   end if
+end init_AppConfiguration
 
 
---> SivaSiva | Init
-
-function init_GetStatus
-   put "lib_SivaSiva" is among the lines of the stacksinuse into someBoolean
-   return someBoolean
-end init_GetStatus
 
 command init_LoadStackFilesFromConfiguration
    -- AAG: loads the stackfiels from json 
@@ -120,72 +161,7 @@ command init_LoadStackFilesFromConfiguration
    
 end init_LoadStackFilesFromConfiguration
 
-command init_AppConfiguration
-   -- called by the "preOpenStack" of the Siva-Siva-App's first card script
-   -- if init_GetStatus() is true then return false
-   -- the first thing we must do is know where the top-level project is
-   start using stack "model_SivaSivaFiles"
-   -- then
-   init_Logging
-   
-   -- due to bug in the files on Android we must use config to load libraries
-   start using stack "model_SivaSivaConfig"
-   
-   init_LoadJsonConfig
-   
-   -- reload the stackfiles property
-   init_LoadStackFilesFromConfiguration
-   
-   
-   -- then start using all required libraries
-   init_LoadLibraries
-   
-   
-   
-   -- set things up for mobile geometry
-   if the environment is "mobile" then 
-      init_MobileGeometry
-   end if
-   
-   -- get long id's for global custom controls on card "custom-controls
-   
-   init_StoreControlsIds
-   
-   # now create local data and media hierachy
-   
-   init_CreateLocalFolders
-   
-   init_Fonts
-   
-   cacheGlobalNavImages
-   
-   set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
-   portal_SetLastStack "Siva-Siva-App"
-   send openPortalStack to me in 50 milliseconds
-   set the effectrate to 500
-   
-   tsNetLibUrlReuseConnection false
-   set the socketTimeoutInterval to 2000
-   
-   send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
-   put platform() into tPlatform
-   put "init/launch"into tAction
-   put the screenrect into pData["screenRect"]
-   put the machine into pData["device"]["hardware"]
-   if platform() = "android" then
-      put mobileBuildInfo("MODEL") into  pData["device"]["model"]
-      put mobileBuildInfo("MANUFACTURER") into  pData["device"]["madeby"]
-   end if
-   mobileRectSet
-   send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
-   
-   -- AAG enable or disable network tracer
-   if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
-      ntEnableNetworkTracer
-   else
-      ntDisableNetworkTracer
-   end if
-end init_AppConfiguration
+
 
 command init_Fonts
    start using font file (path_Assets() & "fonts/NotoSans-Regular.ttf")
@@ -215,10 +191,12 @@ command openPortalStack
 end openPortalStack
 
 command  init_LoadLibraries 
-   
+
    put init_ListStacksToUse() into stackNames   
-   filter items of stackNames without"animationEngine*" # should loaded when need an offload when note
+   filter items of stackNames without"animationEngine*" # should load onlyl when when needed
+   
    repeat for each item stackName in stackNames
+      logging stackName
       if there is a stack stackName then
          start using stack stackName
       else
@@ -234,7 +212,7 @@ command  init_LoadLibraries
             case ("lib" is in stackName)
                put "libraries/" & stackName & ".livecodescript" into stackName
                break
-            --case ("behavior" is in stackName)
+               --case ("behavior" is in stackName)
                --put "behaviors/" & stackName & ".livecodescript" into stackName
                --break
             case ("model" is in stackName)
@@ -256,10 +234,10 @@ command  init_LoadLibraries
    return true
    
    -- if we can get the files working on Android we should use the handlers below instead
-   put project_ListFolderStacks ("libraries") into stackPaths
-   project_UseStacks stackPaths
-   put project_ListFolderStacks ("models") into stackPaths
-   project_UseStacks stackPaths
+   --   put project_ListFolderStacks ("libraries") into stackPaths
+   --   project_UseStacks stackPaths
+   --   put project_ListFolderStacks ("models") into stackPaths
+   --   project_UseStacks stackPaths
 end init_LoadLibraries
 
 function init_ListStacksToUse
@@ -267,20 +245,20 @@ function init_ListStacksToUse
    -- due to bug in the files on Android we must use config to load libraries
    #Libries must come first because there are dependencies in the
    # lib_SivaSiva 
-
+   
    put sConfigA ["libraries"] & comma & sConfigA ["models"]  into stackNames
    -- put "lib_SivaSiva,lib_SivaSivaPortal,lib_MobileControls,model_SivaSiva,model_SivaSivaConfig" into stackNames
    return stackNames
 end init_ListStacksToUse
- 
-command init_MobileGeometry
-   -- see "initializeInterfaceDefaults"
-   -- set the fullscreenmode of this stack to "showAll"
-   mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
-   if the platform = "iphone" then
-      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
-   end if
-end init_MobileGeometry
+
+--command init_MobileGeometry
+--   -- see "initializeInterfaceDefaults"
+--   -- set the fullscreenmode of this stack to "showAll"
+--   mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
+--   if the platform = "iphone" then
+--      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
+--   end if
+--end init_MobileGeometry
 
 command init_CreateLocalFolders
    # We want have folders correponding to app pkg content and also to the web server
@@ -383,6 +361,63 @@ command isBehaviorActive
    answer "Yes, the behavior was found." with "Yes" or "No"
 end isBehaviorActive
 
+function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
+   return the environment is "development"
+end dev
+
+function isMobile -- jg, for convenience
+   return the environment is "mobile"
+end isMobile
+
+command testBehavior 
+   put specialFolderPath("resources")
+end testBehavior
+
+
+--> SivaSiva | Init | Logging
+
+/*
+We aim to remove the need for this section eventually.
+When the code is tested and stable we can stop loggin the initialisation routines
+*/
+
+--command init_Logging
+--   --  relies on stack names so ensure the stackfiles is set properly
+--   -- we have to ensure the general purpose logging handlers are loaded first
+--   start using stack "model_SivaSivaLog"
+--   log_Clear
+
+--   /*
+--   -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
+--   -- we could remove this step if we move this code back to the card script
+--   log_Append "Before behavior_SivaSivaLogging"
+--   put exists (stack "behavior_SivaSivaLogging") into stackExists
+--   if stackExists then
+--      put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
+--      set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
+--      log_Append "Set behaviors"
+--   end if
+--   log_Append stackExists
+--   */
+
+--   log_SetLevelList "all"
+--   log_Append "End of init_Logging"
+--end init_Logging
+
+command Logging pLogMessage
+   put the milliseconds into sNow
+   put sNow-sThen into tInterval
+   put pLogMessage  &&  sNow  & " : "  &  tInterval & cr after sConfigA["log"]
+   put sNow into sThen
+end logging
+
+--> SivaSiva | Init
+
+function init_GetStatus
+   put "lib_SivaSiva" is among the lines of the stacksinuse into someBoolean
+   return someBoolean
+end init_GetStatus
+
 
 -->Project | Start | Load
 
@@ -392,54 +427,53 @@ For legibility and logging.
 They must be public handlers for this to work.
 */
 
-command load_Library stackPath, pShortFolder
-   start using stack stackPath
-end load_Library
+--command load_Library stackPath, pShortFolder
+--   start using stack stackPath
+--end load_Library
 
-command load_FrontScript stackPath
-   insert the script of stack stackPath into front
-end load_FrontScript
+--command load_FrontScript stackPath
+--   insert the script of stack stackPath into front
+--end load_FrontScript
 
-command load_BackScript stackPath
-   insert the script of stack stackPath into back
-end load_BackScript
+--command load_BackScript stackPath
+--   insert the script of stack stackPath into back
+--end load_BackScript
 
 
 --> Deps
 
--- function sivasiva_ListStackPaths someFolder  
-put mobile_ListLongFiles (someFolder, "Siva-Siva-App") into longFiles
-repeat for each line stackFilePath in longFiles
-   if there is a stack stackFilePath then
-      put stackFilePath & CR after stackFilePaths
-   end if
-end repeat
-delete char -1 of stackFilePaths
-return stackFilePaths
-end sivasiva_ListStackPaths
+---- function sivasiva_ListStackPaths someFolder  
+--put mobile_ListLongFiles (someFolder, "Siva-Siva-App") into longFiles
+--repeat for each line stackFilePath in longFiles
+--   if there is a stack stackFilePath then
+--      put stackFilePath & CR after stackFilePaths
+--   end if
+--end repeat
+--delete char -1 of stackFilePaths
+--return stackFilePaths
+--end sivasiva_ListStackPaths
 
--- function mobile_ListLongFiles someFolder, homeStackName
-put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
-repeat for each line shortFile in shortFiles
-   if char 1 of shortFile is "." then next repeat
-   put someFolder & shortFile & CR after longFiles
-end repeat
-delete char -1 of longFiles
-return longFiles
-end mobile_ListLongFiles
+---- function mobile_ListLongFiles someFolder, homeStackName
+--put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
+--repeat for each line shortFile in shortFiles
+--   if char 1 of shortFile is "." then next repeat
+--   put someFolder & shortFile & CR after longFiles
+--end repeat
+--delete char -1 of longFiles
+--return longFiles
+--end mobile_ListLongFiles
 
 -- function mobile_ListShortFiles someFolder, homeStackName
 -- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
 -- requires Livecode 8.1 or greater
-if there is not a folder someFolder then return empty
+----if there is not a folder someFolder then return empty
 
-put the defaultstack into oStack
-set the defaultstack to homeStackName
--- put files (someFolder) into shortFiles -- this is not working on Android with LC 8.2 rc2
-put the files into shortFiles -- this fixes things
-set the defaultstack to oStack
+----put the defaultstack into oStack
+----set the defaultstack to homeStackName
+------ put files (someFolder) into shortFiles -- this is not working on Android with LC 8.2 rc2
+----put the files into shortFiles -- this fixes things
+----set the defaultstack to oStack
 
--- answer there is a folder someFolder & CR & shortFiles
-return shortFiles
-end mobile_ListShortFiles
-
+------ answer there is a folder someFolder & CR & shortFiles
+----return shortFiles
+----end mobile_ListShortFiles
