@@ -63,7 +63,7 @@ end jnanam_GetModelFolder
 
 private function asset_GetFileFromItemArray pItemA
    -- was "pathForItem"
-   put sivasiva_AssetFolder() into assetFolder
+   put path_Assets() into assetFolder
    put pItemA ["file_id"] into fileID
    
    switch pItemA ["media_type"]
@@ -135,44 +135,44 @@ private command _loadDatabase
 end _loadDatabase
 
 private command updateCache pMediaType   
-      switch pMediaType
-         case "art/photography"
-            put sivasiva_AssetFolder() & "/img/photography/" into tPathToPhotos
-            put folders(tPathToPhotos) into tFileIDs
-            delete line 1 of tFileIDs# .. listing
-            replace cr with comma in tFileIDs
-            put format ("UPDATE item SET cached_on_disk=\"true\" WHERE file_id IN" ) into pSQL
-            put " (" & quoteValuesforSQLparam(tFileIDs) & ")" after pSQL
-            put JnanamDB() into pDatabaseConnectionID
-            dbExecuteSQL pSQL, pDatabaseConnectionID
-          break
-       default
-          
-   --##BR 2016-11-22: this doesn't work
-   -- all items on disk should have their "cached_on_disk" updated to "true
- 
-   dbWhere "media_type", pMediaType
-   put dbGet("item") into tItemsA
-   
-   put the number of lines in the keys of tItemsA into tTotal
-   repeat with x = 1 to tTotal
-      put tItemsA [x] into itemArray
-      put asset_GetFileFromItemArray(itemArray) into tFilePath
-      
-      if there is a file tFilePath then    
-         put tItemsA [x]["file_id"] into fileID
-         dbWhere "file_id", fileID
+   switch pMediaType
+      case "art/photography"
+         put path_Assets() & "img/photography/" into tPathToPhotos
+         put folders(tPathToPhotos) into tFileIDs
+         delete line 1 of tFileIDs# .. listing
+         replace cr with comma in tFileIDs
+         put format ("UPDATE item SET cached_on_disk=\"true\" WHERE file_id IN" ) into pSQL
+               put " (" & quoteValuesforSQLparam(tFileIDs) & ")" after pSQL
+         put JnanamDB() into pDatabaseConnectionID
+         dbExecuteSQL pSQL, pDatabaseConnectionID
+         break
+      default
          
-          ## put true into tNewDataA["email"] --Br "email"?
-         put "true" into tNewDataA["cached_on_disk"] -- BR still doesn't work
-        
-         put dbUpdate("item", tNewDataA) into tResult
-         answer tResult
-         breakpoint
-      end if
-   end repeat
-   
-  end switch
+         --##BR 2016-11-22: this doesn't work
+         -- all items on disk should have their "cached_on_disk" updated to "true
+         
+         dbWhere "media_type", pMediaType
+         put dbGet("item") into tItemsA
+         
+         put the number of lines in the keys of tItemsA into tTotal
+         repeat with x = 1 to tTotal
+            put tItemsA [x] into itemArray
+            put asset_GetFileFromItemArray(itemArray) into tFilePath
+            
+            if there is a file tFilePath then    
+               put tItemsA [x]["file_id"] into fileID
+               dbWhere "file_id", fileID
+               
+               ## put true into tNewDataA["email"] --Br "email"?
+               put "true" into tNewDataA["cached_on_disk"] -- BR still doesn't work
+               
+               put dbUpdate("item", tNewDataA) into tResult
+               answer tResult
+               breakpoint
+            end if
+         end repeat
+         
+   end switch
    
 end updateCache
 

@@ -36,7 +36,7 @@ We can now experiment with:
 --> Variables
 
 global  sConfigA
-local LocalArray,sOnlineStatus,sNow,sThen
+local LocalArray,sHome,sOnlineStatus,sNow,sThen
 global sConfigA
 
 --> Events
@@ -47,6 +47,7 @@ on preOpenStack
    # duplicates what's on the lib_SivaSiva, but we need to fire right away
    --breakpoint
    put the seconds into sThen
+   put specialFolderPath("resources") into sHome
    logging "init_AppConfiguration"
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
@@ -54,31 +55,45 @@ end preOpenStack
 
 command init_AppConfiguration
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
+   
+   
+   put url ("binfile:" & sHome& "/" & "Siva-Siva-App.json") into someJSON 
+   put jsonImport (someJSON) into sConfigA
+   
+   # we have simple path scripts in the main backscript.  We load the first
+   # this till deprecate all of David codes non-sense code in 
+   
+   start using stack "lib_SivaSiva"
+   
+   
+   ## possibly on on this is needed, because out goal is get json into sConFigA
+   
    -- if init_GetStatus() is true then return false
    -- the first thing we must do is know where the top-level project is
    
-   logging "start using model_SivaSivaFile"
+   --   logging "start using model_SivaSivaFile"
    
-   start using stack "model_SivaSivaFiles"
+   --   start using stack "model_SivaSivaFiles"
    
    
    -- then
    --init_Logging
    
-   -- due to bug in the files on Android we must use config to load libraries
+   --   -- due to bug in the files on Android we must use config to load libraries
    
-   logging "start using model_SivaSivaConfig: " 
+   --   logging "start using model_SivaSivaConfig: " 
    
-   start using stack "model_SivaSivaConfig"
+   --   start using stack "model_SivaSivaConfig"
    
-   put "load config: "  &  the seconds & cr after sConfigA["log"]
+   --   put "load config: "  &  the seconds & cr after sConfigA["log"]
    
-   init_LoadJsonConfig
+   --   init_LoadJsonConfig
    
-   logging "finish loading json"
-   -- reload the stackfiles property
-   init_LoadStackFilesFromConfiguration
-   logging "LoadStackFilesFromConfiguration"
+   --   logging "finish loading json"
+   --   -- reload the stackfiles property
+   
+   --   init_LoadStackFilesFromConfiguration
+   --   logging "LoadStackFilesFromConfiguration"
    
    -- then start using all required libraries
    logging "start loading libraries"
@@ -191,7 +206,6 @@ command openPortalStack
 end openPortalStack
 
 command  init_LoadLibraries 
-
    put init_ListStacksToUse() into stackNames   
    filter items of stackNames without"animationEngine*" # should load onlyl when when needed
    
