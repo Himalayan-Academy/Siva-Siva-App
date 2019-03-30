@@ -34,7 +34,7 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 
 --> Variables
 -
-local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle
+local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle,sNavMap
 
 
 
@@ -104,7 +104,7 @@ command portal_GoStack cardOrStackObject
       --      if isMobile() then
       --         mobileSetAllowedOrientations "portrait,portrait upside down"
       --      end if
-      go cardOrStackObject
+      go stack cardOrStackObject
    end if
    
    if  oStackName is "Siva-Siva-Portal" then 
@@ -122,16 +122,13 @@ command portal_GoStack cardOrStackObject
    
 end portal_GoStack
 
-function navString pCard,pStack
-   #should 
-end navString
-
-
 command portal_DoRowLink rowName
-   -- safe parsing only of accepted commands
-   -- no dymanic execution of arbitrary code
-   portal_SetLastLinkTitle rowName
-   put portal_GetRowLinkArray (rowName) into linkArray
+   --portal_SetLastLinkTitle rowName
+   --put portal_GetRowLinkArray (rowName) into linkArray
+   
+   put getNavigationMap() into sNavMap
+   put sNavMap[portalRowDictionary][rowName]["link"] into linkArray
+   
    put linkArray ["portal command"] into linkCommand
    put linkArray ["portal param"] into linkParam
    
@@ -317,251 +314,253 @@ command portal_SetLastStack stackName
    put stackName into sLastStack  
 end portal_SetLastStack
 
+
 function portal_GetLastStack
    # a module came from  so we can go back
    return sLastStack
 end portal_GetLastStack
 
---command portal_SetLaunchStack stackName
---   # every time a stack is opened,  it is save as the "sLaunchStack"
---   # Some stacks need to go to "substacks" 
---   # Like going from Wailua Homesteads to the Lihue Airport
---   # the substack, Journal, or the Browser need to return
---   # this stack and then don't return to a global node/stack
---   # We call it the "slaunchStack"
---   --ntInfo "portal_setLaunchStackk"
---   put stackName into sLaunchStack  
---end portal_setLaunchStack
+command portal_SetLaunchStack stackName
+   # every time a stack is opened,  it is save as the "sLaunchStack"
+   # Some stacks need to go to "substacks" 
+   # Like going from Wailua Homesteads to the Lihue Airport
+   # the substack, Journal, or the Browser need to return
+   # this stack and then don't return to a global node/stack
+   # We call it the "slaunchStack"
+   --ntInfo "portal_setLaunchStackk"
+   put stackName into sLaunchStack  
+end portal_setLaunchStack
 
---function portal_GetLaunchStack stackName
---   # we  go back "sLaunchStack" of a local navigation.
---   # like returning from Lihue Airport to Wailua Homesteads
---   --ntInfo "portal_setLaunchStack"
---   return sLaunchStack  
---end portal_GetLaunchStack
+function portal_GetLaunchStack stackName
+  # we  go back "sLaunchStack" of a local navigation.
+  # like returning from Lihue Airport to Wailua Homesteads
+  --ntInfo "portal_setLaunchStack"
+  return sLaunchStack  
+end portal_GetLaunchStack
 
-
-command  portal_SetLastLinkTitle rowName
-   put rowName into sLastLinkTitle # for use in Journal and other context to show user a label
-end portal_SetLastLinkTitle
-
-function portal_GetLastLinkTitle
-   return sLastLinkTitle
-end portal_GetLastLinkTitle
-
-
-
-------------- Layout section -------------------
-# BR: this whole set of handlers is really dedicated to the Portal screens "proper"
-# and could remain here .. encapsulated all Davids lay code for the portals in this
-# on script, there by separating it entirely from all other message path activity.
-# in de-bugging then you could simplyl step through all these if the portals were
-# being dynamically rebuilt. 
-# buit we might need to move out the portal_GetArray and Set array and Get Set data also
-# as these can be useful else where and are not needed for layout as such.
-------------------------------------------------------
-
-
---> SivaSiva | Portal | Row
--
-function portal_ContainingRowName rowName, pSivasivaData
-   -- here we only search topPortalNames
-   put portal_ListTopNames() into topPortalNames
-   put portal_GetData (pSivasivaData) into portalData
-   repeat for each line topPortalName in topPortalNames
-      put portalData [topPortalName]["rowData"] into rowData
-      repeat for each key rowNum in rowData
-         if rowData ["rowName"] = rowName then
-            return topPortalName
-         end if
-      end repeat
-   end repeat
-   return empty
-end portal_ContainingRowName
-
-function portal_FindFromRowName rowName, pSivasivaData
-   -- not used ???
-   -- there could be more than one portalName that contains a rowName
-   put portal_GetData (pSivasivaData) into portalData
-   repeat for each key portalName in portalData
-      put portalData [portalName]["rowData"] into rowData
-      repeat for each key rowNum in rowData
-         if rowData ["rowName"] = rowName then
-            put portalName & CR after foundPortalNames
-         end if
-      end repeat
-   end repeat
-   delete char -1 of foundPortalNames
-   sort foundPortalNames
-   return foundPortalNames
-end portal_FindFromRowName
-
-
---> Portal | List
--
-function portal_ListTopNames
-   -- we could hard wire it
-   -- but here we consider rowNames of portal "home" to be the top level portals
-   put portal_ListRowNames ("home") into homeRowNames
-end portal_ListTopNames
-
-function portal_ListNames pListHow, pSivasivaData
-   switch pListHow
-      case "folders"
-         -- will not return portal names if we have other types of "module" in the "modules" folder
-         put sivasiva_ListModuleFolders() into moduleNames
-         break
-      default
-         put portal_GetData (pSivasivaData) into portalData
-         put keys (portalData) into moduleNames
-         sort moduleNames
-   end switch
-   return moduleNames
-end portal_ListNames
-
-function portal_ListRowNames portalName, pSivaSectionArray
-   put portal_GetArray (portalName, pSivasivaData) into   moduleArray
-   put moduleArray ["rowData"] into rowData
-   put item 2 of the extents of rowData into maxNum
-   repeat with keyNum = 1 to maxNum
-      put rowData [keyNum]["rowName"] into portalLinkName
-      put portalLinkName & CR after orderedPortalLinkNames
-   end repeat
-   delete char -1 of orderedPortalLinkNames
-   return orderedPortalLinkNames
-end portal_ListRowNames
-
-
---> SivaSiva | Portal | Model
--
-function portal_GetRowLinkArray rowName
-   --  We use the information stored in the sivasivaData array to retrieve the "link command" and "link param" from the rowName entry
-   
-   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
-   put portalRowDictionary [rowName]["link"] into linkArray
-   return linkArray
-end portal_GetRowLinkArray
-
-command portal_SetRowLinkArray rowName, linkArray, pSivasivaData
-   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
-   put linkArray into portalRowDictionary [rowName]["link"]
-   portal_SetRowDictionary portalRowDictionary, pSivasivaData
-end portal_SetRowLinkArray
-
-function portal_GetRowData rowName, pSivasivaData
-   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
-   put portalRowDictionary [rowName] into rowData
-   return rowData
-end portal_GetRowData
-
-function portal_GetRowDictionary pSivasivaData
-   sivasiva_FetchOrGetCached pSivasivaData
-   put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
-   return portalRowDictionary
-end portal_GetRowDictionary
-
-command portal_SetRowDictionary portalRowDictionary, pSivasivaData
-   sivasiva_FetchOrGetCached pSivasivaData
-   put portalRowDictionary into pSivasivaData ["portalRowDictionary"]
-   sivasiva_StoreData pSivasivaData
-end portal_SetRowDictionary
 
 command _DEPRECATED_________
    -------------------------------------------------
 end _DEPRECATED_________
 
 
+--command  portal_SetLastLinkTitle rowName
+--   put rowName into sLastLinkTitle # for use in Journal and other context to show user a label
+--end portal_SetLastLinkTitle
 
-function portal_GetLinkUrl portalName, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalArray ["portalColour"] into portalColour
-   if portalColour is empty then return "255,241,208"
-   return portalColour
-end portal_GetLinkUrl
-
-command portal_SetLinkUrl portalName, portalColour, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalColour into portalArray ["portalColour"]
-   portal_SetArray portalName, portalArray, pSivasivaData
-end portal_SetLinkUrl
+--function portal_GetLastLinkTitle
+--   return sLastLinkTitle
+--end portal_GetLastLinkTitle
 
 
 
-function portal_GetHeaderImage portalName, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalArray ["headerImage"] into shortHeaderImageFile
-   return shortHeaderImageFile
-end portal_GetHeaderImage
-
-command portal_SetHeaderImage portalName, shortHeaderImageFile, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put shortHeaderImageFile into portalArray ["headerImage"]
-   portal_SetArray portalName, portalArray, pSivasivaData
-end portal_SetHeaderImage
-
-function portal_GetBackgroundColour portalName, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalArray ["portalColour"] into portalColour
-   if portalColour is empty then return "255,241,208"
-   return portalColour
-end portal_GetBackgroundColour
-
-command portal_SetBackgroundColour portalName, portalColour, pSivasivaData
-   put portal_GetArray (portalName, pSivasivaData) into portalArray
-   put portalColour into portalArray ["portalColour"]
-   portal_SetArray portalName, portalArray, pSivasivaData
-end portal_SetBackgroundColour
-
-function portal_GetArray portalName, pSivasivaData
-   put portal_GetData (pSivasivaData) into portalData
-   put portalData [portalName] into portalArray
-   return portalArray
-end portal_GetArray
-
-command portal_SetArray portalName, portalArray, pSivasivaData
-   put portal_GetData (pSivasivaData) into portalData
-   put portalArray into portalData [portalName]
-   portal_SetData portalData, pSivasivaData
-end portal_SetArray
-
-function portal_GetData pSivasivaData
-   sivasiva_FetchOrGetCached pSivasivaData
-   put pSivasivaData ["portalData"] into portalData
-   return portalData
-end portal_GetData
-
-command portal_SetData portalData, pSivasivaData
-   sivasiva_FetchOrGetCached pSivasivaData
-   put portalData into pSivasivaData ["portalData"]
-   sivasiva_StoreData pSivasivaData
-end portal_SetData
+--------------- Layout section -------------------
+--# BR: this whole set of handlers is really dedicated to the Portal screens "proper"
+--# and could remain here .. encapsulated all Davids lay code for the portals in this
+--# on script, there by separating it entirely from all other message path activity.
+--# in de-bugging then you could simplyl step through all these if the portals were
+--# being dynamically rebuilt. 
+--# buit we might need to move out the portal_GetArray and Set array and Get Set data also
+--# as these can be useful else where and are not needed for layout as such.
+--------------------------------------------------------
 
 
---> Portal | Files
--
-getprop scrolling_View
-   put portal_GetHomeView() into portalView
-   put the scrolling_View of portalView into scrollingView
-   return scrollingView
-end scrolling_View
+----> SivaSiva | Portal | Row
+---
+--function portal_ContainingRowName rowName, pSivasivaData
+--   -- here we only search topPortalNames
+--   put portal_ListTopNames() into topPortalNames
+--   put portal_GetData (pSivasivaData) into portalData
+--   repeat for each line topPortalName in topPortalNames
+--      put portalData [topPortalName]["rowData"] into rowData
+--      repeat for each key rowNum in rowData
+--         if rowData ["rowName"] = rowName then
+--            return topPortalName
+--         end if
+--      end repeat
+--   end repeat
+--   return empty
+--end portal_ContainingRowName
 
-getprop portal_View
-   return portal_GetHomeView()
-end portal_View
+--function portal_FindFromRowName rowName, pSivasivaData
+--   -- not used ???
+--   -- there could be more than one portalName that contains a rowName
+--   put portal_GetData (pSivasivaData) into portalData
+--   repeat for each key portalName in portalData
+--      put portalData [portalName]["rowData"] into rowData
+--      repeat for each key rowNum in rowData
+--         if rowData ["rowName"] = rowName then
+--            put portalName & CR after foundPortalNames
+--         end if
+--      end repeat
+--   end repeat
+--   delete char -1 of foundPortalNames
+--   sort foundPortalNames
+--   return foundPortalNames
+--end portal_FindFromRowName
 
-function portal_GetHomeView
-    put portal_GetHomeStackPath() into portalHomeStackPath
-    #BR -- David had set this to "control 1" but it needs to be set to Control 2 which is the 
-    # group above the background object... why we can't jus declare the name of the4
-    # group is beyond me... but it broke after I put a large background grc on layer 1
-   put the long id of control 2 of cd "portal" of stack portalHomeStackPath into portalView
-   -- put the portal_View of stack portalHomeStackPath into portalView
-   return portalView
-end portal_GetHomeView
 
-function portal_GetHomeStackPath
-   -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-Portal"
-   -- put the filename of stack "sivasivahome" into portalHomeStackPath
-   put the filename of stack "Siva-Siva-Portal" into portalHomeStackPath
-   return portalHomeStackPath
-end portal_GetHomeStackPath
+----> Portal | List
+---
+--function portal_ListTopNames
+--   -- we could hard wire it
+--   -- but here we consider rowNames of portal "home" to be the top level portals
+--   put portal_ListRowNames ("home") into homeRowNames
+--end portal_ListTopNames
+
+--function portal_ListNames pListHow, pSivasivaData
+--   switch pListHow
+--      case "folders"
+--         -- will not return portal names if we have other types of "module" in the "modules" folder
+--         put sivasiva_ListModuleFolders() into moduleNames
+--         break
+--      default
+--         put portal_GetData (pSivasivaData) into portalData
+--         put keys (portalData) into moduleNames
+--         sort moduleNames
+--   end switch
+--   return moduleNames
+--end portal_ListNames
+
+--function portal_ListRowNames portalName, pSivaSectionArray
+--   put portal_GetArray (portalName, pSivasivaData) into   moduleArray
+--   put moduleArray ["rowData"] into rowData
+--   put item 2 of the extents of rowData into maxNum
+--   repeat with keyNum = 1 to maxNum
+--      put rowData [keyNum]["rowName"] into portalLinkName
+--      put portalLinkName & CR after orderedPortalLinkNames
+--   end repeat
+--   delete char -1 of orderedPortalLinkNames
+--   return orderedPortalLinkNames
+--end portal_ListRowNames
+
+
+----> SivaSiva | Portal | Model
+---
+--function portal_GetRowLinkArray rowName
+--   --  We use the information stored in the sivasivaData array to retrieve the "link command" and "link param" from the rowName entry
+
+--   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+--   put portalRowDictionary [rowName]["link"] into linkArray
+--   return linkArray
+--end portal_GetRowLinkArray
+
+--command portal_SetRowLinkArray rowName, linkArray, pSivasivaData
+--   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+--   put linkArray into portalRowDictionary [rowName]["link"]
+--   portal_SetRowDictionary portalRowDictionary, pSivasivaData
+--end portal_SetRowLinkArray
+
+--function portal_GetRowData rowName, pSivasivaData
+--   put portal_GetRowDictionary (pSivasivaData) into portalRowDictionary
+--   put portalRowDictionary [rowName] into rowData
+--   return rowData
+--end portal_GetRowData
+
+--function portal_GetRowDictionary pSivasivaData
+--   sivasiva_FetchOrGetCached pSivasivaData
+--   put pSivasivaData ["portalRowDictionary"] into portalRowDictionary
+--   return portalRowDictionary
+--end portal_GetRowDictionary
+
+--command portal_SetRowDictionary portalRowDictionary, pSivasivaData
+--   sivasiva_FetchOrGetCached pSivasivaData
+--   put portalRowDictionary into pSivasivaData ["portalRowDictionary"]
+--   sivasiva_StoreData pSivasivaData
+--end portal_SetRowDictionary
+
+
+
+--function portal_GetLinkUrl portalName, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put portalArray ["portalColour"] into portalColour
+--   if portalColour is empty then return "255,241,208"
+--   return portalColour
+--end portal_GetLinkUrl
+
+--command portal_SetLinkUrl portalName, portalColour, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put portalColour into portalArray ["portalColour"]
+--   portal_SetArray portalName, portalArray, pSivasivaData
+--end portal_SetLinkUrl
+
+
+
+--function portal_GetHeaderImage portalName, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put portalArray ["headerImage"] into shortHeaderImageFile
+--   return shortHeaderImageFile
+--end portal_GetHeaderImage
+
+--command portal_SetHeaderImage portalName, shortHeaderImageFile, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put shortHeaderImageFile into portalArray ["headerImage"]
+--   portal_SetArray portalName, portalArray, pSivasivaData
+--end portal_SetHeaderImage
+
+--function portal_GetBackgroundColour portalName, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put portalArray ["portalColour"] into portalColour
+--   if portalColour is empty then return "255,241,208"
+--   return portalColour
+--end portal_GetBackgroundColour
+
+--command portal_SetBackgroundColour portalName, portalColour, pSivasivaData
+--   put portal_GetArray (portalName, pSivasivaData) into portalArray
+--   put portalColour into portalArray ["portalColour"]
+--   portal_SetArray portalName, portalArray, pSivasivaData
+--end portal_SetBackgroundColour
+
+--function portal_GetArray portalName, pSivasivaData
+--   put portal_GetData (pSivasivaData) into portalData
+--   put portalData [portalName] into portalArray
+--   return portalArray
+--end portal_GetArray
+
+--command portal_SetArray portalName, portalArray, pSivasivaData
+--   put portal_GetData (pSivasivaData) into portalData
+--   put portalArray into portalData [portalName]
+--   portal_SetData portalData, pSivasivaData
+--end portal_SetArray
+
+--function portal_GetData pSivasivaData
+--   sivasiva_FetchOrGetCached pSivasivaData
+--   put pSivasivaData ["portalData"] into portalData
+--   return portalData
+--end portal_GetData
+
+--command portal_SetData portalData, pSivasivaData
+--   sivasiva_FetchOrGetCached pSivasivaData
+--   put portalData into pSivasivaData ["portalData"]
+--   sivasiva_StoreData pSivasivaData
+--end portal_SetData
+
+
+----> Portal | Files
+---
+--getprop scrolling_View
+--   put portal_GetHomeView() into portalView
+--   put the scrolling_View of portalView into scrollingView
+--   return scrollingView
+--end scrolling_View
+
+--getprop portal_View
+--   return portal_GetHomeView()
+--end portal_View
+
+--function portal_GetHomeView
+--    put portal_GetHomeStackPath() into portalHomeStackPath
+--    #BR -- David had set this to "control 1" but it needs to be set to Control 2 which is the 
+--    # group above the background object... why we can't jus declare the name of the4
+--    # group is beyond me... but it broke after I put a large background grc on layer 1
+--   put the long id of control 2 of cd "portal" of stack portalHomeStackPath into portalView
+--   -- put the portal_View of stack portalHomeStackPath into portalView
+--   return portalView
+--end portal_GetHomeView
+
+--function portal_GetHomeStackPath
+--   -- we will probably move the "portal home" from "sivasivahome" to the projects home stack "Siva-Siva-Portal"
+--   -- put the filename of stack "sivasivahome" into portalHomeStackPath
+--   put the filename of stack "Siva-Siva-Portal" into portalHomeStackPath
+--   return portalHomeStackPath
+--end portal_GetHomeStackPath
