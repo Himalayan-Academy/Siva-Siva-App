@@ -104,7 +104,7 @@ command portal_GoStack cardOrStackObject
       --      if isMobile() then
       --         mobileSetAllowedOrientations "portrait,portrait upside down"
       --      end if
-      go stack cardOrStackObject
+      go cardOrStackObject
    end if
    
    if  oStackName is "Siva-Siva-Portal" then 
