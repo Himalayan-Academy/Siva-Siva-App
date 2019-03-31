@@ -10,6 +10,7 @@ local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
 
 command initializeNarrative
+   ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
       getContent "Deities","Words of Our Master"   # make random later

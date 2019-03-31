@@ -63,49 +63,15 @@ command init_AppConfiguration
    # we have simple path scripts in the main backscript.  We load the first
    # this till deprecate all of David codes non-sense code in 
    
+   --   logging "finish loading json"
+   
    start using stack "lib_SivaSiva"
    
-   
-   ## possibly on on this is needed, because out goal is get json into sConFigA
-   
-   -- if init_GetStatus() is true then return false
-   -- the first thing we must do is know where the top-level project is
-   
-   --   logging "start using model_SivaSivaFile"
-   
-   --   start using stack "model_SivaSivaFiles"
-   
-   
-   -- then
-   --init_Logging
-   
-   --   -- due to bug in the files on Android we must use config to load libraries
-   
-   --   logging "start using model_SivaSivaConfig: " 
-   
-   --   start using stack "model_SivaSivaConfig"
-   
-   --   put "load config: "  &  the seconds & cr after sConfigA["log"]
-   
-   --   init_LoadJsonConfig
-   
-   --   logging "finish loading json"
-   --   -- reload the stackfiles property
-   
-   --   init_LoadStackFilesFromConfiguration
-   --   logging "LoadStackFilesFromConfiguration"
-   
-   -- then start using all required libraries
    logging "start loading libraries"
    
    init_LoadLibraries
    
    logging "end loading libraries"
-   
-   -- set things up for mobile geometry
-   --   if the environment is "mobile" then 
-   --      init_MobileGeometry
-   --   end if
    
    -- get long id's for global custom controls on card "custom-controls
    logging "start StoreControlsIds"
@@ -147,17 +113,17 @@ command init_AppConfiguration
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
    -- AAG enable or disable network tracer
-   --   if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
-   --      ntEnableNetworkTracer
-   --   else
-   --      ntDisableNetworkTracer
-   --   end if
+   if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
+      ntEnableNetworkTracer
+   else
+      ntDisableNetworkTracer
+   end if
 end init_AppConfiguration
 
 
 
 command init_LoadStackFilesFromConfiguration
-   -- AAG: loads the stackfiels from json 
+   -- AAG: loads the stackfiles from json 
    -- put  jsonimport(field "json") into sConfigA
    
    put sConfigA["stackfiles"] into tStackFilesA
@@ -195,8 +161,6 @@ end init_StoreControlsIds
 
 command openPortalStack
    open stack "Siva-Siva-Portal"
-   --portal_Link "loader"
-   --portal_Link "home"
    hide stack "Siva-Siva-App"
    # app will halt at this point  so now is a good
    # time to check for updates on a new session
@@ -247,11 +211,6 @@ command  init_LoadLibraries
    -- answer the stacksinuse
    return true
    
-   -- if we can get the files working on Android we should use the handlers below instead
-   --   put project_ListFolderStacks ("libraries") into stackPaths
-   --   project_UseStacks stackPaths
-   --   put project_ListFolderStacks ("models") into stackPaths
-   --   project_UseStacks stackPaths
 end init_LoadLibraries
 
 function init_ListStacksToUse
@@ -265,14 +224,6 @@ function init_ListStacksToUse
    return stackNames
 end init_ListStacksToUse
 
---command init_MobileGeometry
---   -- see "initializeInterfaceDefaults"
---   -- set the fullscreenmode of this stack to "showAll"
---   mobileSetAllowedOrientations "portrait,portrait upside down" -- lock to both portrait orientations, change later for certain modules
---   if the platform = "iphone" then
---      iphoneSetAudioCategory "playback" -- play when suspended or screen locked; Android doesn't need this
---   end if
---end init_MobileGeometry
 
 command init_CreateLocalFolders
    # We want have folders correponding to app pkg content and also to the web server
@@ -281,6 +232,7 @@ command init_CreateLocalFolders
    # for media we just map to the web server media folder for all types
    
    put path_Documents()  into tLocalFolderRoot 
+   
    # everything goes here path_Documents() alway has a slash 
    # these top level will contain almost everything.
    # jnanam.sqlite and sivasivapreferences are outside on the top level.
@@ -390,33 +342,6 @@ end testBehavior
 
 --> SivaSiva | Init | Logging
 
-/*
-We aim to remove the need for this section eventually.
-When the code is tested and stable we can stop loggin the initialisation routines
-*/
-
---command init_Logging
---   --  relies on stack names so ensure the stackfiles is set properly
---   -- we have to ensure the general purpose logging handlers are loaded first
---   start using stack "model_SivaSivaLog"
---   log_Clear
-
---   /*
---   -- set nested behavior for logging. This is needed as scriptonly stack do not remember their behaviors
---   -- we could remove this step if we move this code back to the card script
---   log_Append "Before behavior_SivaSivaLogging"
---   put exists (stack "behavior_SivaSivaLogging") into stackExists
---   if stackExists then
---      put the name of stack "behavior_SivaSivaLogging" into loggingBehaviorObject
---      set the behavior of stack "behavior_InitSivaSivaProject" to loggingBehaviorObject -- not "me". We have to set the nested bheavior of the "behavior_InitSivaSivaProject" here.
---      log_Append "Set behaviors"
---   end if
---   log_Append stackExists
---   */
-
---   log_SetLevelList "all"
---   log_Append "End of init_Logging"
---end init_Logging
 
 command Logging pLogMessage
    put the milliseconds into sNow
@@ -425,69 +350,9 @@ command Logging pLogMessage
    put sNow into sThen
 end logging
 
---> SivaSiva | Init
-
-function init_GetStatus
-   put "lib_SivaSiva" is among the lines of the stacksinuse into someBoolean
-   return someBoolean
-end init_GetStatus
 
 
--->Project | Start | Load
-
-/*
-Here we split out individual loading of required components.
-For legibility and logging.
-They must be public handlers for this to work.
-*/
-
---command load_Library stackPath, pShortFolder
---   start using stack stackPath
---end load_Library
-
---command load_FrontScript stackPath
---   insert the script of stack stackPath into front
---end load_FrontScript
-
---command load_BackScript stackPath
---   insert the script of stack stackPath into back
---end load_BackScript
 
 
---> Deps
 
----- function sivasiva_ListStackPaths someFolder  
---put mobile_ListLongFiles (someFolder, "Siva-Siva-App") into longFiles
---repeat for each line stackFilePath in longFiles
---   if there is a stack stackFilePath then
---      put stackFilePath & CR after stackFilePaths
---   end if
---end repeat
---delete char -1 of stackFilePaths
---return stackFilePaths
---end sivasiva_ListStackPaths
 
----- function mobile_ListLongFiles someFolder, homeStackName
---put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
---repeat for each line shortFile in shortFiles
---   if char 1 of shortFile is "." then next repeat
---   put someFolder & shortFile & CR after longFiles
---end repeat
---delete char -1 of longFiles
---return longFiles
---end mobile_ListLongFiles
-
--- function mobile_ListShortFiles someFolder, homeStackName
--- bug: this function includes hack to fix Livecode bug on Android by setting the defaultstack
--- requires Livecode 8.1 or greater
-----if there is not a folder someFolder then return empty
-
-----put the defaultstack into oStack
-----set the defaultstack to homeStackName
------- put files (someFolder) into shortFiles -- this is not working on Android with LC 8.2 rc2
-----put the files into shortFiles -- this fixes things
-----set the defaultstack to oStack
-
------- answer there is a folder someFolder & CR & shortFiles
-----return shortFiles
-----end mobile_ListShortFiles
