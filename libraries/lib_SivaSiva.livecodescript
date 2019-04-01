@@ -423,12 +423,8 @@ end ___UTILITIES
  end stripHTMLTags
 
 on backkey # need for android
-   if the short name of this stack is "journal" then
-      send mouseup to widget "go-back"
-   else
-      if there is a widget "go-home-portal" then
-         send mouseup to widget "go-home-portal"
-      end if
+   if not (portal_GetLastStack() = "Siva-Siva-Portal") then
+      portal_GoStack "Siva-Siva-Portal"
    end if
 end backkey
 

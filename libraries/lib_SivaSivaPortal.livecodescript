@@ -96,15 +96,12 @@ command portal_GoStack cardOrStackObject
          (oStackName is not among the items of  tLandScapeModeStacks) then
       ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
-      close stack oStackName
+      --close stack oStackName
    else
       ntInfo "close one; open next"
-      close stack oStackName
-      # this will be called 
-      --      if isMobile() then
-      --         mobileSetAllowedOrientations "portrait,portrait upside down"
-      --      end if
       go cardOrStackObject
+      close stack oStackName
+      
    end if
    
    if  oStackName is "Siva-Siva-Portal" then 
