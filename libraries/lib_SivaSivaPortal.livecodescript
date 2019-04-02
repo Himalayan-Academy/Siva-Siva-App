@@ -102,22 +102,22 @@ command portal_GoStack cardOrStackObject
       go cardOrStackObject
       close stack oStackName
       
-   end if
-   
-   if  oStackName is "Siva-Siva-Portal" then 
-      put "navigation/topindex" into pAction
-   else 
-      put "navigation/goContent" into pAction
-   end if
-   
-   if the short name of this stack is "Siva-Siva-Portal" then
-      news_Fetch
-   end if
-   
-   put oStackName into pTrackData["exitFrom"]
-   tracking_RecordActivity "Portal", pAction, pTrackdata 
-   
-end portal_GoStack
+      end if
+      
+      if  oStackName is "Siva-Siva-Portal" then 
+         put "navigation/topindex" into pAction
+      else 
+         put "navigation/goContent" into pAction
+      end if
+      
+      if the short name of this stack is "Siva-Siva-Portal" then
+         news_Fetch
+      end if
+      
+      put oStackName into pTrackData["exitFrom"]
+      tracking_RecordActivity "Portal", pAction, pTrackdata 
+      
+   end portal_GoStack
 
 command portal_DoRowLink rowName
    --portal_SetLastLinkTitle rowName

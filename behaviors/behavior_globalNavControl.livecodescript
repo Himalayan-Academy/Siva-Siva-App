@@ -73,10 +73,10 @@ on setUpUI pCard
       case "Home"
          break 
       case "modulesList"
-         show widget "goToMainNav"
+         show button "goToMainNav"
          break
       case "mainNav"
-         hide widget "goToMainNav"
+         hide button "goToMainNav"
          break
    end switch
    

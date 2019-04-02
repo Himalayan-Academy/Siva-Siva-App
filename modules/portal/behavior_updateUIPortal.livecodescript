@@ -42,7 +42,7 @@ command updateUIPortal
          
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
-         put the long id of widget "openGlobalNav" into pControl
+         put the long id of button "openGlobalNav" into pControl
          bottomLeftMe pControl,0,8 
          
          break
