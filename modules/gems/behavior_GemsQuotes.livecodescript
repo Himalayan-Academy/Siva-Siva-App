@@ -88,10 +88,10 @@ on closecard
 end closecard
 
 command fetchQuote
-   hide widget "loadContext"
+   hide button "loadContext"
    
    
-   set the uSourceURL of widget "loadContext" to empty
+   set the uSourceURL of button "loadContext" to empty
    put JnanamDB() into tConnectionID
    
    if sJournalData is empty  then # coming portal stack, we want random quote
@@ -157,9 +157,9 @@ command fetchQuote
       if tSource <> empty then
          # some bogus data in this field so confirm 
          if char 1 to 5 of tSource ="https" then
-            set the uSourceURL of widget "loadContext" to tSource
+            set the uSourceURL of button "loadContext" to tSource
             put tSource into sCurrentSourceURL  # for sharing 
-            show widget "loadContext"
+            show button "loadContext"
          end if
       end if
    end if
@@ -236,14 +236,14 @@ command toggleReadContext pState
       case "true"
          if connectivity_PingServer() is "true" then
             put the uSourceURL of the target into tURL
-            set the url of widget "readContext" to  tURL
+            set the url of    widget "readContext" to  tURL
             browser_SetLastURL tURL
             hide the target
-            hide widget "next-arrow" # svg
-            show widget "readContext" # a browser
+            hide button "goNextRealm" # svg
+            show    widget "readContext" # a browser
             # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
             # and not actually go back to gem in this case
-            show widget "cancel"
+            show button "cancel"
             send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
             put  fld "title" into pData["currentRealm"]
             tracking_RecordActivity "Gems", "read/quoteContext", pData
@@ -253,11 +253,10 @@ command toggleReadContext pState
          break
       case "false"
          
-         set the url of widget "readContext" to empty
-         hide widget "readContext"
-         hide widget "cancel"
-         show widget "next-arrow"
-         --  show widget "loadContext"      # Only show if there is a URL from the verse  
+         set the url of   widget "readContext" to empty
+         hide   widget "readContext"
+         hide button "cancel"
+         show button "goNextRealm"
    end switch
 end toggleReadContext
 
@@ -306,7 +305,7 @@ command share_Items
 end share_Items
 
 command resetUI
-   set the uSourceURL of widget "loadContext" to empty
+   set the uSourceURL of button "loadContext" to empty
    put empty into sCurrentSourceURL
    toggleReadContext "false"
 end resetUI
