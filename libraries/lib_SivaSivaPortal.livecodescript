@@ -90,7 +90,7 @@ command portal_GoStack cardOrStackObject
    # we need to from landscape to portrait and backagain 
    # closing one and open the other
    
-   ntinfo ("Potral_GoStack: " & portal_GoStack && cardOrStackObject )
+   ntinfo ("Portal_GoStack: " & portal_GoStack && cardOrStackObject )
    if (cardOrStackObject  is not among the items of tLandScapeModeStacks) AND  \
          (trueword 2 of cardOrStackObject  is not among the items of tLandScapeModeStacks) AND \
          (oStackName is not among the items of  tLandScapeModeStacks) then
