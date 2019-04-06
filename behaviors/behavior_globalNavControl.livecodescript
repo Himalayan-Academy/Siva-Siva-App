@@ -22,7 +22,7 @@ on mouseup
    put the short name of the target into tTarget
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
       switch tTarget
-         lock screen
+         --lock screen
          
          # Cases where we to go to stacks directly with no secondary navigation
       case "Gems"

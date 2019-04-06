@@ -11,7 +11,8 @@ array that keeps the track tile locations.
 --> Events
 -
 on openCard
-   if not (the lockscreen)  then lock screen
+
+   --if not (the lockscreen)  then lock screen
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
    showTitle true
    send "showTitle false" to me in 1 second
@@ -37,7 +38,8 @@ on createWordPuzzle
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
    end if
-   
+   ntinfo ("the lockscreen" && the lockscreen)
+   lock screen
    --Reset
    put empty into sWordLocationsA
    stopTimer
@@ -57,7 +59,7 @@ on createWordPuzzle
    
    put empty into sWordCount
    put 0 into sCluesGiven
-   clearBoard
+   --clearBoard
    startTimer
    
    put getColors() into tColors
@@ -174,6 +176,7 @@ on createWordPuzzle
    
    put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
    tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
+   unlock screen
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
@@ -200,14 +203,14 @@ end assignHomeLocations
    
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
-   if not (the lockscreen)  then lock screen
+   --if not (the lockscreen)  then lock screen
    ntInfo ("lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
    set the filename of img "bgImage" to tFolderPath&tImgPath
-   if (the lockscreen)  then unlock screen
+   --if (the lockscreen)  then unlock screen
 end loadNewBgImg
 
 on checkLevel
@@ -257,6 +260,7 @@ command fetchQuote
    #hack to deal with endline bug
    replace "\n" with space in sQuote
    
+   ## Disable view in context for now, ww don't think use are interested
    --   if connectivity_PingServer() ="true"  then
    --      ## Source URL may or may not there
    --      put   textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
@@ -270,69 +274,8 @@ command fetchQuote
    replace (space & quote) with (space & "“") in sQuote 
    replace (quote& space) with ( "”"& space) in sQuote 
    
-   ## Later we can pull from a file on disk  that gets updated #
-   ## or pull from the database
-   ## we will need to constrain to len(sQuote)<2=330 chars 
-   
-   ## Method for getting small set from custom Property
-   
-   -- --    put the uQuotes of this card into tQuotes
-   --    --   set the itemdelimiter to "|" --jg: why aren't we using lines?
-   --    --   if FALSE then -- for testing, change to TRUE if using fixed quote numbers
-   --    --     --put any item of tQuotes into sQuote  ## any quote
-   --    --     --put item 7  of tQuotes into sQuote # 37 words! longest possible quote
-   --    --     --put item 11  of tQuotes into sQuote  # 18 words
-   --    --     put item 2 of tQuotes into sQuote   # very short if you want to dev fast
-   --    --   else
-   --    --     put line sCurLevel of the uLevelRanges of this cd into tCurRange
-   --    --     put trueword 1 of tCurRange into tMin
-   --    --     put trueword 2 of tCurRange into tMax
-   --    --     repeat for each item i in tQuotes
-   --    --       get the number of truewords in i
-   --    --       if it <= tMax and it >= tMin then
-   --    --         put i & "|" after tQuoteList
-   --    --       end if
-   --    --     end repeat
-   --    --     put any item of tQuoteList into sQuote
-   --    --   end if 
+ 
 end fetchQuote
- 
- --  command fetchQuote -- ORIG
- --    # here is where we pick our quote.  Later we need to get it from the dBase
- --    # for V1 all we want is to set levels based on the number of words
- --    # for young people and beginners, very short quote are needed.
- 
- --    # Here is where we pick our quote...
- --    # for development  we use a custom prop
- 
- --     put the uQuotes of this card into tQuotes
- 
- --     ## Later we can pull from a file on disk  that gets updated #
- --     ## or pull from the database
- --     ## we will need to constrain to len(sQuote)<2=330 chars 
- 
- --    set the itemdelimiter to "|"
- --    put the number of items of tQuotes into tNoOfQuotes
- 
- --    ## any quote
- --    --put item ( random (tNoOfQuotes) ) of tQuotes into sQuote
- 
- --    ## longest possible quote: JG will determine if the tiles are not too small:
- --    --put item 7  of tQuotes into sQuote # 37 words!
- 
- --    --put item 11  of tQuotes into sQuote  # 18 words
- 
- --    # very short if you want to dev fast:
- --  put item 2 of tQuotes into sQuote 
- 
- 
- --  #fix  strings with straight quotes, which are word delimiters in LC
- --  # change to curly's then they are included with the word 
- 
- --   replace (space & quote) with (space & "“") in sQuote 
- --    replace (quote& space) with ( "”"& space) in sQuote 
- 
- -- end fetchQuote
  
  command setSizeAndLocationOfQuote sQuote
    # we want to call quotes of different lengths
@@ -427,7 +370,7 @@ on clearBoard
    send hideSubjectFld to me in 1 seconds
    --hide widget "readContext"
    stopTimer
-   lock screen
+   --lock screen
    put empty into fld "Minutes" of me
    put empty into fld "seconds" of me
    --hide widget "context"
@@ -447,7 +390,7 @@ on clearBoard
    end try
    end repeat
    set the uWordList of me to empty
-   unlock screen
+   --unlock screen
 end clearBoard 
 
 on checkCompletion 
