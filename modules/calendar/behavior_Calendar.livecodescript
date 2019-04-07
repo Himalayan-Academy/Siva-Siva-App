@@ -419,6 +419,7 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
          send "insertDayInfo tRequestDate" to me in 0 seconds
       else  -- downloads calendar if requested and in range
          if not connectivity_PingServer() then
+            --doAnswer "Next year's data is unavailable. Please enable network/internet connection.","OK,Cancel","calendarDownload"
             dialog_CustomMsg "Next year's data is unavailable. Please enable network/internet connection."
             exit insertDayInfo
          else

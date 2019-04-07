@@ -296,9 +296,13 @@ function connectivity_PingServer
    get url "https://www.himalayanacademy.com/ping.txt"
    if it is "true" then
       return true
-   else
+      
+      -- return false 
+      # pretend off line; testing the group "toast" 
+    
       ntInfo "offline!"
-      return false
+      
+      return true # form testing the group "toast" - dialog_CustomMsg
    end if
 end connectivity_PingServer
 

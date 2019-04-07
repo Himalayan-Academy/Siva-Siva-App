@@ -237,7 +237,7 @@ command doAnswer pMsg,pBtns,pHandleAffirm
       copy tDialogControl to this card
    end if
    
-   
+   put the id of grp "answerDlgGrp" of this card into tDoAnswer
    #  case there is some problem, exit without hanging
    if there is no grp "answerDlgGrp" then
       exit doAnswer
@@ -257,14 +257,14 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    put the height of this card into tHeight
    set the rect of grc "cover" to 0,0,tWidth+25,tHeight+25
    set the loc of grc "cover" to location of this card
-   set height fld "lbl-dialogPrompt" to (the formattedHeight of fld "lbl-dialogPrompt" +40)
-   set the bottom of btn "dialogAffirm" to bottom of fld "lbl-dialogPrompt"
-   set the bottom of btn "dialogCancel" to bottom of fld "lbl-dialogPrompt"
+   set height fld "lbl-dialogPrompt" of grp "answerDlgGrp"  to (the formattedHeight of fld "lbl-dialogPrompt"  of grp "answerDlgGrp"+40)
+   set the bottom of btn "dialogAffirm"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
+   set the bottom of btn "dialogCancel"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
    
    # show it
    set the vis of grc "cover" to true
    show grp "answerDlgGrp"
-   show btn "dialogAffirm"
+   show btn "dialogAffirm" of grp "answerDlgGrp"
    
    # cd must have a "[pHandleAffirm]" (eg.) handler to read dialogData and respond
    # it can be any name as it passed through param "pHandleAffirm" to 

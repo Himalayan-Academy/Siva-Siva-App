@@ -2,6 +2,8 @@
 
 command updateUIPortal
    
+   setScreenRectCoords
+   
    # background group of all cards
    
    
@@ -38,12 +40,11 @@ command updateUIPortal
          
          
          put the long id of btn "goNext" into pControl
-         bottomRightMe pControl,25,75 
-         
+         bottomCenterMe pControl     
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         bottomLeftMe pControl,0,8 
+         bottomLeftMe pControl,0,0 
          
          break
          

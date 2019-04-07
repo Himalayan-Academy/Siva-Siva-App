@@ -15,6 +15,8 @@ command gotUILibrary
    answer "Go UIHandler Lib" with "OK"
 end gotUILibrary
 
+
+
 command setCardCoords
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
@@ -24,6 +26,19 @@ command setCardCoords
    put sCardHeight/2 into sVertCenter
    put the loc of tCard into sCardLoc
 end setCardCoords
+
+
+command setScreenRectCoords
+   put the screenRect into tScreenRect
+   put item 3 of tScreenRect into sScreenWidth
+   put item 4 of tScreenRect into sScreenHeight
+   put sScreenHeight/2 into sScreenVertCenter
+   put sScreenwidth/2 into sScreenHorizCenter
+   put sScreenWidth-sCardWidth into sWidthDiff
+   put sScreenHeight-sCardHeight into sHeightDiff
+   put  sHeightDiff into fld "notification"
+end setScreenRectCoords
+
 
 function CardRect
    return sCardRect
@@ -174,7 +189,11 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
    # param x = if you to want a shorter image
    setRectOfCurrentGrc pImage
    if pOrientation="portrait" then
+      --      if isMobile() then
+      --         resizeToHeight pImage,(the height of this card + sHeightDiff -  x)
+      --         else
       resizeToHeight pImage,(the height of this card - x)
+      --   end if
    else
       resizeTowidth pImage,(the height of this card - x)
    end if
