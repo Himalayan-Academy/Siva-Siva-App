@@ -265,16 +265,21 @@ function calendarExists pRequestDate,pCityName -- return a year range if a file 
 end calendarExists
   
 on calendarDownload -- download a calendar one year later than this year's
-  -- sent from doAnswer in insertDayInfo when current date is in range but not in the current calendar; get next year
-  put last trueword of calcYearRange(the date) into tYear
-  put tYear & "-" & tYear + 1 into tYearRange
-  if sCityName = "" then loadCityName -- loads script local
-  if sCityName = "" then
-    doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
-    exit calendarDownload
-  end if
-  parseUserICSfile sCityName,tYearRange -- does the download, loads the array
-  dialog_CustomMsg "Download complete"
+   
+   -- sent from doAnswer in insertDayInfo when current date is in range but not in the current calendar; get next year
+   put the long  id of fld "downloading" into tDownLoadNotice
+   bottomCenterMe tDownLoadNotice,50
+   show tDownLoadNotice
+   put last trueword of calcYearRange(the date) into tYear
+   put tYear & "-" & tYear + 1 into tYearRange
+   if sCityName = "" then loadCityName -- loads script local
+   if sCityName = "" then
+      doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
+      exit calendarDownload
+   end if
+   parseUserICSfile sCityName,tYearRange -- does the download, loads the array
+   hide tDownLoadNotice
+   dialog_CustomMsg "Download complete"
 end calendarDownload
 
 function calcStartDay pStartDay -- returns integer for first month entry
