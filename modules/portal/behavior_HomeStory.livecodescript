@@ -84,8 +84,8 @@ end goNextScene
 command loadNewImage pPath
 lock screen for visual effect
    set the filename of sMainImage to pPath
-   setImageToFullCardLoc sMainImage, "portrait", 50
-   centerMe sMainImage,0,50
+   setImageToFullCardLoc sMainImage, "portrait", 0,0
+   centerMe sMainImage,0,0
    show sMainImage --with visual effect "dissolve" 
 unlock screen with visual effect "dissolve" 
 end loadNewImage

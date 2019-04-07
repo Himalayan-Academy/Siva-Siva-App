@@ -247,7 +247,8 @@ end GetvObjectPropertyValue
 function pathToCalendarICS pYearRange,pCityName,pType -- return path to ICS file
   -- pYearRange = two years separated by hyphen
   -- pType = "ics" or "bin" (a binary LC array already parsed)
-  -- called from parseUserICSfile, preOpenCard, and Submit btn
+   -- called from parseUserICSfile, preOpenCard, and Submit btn
+   put pCityName into sCityname
   if pYearRange = "" then put calcYearRange() into pYearRange
   if pCityName = "" then put getPref ("preferences/modules/calendar/city") into pCityName
   replace space with "_" in pCityName
@@ -619,6 +620,12 @@ command fetchFile
   get sCityName
   breakpoint
 end showLocals
+
+on clearLocals
+   put empty into sHinduCalendarA
+   put empty into sCityName
+   put empty into sUserCalendarA
+end clearLocals
 
 ## JG: compare load times:
 ## JG: read from file above is fastest

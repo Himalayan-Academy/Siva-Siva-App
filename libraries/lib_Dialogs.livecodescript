@@ -130,6 +130,7 @@ end fieldLinkClicked
 
 
 command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
+   
    # short notification at bottom of screen goes away of itself
    # use the DoAnswer option for more interactions.
    
@@ -141,19 +142,19 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
       lock screen
       copy tDialogControl to this card
    end if
-   
-   # we are not using buttons here.. but could inthe future, 
+   put the long id  grp "bottomToast" of this card into tLocalToast
+   # we are noti using buttons here.. but could inthe future, 
    # the guideline is to only offer a single choice, no icons
    # for now we keep the button Hidden
    
    if pBtn is empty then
-      hide btn "DIALOGAFFIRM"
-      set the textalign of fld "lbl-dialogPrompt" to center
-      set the textalign of line 1 of fld "lbl-dialogPrompt" to center
+      hide btn "DIALOGAFFIRM" of tLocalToast --of grp "botton"
+      set the textalign of fld "lbl-dialogPrompt" of tLocalToast   to center
+      set the textalign of line 1 of fld "lbl-dialogPrompt"  of tLocalToast  to center
    else
-      set the label of btn "DIALOGAFFIRM" to pBtn
-      set the textalign of fld "lbl-dialogPrompt" to left
-      set the textalign of line 1 of fld "lbl-dialogPrompt" to left
+      set the label of btn "DIALOGAFFIRM" of tLocalToast  to pBtn
+      set the textalign of fld "lbl-dialogPrompt"   of tLocalToast  to left
+      set the textalign of line 1 of fld "lbl-dialogPrompt"   of tLocalToast  to left
    end if
    
    -- put "This is a one liner. message to the user. " into tMsg
@@ -161,35 +162,31 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    # relative to the bottom
    put the width of this card into tCdWidth
    put the height of this card into tCdHeight
-   put pMsg into fld "lbl-dialogPrompt"
-   put the number of lines of the formattedText of fld "lbl-dialogPrompt" into tmsgLines
-   
-   --   if tMsgLines > 1 then
-   --      set the margins of fld "lbl-dialogPrompt" to 24,20,24,24
-   --   else
-   --      set the margins of fld "lbl-dialogPrompt" to 24,19,24,27
-   --   end if
-   
-   set the width of fld "lbl-dialogPrompt" to tCdWidth
-   set the left of fld "lbl-dialogPrompt" to 0
-   
+   put pMsg into fld "lbl-dialogPrompt" of tLocalToast 
+   put the number of lines of the formattedText of fld "lbl-dialogPrompt"  of tLocalToast  into tmsgLines
+   set the width of fld "lbl-dialogPrompt"   of tLocalToast to tCdWidth
+   set the left of fld "lbl-dialogPrompt"  of tLocalToast  to 0
+   set the textcolor fld "lbl-dialogPrompt"  of tLocalToast   to 0,0,0
    # if the button is required just add height
-   if the vis of  btn "DIALOGAFFIRM" then
+   if the vis of  btn "DIALOGAFFIRM"  of tLocalToast   then
       put 24 into tBtnHeight
    end if 
    
-   put ((the formattedHeight of fld "lbl-dialogPrompt") + tBtnHeight) into tDialogHeight
-   set the height of fld "lbl-dialogPrompt" to tDialogHeight
-   set the bottomright of btn "DIALOGAFFIRM" to tCdwidth-24,tCdheight-15
-   set the top of  group "bottomToast" to tCdHeight+400  # make sure it off screen
+   put ((the formattedHeight of fld "lbl-dialogPrompt"  of tLocalToast ) + tBtnHeight) into tDialogHeight
+   set the height of fld "lbl-dialogPrompt"  of tLocalToast  to tDialogHeight
+   set the bottom of fld "lbl-dialogPrompt"   of tLocalToast  to tCdHeight
+   set the bottomright of btn "DIALOGAFFIRM"   of tLocalToast to tCdwidth-24,tCdheight-15
+   set the top of  group "bottomToast"  to tCdHeight+400  # make sure it off screen
+   
    unlock screen
-   show group "bottomToast"
+   show group "bottomToast"   
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
-   wait 2 seconds
+   wait 2 seconds 
    move grp "BottomToast" relative 0,tDialogHeight+400 in 800 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
 end dialog_CustomMsg
+
 
 -----------------------------------
 # BY Jacqueline Landman Gay
