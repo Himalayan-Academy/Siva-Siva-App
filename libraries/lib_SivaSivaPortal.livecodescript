@@ -96,7 +96,7 @@ command portal_GoStack cardOrStackObject
          (oStackName is not among the items of  tLandScapeModeStacks) then
       ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
-      --close stack oStackName
+      close stack oStackName
    else
       ntInfo "close one; open next"
       go cardOrStackObject
