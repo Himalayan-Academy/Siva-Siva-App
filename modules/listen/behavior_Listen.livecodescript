@@ -270,6 +270,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          # It just set the WHERE clause in the query with what ever you request. then sorts on date sends bak the request number
          # of records.
+         --breakpoint
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
@@ -280,7 +281,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -288,7 +289,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             exit to top
          else 
             put it into tRecords
-        
+            
             put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
@@ -327,7 +328,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
+         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -509,10 +510,14 @@ function getItemURL pRecordNum
       
       # but lib_SivaSivaMedia won't have string for the latest item
       # fortunately there is easily solution for audio:
+      --      breakpoint
+      --      if char -1 of sSelectedURL = "/" then
+      --         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
+      --      end if   
+      --      breakpoint
       if char -1 of sSelectedURL = "/" then
-         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
-         -- put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" into sCurrentPlayListA["audioFiles"][pRecordNum]["myURL"]
-      end if      
+         put  sCurrentPlayListA["audioFiles"][pRecordNum]["filename"]  after sSelectedURL
+      end if       
    else
       # its an audio book
       put getMediaURL("audioBook") into sSelectedURL

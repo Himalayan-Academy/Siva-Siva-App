@@ -228,6 +228,7 @@ command getformatData pItemID
          put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet("item_format", tConnectionID) into aSelectedItemFormats   
+   return aSelectedItemFormats
 end getformatData
 
 # metadata_SetRecord
