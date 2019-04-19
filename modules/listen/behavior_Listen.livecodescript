@@ -55,6 +55,7 @@ on openstack
    
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA   
+   portal_SetLastStack "Listen"
    
    # must have net connection, otherwise take to My Audio
 end openstack
