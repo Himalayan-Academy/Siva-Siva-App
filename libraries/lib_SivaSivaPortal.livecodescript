@@ -100,11 +100,9 @@ command portal_GoStack cardOrStackObject
    else
       ntInfo "close one; open next"
       go cardOrStackObject
-      
-   end if
-   if cardOrStackObject is not among the items of tNoCloseStacks then
       close stack oStackName  
    end if
+
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
