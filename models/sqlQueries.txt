@@ -12,3 +12,111 @@ selectQuotesCollection
 SELECT  *
 FROM quote
 WHERE subject = "#####"
+|
+
+
+SELECT  file_id
+FROM item
+WHERE media_type = "art/photography"
+AND `tags` LIKE "%:1%"
+AND `cached_on_disk` ="true"
+ORDER BY 
+RANDOM() LIMIT 1
+|
+
+
+SELECT  * 
+FROM quote
+WHERE quote_id 
+
+IN
+
+(
+SELECT quote_id
+FROM category_quote
+WHERE category_id
+IN  ( :1)
+)
+
+ORDER BY
+RANDOM() 
+LIMIT 1
+
+|
+
+SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.diacritical_transliteration,item.lyrics_id" FROM 
+song_lyrics 
+JOIN  item 
+ON 
+item.lyrics_id= song_lyrics.lyrics_id 
+WHERE 
+item.item_id = " & pItemID
+|
+
+SELECT 
+	item.*,item_format.format_name,item_format.filename
+FROM
+	item,item_format
+WHERE
+	item.item_id = item_format.item_id
+	
+	
+|
+
+SELECT a.*, CONCAT('[',GROUP_CONCAT(b.format_name),']') formats
+FROM item a 
+INNER JOIN item_format b
+ON a.item_id = b.item_id
+WHERE a.media_type LIKE "%audio%"
+GROUP BY a.item_id
+|
+
+SELECT a.*, b.filename, CONCAT('[',GROUP_CONCAT(b.format_name),']') formats
+FROM item a 
+INNER JOIN item_format b
+ON a.item_id = b.item_id
+WHERE a.media_type = "art/photography"
+GROUP BY a.item_id
+
+
+|
+
+Select "item.*" into tFieldsA[1]
+		put "item_format.filename" into tFieldsA[2]
+		put "CONCAT('[',GROUP_CONCAT(item_format.format_name),']') formats" into tFieldsA[3]
+		rigDbSelect tFieldsA, false
+
+		rigDbFrom "item"
+		rigDbJoin "item_format", "item.item_id = item.item_id", "inner"
+		rigDbGroupBy "item.item_id"
+		rigDbGet("item") into tQuery
+--------------
+examples http://www.informit.com/articles/article.aspx?p=30875&seqNum=5
+
+SELECT selection_list         # What columns to select
+FROM table_list               # Where to select rows from
+WHERE primary_constraint      # What conditions rows must satisfy
+GROUP BY grouping_columns     # How to group results
+ORDER BY sorting_columns      # How to sort results
+HAVING secondary_constraint   # Secondary conditions rows must satisfy
+LIMIT count;                  # Limit on results=
+-----------
+The Full Join
+
+If a SELECT statement names multiple tables in the FROM clause with the names separated by commas, MySQL performs a full join. For example, if you join t1 and t2 as follows, each row in t1 is combined with each row in t2:
+
+mysql> SELECT t1.*, t2.* FROM t1, t2;
+---
+If you add a WHERE clause causing tables to be matched on the values of certain columns, the join becomes what is known as an equi-join because you're selecting only rows with equal values in the specified columns:
+
+mysql> SELECT t1.*, t2.* FROM t1, t2 WHERE t1.i1 = t2.i2;
+
+---
+
+The JOIN and CROSS JOIN join types are equivalent to the ',' (comma) join operator. For example, the following statements are all the same:
+
+SELECT t1.*, t2.* FROM t1, t2 WHERE t1.i1 = t2.i2;
+SELECT t1.*, t2.* FROM t1 JOIN t2 WHERE t1.i1 = t2.i2;
+SELECT t1.*, t2.* FROM t1 CROSS JOIN t2 WHERE t1.i1 = t2.i2; http://www.informit.com/articles/article.aspx?p=30875&seqNum=5
+
+

@@ -165,6 +165,6 @@ on closestack
    put empty into fld "ProgressTitle"
    put empty into fld "progressField"
    hide scrollbar "progressbar"
-   open stack sConfigA[last_stack]
-   show stack sConfigA[last_stack]
+   put  portal_GetLastStack()  into tLastStack
+   show stack tLastStack
 end closestack
