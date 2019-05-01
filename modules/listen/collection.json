@@ -1,6 +1,6 @@
 [
     {
-    "collection-title": "All Recent - Bodhinatha",
+    "collection-title": "Recent  Additions | Classical/Popular",
     "playLists": [
       {
         "playListTitle": "Recent Additions",
@@ -25,26 +25,24 @@
 			"approved_for_public": "YES"
         }
       },
-      {
-        "playListTitle": "All Bodhinatha\nTalks",
-        "playListImg": "bodhinatha_all-talks_DSC_330.jpg",
+       {
+        "playListTitle": "Classical\nArtists",
+        "playListImg": "professional_rajam-singer_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Bodhinatha Veylanswami",
-			"approved_for_public": "YES"		
-		}
-      },
-      {
-        "playListTitle": "Bodhinatha\nPath to Siva",
-        "playListImg": "bodhinatha_path-to-siva_330.jpg",
-        "playlistClass": "cached",
-        "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Bodhinatha Veylanswami",
-			"file_id": "path-to-siva",
+			"media_type": "audio/song",
+			"tags": "Professional",
 			"approved_for_public": "YES"
-				
+        }
+      },
+       {
+        "playListTitle": "Popular Tunes",
+        "playListImg": "popular-tunes-lady-headset_shutterstock_330.jpg",
+        "playlistClass": "cached",
+        "data_query": {
+			"media_type": "audio/song",
+			"tags": "pop",
+			"approved_for_public": "YES"
         }
       }
     ]
@@ -122,9 +120,30 @@
     ]
   },
   {
-    "collection-title": "All Gurudeva",
+    "collection-title": "Satguru Speaks",
     "playLists": [
       {
+        "playListTitle": "All Bodhinatha's\nTalks",
+        "playListImg": "bodhinatha_all-talks_DSC_330.jpg",
+        "playlistClass": "cached",
+        "data_query": {
+			"media_type": "inspiredtalk",
+			"author": "Satguru Bodhinatha Veylanswami",
+			"approved_for_public": "YES"		
+		}
+      },
+      {
+        "playListTitle": "Bodhinatha\nPath to Siva",
+        "playListImg": "bodhinatha_path-to-siva_330.jpg",
+        "playlistClass": "cached",
+        "data_query": {
+			"media_type": "inspiredtalk",
+			"author": "Satguru Bodhinatha Veylanswami",
+			"file_id": "path-to-siva",
+			"approved_for_public": "YES"
+			}	
+        },
+        {
         "playListTitle": "1970\nAudio Course",
         "playListImg": "gurudeva-all-master-047-019_330.jpg",
         "playlistClass": "cached",

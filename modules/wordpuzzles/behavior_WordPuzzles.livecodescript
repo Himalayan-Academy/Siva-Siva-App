@@ -11,7 +11,6 @@ array that keeps the track tile locations.
 --> Events
 -
 on openCard
-
    --if not (the lockscreen)  then lock screen
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
    showTitle true
@@ -67,8 +66,6 @@ on createWordPuzzle
    put line 2 of tColors into tTileBkgndRGB
    set the foregroundcolor of fld _Quote to tRGB
    set the backgroundColor of grc quoteBkgnd to tTileBkgndRGB
-   
-   lock screen
    
    
    -- Set the quote in a field
@@ -165,11 +162,9 @@ on createWordPuzzle
    
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
-   unlock screen
-   send hideSubjectFld to me in 200 milliseconds
    
    --send "clueGoHome" to image "word_1" in 500 milliseconds
-  put the long id of image "word_1" into pTile
+   put the long id of image "word_1" into pTile
    setTileGlow "large" 
    relayer  pTile to front of card "word-puzzle"
    glowtile pTile, true
@@ -177,6 +172,8 @@ on createWordPuzzle
    put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
    tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
    unlock screen
+   show fld "wordPuzzleSubject"
+   send "hideSubjectFld" to me in 5 seconds
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
@@ -204,7 +201,7 @@ end assignHomeLocations
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
    --if not (the lockscreen)  then lock screen
-   ntInfo ("lockscreen: " & the lockscreen)
+   ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
@@ -250,24 +247,10 @@ command fetchQuote
    put textDecode ( aSelectedQuotes[tNo]["content"], UTF8)  into sQuote
    put textDecode ( aSelectedQuotes[tNo]["subject"], UTF8)  into fld "wordPuzzleSubject"
    put textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
-   --   if sSourceURL <> empty then
-   --      set  the uSourceURL of widget "Context" to sSourceURL
-   --   else
-   --      set  the uSourceURL of widget "Context" to empty # wipe an old link
-   --   end if
-   
+  
    show fld "wordPuzzleSubject"
    #hack to deal with endline bug
    replace "\n" with space in sQuote
-   
-   ## Disable view in context for now, ww don't think use are interested
-   --   if connectivity_PingServer() ="true"  then
-   --      ## Source URL may or may not there
-   --      put   textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
-   --      replace "http:" with "https:" in sSourceURL
-   --      set the uSourceURL of widget "context" to sSourceURL
-   --      ## could be somethign else, if connectivity is bad... will check that on completion
-   --   end if
    
    # fix  strings with straight quotes, which are word delimiters in LC
    # change to curly's when they are included with the word 

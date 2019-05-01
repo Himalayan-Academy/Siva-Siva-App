@@ -91,6 +91,11 @@ Select "item.*" into tFieldsA[1]
 		rigDbGroupBy "item.item_id"
 		rigDbGet("item") into tQuery
 --------------
+
+put rigDbLastQuery() into tStr
+rigLogMessage "debug", tStr
+
+-----------
 examples http://www.informit.com/articles/article.aspx?p=30875&seqNum=5
 
 SELECT selection_list         # What columns to select
