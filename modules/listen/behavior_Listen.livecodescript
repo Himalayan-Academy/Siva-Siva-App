@@ -56,7 +56,6 @@ on openstack
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA 
    
-   put the keys of sCollectionA
    portal_SetLastStack "Listen"
    
    # must have net connection, otherwise take to My Audio
@@ -343,6 +342,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             # this is not a series of records for individual files
             # We need this later:
             put jsonToArray (tRecords) into sCurrentPlayListA["audioBookMetadata"]
+            put tFileID into sCurrentPlayListA["audioBookMetadata"]["file_id"]
          end if
          
          break      
@@ -524,7 +524,7 @@ function getItemURL pRecordNum
    else
       # its an audio book
       put getMediaURL("audioBook") into sSelectedURL
-      put  sCurrentPlayListA["audioBookMetadata"][1]["file_id"] & "/" after sSelectedURL
+      put  sCurrentPlayListA["audioBookMetadata"]["file_id"] & "/" after sSelectedURL
       put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
    end if
    return sSelectedURL
