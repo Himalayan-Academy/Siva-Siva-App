@@ -102,7 +102,7 @@ command portal_GoStack cardOrStackObject
       go cardOrStackObject
       close stack oStackName  
    end if
-
+   
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 

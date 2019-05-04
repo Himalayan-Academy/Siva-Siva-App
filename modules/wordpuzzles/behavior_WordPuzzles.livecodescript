@@ -13,8 +13,7 @@ array that keeps the track tile locations.
 on openCard
    --if not (the lockscreen)  then lock screen
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
-   showTitle true
-   send "showTitle false" to me in 1 second
+   
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
@@ -24,6 +23,8 @@ on openCard
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
    loadNewBgImg
+   showTitle true
+   send "showTitle false" to me in 3 seconds
    setTileGlow "small"
    put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
@@ -78,7 +79,7 @@ on createWordPuzzle
    show fld "_quote"
    
    
-   set the acceleratedRendering  of this stack to true
+   
    
    -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "quoteGroup"
@@ -163,7 +164,7 @@ on createWordPuzzle
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
    
-   --send "clueGoHome" to image "word_1" in 500 milliseconds
+ 
    put the long id of image "word_1" into pTile
    setTileGlow "large" 
    relayer  pTile to front of card "word-puzzle"
@@ -172,8 +173,9 @@ on createWordPuzzle
    put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
    tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
    unlock screen
+   set the acceleratedRendering  of this stack to true
    show fld "wordPuzzleSubject"
-   send "hideSubjectFld" to me in 5 seconds
+   send "hideSubjectFld" to me in 10 seconds
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
@@ -248,7 +250,6 @@ command fetchQuote
    put textDecode ( aSelectedQuotes[tNo]["subject"], UTF8)  into fld "wordPuzzleSubject"
    put textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
   
-   show fld "wordPuzzleSubject"
    #hack to deal with endline bug
    replace "\n" with space in sQuote
    
@@ -349,17 +350,15 @@ on clearBoard
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
    hide group "prefsSelectorGrp"
-   --set the url of widget "readContext" to empty # otherwise old content appears next time
-   send hideSubjectFld to me in 1 seconds
-   --hide widget "readContext"
    stopTimer
-   --lock screen
+   lock screen
    put empty into fld "Minutes" of me
    put empty into fld "seconds" of me
    --hide widget "context"
    --set the vis of grc "startHere" to false
    put empty into fld "_Quote" of me
    hide  fld "_Quote" of me
+   hide fld "wordPuzzleSubject"
    hide group "quoteGroup"
    if the uwordlist of me = "" then exit clearBoard -- assume imgs are gone
    repeat with x = the number of imgs of me down to 1
@@ -373,7 +372,7 @@ on clearBoard
    end try
    end repeat
    set the uWordList of me to empty
-   --unlock screen
+   unlock screen
 end clearBoard 
 
 on checkCompletion 
