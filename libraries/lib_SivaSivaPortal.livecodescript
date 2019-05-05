@@ -99,8 +99,8 @@ command portal_GoStack cardOrStackObject
       go cardOrStackObject in stack oStackName
    else
       ntInfo "close one; open next"
-      go cardOrStackObject
-      close stack oStackName  
+        close stack oStackName  
+       go cardOrStackObject
    end if
    
    if  oStackName is "Siva-Siva-Portal" then 

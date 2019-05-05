@@ -24,7 +24,7 @@ on openCard
    # use resetUI then save and close the stack
    loadNewBgImg
    showTitle true
-   send "showTitle false" to me in 3 seconds
+   send "showTitle false" to me in 90 ticks
    setTileGlow "small"
    put 0 into sCluesGiven
    # we should be storing the user's pref for length, but for V1
@@ -221,7 +221,7 @@ command showTitle pBool
     hide grp "puzzleControls" with visual effect dissolve very fast
     show fld "titleFld"
   else -- hide title
-    hide fld "titleFld" with visual effect dissolve
+    hide fld "titleFld" with visual effect dissolve very fast
     show grp "puzzleControls" with visual effect dissolve very fast
   end if
 end showTitle
