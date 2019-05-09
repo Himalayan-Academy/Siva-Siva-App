@@ -112,7 +112,8 @@ on mouseup
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
          end if
-            downloadSelection pTarget
+         portal_SetLastStack "Listen"
+         downloadSelection pTarget
          break
    end switch
    
@@ -221,8 +222,9 @@ command downloadAffirmed
       put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
    put "listen" into sConfigA[last_stack]
-   hide stack "listen"
+   --hide stack "listen"
    go stack "view_Download"
+   wait 100 milliseconds with messages
    dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed

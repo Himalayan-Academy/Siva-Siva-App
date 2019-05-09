@@ -86,7 +86,7 @@ command portal_GoStack cardOrStackObject
    # it doesn't work to go in window from a Portrait to Landscape.
    # need to use the old go stack
    put "wordpuzzles,view_BrowserLandscape" into tLandScapeModeStacks
-   put "view_DownLoad"  into tNoCloseStacks
+
    
    # we need to from landscape to portrait and backagain 
    # closing one and open the other
@@ -97,10 +97,11 @@ command portal_GoStack cardOrStackObject
          (oStackName is not among the items of  tLandScapeModeStacks) then
       ntInfo "go stack in window of other stack"
       go cardOrStackObject in stack oStackName
+         close stack oStackName  
    else
       ntInfo "close one; open next"
-        close stack oStackName  
-       go cardOrStackObject
+      close stack oStackName  
+      go cardOrStackObject
    end if
    
    if  oStackName is "Siva-Siva-Portal" then 
