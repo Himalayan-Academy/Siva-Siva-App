@@ -252,30 +252,36 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
-   
+
    put ("youtube.com") into tRequiresLandscape
    
    if requiresConnection(sLastLinkTitle) = "false" then
       dialog_CustomMsg "Connection required."
       exit to top
-   else
-      put the short name of this stack into oStackName
-      repeat for each item x  in tRequiresLandscape
-         if  pURL contains x then
-            put "goLandscape" into tBrowserView
-         end if
-      end repeat
-      if  tBrowserView = "goLandscape" then
-         portal_GoStack "view_BrowserLandscape"
-         send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
-      else
-         portal_GoStack "view_SivaSivaBrowser"     
-         send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
-      end if
-      
-      put pURL into pTrackdata["webUrl"]
-      tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
    end if
+   
+   if checkURLAvailable(pURL) = "false" then
+      dialog_CustomMsg "Web site unavailable. Try later."
+      exit to top
+   end if
+   
+   put the short name of this stack into oStackName
+   repeat for each item x  in tRequiresLandscape
+      if  pURL contains x then
+         put "goLandscape" into tBrowserView
+      end if
+   end repeat
+   if  tBrowserView = "goLandscape" then
+      portal_GoStack "view_BrowserLandscape"
+      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
+   else
+      portal_GoStack "view_SivaSivaBrowser"     
+      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+   end if
+   
+   put pURL into pTrackdata["webUrl"]
+   tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
+
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
