@@ -240,6 +240,17 @@ command toggleReadContext pState
             browser_SetLastURL tURL
             hide the target
             hide button "goNextRealm" # svg
+            
+            ## GEOMETRY
+            
+            ## we will later refactor this to an UpDateUI OI(or something) responsive Geometry  handler
+            # for not it is based on fixed rect as per:
+            # mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+       
+            set rect of  widget "readContext" to (10,the bottom of btn "cancel"+ 6,404,680)
+            
+            ## 
+            
             show    widget "readContext" # a browser
             # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
             # and not actually go back to gem in this case
