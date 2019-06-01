@@ -79,14 +79,15 @@ command portal_GoStack cardOrStackObject
       deleteAllMobileControls # will destroy all except audioPlayer
    end if
    
-   set the acceleratedRendering of stack oStackName to false
    
-   ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject 
-   ntinfo ("Portal_GoStack: " & portal_GoStack && cardOrStackObject )
-  
-      close stack oStackName  
-      go cardOrStackObject
-
+   ## Do not change to teh acceleratedRending true | false at this point
+   ## it causes a blank black going form on stack to another
+   
+   ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
+   
+   close stack oStackName
+   go cardOrStackObject
+   
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
@@ -293,10 +294,10 @@ command portal_SetLastStack stackName
    # we  go back "sLastStack" on "global" navigation.
    # like returning from Chennai to London;
    --ntInfo "portal_SetLastStack"
-   if stackname = "Siva-Siva-App" then
-      ntinfo "Launch from SivaSivaApp"
-      put "Siva-Siva-Portal" into stackName
-   end if
+   --   if stackname = "Siva-Siva-App" then
+   --      ntinfo "Launch from SivaSivaApp"
+   --      put "Siva-Siva-Portal" into stackName
+   --   end if
    put stackName into sLastStack  
 end portal_SetLastStack
 
@@ -318,9 +319,41 @@ command portal_SetLaunchStack stackName
 end portal_setLaunchStack
 
 function portal_GetLaunchStack stackName
-  # we  go back "sLaunchStack" of a local navigation.
-  # like returning from Lihue Airport to Wailua Homesteads
-  --ntInfo "portal_setLaunchStack"
-  return sLaunchStack  
+   # we  go back "sLaunchStack" of a local navigation.
+   # like returning from Lihue Airport to Wailua Homesteads
+   --ntInfo "portal_setLaunchStack"
+   return sLaunchStack  
 end portal_GetLaunchStack
 
+############################
+on ___DEPRECATED
+end ___DEPRECATED
+############################
+
+## Previous handler Portal_GoStack but it turns out the for 9.0.4 onward
+## we can simply close the last stack 
+## go to the next one.
+
+
+--   # it doesn't work to go in window from a Portrait to Landscape.
+--   # need to use the old go stack
+--   put "wordpuzzles,view_BrowserLandscape" into tLandScapeModeStacks
+
+--   # we need to from landscape to portrait and backagain 
+--   # closing one and open the other
+
+--   ntinfo ("Portal_GoStack: " & portal_GoStack && cardOrStackObject )
+--   if (cardOrStackObject  is not among the items of tLandScapeModeStacks) AND  \
+--         (trueword 2 of cardOrStackObject  is not among the items of tLandScapeModeStacks) AND \
+--         (oStackName is not among the items of  tLandScapeModeStacks) then
+--      ntInfo "go stack in window of other stack"
+--      close stack oStackName
+--      go cardOrStackObject
+
+--   else
+--      ntInfo "close one; open next"
+--      close stack oStackName
+--      go cardOrStackObject
+
+
+--   end if
