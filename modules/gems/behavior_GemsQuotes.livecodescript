@@ -84,6 +84,7 @@ on setCardTitle
 end setCardTitle
 
 on closecard
+   set the acceleratedRendering of this stack to false
    resetUI
 end closecard
 
