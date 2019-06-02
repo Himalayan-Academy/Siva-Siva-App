@@ -17,11 +17,13 @@ end gotUILibrary
 
 
 
-command setCardCoords
+command setCardCoords x,y
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
    put item 3 of sCardRect into sCardWidth
    put item 4 of sCardRect into sCardHeight
+   --put x into sCardWidth
+   --put y into sCardHeight
    put sCardWidth/2 into sHorizCenter
    put sCardHeight/2 into sVertCenter
    put the loc of tCard into sCardLoc

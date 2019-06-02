@@ -13,6 +13,7 @@
 local sRowName, sMap, sFavoritesA
 
 on preOpenCard
+   lock screen
    put the short name of this card into pCard
    setUpUI pCard
 end preOpenCard
@@ -79,7 +80,7 @@ on setUpUI pCard
          hide button "goToMainNav"
          break
    end switch
-   
+   updateUI
 end setUpUi
 
 function checkConnectionStop
@@ -95,11 +96,12 @@ end checkConnectionStop
 
 
 on loadModulesList tTarget
+   portal_SetModulesList tTarget
    put getNavigationMap() into sMap 
    put sMap[portalData][tTarget][rowdata] into tRowdataA
    set dgData of grp "modulesList" of me to tRowdataA
    reSizeDataGrid 
-
+   unlock screen
 end loadModulesList
 
 command  loadFavoritesToMyHome
@@ -137,3 +139,10 @@ command launchModule
       portal_DoRowLink theDataA["rowName"]
    end if
 end launchModule
+
+## GEOMETRY
+
+command updateUI
+   put the long id of grp "footer" into pControl
+   bottomCenterMe pControl,8
+end updateUI

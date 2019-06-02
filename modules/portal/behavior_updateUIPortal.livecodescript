@@ -1,8 +1,18 @@
 ﻿script "behavior_updateUIPortal"
 
+
+--on resizestack x,y
+--    x,y
+
+--end resizeStack
+
+on opencard
+
+   setCardCoords
+   updateUIPortal
+end opencard
+
 command updateUIPortal
-   
-   setScreenRectCoords
    
    # background group of all cards
    
@@ -62,6 +72,7 @@ command updateUIPortal
          
          
    end switch
-   
+   unlock screen
+
 end updateUIPortal
 

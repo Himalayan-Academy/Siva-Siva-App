@@ -35,7 +35,7 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 --> Variables
 -
 local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle,sNavMap
-
+local sLastModulesList
 
 
 ------------- Navigation section -------------------
@@ -236,7 +236,7 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
-
+   
    put ("youtube.com") into tRequiresLandscape
    
    if requiresConnection(sLastLinkTitle) = "false" then
@@ -265,7 +265,7 @@ command portal_GoUrl pURL,pJournalLabel
    
    put pURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-
+   
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
@@ -324,6 +324,16 @@ function portal_GetLaunchStack stackName
    --ntInfo "portal_setLaunchStack"
    return sLaunchStack  
 end portal_GetLaunchStack
+
+
+command portal_SetModulesList  tTarget
+   put tTarget into sLastModulesList  
+end portal_SetModulesList
+
+function portal_GetModulesList stackName
+   return sLastModulesList  
+end portal_getModulesList
+
 
 ############################
 on ___DEPRECATED
