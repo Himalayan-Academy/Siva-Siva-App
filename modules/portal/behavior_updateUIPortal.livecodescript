@@ -7,9 +7,10 @@
 --end resizeStack
 
 on opencard
-
+  
    setCardCoords
    updateUIPortal
+   
 end opencard
 
 command updateUIPortal
@@ -72,7 +73,6 @@ command updateUIPortal
          
          
    end switch
-   unlock screen
-
+  
 end updateUIPortal
 

@@ -112,6 +112,8 @@ command init_AppConfiguration
    mobileRectSet
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
+   send "preparePortalMainNavImages" to me in 800 milliseconds
+   
    -- AAG enable or disable network tracer
    if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
       ntEnableNetworkTracer
@@ -142,7 +144,26 @@ command init_LoadStackFilesFromConfiguration
    
 end init_LoadStackFilesFromConfiguration
 
+command preparePortalMainNavImages 
 
+   put  "img/bkgnds/patterns/home_back.jpg,"&\
+         "img/nav-global-icons/diamond-sparkle-small.jpg," & \
+         "img/nav-global-icons/baby-surprise-thumb.jpg," &\
+         "img/nav-global-icons/look_big-eye-shtrstk-13603590_260-150.jpg," & \
+         "img/nav-global-icons/practice_girl-handstand_230-150.jpg," & \
+         "img/nav-global-icons/listen_audio_boy-headphones-shtrstk-357641909.jpg," & \
+         "img/nav-global-icons/read_shutterstock_260-150.jpg," & \
+         "img/nav-global-icons/websites_shutterstock_372104245.jpg," & \
+         "img/nav-global-icons/Fun_Siva-Is-Love.jpg," & \
+         "img/nav-global-icons/my-home-DonAngeIraivan_230-150o.jpg," & \
+         "img/nav-global-icons/journal_little-lizardDSC_7012.jpg,"  \
+         into tImageList
+   
+   repeat for each item i in tImagelist
+      prepare image file (path_Assets()& i )
+   end repeat
+   
+end  preparePortalMainNavImages
 
 command init_Fonts
    start using font file (path_Assets() & "fonts/NotoSans-Regular.ttf")
