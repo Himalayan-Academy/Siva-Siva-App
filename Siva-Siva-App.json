@@ -122,6 +122,10 @@
       "file": "views/behavior_view_SivaSivaBrowser.livecodescript"
     },
     {
+      "name": "behavior_view_LandscapeBrowser",
+      "file": "views/behavior_view_LandscapeBrowser.livecodescript"
+    },
+    {
       "name": "view_BrowserLandscape",
       "file": "views/view_BrowserLandscape.livecode"
     },

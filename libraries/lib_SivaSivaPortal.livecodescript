@@ -237,7 +237,7 @@ end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
    
-   put ("youtube.com") into tRequiresLandscape
+   put ("youtube.com","1988-apple-video") into tRequiresLandscape
    
    if requiresConnection(sLastLinkTitle) = "false" then
       dialog_CustomMsg "Connection required."

@@ -145,6 +145,14 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
+         "Apple Video": {
+             "link": {
+                "portal param": "http://dev.himalayanacademy.com/media/video/1988-apple-video/open_apple_kauai_monks.mp4",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        },
         "Our Guru Lineage": {
             "link": {
                 "portal param": "https://www.himalayanacademy.com/monastery/lineage-philosophy/lineage",
@@ -448,6 +456,9 @@
                 },
                 "6": {
                     "rowName": "Hindu History Song, 6000 Years"
+                },
+                "7": {
+                    "rowName": "Apple Video"
                 }
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
