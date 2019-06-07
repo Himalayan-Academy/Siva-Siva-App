@@ -85,6 +85,8 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
+   if the lockScreen is true then unlock screen
+  
    close stack oStackName
    go cardOrStackObject
    
@@ -257,7 +259,7 @@ command portal_GoUrl pURL,pJournalLabel
    end repeat
    if  tBrowserView = "goLandscape" then
       portal_GoStack "view_BrowserLandscape"
-      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
+      send "setBrowserURL pURL"  to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
    else
       portal_GoStack "view_SivaSivaBrowser"     
       send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
