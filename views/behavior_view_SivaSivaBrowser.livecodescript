@@ -1,10 +1,12 @@
 ﻿script "behavior_view_SivaSivaBrowser"
 # this behavior is also use  by the view_BrowserLandscape.livecode stack
 # 
-local sMediaURL,sBrowserURL,sBrowserOrientation
+local sMediaURL,sBrowserURL
 
-local sPortraitRect, sLandscapeRect, sScreenRect,
+#local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
 local sHackDownloadCompleteFlag
+
+local sLandscapeOnly, sOrientation
 
 # this stack intend to make the UI responsive
 # by getting rect of the screen and using those coordinator
@@ -14,86 +16,80 @@ local sHackDownloadCompleteFlag
 # is sent from portal_GoURL in the lib_SivaSivaPortal 
 
 on preopenstack
-   lock screen
-   put the short name this stack into theBrowser
-   if theBrowser contains "landscape" then
-      put "landscape" into sBrowserOrientation
-   else 
-      # regular brower stack supports orientation changes
-      # but always starts out in portrait mode
-      put "portrait" into sBrowserOrientation 
-   end if
+   local tBrowser, tOrientations
+   set the fullscreenmode of this stack to empty
+   put the short name this stack into tBrowser
+   put (tBrowser contains "landscape") into sLandscapeOnly
    if isMobile() then
-      if sBrowserOrientation = "landscape"   then
-         mobileSetAllowedOrientations "landscape left,landscape right"
+      put "landscape left,landscape right" into tOrientations
+      if sLandscapeOnly then
+         put "landscape" into sOrientation
       else
-         mobileSetAllowedOrientations "portrait,landscape left,landscape right"
+         put "portrait," before tOrientations
+         put "portrait" into sOrientation
       end if
+      mobileSetAllowedOrientations tOrientations
    end if
    resetUI
-   send "updateUI sBrowserOrientation"  to this card in 0 seconds
 end preopenstack
 
 on resizeStack
-   if isMobile() then
-      if sBrowserOrientation = "landscape" then
-         send "updateUI sBrowserOrientation" to this card in 100 milliseconds
-      else
-         put mobileDeviceOrientation() into theOrientation
-         send "updateUI" && theOrientation to this card in 100 milliseconds
-      end if
-   end if
+   lock screen
+   updateUI
+   unlock screen
 end resizeStack
 
 command updateUI theOrientation
+   local tBrowser, tLoader, tOrientation, tHeight, tWidth, tBrowserLoc, tBrowserRect, tUnit
    
    put the long id of widget "body" of card "SivaSivaBrowser" into tBrowser
    put the long id of widget "loader" of card "SivaSivaBrowser" into tLoader
+   if isMobile() then
+      put mobileDeviceOrientation() into tOrientation
+   else
+      put sOrientation into tOrientation
+   end if
+   put the width of this card into tWidth
+   put the height of this card into tHeight
+   
    switch 
+      case (tOrientation contains "portrait")
+         put (tWidth/2,(tHeight-50)/2) into tBrowserLoc
+         put (0,0,tWidth,(tHeight - 50)) into tBrowserRect
+         
+         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( round(tWidth/2),tHeight - 25)
+         put tWidth/4 into tUnit
+         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tUnit/2,tHeight-25)
+         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tUnit*1.5,tHeight-25)
+         set the loc of button "share"  of card "SivaSivaBrowser" to (tUnit*2.5,tHeight-25)
+         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tUnit*3.5,tHeight-25)
+         --show group "footerNavigation" of card "SivaSivaBrowser"
+         break
       
-      
-      case (theOrientation contains "portrait")
-         put the width of this card into sCdWidth
-         put the height of this card into sCdHeight
-         put (sCdWidth/2,(sCdHeight-50)/2) into tBrowserLoc
-         put (0,0,sCdWidth,(sCdHeight - 50)) into tBrowserRect
-         set the rect of tBrowser  to tBrowserRect
-         set the loc of tBrowser to tBrowserLoc
-         set the rect of tLoader to tBrowserRect
-         set the loc of tLoader to tBrowserLoc
-         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( round(sCdWidth/2),sCdHeight - 25)
-         put sCdWidth/4 into tUnit
-         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tUnit/2,sCdHeight-25)
-         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tUnit*1.5,sCdHeight-25)
-         set the loc of button "share"  of card "SivaSivaBrowser" to (tUnit*2.5,sCdHeight-25)
-         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tUnit*3.5,sCdHeight-25)
-         show group "footerNavigation" of card "SivaSivaBrowser"
-         break 
-      case (theOrientation contains "landscape")
-         put the width of this card into sCdWidth
-         put the height of this card into sCdHeight
-         hide group "footerNavigation" of card "SivaSivaBrowser"
+      case (tOrientation contains "landscape")
+         put (0,0,(tWidth- 50),tHeight) into tBrowserRect
+         put ((tWidth+50)/2,tHeight/2) into tBrowserLoc
          
-         put (0,0,(sCdwidth- 50),sCdHeight) into tBrowserRect
-         put ((sCdWidth+50)/2,sCdHeight/2) into tBrowserLoc
-         
-         
-         set the rect of tBrowser  to tBrowserRect
-         set the rect of tLoader to tBrowserRect
-         set the loc of tBrowser to  tBrowserLoc
-         set the loc of tLoader to  tBrowserLoc
-         
-         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( 25,sCdHeight/2)
-         put sCdHeight/4 into tUnit
+         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( 25,tHeight/2)
+         put tHeight/4 into tUnit
          set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (25,tUnit/2) 
          set the loc of button "add-favorites" of card "SivaSivaBrowser" to (25,tUnit*1.5)
          set the loc of button "share"  of card "SivaSivaBrowser" to (25, tUnit*2.5)
          set the loc of button "settings-gear" of card "SivaSivaBrowser" to (25, tUnit*3.5)
-         show group "footerNavigation" of card "SivaSivaBrowser"
+         --show group "footerNavigation" of card "SivaSivaBrowser"
+         break
          
+      default
+         -- unknown, face up, face down
+         exit updateUI
    end switch
    
-   if (the lockscreen) then unlock screen
+   set the rect of tBrowser  to tBrowserRect
+   set the loc of tBrowser to tBrowserLoc
+   set the rect of tLoader to tBrowserRect
+   set the loc of tLoader to tBrowserLoc
+   
+   --if (the lockscreen) then unlock screen
 end updateUI
 
 command setBrowserURL pURL
@@ -107,7 +103,7 @@ command terminateBrowser
    set the url of widget "Body" to empty
 end terminateBrowser
 
-Local sStartLoadTime,sTimePassed,sLoadSuccessFlag,
+Local sStartLoadTime,sTimePassed,sLoadSuccessFlag
 
 # BUG iOS does not respond to message  "browserDocumentLoadBegin"
 # the loading Spinner and cancel command remain on screen.
@@ -138,8 +134,10 @@ on browserDocumentLoadBegin pURL
    ntInfo ( (the lockscreen) & "; show the loader " &  pURL)
 end browserDocumentLoadBegin
 
+
 on browserDocumentLoadComplete pURL
-  
+   local tBrowser
+   
    ntinfo ("download flag: " & sHackDownloadCompleteFlag)
    if pURL is not empty then
       dispatch "hideloader" to me 
@@ -160,15 +158,19 @@ command hideLoader
    hide widget "loader"
 end hideLoader
 
+
 on journal_AddEntry
+   -- should pData be a parameter?
+   local pData, tTitle
    try
       parseTheHTML (the htmlText of widget "body"),"Title"
    end try
    put browser_GetLastURL() into pData["weburl"] 
    put browser_GetLastPageTitle() into tTitle
-   if sBrowserOrientation = "landscape" then
+   if sLandscapeOnly then
+      --if sBrowserOrientation = "landscape" then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
-      else
+   else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end if
    
@@ -176,11 +178,15 @@ end journal_AddEntry
 
 
 on journalResume  pDataA, pEntryA
+   local tBrowser
    put the long id of widget "Body" of cd "SivaSivaBrowser"  into tBrowser 
    set the URL of tBrowser to pDataA["weburl"]
 end journalResume
 
-command share_Items 
+-- not sure where this variable declaration really goes
+local sShareItemsA
+command share_Items
+   local tWebPage
    put browser_GetLastURL() into tWebPage
    put tWebPage into sShareItemsA["url"]  
    if tWebPage contains "Youtube" then # we have a video
@@ -194,14 +200,13 @@ command share_Items
 end share_Items
 
 command resetUI
-   set the url of  widget "body" of cd "SivaSivaBrowser" to empty
+   set the url of widget "body" of cd "SivaSivaBrowser" to empty
    hide widget "body" of cd "SivaSivaBrowser"
    show widget "loader" of cd "SivaSivaBrowser"
 end resetUI
 
 on closestack
-   
-   if sBrowserOrientation = "landscape" then
+   if sLandscapeOnly then
       portal_SetLastStack "view_BrowserLandscape"
    else
       portal_SetLastStack "view_SivaSivaBrowser"
