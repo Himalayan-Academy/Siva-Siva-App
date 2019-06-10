@@ -13,8 +13,9 @@ on mobileStandaloneSaved
 end mobileStandaloneSaved
 
 on closestack
-   if isMobile then
-      put the long Date into pData
-      tracking_RecordActivity "Siva-Siva-App", "shutdown/exit",  pDate
+   local tDate
+   if isMobile() then
+      put the long Date into tDate
+      tracking_RecordActivity "Siva-Siva-App", "shutdown/exit", tDate
    end if
 end closestack

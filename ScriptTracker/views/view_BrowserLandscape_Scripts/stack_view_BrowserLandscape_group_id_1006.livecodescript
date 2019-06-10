@@ -9,20 +9,25 @@ Script "stack_view_BrowserLandscape_group_id_1006"
 global sConfigA
 
 on mouseUp
-   -- record the last URL they were at
+   local tTarget, tShareControl, tControl, tBrowser
+   local tCdHeight, tSharingHeight
    
+   -- record the last URL they were on
    if not (the vis of widget "loader") then
       journal_AddEntry
    end if
    
-   terminateBrowser
-   
-   -- give time for connection to close before close the stack
-   -- maybe to helps
-   
-   wait 100 milliseconds with messages
-   
    put the short name of the target into tTarget
+
+   if tTarget is not "share" then
+      terminateBrowser
+      
+      -- give time for connection to close before close the stack
+      -- maybe to helps
+      
+      wait 100 milliseconds with messages
+   end if
+   
    switch tTarget
       case "go-home-portal"
          portal_GoStack ("Siva-Siva-Portal")
@@ -34,23 +39,23 @@ on mouseUp
          
       case "share"
          lock screen
-         put sConfigA["shareControl"] into tShareControl  
+         put sConfigA["shareControl"] into tShareControl
          
-         if (exists(group "share-ui" of this card) ) then 
+         if (exists(group "share-ui" of this card) ) then
             -- it has a preopencontrol which hides me
          else
             copy tShareControl to this card 
          end if
-         put the long id of group "share-ui" of this card into pControl
+         put the long id of group "share-ui" of this card into tControl
          put the long id of widget "body" of this card into tBrowser
          put the height of this card into tCdHeight
-         put the height of pControl into tSharingHeight
-         set loc of pControl to\
+         put the height of tControl into tSharingHeight
+         set loc of tControl to\
                (the width of this card/2),tCdHeight- (tSharingHeight/2 )
          set the top of tBrowser to -tSharingHeight
          
          deleteMobileControl  "audioPlayer"
-         show group "share-ui" with visual dissolve very fast
+         show group "share-ui" with visual "dissolve" very fast
          unlock screen
          break
          
