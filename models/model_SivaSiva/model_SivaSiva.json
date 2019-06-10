@@ -99,7 +99,7 @@
         },
         "Hindu History, Ancient Times, Pt 1": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?start=12",
+                "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -107,7 +107,7 @@
         },
          "Hindu History, 300-1000ce, Pt 2": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/j0kLX2aPgo8?start=12",
+                "portal param": "https://www.youtube.com/embed/j0kLX2aPgo8?start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -115,7 +115,7 @@
         },
          "Hindu History, 1000-1850 ce, Pt 3": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/Lr8Qx0SyrYI?start=12",
+                "portal param": "https://www.youtube.com/embed/Lr8Qx0SyrYI?start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -123,7 +123,7 @@
         },
          "Hindu History, 1850 to 1947, Pt 4": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/nx_vSuduwAk?start=12",
+                "portal param": "https://www.youtube.com/embed/nx_vSuduwAk?start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -131,7 +131,7 @@
         },
          "Hindu History, 1947 to Present, Pt 5": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/eVnqJHO3PcY?start=12",
+                "portal param": "https://www.youtube.com/embed/eVnqJHO3PcY?start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -139,7 +139,7 @@
         },
          "History Song, 6000 Years": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/YHS7dyN6sgM",
+                "portal param": "https://www.youtube.com/embed/YHS7dyN6sgM?playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -147,7 +147,7 @@
         },
         "History Song, What Hindu's Believe": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/PAzBZa-FBOo",
+                "portal param": "https://www.youtube.com/embed/PAzBZa-FBOo?playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -155,7 +155,7 @@
         },
         "History Song, Love Celebrations": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/URoNuvY1wx4",
+                "portal param": "https://www.youtube.com/embed/URoNuvY1wx4?playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
