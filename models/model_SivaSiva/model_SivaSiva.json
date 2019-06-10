@@ -107,7 +107,7 @@
         },
          "Hindu History, 300-1000ce, Pt 2": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/j0kLX2aPgo8",
+                "portal param": "https://www.youtube.com/embed/j0kLX2aPgo8?start=12",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -115,7 +115,7 @@
         },
          "Hindu History, 1000-1850 ce, Pt 3": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/Lr8Qx0SyrYI",
+                "portal param": "https://www.youtube.com/embed/Lr8Qx0SyrYI?start=12",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -123,7 +123,7 @@
         },
          "Hindu History, 1850 to 1947, Pt 4": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/nx_vSuduwAk",
+                "portal param": "https://www.youtube.com/embed/nx_vSuduwAk?start=12",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -131,13 +131,13 @@
         },
          "Hindu History, 1947 to Present, Pt 5": {
              "link": {
-                "portal param": "https://www.youtube.com/embed/eVnqJHO3PcY",
+                "portal param": "https://www.youtube.com/embed/eVnqJHO3PcY?start=12",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Hindu History Song, 6000 Years": {
+         "History Song, 6000 Years": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/YHS7dyN6sgM",
                 "portal command": "portal_GoUrl"
@@ -145,9 +145,17 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Apple Video": {
+        "History Song, What Hindu's Believe": {
              "link": {
-                "portal param": "http://dev.himalayanacademy.com/media/video/1988-apple-video/open_apple_kauai_monks.mp4",
+                "portal param": "https://www.youtube.com/embed/PAzBZa-FBOo",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        },
+        "History Song, Love Celebrations": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/URoNuvY1wx4",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -455,10 +463,13 @@
                     "rowName": "Hindu History, 1947 to Present, Pt 5"
                 },
                 "6": {
-                    "rowName": "Hindu History Song, 6000 Years"
+                    "rowName": "History Song, 6000 Years"
                 },
                 "7": {
-                    "rowName": "Apple Video"
+                    "rowName": "History Song, What Hindu's Believe"
+                },
+                "8": {
+                    "rowName": "History Song, Love Celebrations"
                 }
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
