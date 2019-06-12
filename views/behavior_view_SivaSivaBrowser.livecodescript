@@ -206,12 +206,9 @@ command resetUI
 end resetUI
 
 on closestack
-   if sLandscapeOnly then
-      portal_SetLastStack "view_BrowserLandscape"
-   else
-      portal_SetLastStack "view_SivaSivaBrowser"
-   end if
-   
+   # we never log the browers stacks as the sLastStack
+   # because we may be coming to view a web page from any module
+   # which should be designated as sLastStack and not these browers.
    if isMobile() then
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
