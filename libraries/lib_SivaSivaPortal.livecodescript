@@ -85,10 +85,12 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
-   if the lockScreen is true then unlock screen
-  
+   
+   --breakpoint
    close stack oStackName
    go cardOrStackObject
+   
+   if the lockScreen is true then unlock screen
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction

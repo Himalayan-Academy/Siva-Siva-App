@@ -3,6 +3,8 @@
 /* 
 This script  is the behavior assigned to card 1 of the Home
 assign to group "HomeStory"
+
+It is nested with a parent behavior: behavior "model_Narratives"
 */
 
 global sConfigA,sDefaultImage,sMainImage
