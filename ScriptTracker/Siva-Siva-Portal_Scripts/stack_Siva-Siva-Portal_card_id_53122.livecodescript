@@ -10,13 +10,16 @@ Script "stack_Siva-Siva-Portal_card_id_53122"
 global sConfigA
 
 on preopenCard 
+   lock screen
    setcardCoords
    audioIsRunning  
-   pass preopencard
+   
    put the long id of grp "modulesList" into pControl
    topCenterMe pControl,100
    put the long id of grp "footer" into pControl
    bottomCenterMe pControl,8
+   pass preopencard
+   unlock screen
 end preopenCard
 
 command showStories

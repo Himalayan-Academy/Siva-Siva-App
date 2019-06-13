@@ -10,13 +10,19 @@ global sConfigA
 
 
 on preOpenStack
-   
    ntinfo ("Portal: lockscreen is: " & (the lockscreen) )
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
       set the fullscreenmode of this stack to "showAll"
    end if
+   
+ 
+end preOpenStack
+
+on openStack
+   lock screen
+   put portal_GetModulesList() into tLastNavModule
    
    if not (portal_GetLastStack() is "Siva-Siva-App" or  Portal_GetLastStack() is empty) then
       switch Portal_GetLastStack()
@@ -26,13 +32,14 @@ on preOpenStack
          case "Surprise"
             go card  "Surprise"
             break
-         case "view_SivaSivaBrowser"
-         case "view_BrowserLandscape"
+         case "Siva-Siva-Portal"
          case "pathtosiva"
          case "calendar"
          case "color-meditation"
          case "daily-lesson"
          case "lexicon"
+            
+            --case (tLastNavModule= "Look" OR  tLastNavModule= "Websites" )
             lock screen
             go to card "modulesList"
             --dispatch loadModulesList to group "globalPortalMap" of card "modulesList"  with portal_GetModulesList() 
@@ -44,8 +51,8 @@ on preOpenStack
             go card  "mainNav"
       end switch
    end if
-   
-end preOpenStack
+unlock screen
+end openstack
 
 on closestack
    portal_SetLastStack "Siva-Siva-Portal"
