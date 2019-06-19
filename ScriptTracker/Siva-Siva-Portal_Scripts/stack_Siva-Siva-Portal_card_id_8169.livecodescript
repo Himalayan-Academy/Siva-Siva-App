@@ -10,7 +10,10 @@ Script "stack_Siva-Siva-Portal_card_id_8169"
 global sConfigA
 local sStartLoc,sScreenRect
 
-on preopenCard 
+
+on preopenCard
+   local pControl
+   
    setCardCoords
    updateUIPortal
    audioIsRunning
@@ -24,7 +27,11 @@ on preopenCard
    show btn "brandLogo"
 end preopenCard
 
-command  setDefaultImage 
+
+command  setDefaultImage
+   local pImage
+   local sLastImage, sMainImage -- BWM - should these be script locals?
+   
    # store brand image; set stage to screen to 1
    put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
    put 0 into sLastImage
@@ -34,7 +41,7 @@ command  setDefaultImage
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    show btn "brandLogo"
-   show sMainImage with visual effect dissolve
+   show sMainImage with visual effect "dissolve"
 end  setDefaultImage
 
 

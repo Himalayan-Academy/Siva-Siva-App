@@ -24,7 +24,7 @@ end FillInData
 
 on LayoutControl pControlRect, pWorkingRect
    
-   local theFieldRect
+   local tFieldRect, tBackdropRect
    
    -- This message is sent when you should layout your template's controls.
    -- This is where you resize the 'Background' graphic, resize fields and 
@@ -37,13 +37,16 @@ on LayoutControl pControlRect, pWorkingRect
    -- Use this rect to make sure your controls don't overlap with any edit mode controls.
    
    -- Example:
-   put the rect of field "rowname" of me into theFieldRect
-   put item 1 of pWorkingRect into item 1 of theFieldRect 
-   put item 3 of pWorkingRect - 5 into item 3 of theFieldRect
-   set the rect of field "rowname" of me to theFieldRect
-   --ntinfo theFieldRect
+   put the rect of field "rowname" of me into tFieldRect
+   put item 1 of pWorkingRect + 5 into item 1 of tFieldRect 
+   put item 3 of pWorkingRect - 5 into item 3 of tFieldRect
+   set the rect of field "rowname" of me to tFieldRect
+   --ntinfo tFieldRect
    set the rect of graphic "Background" of me to pControlRect
    --ntinfo pControlRect
+   put tFieldRect into tBackdropRect
+   put item 4 of pWorkingRect - 10 into item 4 of tBackdropRect 
+   set the rect of graphic "backdrop" of me to tBackdropRect
 end LayoutControl
 
 

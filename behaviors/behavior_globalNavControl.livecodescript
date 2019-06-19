@@ -13,12 +13,16 @@
 local sRowName, sMap, sFavoritesA
 
 on preOpenCard
+   local pCard
+   
    lock screen
    put the short name of this card into pCard
    setUpUI pCard
 end preOpenCard
 
 on mouseup
+   local tTarget
+   
    put empty into sFavoritesA
    put the short name of the target into tTarget
    if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
@@ -96,21 +100,24 @@ end checkConnectionStop
 
 
 on loadModulesList tTarget
+   local tRowdataA
+   
    portal_SetModulesList tTarget
    put getNavigationMap() into sMap 
-   put sMap[portalData][tTarget][rowdata] into tRowdataA
+   put sMap["portalData"][tTarget]["rowdata"] into tRowdataA
    set dgData of grp "modulesList" of me to tRowdataA
    reSizeDataGrid 
    unlock screen
 end loadModulesList
 
 command  loadFavoritesToMyHome
+   local tJournalEntriesA, y
    
    put Journal_GetEntries() into tJournalEntriesA
    repeat for each key x in tJournalEntriesA
       if tJournalEntriesA[x]["is_favorite"] = 1 then
          add 1 to y
-         put tJournalEntriesA[x]  into sFavoritesA[y]
+         put tJournalEntriesA[x] into sFavoritesA[y]
          put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
       end if
    end repeat
@@ -118,11 +125,13 @@ command  loadFavoritesToMyHome
       tellUserToGetFavorites
       exit to top
    end if
-   set dgData of grp "modulesList"  of card "modulesList"  to sFavoritesA
+   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
    reSizeDataGrid 
 end  loadFavoritesToMyHome
 
 command reSizeDataGrid pNumOfRows
+   local tNumberOfRecords, tRowHeight
+   
    put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
    put the dgProp ["row height"] of group "modulesList" into tRowHeight
    Set the height of group "modulesList"  to min(12, tNumberOfRecords) * (tRowHeight) + 10 -- account for header and scrollbar
@@ -131,18 +140,22 @@ command reSizeDataGrid pNumOfRows
 end reSizeDataGrid
 
 command launchModule
-   put the dgHilitedLines of group "modulesList" into theLine
-   put the dgDataOfLine[theLine] of group "modulesList" into theDataA
-   if  theDataA["is_favorite"] is a number then
-      Journal_LaunchEntry theDataA["journal_id"]
+   local tLine, tDataA
+   
+   put the dgHilitedLines of group "modulesList" into tLine
+   put the dgDataOfLine[tLine] of group "modulesList" into tDataA
+   if  tDataA["is_favorite"] is a number then
+      Journal_LaunchEntry tDataA["journal_id"]
    else
-      portal_DoRowLink theDataA["rowName"]
+      portal_DoRowLink tDataA["rowName"]
    end if
 end launchModule
 
 ## GEOMETRY
 
 command updateUI
+   local pControl
+   
    put the long id of grp "footer" into pControl
    bottomCenterMe pControl,8
 end updateUI

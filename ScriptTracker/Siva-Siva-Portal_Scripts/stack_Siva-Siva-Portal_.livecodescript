@@ -16,11 +16,12 @@ on preOpenStack
       mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
       set the fullscreenmode of this stack to "showAll"
    end if
-   
- 
 end preOpenStack
 
+
 on openStack
+   local tLastNavModule
+   
    lock screen
    put portal_GetModulesList() into tLastNavModule
    
@@ -51,8 +52,9 @@ on openStack
             go card  "mainNav"
       end switch
    end if
-unlock screen
+   unlock screen
 end openstack
+
 
 on closestack
    portal_SetLastStack "Siva-Siva-Portal"

@@ -1,6 +1,6 @@
 ﻿script "lib_UIHandlers"
 local sCardRect,sCardWidth,sCardHeight, sCardLoc,sHorizCenter, sVertCenter
-Local sCurrentGraphicRect,
+Local sCurrentGraphicRect,sStopRunningAudio
 ************************
 on __RESPONSIVE
 end __RESPONSIVE
@@ -18,6 +18,8 @@ end gotUILibrary
 
 
 command setCardCoords x,y
+   local tCard
+   
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
    put item 3 of sCardRect into sCardWidth
@@ -31,6 +33,9 @@ end setCardCoords
 
 
 command setScreenRectCoords
+   local tScreenRect
+   local sScreenWidth, sScreenHeight, sScreenVertCenter, sScreenHorizCenter, sWidthDiff, sHeightDiff
+   
    put the screenRect into tScreenRect
    put item 3 of tScreenRect into sScreenWidth
    put item 4 of tScreenRect into sScreenHeight
@@ -74,6 +79,7 @@ end vertCenter
 -- relation to top of the card, of the bottom of the card
 
 command centerMe pControl pHeaderHeight,pFooterHeight
+   local tYaxis
    # use to center on screen, if the is a foot and header
    # you send those params and pcontrol center in remaining space.
    # This only handles vertical space
@@ -149,6 +155,8 @@ function getRectOfCurrentGrc
 end getRectOfCurrentGrc
 
 command setRectOfCurrentGrc pimage
+   local tFWd, tFHt
+   
    put the formattedWidth of  pImage into tFWd
    put the formattedHeight of  pImage into tFHt
    put (tFWd & "x" & tFHt) into sCurrentGraphicRect
@@ -159,6 +167,7 @@ end setRectOfCurrentGrc
 ## and the long ID of the target image to "pImage" 
 
 on resizeToHeight pImage,pSize
+   local tOrigImgWidth, tOrigImgHeight, tRatio, tNewWidth, tNewHeight
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
@@ -171,6 +180,7 @@ on resizeToHeight pImage,pSize
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 
+   local tOrigImgWidth, tOrigImgHeight, tRatio, tNewWidth, tNewHeight
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
@@ -201,7 +211,8 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
    end if
 end setImageToFullCardLoc
 
-on toggleImgSize pImage, pFullSize, pTargetSize,pLocation 
+on toggleImgSize pImage, pFullSize, pTargetSize,pLocation
+   local tFWd, tFHt
    # we may not always this rect of the images from  the metadata
    # May as well just find out what it is right here.
    # pImage is the long ID of the image
@@ -246,14 +257,15 @@ END ___VISUALEFFECTS
 ## OuterGlow
 
 function OuterglowA pTint,pColor,pBlendMode,pOpacity,pFilter,pSize,pSpread
+   local tOuterglow, pParams, pValues, pParam
    if pTint is empty then
-      put pColor into outerglow["color"]
-      put pBlendMode into  outerglow["blendMode"]
-      put pOpacity into  outerglow["opacity"] 
-      put pFilter into  outerglow["filter"]
-      put pSize into  outerglow["size"]
-      put pSpread into outerglow["spread"]
-      returnouterglow
+      put pColor into tOuterglow["color"]
+      put pBlendMode into  tOuterglow["blendMode"]
+      put pOpacity into  tOuterglow["opacity"] 
+      put pFilter into  tOuterglow["filter"]
+      put pSize into  tOuterglow["size"]
+      put pSpread into tOuterglow["spread"]
+      return tOuterglow
       exit outerGlowA
    end if
    put "color|blendMode|opacity|filter|size|spread" into pParams
@@ -265,9 +277,9 @@ function OuterglowA pTint,pColor,pBlendMode,pOpacity,pFilter,pSize,pSpread
    set itemDel to "|"
    repeat with x =1 to 6
       put item x of pParams into pParam
-      put item x of pValues into outerglow[pParam]
+      put item x of pValues into tOuterglow[pParam]
    end repeat
-   return outerglow
+   return tOuterglow
    
 end OuterglowA
 
@@ -322,6 +334,7 @@ on __MOTION
 end __MOTION
 
 on moveMe pControlName, pHorz, pVert, pSpeed -- use move instead of visual effect to prevent Android issues
+   local tPt
    # "moveControl" is a reserve message in LC 
    # hence the name "move Me" -- pass 0 pHorz for vertical move and 0 to pVert to horizontal move
    put pHorz,pVert into tPt
@@ -391,6 +404,7 @@ end setGrpVis
 
 on revealSearchControls pVis --jg: combined reveal/hide handlers
    -- pVis = boolean
+   local cMoveSpeed
    
    if there is no grp "searchControls" then -- unplaced on current cd; just set vis & exit
       set the vis of bg "searchControls" to pVis
@@ -435,6 +449,7 @@ command audioIsRunning
 end audioIsRunning
 
 function runningAudioIndicatorVis visBool
+   local tList
    if isMobile() then
       put mobileControls() into tList
       if tList contains "audioPlayer" then 
@@ -467,7 +482,7 @@ command turnOffAudio
    end if
 end turnOffAudio
 
-function isAudioPlay
+function isAudioPlay pName
    repeat while pName is among the lines of mobileControls()
       mobileControlDelete pName
    end repeat

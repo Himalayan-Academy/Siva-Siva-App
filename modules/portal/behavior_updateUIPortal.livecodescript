@@ -14,11 +14,12 @@ on opencard
 end opencard
 
 command updateUIPortal
+   local pControl, tBrandImage
    
    # background group of all cards
    
    
-   put the long id of group "audioGlobalControl" of me  into pControl
+   put the long id of group "audioGlobalControl" of me into pControl
    topRightMe pControl,40,30
    
    
@@ -67,12 +68,15 @@ command updateUIPortal
          put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
          
+         put the long id of button "brandLogo" of me into pControl
+         topCenterMe pControl,20
+         
          put the long id of grp "globalPortalMap" into pControl
          topCenterMe pControl,55
          break
          
          
    end switch
-  
+   
 end updateUIPortal
 

@@ -9,7 +9,9 @@ Script "stack_Siva-Siva-Portal_card_id_53122"
 
 global sConfigA
 
-on preopenCard 
+on preopenCard
+   local pControl
+   
    lock screen
    setcardCoords
    audioIsRunning  
@@ -27,7 +29,7 @@ command showStories
 end showStories
 
 command tellUserToGetFavorites 
-   doAnswer "You are nothing in My Home yet. Go to the Journal. Click the Star by some of your favorites. They will then appear in My Home", "OK","downloadAffirmed"
+   doAnswer "There is nothing in My Home yet. Go to the Journal. Click the Star by some of your favorites. They will then appear in My Home", "OK","downloadAffirmed"
 end tellUserToGetFavorites
 
 command downloadAffirmed   

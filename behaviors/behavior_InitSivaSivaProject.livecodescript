@@ -35,9 +35,8 @@ We can now experiment with:
 
 --> Variables
 
-global  sConfigA
-local LocalArray,sHome,sOnlineStatus,sNow,sThen
 global sConfigA
+local LocalArray,sHome,sOnlineStatus,sNow,sThen
 
 --> Events
 
@@ -54,6 +53,7 @@ on preOpenStack
 end preOpenStack
 
 command init_AppConfiguration
+   local someJSON, tPlatform, tAction, pData
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
    
    
@@ -94,7 +94,7 @@ command init_AppConfiguration
    portal_SetLastStack "Siva-Siva-App"
    
    logging "open Portal Stack"
-   send openPortalStack to me in 50 milliseconds
+   send "openPortalStack" to me in 50 milliseconds
    set the effectrate to 500
    
    tsNetLibUrlReuseConnection false
@@ -125,6 +125,7 @@ end init_AppConfiguration
 
 
 command init_LoadStackFilesFromConfiguration
+   local tStackFilesA, tTempA, tBuffer, tStartingList
    -- AAG: loads the stackfiles from json 
    -- put  jsonimport(field "json") into sConfigA
    
@@ -145,7 +146,8 @@ command init_LoadStackFilesFromConfiguration
 end init_LoadStackFilesFromConfiguration
 
 command preparePortalMainNavImages 
-
+   local tImageList
+   
    put  "img/bkgnds/patterns/home_back.jpg,"&\
          "img/nav-global-icons/diamond-sparkle-small.jpg," & \
          "img/nav-global-icons/baby-surprise-thumb.jpg," &\
@@ -159,7 +161,7 @@ command preparePortalMainNavImages
          "img/nav-global-icons/journal_little-lizardDSC_7012.jpg,"  \
          into tImageList
    
-   repeat for each item i in tImagelist
+   repeat for each item i in tImageList
       prepare image file (path_Assets()& i )
    end repeat
    
@@ -190,7 +192,9 @@ command openPortalStack
    newcontent_Check
 end openPortalStack
 
-command  init_LoadLibraries 
+command  init_LoadLibraries
+   local stackNames, tDF
+   
    put init_ListStacksToUse() into stackNames   
    filter items of stackNames without"animationEngine*" # should load onlyl when when needed
    
@@ -235,6 +239,7 @@ command  init_LoadLibraries
 end init_LoadLibraries
 
 function init_ListStacksToUse
+   local stackNames
    -- we start using both "library" stacks and "model" stacks
    -- due to bug in the files on Android we must use config to load libraries
    #Libries must come first because there are dependencies in the
@@ -247,6 +252,9 @@ end init_ListStacksToUse
 
 
 command init_CreateLocalFolders
+   local tLocalFolderRoot, tTopLocalFolders, tTopAssetsFolders, tTopModulesFolders
+   local tTopMediaFolders, tTopAudioFolders, tTopAudioAuthorFolders, tTopAudioSongFolders
+   local tTopAudioGenreFolders
    # We want have folders correponding to app pkg content and also to the web server
    # virtually all local content that is specific to the app will be in assets and modules
    # global libraries, modules, behaviors only update when the app is updated
@@ -336,6 +344,7 @@ end init_CreateLocalFolders
 -->Project | Start
 
 command project_UseStacks stackPaths
+   local shortFolder -- BWM - not sure what the intent is in the load_Library call
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
       load_Library stackPath, shortFolder
@@ -365,6 +374,8 @@ end testBehavior
 
 
 command Logging pLogMessage
+   local tInterval
+   
    put the milliseconds into sNow
    put sNow-sThen into tInterval
    put pLogMessage  &&  sNow  & " : "  &  tInterval & cr after sConfigA["log"]
