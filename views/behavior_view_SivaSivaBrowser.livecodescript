@@ -52,6 +52,16 @@ command updateUI theOrientation
    put the width of this card into tWidth
    put the height of this card into tHeight
    
+   -- initial orientations of "face up", "face down", or "unknown" will
+   -- not be drawn correctly if not manually determined like this
+   if tOrientation begins with "f" or tOrientation begins with "u" then
+      if tWidth < tHeight then
+         put "portrait" into tOrientation
+      else
+         put "landscape" into tOrientation
+      end if
+   end if
+   
    switch 
       case (tOrientation contains "portrait")
          put (tWidth/2,(tHeight-50)/2) into tBrowserLoc
