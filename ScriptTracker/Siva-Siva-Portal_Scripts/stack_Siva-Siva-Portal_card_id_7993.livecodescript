@@ -8,9 +8,9 @@ Script "stack_Siva-Siva-Portal_card_id_7993"
 
 
 on preopencard
-   setCardCoords
+   setCardCoords "portrait"
    if isMobile() then    
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down",cardRect()
-      set the fullscreenmode of this stack to "showAll"
+      --mobileSetFullScreenRectForOrientations "portrait,portrait upside down",cardRect()
+      --set the fullscreenmode of this stack to "showAll"
    end if
 end preopencard

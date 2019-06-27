@@ -20,6 +20,17 @@ on preOpenCard
    setUpUI pCard
 end preOpenCard
 
+
+on resizeStack
+   local pCard
+   
+   lock screen
+   put the short name of this card into pCard
+   setUpUI pCard
+   unlock screen
+end resizeStack
+
+
 on mouseup
    local tTarget
    
@@ -156,6 +167,11 @@ end launchModule
 command updateUI
    local pControl
    
+   setCardCoords "portrait"
    put the long id of grp "footer" into pControl
-   bottomCenterMe pControl,8
+   bottomCenterMe pControl,0 --8
+   put the long id of of group "modulesList" into pControl
+   set the width of pControl to CardWidth() - 12
+   topCenterMe pControl,100
+   --centerMe pControl, 0, 0
 end updateUI

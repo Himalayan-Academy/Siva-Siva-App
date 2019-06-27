@@ -11,7 +11,7 @@ local thePixie,tFadeIncrement,sPixies,sPuzzleLevel,sCardRect
 on preOpenStack
    if isMobile() then
       mobileSetAllowedOrientations "landscape left,landscape right" 
-      mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
+      --      mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
    end if
 end preOpenStack
@@ -20,9 +20,9 @@ on closeStack
    local pTrackdata -- BWM looks like something is missing
    addJournalEntry
    tracking_RecordActivity "Word Puzzles", "navigation/exit", pTrackdata
-   if isMobile() then
-      mobileSetFullScreenRectForOrientations "landscape left,landscape right"
-   end if
+   --   if isMobile() then
+   --      mobileSetFullScreenRectForOrientations "landscape left,landscape right"
+   --   end if
    portal_SetLastStack "wordpuzzles"
 end closeStack
 

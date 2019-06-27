@@ -67,6 +67,7 @@ local sLastModulesList
 --------------------------------------------------------------
 
 command portal_GoStack cardOrStackObject
+   local oStackName, pTrackdata, pAction
    --breakpoint
    put the short name of this stack into oStackName
    
@@ -85,12 +86,17 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
+   --   if isMobile() then
+   --      if mobileOrientation() begins with "l" then
+   --         set the fullscreenmode of this stack to "exactFit"
+   --      end if
+   --   end if
    
    --breakpoint
    close stack oStackName
    go cardOrStackObject
    
-   if the lockScreen is true then unlock screen
+   --if the lockScreen is true then unlock screen
    
    if  oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
@@ -108,11 +114,12 @@ command portal_GoStack cardOrStackObject
 end portal_GoStack
 
 command portal_DoRowLink rowName
+   local linkArray, linkCommand, linkParam
    --portal_SetLastLinkTitle rowName
    --put portal_GetRowLinkArray (rowName) into linkArray
    
    put getNavigationMap() into sNavMap
-   put sNavMap[portalRowDictionary][rowName]["link"] into linkArray
+   put sNavMap["portalRowDictionary"][rowName]["link"] into linkArray
    
    put linkArray ["portal command"] into linkCommand
    put linkArray ["portal param"] into linkParam
@@ -211,6 +218,7 @@ end portal_DoRowLink
 --end portal_GoStack
 
 command portal_Link portalName
+   local tPortalTarget, pTrackdata
    --ntInfo "Portal link"
    
    -- navigates to the "portal view" and displays the named portal
@@ -240,6 +248,7 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
+   local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
    put ("youtube.com","1988-apple-video") into tRequiresLandscape
    

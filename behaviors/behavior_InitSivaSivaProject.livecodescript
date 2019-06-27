@@ -344,10 +344,9 @@ end init_CreateLocalFolders
 -->Project | Start
 
 command project_UseStacks stackPaths
-   local shortFolder -- BWM - not sure what the intent is in the load_Library call
    repeat for each line stackPath in stackPaths
       if exists (stack stackPath) is false then next repeat
-      load_Library stackPath, shortFolder
+      load_Library stackPath
    end repeat
    return stackPaths
 end project_UseStacks

@@ -10,7 +10,7 @@ on preopenstack
    
    if isMobile() then  
       set the fullscreenMode of this stack to "showAll"  
-      mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,414,736"
+      --mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,414,736"
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileShowStatusBar
    end if

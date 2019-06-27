@@ -13,20 +13,23 @@ on preOpenStack
    ntinfo ("Portal: lockscreen is: " & (the lockscreen) )
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+      --mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
       set the fullscreenmode of this stack to "showAll"
+      set the fullscreenmode of this stack to empty
    end if
 end preOpenStack
 
 
 on openStack
-   local tLastNavModule
+   --local tLastNavModule
+   local tLastStack
    
    lock screen
-   put portal_GetModulesList() into tLastNavModule
+   --put portal_GetModulesList() into tLastNavModule
    
-   if not (portal_GetLastStack() is "Siva-Siva-App" or  Portal_GetLastStack() is empty) then
-      switch Portal_GetLastStack()
+   put portal_GetLastStack() into tLastStack
+   if not (tLastStack is "Siva-Siva-App" or tLastStack is empty) then
+      switch tLastStack
          case "Siva-Siva-App"
             go card  "Home"
             break

@@ -27,6 +27,14 @@ on preopenCard
    show btn "brandLogo"
 end preopenCard
 
+on resizeStack
+   local tControl
+   setCardCoords
+   updateUIPortal
+   put the long id of fld "homeStoryText" into tControl
+   centerMe tControl,0,5
+   pass resizeStack
+end resizeStack
 
 command  setDefaultImage
    local pImage

@@ -1,6 +1,9 @@
 ﻿script "lib_UIHandlers"
-local sCardRect,sCardWidth,sCardHeight, sCardLoc,sHorizCenter, sVertCenter
+local sCardRect, sCardWidth, sCardHeight, sCardLoc, sHorizCenter, sVertCenter, sMargins
 Local sCurrentGraphicRect,sStopRunningAudio
+local sPhoneModel = "unknown"
+local sPortraitMargins, sLandscapeMargins
+
 ************************
 on __RESPONSIVE
 end __RESPONSIVE
@@ -17,18 +20,33 @@ end gotUILibrary
 
 
 
-command setCardCoords x,y
-   local tCard
+command setCardCoords pForceOrientation
+   -- pForceOrientation - orientation to force, only considers first letter
+   local tCard, tHeight
    
    put the long id of this card into tCard
    put the rect of tCard into sCardRect
    put item 3 of sCardRect into sCardWidth
    put item 4 of sCardRect into sCardHeight
-   --put x into sCardWidth
-   --put y into sCardHeight
+   if pForceOrientation begins with "p" then
+      if sCardWidth > sCardHeight then
+         put sCardWidth into tHeight
+         put sCardHeight into sCardWidth
+         put tHeight into sCardHeight
+         put (0,0,sCardWidth,sCardHeight) into sCardRect
+      end if
+   else if pForceOrientation begins with "l" then
+      if sCardWidth < sCardHeight then
+         put sCardWidth into tHeight
+         put sCardHeight into sCardWidth
+         put tHeight into sCardHeight
+         put (0,0,sCardWidth,sCardHeight) into sCardRect
+      end if
+   end if
    put sCardWidth/2 into sHorizCenter
    put sCardHeight/2 into sVertCenter
-   put the loc of tCard into sCardLoc
+   put (sHorizCenter,sVertCenter) into sCardLoc
+   put safeMargins(pForceOrientation) into sMargins
 end setCardCoords
 
 
@@ -45,6 +63,51 @@ command setScreenRectCoords
    put sScreenHeight-sCardHeight into sHeightDiff
    put  sHeightDiff into fld "notification"
 end setScreenRectCoords
+
+
+private command _setPhoneModel
+   local tScreenRect, tW, tH
+   put the screenRect into tScreenRect
+   put item 3 of tScreenRect into tW
+   put item 4 of tScreenRect into tH
+   
+   if not isMobile() then
+      put "desktop" into sPhoneModel
+   else if the platform is "iPhone" then
+      if tH is 812 or tH is 896 then
+         --iPhone with a notch, portrait
+         put "iPhoneX" into sPhoneModel
+      else if tW is 812 or tW is 896 then
+         --iPhone with a notch, landscape
+         put "iPhoneX" into sPhoneModel
+      else
+         put "iPhone" into sPhoneModel
+      end if
+   else
+      -- will add Android models here
+      put "Android" into sPhoneModel
+   end if
+   
+   switch sPhoneModel
+      case "iPhoneX"
+         put 44 into sPortraitMargins["top"]
+         put 34 into sPortraitMargins["bottom"]
+         put  0 into sPortraitMargins["side"]
+         
+         put 32 into sLandscapeMargins["top"]
+         put 23 into sLandscapeMargins["bottom"]
+         put 44 into sLandscapeMargins["side"]
+         break
+      default
+         put 0 into sPortraitMargins["top"]
+         put 8 into sPortraitMargins["bottom"]
+         put 0 into sPortraitMargins["side"]
+         
+         put 0 into sLandscapeMargins["top"]
+         put 8 into sLandscapeMargins["bottom"]
+         put 0 into sLandscapeMargins["side"]
+   end switch
+end _setPhoneModel
 
 
 function CardRect
@@ -71,6 +134,47 @@ function vertCenter
    return sVertCenter
 end vertCenter
 
+-- To account for various device notch designs, make functions
+-- available to return the amount of space to allow.
+-- Values will be returned based on current orientation.
+
+function safeMargins pForceOrientation
+   local tOrientation
+   
+   if sPhoneModel is "unknown" then _setPhoneModel
+   
+   if pForceOrientation is not empty then
+      put pForceOrientation into tOrientation
+   else if isMobile() then
+      put mobileDeviceOrientation() into tOrientation
+   else
+      put "u" into tOrientation
+   end if
+   if tOrientation begins with "u" or tOrientation begins with "f" then
+      if the width of this card < the height of this card then
+         put "portrait" into tOrientation
+      else
+         put "landscape" into tOrientation
+      end if
+   end if
+   if tOrientation begins with "l" then
+      return sLandscapeMargins
+   else
+      return sPortraitMargins
+   end if
+end safeMargins
+
+function safeTopMargin
+   return sMargins["top"]
+end safeTopMargin
+
+function safeBottomMargin
+   return sMargins["bottom"]
+end safeBottomMargin
+
+function safeSideMargin
+   return sMargins["side"]
+end safeSideMargin
 
 ####################
 -- positioning, various kinds
@@ -78,35 +182,36 @@ end vertCenter
 -- it is depend on whether you choose to "think" about it as 
 -- relation to top of the card, of the bottom of the card
 
-command centerMe pControl pHeaderHeight,pFooterHeight
+command centerMe pControl, pHeaderHeight, pFooterHeight
    local tYaxis
    # use to center on screen, if the is a foot and header
    # you send those params and pcontrol center in remaining space.
    # This only handles vertical space
    
-   put (cardHeight()-pHeaderHeight-pFooterHeight) /2 into tYaxis
-   set the loc of pControl to ( horizCenter(),tYaxis )
+   put (sCardHeight - pHeaderHeight - pFooterHeight) / 2 into tYaxis
+   add pHeaderHeight to tYaxis
+   set the loc of pControl to ( sHorizCenter, tYaxis )
    
 end centerMe
 
 
-command topCenterMe pControl,y
+command topCenterMe pControl, y
    # place a control at the bottom of the screen
    # can be any width, even beyond the width the card.
    # y is single integer which is from the top of card
    # It empty, defaults to center to screen
    
-   set the loc of pControl to cardLoc()
-   set the top of pControl to  y
+   set the loc of pControl to sCardLoc
+   set the top of pControl to y + sMargins["top"]
    
 end topCenterMe
 
-command topRightMe pControl,x,y
+command topRightMe pControl, x, y
    # for a control whose bounds are fully inside the card
    # use X to offset from the right of the card
    # and y is from the top 
    
-   set topRight of pControl to (CardWidth()-x,y)
+   set topRight of pControl to (sCardWidth - x - sMargins["side"], y)
    
 end topRightMe
 
@@ -115,7 +220,8 @@ command bottomRightMe pControl, x, y
    # use X to offset from the right of the card
    # and y to from the bottom.
    
-   set  bottomright of pControl to (CardWidth()-x,CardHeight()-y)
+   set bottomright of pControl to (sCardWidth - x - sMargins["side"], \
+         sCardHeight - y - sMargins["bottom"])
    
 end bottomRightMe
 
@@ -124,7 +230,8 @@ command bottomLeftMe pControl, x, y
    # use X to offset from the left  of the card
    # and y to from the bottom.
    
-   set  bottomleft of pControl to (0+x,CardHeight()-y)
+   set  bottomleft of pControl to (0 + x + sMargins["side"], \
+         sCardHeight - y - sMargins["bottom"])
    
 end bottomLeftMe
 
@@ -133,8 +240,8 @@ command bottomCenterMe pControl, y
    # can be any width, even beyond the width the card.
    # Y is offset from the bottom
    
-   set the loc of pControl to cardLoc()
-   set the bottom of pControl to cardHeight()-y
+   set the loc of pControl to sCardLoc
+   set the bottom of pControl to sCardHeight - y - sMargins["bottom"]
 end bottomCenterMe 
 
 ####################
@@ -172,7 +279,7 @@ on resizeToHeight pImage,pSize
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
    # it may not be necessary
-   if pSize > tOrigImgHeight then exit resizeToHeight
+   --if pSize > tOrigImgHeight then exit resizeToHeight
    put (pSize)/tOrigImgHeight  into tRatio
    put (tOrigImgWidth * tRatio) into tNewWidth
    put (tOrigImgHeight * tRatio) into tNewHeight

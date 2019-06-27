@@ -1,17 +1,20 @@
 ﻿script "behavior_updateUIPortal"
-
-
---on resizestack x,y
---    x,y
-
---end resizeStack
-
-on opencard
+after preopencard
    lock screen
-   setCardCoords
+   setCardCoords "portrait"
    updateUIPortal
    unlock screen
-end opencard
+end preopencard
+
+on resizeStack x,y,ox,oy
+   lock screen
+   -- When coming from a landscape stack, card rect is not updated correctly
+   -- and the resizeStack is called with a landscape rect.  If an answer is
+   -- inserted here, a second resizeStack gets sent with the correct rect.
+   setCardCoords "portrait"
+   updateUIPortal
+   unlock screen
+end resizeStack
 
 command updateUIPortal
    local pControl, tBrandImage
@@ -47,23 +50,23 @@ command updateUIPortal
          put long Id of img "HomeStoryMainImage" into pControl
          put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tBrandImage
          set filename of pControl to tBrandImage
-         setImageToFullCardLoc pControl, "portrait", 50
-         centerMe pControl,0,50
+         setImageToFullCardLoc pControl, "portrait", 0
+         centerMe pControl, 0, 0
          
          
          put the long id of btn "goNext" into pControl
-         bottomCenterMe pControl,8    
+         bottomCenterMe pControl,0 --8    
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         bottomLeftMe pControl,0,8 
+         bottomLeftMe pControl,0,0 --8 
          
          break
          
          
       case  "mainNav"
          put the long id of grp "footer" into pControl
-         bottomCenterMe pControl,8
+         bottomCenterMe pControl,0 --8
          
          put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
