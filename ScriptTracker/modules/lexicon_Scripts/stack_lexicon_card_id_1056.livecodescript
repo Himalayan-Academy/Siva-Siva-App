@@ -13,20 +13,31 @@ on preOpenCard
    end if
    set the rect of widget "Browser" of me to the rect of this card
    
-   put "this is preOpenStack"
+   --put "this is preOpenStack"
    if the environment is not "development" then
       set the url of widget "Browser" to (specialFolderPath("resources") & "/modules/lexicon/web/index.html")
    else
       set the url of widget "Browser" to (specialFolderPath("resources") & "/web/index.html") 
    end if
+   
+   if getPhoneModel() is "iPhoneX" then
+      mobileShowStatusBar
+   end if
 end preOpenCard
 
+on saveStackRequest
+   set the url of widget "Browser" of me to empty
+   send "preOpenCard" to me in 50 ms
+end saveStackRequest
 
 on resizeStack
    set the rect of widget "Browser" of me to the rect of this card
 end resizeStack
 
 on goHome
+   if getPhoneModel() is "iPhoneX" then
+      mobileHideStatusBar
+   end if
    go first card
    portal_GoStack "Siva-Siva-Portal"
 end goHome
@@ -41,6 +52,7 @@ on browserLoadRequested pUrl, pType
 end browserLoadRequested
 
 on getWordList
+   local tStart, tA, tBuf, tJS
    put the seconds into tStart
    dbColumns "lexicon_id,word"
    put dbGet("lexicon", JnanamDB()) into tA
@@ -84,6 +96,7 @@ function trim p
 end trim
 
 on getWordDefinition pWordID
+   local tA,tB,tListA,tBuf,tJS
    dbWhere "lexicon_id", pWordID
    put dbGet("lexicon", JnanamDB()) into tA
    put tA[1]["lexicon_id"] into tB["id"]
@@ -114,6 +127,3 @@ end getWordDefinition
 on debug p t 
    put "debug" && p && t
 end debug
-
-
-

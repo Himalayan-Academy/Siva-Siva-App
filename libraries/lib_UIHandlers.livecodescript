@@ -176,6 +176,13 @@ function safeSideMargin
    return sMargins["side"]
 end safeSideMargin
 
+function getPhoneModel
+   if sPhoneModel is "unknown" then _setPhoneModel
+   
+   return sPhoneModel
+end getPhoneModel
+
+
 ####################
 -- positioning, various kinds
 -- many of these methods would put the control it the same place
