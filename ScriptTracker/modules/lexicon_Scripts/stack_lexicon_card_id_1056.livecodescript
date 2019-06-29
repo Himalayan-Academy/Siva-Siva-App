@@ -11,7 +11,9 @@ on preOpenCard
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
-   set the rect of widget "Browser" of me to the rect of this card
+   setCardCoords
+   set the rect of widget "Browser" of me to safeRect()
+   --set the rect of widget "Browser" of me to the rect of this card
    
    --put "this is preOpenStack"
    if the environment is not "development" then

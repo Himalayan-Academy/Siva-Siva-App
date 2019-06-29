@@ -2,7 +2,7 @@
 local sCardRect, sCardWidth, sCardHeight, sCardLoc, sHorizCenter, sVertCenter, sMargins
 Local sCurrentGraphicRect,sStopRunningAudio
 local sPhoneModel = "unknown"
-local sPortraitMargins, sLandscapeMargins
+local sPortraitMargins, sLandscapeMargins, sSafeRect
 
 ************************
 on __RESPONSIVE
@@ -17,7 +17,6 @@ end __RESPONSIVE
 command gotUILibrary
    answer "Go UIHandler Lib" with "OK"
 end gotUILibrary
-
 
 
 command setCardCoords pForceOrientation
@@ -47,6 +46,8 @@ command setCardCoords pForceOrientation
    put sCardHeight/2 into sVertCenter
    put (sHorizCenter,sVertCenter) into sCardLoc
    put safeMargins(pForceOrientation) into sMargins
+   put (sMargins["side"], sMargins["top"], sCardWidth-sMargins["side"], \
+         sCardHeight-sMargins["bottom"]) into sSafeRect
 end setCardCoords
 
 
@@ -176,9 +177,12 @@ function safeSideMargin
    return sMargins["side"]
 end safeSideMargin
 
+function safeRect
+   return sSafeRect
+end safeRect
+
 function getPhoneModel
    if sPhoneModel is "unknown" then _setPhoneModel
-   
    return sPhoneModel
 end getPhoneModel
 
