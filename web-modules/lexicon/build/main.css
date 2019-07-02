@@ -13,3 +13,7 @@ img {
   margin: 20px 0;
   max-width: 200px;
 }
+
+input::placeholder {
+  margin-left: 20px !important;
+}

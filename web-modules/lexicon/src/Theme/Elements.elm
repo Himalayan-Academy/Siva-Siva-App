@@ -57,6 +57,8 @@ bodyStyle =
         [ backgroundColor theme.palette.darkGreen
         , height (pct 100)
         , minHeight (pct 100)
+        , displayFlex
+        , flexDirection column
         ]
 
 
@@ -135,15 +137,17 @@ searchBox changed search query =
                 , backgroundColor (rgb 10 70 80)
                 , color theme.palette.white
                 , width (pct 80)
+                , lineHeight (int 2)
+                , paddingRight (px 20)
                 ]
             , onInput changed
             , onEnter search
             , value query
             , id "search-box"
-            ,  placeholder "🔍"
+            , placeholder "  type to search"
             ]
             []
-        
+
         ]
 
 
@@ -163,7 +167,7 @@ listHeader =
                 ]
             ]
             [ text "Scroll the results and choose a word!" ]
-        
+
         ]
 
 

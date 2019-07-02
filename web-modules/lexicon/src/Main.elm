@@ -256,7 +256,7 @@ update msg model =
             ( model, Cmd.none )
 
         Search ->
-            ( model, unfocusSearchBox) 
+            ( model, unfocusSearchBox)
 
 
 
@@ -337,6 +337,7 @@ view model =
     div
         [ css
             [ bodyStyle ]
+        , id "body"
         ]
         [ div
             [ css
@@ -345,7 +346,7 @@ view model =
             [ headerTitle
             , pageNavigation model.currentPage
             ]
-        , activeView
+            , div [css [flex2 (int 1) (int 1)]] [activeView]
         , appNavigation
         ]
 
@@ -460,6 +461,7 @@ helpView karma =
             , div [ css [ textAlign center ] ] [ seeAlso karma "karma" ]
             , br [] []
             , text "and go on a word adventure by clicking other words that pop up."
+            , br [] []
             , text "You can permanently add word to My Words by clicking on the small bookmark. When you are in My Word, clicking the bookmark will delete that word from your saved list. To see all the words in the My Words list, you must empty the search field."
             ]
         ]
@@ -484,7 +486,7 @@ searchView model =
                     [ marginTop (px 125) ]
                 ]
                 [ searchHeader (Navigate HelpView)
-                , searchBox FilterWordList Search model.query 
+                , searchBox FilterWordList Search model.query
                 , listHeader
                 , ul
                     [ css

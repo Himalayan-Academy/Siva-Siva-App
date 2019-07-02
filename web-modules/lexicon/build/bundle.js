@@ -8673,6 +8673,7 @@ var author$project$Main$helpView = function (karma) {
 							])),
 						A2(rtfeldman$elm_css$Html$Styled$br, _List_Nil, _List_Nil),
 						rtfeldman$elm_css$Html$Styled$text('and go on a word adventure by clicking other words that pop up.'),
+						A2(rtfeldman$elm_css$Html$Styled$br, _List_Nil, _List_Nil),
 						rtfeldman$elm_css$Html$Styled$text('You can permanently add word to My Words by clicking on the small bookmark. When you are in My Word, clicking the bookmark will delete that word from your saved list. To see all the words in the My Words list, you must empty the search field.')
 					]))
 			]));
@@ -8775,6 +8776,21 @@ var author$project$Theme$Elements$onEnter = function (msg) {
 		'keydown',
 		A2(elm$json$Json$Decode$andThen, isEnter, rtfeldman$elm_css$Html$Styled$Events$keyCode));
 };
+var rtfeldman$elm_css$Css$int = function (val) {
+	return {
+		H: 0,
+		a1: 0,
+		S: 0,
+		z: 0,
+		aJ: 0,
+		L: val,
+		ay: '',
+		aT: 0,
+		B: elm$core$String$fromInt(val)
+	};
+};
+var rtfeldman$elm_css$Css$lineHeight = rtfeldman$elm_css$Css$prop1('line-height');
+var rtfeldman$elm_css$Css$paddingRight = rtfeldman$elm_css$Css$prop1('padding-right');
 var rtfeldman$elm_css$Html$Styled$input = rtfeldman$elm_css$Html$Styled$node('input');
 var rtfeldman$elm_css$Html$Styled$Attributes$id = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('id');
 var rtfeldman$elm_css$Html$Styled$Attributes$placeholder = rtfeldman$elm_css$Html$Styled$Attributes$stringProperty('placeholder');
@@ -8840,13 +8856,17 @@ var author$project$Theme$Elements$searchBox = F3(
 									A3(rtfeldman$elm_css$Css$rgb, 10, 70, 80)),
 									rtfeldman$elm_css$Css$color(author$project$Theme$Colors$theme.s.C),
 									rtfeldman$elm_css$Css$width(
-									rtfeldman$elm_css$Css$pct(80))
+									rtfeldman$elm_css$Css$pct(80)),
+									rtfeldman$elm_css$Css$lineHeight(
+									rtfeldman$elm_css$Css$int(2)),
+									rtfeldman$elm_css$Css$paddingRight(
+									rtfeldman$elm_css$Css$px(20))
 								])),
 							rtfeldman$elm_css$Html$Styled$Events$onInput(changed),
 							author$project$Theme$Elements$onEnter(search),
 							rtfeldman$elm_css$Html$Styled$Attributes$value(query),
 							rtfeldman$elm_css$Html$Styled$Attributes$id('search-box'),
-							rtfeldman$elm_css$Html$Styled$Attributes$placeholder('🔍')
+							rtfeldman$elm_css$Html$Styled$Attributes$placeholder('  type to search')
 						]),
 					_List_Nil)
 				]));
@@ -8994,19 +9014,6 @@ var rtfeldman$elm_css$Css$pseudoClass = function (_class) {
 		rtfeldman$elm_css$Css$Structure$PseudoClassSelector(_class));
 };
 var rtfeldman$elm_css$Css$hover = rtfeldman$elm_css$Css$pseudoClass('hover');
-var rtfeldman$elm_css$Css$int = function (val) {
-	return {
-		H: 0,
-		a1: 0,
-		S: 0,
-		z: 0,
-		aJ: 0,
-		L: val,
-		ay: '',
-		aT: 0,
-		B: elm$core$String$fromInt(val)
-	};
-};
 var rtfeldman$elm_css$Html$Styled$styled = F4(
 	function (fn, styles, attrs, children) {
 		return A2(
@@ -9181,6 +9188,9 @@ var author$project$Main$searchView = function (model) {
 	}
 };
 var rtfeldman$elm_css$Css$batch = rtfeldman$elm_css$Css$Preprocess$ApplyStyles;
+var rtfeldman$elm_css$Css$column = _Utils_update(
+	rtfeldman$elm_css$Css$row,
+	{B: 'column'});
 var rtfeldman$elm_css$Css$minHeight = rtfeldman$elm_css$Css$prop1('min-height');
 var author$project$Theme$Elements$bodyStyle = rtfeldman$elm_css$Css$batch(
 	_List_fromArray(
@@ -9189,7 +9199,9 @@ var author$project$Theme$Elements$bodyStyle = rtfeldman$elm_css$Css$batch(
 			rtfeldman$elm_css$Css$height(
 			rtfeldman$elm_css$Css$pct(100)),
 			rtfeldman$elm_css$Css$minHeight(
-			rtfeldman$elm_css$Css$pct(100))
+			rtfeldman$elm_css$Css$pct(100)),
+			rtfeldman$elm_css$Css$displayFlex,
+			rtfeldman$elm_css$Css$flexDirection(rtfeldman$elm_css$Css$column)
 		]));
 var rtfeldman$elm_css$Css$top = rtfeldman$elm_css$Css$prop1('top');
 var author$project$Theme$Elements$headerStyle = rtfeldman$elm_css$Css$batch(
@@ -9246,6 +9258,18 @@ var author$project$Theme$Elements$headerTitle = A2(
 					rtfeldman$elm_css$Html$Styled$text('A Hindu Lexicon')
 				]))
 		]));
+var rtfeldman$elm_css$Css$prop2 = F3(
+	function (key, argA, argB) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.B, argB.B])));
+	});
+var rtfeldman$elm_css$Css$flex2 = rtfeldman$elm_css$Css$prop2('flex');
 var author$project$Main$view = function (model) {
 	var activeView = function () {
 		var _n0 = model.O;
@@ -9277,7 +9301,8 @@ var author$project$Main$view = function (model) {
 			[
 				rtfeldman$elm_css$Html$Styled$Attributes$css(
 				_List_fromArray(
-					[author$project$Theme$Elements$bodyStyle]))
+					[author$project$Theme$Elements$bodyStyle])),
+				rtfeldman$elm_css$Html$Styled$Attributes$id('body')
 			]),
 		_List_fromArray(
 			[
@@ -9294,7 +9319,21 @@ var author$project$Main$view = function (model) {
 						author$project$Theme$Elements$headerTitle,
 						author$project$Main$pageNavigation(model.O)
 					])),
-				activeView,
+				A2(
+				rtfeldman$elm_css$Html$Styled$div,
+				_List_fromArray(
+					[
+						rtfeldman$elm_css$Html$Styled$Attributes$css(
+						_List_fromArray(
+							[
+								A2(
+								rtfeldman$elm_css$Css$flex2,
+								rtfeldman$elm_css$Css$int(1),
+								rtfeldman$elm_css$Css$int(1))
+							]))
+					]),
+				_List_fromArray(
+					[activeView])),
 				author$project$Main$appNavigation
 			]));
 };
