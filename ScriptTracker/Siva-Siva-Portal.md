@@ -83,6 +83,14 @@
 * ID: button id 57744 of card id 8169 of stack "Siva-Siva-Portal"
 * [stack_Siva-Siva-Portal_button_id_57744](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_57744.livecodescript)
 
+**button "PurgeStack" of card "Home" of stack "Siva-Siva-Portal"**
+* ID: button id 65138 of card id 8169 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_button_id_65138](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_65138.livecodescript)
+
+**button "PurgeWindow" of card "Home" of stack "Siva-Siva-Portal"**
+* ID: button id 65139 of card id 8169 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_button_id_65139](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_65139.livecodescript)
+
 **card "mainNav" of stack "Siva-Siva-Portal"**
 * ID: card id 51340 of stack "Siva-Siva-Portal"
 * Behavior: stack "behavior_updateUIPortal"
