@@ -50,6 +50,7 @@ end getContent
 
 
 command goNextScene
+   local tImage, tPath
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
    if sConfigA["narrationScene"] = empty then
       # it means we are starting again
@@ -68,14 +69,14 @@ command goNextScene
       if sLastImage > sImageCount then 
          put 0 into sLastImage
          put empty into sConfigA["narrationScene"] 
-         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
-         setDefaultImage pImage
+         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tImage
+         setDefaultImage tImage
          answer "The End. Start Again?" with  "Yes" or "No"
          if it is "Yes" then goNextScene
          exit goNextScene
       end if
-      put line  sLastImage of sImageList into pPath
-      loadNewImage pPath
+      put line  sLastImage of sImageList into tPath
+      loadNewImage tPath
    else
       loadNextQuote sLastImage
    end if
@@ -84,21 +85,21 @@ command goNextScene
 end goNextScene
 
 command loadNewImage pPath
-lock screen for visual effect
+   lock screen for visual effect
    set the filename of sMainImage to pPath
    setImageToFullCardLoc sMainImage, "portrait", 0,0
    centerMe sMainImage,0,0
    show sMainImage --with visual effect "dissolve" 
-unlock screen with visual effect "dissolve" 
+   unlock screen with visual effect "dissolve" 
 end loadNewImage
 
 command loadNextQuote pQuoteNo
-   
+   local tControl
    lock screen for visual effect
    set the itemdel to "|"
    put item pQuoteNo  of sQuoteList into fld "homeStoryText"
-   put the long id of fld "homeStoryText" into pControl
-   centerMe pControl,0,5
+   put the long id of fld "homeStoryText" into tControl
+   centerMe tControl,0,5
    hide sMainImage -- with effect "dissolve" 
    unlock screen with visual effect "dissolve" 
 end loadNextQuote
