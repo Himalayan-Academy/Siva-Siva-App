@@ -31,6 +31,7 @@ on preOpenControl
 end preOpenControl
 
 command share_MouseEvent
+   local sShareItemsA, tURLEncodedURL, pShareChoice, tShareURL
    dispatch "share_Items" to this card
    
    # share_items should be in your module stack
@@ -82,6 +83,7 @@ command share_MouseEvent
 end share_MouseEvent
 
 command Share_Email sShareItemsA
+   local tSubject, tAddress, tBody
    put sShareItemsA["subject"] && "From SivaSivaApp"  into tSubject
    put "name@domain.com" into tAddress
    put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
@@ -97,6 +99,7 @@ command Share_Email sShareItemsA
 end share_Email
 
 command twitter_TweetItems sShareItemsA
+   local encodedText, someUrl
    put twitter_EncodeIntent (sShareItemsA["text"]) into encodedText
    put "http://www.twitter.com/intent/tweet?text=" & encodedText into someUrl
   put "&url=" & urlencode (sShareItemsA["url"]) after someUrl
@@ -168,8 +171,7 @@ end share_Tweet
 
 
 command shareAudio pShareChoice
-   global gCurrentAudio
-   
+   local tAddress, tSubject, tBody
    if gCurrentAudio = "" then
       answer "Select an audio to share."
       exit shareAudio
@@ -227,6 +229,7 @@ command android_ShareTweet pQuote
 end android_ShareTweet
 
 command android_ShareAudioTweet
+   local someTweet
    put audio_ConstructTweet() into someTweet
    twitter_ShareQuote someTweet
 end android_ShareAudioTweet
@@ -236,6 +239,7 @@ command android_ShareFacebook pQuote
 end android_ShareFacebook
 
 command android_ShareAudioFaceBook
+   local someText
    put audio_ConstructTweet() into someText
    put CR & CR & _GetGurudevaAppText() after someText
    
@@ -245,7 +249,8 @@ end android_ShareAudioFaceBook
 
 --> iPhone | Share
 -
-command iphone_ShareTweet pQuote  
+command iphone_ShareTweet pQuote
+   local imagePath
    put the filename of image "currentGDPhoto" of card "main-view" into imagePath
    if mergSocialIsAvailableForServiceType ("twitter") is true then 
       mergSocial "twitter", pQuote, imagePath, cGurudevaAppUrl
@@ -255,6 +260,7 @@ command iphone_ShareTweet pQuote
 end iphone_ShareTweet
 
 command iphone_ShareAudioTweet
+   local someTweet, imagePath
    -- put audio_ConstructTweet() into someTweet
    put "Here is a Gurudeva audio:" && audio_ConstructUrl() into someTweet
    put empty into imagePath
@@ -262,6 +268,7 @@ command iphone_ShareAudioTweet
 end iphone_ShareAudioTweet
 
 command iphone_ShareAudioFaceBook
+   local someText
    put audio_ConstructTweet() into someText
    put CR & CR & _GetGurudevaAppText() after someText
    
@@ -282,6 +289,7 @@ command iphone_ShareAudioFaceBook
 end iphone_ShareAudioFaceBook
 
 command iphone_ShareFaceBook pQuote
+   local imagePath
    fb_ShareQuote pQuote
    return empty
    
@@ -310,7 +318,8 @@ end desktop_ShareAudioTweet
 
 --> Share | Utils
 -
-command fb_ShareAudio pQuote 
+command fb_ShareAudio pQuote
+   local fbAccessToken, publishWhere, tDataA, tA
    -- https://developers.facebook.com/docs/graph-api/reference/v2.0/user/feed
    
    put fb_StoreAccessToken() into fbAccessToken
@@ -342,7 +351,8 @@ command fb_ShareAudio pQuote
    end if
 end fb_ShareAudio
 
-command fb_ShareQuote pQuote  
+command fb_ShareQuote pQuote
+   local fbAccessToken, publishWhere, tNonBinaryA, imagePath, tBinaryA, tA
    put fb_StoreAccessToken() into fbAccessToken
    if fbAccessToken is empty then
       fb_Authenticate
@@ -375,7 +385,7 @@ end fb_ShareQuote
 
 
 function twitter_EncodeIntent pQuote
-
+   local encodedText, tMaxLen
    put unidecode (uniencode (pQuote), "UTF8") into pQuote
    put urlencode (pQuote) into encodedText
    
@@ -383,12 +393,13 @@ function twitter_EncodeIntent pQuote
    if len(pQuote) >tMaxLen then # actually 140 but the URL takes 23 characters
       --### POPULATE EDIT FLD, SHOW EDITING GRP
       -- user can trim in the dialogue
-   put char 1 to tMaxLen of encodedText & "..." into encodedText
+      put char 1 to tMaxLen of encodedText & "..." into encodedText
    end if
    return encodedText
 end twitter_EncodeIntent
 
 function email_ConstructAudioText
+   local tBody
    -- put gCurrentAudio into tFileName
    -- set the itemDel to "."
    -- delete last item of tFileName -- file extension
@@ -406,6 +417,7 @@ end email_ConstructAudioText
 end construct_EmailAppLink
 
 function audio_ConstructUrl
+   local tFileName, oDelim, audioUrl
    if gCurrentAudio = "" then return empty
    
    put gCurrentAudio into tFileName
@@ -421,6 +433,7 @@ function audio_ConstructUrl
 end audio_ConstructUrl
 
 function audio_ConstructTweet
+   local someTweet
    put "Here is a Gurudeva audio:" && audio_ConstructUrl() into someTweet
    -- put space & _GetGurudevaAppText() after someTweet
    return someTweet
@@ -454,6 +467,7 @@ end _GetGurudevaAppText
 --> Objects
 -
 function fb_Button
+   local fbButton
    put the long id of btn "facebooks" of me into fbButton
    return fbButton
 end fb_Button
@@ -462,12 +476,14 @@ end fb_Button
 --> Display
 -
 getprop display_FacebookButton
+   local isAuthenticated
    put the innerglow ["color"] of fb_Button() is empty into isAuthenticated
    -- put the disabled of fb_Button() into someBoolean
    return isAuthenticated
 end display_FacebookButton
 
 setprop display_FacebookButton isAuthenticated
+   local propArray
    -- diplays / changes state of the facebook button
    -- if true then the facebook button is showing
    -- if false then the "authernitcate facebook button" is showing
@@ -495,6 +511,7 @@ end display_FacebookButton
 --> Facebook | Authentication
 -
 function fb_IsAuthenticated
+   local fbAccessToken, someBoolean
    put fb_StoreAccessToken() into fbAccessToken
    put fbAccessToken is not empty into someBoolean
    return someBoolean
@@ -511,11 +528,13 @@ command fb_Authenticate
 end fb_Authenticate
 
 command fb_UseLibrary
+   local somePath
    put the engine folder & "/aagFacebookMobileLib7.livecode" into somePath
    start using somePath
 end fb_UseLibrary
 
 on onFacebookAuthenticationComplete pDataA
+   local fbAccessToken
    put pDataA["access_token"] into fbAccessToken
    fb_StoreAccessToken fbAccessToken
    set the display_FacebookButton of fb_Button() to true
@@ -528,29 +547,34 @@ on onFacebookError pA
 end onFacebookError
 
 function fb_StoreAccessToken
+   local accessTokenFile, fbAccessToken
    put fb_AccessTokenFile() into accessTokenFile
    put url ("binfile:" & accessTokenFile) into fbAccessToken
    return fbAccessToken
 end fb_StoreAccessToken
 
 command fb_StoreAccessToken fbAccessToken
+   local accessTokenFile
    put fb_AccessTokenFile() into accessTokenFile
    put fbAccessToken into url ("binfile:" & accessTokenFile)
    return accessTokenFile
 end fb_StoreAccessToken
 
 function fb_AccessTokenFile
+   local accessTokenFile
    put pref_Folder() & "fbAccessToken.txt" into accessTokenFile
    return accessTokenFile
 end fb_AccessTokenFile
 
 function pref_Folder
+   local prefFolder
    put specialFolderPath("cache") into prefFolder
    put "/" after prefFolder
    return prefFolder
 end pref_Folder
 
 function version_IsEarlier testVersion, refVersion
+   local isEarlier
    -- no longer needed if no mergExt Facebook works at all?
    /*
    -- the systemversion is "9.1" or the systemversion begins with "9.1." then
@@ -567,6 +591,7 @@ function version_IsEarlier testVersion, refVersion
 end version_IsEarlier
 
 function _convertVersionToNumber someVersion
+   local someNum
    -- assumes a version of the format ###.###.###
    -- to be safe each number can be up to 3 digits (they are usually 2)
    set the itemdelimiter to "."
@@ -579,6 +604,7 @@ end _convertVersionToNumber
 --> Objects
 -
 function fb_Button
+   local fbButton
    put the long id of btn "facebooks" of me into fbButton
    return fbButton
 end fb_Button
@@ -611,7 +637,8 @@ end utf8decode
 
 command hideSharing
    if exists (widget "body" of this card) then
-      set the top of widget "body" to 0
+      --set the top of widget "body" to safeTopMargin()
+      repositionBrowser
    end if    
    set the left of grp "share-ui" to -2000
    hide group "share-ui"

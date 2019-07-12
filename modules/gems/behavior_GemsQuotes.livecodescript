@@ -39,6 +39,8 @@ on preOpenCard
 end preOpenCard
 
 on openCard
+   lock screen
+   local tImageFile, tNextImagePath, tControl
    --ntInfo "gems opencard"
    audioIsRunning     
    
@@ -56,7 +58,7 @@ on openCard
    --   put connectivity_PingServer() into sOnline
    put true into sOnline
    
-  
+   
    setCardTitle 
    
    --ntInfo "fetchQuote"
@@ -65,10 +67,13 @@ on openCard
    fetchImage
    --ntInfo "done"
    ntinfo "Open cards gems: lockscreen is: " & the lockscreen
+   
+   unlock screen
 end opencard
 
 
 on setCardTitle
+   local tTitles, tRealm
    if sJournalData is empty then 
       put itemOffset(sConfigA["currentRealm"],"God,Soul,Life")  into sCurrentRealm
       if sCurrentRealm = 0 then 
@@ -89,6 +94,7 @@ on closecard
 end closecard
 
 command fetchQuote
+   local tConnectionID, tCats, tQuoteSQL, tQuote, aSelectedQuotes, pQuoteID, tSource
    hide button "loadContext"
    
    
@@ -109,12 +115,12 @@ command fetchQuote
       
       dbSetSQL tQuoteSQL
       put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
-      put textEncode(sTruncFirstLine,"UTF-8") into sTruncFirstLine
+      put textEncode(sTruncFirstLine,"UTF8") into sTruncFirstLine
       # store the quote id. see lib_SivaSivaMedia
       
       put dbGet("quote", tConnectionID) into aSelectedQuotes
       ntInfo "Quote from dbase"
-      put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
+      put textDecode ( aSelectedQuotes[1]["content"], "UTF8")  into tQuote
       setLastQuoteID (aSelectedQuotes[1]["quote_id"])
       replace "\n" with cr in tQuote
       put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
@@ -123,7 +129,7 @@ command fetchQuote
       put sJournalData["lastQuote"] into pQuoteID 
       dbLike "quote_id",pQuoteID
       put dbGet("quote", tConnectionID) into aSelectedQuotes
-      put textDecode  (aSelectedQuotes[1]["content"],UTF8)  into tQuote
+      put textDecode  (aSelectedQuotes[1]["content"],"UTF8")  into tQuote
    end if
    
    replace "\n" with cr in tQuote
@@ -145,7 +151,7 @@ command fetchQuote
       
    end if
    
-   put textDecode ( aSelectedQuotes[1]["source_url"], UTF8) into tSource
+   put textDecode ( aSelectedQuotes[1]["source_url"], "UTF8") into tSource
    
    # We need to use https, but if we change all the URL in the dbase on the server
    # then we need a little test/fork
@@ -168,6 +174,7 @@ command fetchQuote
 end fetchQuote
 
 command fetchImage
+   local tRealm, tImgSQL, tImageFileID, tNextImagePath, tControl
    // AAG: Tip, folders in Android change every time the application
    // is launched. So storing a full path (assets) for the image
    // will break the next time the app launches. Below
@@ -185,19 +192,24 @@ command fetchImage
       replace ":1" with tRealm in tImgSQL
       dbSetSQL tImgSQL
       put dbGet ("file_id", JnanamDB()) into tImageFileID
-      put textDecode ( tImageFileID[1]["file_id"], UTF8)  into tImageFileID     
+      put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
       put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tNextImagePath
    else
       put sJournalData["lastImage"] into tNextImagePath   
    end if
    --ntInfo "gems image" && tNextImagePath
    
-   set the filename of img "gems-image" to sivasiva_AssetFolder() & tNextImagePath   
-   setLastImagePath tNextImagePath  
+   put the long id of img "gems-image" into tControl
+   set the filename of tControl to sivasiva_AssetFolder() & tNextImagePath   
+   setImageToFullCardLoc tControl, "portrait"
+   set the loc of tControl to CardLoc()
+   
+   setLastImagePath tNextImagePath
+   
    show image "gems-Image" 
    
    put empty into sJournalData
-   # other wise you get the same quote over and over again!
+   # otherwise you get the same quote over and over again!
    
 end fetchImage
 
@@ -206,11 +218,13 @@ on updateImages
 end updateImages
  
 private function _getRandomSQL
+   local tSQL
    put the uRandomSQLQuery of this card into tSQL
    return tSQL
 end _getRandomSQL
 
 private function _getRandomImageSQL
+   local tSQL
    put the uRandomImageSelect of this card into tSQL
    return tSQL
 end _getRandomImageSQL
@@ -232,7 +246,9 @@ end incrementRealm
 on checkRealm
    put sCurrentRealm
 end checkRealm
+
 command toggleReadContext pState
+   local tURL, pData
    switch pState
       case "true"
          if connectivity_PingServer() is "true" then
@@ -273,6 +289,7 @@ command toggleReadContext pState
 end toggleReadContext
 
 on addJournalEntry pContext
+   local tRealm, pDataA, pData, tTitle
    switch pContext
       case "pReadQuote"
          put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
@@ -294,7 +311,7 @@ end addJournalEntry
 command switchViewState 
    switch sViewState
       case 0          # img is full size and quote is showing    
-         hide group quoteControl
+         hide group "quoteControl"
          put 1 into sViewState
          break          
       case 1  # quote is hidden but image is full size
@@ -309,11 +326,12 @@ command switchViewState
 end switchViewState
 
 command share_Items
-   put  sCurrentSourceURL into sShareItemsA["url"]  
+   local tShareItemsA
+   put  sCurrentSourceURL into tShareItemsA["url"]  
    # if url is empty should default to home page for the app
-   put fld "gems-quote" into sShareItemsA["text"]
-   put "Gems of Wisdom from SivaSiva.App" into sShareItemsA["subject"]
-   return sShareItemsA
+   put fld "gems-quote" into tShareItemsA["text"]
+   put "Gems of Wisdom from SivaSiva.App" into tShareItemsA["subject"]
+   return tShareItemsA
 end share_Items
 
 command resetUI

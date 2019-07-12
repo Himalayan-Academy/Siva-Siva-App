@@ -10,6 +10,8 @@ Script "stack_gems_group_id_1188"
 local tapFlag
 
 on resizeControl
+   local tGroupContainer, tControlWidth, tShareOptions
+   
    set the clipstorect of me to true
    
    # use the bkgnd rect as the coords system
@@ -36,12 +38,10 @@ on resizeControl
    set the top  of widget "close-sharing" to the top of tGroupContainer
    set the loc of btn "close-sharing" to the loc of widget "close-sharing"
    
-   
-   
 end resizeControl
 
 on mouseUp
- share_MouseEvent
+   share_MouseEvent
 end mouseUp
 
 

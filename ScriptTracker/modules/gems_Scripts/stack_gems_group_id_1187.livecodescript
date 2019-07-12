@@ -7,7 +7,9 @@ Script "stack_gems_group_id_1187"
 
 
 on mouseUp
+   lock screen
    toggleReadContext ("false") # in case the browser in showing
    fetchImage
    fetchQuote
+   unlock screen
 end mouseUp

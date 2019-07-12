@@ -15,7 +15,7 @@ end __RESPONSIVE
 -- Get card geometry 
 
 command gotUILibrary
-   answer "Go UIHandler Lib" with "OK"
+   answer "Got UIHandler Lib" with "OK"
 end gotUILibrary
 
 
@@ -95,17 +95,17 @@ private command _setPhoneModel
          put 34 into sPortraitMargins["bottom"]
          put  0 into sPortraitMargins["side"]
          
-         put 32 into sLandscapeMargins["top"]
+         put 0 into sLandscapeMargins["top"] -- 32 if status bar visible
          put 23 into sLandscapeMargins["bottom"]
          put 44 into sLandscapeMargins["side"]
          break
       default
          put 0 into sPortraitMargins["top"]
-         put 8 into sPortraitMargins["bottom"]
+         put 0 into sPortraitMargins["bottom"]
          put 0 into sPortraitMargins["side"]
          
          put 0 into sLandscapeMargins["top"]
-         put 8 into sLandscapeMargins["bottom"]
+         put 0 into sLandscapeMargins["bottom"]
          put 0 into sLandscapeMargins["side"]
    end switch
 end _setPhoneModel
@@ -222,9 +222,19 @@ command topRightMe pControl, x, y
    # use X to offset from the right of the card
    # and y is from the top 
    
-   set topRight of pControl to (sCardWidth - x - sMargins["side"], y)
+   set topRight of pControl to (sCardWidth - x - sMargins["side"], \
+         y + sMargins["top"])
    
 end topRightMe
+
+command topLeftMe pControl, x, y
+   # for a control whose bounds are fully inside the card
+   # use X to offset from the left of the card
+   # and y is from the top 
+   
+   set topLeft of pControl to (x + sMargins["side"], y + sMargins["top"])
+   
+end topLeftMe
 
 command bottomRightMe pControl, x, y
    # for a control whose bounds are fully inside the card
@@ -303,7 +313,7 @@ on resizeToWidth pImage,pSize
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
    # it may not be necessary
-   if pSize > tOrigImgWidth then exit resizeToWidth
+   --if pSize > tOrigImgWidth then exit resizeToWidth
    put pSize/tOrigImgWidth into tRatio 
    put (tOrigImgWidth * tRatio) into tNewWidth
    put (tOrigImgHeight * tRatio) into tNewHeight
@@ -329,7 +339,7 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
    end if
 end setImageToFullCardLoc
 
-on toggleImgSize pImage, pFullSize, pTargetSize,pLocation
+on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    local tFWd, tFHt
    # we may not always this rect of the images from  the metadata
    # May as well just find out what it is right here.
@@ -343,21 +353,21 @@ on toggleImgSize pImage, pFullSize, pTargetSize,pLocation
       put (the width of  pImage > the width of this cd) into pFullSize
       # true for landscape (width is greater); false for portrait (height is greater)
    end if
-   put the formattedWidth of  pImage into tFWd
-   put the formattedHeight of  pImage into tFHt
+   put the formattedWidth of pImage into tFWd
+   put the formattedHeight of pImage into tFHt
    
    if pFullSize then -- reduce to fit
       resizeToWidth pImage,pTargetSize
    else -- return to full size
-      resizeToHeight pImage,tFHt
+      resizeToHeight pImage,max(tFHt,sCardHeight)
    end if
    
    # set the location of image, 
    # it is empty, assume to card rect
    if pLocation = empty then
-      set the loc of  pImage to the loc of this cd
+      set the loc of pImage to the loc of this cd
    else
-      set the loc of  pImage to pLocation
+      set the loc of pImage to pLocation
    end if
 end toggleImgSize
 

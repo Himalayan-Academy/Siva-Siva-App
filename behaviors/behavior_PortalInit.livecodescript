@@ -54,7 +54,7 @@ end  mouseup
 command layoutNavBar
    local tWidth, tBottom, tHorzFour, tHorzThree, tHorzTwo, tControl
    put cardWidth() into tWidth
-   put cardHeight() - safeBottomMargin() - 17 into tBottom
+   put cardHeight() - safeBottomMargin() - 25 into tBottom
    --put item 3 of (the rect of this card)  into tWidth
    --put item 4 of (the rect of this card)-25 into tBottom
    
