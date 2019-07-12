@@ -144,7 +144,7 @@ searchBox changed search query =
             , onEnter search
             , value query
             , id "search-box"
-            , placeholder "  type to search"
+            , placeholder "  🔎"
             ]
             []
 

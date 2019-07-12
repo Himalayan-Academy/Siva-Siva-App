@@ -8866,7 +8866,7 @@ var author$project$Theme$Elements$searchBox = F3(
 							author$project$Theme$Elements$onEnter(search),
 							rtfeldman$elm_css$Html$Styled$Attributes$value(query),
 							rtfeldman$elm_css$Html$Styled$Attributes$id('search-box'),
-							rtfeldman$elm_css$Html$Styled$Attributes$placeholder('  type to search')
+							rtfeldman$elm_css$Html$Styled$Attributes$placeholder('  🔎')
 						]),
 					_List_Nil)
 				]));
