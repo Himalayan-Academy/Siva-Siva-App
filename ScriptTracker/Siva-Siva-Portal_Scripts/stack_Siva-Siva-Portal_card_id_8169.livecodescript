@@ -14,7 +14,7 @@ local sStartLoc,sScreenRect
 on preopenCard
    local pControl
    
-   setCardCoords
+   setCardCoords "portrait"
    updateUIPortal
    audioIsRunning
    ntInfo ("Home card rect: " & the rect of this card)
@@ -29,7 +29,7 @@ end preopenCard
 
 on resizeStack
    local tControl
-   setCardCoords
+   setCardCoords "portrait"
    updateUIPortal
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5

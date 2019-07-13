@@ -253,27 +253,27 @@ command toggleReadContext pState
       case "true"
          if connectivity_PingServer() is "true" then
             put the uSourceURL of the target into tURL
-            set the url of    widget "readContext" to  tURL
+            set the url of widget "readContext" to tURL
             browser_SetLastURL tURL
             hide the target
             hide button "goNextRealm" # svg
             
-            ## GEOMETRY
+            --            ## GEOMETRY
             
-            ## we will later refactor this to an UpDateUI OI(or something) responsive Geometry  handler
-            # for not it is based on fixed rect as per:
-            # mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-       
-            set rect of  widget "readContext" to (10,the bottom of btn "cancel"+ 6,404,680)
+            --            ## we will later refactor this to an UpDateUI OI(or something) responsive Geometry  handler
+            --            # for not it is based on fixed rect as per:
+            --            # mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
             
-            ## 
+            --            set rect of  widget "readContext" to (10,the bottom of btn "cancel"+ 6,404,680)
+            
+            --            ## 
             
             show    widget "readContext" # a browser
             # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
             # and not actually go back to gem in this case
             show button "cancel"
-            send  "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
-            put  fld "title" into pData["currentRealm"]
+            send "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
+            put fld "title" into pData["currentRealm"]
             tracking_RecordActivity "Gems", "read/quoteContext", pData
          else
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -281,8 +281,8 @@ command toggleReadContext pState
          break
       case "false"
          
-         set the url of   widget "readContext" to empty
-         hide   widget "readContext"
+         set the url of widget "readContext" to empty
+         hide widget "readContext"
          hide button "cancel"
          show button "goNextRealm"
    end switch
@@ -305,7 +305,6 @@ on addJournalEntry pContext
          put  browser_GetLastPageTitle() into tTitle
          Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end switch
-   
 end addJournalEntry
 
 command switchViewState 

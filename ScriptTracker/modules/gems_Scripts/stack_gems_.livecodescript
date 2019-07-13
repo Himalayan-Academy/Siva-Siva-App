@@ -7,14 +7,15 @@ Script "stack_gems_"
 
 
 on preopenstack
-   --   set the fullscreenmode of this stack to "showAll"
-   --   if isMobile() then    
-   --      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-   --      set the fullscreenmode of this stack to "showAll"
-   --   end if
+   if isMobile() then
+      mobileHideStatusBar
+   end if
 end preopenstack
 
 on closestack
+   if isMobile() then
+      mobileShowStatusBar
+   end if
    portal_SetLastStack "gems" 
 end closestack
 
@@ -37,18 +38,15 @@ on updateUI
    put the long id of grp "quoteControl" into tControl
    put (0,321,CardWidth(),CardHeight()) into tRect
    set the rect of tControl to tRect
-   --put the long id of fld "gems-quote" of grp "quoteControl" into tQuote
-   --put the rect of tQuote into tRect
-   --put (item 2 of the rect of tFooter) - 12 into item 4 of tRect
-   --set the rect of tQuote to tRect
    if there is a control "Title" then
-      put the long id of grc "portal-title-bkgnd" into tControl
-      topCenterMe tControl
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7
-      put the long id of btn "loadContext" into tControl
-      topLeftMe tControl
       put the long id of btn "goNextRealm" into tControl
       topRightMe tControl
+      put the long id of btn "loadContext" into tControl
+      topLeftMe tControl
+      set the rect of btn "cancel" to the rect of tControl
+      set rect of widget "readContext" to (10, the bottom of btn "cancel" + 6, \
+            CardWidth() - 10, the top of grp "footerNav" - 10)
    end if
 end updateUI

@@ -146,12 +146,13 @@ function safeMargins pForceOrientation
    
    if pForceOrientation is not empty then
       put pForceOrientation into tOrientation
-   else if isMobile() then
-      put mobileDeviceOrientation() into tOrientation
+      --   else if isMobile() then
+      --      --put mobileDeviceOrientation() into tOrientation
+      --      put mobileOrientation() into tOrientation
    else
-      put "u" into tOrientation
-   end if
-   if tOrientation begins with "u" or tOrientation begins with "f" then
+      --      put "u" into tOrientation
+      --   end if
+      --   if tOrientation begins with "u" or tOrientation begins with "f" then
       if the width of this card < the height of this card then
          put "portrait" into tOrientation
       else

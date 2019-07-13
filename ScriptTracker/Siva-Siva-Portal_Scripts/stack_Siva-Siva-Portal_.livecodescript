@@ -14,7 +14,7 @@ on preOpenStack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       --mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-      set the fullscreenmode of this stack to "showAll"
+      --set the fullscreenmode of this stack to "showAll"
       set the fullscreenmode of this stack to empty
    end if
 end preOpenStack

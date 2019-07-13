@@ -86,11 +86,6 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
-   --   if isMobile() then
-   --      if mobileOrientation() begins with "l" then
-   --         set the fullscreenmode of this stack to "exactFit"
-   --      end if
-   --   end if
    
    --breakpoint
    close stack oStackName

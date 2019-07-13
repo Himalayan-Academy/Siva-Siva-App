@@ -25,7 +25,7 @@ on preopenstack
       if sLandscapeOnly then
          put "landscape" into sOrientation
       else
-         put "portrait," before tOrientations
+         put "portrait,portrait upside down," before tOrientations
          put "portrait" into sOrientation
       end if
       mobileSetAllowedOrientations tOrientations
@@ -47,7 +47,8 @@ command updateUI theOrientation
    put the long id of widget "body" of card "SivaSivaBrowser" into tBrowser
    put the long id of widget "loader" of card "SivaSivaBrowser" into tLoader
    if isMobile() then
-      put mobileDeviceOrientation() into tOrientation
+      --put mobileDeviceOrientation() into tOrientation
+      put mobileOrientation() into tOrientation
    else
       put sOrientation into tOrientation
    end if
@@ -241,7 +242,7 @@ on closestack
    # because we may be coming to view a web page from any module
    # which should be designated as sLastStack and not these browers.
    if isMobile() then
-      mobileSetAllowedOrientations "portrait,portrait upside down"
+      --mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
 end closestack
 
