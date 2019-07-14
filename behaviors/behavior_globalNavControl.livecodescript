@@ -41,36 +41,41 @@ on mouseup
          --lock screen
          
          # Cases where we to go to stacks directly with no secondary navigation
-      case "Gems"
-      case "Surprise"
-      case "Listen"
-      case "Journal"
-         portal_GoStack tTarget
-         break
-         
-         # cases require connectivity
-      case "Look"
-      case "Websites"
-         if checkConnectionStop() then
+         case "Gems"
+         case "Surprise"
+         case "Listen"
+         case "Journal"
+            if the platform is "iPhone" then
+               # handle the shift of the main nav screen
+               set the destroyStack of this stack to false
+            end if
+            portal_GoStack tTarget
+            break
+            
+            # cases that require connectivity
+         case "Look"
+         case "Websites"
+            if checkConnectionStop() then
+               getModuleList tTarget
+            end if
+            break
+            
+            # we need to get the modules, no connection required
+         case "Fun"
+         case "Practice"
+         case "Read"
             getModuleList tTarget
-         end if
-         break
-         
-         # we need to get the modules, not connection required
-      case "Fun"
-      case "Practice"
-      case "Read"
-         getModuleList tTarget
-         break
-         # oad Journal Entries to My Home
-      case "My home"
-         go to card "modulesList"
-         loadFavoritesToMyHome
-         
-         break
-   end switch
-end if
+            break
+            
+            # load Journal Entries to My Home
+         case "My home"
+            go to card "modulesList"
+            loadFavoritesToMyHome
+            break
+      end switch
+   end if
 end mouseup
+
 
 on getModuleList tTarget
    # we this on behavior on cards "MainNav"  and card "modulesList"
@@ -81,6 +86,7 @@ on getModuleList tTarget
    
 end getModuleList
 
+
 on setUpUI pCard
    # we hide some controls on one are or another
    # this behavior it in both cards
@@ -89,6 +95,10 @@ on setUpUI pCard
       case "Home"
          break 
       case "modulesList"
+         if the platform is "iPhone" then
+            # handle the shift of the main nav screen (return to original setting)
+            set the destroyStack of this stack to true
+         end if
          show button "goToMainNav"
          break
       case "mainNav"
@@ -97,6 +107,7 @@ on setUpUI pCard
    end switch
    updateUI
 end setUpUi
+
 
 function checkConnectionStop
    if connectivity_PingServer() = "false" then
@@ -109,7 +120,6 @@ function checkConnectionStop
 end checkConnectionStop
 
 
-
 on loadModulesList tTarget
    local tRowdataA
    
@@ -120,6 +130,7 @@ on loadModulesList tTarget
    reSizeDataGrid 
    unlock screen
 end loadModulesList
+
 
 command  loadFavoritesToMyHome
    local tJournalEntriesA, y
@@ -140,6 +151,7 @@ command  loadFavoritesToMyHome
    reSizeDataGrid 
 end  loadFavoritesToMyHome
 
+
 command reSizeDataGrid pNumOfRows
    local tNumberOfRecords, tRowHeight
    
@@ -149,6 +161,7 @@ command reSizeDataGrid pNumOfRows
    --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
    --set top of group "modulesList" of me to 100
 end reSizeDataGrid
+
 
 command launchModule
    local tLine, tDataA
@@ -162,6 +175,7 @@ command launchModule
    end if
 end launchModule
 
+
 ## GEOMETRY
 
 command updateUI
@@ -173,5 +187,4 @@ command updateUI
    put the long id of of group "modulesList" into pControl
    set the width of pControl to CardWidth() - 12
    topCenterMe pControl,100
-   --centerMe pControl, 0, 0
 end updateUI

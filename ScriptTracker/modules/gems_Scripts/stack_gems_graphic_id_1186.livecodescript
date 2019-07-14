@@ -10,5 +10,5 @@ on mouseUp
    lock screen
    fetchQuote
    fetchImage
-   lock screen
+   unlock screen
 end mouseUp
