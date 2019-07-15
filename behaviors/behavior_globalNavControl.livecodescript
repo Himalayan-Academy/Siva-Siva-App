@@ -46,7 +46,7 @@ on mouseup
          case "Listen"
          case "Journal"
             if the platform is "iPhone" then
-               # handle the shift of the main nav screen
+               # handle the shift of the main nav screen when returning
                set the destroyStack of this stack to false
             end if
             portal_GoStack tTarget

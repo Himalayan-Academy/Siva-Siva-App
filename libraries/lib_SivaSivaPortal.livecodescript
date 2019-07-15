@@ -81,11 +81,16 @@ command portal_GoStack cardOrStackObject
    end if
    
    
-   ## Do not change to teh acceleratedRending true | false at this point
-   ## it causes a blank black going form on stack to another
+   ## Do not change to the acceleratedRending true | false at this point
+   ## it causes a blank black screen going form one stack to another
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
+   if pTrackdata["contentTarget"] is "stack wordpuzzles" \
+         and the platform is "iPhone" then
+      # handle the shift of the main nav screen when returning
+      set the destroyStack of this stack to false
+   end if
    
    --breakpoint
    close stack oStackName
@@ -93,13 +98,13 @@ command portal_GoStack cardOrStackObject
    
    --if the lockScreen is true then unlock screen
    
-   if  oStackName is "Siva-Siva-Portal" then 
+   if oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
       put "navigation/goContent" into pAction
    end if
    
-   if the short name of this stack is "Siva-Siva-Portal" then
+   if oStackName is "Siva-Siva-Portal" then
       news_Fetch
    end if
    

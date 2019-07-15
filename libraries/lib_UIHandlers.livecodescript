@@ -333,10 +333,10 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
       --      if isMobile() then
       --         resizeToHeight pImage,(the height of this card + sHeightDiff -  x)
       --         else
-      resizeToHeight pImage,(the height of this card - x)
+      resizeToHeight pImage,(sCardHeight - x)
       --   end if
    else
-      resizeTowidth pImage,(the height of this card - x)
+      resizeTowidth pImage,(sCardHeight - x)
    end if
 end setImageToFullCardLoc
 
@@ -351,7 +351,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    -- called from main img script when tapped and when main cd closes to reset
    
    if pFullSize = "" then -- calculate if it's already full size
-      put (the width of  pImage > the width of this cd) into pFullSize
+      put (the width of pImage > sCardWidth) into pFullSize
       # true for landscape (width is greater); false for portrait (height is greater)
    end if
    put the formattedWidth of pImage into tFWd
@@ -366,7 +366,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    # set the location of image, 
    # it is empty, assume to card rect
    if pLocation = empty then
-      set the loc of pImage to the loc of this cd
+      set the loc of pImage to sCardLoc
    else
       set the loc of pImage to pLocation
    end if
