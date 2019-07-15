@@ -184,7 +184,9 @@ end init_StoreControlsIds
 
 command openPortalStack
    open stack "Siva-Siva-Portal"
-   hide stack "Siva-Siva-App"
+   if the environment is not "development" then
+      hide stack "Siva-Siva-App"
+   end if
    # app will halt at this point  so now is a good
    # time to check for updates on a new session
    # check for news first
