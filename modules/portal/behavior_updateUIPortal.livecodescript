@@ -23,7 +23,7 @@ command updateUIPortal
    
    
    put the long id of group "audioGlobalControl" of me into pControl
-   topRightMe pControl,40,30
+   topRightMe pControl,40,15
    
    
    put the long id of fld "Notification" of me into pControl

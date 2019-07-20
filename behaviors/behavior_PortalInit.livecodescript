@@ -19,7 +19,11 @@ on openCard
    send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 0 milliseconds
    if (the lockscreen) then unlock Screen
 end openCard
- 
+
+on closeCard
+   deleteAllMobileControls
+end closeCard
+
 on mouseDown
       put the mouseloc into sStartLoc
 end mouseDown
