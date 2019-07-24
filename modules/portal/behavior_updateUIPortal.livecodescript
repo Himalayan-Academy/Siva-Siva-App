@@ -6,6 +6,7 @@ after preopencard
    unlock screen
 end preopencard
 
+
 on resizeStack x,y,ox,oy
    lock screen
    -- When coming from a landscape stack, card rect is not updated correctly
@@ -16,19 +17,23 @@ on resizeStack x,y,ox,oy
    unlock screen
 end resizeStack
 
+
 command updateUIPortal
-   local pControl, tBrandImage
+   local pControl, tBrandImage, tBottomMargin
+   
+   if safeBottomMargin() > 0 then
+      put 0 into tBottomMargin
+   else
+      put 8 into tBottomMargin
+   end if
    
    # background group of all cards
-   
    
    put the long id of group "audioGlobalControl" of me into pControl
    topRightMe pControl,40,15
    
-   
    put the long id of fld "Notification" of me into pControl
    topCenterMe pControl,150
-   
    
    switch (the short name of this card)
       case "Home"
@@ -55,18 +60,17 @@ command updateUIPortal
          
          
          put the long id of btn "goNext" into pControl
-         bottomCenterMe pControl,0 --8    
+         bottomCenterMe pControl,tBottomMargin    
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         bottomLeftMe pControl,0,0 --8 
+         bottomLeftMe pControl,0,tBottomMargin 
          
          break
          
-         
       case  "mainNav"
          put the long id of grp "footer" into pControl
-         bottomCenterMe pControl,0 --8
+         bottomCenterMe pControl,tBottomMargin
          
          put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
@@ -76,10 +80,54 @@ command updateUIPortal
          
          put the long id of grp "globalPortalMap" into pControl
          topCenterMe pControl,55
+         
+         updatePortalMap
+         
          break
          
-         
    end switch
-   
 end updateUIPortal
 
+
+command updatePortalMap
+   constant kMap = "Gems,Surprise,Listen,Look,Practice,Read,Websites,Fun,Journal,My Home"
+   constant kSpace = 15
+   constant kEdge = 10
+   constant kLogoOverlap = 26
+   constant kMaxHeight = 100
+   
+   local tTop, tLeft, tBottom, tRight, tWidth, tHeight, tButtonID, tFieldID
+   local tLeftLeft, tLeftRight, tRightLeft, tRightRight, tLeftSide, tRect
+   
+   put the bottom of button "brandLogo" of me - kLogoOverlap into tTop
+   put the top of grp "footer" into tBottom
+   put max(kEdge, safeSideMargin()) into tLeft
+   put CardWidth() - tLeft into tRight
+   
+   put ((tBottom - tTop) / 5) - kSpace into tHeight
+   put min(tHeight, kMaxHeight) into tHeight
+   put (tRight - tLeft - kSpace) / 2 into tWidth
+   put tLeft into tLeftLeft
+   put tLeft + tWidth into tLeftRight
+   put tLeftRight + kSpace into tRightLeft
+   put tRight into tRightRight
+   
+   put true into tLeftSide
+   repeat for each item tObjectName in kMap
+      put the long id of btn tObjectName of grp "GlobalPortalMap" into tButtonID
+      put the long id of fld tObjectName of grp "GlobalPortalMap" into tFieldID
+      if tLeftSide then
+         put tTop + tHeight into tBottom
+         put (tLeftLeft, tTop, tLeftRight, tBottom) into tRect
+         put false into tLeftSide
+      else
+         put (tRightLeft, tTop, tRightRight, tBottom) into tRect
+         put tTop + tHeight + kSpace into tTop
+         put true into tLeftSide
+      end if
+      set the rect of tButtonID to tRect
+      set the width of tFieldID to tWidth
+      set the bottomLeft of tFieldID to the bottomLeft of tButtonID
+   end repeat
+   
+end updatePortalMap

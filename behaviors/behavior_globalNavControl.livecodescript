@@ -179,12 +179,18 @@ end launchModule
 ## GEOMETRY
 
 command updateUI
-   local pControl
+   local pControl, tBottomMargin
+   
+   if safeBottomMargin() > 0 then
+      put 0 into tBottomMargin
+   else
+      put 8 into tBottomMargin
+   end if
    
    setCardCoords "portrait"
    put the long id of grp "footer" into pControl
-   bottomCenterMe pControl,0 --8
+   bottomCenterMe pControl,tBottomMargin
    put the long id of of group "modulesList" into pControl
-   set the width of pControl to CardWidth() - 12
+   set the width of pControl to CardWidth() - 20
    topCenterMe pControl,100
 end updateUI
