@@ -13,9 +13,6 @@ on preopenstack
 end preopenstack
 
 on closestack
-   if isMobile() then
-      mobileShowStatusBar
-   end if
    portal_SetLastStack "gems" 
 end closestack
 

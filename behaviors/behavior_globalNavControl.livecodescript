@@ -18,6 +18,10 @@ on preOpenCard
    lock screen
    put the short name of this card into pCard
    setUpUI pCard
+   
+   if getPhoneModel() is "iPhoneX" then
+      mobileShowStatusBar
+   end if
 end preOpenCard
 
 
@@ -190,6 +194,8 @@ command updateUI
    setCardCoords "portrait"
    put the long id of grp "footer" into pControl
    bottomCenterMe pControl,tBottomMargin
+   put the long id of btn "backgroundOverlay" into pControl
+   centerMe pControl
    put the long id of of group "modulesList" into pControl
    set the width of pControl to CardWidth() - 20
    topCenterMe pControl,100

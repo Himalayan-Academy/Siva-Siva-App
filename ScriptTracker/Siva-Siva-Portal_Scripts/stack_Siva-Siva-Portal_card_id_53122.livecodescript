@@ -10,16 +10,22 @@ Script "stack_Siva-Siva-Portal_card_id_53122"
 global sConfigA
 
 on preopenCard
-   local pControl
+   local pControl, tBottomMargin
    
    lock screen
    setcardCoords "portrait"
    audioIsRunning  
    
+   if safeBottomMargin() > 0 then
+      put 0 into tBottomMargin
+   else
+      put 8 into tBottomMargin
+   end if
+   
    put the long id of grp "modulesList" into pControl
    topCenterMe pControl,100
    put the long id of grp "footer" into pControl
-   bottomCenterMe pControl,0 --8
+   bottomCenterMe pControl,tBottomMargin
    pass preopencard
    unlock screen
 end preopenCard

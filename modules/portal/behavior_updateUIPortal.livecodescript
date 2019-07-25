@@ -37,6 +37,9 @@ command updateUIPortal
    
    switch (the short name of this card)
       case "Home"
+         if isMobile() then
+            mobileHideStatusBar
+         end if
          
          # Backgrond
          
@@ -69,6 +72,10 @@ command updateUIPortal
          break
          
       case  "mainNav"
+         if getPhoneModel() is "iPhoneX" then
+            mobileShowStatusBar
+         end if
+         
          put the long id of grp "footer" into pControl
          bottomCenterMe pControl,tBottomMargin
          
@@ -95,9 +102,10 @@ command updatePortalMap
    constant kEdge = 10
    constant kLogoOverlap = 26
    constant kMaxHeight = 100
+   constant kMaxWidth = 190
    
    local tTop, tLeft, tBottom, tRight, tWidth, tHeight, tButtonID, tFieldID
-   local tLeftLeft, tLeftRight, tRightLeft, tRightRight, tLeftSide, tRect
+   local tLeftLeft, tLeftRight, tRightLeft, tRightRight, tLeftSide, tRect, tExtraH, tExtraV
    
    put the bottom of button "brandLogo" of me - kLogoOverlap into tTop
    put the top of grp "footer" into tBottom
@@ -105,12 +113,24 @@ command updatePortalMap
    put CardWidth() - tLeft into tRight
    
    put ((tBottom - tTop) / 5) - kSpace into tHeight
-   put min(tHeight, kMaxHeight) into tHeight
+   if tHeight > kMaxHeight then
+      put tHeight - kMaxHeight into tExtraV
+      put kMaxHeight into tHeight
+   else
+      put 0 into tExtraV
+   end if
    put (tRight - tLeft - kSpace) / 2 into tWidth
-   put tLeft into tLeftLeft
-   put tLeft + tWidth into tLeftRight
-   put tLeftRight + kSpace into tRightLeft
-   put tRight into tRightRight
+   if tWidth > kMaxWidth then
+      put (tWidth - kMaxWidth) * 0.7 into tExtraH
+      put kMaxWidth into tWidth
+   else
+      put 0 into tExtraH
+      put 0 into tExtraV -- only add vertical space if horizontal space added
+   end if
+   put tLeft + tExtraH into tLeftLeft
+   put tLeftLeft + tWidth into tLeftRight
+   put tRight - tExtraH into tRightRight
+   put tRightRight - tWidth into tRightLeft
    
    put true into tLeftSide
    repeat for each item tObjectName in kMap
@@ -122,7 +142,7 @@ command updatePortalMap
          put false into tLeftSide
       else
          put (tRightLeft, tTop, tRightRight, tBottom) into tRect
-         put tTop + tHeight + kSpace into tTop
+         put tTop + tHeight + kSpace + tExtraV into tTop
          put true into tLeftSide
       end if
       set the rect of tButtonID to tRect
