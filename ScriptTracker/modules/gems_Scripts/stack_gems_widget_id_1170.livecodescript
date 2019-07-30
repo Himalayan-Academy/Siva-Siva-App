@@ -8,7 +8,7 @@ Script "stack_gems_widget_id_1170"
 
 
 on browserNavigateComplete pURL
-   send getTitle to me in 1 second
+   send "getTitle" to me in 1 second
 end browserNavigateComplete
 
 command getTitle

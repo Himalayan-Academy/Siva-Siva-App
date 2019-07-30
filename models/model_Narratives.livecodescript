@@ -16,7 +16,8 @@ command showNarrative pNarrativeA
    dispatch "showNarrative" to stack "narrative" with pNarrativeA
 end showNarrative
 
-function loadNarrativeFromDisk pID 
+function loadNarrativeFromDisk pID
+   local tPath, tXML, tNarrativeA, tFirstChild, i, tNextSibling
    put sivasiva_AssetFolder() & "narratives/" & pID & ".xml" into tPath 
    
    if there is not a file tPath then 
@@ -49,7 +50,8 @@ function loadNarrativeFromDisk pID
    return tNarrativeA
 end loadNarrativeFromDisk
 
-function narrativeExtractScene pXML, pPath 
+function narrativeExtractScene pXML, pPath
+   local tFirstItem, i, tSceneA, tNextItem
    put revxmlfirstchild(pXML, pPath) into tFirstItem
    put 1 into i
    put narrativeExtractItem(pXML, tFirstItem) into tSceneA[i]
@@ -69,6 +71,7 @@ end narrativeExtractScene
 
 
 function narrativeExtractItem pXML, pPath 
+   local tAttributesA, tContents, tNodeName, tR
    put pPath
    put revXMLAttributes(pXML, pPath, tab, cr) into tAttributesA
    split tAttributesA by cr and tab 
@@ -97,6 +100,7 @@ function narrativeExtractItem pXML, pPath
 end narrativeExtractItem
 
 on narrativeItemLoadImage @pItemA
+   local tRecordA, tPath
    if pItemA["attributes"]["file-id"] is not empty then
      put jnanamGetItem(pItemA["attributes"]["file-id"]) into tRecordA 
      # AAG: BROKEN! Files on disk doesn't match media folder on hap. 
@@ -126,6 +130,7 @@ end narrativeItemLoadImage
 # to see how it flows.
 
 function randomDeityPhotos
+   local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
    --ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
@@ -137,16 +142,17 @@ function randomDeityPhotos
  --ntinfo tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into pDeityPhotoFileIDA
-   repeat for each key x in pDeityPhotoFileIDA
-      put returnAssetPath("photography",pDeityPhotoFileIDA[x]["file_id"]) & cr after pImageList
+   put dbGet(,tConnectionID) into tDeityPhotoFileIDA
+   repeat for each key x in tDeityPhotoFileIDA
+      put returnAssetPath("photography",tDeityPhotoFileIDA[x]["file_id"]) & cr after tImageList
    end repeat
    --ntinfo ("put line 10: " & (line 10 of pImageList))
-   return pImageList
+   return tImageList
    
 end randomDeityPhotos 
 
 function fetchQuotesCollection pCollection
+   local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuotes
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
       if tQueriesA[x]["queryName"] = "selectQuotesCollection" then
@@ -159,15 +165,16 @@ function fetchQuotesCollection pCollection
    
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into pQuotesDataA
-   repeat for each key x in pQuotesDataA
-      put pQuotesDataA[x]["content"] &cr & "|" after pQuotes
+   put dbGet(,tConnectionID) into tQuotesDataA
+   repeat for each key x in tQuotesDataA
+      put tQuotesDataA[x]["content"] &cr & "|" after tQuotes
    end repeat
-   return pQuotes
+   return tQuotes
 end fetchQuotesCollection 
 
 
 function returnAssetPath pAssets,pFileID
+   local tPath
    switch pAssets
       case "photography"
          --ntinfo ("Accessingphotography folder")

@@ -8,6 +8,8 @@ Script "stack_gems_widget_id_1185"
 
 
 on mouseUp
+   lock screen
    fetchQuote
    fetchImage
+   unlock screen
 end mouseUp

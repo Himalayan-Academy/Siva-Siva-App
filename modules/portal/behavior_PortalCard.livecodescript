@@ -1,23 +1,36 @@
-﻿script "behavior_PortalInit"
+﻿script "behavior_PortalCard"
+
 # behavior for each portal card
 
 local sStartLoc,sScreenRect
 
-on openCard 
-  put getCardRect() into sScreenRect
+on openCard
+   local tLinksGroup, tControl, tRect
+   -- put getCardRect() into sScreenRect
+   setCardCoords "portrait"
    portal_SetCurrentPortal (the short name of this card)
    audioIsRunning
    layoutNavBar
    put "SivaSiva Portal Scrolling" into tLinksGroup
+   put the long id of grp tLinksGroup into tControl
+   topCenterMe tControl
+   put the rect of tControl into tRect
+   put the top of grp "SivaSiva Portal Navigation" into item 4 of tRect
+   set the rect of tControl to tRect
    send "CreateScroller tLinksGroup" to grp "SivaSiva Portal Scrolling" in 0 milliseconds
    if (the lockscreen) then unlock Screen
 end openCard
- 
+
+on closeCard
+   deleteAllMobileControls
+end closeCard
+
 on mouseDown
       put the mouseloc into sStartLoc
 end mouseDown
 
-on mouseUp   
+on mouseUp
+   local tRow, tLinkNo, tRowName
    # the text fld and image of each row are both disabled 
    # but have the naming convention of
    # 1_portal-link-bkgnd
@@ -44,16 +57,23 @@ on mouseUp
 end  mouseup
 
 command layoutNavBar
-   put item 3 of (the rect of this card)  into tWidth
-   put item 4 of (the rect of this card)-25 into tBottom
+   local tWidth, tBottom, tHorzFour, tHorzThree, tHorzTwo, tControl
+   put cardWidth() into tWidth
+   put cardHeight() - safeBottomMargin() - 25 into tBottom
+   --put item 3 of (the rect of this card)  into tWidth
+   --put item 4 of (the rect of this card)-25 into tBottom
    
    --put item 3 of sScreenRect into tWidth
    --put item 4 of sScreenRect-25 into tBottom
    --
    
+   -- BWM: this method will not take into account side safe margins
    put round(tWidth/8) into tHorzFour
    put round(tWidth/6) into tHorzThree
-   put round(tWidth/4) into tHorzTwo
+   --put round(tWidth/4) into tHorzTwo
+   
+   put the long id of grp "SivaSiva Portal Navigation" into tControl
+   bottomCenterMe tControl
    
    Switch (the short name of this card)
       case "Home"

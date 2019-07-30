@@ -18,7 +18,9 @@ on preopenCard
 end preopenCard
 
 command tellUserToGetFavorites 
-   doAnswer "There are no Favorites in My Home yet. Go to the Journal. Click the star by some of your Favorites. They will then appear in My Home", "OK","downloadAffirmed"
+   doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
+         "Click the star by some of your Favorites. They will then appear in My Home", \
+         "OK","downloadAffirmed"
 end tellUserToGetFavorites
 
 command downloadAffirmed   

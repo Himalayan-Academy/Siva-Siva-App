@@ -52,6 +52,7 @@ end layoutHeader
 
 
 on layoutFilters
+   local tRect
    put 10,(the bottom of grc "header bar" + 10),(the width of this card - 10), (the bottom of grc "header bar" + 70) into tRect
    set the rect of button "favorites" to tRect
    if the cFlag of button "favorites" then
@@ -64,6 +65,7 @@ on layoutFilters
 end layoutFilters
 
 on layoutCard
+   local tRect
    set the backgroundColor of this card to getConfigForLayout("listView", "cardBackgroundColor")
    -- left, top, right, and bottom is a rect
    put 10,(the bottom of button "favorites" + 10),(the width of this card - 10), (the bottom of this card - 10) into tRect
@@ -84,6 +86,7 @@ end layoutCard
 
 on fetchEntries
    put Journal_GetEntries() into sStateA["entries"]
+   local tStateA -- BWM - not sure about this one, should be sStateA?
    put 0 into tStateA["current entry"]
 end fetchEntries
 
@@ -92,6 +95,7 @@ on layoutEntries
       if the cFlag of button "favorites" is true and tEntryA["is_favorite"] is 0 then
          next repeat
       else
+         local tStateA -- BWM - not sure about this one, should be sStateA?
          createNewJournalEntry tEntryA, tStateA["current entry"]
          add 1 to tStateA["current entry"]
       end if
@@ -103,6 +107,7 @@ on layoutEntries
 end layoutEntries
 
 on createNewJournalEntry pEntryA, pNum
+   local tPadding, tTop, tName, tLabel, pData, tDate, tHumanReadableElapsedTime
    
    if pNum is not a number then put 0 into pNum
    put 20 into tPadding

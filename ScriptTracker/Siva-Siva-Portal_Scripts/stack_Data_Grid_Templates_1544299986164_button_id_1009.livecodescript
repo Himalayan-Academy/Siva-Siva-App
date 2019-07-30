@@ -18,13 +18,13 @@ on FillInData pDataArray
    -- this message. All resizing should be handled in resizeControl.
    
    -- Example:
-   set the text of field "rowname" of me to pDataArray[rowName]
+   set the text of field "rowname" of me to pDataArray["rowName"]
 end FillInData
 
 
 on LayoutControl pControlRect, pWorkingRect
    
-   local theFieldRect
+   local tFieldRect, tBackdropRect
    
    -- This message is sent when you should layout your template's controls.
    -- This is where you resize the 'Background' graphic, resize fields and 
@@ -36,14 +36,17 @@ on LayoutControl pControlRect, pWorkingRect
    -- The working rect is defined area of the control you can safelt use.
    -- Use this rect to make sure your controls don't overlap with any edit mode controls.
    
-   -- Example:
-   put the rect of field "rowname" of me into theFieldRect
-   put item 1 of pWorkingRect into item 1 of theFieldRect 
-   put item 3 of pWorkingRect - 5 into item 3 of theFieldRect
-   set the rect of field "rowname" of me to theFieldRect
-   --ntinfo theFieldRect
+   put the rect of field "rowname" of me into tFieldRect
+   put item 1 of pWorkingRect + 5 into item 1 of tFieldRect 
+   put item 3 of pWorkingRect - 5 into item 3 of tFieldRect
+   set the rect of field "rowname" of me to tFieldRect
+   --ntinfo tFieldRect
    set the rect of graphic "Background" of me to pControlRect
    --ntinfo pControlRect
+   put tFieldRect into tBackdropRect
+   subtract 7 from item 2 of tBackdropRect
+   add 7 to item 4 of tBackdropRect
+   set the rect of graphic "backdrop" of me to tBackdropRect
 end LayoutControl
 
 

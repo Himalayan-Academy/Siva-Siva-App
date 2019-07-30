@@ -7,7 +7,9 @@ Script "stack_gems_button_id_1524"
 
 
 on mouseUp
+   lock screen
    incrementRealm
    fetchImage
    fetchQuote
+   unlock screen
 end mouseUp

@@ -6,7 +6,7 @@ local sMediaURL,sBrowserURL
 #local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
 local sHackDownloadCompleteFlag
 
-local sLandscapeOnly, sOrientation
+local sLandscapeOnly, sOrientation, sBrowserRect
 
 # this stack intend to make the UI responsive
 # by getting rect of the screen and using those coordinator
@@ -25,7 +25,7 @@ on preopenstack
       if sLandscapeOnly then
          put "landscape" into sOrientation
       else
-         put "portrait," before tOrientations
+         put "portrait,portrait upside down," before tOrientations
          put "portrait" into sOrientation
       end if
       mobileSetAllowedOrientations tOrientations
@@ -35,47 +35,74 @@ end preopenstack
 
 on resizeStack
    lock screen
+   setCardCoords
    updateUI
    unlock screen
 end resizeStack
 
 command updateUI theOrientation
-   local tBrowser, tLoader, tOrientation, tHeight, tWidth, tBrowserLoc, tBrowserRect, tUnit
+   local tBrowser, tLoader, tOrientation, tHeight, tWidth, tUnit
+   local tSafeRect, tEdge
    
    put the long id of widget "body" of card "SivaSivaBrowser" into tBrowser
    put the long id of widget "loader" of card "SivaSivaBrowser" into tLoader
    if isMobile() then
-      put mobileDeviceOrientation() into tOrientation
+      --put mobileDeviceOrientation() into tOrientation
+      put mobileOrientation() into tOrientation
    else
       put sOrientation into tOrientation
    end if
    put the width of this card into tWidth
    put the height of this card into tHeight
+   put safeRect() into tSafeRect
+   put tSafeRect into sBrowserRect
+   
+   -- initial orientations of "face up", "face down", or "unknown" will
+   -- not be drawn correctly if not manually determined like this
+   if tOrientation begins with "f" or tOrientation begins with "u" then
+      if tWidth < tHeight then
+         put "portrait" into tOrientation
+      else
+         put "landscape" into tOrientation
+      end if
+   end if
    
    switch 
       case (tOrientation contains "portrait")
-         put (tWidth/2,(tHeight-50)/2) into tBrowserLoc
-         put (0,0,tWidth,(tHeight - 50)) into tBrowserRect
+         if getPhoneModel() is "iPhoneX" then
+            mobileShowStatusBar
+         end if
          
-         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( round(tWidth/2),tHeight - 25)
+         subtract 50 from item 4 of sBrowserRect
+         put item 4 of sBrowserRect + 25 into tEdge
+         --put (tWidth/2,(tHeight-50)/2) into tBrowserLoc
+         --put (0,0,tWidth,(tHeight - 50)) into tBrowserRect
+         
+         --set loc group "footerNavigation" of card "SivaSivaBrowser" to ( round(tWidth/2),tEdge)
          put tWidth/4 into tUnit
-         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tUnit/2,tHeight-25)
-         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tUnit*1.5,tHeight-25)
-         set the loc of button "share"  of card "SivaSivaBrowser" to (tUnit*2.5,tHeight-25)
-         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tUnit*3.5,tHeight-25)
+         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tUnit/2,tEdge)
+         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tUnit*1.5,tEdge)
+         set the loc of button "share"  of card "SivaSivaBrowser" to (tUnit*2.5,tEdge)
+         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tUnit*3.5,tEdge)
          --show group "footerNavigation" of card "SivaSivaBrowser"
          break
-      
-      case (tOrientation contains "landscape")
-         put (0,0,(tWidth- 50),tHeight) into tBrowserRect
-         put ((tWidth+50)/2,tHeight/2) into tBrowserLoc
          
-         set loc group "footerNavigation" of card "SivaSivaBrowser" to ( 25,tHeight/2)
+      case (tOrientation contains "landscape")
+         if getPhoneModel() is "iPhoneX" then
+            mobileHideStatusBar
+         end if
+         
+         add 50 to item 1 of sBrowserRect
+         put item 1 of sBrowserRect  - 25 into tEdge
+         --put (0,0,(tWidth- 50),tHeight) into tBrowserRect
+         --put ((tWidth+50)/2,tHeight/2) into tBrowserLoc
+         
+         --set loc group "footerNavigation" of card "SivaSivaBrowser" to ( tEdge,tHeight/2)
          put tHeight/4 into tUnit
-         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (25,tUnit/2) 
-         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (25,tUnit*1.5)
-         set the loc of button "share"  of card "SivaSivaBrowser" to (25, tUnit*2.5)
-         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (25, tUnit*3.5)
+         set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tEdge,tUnit/2) 
+         set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tEdge,tUnit*1.5)
+         set the loc of button "share"  of card "SivaSivaBrowser" to (tEdge, tUnit*2.5)
+         set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tEdge, tUnit*3.5)
          --show group "footerNavigation" of card "SivaSivaBrowser"
          break
          
@@ -84,13 +111,17 @@ command updateUI theOrientation
          exit updateUI
    end switch
    
-   set the rect of tBrowser  to tBrowserRect
-   set the loc of tBrowser to tBrowserLoc
-   set the rect of tLoader to tBrowserRect
-   set the loc of tLoader to tBrowserLoc
+   set the rect of tBrowser to sBrowserRect
+   --set the loc of tBrowser to tBrowserLoc
+   set the rect of tLoader to sBrowserRect
+   --set the loc of tLoader to tBrowserLoc
    
    --if (the lockscreen) then unlock screen
 end updateUI
+
+command repositionBrowser
+   set the rect of widget "body" of card "SivaSivaBrowser" to sBrowserRect
+end repositionBrowser
 
 command setBrowserURL pURL
    setJournalFlag (0)
@@ -203,6 +234,7 @@ command resetUI
    set the url of widget "body" of cd "SivaSivaBrowser" to empty
    hide widget "body" of cd "SivaSivaBrowser"
    show widget "loader" of cd "SivaSivaBrowser"
+   put the rect of widget "body" of cd "SivaSivaBrowser" into sBrowserRect
 end resetUI
 
 on closestack
@@ -210,7 +242,7 @@ on closestack
    # because we may be coming to view a web page from any module
    # which should be designated as sLastStack and not these browers.
    if isMobile() then
-      mobileSetAllowedOrientations "portrait,portrait upside down"
+      --mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
 end closestack
 

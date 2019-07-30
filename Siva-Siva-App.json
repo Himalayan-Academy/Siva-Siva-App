@@ -54,8 +54,12 @@
       "file": "models/model_SivaSivaTracking.livecodescript"
     },
     {
-      "name": "behavior_PortalInit",
-      "file": "behaviors/behavior_PortalInit.livecodescript"
+      "name": "behavior_Portal",
+      "file": "modules/portal/behavior_Portal.livecodescript"
+    },
+    {
+      "name": "behavior_PortalCard",
+      "file": "modules/portal/behavior_PortalCard.livecodescript"
     },
     {
       "name": "behavior_PortalViewScrolling",

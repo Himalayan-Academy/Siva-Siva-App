@@ -7,6 +7,8 @@ Script "stack_gems_graphic_id_1186"
 
 
 on mouseUp
+   lock screen
    fetchQuote
    fetchImage
+   unlock screen
 end mouseUp

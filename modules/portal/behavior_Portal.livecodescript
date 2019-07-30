@@ -1,9 +1,4 @@
-Script "stack_Siva-Siva-Portal_"
-
-/*
-# Name: stack "Siva-Siva-Portal"
-# ID: stack "Siva-Siva-Portal"
-*/
+script "behavior_Portal"
 
 
 global sConfigA
@@ -13,19 +8,22 @@ on preOpenStack
    ntinfo ("Portal: lockscreen is: " & (the lockscreen) )
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-      set the fullscreenmode of this stack to "showAll"
+      --mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+      --set the fullscreenmode of this stack to "showAll"
+      set the fullscreenmode of this stack to empty
    end if
-   
- 
 end preOpenStack
 
+
 on openStack
-   lock screen
-   put portal_GetModulesList() into tLastNavModule
+
+   local tLastStack
+   if the lockscreen <> true then lock screen
    
-   if not (portal_GetLastStack() is "Siva-Siva-App" or  Portal_GetLastStack() is empty) then
-      switch Portal_GetLastStack()
+   
+   put portal_GetLastStack() into tLastStack
+   if not (tLastStack is "Siva-Siva-App" or tLastStack is empty) then
+      switch tLastStack
          case "Siva-Siva-App"
             go card  "Home"
             break
@@ -38,21 +36,18 @@ on openStack
          case "color-meditation"
          case "daily-lesson"
          case "lexicon"
-            
-            --case (tLastNavModule= "Look" OR  tLastNavModule= "Websites" )
-            lock screen
             go to card "modulesList"
-            --dispatch loadModulesList to group "globalPortalMap" of card "modulesList"  with portal_GetModulesList() 
             send "LoadModulesList portal_GetModulesList()" to card "modulesList"  in 0 seconds
-            unlock screen
             break
-            
          default
             go card  "mainNav"
       end switch
    end if
-unlock screen
+   if the lockscreen = true then unlock screen
+   
+   #unlock screen
 end openstack
+
 
 on closestack
    portal_SetLastStack "Siva-Siva-Portal"

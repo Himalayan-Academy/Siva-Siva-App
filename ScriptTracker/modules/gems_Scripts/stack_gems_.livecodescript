@@ -7,10 +7,8 @@ Script "stack_gems_"
 
 
 on preopenstack
-   set the fullscreenmode of this stack to "showAll"
-   if isMobile() then    
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-      set the fullscreenmode of this stack to "showAll"
+   if isMobile() then
+      mobileHideStatusBar
    end if
 end preopenstack
 
@@ -19,5 +17,33 @@ on closestack
 end closestack
 
 on journalResume  pDataA, pEntryA
-   dispatch restoreFromJournalEntry to card "images-quotes" with pDataA
+   dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
 end journalResume
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+on updateUI
+   local tFooter, tQuote, tRect, tControl
+   put the long id of grp "footerNav" into tFooter
+   set the width of tFooter to CardWidth()
+   bottomCenterMe tFooter
+   put the long id of grp "quoteControl" into tControl
+   put (0,321,CardWidth(),CardHeight()) into tRect
+   set the rect of tControl to tRect
+   if there is a control "Title" then
+      put the long id of fld "Title" into tControl
+      topCenterMe tControl, 7
+      put the long id of btn "goNextRealm" into tControl
+      topRightMe tControl
+      put the long id of btn "loadContext" into tControl
+      topLeftMe tControl
+      set the rect of btn "cancel" to the rect of tControl
+      set rect of widget "readContext" to (10, the bottom of btn "cancel" + 6, \
+            CardWidth() - 10, the top of grp "footerNav" - 10)
+   end if
+end updateUI

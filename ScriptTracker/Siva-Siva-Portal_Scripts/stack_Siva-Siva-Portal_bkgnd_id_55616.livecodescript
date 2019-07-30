@@ -9,9 +9,14 @@ Script "stack_Siva-Siva-Portal_bkgnd_id_55616"
 
 
 on mouseup
+   local tTarget
    put the short name of the target into tTarget
    switch tTarget
       case "Settings-Gear"
+         if the platform is "iPhone" then
+            # handle the shift of the main nav screen when returning
+            set the destroyStack of this stack to false
+         end if
          portal_GoStack "settings"
          break
       case "goToMainNav" 
