@@ -3,7 +3,7 @@ Script "stack_Siva-Siva-Portal_card_id_7993"
 /*
 # Name: card "Surprise" of stack "Siva-Siva-Portal"
 # ID: card id 7993 of stack "Siva-Siva-Portal"
-# Behavior: stack "behavior_PortalInit"
+# Behavior: stack "behavior_PortalCard"
 */
 
 

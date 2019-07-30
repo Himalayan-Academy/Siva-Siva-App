@@ -1,8 +1,4 @@
 # Siva-Siva-Portal
-**stack "Siva-Siva-Portal"**
-* ID: stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_.livecodescript)
-
 **widget "go-home-portal" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
 * ID: widget id 7281 of bkgnd id 7279 of stack "Siva-Siva-Portal"
 * Widget Kind: com.livecode.widget.svgpath
@@ -111,13 +107,9 @@
 * Behavior: button id 1005 of stack "revDataGridLibrary"
 * [stack_Siva-Siva-Portal_group_id_53160](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_group_id_53160.livecodescript)
 
-**button "fetch favorites" of card "fetchFavorites" of stack "Siva-Siva-Portal"**
-* ID: button id 28648 of card id 28647 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_button_id_28648](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_28648.livecodescript)
-
 **card "Surprise" of stack "Siva-Siva-Portal"**
 * ID: card id 7993 of stack "Siva-Siva-Portal"
-* Behavior: stack "behavior_PortalInit"
+* Behavior: stack "behavior_PortalCard"
 * [stack_Siva-Siva-Portal_card_id_7993](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_7993.livecodescript)
 
 **group "share-ui" of card "Surprise" of stack "Siva-Siva-Portal"**
