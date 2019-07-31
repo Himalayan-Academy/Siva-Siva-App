@@ -25,7 +25,9 @@ on mouseUp
    
    switch tTarget
       case "go-home-portal"
+         lock screen
          portal_GoStack ("Siva-Siva-Portal")
+         unlock screen
          break
          
       Case "settings-gear"
