@@ -291,7 +291,9 @@ function getIconForModule pEntryA
 end getIconForModule
 
 command goHome
+   lock screen
    portal_GoStack  "Siva-Siva-Portal"
+   unlock screen
 end goHome
 
 on closestack
