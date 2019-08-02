@@ -10,8 +10,6 @@ on mouseUp
    if the platform is "iphone" then
       clearBoard
       hide grp "puzzleControls"
-      --set the loc of btn "navigationOverlay" to the loc of this card
-      --show btn "navigationOverlay"
    end if
    portal_GoStack ("Siva-Siva-Portal")
 end mouseUp

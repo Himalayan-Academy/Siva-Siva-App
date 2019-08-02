@@ -51,7 +51,3 @@
 * ID: button id 11502 of card id 1028 of stack "wordpuzzles"
 * [stack_wordpuzzles_button_id_11502](./../../ScriptTracker/modules/wordpuzzles_Scripts/stack_wordpuzzles_button_id_11502.livecodescript)
 
-**button "back-arrow-test" of card "word-puzzle" of stack "wordpuzzles"**
-* ID: button id 11834 of card id 1028 of stack "wordpuzzles"
-* [stack_wordpuzzles_button_id_11834](./../../ScriptTracker/modules/wordpuzzles_Scripts/stack_wordpuzzles_button_id_11834.livecodescript)
-
