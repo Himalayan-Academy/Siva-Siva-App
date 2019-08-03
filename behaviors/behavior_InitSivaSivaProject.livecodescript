@@ -41,6 +41,7 @@ local LocalArray,sHome,sOnlineStatus,sNow,sThen
 --> Events
 
 on preOpenStack
+   --breakpoint
    set the fullscreenmode of this stack to "showAll"
    -- start using this stack
    # duplicates what's on the lib_SivaSiva, but we need to fire right away
@@ -70,7 +71,7 @@ command init_AppConfiguration
    logging "start loading libraries"
    
    init_LoadLibraries
-   
+   --breakpoint
    logging "end loading libraries"
    
    -- get long id's for global custom controls on card "custom-controls

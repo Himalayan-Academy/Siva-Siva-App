@@ -47,7 +47,7 @@
     },
     {
       "name": "lib_CustomControls",
-      "file": "libraries/lib_CustomControls.livecodescript"
+      "file": "libraries/lib_CustomControls.livecode"
     },
     {
       "name": "model_SivaSivaTracking",
