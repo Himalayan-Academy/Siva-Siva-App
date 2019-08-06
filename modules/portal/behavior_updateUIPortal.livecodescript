@@ -1,4 +1,71 @@
 ﻿script "behavior_updateUIPortal"
+global sConfigA
+local sStartLoc,sScreenRect
+local sLastImage, sMainImage
+
+
+##################
+-- At the top of this script we use functions and handlers
+-- related to the logic of stack contents 
+-- the idea is not to put that code in the binary stack
+-- the stack is applied as a behavior to multiple cards
+-- as such, you may need to include logic related related to a given card here
+-- BR:
+-- 2019-08 Caveat: Brian: the surprise card still has an old "behavior_PortalCard"
+-- which we many need to deprecate and more the logic for behavior on the 
+-- old "panel" navigation to here. I will leave that to you.
+
+on preopenCard
+   local pControl
+   
+   setCardCoords "portrait"
+   updateUIPortal
+   audioIsRunning
+   ntInfo ("Home card rect: " & the rect of this card)
+   put empty into fld "homeStoryText"
+   hide image "homeStoryMainImage"
+   put the long id of fld "homeStoryText" into pControl
+   centerMe pControl,0,5
+   ntInfo ("fld homestoryText loc: "& the loc of pControl)
+   dispatch "initializeNarrative" to grp "homeStory"
+   show btn "brandLogo"
+end preopenCard
+
+on opencard
+   News_Fetch
+end opencard
+
+command  setDefaultImage
+   local pImage
+   # store brand image; set stage to screen to 1
+   put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
+   --put 0 into sLastImage
+   put  empty into sConfigA["narrativeScene"]
+   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   set the filename of sMainImage to  pImage
+   setImageToFullCardLoc sMainImage,"portrait",0,0
+   centerMe sMainImage,0,0
+   show btn "brandLogo"
+   show sMainImage with visual effect "dissolve"
+end  setDefaultImage
+
+
+#######################
+
+command _RESPONSIVE
+end _RESPONSIVE
+
+#######################
+-- RESPONSIVE CODE
+-- This section is related to geometry of objects
+-- Please do not place functions or handlers here
+-- that relate to the stack content logic 
+-- of course, if the content logic requires updating the binary
+-- with new objects, then those object will need to added
+-- to upDateUIPortal handler in the switch 
+-- to deals with different cards
+###############
+
 after preopencard
    lock screen
    setCardCoords "portrait"
