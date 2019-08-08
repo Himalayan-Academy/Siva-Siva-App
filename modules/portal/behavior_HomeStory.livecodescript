@@ -12,12 +12,18 @@ local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
 
 
 command initializeNarrative
+   --breakpoint
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
       getContent "Deities","Words of Our Master"   # make random later
    end if
+   
+   # sConfigAsConfigA["narrationScene"]  tell us where we have in the current story
+   # so that we can come back and start from where we left off.
+   
    if sConfigA["narrationScene"] = empty then
+      
       # it means this a brand new session, start of the app.
       #  or, the user finished to story and back at a new beginning
       setDefaultImage  # on the card script
@@ -27,8 +33,17 @@ command initializeNarrative
    end if
    # responsive for the qute
    
-   
 end initializeNarrative
+
+-----------------------------------------
+## Trying to find architect that is scaleble and maintainable
+## "getContent" is meant to "get a story"
+## we should be able get and slide show in content store in that app
+## slide show from the internet
+## "a narrative" for the server , to be developed that called XML
+##  which is a description of scened (see spec a google doc)
+## for now is is hard wired to in-app photo + quote from the dBase
+## this is just the beginning, It weill need to be responsive
 
 
 command  getContent pPhotos,pText
@@ -50,6 +65,7 @@ end getContent
 
 
 command goNextScene
+   breakpoint
    local tImage, tPath
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
    if sConfigA["narrationScene"] = empty then
@@ -64,7 +80,8 @@ command goNextScene
    # this keeps the Scene position when we leave this stack and come back
    put empty into fld "HomeStoryText"
    # load an image
-   if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
+   if (sLastImage is 0 )  then add 1 to sLastImage
+   --if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
    if not (the vis of sMainImage) then
       if sLastImage > sImageCount then 
          put 0 into sLastImage
