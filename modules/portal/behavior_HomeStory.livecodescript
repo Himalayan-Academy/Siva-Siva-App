@@ -65,7 +65,6 @@ end getContent
 
 
 command goNextScene
-   breakpoint
    local tImage, tPath
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
    if sConfigA["narrationScene"] = empty then
@@ -114,7 +113,10 @@ command loadNextQuote pQuoteNo
    local tControl
    lock screen for visual effect
    set the itemdel to "|"
-   put item pQuoteNo  of sQuoteList into fld "homeStoryText"
+   # random quote
+   put random(the number of lines of sQuoteList) into tLine
+   put item tLine  of sQuoteList into fld "homeStoryText"
+   --put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
    hide sMainImage -- with effect "dissolve" 
