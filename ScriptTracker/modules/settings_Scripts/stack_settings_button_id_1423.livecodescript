@@ -7,5 +7,7 @@ Script "stack_settings_button_id_1423"
 
 
 on mouseUp
+   lock screen
    portal_GoStack ("Siva-Siva-Portal")
+   unlock screen
 end mouseUp
