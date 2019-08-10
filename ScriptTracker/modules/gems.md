@@ -31,12 +31,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_gems_widget_id_1185](./../../ScriptTracker/modules/gems_Scripts/stack_gems_widget_id_1185.livecodescript)
 
-**bkgnd "footerNav" of stack "gems"**
-* ID: bkgnd id 1160 of stack "gems"
-
-* Background on card IDs: 1002, 1184, 1179
-* [stack_gems_bkgnd_id_1160](./../../ScriptTracker/modules/gems_Scripts/stack_gems_bkgnd_id_1160.livecodescript)
-
 **image "gems-image" of card "images-quotes" of stack "gems"**
 * ID: image id 1168 of card id 1002 of stack "gems"
 * [stack_gems_image_id_1168](./../../ScriptTracker/modules/gems_Scripts/stack_gems_image_id_1168.livecodescript)

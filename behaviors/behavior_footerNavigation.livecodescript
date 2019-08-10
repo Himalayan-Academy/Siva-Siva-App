@@ -1,6 +1,18 @@
 ﻿script "behavior_footerNavigation"
 global sConfigA
-constant kButtons = "home,journal,share,settings"
+local sButtons
+
+on preOpenControl
+   local tStack
+   put the short name of this stack into tStack
+   if tStack is "gems" or tStack is "lib_CustomControls" then
+      put "home,journal,save,share,settings" into sButtons
+   else
+      put "home,journal,share,settings" into sButtons
+      hide btn "save" of me
+      send "resizeControl" to me
+   end if
+end preOpenControl
 
 on mouseup
    local tTarget, tShareControl, tControl
@@ -35,6 +47,14 @@ on mouseup
          portal_GoStack "Journal"
          break
          
+      case "save"
+         AddJournalEntry "pReadQuote"
+         set the hilited of control tTarget to true
+         move control target relative 0,-100 in 500 milliseconds
+         move control target relative 0,100 in 110 milliseconds
+         send "unHiliteBtn tTarget" to me in 1 seconds
+         break
+         
       case "share"
          lock screen
          put sConfigA["shareControl"] into tShareControl
@@ -67,21 +87,21 @@ end mouseup
 
 
 command unHiliteBtn pTarget
-   set the hilited of control ptarget to false
+   set the hilited of control pTarget to false
 end unHiliteBtn
 
 
 on resizeControl
    local tHSpace, tV, tH, tControl
-   put the width of me / 4 into tHSpace
+   put the width of me / (the number of items in sButtons) into tHSpace
    put item 2 of the loc of me into tV
    put the left of me + (tHSpace / 2) into tH
    
-   repeat for each item tName in kButtons
-      put the long name of widget tName of me into tControl
-      set the width of tControl to tHSpace
-      set the loc of tControl to (tH, tV)
-      put the long name of grc tName of me into tControl
+   repeat for each item tName in sButtons
+      --      put the long name of widget tName of me into tControl
+      --      set the width of tControl to tHSpace
+      --      set the loc of tControl to (tH, tV)
+      put the long name of btn tName of me into tControl
       set the width of tControl to tHSpace
       set the loc of tControl to (tH, tV)
       add tHSpace to tH

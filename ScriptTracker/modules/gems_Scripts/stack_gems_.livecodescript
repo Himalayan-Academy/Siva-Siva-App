@@ -29,7 +29,7 @@ end resizeStack
 
 on updateUI
    local tFooter, tQuote, tRect, tControl
-   put the long id of grp "footerNav" into tFooter
+   put the long id of grp "footerNavGroup" into tFooter
    set the width of tFooter to CardWidth()
    bottomCenterMe tFooter
    put the long id of grp "quoteControl" into tControl
@@ -44,6 +44,6 @@ on updateUI
       topLeftMe tControl
       set the rect of btn "cancel" to the rect of tControl
       set rect of widget "readContext" to (10, the bottom of btn "cancel" + 6, \
-            CardWidth() - 10, the top of grp "footerNav" - 10)
+            CardWidth() - 10, the top of tFooter - 10)
    end if
 end updateUI
