@@ -23,13 +23,11 @@ on preopenCard
    audioIsRunning
    ntInfo ("Home card rect: " & the rect of this card)
    put empty into fld "homeStoryText"
-   hide image "homeStoryMainImage"
    put the long id of fld "homeStoryText" into pControl
    centerMe pControl,0,5
    ntInfo ("fld homestoryText loc: "& the loc of pControl)
    dispatch "initializeNarrative" to grp "homeStory"
    show btn "brandLogo"
-   
 end preopenCard
 
 on opencard
@@ -37,8 +35,14 @@ on opencard
 end opencard
 
 command  setDefaultImage 
+   --breakpoint
+   
    local pImage
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
+   
+   # new install boot
+   if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
+   
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
    put brandImagesPaths()  into tPaths

@@ -22,16 +22,17 @@ command initializeNarrative
    # sConfigAsConfigA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
    
-   if sConfigA["narrationScene"] = empty then
+   if sConfigA["narrationScene"] <> empty then
       
-      # it means this a brand new session, start of the app.
-      #  or, the user finished to story and back at a new beginning
-      setDefaultImage  # on the card script
-   else
+      --      # it means this a brand new session, start of the app.
+      --      #  or, the user finished to story and back at a new beginning
+      --      setDefaultImage  # on the card script
+      --   else
       goNextScene
-      if (the lockscreen) then unlock screen
    end if
-   # responsive for the qute
+   
+   if (the lockscreen) then unlock screen
+
    
 end initializeNarrative
 
