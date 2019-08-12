@@ -5,6 +5,7 @@ local sButtons
 on preOpenControl
    local tStack
    put the short name of this stack into tStack
+   --set the visible of me to true
    if tStack is "gems" or tStack is "lib_CustomControls" then
       put "home,journal,save,share,settings" into sButtons
    else
@@ -15,7 +16,7 @@ on preOpenControl
 end preOpenControl
 
 on mouseup
-   local tTarget, tShareControl, tControl
+   local tTarget, tShareControl, tControl, tCard
    local tBrowserExists, tBrowser, tBrowserRect
    local tCdHeight, tSharingHeight
    
@@ -34,8 +35,13 @@ on mouseup
    
    switch tTarget
       case "home"
-         if the short name of this card is "surprise_verse" then
+         put the short name of this card into tCard
+         if tCard is "surprise_verse" then
             go to card "surprise_verses"
+         else if tCard is "Surprise" and \
+               there is a card "mainNav" then
+            --set the visible of me to false
+            go to card "mainNav"
          else
             lock screen
             portal_GoStack ("Siva-Siva-Portal")
@@ -98,9 +104,6 @@ on resizeControl
    put the left of me + (tHSpace / 2) into tH
    
    repeat for each item tName in sButtons
-      --      put the long name of widget tName of me into tControl
-      --      set the width of tControl to tHSpace
-      --      set the loc of tControl to (tH, tV)
       put the long name of btn tName of me into tControl
       set the width of tControl to tHSpace
       set the loc of tControl to (tH, tV)

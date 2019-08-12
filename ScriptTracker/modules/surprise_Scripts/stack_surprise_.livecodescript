@@ -11,7 +11,7 @@ local sFromJournalA,sCollection
 
 
 on preopenstack
-   set the fullscreenmode of this stack to "showAll" -- better for wider screens
+   --set the fullscreenmode of this stack to "showAll" -- better for wider screens
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
@@ -25,12 +25,50 @@ on opencard
    audioIsRunning
 end opencard
 
+on closeStack
+   portal_SetLastStack "Surprise"
+end closeStack
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+on updateUI
+   local tFooter, tCard, tLoc
+   put the long id of grp "footerNavigation" into tFooter
+   set the width of tFooter to CardWidth()
+   bottomCenterMe tFooter
+   
+   put the short name of this card into tCard
+   switch tCard
+      case "surprise"
+         put the loc of tFooter into tLoc
+         subtract 89 from item 2 of tLoc
+         set the loc of btn "Surprise" to tLoc
+         break
+      case "surprise_verse"
+         break
+      case "surprise_art"
+         break
+      case "surprise_darshan"
+         break
+      case "surprise_audio"
+         break
+      case "surprise_video"
+         break
+   end switch
+end updateUI
+
 # go to random media type
 # if the user is not connected to the network
 # take him to verses.
 # check the script if each card you know what happens
 
 command setUpSurprise
+   local tTarget, tCard
    if connectivity_PingServer() = "true" then 
       put "verse,audio,darshan,art,video" into tTargets
       put item (random(5)) of tTargets into tTarget
@@ -48,18 +86,19 @@ command setUpSurprise
    end if
 end setUpSurprise
 
-command fetchRandomQuote pSubject  # same as sCollection 
+command fetchRandomQuote pSubject  # same as sCollection
+   local tSQL, tConnectionID, aSelectedQuotes, tQuote
    put the uRandomQuoteBySubjectQuery of this stack into tSQL
    replace ":1" with pSubject in tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet("quote", tConnectionID) into aSelectedQuotes
-   put textDecode ( aSelectedQuotes[1]["content"], UTF8)  into tQuote
+   put textDecode ( aSelectedQuotes[1]["content"], "UTF8")  into tQuote
    replace "\n" with cr in tQuote
    put tQuote into  sQuoteData["content"]
-   put textDecode ( aSelectedQuotes[1]["citation"], UTF8)  into sQuoteData["citation"]
-   put textDecode ( aSelectedQuotes[1]["subject"], UTF8)  into sQuoteData["subject"]
-   put textDecode ( aSelectedQuotes[1]["author"], UTF8)  into sQuoteData["author"]
+   put textDecode ( aSelectedQuotes[1]["citation"], "UTF8")  into sQuoteData["citation"]
+   put textDecode ( aSelectedQuotes[1]["subject"], "UTF8")  into sQuoteData["subject"]
+   put textDecode ( aSelectedQuotes[1]["author"], "UTF8")  into sQuoteData["author"]
    
    # Later pass source to call browser to read source,
    # after we get internet connectivity thing more robust
@@ -79,6 +118,7 @@ end getQuoteData
 # other wise it comes from the mouse on butttons of that card
 
 command  pokeACollection
+   local tCollection
    put "Tayumanvar,Vedas,Tirukural,Words of Our Master,Atti Chudi" into tCollection
    put item (random(5)) of tCollection into tCollection
    setCurrentCollection tCollection
@@ -109,6 +149,7 @@ function mediaUrl_Get
 end mediaUrl_Get
 
 on getNextItem
+   local tCard
    put the short name of this card into tCard
    switch tCard
       case "surprise_verse"
@@ -129,8 +170,3 @@ on getNextItem
          break
    end switch
 end getNextItem
-
-on closeStack
-   portal_SetLastStack "Surprise"
-end closeStack
-

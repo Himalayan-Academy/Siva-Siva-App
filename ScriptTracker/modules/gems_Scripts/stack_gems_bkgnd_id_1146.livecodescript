@@ -75,6 +75,6 @@ on resizeControl
    --set the rect of grc "quoteBackground" of me to the rect of me
    set the right of grp "goNextQuote" of me to CardWidth() + 13
    put (9, the top of tControl + 21, CardWidth() - 5, \
-         the top of grp "footerNavGroup" of this cd - 12) into tRect
+         the top of grp "footerNavigation" of this cd - 12) into tRect
    set the rect of fld "gems-quote" of me to tRect
 end resizeControl

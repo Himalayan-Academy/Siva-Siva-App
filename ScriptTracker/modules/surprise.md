@@ -68,12 +68,6 @@
 * Behavior: stack "siva_fields_behavior"
 * [stack_surprise_field_id_1265](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1265.livecodescript)
 
-**bkgnd "footerNavigation" of stack "surprise"**
-* ID: bkgnd id 1276 of stack "surprise"
-
-* Background on card IDs: 1494, 1002, 1106, 1031, 1421, 1039, 1037
-* [stack_surprise_bkgnd_id_1276](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1276.livecodescript)
-
 **bkgnd "go-next" of stack "surprise"**
 * ID: bkgnd id 1446 of stack "surprise"
 
