@@ -65,6 +65,7 @@ end getContent
 
 
 command goNextScene
+   --breakpoint
    local tImage, tPath
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
    if sConfigA["narrationScene"] = empty then
@@ -91,7 +92,9 @@ command goNextScene
          if it is "Yes" then goNextScene
          exit goNextScene
       end if
-      put line  sLastImage of sImageList into tPath
+      put random(the number of lines of sImageList) into tLine
+      put line tLine of sImageList into tPath
+      # put line  sLastImage of sImageList into tPath
       loadNewImage tPath
    else
       loadNextQuote sLastImage

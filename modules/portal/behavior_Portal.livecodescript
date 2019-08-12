@@ -1,8 +1,6 @@
 ﻿script "behavior_Portal"
 
-
 global sConfigA
-
 
 on preOpenStack
    ntinfo ("Portal: lockscreen is: " & (the lockscreen) )
@@ -11,7 +9,6 @@ on preOpenStack
       set the fullscreenmode of this stack to empty
    end if
 end preOpenStack
-
 
 on openStack
    
@@ -45,6 +42,19 @@ on openStack
    #unlock screen
 end openstack
 
+# set a hidden preference of disk to call of 5 - 10
+# brand images. We will make it generic and save just integer
+
+
+function getUserPreferences pPref
+   put getPref ("preferences/modules/portal") into aPortalPreferences
+   put aPortalPreferences[pPref] into pPref
+   return pPref
+end getUserPreferences
+
+command saveUserPrefs sBrandImageNumber
+   setPref "preferences/modules/portal/brandImageNumber", sBrandImageNumber
+end saveUserPrefs
 
 on closestack
    portal_SetLastStack "Siva-Siva-Portal"
