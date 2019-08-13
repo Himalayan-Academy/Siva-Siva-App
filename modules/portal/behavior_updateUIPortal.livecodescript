@@ -1,7 +1,7 @@
 ﻿script "behavior_updateUIPortal"
 global sConfigA
 local sStartLoc,sScreenRect
-local sLastImage, sMainImage
+local sLastImage, sMainImage,sBrandImageNumber
 
 
 ##################
@@ -17,13 +17,12 @@ local sLastImage, sMainImage
 
 on preopenCard
    local pControl
-   
    setCardCoords "portrait"
+   setDefaultImage
    updateUIPortal
    audioIsRunning
    ntInfo ("Home card rect: " & the rect of this card)
    put empty into fld "homeStoryText"
-   hide image "homeStoryMainImage"
    put the long id of fld "homeStoryText" into pControl
    centerMe pControl,0,5
    ntInfo ("fld homestoryText loc: "& the loc of pControl)
@@ -35,20 +34,69 @@ on opencard
    News_Fetch
 end opencard
 
-command  setDefaultImage
+command  setDefaultImage 
+   --breakpoint
+   
    local pImage
-   # store brand image; set stage to screen to 1
-   put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into pImage
-   --put 0 into sLastImage
-   put  empty into sConfigA["narrativeScene"]
+   put getUserPreferences("brandImageNumber") into sBrandImageNumber
+   
+   # new install boot
+   if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
+   
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   
+   put brandImagesPaths()  into tPaths
+   # store brand image; set stage to screen to 1
+   put line  sBrandImageNumber of tPaths into pImage
    set the filename of sMainImage to  pImage
+   
+   --put  empty into sConfigA["narrationScene"] # wrong place for this!
+   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    show btn "brandLogo"
    show sMainImage with visual effect "dissolve"
+   
+   # we have to save the number, this was on next start up
+   # it will change....
+   if sBrandImageNumber = (the number of lines of tPaths) then
+      put 1 into sBrandImageNumber
+   else 
+      add 1 to  sBrandImageNumber
+   end if
+   saveUserPrefs sBrandImageNumber
 end  setDefaultImage
 
+## I suppose there is a better way to store these
+## to KISS suggest we do it right here.
+## see the close stack handler for the number increment
+
+
+function brandImagesPaths
+   put "app-img_who-is-siva_1200x800," &\
+         "app-img_06-sadasiva_opt-80_552w-portrait,"&\
+         "app-img_01-sadyojata_opt-80_552w-portrait,"&\
+         "app-img_02-vamadeva_opt-80_552w-portrait,"&\
+         "app-img_03-aghora_opt-80_552w-portrait,"&\
+         "app-img_03_painting_tree_552w-portrait,"&\
+         "app-img_04-tatpurusha_opt-80_552w-portrait,"&\
+         "app-img_05-ishana_opt-80_552w-portrait,"&\
+         "app-img_28_sahasrara_736h-landscape,"&\
+         "app-img_70's_siva_poster_552w-portrait,"&\
+         "app-img_book_siva_face_736h-square,"&\
+         "app-img_book_siva_yogi_big_736h-square,"&\
+         "app-img_hap-0140_552w-portrait,"&\
+         "app-img_shivlinga-amarnath-shiva_736h-landscape,"&\
+         "app-img_sinha_9_552w-portrait,"&\
+         "app-img_siva_552w-portrait"  \
+         into brandImages
+   repeat for each item x in brandImages
+      put path_Assets() & "img/photography/" & x & "/" & x &"_med.jpg" & cr after pPaths
+   end repeat
+   delete last char of pPaths
+   return pPaths
+end brandImagesPaths
 
 #######################
 
@@ -86,6 +134,7 @@ end resizeStack
 
 
 command updateUIPortal
+ 
    local pControl, tBrandImage, tBottomMargin
    
    if safeBottomMargin() > 0 then
@@ -123,8 +172,6 @@ command updateUIPortal
          
          
          put long Id of img "HomeStoryMainImage" into pControl
-         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tBrandImage
-         set filename of pControl to tBrandImage
          setImageToFullCardLoc pControl, "portrait", 0
          centerMe pControl, 0, 0
          
