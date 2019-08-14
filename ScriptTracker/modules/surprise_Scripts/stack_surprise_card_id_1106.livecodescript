@@ -8,7 +8,7 @@ Script "stack_surprise_card_id_1106"
 
 on opencard
    positionQuote
-   pass opencard 
+   pass opencard
 end opencard
 
 on closeCard
@@ -17,8 +17,10 @@ on closeCard
 end closeCard
 
 on setUpQuote
+   local aQuoteDetails
+   
    lock screen
-   put getQuoteData() into  aQuoteDetails
+   put getQuoteData() into aQuoteDetails
    put aQuoteDetails["content"] into fld "random-verse" of card "surprise_verse"
    put cr & cr & aQuoteDetails["author"] after fld "random-verse" of card "surprise_verse"
    set the textalign of line -1 of   fld "random-verse" of card "surprise_verse" to left
@@ -38,6 +40,8 @@ on SetUpCard
 end SetUpCard
 
 on positionQuote
+   local tRequiredHeight
+   
    wait 200 milliseconds # for android since we are setting the accelleratedRendering
    # function here to get the formatted height of the quote
    # set the field height to that height
@@ -59,11 +63,12 @@ on positionQuote
 end positionQuote
 
 command share_Items
-   -- put mediaUrl_Get() into  sShareItemsA["url"]  
+   local tShareItemsA
+   -- put mediaUrl_Get() into tShareItemsA["url"]  
    # later we get the URL for the book from which the verse was taken and pass that.
-   put "Sacred Verses" into sShareItemsA["subject"]
-   put fld "random-verse" & cr & cr & "From the SivaSiva app." into sShareItemsA["text"]
-   return sShareItemsA
+   put "Sacred Verses" into tShareItemsA["subject"]
+   put fld "random-verse" & cr & cr & "From the SivaSiva app." into tShareItemsA["text"]
+   return tShareItemsA
 end share_Items
 
 

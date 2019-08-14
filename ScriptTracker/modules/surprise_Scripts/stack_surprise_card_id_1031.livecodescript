@@ -21,6 +21,7 @@ on opencard
 end opencard
 
 on getRandomAudio
+   local gotIt, tURL
    hide fld "audioDetails"
    -- showBusyIndicator true,"Loading"
    
@@ -73,6 +74,7 @@ on closeCard
 end closeCard
 
 command showAudioDetails
+   local tRequiredHeight
    put textDecode (getMediaItemMetadata(),"UTF8") into  fld "audioDetails" 
    set the textsize of line 1 of fld "audioDetails" to 22
    set the textstyle of line 1 of fld "audioDetails" to "bold"
@@ -102,12 +104,13 @@ command showAudioDetails
          set the loc of fld "audioDetails" to the loc of this card
       end if
    end if
-   show fld "audioDetails" with visual effect reveal right
+   show fld "audioDetails" with visual effect "reveal right"
 end showAudioDetails
 
 command share_Items
-   put mediaUrl_Get() into  sShareItemsA["url"]  
-   put "Awesome Audio!" into sShareItemsA["subject"]
-   put  "From the SivaSiva app." & cr & cr & fld "audioDetails" into sShareItemsA["text"]
-   return sShareItemsA
+   local tShareItemsA
+   put mediaUrl_Get() into  tShareItemsA["url"]  
+   put "Awesome Audio!" into tShareItemsA["subject"]
+   put  "From the SivaSiva app." & cr & cr & fld "audioDetails" into tShareItemsA["text"]
+   return tShareItemsA
 end share_Items

@@ -79,6 +79,19 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_surprise_widget_id_1493](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1493.livecodescript)
 
+**bkgnd "share-ui" of stack "surprise"**
+* ID: bkgnd id 1509 of stack "surprise"
+* Behavior: stack "behavior_SocialShare"
+
+* Background on card IDs: 1494, 1037
+* [stack_surprise_bkgnd_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1509.livecodescript)
+
+**bkgnd "header" of stack "surprise"**
+* ID: bkgnd id 1282 of stack "surprise"
+
+* Background on card IDs: 1494, 1002, 1106, 1031, 1421, 1039, 1037
+* [stack_surprise_bkgnd_id_1282](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1282.livecodescript)
+
 **card "surprise" of stack "surprise"**
 * ID: card id 1494 of stack "surprise"
 * [stack_surprise_card_id_1494](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1494.livecodescript)
@@ -90,20 +103,6 @@
 **button "Surprise" of card "surprise" of stack "surprise"**
 * ID: button id 1495 of card id 1494 of stack "surprise"
 * [stack_surprise_button_id_1495](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1495.livecodescript)
-
-**group "share-ui" of card "surprise" of stack "surprise"**
-* ID: group id 1509 of card id 1494 of stack "surprise"
-* Behavior: stack "behavior_SocialShare"
-* [stack_surprise_group_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1509.livecodescript)
-
-**widget "close-sharing" of group "share-ui" of card "surprise" of stack "surprise"**
-* ID: widget id 1511 of group id 1509 of card id 1494 of stack "surprise"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_surprise_widget_id_1511](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1511.livecodescript)
-
-**card "surprise_verses" of stack "surprise"**
-* ID: card id 1002 of stack "surprise"
-* [stack_surprise_card_id_1002](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1002.livecodescript)
 
 **group "verse-collections" of card "surprise_verses" of stack "surprise"**
 * ID: group id 1303 of card id 1002 of stack "surprise"
@@ -125,16 +124,6 @@
 **image "headset_portrait_bkgnd_opt-50.jpg" of card "surprise_audio" of stack "surprise"**
 * ID: image id 1118 of card id 1031 of stack "surprise"
 * [stack_surprise_image_id_1118](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_image_id_1118.livecodescript)
-
-**group "share-ui" of card "surprise_audio" of stack "surprise"**
-* ID: group id 1485 of card id 1031 of stack "surprise"
-* Behavior: stack "behavior_SocialShare"
-* [stack_surprise_group_id_1485](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1485.livecodescript)
-
-**widget "close-sharing" of group "share-ui" of card "surprise_audio" of stack "surprise"**
-* ID: widget id 1487 of group id 1485 of card id 1031 of stack "surprise"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_surprise_widget_id_1487](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1487.livecodescript)
 
 **card "surprise_video" of stack "surprise"**
 * ID: card id 1421 of stack "surprise"
