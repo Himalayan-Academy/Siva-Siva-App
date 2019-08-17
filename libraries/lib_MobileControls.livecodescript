@@ -21,8 +21,7 @@ The suggestion is to split this into general and more specific libraires - for i
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId 
-local pPlayerName -- jg: may not need this any more; check
+local sPlayerId, sPlayerRect
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -39,54 +38,74 @@ local pPlayerName -- jg: may not need this any more; check
 --      put 1 into gPlayerIsRunning # use this later when stopping the sound...
 -- CHANGES
 --         07/20/2016: Brahmanathaswami - updated
+--         08/15/2019: BWM - add sPlayerRect, getMobileAudioPlayerRect for responsive use
 ---------------------------------------------------------------------------------------
 
-
-command createMobileAudioPlayer pURL, pPlayerName,tRect
-   if pPlayerName is among the lines of mobileControls() then mobileControlDelete pPlayerName -- init
-   mobileControlCreate "player",pPlayerName
-   put the result into sPlayerId
-   -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
-   if tRect is empty then
-      put the rect of player pPlayerName into tRect 
-   end if   
-   if the platform is "android" then -- android player controls appear above the player; adjust
-      -- with controller it's about 4x rect of cd player so align the botom edges:
-      # this his hard wired to the bottom of the card for now.
-      put (the height of this card)  -70  into item 4 of tRect
-      put item 4 of tRect - item 2 of tRect into tHeight
-      subtract tHeight from item 2 of tRect
+command createMobileAudioPlayer pURL, pPlayerName, pRect
+   local tHeight
+   if pPlayerName is among the lines of mobileControls() then
+      mobileControlDelete pPlayerName -- init
    end if
+   mobileControlCreate "player", pPlayerName
+   put the result into sPlayerId
+   
+   if pRect is empty then
+      put the rect of player pPlayerName into pRect 
+   end if
+   
+   -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
+   if the platform is "android" then
+      if the short name of this card is "surprise_audio" then
+         subtract 70 from item 2 of pRect
+      else
+         -- android player controls appear above the player; adjust
+         -- with controller it's about 4x rect of cd player so align the bottom edges:
+         # this is hard wired to the bottom of the card for now.
+         put item 4 of pRect - item 2 of pRect into tHeight
+         put CardHeight() - safeBottomMargin() - 70 into item 4 of pRect
+         put (item 4 of pRect) - tHeight - 50 into item 2 of pRect
+      end if
+   end if
+   put pRect into sPlayerRect
    mobileControlSet pPlayerName, "visible", true 
-   mobileControlSet pPlayerName, "rect", tRect
+   mobileControlSet pPlayerName, "rect", pRect
    mobileControlSet pPlayerName, "showController", true 
    mobileControlSet pPlayerName, "filename", pURL 
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
-   if mobileIdleTimerLocked() is false then mobileLockIdleTimer --jg: disallow screen lock
+   if mobileIdleTimerLocked() is false then
+      mobileLockIdleTimer --jg: disallow screen lock
+   end if
 end createMobileAudioPlayer 
+
+function getMobileAudioPlayerRect
+   return sPlayerRect
+end getMobileAudioPlayerRect
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    if theProperty is "duration" then
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
-      mobileControlDo pPlayerName, "play"
+      mobileControlDo sPlayerId, "play"
    end if
 end playerPropertyAvailable
 
-command setMobileAudioPlayer pPlayerName, pState,pTimeStamp --jg: control the state of the mobile player
+
+command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
+   --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
    mobileControlDo pPlayerName, pState
    if pState = "stop" then
       showBusyIndicator false -- in case it's still showing
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
+      put empty into sPlayerRect
       if mobileIdleTimerLocked() is true then 
          mobileUnlockIdleTimer
       end if
       get runningAudioIndicatorVis("false")
       # above is need to ensure we hide the icon that show audio is playing stop button/icon
-      # we set a local in the backscript lib_SivaSiva  that we query when going 
+      # we set a local in the backscript lib_SivaSiva that we query when going 
       # to any context where this icon should appear
    else
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
@@ -94,9 +113,11 @@ command setMobileAudioPlayer pPlayerName, pState,pTimeStamp --jg: control the st
    end if
 end setMobileAudioPlayer
 
+
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
-   mobileControlDelete pPlayerName
+   mobileControlDelete sPlayerId
+   put empty into sPlayerRect
    get runningAudioIndicatorVis("false")
 end playerFinished
 
@@ -106,7 +127,7 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
    -- pBool = boolean
    if isMobile() then
       hide player pPlayerName -- the LC one; never show it
-      mobileControlSet pPlayerName, "showController",pBool
+      mobileControlSet pPlayerName, "showController", pBool
       mobileControlSet pPlayerName, "visible", pBool
    else
       set the vis of player pPlayerName to pBool
@@ -125,6 +146,7 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
 end deleteMobileControl
 
 on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
+   local tList
    if not isMobile() then exit deleteAllMobileControls
    put mobileControls() into tList
    if not (tList contains "audioPlayer") then # play we terminated
@@ -140,7 +162,7 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    end repeat
 end deleteAllMobileControls
 
-command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
+command showBusyIndicator pBool, pMsg --jg: for both desktop and mobile
    if isMobile() then
       if pBool = true then
          mobileBusyIndicatorStart "square", pMsg -- add loading indicator until duration is available
@@ -148,8 +170,8 @@ command showBusyIndicator pBool,pMsg --jg: for both desktop and mobile
          mobileBusyIndicatorStop
       end if
    else
-      if there is a btn "loading"  then
-         set the vis of btn "loading"  to pBool
+      if there is a btn "loading" then
+         set the vis of btn "loading" to pBool
       end if
    end if
 end showBusyIndicator

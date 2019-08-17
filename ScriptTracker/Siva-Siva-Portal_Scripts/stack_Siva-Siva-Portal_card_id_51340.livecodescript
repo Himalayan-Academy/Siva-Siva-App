@@ -11,10 +11,10 @@ global sConfigA
 local sStartLoc,sScreenRect
 
 on preopenCard 
-   news_Fetch
-   audioIsRunning  
    hide button "goToMainNav" of group "footer" of me
    show button "goHome" of group "footer" of me
+   news_Fetch
+   audioIsRunning  
 end preopenCard
 
 command tellUserToGetFavorites 

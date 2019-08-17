@@ -10,6 +10,7 @@ constant kSelectedColor = "226,232,186"
 constant kBackgroundBrown = "96,12,12"
 
 on mousewithin
+   local tSurpriseButtonsRollOver
    put "70,105,134" into tSurpriseButtonsRollOver["color"]
    put "normal" into tSurpriseButtonsRollOver["blendMode"]
    put "100" into tSurpriseButtonsRollOver["opacity"]
@@ -21,6 +22,7 @@ on mousewithin
 end mousewithin
 
 on mouseleave
-       set the outerglow of me to tWipeOutEffect # an empty variable
+   local tWipeOutEffect
+   set the outerglow of me to tWipeOutEffect # an empty variable
    set the textcolor of me to kBackgroundBrown
 end mouseleave
