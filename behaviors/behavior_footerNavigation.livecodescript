@@ -36,6 +36,7 @@ on mouseup
    switch tTarget
       case "home"
          put the short name of this card into tCard
+         lock screen
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is "Surprise" and \
@@ -43,10 +44,9 @@ on mouseup
             --set the visible of me to false
             go to card "mainNav"
          else
-            lock screen
             portal_GoStack ("Siva-Siva-Portal")
-            unlock screen
          end if
+         unlock screen
          break
          
       case "journal"

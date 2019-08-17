@@ -6,12 +6,11 @@ Script "stack_surprise_"
 */
 
 
-local tCurrentCardOrientation, sMediaURL,sQuoteData, tTargets,sOnline,sCurrentCard
-local sFromJournalA,sCollection
-
+local sMediaURL,sQuoteData,sOnline
+local sCollection
+local sPlayerRect
 
 on preOpenStack
-   --set the fullscreenmode of this stack to "showAll" -- better for wider screens
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
@@ -20,6 +19,13 @@ end preOpenStack
 on preOpenCard
    updateUI
 end preOpenCard
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
 
 on openstack
    set the acceleratedRendering of this stack to true
@@ -32,13 +38,6 @@ end opencard
 on closeStack
    portal_SetLastStack "Surprise"
 end closeStack
-
-on resizeStack
-   lock screen
-   setCardCoords
-   updateUI
-   unlock screen
-end resizeStack
 
 on updateUI
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground
@@ -77,9 +76,9 @@ on updateUI
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
          put the long id of grp "go-next" into tNext
-         set the bottom of player "audioPlayer" to the top of tFooter - 42
-         set the width of player "audioPlayer" to CardWidth() - 42
-         set the left of player "audioPlayer" to 21
+         put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
+               into sPlayerRect
+         set the rect of player "audioPlayer" to sPlayerRect
          break
       case "surprise_video"
          break
@@ -106,7 +105,7 @@ end updateUI
 # check the script if each card you know what happens
 
 command setUpSurprise
-   local tTarget, tCard
+   local tTargets, tTarget, tCard
    if connectivity_PingServer() = "true" then 
       put "verse,audio,darshan,art,video" into tTargets
       put item (random(5)) of tTargets into tTarget
@@ -170,12 +169,18 @@ function getCurrentCollection
    return sCollection
 end getCurrentCollection
 
+function getPlayerRect
+   return sPlayerRect
+end getPlayerRect
 
 on insertRandomVerse
+   lock screen
    fetchRandomQuote (sCollection)
-   # get it over there first
-   send "setUpQuote" to card "surprise_verse"
+   -- go to the card first to shorten object references in the card script
    go to card "surprise_verse"
+   send "setUpQuote" to card "surprise_verse"
+   send "positionQuote" to card "surprise_verse"
+   unlock screen
 end insertRandomVerse
 
 on mediaUrl_Set pURL # used by all card except verses
@@ -194,10 +199,10 @@ on getNextItem
          insertRandomVerse # handled here in the stack script
          break
       case "surprise_art"
-         dispatch  "getAnImage" to this card
+         dispatch "getAnImage" to this card
          break
       case "surprise_darshan"
-         dispatch  "getAnImage" to this card
+         dispatch "getAnImage" to this card
          break
       case "surprise_audio"
          dispatch "getRandomAudio" to this card
