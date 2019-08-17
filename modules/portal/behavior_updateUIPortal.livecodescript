@@ -37,20 +37,23 @@ end opencard
 command  setDefaultImage 
    --breakpoint
    
-   local pImage
+   local pImage, tPaths
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
    
    # new install boot
    if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
    
+   # upgrade install boot
+   if sBrandImageNumber is empty then put 1 into sBrandImageNumber
+   
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
-   put brandImagesPaths()  into tPaths
+   put brandImagesPaths() into tPaths
    # store brand image; set stage to screen to 1
-   put line  sBrandImageNumber of tPaths into pImage
+   put line sBrandImageNumber of tPaths into pImage
    set the filename of sMainImage to  pImage
    
-   --put  empty into sConfigA["narrationScene"] # wrong place for this!
+   --put empty into sConfigA["narrationScene"] # wrong place for this!
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
    setImageToFullCardLoc sMainImage,"portrait",0,0
@@ -63,7 +66,7 @@ command  setDefaultImage
    if sBrandImageNumber = (the number of lines of tPaths) then
       put 1 into sBrandImageNumber
    else 
-      add 1 to  sBrandImageNumber
+      add 1 to sBrandImageNumber
    end if
    saveUserPrefs sBrandImageNumber
 end  setDefaultImage
@@ -74,6 +77,7 @@ end  setDefaultImage
 
 
 function brandImagesPaths
+   local brandImages, tPaths
    put "app-img_who-is-siva_1200x800," &\
          "app-img_06-sadasiva_opt-80_552w-portrait,"&\
          "app-img_01-sadyojata_opt-80_552w-portrait,"&\
@@ -92,10 +96,10 @@ function brandImagesPaths
          "app-img_siva_552w-portrait"  \
          into brandImages
    repeat for each item x in brandImages
-      put path_Assets() & "img/photography/" & x & "/" & x &"_med.jpg" & cr after pPaths
+      put path_Assets() & "img/photography/" & x & "/" & x &"_med.jpg" & cr after tPaths
    end repeat
-   delete last char of pPaths
-   return pPaths
+   delete last char of tPaths
+   return tPaths
 end brandImagesPaths
 
 #######################
