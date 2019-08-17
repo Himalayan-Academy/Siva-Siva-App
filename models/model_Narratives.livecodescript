@@ -12,6 +12,10 @@
 # CHANGES: 2018-20-2018 CREATED Brahmanathaswami
 -----
 
+command foundNarrativeScript
+   answer "Yes, in the mesage Path!" with "OK"
+end foundNarrativeScript
+
 command showNarrative pNarrativeA
    dispatch "showNarrative" to stack "narrative" with pNarrativeA
 end showNarrative
@@ -117,17 +121,8 @@ end narrativeItemLoadImage
 
 
 
-
-
-
-
-
-
-
-
-# for now this a proof of conceptI have just a little kale left to last me 5 days. 
-# starting by building it locally in the stack
-# to see how it flows.
+-------------------------
+# we should optimize thesetwo functions for any slides show
 
 function randomDeityPhotos
    local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
@@ -151,6 +146,29 @@ function randomDeityPhotos
    
 end randomDeityPhotos 
 
+function randomLifePhotos
+   local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
+   --ntInfo ("getting RandomImage")
+   put getSQLQueries() into tQueriesA
+   repeat for each key x in tQueriesA
+      if tQueriesA[x]["queryName"] = "selectCachedLifePhotos" then
+         put tQueriesA[x]["sqlQuery"] into tSQL
+         exit repeat
+      end if
+   end repeat
+ --ntinfo tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet(,tConnectionID) into tLifePhotoFileIDA
+   repeat for each key x in tDeityPhotoFileIDA
+      put returnAssetPath("photography",tLifePhotoFileIDA[x]["file_id"]) & cr after tImageList
+   end repeat
+   --ntinfo ("put line 10: " & (line 10 of pImageList))
+   return tImageList
+   
+end randomLifePhotos 
+
+
 function fetchQuotesCollection pCollection
    local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuotes
    put getSQLQueries() into tQueriesA
@@ -160,7 +178,10 @@ function fetchQuotesCollection pCollection
          exit repeat
       end if
    end repeat
-   
+
+   ## It is taken from the "subject" column of the quote table
+   ## where use the book title in many cases
+  
    replace "#####" with pCollection in tSQL
    
    put  JnanamDB() into tConnectionID

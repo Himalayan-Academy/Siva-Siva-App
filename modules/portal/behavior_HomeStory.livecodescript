@@ -8,37 +8,34 @@ It is nested with a parent behavior: behavior "model_Narratives"
 */
 
 global sConfigA,sDefaultImage,sMainImage
-local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
+local  sImageList,sLastImage,sQuoteList,sLastQuote,sTotalSceneCount
 
 
 command initializeNarrative
    --breakpoint
+   foundNarrativeScript
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
-      getContent "Deities","Words of Our Master"   # make random later
+   getContent "Life","Atti Chudi"   # make random later
+      --getContent "Deities","Words of Our Master"   # make random later
    end if
    
    # sConfigAsConfigA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
    
    if sConfigA["narrationScene"] <> empty then
-      
-      --      # it means this a brand new session, start of the app.
-      --      #  or, the user finished to story and back at a new beginning
-      --      setDefaultImage  # on the card script
-      --   else
       goNextScene
    end if
    
    if (the lockscreen) then unlock screen
-
    
 end initializeNarrative
 
 -----------------------------------------
 ## Trying to find architect that is scaleble and maintainable
 ## "getContent" is meant to "get a story"
+## we are not using "model_Narratives" but we should be
 ## we should be able get and slide show in content store in that app
 ## slide show from the internet
 ## "a narrative" for the server , to be developed that called XML
@@ -46,14 +43,20 @@ end initializeNarrative
 ## for now is is hard wired to in-app photo + quote from the dBase
 ## this is just the beginning, It weill need to be responsive
 
+# later should be  in model_Narratives
 
 command  getContent pPhotos,pText
    # functions from  model_Narrative:
    switch pPhotos
       case "Deities"
          put randomDeityPhotos() into sImageList 
-    
-         put the number of lines of sImageList into sImageCount
+         # scenes constrained by the number of Deity Photos
+         put the number of lines of sImageList into sTotalSceneCount
+         --ntInfo ("image list: " & line 1 of sImageList)
+         break
+      case "AttiChudi"
+         put randomLifePhotos() into sImageList 
+         
          --ntInfo ("image list: " & line 1 of sImageList)
          break
    end switch
@@ -61,19 +64,25 @@ command  getContent pPhotos,pText
       case "Words of Our Master"
          put FetchQuotesCollection(pText) into sQuoteList
          break
+      case "Atti Chudi"
+         put FetchQuotesCollection(pText) into sQuoteList
+         #   scenes constrained by the number verses
+         put the number of lines of sQuoteList into sTotalSceneCount
+         break
    end switch
 end getContent
 
 
 command goNextScene
-   --breakpoint
+   breakpoint
    local tImage, tPath
-   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
+   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    if sConfigA["narrationScene"] = empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content
       # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
+      showAttribution ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" )
+      --showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
       put 1 into sConfigA["narrationScene"]
       exit goNextScene
    end if
@@ -84,7 +93,7 @@ command goNextScene
    if (sLastImage is 0 )  then add 1 to sLastImage
    --if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
    if not (the vis of sMainImage) then
-      if sLastImage > sImageCount then 
+      if sLastImage > sTotalSceneCount then 
          put 0 into sLastImage
          put empty into sConfigA["narrationScene"] 
          put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tImage
