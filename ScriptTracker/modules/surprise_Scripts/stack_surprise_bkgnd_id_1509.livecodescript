@@ -1,9 +1,11 @@
-Script "stack_surprise_group_id_1485"
+Script "stack_surprise_bkgnd_id_1509"
 
 /*
-# Name: group "share-ui" of card "surprise_audio" of stack "surprise"
-# ID: group id 1485 of card id 1031 of stack "surprise"
+# Name: bkgnd "share-ui" of stack "surprise"
+# ID: bkgnd id 1509 of stack "surprise"
 # Behavior: stack "behavior_SocialShare"
+
+# Background on card IDs: 1494, 1037
 */
 
 

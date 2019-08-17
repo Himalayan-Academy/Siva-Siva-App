@@ -1,40 +1,4 @@
 # Siva-Siva-Portal
-**widget "go-home-portal" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: widget id 7281 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-Portal_widget_id_7281](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_7281.livecodescript)
-
-**widget "share" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: widget id 7282 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-Portal_widget_id_7282](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_7282.livecodescript)
-
-**widget "add-favorites" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: widget id 7283 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-Portal_widget_id_7283](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_7283.livecodescript)
-
-**widget "settings-gear" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: widget id 7284 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-Portal_widget_id_7284](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_7284.livecodescript)
-
-**graphic "go-home-portal" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: graphic id 57740 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_graphic_id_57740](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_57740.livecodescript)
-
-**graphic "add-favorites" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: graphic id 57741 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_graphic_id_57741](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_57741.livecodescript)
-
-**graphic "share" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: graphic id 57742 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_graphic_id_57742](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_57742.livecodescript)
-
-**graphic "settings-gear" of bkgnd "SivaSiva Portal Navigation" of stack "Siva-Siva-Portal"**
-* ID: graphic id 57743 of bkgnd id 7279 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_graphic_id_57743](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_57743.livecodescript)
-
 **bkgnd "share-ui" of stack "Siva-Siva-Portal"**
 * ID: bkgnd id 8191 of stack "Siva-Siva-Portal"
 * Behavior: stack "behavior_SocialShare"
@@ -57,11 +21,6 @@
 
 * Background on card IDs: 51340, 53122
 * [stack_Siva-Siva-Portal_bkgnd_id_55616](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_bkgnd_id_55616.livecodescript)
-
-**card "Home" of stack "Siva-Siva-Portal"**
-* ID: card id 8169 of stack "Siva-Siva-Portal"
-* Behavior: stack "behavior_updateUIPortal"
-* [stack_Siva-Siva-Portal_card_id_8169](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_8169.livecodescript)
 
 **image "homeStoryMainImage" of group "homeStory" of card "Home" of stack "Siva-Siva-Portal"**
 * ID: image id 8189 of group id 8199 of card id 8169 of stack "Siva-Siva-Portal"
@@ -106,11 +65,6 @@
 * ID: group id 53160 of card id 53122 of stack "Siva-Siva-Portal"
 * Behavior: button id 1005 of stack "revDataGridLibrary"
 * [stack_Siva-Siva-Portal_group_id_53160](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_group_id_53160.livecodescript)
-
-**card "Surprise" of stack "Siva-Siva-Portal"**
-* ID: card id 7993 of stack "Siva-Siva-Portal"
-* Behavior: stack "behavior_PortalCard"
-* [stack_Siva-Siva-Portal_card_id_7993](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_7993.livecodescript)
 
 **group "share-ui" of card "Surprise" of stack "Siva-Siva-Portal"**
 * ID: group id 8157 of card id 7993 of stack "Siva-Siva-Portal"

@@ -300,8 +300,7 @@ on resizeToHeight pImage,pSize
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
-   # it may not be necessary
-   --if pSize > tOrigImgHeight then exit resizeToHeight
+   if tOrigImgHeight is 0 then exit resizeToHeight
    put (pSize)/tOrigImgHeight  into tRatio
    put (tOrigImgWidth * tRatio) into tNewWidth
    put (tOrigImgHeight * tRatio) into tNewHeight
@@ -313,8 +312,7 @@ on resizeToWidth pImage,pSize
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
-   # it may not be necessary
-   --if pSize > tOrigImgWidth then exit resizeToWidth
+   if tOrigImgWidth is 0 then exit resizeToWidth
    put pSize/tOrigImgWidth into tRatio 
    put (tOrigImgWidth * tRatio) into tNewWidth
    put (tOrigImgHeight * tRatio) into tNewHeight

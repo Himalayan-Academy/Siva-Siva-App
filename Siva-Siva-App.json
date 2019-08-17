@@ -46,6 +46,10 @@
       "file": "libraries/lib_Calendar.livecodescript"
     },
     {
+      "name": "behavior_footerNavigation",
+      "file": "behaviors/behavior_footerNavigation.livecodescript"
+    },
+    {
       "name": "lib_CustomControls",
       "file": "libraries/lib_CustomControls.livecode"
     },
