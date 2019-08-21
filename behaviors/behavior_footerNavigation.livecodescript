@@ -5,7 +5,6 @@ local sButtons
 on preOpenControl
    local tStack
    put the short name of this stack into tStack
-   --set the visible of me to true
    if tStack is "gems" or tStack is "lib_CustomControls" then
       put "home,journal,save,share,settings" into sButtons
    else
@@ -20,6 +19,7 @@ on mouseup
    local tBrowserExists, tBrowser, tBrowserRect
    local tCdHeight, tSharingHeight
    
+   lock screen
    put short name of the target into tTarget
    put (there is a widget "body") into tBrowserExists
    
@@ -36,7 +36,7 @@ on mouseup
    switch tTarget
       case "home"
          put the short name of this card into tCard
-         lock screen
+         --lock screen
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is "Surprise" and \
@@ -46,7 +46,7 @@ on mouseup
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
-         unlock screen
+         --unlock screen
          break
          
       case "journal"
@@ -55,6 +55,7 @@ on mouseup
          
       case "save"
          AddJournalEntry "pReadQuote"
+         unlock screen
          set the hilited of control tTarget to true
          move control target relative 0,-100 in 500 milliseconds
          move control target relative 0,100 in 110 milliseconds
@@ -62,7 +63,7 @@ on mouseup
          break
          
       case "share"
-         lock screen
+         --lock screen
          put sConfigA["shareControl"] into tShareControl
          
          if (exists(group "share-ui" of this card) ) then
@@ -82,13 +83,14 @@ on mouseup
          
          deleteMobileControl  "audioPlayer"
          show group "share-ui" with visual "dissolve" very fast
-         unlock screen
+         --unlock screen
          break
          
       case "settings"
          portal_GoStack "settings"
          break
    end switch
+   unlock screen
 end mouseup
 
 

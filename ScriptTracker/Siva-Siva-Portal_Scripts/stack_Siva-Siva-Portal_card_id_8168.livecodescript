@@ -6,18 +6,14 @@ Script "stack_Siva-Siva-Portal_card_id_8168"
 */
 
 
+-- BM:  Stack script handles redirecting to the correct card
+--      This avoids the time necessary to set up the home card
+--      if that is not the final destination.
+
 on openCard
---   // if we are opening the stack  from any place other the
---   // SivaSivaApp. that is, another module, we always to go to
---   // to the main navigation.
-
---   if  (Portal_GetLaunchStack() = "Siva-Siva-App") OR \
---         (Portal_GetLaunchStack() = empty)  then
-go card "home"
---   else 
---      go card  "mainNav"
---   end if 
-
---   if (the lockscreen) then unlock screen
-
+   set the loc of btn "brandLogo" to the loc of this card
 end openCard
+
+on resizeStack
+   set the loc of btn "brandLogo" to the loc of this card
+end resizeStack
