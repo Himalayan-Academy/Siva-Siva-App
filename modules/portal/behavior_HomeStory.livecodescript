@@ -8,16 +8,16 @@ It is nested with a parent behavior: behavior "model_Narratives"
 */
 
 global sConfigA,sDefaultImage,sMainImage
-local  sImageList,sLastImage,sQuoteList,sLastQuote,sTotalSceneCount
+local  sImageList,sLastImage,sQuoteList,sLastQuote,sLastScene,sTotalSceneCount
+local sAttribution
 
 
 command initializeNarrative
-   --breakpoint
-   foundNarrativeScript
+   breakpoint
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
-   getContent "Life","Atti Chudi"   # make random later
+      getContent "Life","Atti Chudi"   # later, when the finish to story they get a list
       --getContent "Deities","Words of Our Master"   # make random later
    end if
    
@@ -47,70 +47,102 @@ end initializeNarrative
 
 command  getContent pPhotos,pText
    # functions from  model_Narrative:
+   # refactor so that each narrative contain is photo, text and attribution
+   # ideally not called from here.
+   
    switch pPhotos
       case "Deities"
+         # this slideshow it based on the sImageList for totalSceneCount
+         # It can but use for any text, narrative.
          put randomDeityPhotos() into sImageList 
          # scenes constrained by the number of Deity Photos
          put the number of lines of sImageList into sTotalSceneCount
          --ntInfo ("image list: " & line 1 of sImageList)
          break
-      case "AttiChudi"
+      case "Life"
          put randomLifePhotos() into sImageList 
          
          --ntInfo ("image list: " & line 1 of sImageList)
          break
    end switch
+   
    switch pText
       case "Words of Our Master"
+         # scenes constrained by the total number of Deities Images
+         put the number of lines of sImageList into sTotalSceneCount
          put FetchQuotesCollection(pText) into sQuoteList
+         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
+     
          break
       case "Atti Chudi"
          put FetchQuotesCollection(pText) into sQuoteList
+         put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sQuoteList into sTotalSceneCount
          break
    end switch
+   
 end getContent
 
 
 command goNextScene
-   breakpoint
+   
+   --breakpoint
    local tImage, tPath
+   
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
-   if sConfigA["narrationScene"] = empty then
+   
+   # sConfigA["narrationScene"] = sLastScene 
+   # for simplicity on coding, use the local
+   #  sConfigA["narrationScene"] is save across session/if and when stack closes.
+   
+   put  sConfigA["narrationScene"] into sLastScene
+   
+   if sLastScene= empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content
       # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" )
-      --showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
-      put 1 into sConfigA["narrationScene"]
+      showAttribution sAttribution
+      put 1 into  sConfigA["narrationScene"] 
       exit goNextScene
    end if
-   put sConfigA["narrationScene"] into sLastImage 
-   # this keeps the Scene position when we leave this stack and come back
+   
    put empty into fld "HomeStoryText"
-   # load an image
-   if (sLastImage is 0 )  then add 1 to sLastImage
-   --if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
+   
+   # brand new lauch, the app only know the branding image, nothing more
+   # when have to increment to first scene
+   
+   if (sLastScene is 0 )  then add 1 to sLastScene
+   
+   # following is hard wired to slide show from the app
+   # refacdtor when we get to an XML cum "SMILE" model
+   
    if not (the vis of sMainImage) then
-      if sLastImage > sTotalSceneCount then 
-         put 0 into sLastImage
+      if sLastScene > sTotalSceneCount then 
+         put empty into sLastScene
          put empty into sConfigA["narrationScene"] 
-         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tImage
-         setDefaultImage tImage
          answer "The End. Start Again?" with  "Yes" or "No"
-         if it is "Yes" then goNextScene
-         exit goNextScene
+         if it is "Yes" then 
+            put 1 into sConfigA["narrationScene"] 
+            showAttribution sAttribution
+            wait 500 ticks
+            goNextScene
+         else
+            setDefaultImage
+            exit goNextScene
+         end if
+         put random(the number of lines of sImageList) into tLine
+         put line tLine of sImageList into tPath
+         # put line  sLastImage of sImageList into tPath
+         loadNewImage tPath
+      else
+         loadNextQuote sLastImage
       end if
-      put random(the number of lines of sImageList) into tLine
-      put line tLine of sImageList into tPath
-      # put line  sLastImage of sImageList into tPath
-      loadNewImage tPath
-   else
-      loadNextQuote sLastImage
    end if
-   add 1 to sLastImage
-   put sLastImage into  sConfigA["narrationScene"] 
+   
+   add 1 to sLastScene
+   put sLastScene into  sConfigA["narrationScene"] 
+   
 end goNextScene
 
 command loadNewImage pPath

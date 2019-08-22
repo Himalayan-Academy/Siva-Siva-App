@@ -12,9 +12,9 @@
 # CHANGES: 2018-20-2018 CREATED Brahmanathaswami
 -----
 
-command foundNarrativeScript
-   answer "Yes, in the mesage Path!" with "OK"
-end foundNarrativeScript
+--command foundNarrativeScript
+--   answer "Yes, I am model_narrative and I am in the message Path!" with "OK"
+--end foundNarrativeScript
 
 command showNarrative pNarrativeA
    dispatch "showNarrative" to stack "narrative" with pNarrativeA
@@ -122,10 +122,10 @@ end narrativeItemLoadImage
 
 
 -------------------------
-# we should optimize thesetwo functions for any slides show
+# we should optimize these two functions for any slides show
 
 function randomDeityPhotos
-   local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
+   local tQueriesA, tSQL, tConnectionID, tImageList
    --ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
@@ -134,12 +134,12 @@ function randomDeityPhotos
          exit repeat
       end if
    end repeat
- --ntinfo tSQL
+   --ntinfo tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into tDeityPhotoFileIDA
-   repeat for each key x in tDeityPhotoFileIDA
-      put returnAssetPath("photography",tDeityPhotoFileIDA[x]["file_id"]) & cr after tImageList
+   put dbGet(,tConnectionID) into tPhotoFileIDA
+   repeat for each key x in tPhotoFileIDA
+      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
    end repeat
    --ntinfo ("put line 10: " & (line 10 of pImageList))
    return tImageList
@@ -147,7 +147,7 @@ function randomDeityPhotos
 end randomDeityPhotos 
 
 function randomLifePhotos
-   local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
+   local tQueriesA, tSQL, tConnectionID, tImageList
    --ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
@@ -156,12 +156,12 @@ function randomLifePhotos
          exit repeat
       end if
    end repeat
- --ntinfo tSQL
+   --ntinfo tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into tLifePhotoFileIDA
-   repeat for each key x in tDeityPhotoFileIDA
-      put returnAssetPath("photography",tLifePhotoFileIDA[x]["file_id"]) & cr after tImageList
+   put dbGet(,tConnectionID) into tPhotoFileIDA
+   repeat for each key x in tPhotoFileIDA
+      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
    end repeat
    --ntinfo ("put line 10: " & (line 10 of pImageList))
    return tImageList
