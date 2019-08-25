@@ -16,17 +16,37 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- old "panel" navigation to here. I will leave that to you.
 
 on preopenCard
-   local pControl
+   local pControl, pCard
+   put the short name of this card into pCard
+   
    setCardCoords "portrait"
-   setDefaultImage
+   
+   switch pCard
+      case "Home"
+         setDefaultImage
+         put empty into fld "homeStoryText"
+         put the long id of fld "homeStoryText" into pControl
+         centerMe pControl,0,5
+         ntInfo ("fld homestoryText loc: "& the loc of pControl)
+         dispatch "initializeNarrative" to grp "homeStory"
+         ntInfo ("Home card rect: " & the rect of this card)
+         break
+      case "MainNav"
+         hide button "goToMainNav" of group "footer" of me
+         show button "goHome" of group "footer" of me
+         break
+   end switch
+   
    updateUIPortal
    audioIsRunning
-   ntInfo ("Home card rect: " & the rect of this card)
-   put empty into fld "homeStoryText"
-   put the long id of fld "homeStoryText" into pControl
-   centerMe pControl,0,5
-   ntInfo ("fld homestoryText loc: "& the loc of pControl)
-   dispatch "initializeNarrative" to grp "homeStory"
+   
+   --   if pCard is "Home" then
+   --      put empty into fld "homeStoryText"
+   --      put the long id of fld "homeStoryText" into pControl
+   --      centerMe pControl,0,5
+   --      ntInfo ("fld homestoryText loc: "& the loc of pControl)
+   --      dispatch "initializeNarrative" to grp "homeStory"
+   --   end if
    show btn "brandLogo"
 end preopenCard
 
@@ -38,6 +58,8 @@ command  setDefaultImage
    --breakpoint
    
    local pImage, tPaths
+   
+   local tImages, tImage, tPath
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
    
    # new install boot
@@ -48,10 +70,14 @@ command  setDefaultImage
    
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
-   put brandImagesPaths() into tPaths
+   put _brandImages() into tImages
+   put line sBrandImageNumber of tImages into tImage
+   set the filename of sMainImage to brandImagePath(tImage)
+   
+   --put brandImagesPaths() into tPaths
    # store brand image; set stage to screen to 1
-   put line sBrandImageNumber of tPaths into pImage
-   set the filename of sMainImage to  pImage
+   --put line sBrandImageNumber of tPaths into pImage
+   --set the filename of sMainImage to  pImage
    
    --put empty into sConfigA["narrationScene"] # wrong place for this!
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
@@ -63,7 +89,7 @@ command  setDefaultImage
    
    # we have to save the number, this was on next start up
    # it will change....
-   if sBrandImageNumber = (the number of lines of tPaths) then
+   if sBrandImageNumber = (the number of lines of tImages) then
       put 1 into sBrandImageNumber
    else 
       add 1 to sBrandImageNumber
@@ -75,7 +101,38 @@ end  setDefaultImage
 ## to KISS suggest we do it right here.
 ## see the close stack handler for the number increment
 
+private function _brandImages
+   local tBrandImages
+   put "app-img_who-is-siva_1200x800" & lf & \
+         "app-img_06-sadasiva_opt-80_552w-portrait" & lf & \
+         "app-img_01-sadyojata_opt-80_552w-portrait" & lf & \
+         "app-img_02-vamadeva_opt-80_552w-portrait" & lf & \
+         "app-img_03-aghora_opt-80_552w-portrait" & lf & \
+         "app-img_03_painting_tree_552w-portrait" & lf & \
+         "app-img_04-tatpurusha_opt-80_552w-portrait" & lf & \
+         "app-img_05-ishana_opt-80_552w-portrait" & lf & \
+         "app-img_28_sahasrara_736h-landscape" & lf & \
+         "app-img_70's_siva_poster_552w-portrait" & lf & \
+         "app-img_book_siva_face_736h-square" & lf & \
+         "app-img_book_siva_yogi_big_736h-square" & lf & \
+         "app-img_hap-0140_552w-portrait" & lf & \
+         "app-img_shivlinga-amarnath-shiva_736h-landscape" & lf & \
+         "app-img_sinha_9_552w-portrait" & lf & \
+         "app-img_siva_552w-portrait"\
+         into tBrandImages
+   return tBrandImages
+end _brandImages
 
+function brandImagePath pImage
+   local tPath
+   put path_Assets() & "img/photography/" & pImage & "/" \
+         & pImage & "_med.jpg" into tPath
+   return tPath
+end brandImagePath
+
+-- BM: no need to calculate all of the paths, just get the path as needed.
+--     Stack probably has been closed and reloaded, so the precalculation
+--     isn't saving anything.  This function is no longer used in the above code.
 function brandImagesPaths
    local brandImages, tPaths
    put "app-img_who-is-siva_1200x800," &\
@@ -102,6 +159,21 @@ function brandImagesPaths
    return tPaths
 end brandImagesPaths
 
+
+-- BM:  From MainNav card script
+command tellUserToGetFavorites 
+   doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
+         "Click the star by some of your Favorites. They will then appear in My Home", \
+         "OK","downloadAffirmed"
+end tellUserToGetFavorites
+
+command downloadAffirmed
+   lock screen
+   portal_GoStack "Journal"
+   unlock screen
+end downloadAffirmed
+
+
 #######################
 
 command _RESPONSIVE
@@ -118,12 +190,12 @@ end _RESPONSIVE
 -- to deals with different cards
 ###############
 
-after preopencard
-   lock screen
-   setCardCoords "portrait"
-   updateUIPortal
-   unlock screen
-end preopencard
+--after preopencard
+--   lock screen
+--   setCardCoords "portrait"
+--   updateUIPortal
+--   unlock screen
+--end preopencard
 
 
 on resizeStack x,y,ox,oy

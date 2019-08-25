@@ -22,6 +22,10 @@
 * Background on card IDs: 51340, 53122
 * [stack_Siva-Siva-Portal_bkgnd_id_55616](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_bkgnd_id_55616.livecodescript)
 
+**card "loader" of stack "Siva-Siva-Portal"**
+* ID: card id 8168 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_card_id_8168](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_8168.livecodescript)
+
 **image "homeStoryMainImage" of group "homeStory" of card "Home" of stack "Siva-Siva-Portal"**
 * ID: image id 8189 of group id 8199 of card id 8169 of stack "Siva-Siva-Portal"
 * [stack_Siva-Siva-Portal_image_id_8189](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_image_id_8189.livecodescript)
@@ -75,10 +79,6 @@
 * ID: widget id 8159 of group id 8157 of card id 7993 of stack "Siva-Siva-Portal"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_Siva-Siva-Portal_widget_id_8159](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_8159.livecodescript)
-
-**card "loader" of stack "Siva-Siva-Portal"**
-* ID: card id 8168 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_card_id_8168](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_8168.livecodescript)
 
 **button "Behavior Script" of card id 1005 of stack "Data Grid Templates 1544299986164" of stack "Siva-Siva-Portal"**
 * ID: button id 1009 of card id 1005 of stack "Data Grid Templates 1544299986164" of stack "Siva-Siva-Portal"

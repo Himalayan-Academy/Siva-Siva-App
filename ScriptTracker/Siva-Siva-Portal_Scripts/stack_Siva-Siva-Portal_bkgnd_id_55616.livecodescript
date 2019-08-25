@@ -10,6 +10,7 @@ Script "stack_Siva-Siva-Portal_bkgnd_id_55616"
 
 on mouseup
    local tTarget
+   lock screen
    put the short name of the target into tTarget
    switch tTarget
       case "Settings-Gear"
@@ -26,5 +27,6 @@ on mouseup
          go to card "home"
          break
    end switch
+   unlock screen
 end mouseup
 
