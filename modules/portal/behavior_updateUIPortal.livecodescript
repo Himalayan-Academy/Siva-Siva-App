@@ -54,6 +54,7 @@ on opencard
    News_Fetch
 end opencard
 
+
 command  setDefaultImage 
    --breakpoint
    
@@ -210,7 +211,7 @@ end resizeStack
 
 
 command updateUIPortal
- 
+   
    local pControl, tBrandImage, tBottomMargin
    
    if safeBottomMargin() > 0 then
@@ -257,7 +258,7 @@ command updateUIPortal
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         bottomLeftMe pControl,0,tBottomMargin 
+         bottomRightMe pControl,0,tBottomMargin 
          
          break
          
@@ -283,6 +284,8 @@ command updateUIPortal
          break
          
    end switch
+   
+   
 end updateUIPortal
 
 

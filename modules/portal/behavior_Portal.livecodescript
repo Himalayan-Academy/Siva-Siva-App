@@ -32,7 +32,7 @@ on openStack
             send "LoadModulesList portal_GetModulesList()" to card "modulesList" -- in 0 seconds
             break
          default
-            go card  "mainNav"
+            go card  "home"
       end switch
    --end if
 end openstack
