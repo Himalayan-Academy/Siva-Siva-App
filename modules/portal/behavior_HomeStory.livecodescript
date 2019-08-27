@@ -13,10 +13,13 @@ local sAttribution
 
 
 command initializeNarrative
-   breakpoint
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (sImageList is empty) OR (sQuoteList is empty) then 
+      --implement moving this to narrative script
+      -- use a "initializeNarrative pClass"
+      -- to do to randomslides to other kind of harratives.
+      
       getContent "Life","Atti Chudi"   # later, when the finish to story they get a list
       --getContent "Deities","Words of Our Master"   # make random later
    end if
@@ -115,30 +118,38 @@ command goNextScene
    if (sLastScene is 0 )  then add 1 to sLastScene
    
    # following is hard wired to slide show from the app
-   # refacdtor when we get to an XML cum "SMILE" model
+   # refactor when we get to an XML cum "SMILE" model
    
-   if not (the vis of sMainImage) then
-      if sLastScene > sTotalSceneCount then 
-         put empty into sLastScene
-         put empty into sConfigA["narrationScene"] 
-         answer "The End. Start Again?" with  "Yes" or "No"
-         if it is "Yes" then 
-            put 1 into sConfigA["narrationScene"] 
-            showAttribution sAttribution
-            wait 500 ticks
-            goNextScene
-         else
-            setDefaultImage
-            exit goNextScene
-         end if
-         put random(the number of lines of sImageList) into tLine
-         put line tLine of sImageList into tPath
-         # put line  sLastImage of sImageList into tPath
-         loadNewImage tPath
+   #Deal with scene count, begin again etc.
+   # we have reach the end.
+   
+   if sLastScene > sTotalSceneCount then 
+      put empty into sLastScene
+      put empty into sConfigA["narrationScene"] 
+      answer "The End. Start Again?" with  "Yes" or "No"
+      if it is "Yes" then 
+         put 1 into sConfigA["narrationScene"] 
+         showAttribution sAttribution
+         wait 500 ticks
+         goNextScene
       else
-         loadNextQuote sLastImage
+         setDefaultImage
+         exit goNextScene
       end if
    end if
+   
+   # We have not reached then end. We are in the middle of a story
+   # so we can actually "go next" 
+   
+   if not (the vis of sMainImage) then
+      put random(the number of lines of sImageList) into tLine
+      put line tLine of sImageList into tPath
+      # put line  sLastImage of sImageList into tPath
+      loadNewImage tPath
+   else
+      loadNextQuote sLastImage
+   end if
+   
    
    add 1 to sLastScene
    put sLastScene into  sConfigA["narrationScene"] 

@@ -1,17 +1,17 @@
 ﻿script "model_Narratives"
 
 -----------------------------------------------------
-#  behavior_Narrative
+# model_Narrative
 #
 # DESCRIPTION
-# this behavior is meant to serve as the code behind any  grp "narrative" 
-# which contains one or more images, fields, browser and audio that will be called
+# used a behavior but called in model because it gets for disk what is needed
+# is meant to serve as the code behind any  grp "narrative" which contains one or more images, fields, browser and audio that will be called
 # to a narrative/story, narrative/teaching, narrative/reference
 # the idea is to all an XML file to server narrative folders
 # then "informs" the user with story.
+# CHANGES: 2018-20-2019 Added a command to call a class of narrative (future use case, current a slideshow from the app) and random function 
 # CHANGES: 2018-20-2018 CREATED Brahmanathaswami
 -----
-
 --command foundNarrativeScript
 --   answer "Yes, I am model_narrative and I am in the message Path!" with "OK"
 --end foundNarrativeScript
