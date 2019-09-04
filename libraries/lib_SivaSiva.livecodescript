@@ -367,6 +367,19 @@ end ___SETTERS_GETTERS
 
 
 local sJournalFlag,sJournalData
+local sCacheA
+
+command setCache pKey, pValue
+   put pValue into sCacheA[pKey]
+end setCache
+
+function getCache pKey
+   if pKey is empty then
+      return sCacheA # return the whole array if needed
+   else
+      return sCacheA[pKey] # return just the requested value
+   end if
+end getCache
 
 command setJournalFlag pFlag
    put pFlag into sJournalFlag

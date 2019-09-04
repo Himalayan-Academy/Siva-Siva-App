@@ -28,7 +28,7 @@ on preopenCard
          put the long id of fld "homeStoryText" into pControl
          centerMe pControl,0,5
          ntInfo ("fld homestoryText loc: "& the loc of pControl)
-         dispatch "initializeNarrative" to grp "homeStory"
+         --dispatch "initializeNarrative" to grp "homeStory"
          ntInfo ("Home card rect: " & the rect of this card)
          break
       case "MainNav"

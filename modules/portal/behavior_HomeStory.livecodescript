@@ -4,7 +4,7 @@
 This script  is the behavior assigned to card 1 of the Home
 assign to group "HomeStory"
 
-It is nested with a parent behavior: behavior "model_Narratives"
+It is nested under a parent behavior: behavior "model_Narratives"
 */
 
 global sConfigA,sDefaultImage,sMainImage
@@ -13,9 +13,13 @@ local sAttribution
 
 
 command initializeNarrative
+   if getCache(pContentFlag) = 1 then 
+      exit initializeNarrative #all content is cached
+   end if
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
-   if (sImageList is empty) OR (sQuoteList is empty) then 
+   if (getCache(pImage)) is empty OR (getCache(pQuotes)is empty) then 
+      --if (sImageList is empty) OR (sQuoteList is empty) then 
       --implement moving this to narrative script
       -- use a "initializeNarrative pClass"
       -- to do to randomslides to other kind of harratives.
@@ -24,10 +28,11 @@ command initializeNarrative
       --getContent "Deities","Words of Our Master"   # make random later
    end if
    
-   # sConfigAsConfigA["narrationScene"]  tell us where we have in the current story
+   # sCacheA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
+   # see getters and setters lib_SivaSivae
    
-   if sConfigA["narrationScene"] <> empty then
+   if getCache["narrationScene"] <> empty then
       goNextScene
    end if
    
@@ -48,65 +53,27 @@ end initializeNarrative
 
 # later should be  in model_Narratives
 
-command  getContent pPhotos,pText
-   # functions from  model_Narrative:
-   # refactor so that each narrative contain is photo, text and attribution
-   # ideally not called from here.
-   
-   switch pPhotos
-      case "Deities"
-         # this slideshow it based on the sImageList for totalSceneCount
-         # It can but use for any text, narrative.
-         put randomDeityPhotos() into sImageList 
-         # scenes constrained by the number of Deity Photos
-         put the number of lines of sImageList into sTotalSceneCount
-         --ntInfo ("image list: " & line 1 of sImageList)
-         break
-      case "Life"
-         put randomLifePhotos() into sImageList 
-         
-         --ntInfo ("image list: " & line 1 of sImageList)
-         break
-   end switch
-   
-   switch pText
-      case "Words of Our Master"
-         # scenes constrained by the total number of Deities Images
-         put the number of lines of sImageList into sTotalSceneCount
-         put FetchQuotesCollection(pText) into sQuoteList
-         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
-     
-         break
-      case "Atti Chudi"
-         put FetchQuotesCollection(pText) into sQuoteList
-         put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
-         #   scenes constrained by the number verses
-         put the number of lines of sQuoteList into sTotalSceneCount
-         break
-   end switch
-   
-end getContent
+
 
 
 command goNextScene
-   
    --breakpoint
    local tImage, tPath
    
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
-   # sConfigA["narrationScene"] = sLastScene 
-   # for simplicity on coding, use the local
-   #  sConfigA["narrationScene"] is save across session/if and when stack closes.
-   
-   put  sConfigA["narrationScene"] into sLastScene
-   
+   put  getCache["narrationScene"] into sLastScene
+   put  getCache["pImages"] into sImageList
+   put  getCache["pQuotes"] into sQuoteList
+   put  getCache["pAttribution"] into sAttribution
+  
+
    if sLastScene= empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content
       # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution sAttribution
-      put 1 into  sConfigA["narrationScene"] 
+      showAttribution getCache(sAttribution)
+      setCache "narrationScene",1
       exit goNextScene
    end if
    
@@ -125,10 +92,10 @@ command goNextScene
    
    if sLastScene > sTotalSceneCount then 
       put empty into sLastScene
-      put empty into sConfigA["narrationScene"] 
+      setCache "narrationScene",""
       answer "The End. Start Again?" with  "Yes" or "No"
       if it is "Yes" then 
-         put 1 into sConfigA["narrationScene"] 
+         setCache "narrationScene",1
          showAttribution sAttribution
          wait 500 ticks
          goNextScene
@@ -152,7 +119,7 @@ command goNextScene
    
    
    add 1 to sLastScene
-   put sLastScene into  sConfigA["narrationScene"] 
+   setCache "narrationScene",sLastScene 
    
 end goNextScene
 
