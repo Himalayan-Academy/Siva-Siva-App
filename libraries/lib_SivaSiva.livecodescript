@@ -369,6 +369,10 @@ end ___SETTERS_GETTERS
 local sJournalFlag,sJournalData
 local sCacheA
 
+command clearCache
+   put empty into sCacheA
+end clearCache
+
 command setCache pKey, pValue
    put pValue into sCacheA[pKey]
 end setCache

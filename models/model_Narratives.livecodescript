@@ -59,11 +59,11 @@ command  getContent pPhotos,pText
          break
    end switch
    
-   setCache pImages, sImageList
-   setCache pQuotes, sQuoteList
-   setCache sAttribution
-   setCache pSceneCount, sTotalSceneCount
-   setCache pContentFlag, 1
+   setCache imageList, sImageList
+   setCache Quotes, sQuoteList
+   setCache Attribution, sAttribution
+   setCache SceneCount, sTotalSceneCount
+   setCache ContentFlag, 1
    
 end getContent
 

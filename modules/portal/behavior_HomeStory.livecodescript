@@ -13,7 +13,8 @@ local sAttribution
 
 
 command initializeNarrative
-   if getCache(pContentFlag) = 1 then 
+   --breakpoint
+   if getCache("ContentFlag") = 1 then 
       exit initializeNarrative #all content is cached
    end if
    ntinfo "Initialize scene"
@@ -32,7 +33,7 @@ command initializeNarrative
    # so that we can come back and start from where we left off.
    # see getters and setters lib_SivaSivae
    
-   if getCache["narrationScene"] <> empty then
+   if getCache("narrationScene") <> empty then
       goNextScene
    end if
    
@@ -54,25 +55,32 @@ end initializeNarrative
 # later should be  in model_Narratives
 
 
-
-
 command goNextScene
    --breakpoint
    local tImage, tPath
    
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
-   put  getCache["narrationScene"] into sLastScene
-   put  getCache["pImages"] into sImageList
-   put  getCache["pQuotes"] into sQuoteList
-   put  getCache["pAttribution"] into sAttribution
-  
-
+   put  getCache("narrationScene") into sLastScene
+   
+   # see if we need to get the cache.
+   
+   if sTotalSceneCount =""  then
+      
+      # locals are empty, first run or means we have gone to another module
+      # and come back, need to get content for cache
+      
+      put  getCache(imageList) into sImageList
+      put  getCache("Quotes") into sQuoteList
+      put  getCache("Attribution") into sAttribution
+      put  getCache("SceneCount") into sTotalSceneCount
+   end if
+   
    if sLastScene= empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content
       # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution getCache(sAttribution)
+      showAttribution sAttribution
       setCache "narrationScene",1
       exit goNextScene
    end if
