@@ -25,39 +25,32 @@
 -- slideshow from the web etc.
 ############
 
-command  getContent pPhotos,pText
+command  getContent pStoryNumber --  pPhotos,pText
    
-   switch pPhotos
-      case "Deities"
+   switch pStoryNumber
+      case "1" # Words of Our Master
          # this slideshow it based on the sImageList for totalSceneCount
          # It can but use for any text, narrative.
          put randomDeityPhotos() into sImageList 
          # scenes constrained by the number of Deity Photos
          put the number of lines of sImageList into sTotalSceneCount
          --ntInfo ("image list: " & line 1 of sImageList)
+         
+         put FetchQuotesCollection("Words of Our Master") into sQuoteList
+         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
          break
-      case "Life"
-         put randomLifePhotos() into sImageList 
+      case "2" # Atti Chudi
          
          --ntInfo ("image list: " & line 1 of sImageList)
-         break
-   end switch
-   
-   switch pText
-      case "Words of Our Master"
-         # scenes constrained by the total number of Deities Images
-         put the number of lines of sImageList into sTotalSceneCount
-         put FetchQuotesCollection(pText) into sQuoteList
-         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
-         
-         break
-      case "Atti Chudi"
-         put FetchQuotesCollection(pText) into sQuoteList
+         put randomLifePhotos() into sImageList 
+         put FetchQuotesCollection("Atti Chudi") into sQuoteList
          put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sQuoteList into sTotalSceneCount
+         
          break
    end switch
+   
    
    setCache imageList, sImageList
    setCache Quotes, sQuoteList
@@ -65,6 +58,38 @@ command  getContent pPhotos,pText
    setCache SceneCount, sTotalSceneCount
    setCache ContentFlag, 1
    
+   
+   --   switch pPhotos
+   --      case "Deities"
+   --         # this slideshow it based on the sImageList for totalSceneCount
+   --         # It can but use for any text, narrative.
+   --         put randomDeityPhotos() into sImageList 
+   --         # scenes constrained by the number of Deity Photos
+   --         put the number of lines of sImageList into sTotalSceneCount
+   --         --ntInfo ("image list: " & line 1 of sImageList)
+   --         break
+   --      case "Life"
+   --         put randomLifePhotos("Atti Chudi") into sImageList 
+   
+   --         --ntInfo ("image list: " & line 1 of sImageList)
+   --         break
+   --   end switch
+   
+   --   switch pText
+   --      case "Words of Our Master"
+   --         # scenes constrained by the total number of Deities Images
+   --         put the number of lines of sImageList into sTotalSceneCount
+   --         put FetchQuotesCollection(pText) into sQuoteList
+   --         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
+   
+   --         break
+   --      case "Atti Chudi"
+   --         put FetchQuotesCollection(pText) into sQuoteList
+   --         put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
+   --         #   scenes constrained by the number verses
+   --         put the number of lines of sQuoteList into sTotalSceneCount
+   --         break
+   --   end switch
 end getContent
 
 command showNarrative pNarrativeA

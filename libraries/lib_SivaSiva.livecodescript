@@ -373,6 +373,13 @@ command clearCache
    put empty into sCacheA
 end clearCache
 
+on displayCache
+   repeat for each key x in sCacheA
+      put x & ": " & sCacheA[x] & cr after tOutput
+   end repeat
+   put tOutput
+end displayCache
+
 command setCache pKey, pValue
    put pValue into sCacheA[pKey]
 end setCache
