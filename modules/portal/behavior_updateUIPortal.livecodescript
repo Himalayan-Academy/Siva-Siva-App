@@ -40,13 +40,6 @@ on preopenCard
    updateUIPortal
    audioIsRunning
    
-   --   if pCard is "Home" then
-   --      put empty into fld "homeStoryText"
-   --      put the long id of fld "homeStoryText" into pControl
-   --      centerMe pControl,0,5
-   --      ntInfo ("fld homestoryText loc: "& the loc of pControl)
-   --      dispatch "initializeNarrative" to grp "homeStory"
-   --   end if
    show btn "brandLogo"
 end preopenCard
 
@@ -60,6 +53,11 @@ command  setDefaultImage
    local pImage, tPaths
    
    local tImages, tImage, tPath
+   
+   # save this to stack behavrio and use sCacheA for the duration 
+   # that that app is open 
+   # increment when the use closes that app.
+   
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
    
    # new install boot
@@ -94,7 +92,7 @@ command  setDefaultImage
    else 
       add 1 to sBrandImageNumber
    end if
-   saveUserPrefs sBrandImageNumber
+  
 end  setDefaultImage
 
 ## I suppose there is a better way to store these
@@ -130,35 +128,10 @@ function brandImagePath pImage
    return tPath
 end brandImagePath
 
--- BM: no need to calculate all of the paths, just get the path as needed.
---     Stack probably has been closed and reloaded, so the precalculation
---     isn't saving anything.  This function is no longer used in the above code.
-function brandImagesPaths
-   local brandImages, tPaths
-   put "app-img_who-is-siva_1200x800," &\
-         "app-img_06-sadasiva_opt-80_552w-portrait,"&\
-         "app-img_01-sadyojata_opt-80_552w-portrait,"&\
-         "app-img_02-vamadeva_opt-80_552w-portrait,"&\
-         "app-img_03-aghora_opt-80_552w-portrait,"&\
-         "app-img_03_painting_tree_552w-portrait,"&\
-         "app-img_04-tatpurusha_opt-80_552w-portrait,"&\
-         "app-img_05-ishana_opt-80_552w-portrait,"&\
-         "app-img_28_sahasrara_736h-landscape,"&\
-         "app-img_70's_siva_poster_552w-portrait,"&\
-         "app-img_book_siva_face_736h-square,"&\
-         "app-img_book_siva_yogi_big_736h-square,"&\
-         "app-img_hap-0140_552w-portrait,"&\
-         "app-img_shivlinga-amarnath-shiva_736h-landscape,"&\
-         "app-img_sinha_9_552w-portrait,"&\
-         "app-img_siva_552w-portrait"  \
-         into brandImages
-   repeat for each item x in brandImages
-      put path_Assets() & "img/photography/" & x & "/" & x &"_med.jpg" & cr after tPaths
-   end repeat
-   delete last char of tPaths
-   return tPaths
-end brandImagesPaths
-
+--on closestack
+--   saveUserPrefs sBrandImageNumber
+--   pass closestack
+--end closestack
 
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 

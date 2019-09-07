@@ -20,10 +20,6 @@ command initializeNarrative
    ntinfo "Initialize scene"
    put the long id of img "homeStoryMainImage" into sMainImage
    if (getCache(pImage)) is empty OR (getCache(pQuotes)is empty) then 
-      --if (sImageList is empty) OR (sQuoteList is empty) then 
-      --implement moving this to narrative script
-      -- use a "initializeNarrative pClass"
-      -- to do to randomslides to other kind of harratives.
       
       getContent "Life","Atti Chudi"   # later, when the finish to story they get a list
       --getContent "Deities","Words of Our Master"   # make random later
