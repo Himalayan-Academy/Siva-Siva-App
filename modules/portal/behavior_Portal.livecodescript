@@ -53,6 +53,7 @@ command saveUserPrefs sBrandImageNumber
 end saveUserPrefs
 
 on closestack
+   dispatch "saveNarrationScene" to group "homeStory" of card "home"
    portal_SetLastStack "Siva-Siva-Portal"
 end closestack
 

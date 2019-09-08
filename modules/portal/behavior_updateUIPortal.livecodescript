@@ -60,11 +60,14 @@ command  setDefaultImage
    
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
    
-   # new install boot
-   if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
+   --   # new install boot
+   --   if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
    
-   # upgrade install boot
-   if sBrandImageNumber is empty then put 1 into sBrandImageNumber
+   --   # upgrade install boot
+   --   if sBrandImageNumber is empty then put 1 into sBrandImageNumber
+   
+   # new install oe upgrade - boot
+   if sBrandImageNumber > 1 then put 1 into sBrandImageNumber
    
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
@@ -92,7 +95,7 @@ command  setDefaultImage
    else 
       add 1 to sBrandImageNumber
    end if
-  
+   
 end  setDefaultImage
 
 ## I suppose there is a better way to store these

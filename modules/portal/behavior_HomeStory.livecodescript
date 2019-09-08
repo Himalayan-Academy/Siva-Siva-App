@@ -9,8 +9,17 @@ It is nested under a parent behavior: behavior "model_Narratives"
 
 global sConfigA,sDefaultImage,sMainImage
 local  sImageList,sLastImage,sQuoteList,sLastQuote,sLastScene,sTotalSceneCount
-local sAttribution
+local sAttribution,sStoryNumber
 
+
+on preopencontrol
+   # fresh reboot these will be null. 
+   # handle in initializeNarrative
+   put getPref ("preferences/modules/portal/narrative/storyNumber") into sStoryNumber
+   setCache"storyNumber", sStoryNumber
+   put getPref ("preferences/modules/portal/narrative/narrationScene") into sLastScene
+   setCache "narrationScene",sLastScene
+end preopencontrol
 
 command initializeNarrative
    --breakpoint
@@ -28,12 +37,8 @@ command initializeNarrative
       setCache"storyNumber",1
    end if
    
-   put getCache("storyNumber")  into pStoryNumber
-   getContent pStoryNumber
-   
-   ntinfo "Initialize scene"
-   
-   put the long id of img "homeStoryMainImage" into sMainImage
+   put getCache("storyNumber")  into sStoryNumber
+   getContent sStoryNumber
    
    if (getCache(pImage)) is empty OR (getCache(pQuotes)is empty) then 
       getContent (getCache("storyNumber") )
@@ -42,6 +47,10 @@ command initializeNarrative
    # sCacheA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
    # see getters and setters lib_SivaSivae
+   
+   ntinfo "Initialize scene"
+   
+   put the long id of img "homeStoryMainImage" into sMainImage
    
    if getCache("narrationScene") <> empty then
       goNextScene
@@ -52,24 +61,6 @@ command initializeNarrative
 end initializeNarrative
 
 
-## TO DO... when the using quits the app and reboot we need them in come back
-# the narrative in the right place.
-# requires saviing the story number, scene and re-initalizing the cache.
-
-# optimize to setting of preference,
-#  we doing on the main stack script, for branding, 
-# and also here 
-
-function getUserPreferences pPref
-   local tPortalPreferences, tPref
-   put getPref ("preferences/modules/narrative") into tPortalPreferences
-   put tPortalPreferences[pPref] into tPref
-   return tPref
-end getUserPreferences
-
-command saveUserPrefs sBrandImageNumber
-   setPref "preferences/modules/narrative", sBrandImageNumber
-end saveUserPrefs
 
 -----------------------------------------
 ## Trying to find architect that is scaleble and maintainable
@@ -222,5 +213,9 @@ command hideShowField pField,pBool
    set the vis of pField to pBool
 end hideShowField
 
+on closeControl
+   setPref "preferences/modules/portal/narrative/storyNumber", getCache("storyNumber")
+   setPref "preferences/modules/portal/narrative/narrationScene/", sLastScene
+end closeControl
 
 
