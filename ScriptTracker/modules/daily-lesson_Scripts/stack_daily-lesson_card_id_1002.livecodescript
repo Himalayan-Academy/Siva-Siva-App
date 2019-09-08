@@ -13,8 +13,9 @@ local sConfigA,sOnLine,sCurrentRealm,sViewState,sLesson,sLineStyle
 --> Events
 -
 on preOpenCard
-   lock screen
    setCardCoords
+   resetUI
+   updateUI
    
    # Fix image path from desktop when loading on Mobile
    # should not be required since David's method solve the issue (we think)
@@ -31,73 +32,99 @@ on preOpenCard
    
    --play (localPath() &"shared/audio/aum.mp3")
    
-   lock screen
    hide grp "lessonTextControl" 
    put empty into sLesson
    send "fetchLessonAndImage" to me in 20 milliseconds
-   unlock screen
 end preOpenCard
 
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+on updateUI
+   local tFooter, tTitle, tRect, tControl
+   put the long id of grp "footerNavigation" into tFooter
+   set the width of tFooter to CardWidth()
+   bottomCenterMe tFooter
+   put the long id of fld "Title" into tTitle
+   topCenterMe tTitle, 7
+   put the long id of btn "right-arrow" into tControl
+   topRightMe tControl
+   put the long id of btn "left-arrow" into tControl
+   topLeftMe tControl
+   put the long id of grp "lessonTextControl" into tControl
+   put (0,the bottom of tTitle + 30,CardWidth(),the top of tFooter) into tRect
+   set the rect of tControl to tRect
+end updateUI
+
 command goNextLesson
-    put empty into fld "title"
-    if sLesson= 365 then
-        put 1 into sLesson
-    else 
-        add 1 to sLesson
-    end if
+   put empty into fld "title"
+   if sLesson= 365 then
+      put 1 into sLesson
+   else 
+      add 1 to sLesson
+   end if
    send "fetchLessonAndImage sLesson" to me
 end goNextLesson
 
 command goPreviousLesson
-    put empty into fld "title"   
-    if sLesson= 1 then
-        put 365 into sLesson
-    else 
-        subtract 1 from sLesson
-    end if
-    send "fetchLessonAndImage sLesson" to me    
+   put empty into fld "title"   
+   if sLesson= 1 then
+      put 365 into sLesson
+   else 
+      subtract 1 from sLesson
+   end if
+   send "fetchLessonAndImage sLesson" to me    
 end goPreviousLesson
 
-command fetchLessonAndImage sLesson  
-
-    put "Realm of God,Realm of Soul" into tTitles # Currently wired to Realm of god and soul (no "Life")
-    put item sCurrentRealm of tTitles into tRealm # set to 1 for the daily MC lesson
-    ## Fetch Images
-    fetchImage tRealm
-    wait 300 milliseconds with messages
-    
-    buildLesson sLesson
-    
-    if isMobile() then
-        
-        # there is no way to dynamically fetch the new formatted height if the
-        # next lesson is longer than the last one. Our only option is to delete
-        # and recreate the mobilescroller on the fly      
-        
-        #scroller_Delete "scrolling gems field"
-       send "deleteMobileControl daily-lesson-text" to fld "daily-lesson-text"
-        # recreate:
-        if the formattedheight of fld "daily-lesson-text" > the height of fld "daily-lesson-text" then
-            send "CreateScroller daily-lesson-text"  to fld "daily-lesson-text"
-        end if
-        
-     end if
-     put fld "title" into pTrackData["currentLesson"]
-      tracking_RecordActivity "Daily Lesson", "navigation/goContent", pTrackdata
+command fetchLessonAndImage sLesson
+   local tTitles, tRealm, tTrackData
+   
+   put "Realm of God,Realm of Soul" into tTitles # Currently wired to Realm of god and soul (no "Life")
+   put item sCurrentRealm of tTitles into tRealm # set to 1 for the daily MC lesson
+   ## Fetch Images
+   fetchImage tRealm
+   wait 300 milliseconds with messages
+   
+   buildLesson sLesson
+   
+   if isMobile() then
+      
+      # there is no way to dynamically fetch the new formatted height if the
+      # next lesson is longer than the last one. Our only option is to delete
+      # and recreate the mobilescroller on the fly      
+      
+      #scroller_Delete "scrolling gems field"
+      send "deleteMobileControl daily-lesson-text" to fld "daily-lesson-text"
+      # recreate:
+      if the formattedheight of fld "daily-lesson-text" > the height of fld "daily-lesson-text" then
+         send "CreateScroller daily-lesson-text"  to fld "daily-lesson-text"
+      end if
+      
+   end if
+   put fld "title" into tTrackData["currentLesson"]
+   tracking_RecordActivity "Daily Lesson", "navigation/goContent", tTrackdata
 end fetchLessonAndImage
 
 command fetchImage pRealm
-
+   local tImgSQL, tConnectionID, tImageFileID, tNextImagePath, tControl
+   
    put _getRandomImageSQL() into tImgSQL
    replace ":1" with pRealm in tImgSQL
    put JnanamDB() into tConnectionID
    dbSetSQL tImgSQL
-   put dbGet ("file_id", tConnectionID) into tImageFileID
-   put textDecode ( tImageFileID[1]["file_id"], UTF8)  into tImageFileID     
-   put   (sivasiva_AssetFolder()&"img/photography/")  & tImageFileID & "/" & tImageFileID & "_med.jpg" \
-         into tNextImagePath
-   set the filename of img "lesson-background" to tNextImagePath    
-
+   put dbGet("file_id", tConnectionID) into tImageFileID
+   put textDecode(tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
+   put sivasiva_AssetFolder() & "img/photography/" & tImageFileID & "/" & \
+         tImageFileID & "_med.jpg" into tNextImagePath
+   
+   put the long id of img "lesson-background" into tControl
+   set the filename of tControl to tNextImagePath   
+   setImageToFullCardLoc tControl, "portrait"
+   set the loc of tControl to CardLoc()
 end fetchImage
 
 on updateImages # call if needed to update the dbase after changes made on disk to photo folders
@@ -105,16 +132,20 @@ on updateImages # call if needed to update the dbase after changes made on disk 
 end updateImages
 
 private function _getRandomSQL
+   local tSQL
    put the uRandomSQLQuery of this card into tSQL
    return tSQL
 end _getRandomSQL
 
 private function _getRandomImageSQL
+   local tSQL
    put the uRandomImageSelect of this card into tSQL
    return tSQL
 end _getRandomImageSQL
 
 command buildLesson pLessonNumber
+   local tStartYear, tToday, theNow, tNewYear, tLessonNo, tDwSNo, \
+         tTodaysDWS, tTodaysLWS, tTodaysSUTRA, tTodaysMWS
    lock screen for visual effect
    show grp "lessonTextControl"
    # Start with getting the right number  based on the day
@@ -235,7 +266,7 @@ command buildLesson pLessonNumber
    
    #We have to style each lesson with custom styles
    
-  lock screen
+   lock screen
    
    --    #DWS: center the book title, 
    
@@ -456,6 +487,7 @@ end buildLesson
 
 
 function returnFiles pBook,pNumber
+   local tFolder, tListOfLessons, tLessonTextFile, tPathToLesson, tLessonText
    put (path_Assets()&"books/"&pBook) into tFolder
    put files(tFolder) into tListOfLessons
    filter tListOfLessons without ".*"
