@@ -13,16 +13,27 @@ local sAttribution,sStoryNumber
 
 
 on preopencontrol
+   --breakpoint
    # fresh reboot these will be null. 
    # handle in initializeNarrative
+   
    put getPref ("preferences/modules/portal/narrative/storyNumber") into sStoryNumber
+   if sStoryNumber is "false" then # no prefs, first time app being loaded
+      put 1 into sStoryNumber
+   end if
    setCache"storyNumber", sStoryNumber
+   
    put getPref ("preferences/modules/portal/narrative/narrationScene") into sLastScene
+   if sLastScene is "false" then      # no prefs, first time app being loaded
+      put "" into sLastScene           # must be null to start by showing Attribution
+   end if
    setCache "narrationScene",sLastScene
+   
+   initializeNarrative
+   
 end preopencontrol
 
 command initializeNarrative
-   --breakpoint
    
    # for testin,set last scene toward the and
    --put 38 into sLastScene         
@@ -40,21 +51,19 @@ command initializeNarrative
    put getCache("storyNumber")  into sStoryNumber
    getContent sStoryNumber
    
-   if (getCache(pImage)) is empty OR (getCache(pQuotes)is empty) then 
-      getContent (getCache("storyNumber") )
-   end if
+   # Load local  with images and text
+   put getCache("imageList") into simageList
+   put getCache("Quotes") into sQuoteList
+   put getCache("Attribution") into sAttribution 
+   put getCache("sceneCount") into sTotalSceneCount
    
    # sCacheA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
-   # see getters and setters lib_SivaSivae
+   # see getters and setters lib_SivaSiva
    
    ntinfo "Initialize scene"
    
    put the long id of img "homeStoryMainImage" into sMainImage
-   
-   if getCache("narrationScene") <> empty then
-      goNextScene
-   end if
    
    if (the lockscreen) then unlock screen
    
@@ -77,25 +86,11 @@ end initializeNarrative
 
 
 command goNextScene
-   --breakpoint
    local tImage, tPath
    
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
    put  getCache("narrationScene") into sLastScene
-   
-   # see if we need to get the cache.
-   
-   if sTotalSceneCount =""  then
-      
-      # locals are empty, first run or means we have gone to another module
-      # and come back, need to get content for cache
-      
-      put  getCache(imageList) into sImageList
-      put  getCache("Quotes") into sQuoteList
-      put  getCache("Attribution") into sAttribution
-      put  getCache("SceneCount") into sTotalSceneCount
-   end if
    
    if sLastScene= empty then
       # it means we are starting again
@@ -107,9 +102,6 @@ command goNextScene
    end if
    
    put empty into fld "HomeStoryText"
-   
-   # brand new lauch, the app only know the branding image, nothing more
-   # when have to increment to first scene
    
    if (sLastScene is 0 )  then add 1 to sLastScene
    
@@ -147,21 +139,21 @@ command showIsOver
    # increment to the next narrative.
    put empty into sLastScene
    setCache("ContentFlag"),0
-   put getCache("storyNumber") into tStoryNumber
+   put getCache("storyNumber") into sStoryNumber
    
-   if (tStoryNumber  = "" ) OR (tStoryNumber =2) then 
+   if (sStoryNumber  = "" ) OR (sStoryNumber =2) then 
       # new app user first run, or an upgrade: preference on story are empty..
       # or we are reach the end of stories... hard wired right now to 2
-      put 1 into tStoryNumber
+      put 1 into sStoryNumber
    else
-      add 1 to tStoryNumber
+      add 1 to sStoryNumber
    end if
-   setCache ("storyNumber"),tStoryNumber
+   setCache ("storyNumber"),sStoryNumber
    setCache "narrationScene",""
    setDefaultImage
    
    # get the new story
-   getContent tStoryNumber
+   getContent sStoryNumber
    put getCache("imageList") into sImageList
    put getCache("Quotes") into sQuoteList
    put getCache("Attribution") into sAttribution

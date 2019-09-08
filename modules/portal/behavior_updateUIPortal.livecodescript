@@ -67,7 +67,8 @@ command  setDefaultImage
    --   if sBrandImageNumber is empty then put 1 into sBrandImageNumber
    
    # new install oe upgrade - boot
-   if sBrandImageNumber > 1 then put 1 into sBrandImageNumber
+   --breakpoint
+   if sBrandImageNumber < 1 then put 1 into sBrandImageNumber
    
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
