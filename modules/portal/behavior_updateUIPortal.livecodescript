@@ -27,9 +27,6 @@ on preopenCard
          put empty into fld "homeStoryText"
          put the long id of fld "homeStoryText" into pControl
          centerMe pControl,0,5
-         ntInfo ("fld homestoryText loc: "& the loc of pControl)
-         --dispatch "initializeNarrative" to grp "homeStory"
-         ntInfo ("Home card rect: " & the rect of this card)
          break
       case "MainNav"
          hide button "goToMainNav" of group "footer" of me
@@ -54,25 +51,33 @@ command  setDefaultImage
    
    local tImages, tImage, tPath
    
-   # save this to stack behavrio and use sCacheA for the duration 
+   # save this to stack behavoirand use sCacheA for the duration 
    # that that app is open 
-   # increment when the use closes that app.
+   # increment when the user closes that app. But that has to done 
+   # in SivaSiva.app close stack
    
    put getUserPreferences("brandImageNumber") into sBrandImageNumber
    
-   --   # new install boot
-   --   if sBrandImageNumber = 0 then put 1 into sBrandImageNumber
+   # new app stall boot w/o preferences:
    
-   --   # upgrade install boot
-   --   if sBrandImageNumber is empty then put 1 into sBrandImageNumber
-   
-   # new install oe upgrade - boot
-   --breakpoint
-   if sBrandImageNumber < 1 then put 1 into sBrandImageNumber
+   if (sBrandImageNumber < 1) OR (sBrandImageNumber = "false") then
+      put 1 into sBrandImageNumber
+   end if
    
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    
    put _brandImages() into tImages
+   
+   # we save the number of images so we can more with hardwiring the number 
+   # save to cache to set preferences of reboot.
+   
+   put the number of lines of tImages into tTotalBrandImages
+   
+   # will get this out when we close Sivasiva.app
+   # the user get a new brand image only opening the app.
+   
+   setCache TotalBrandImages, tTotalBrandImages
+   
    put line sBrandImageNumber of tImages into tImage
    set the filename of sMainImage to brandImagePath(tImage)
    

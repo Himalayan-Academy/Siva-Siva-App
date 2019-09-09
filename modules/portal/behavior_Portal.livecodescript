@@ -48,12 +48,7 @@ function getUserPreferences pPref
    return tPref
 end getUserPreferences
 
-command saveUserPrefs sBrandImageNumber
-   setPref "preferences/modules/portal/brandImageNumber", sBrandImageNumber
-end saveUserPrefs
-
 on closestack
-   dispatch "saveNarrationScene" to group "homeStory" of card "home"
    portal_SetLastStack "Siva-Siva-Portal"
 end closestack
 

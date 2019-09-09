@@ -13,7 +13,7 @@ local sAttribution,sStoryNumber
 
 
 on preopencontrol
-   --breakpoint
+
    # fresh reboot these will be null. 
    # handle in initializeNarrative
    
