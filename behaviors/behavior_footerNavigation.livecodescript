@@ -82,7 +82,8 @@ on mouseup
          end if
          
          deleteMobileControl  "audioPlayer"
-         show group "share-ui" with visual "dissolve" very fast
+         --show group "share-ui" with visual "dissolve" very fast
+         show tControl
          --unlock screen
          break
          
