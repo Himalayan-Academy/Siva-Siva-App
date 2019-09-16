@@ -23,6 +23,7 @@ on preopenCard
    
    switch pCard
       case "Home"
+         setUpBrandImage
          setDefaultImage
          put empty into fld "homeStoryText"
          put the long id of fld "homeStoryText" into pControl
@@ -49,58 +50,29 @@ command  setDefaultImage
    
    local pImage, tPaths
    
-   local tImages, tImage, tPath
-   
-   # save this to stack behavoirand use sCacheA for the duration 
-   # that that app is open 
-   # increment when the user closes that app. But that has to done 
-   # in SivaSiva.app close stack
-   
-   put getUserPreferences("brandImageNumber") into sBrandImageNumber
-   
-   # new app stall boot w/o preferences:
-   
-   if (sBrandImageNumber < 1) OR (sBrandImageNumber = "false") then
-      put 1 into sBrandImageNumber
-   end if
-   
+   put getCache("BrandImage") into sBrandImageNumber
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
-   
-   put _brandImages() into tImages
-   
-   # we save the number of images so we can more with hardwiring the number 
-   # save to cache to set preferences of reboot.
-   
-   put the number of lines of tImages into tTotalBrandImages
+   put _brandImages() into tBrandImages
    
    # will get this out when we close Sivasiva.app
    # the user get a new brand image only opening the app.
    
    setCache TotalBrandImages, tTotalBrandImages
    
-   put line sBrandImageNumber of tImages into tImage
-   set the filename of sMainImage to brandImagePath(tImage)
+   put line sBrandImageNumber of tBrandImages into pImage
+   set the filename of sMainImage to brandImagePath(pImage)
    
-   --put brandImagesPaths() into tPaths
-   # store brand image; set stage to screen to 1
-   --put line sBrandImageNumber of tPaths into pImage
-   --set the filename of sMainImage to  pImage
-   
-   --put empty into sConfigA["narrationScene"] # wrong place for this!
+  #  UI responsive
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
-   
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    show btn "brandLogo"
    show sMainImage with visual effect "dissolve"
    
-   # we have to save the number, this was on next start up
-   # it will change....
-   if sBrandImageNumber = (the number of lines of tImages) then
-      put 1 into sBrandImageNumber
-   else 
-      add 1 to sBrandImageNumber
-   end if
+   # optimize disk operations *after* the display is finished updating
+   
+   put the number of lines of tBrandImages into tTotalBrandImages
+   setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
 end  setDefaultImage
 

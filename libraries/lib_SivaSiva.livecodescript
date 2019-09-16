@@ -30,6 +30,53 @@ end ntInfo
 function isMobile
    return the environment is "mobile"
 end isMobile
+  
+on setUpBrandImage
+   # we have to save the number, this was on next start up
+   # it will change
+   --breakpoint
+   
+   # we don't want to go to disk every thing we hit the card
+   # therefore check the cache, if we have reach tNextChangeUp time
+   # exit to top
+   
+   put getcache("NextBrandImageChange") into tNextChangeUp
+   convert tNextChangeUp to seconds
+   if tNextChangeUp > (the seconds) then
+      exit to top
+   end if
+   
+   put getPref ("preferences/modules/portal/brandImageNumber") into tBrandImage
+   put getPref ("preferences/modules/portal/totalBrandImages") into tTotalBrandImages
+   put getPref ("preferences/global/lastRunDate") into tLastRunDate
+   if tLastRunDate = "false" then  put the internet date  into tLastRunDate
+   convert tLastRunDate to seconds
+   
+   # new install, no prefs OR total is reached  
+   
+   if (tBrandImage = "false") OR (tBrandImage = 0) OR (tBrandImage>tTotalBrandImages)  then
+      put 1 into  tBrandImage
+   else 
+      # or  12 hours has passed
+      put tLastRunDate + 40 into tNextChangeUp
+      if tNextChangeUp > tLastRunDate then 
+         add 1 to  tBrandImage
+         put the seconds into tNextChangeUp
+         add 40 to tNextChangeUp
+         convert tNextChangeUp to internet date
+         setPref "preferences/global/lastRunDate", tNextChangeUp
+         setCache "NextBrandImageChange",tNextChangeUp
+      end if
+   end if
+   
+   
+   setPref "preferences/modules/portal/brandImageNumber",  tBrandImage
+   # tTotalBrandImages is set on the home card
+   
+   # cache 
+   setCache "BrandImage", tBrandImage
+   
+end setUpBrandImage
 
 
 
