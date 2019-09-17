@@ -87,15 +87,10 @@ private function _brandImages
          "app-img_01-sadyojata_opt-80_552w-portrait" & cr & \
          "app-img_02-vamadeva_opt-80_552w-portrait" & cr & \
          "app-img_03-aghora_opt-80_552w-portrait" & cr & \
-         "app-img_03_painting_tree_552w-portrait" & cr & \
          "app-img_04-tatpurusha_opt-80_552w-portrait" & cr & \
          "app-img_05-ishana_opt-80_552w-portrait" & cr & \
-         "app-img_28_sahasrara_736h-landscape" & cr & \
-         "app-img_70's_siva_poster_552w-portrait" & cr & \
          "app-img_book_siva_face_736h-square" & cr & \
-         "app-img_book_siva_yogi_big_736h-square" & cr & \
          "app-img_hap-0140_552w-portrait" & cr & \
-         "app-img_shivlinga-amarnath-shiva_736h-landscape" & cr & \
          "app-img_sinha_9_552w-portrait" & cr & \
          "app-img_siva_552w-portrait"\
          into tBrandImages

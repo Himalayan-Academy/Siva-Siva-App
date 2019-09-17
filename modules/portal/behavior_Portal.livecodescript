@@ -11,29 +11,29 @@ end preOpenStack
 
 on openStack
    local tLastStack
-   
+   set the acceleratedRendering of this stack to true
    put portal_GetLastStack() into tLastStack
    --if not (tLastStack is "Siva-Siva-App" or tLastStack is empty) then
-      switch tLastStack
-         case "Siva-Siva-App"
-         case empty
-            go card  "Home"
-            break
-         case "Surprise"
-            go card  "Surprise"
-            break
-         case "Siva-Siva-Portal"
-         case "pathtosiva"
-         case "calendar"
-         case "color-meditation"
-         case "daily-lesson"
-         case "lexicon"
-            go to card "modulesList"
-            send "LoadModulesList portal_GetModulesList()" to card "modulesList" -- in 0 seconds
-            break
-         default
-            go card  "mainNav"
-      end switch
+   switch tLastStack
+      case "Siva-Siva-App"
+      case empty
+         go card  "Home"
+         break
+      case "Surprise"
+         go card  "Surprise"
+         break
+      case "Siva-Siva-Portal"
+      case "pathtosiva"
+      case "calendar"
+      case "color-meditation"
+      case "daily-lesson"
+      case "lexicon"
+         go to card "modulesList"
+         send "LoadModulesList portal_GetModulesList()" to card "modulesList" -- in 0 seconds
+         break
+      default
+         go card  "mainNav"
+   end switch
    --end if
 end openstack
 
