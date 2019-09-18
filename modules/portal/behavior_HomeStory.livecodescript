@@ -4,41 +4,77 @@
 This script  is the behavior assigned to card 1 of the Home
 assign to group "HomeStory"
 
-It is nested with a parent behavior: behavior "model_Narratives"
+It is nested under a parent behavior: behavior "model_Narratives"
 */
 
 global sConfigA,sDefaultImage,sMainImage
-local  sImageList,sLastImage,sQuoteList,sLastQuote,sImageCount
+local  sImageList,sLastImage,sQuoteList,sLastQuote,sLastScene,sTotalSceneCount
+local sAttribution,sStoryNumber
 
+
+on preopencontrol
+
+   # fresh reboot these will be null. 
+   # handle in initializeNarrative
+   
+   put getPref ("preferences/modules/portal/narrative/storyNumber") into sStoryNumber
+   if sStoryNumber is "false" then # no prefs, first time app being loaded
+      put 1 into sStoryNumber
+   end if
+   setCache"storyNumber", sStoryNumber
+   
+   put getPref ("preferences/modules/portal/narrative/narrationScene") into sLastScene
+   if sLastScene is "false" then      # no prefs, first time app being loaded
+      put "" into sLastScene           # must be null to start by showing Attribution
+   end if
+   setCache "narrationScene",sLastScene
+   
+   initializeNarrative
+   
+end preopencontrol
 
 command initializeNarrative
-   --breakpoint
-   ntinfo "Initialize scene"
-   put the long id of img "homeStoryMainImage" into sMainImage
-   if (sImageList is empty) OR (sQuoteList is empty) then 
-      getContent "Deities","Words of Our Master"   # make random later
+   
+   # for testin,set last scene toward the and
+   --put 38 into sLastScene         
+   
+   # narrative is cached
+   if getCache("ContentFlag") = 1 then 
+      exit initializeNarrative #all content is cached
    end if
    
-   # sConfigAsConfigA["narrationScene"]  tell us where we have in the current story
+   #first run; narrative number is was not save to pref and is null
+   if getCache("storyNumber") = "" then 
+      setCache"storyNumber",1
+   end if
+   
+   put getCache("storyNumber")  into sStoryNumber
+   getContent sStoryNumber
+   
+   # Load local  with images and text
+   put getCache("imageList") into simageList
+   put getCache("Quotes") into sQuoteList
+   put getCache("Attribution") into sAttribution 
+   put getCache("sceneCount") into sTotalSceneCount
+   
+   # sCacheA["narrationScene"]  tell us where we have in the current story
    # so that we can come back and start from where we left off.
+   # see getters and setters lib_SivaSiva
    
-   if sConfigA["narrationScene"] <> empty then
-      
-      --      # it means this a brand new session, start of the app.
-      --      #  or, the user finished to story and back at a new beginning
-      --      setDefaultImage  # on the card script
-      --   else
-      goNextScene
-   end if
+   ntinfo "Initialize scene"
+   
+   put the long id of img "homeStoryMainImage" into sMainImage
    
    if (the lockscreen) then unlock screen
-
    
 end initializeNarrative
+
+
 
 -----------------------------------------
 ## Trying to find architect that is scaleble and maintainable
 ## "getContent" is meant to "get a story"
+## we are not using "model_Narratives" but we should be
 ## we should be able get and slide show in content store in that app
 ## slide show from the internet
 ## "a narrative" for the server , to be developed that called XML
@@ -46,53 +82,44 @@ end initializeNarrative
 ## for now is is hard wired to in-app photo + quote from the dBase
 ## this is just the beginning, It weill need to be responsive
 
-
-command  getContent pPhotos,pText
-   # functions from  model_Narrative:
-   switch pPhotos
-      case "Deities"
-         put randomDeityPhotos() into sImageList 
-    
-         put the number of lines of sImageList into sImageCount
-         --ntInfo ("image list: " & line 1 of sImageList)
-         break
-   end switch
-   switch pText
-      case "Words of Our Master"
-         put FetchQuotesCollection(pText) into sQuoteList
-         break
-   end switch
-end getContent
+# later should be  in model_Narratives
 
 
 command goNextScene
-   --breakpoint
    local tImage, tPath
-   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sImageCount)
-   if sConfigA["narrationScene"] = empty then
+   
+   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
+   
+   put  getCache("narrationScene") into sLastScene
+   
+   if sLastScene= empty then
       # it means we are starting again
       # TO DO we should have attributions as part of the narrative content
       # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )
-      put 1 into sConfigA["narrationScene"]
+      showAttribution sAttribution
+      setCache "narrationScene",1
       exit goNextScene
    end if
-   put sConfigA["narrationScene"] into sLastImage 
-   # this keeps the Scene position when we leave this stack and come back
+   
    put empty into fld "HomeStoryText"
-   # load an image
-   if (sLastImage is 0 )  then add 1 to sLastImage
-   --if (sLastImage is 0 ) OR (sLastImage is empty) then add 1 to sLastImage
+   
+   if (sLastScene is 0 )  then add 1 to sLastScene
+   
+   # following is hard wired to slide show from the app
+   # refactor when we get to an XML cum "SMILE" model
+   
+   #Deal with scene count, begin again etc.
+   # we have reach the end.
+   
+   if sLastScene > sTotalSceneCount then 
+      showIsOver
+      exit goNextScene
+   end if
+   
+   # We have not reached then end. We are in the middle of a story
+   # so we can actually "go next" 
+   
    if not (the vis of sMainImage) then
-      if sLastImage > sImageCount then 
-         put 0 into sLastImage
-         put empty into sConfigA["narrationScene"] 
-         put path_Assets()& "img/siva-darshan/who-is-siva_1200x800.jpg" into tImage
-         setDefaultImage tImage
-         answer "The End. Start Again?" with  "Yes" or "No"
-         if it is "Yes" then goNextScene
-         exit goNextScene
-      end if
       put random(the number of lines of sImageList) into tLine
       put line tLine of sImageList into tPath
       # put line  sLastImage of sImageList into tPath
@@ -100,9 +127,45 @@ command goNextScene
    else
       loadNextQuote sLastImage
    end if
-   add 1 to sLastImage
-   put sLastImage into  sConfigA["narrationScene"] 
+   
+   
+   add 1 to sLastScene
+   setCache "narrationScene",sLastScene 
+   
 end goNextScene
+
+command showIsOver
+   # story if finished. back to default and prepare to 
+   # increment to the next narrative.
+   put empty into sLastScene
+   setCache("ContentFlag"),0
+   put getCache("storyNumber") into sStoryNumber
+   
+   if (sStoryNumber  = "" ) OR (sStoryNumber =2) then 
+      # new app user first run, or an upgrade: preference on story are empty..
+      # or we are reach the end of stories... hard wired right now to 2
+      put 1 into sStoryNumber
+   else
+      add 1 to sStoryNumber
+   end if
+   setCache ("storyNumber"),sStoryNumber
+   setCache "narrationScene",""
+   setDefaultImage
+   
+   # get the new story
+   getContent sStoryNumber
+   put getCache("imageList") into sImageList
+   put getCache("Quotes") into sQuoteList
+   put getCache("Attribution") into sAttribution
+   put getCache("SceneCount")  into sTotalSceneCount
+   setCache ContentFlag, 1
+end showIsOver
+
+
+## we think for following handle my belong to the "model"
+# but this a UI call  to show something in the "view"
+# in MVC architecture, this would be part of a "controller"
+# perhaps this script falls in that category?  
 
 command loadNewImage pPath
    lock screen for visual effect
@@ -142,5 +205,9 @@ command hideShowField pField,pBool
    set the vis of pField to pBool
 end hideShowField
 
+on closeControl
+   setPref "preferences/modules/portal/narrative/storyNumber", getCache("storyNumber")
+   setPref "preferences/modules/portal/narrative/narrationScene/", sLastScene
+end closeControl
 
 

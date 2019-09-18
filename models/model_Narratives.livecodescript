@@ -1,16 +1,64 @@
 ﻿script "model_Narratives"
 
 -----------------------------------------------------
-#  behavior_Narrative
+# model_Narrative
 #
 # DESCRIPTION
-# this behavior is meant to serve as the code behind any  grp "narrative" 
-# which contains one or more images, fields, browser and audio that will be called
+# used a behavior but called in model because it gets for disk what is needed
+# is meant to serve as the code behind any  grp "narrative" which contains one or more images, fields, browser and audio that will be called
 # to a narrative/story, narrative/teaching, narrative/reference
 # the idea is to all an XML file to server narrative folders
 # then "informs" the user with story.
+# CHANGES: 2018-20-2019 Added a command to call a class of narrative (future use case, current a slideshow from the app) and random function 
 # CHANGES: 2018-20-2018 CREATED Brahmanathaswami
 -----
+--command foundNarrativeScript
+--   answer "Yes, I am model_narrative and I am in the message Path!" with "OK"
+--end foundNarrativeScript
+
+#### GETCONTENT 
+## BR: 09-03-2019
+-- getContent
+-- currently use for slide shows using app package
+-- photos and quote
+-- eventually: "classes" TBD, like vidoe, XML presention
+-- slideshow from the web etc.
+############
+
+command  getContent pStoryNumber --  pPhotos,pText
+   
+   switch pStoryNumber
+      case "1" # Words of Our Master
+         # this slideshow it based on the sImageList for totalSceneCount
+         # It can but use for any text, narrative.
+         put randomDeityPhotos() into sImageList 
+         # scenes constrained by the number of Deity Photos
+         put the number of lines of sImageList into sTotalSceneCount
+         --ntInfo ("image list: " & line 1 of sImageList)
+         
+         put FetchQuotesCollection("Words of Our Master") into sQuoteList
+         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
+         break
+      case "2" # Atti Chudi
+         
+         --ntInfo ("image list: " & line 1 of sImageList)
+         put randomLifePhotos() into sImageList 
+         put FetchQuotesCollection("Atti Chudi") into sQuoteList
+         put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
+         #   scenes constrained by the number verses
+         put the number of lines of sQuoteList into sTotalSceneCount
+         
+         break
+   end switch
+   
+   
+   setCache imageList, sImageList
+   setCache Quotes, sQuoteList
+   setCache Attribution, sAttribution
+   setCache SceneCount, sTotalSceneCount
+   setCache ContentFlag, 1
+   
+end getContent
 
 command showNarrative pNarrativeA
    dispatch "showNarrative" to stack "narrative" with pNarrativeA
@@ -117,20 +165,11 @@ end narrativeItemLoadImage
 
 
 
-
-
-
-
-
-
-
-
-# for now this a proof of conceptI have just a little kale left to last me 5 days. 
-# starting by building it locally in the stack
-# to see how it flows.
+-------------------------
+# we should optimize these two functions for any slides show
 
 function randomDeityPhotos
-   local tQueriesA, tSQL, tConnectionID, tDeityPhotoFileIDA, tImageList
+   local tQueriesA, tSQL, tConnectionID, tImageList
    --ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
@@ -139,17 +178,40 @@ function randomDeityPhotos
          exit repeat
       end if
    end repeat
- --ntinfo tSQL
+   --ntinfo tSQL
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
-   put dbGet(,tConnectionID) into tDeityPhotoFileIDA
-   repeat for each key x in tDeityPhotoFileIDA
-      put returnAssetPath("photography",tDeityPhotoFileIDA[x]["file_id"]) & cr after tImageList
+   put dbGet(,tConnectionID) into tPhotoFileIDA
+   repeat for each key x in tPhotoFileIDA
+      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
    end repeat
    --ntinfo ("put line 10: " & (line 10 of pImageList))
    return tImageList
    
 end randomDeityPhotos 
+
+function randomLifePhotos
+   local tQueriesA, tSQL, tConnectionID, tImageList
+   --ntInfo ("getting RandomImage")
+   put getSQLQueries() into tQueriesA
+   repeat for each key x in tQueriesA
+      if tQueriesA[x]["queryName"] = "selectCachedLifePhotos" then
+         put tQueriesA[x]["sqlQuery"] into tSQL
+         exit repeat
+      end if
+   end repeat
+   --ntinfo tSQL
+   put  JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet(,tConnectionID) into tPhotoFileIDA
+   repeat for each key x in tPhotoFileIDA
+      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
+   end repeat
+   --ntinfo ("put line 10: " & (line 10 of pImageList))
+   return tImageList
+   
+end randomLifePhotos 
+
 
 function fetchQuotesCollection pCollection
    local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuotes
@@ -160,7 +222,10 @@ function fetchQuotesCollection pCollection
          exit repeat
       end if
    end repeat
-   
+
+   ## It is taken from the "subject" column of the quote table
+   ## where use the book title in many cases
+  
    replace "#####" with pCollection in tSQL
    
    put  JnanamDB() into tConnectionID

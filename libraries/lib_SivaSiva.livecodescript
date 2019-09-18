@@ -7,6 +7,7 @@ local sSivaSivaNavigation
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
+constant kBRAND_IMAGE_CHANGE= 240  # for production change to 12 hour = 1800 sec
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
 constant cRemoteNewsFile="siva-app-news_1-4.html"
@@ -30,6 +31,51 @@ end ntInfo
 function isMobile
    return the environment is "mobile"
 end isMobile
+  
+on setUpBrandImage
+   # we have to save the number, this was on next start up
+   # it will change
+   --breakpoint
+   
+   # we don't want to go to disk every thing we hit the card
+   # therefore check the cache, if we have reach tNextChangeUp time
+   # exit to top
+   
+   put getcache("NextBrandImageChange") into tNextChangeUp
+   convert tNextChangeUp to seconds
+   if tNextChangeUp > (the seconds) then
+      exit to top
+   end if
+   
+   put getPref ("preferences/modules/portal/brandImageNumber") into tBrandImage
+   put getPref ("preferences/modules/portal/totalBrandImages") into tTotalBrandImages
+   put getPref ("preferences/global/lastRunDate") into tLastRunDate
+   if tLastRunDate = "false" then  put the internet date  into tLastRunDate
+   convert tLastRunDate to seconds
+   
+   # new install, no prefs OR total is reached  
+   
+   if (tBrandImage = "false") OR (tBrandImage = 0) OR (tBrandImage>tTotalBrandImages)  then
+      put 1 into  tBrandImage
+   else 
+      # or  12 hours has passed
+      if tNextChangeUp > tLastRunDate then 
+         add 1 to  tBrandImage
+      end if
+   end if
+   put the seconds +  kBRAND_IMAGE_CHANGE into tNextChangeUp
+   convert tNextChangeUp to internet date
+   setPref "preferences/global/lastRunDate", tNextChangeUp
+   setCache "NextBrandImageChange",tNextChangeUp
+   
+   
+   setPref "preferences/modules/portal/brandImageNumber",  tBrandImage
+   # tTotalBrandImages is set on the home card
+   
+   # cache 
+   setCache "BrandImage", tBrandImage
+   
+end setUpBrandImage
 
 
 
@@ -367,6 +413,30 @@ end ___SETTERS_GETTERS
 
 
 local sJournalFlag,sJournalData
+local sCacheA
+
+command clearCache
+   put empty into sCacheA
+end clearCache
+
+on displayCache
+   repeat for each key x in sCacheA
+      put x & ": " & sCacheA[x] & cr after tOutput
+   end repeat
+   put tOutput
+end displayCache
+
+command setCache pKey, pValue
+   put pValue into sCacheA[pKey]
+end setCache
+
+function getCache pKey
+   if pKey is empty then
+      return sCacheA # return the whole array if needed
+   else
+      return sCacheA[pKey] # return just the requested value
+   end if
+end getCache
 
 command setJournalFlag pFlag
    put pFlag into sJournalFlag
