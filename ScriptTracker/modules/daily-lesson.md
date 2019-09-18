@@ -18,16 +18,6 @@
 * Behavior: stack "behavior_mobileScroller"
 * [stack_daily-lesson_field_id_1148](./../../ScriptTracker/modules/daily-lesson_Scripts/stack_daily-lesson_field_id_1148.livecodescript)
 
-**bkgnd "footerNavigation" of stack "daily-lesson"**
-* ID: bkgnd id 1160 of stack "daily-lesson"
-
-* Background on card IDs: 1002
-* [stack_daily-lesson_bkgnd_id_1160](./../../ScriptTracker/modules/daily-lesson_Scripts/stack_daily-lesson_bkgnd_id_1160.livecodescript)
-
-**button "share" of bkgnd "footerNavigation" of stack "daily-lesson"**
-* ID: button id 1199 of bkgnd id 1160 of stack "daily-lesson"
-* [stack_daily-lesson_button_id_1199](./../../ScriptTracker/modules/daily-lesson_Scripts/stack_daily-lesson_button_id_1199.livecodescript)
-
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "daily-lesson"**
 * ID: widget id 1188 of bkgnd id 1187 of stack "daily-lesson"
 * Widget Kind: com.livecode.widget.svgpath

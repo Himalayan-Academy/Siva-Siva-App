@@ -9,19 +9,14 @@ Script "stack_daily-lesson_"
 local sLastActivityA
 
 on preopenstack
-   set the fullscreenmode of this stack to "showAll"
-   
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-      set the fullscreenmode of this stack to "showAll"
    end if
-   
 end preopenstack
-  
-  on opencard
-     audioIsRunning  
-  end opencard
+
+on opencard
+   audioIsRunning  
+end opencard
 
 on setLastactivity  pLessonNum, pCdName  
    put pCdName into sLastActivityA["CdName"]
@@ -42,19 +37,21 @@ end closeStack
 # so keeping Jacque's nice construct for now.
 
 command addJournalEntry -- save a bookmark to db
+   local tCdName, tData, tTitle
    put sLastActivityA["CdName"] into tCdName
-   put tCdName into pData["card"] -- store the last user cd   
+   put tCdName into tData["card"] -- store the last user cd   
    if tCdName = "daily-lesson" then -- store the lesson number
       --put sLastActivityA["LessonNum"] into tLessonNum
-      --put tLessonNum into pData["lessonNum"]
+      --put tLessonNum into tData["lessonNum"]
       --put "Master Course Dialy Lesson - " & tLessonNum into tTitle -- "lesson x"
       put "Master Course Daily Lesson"  into tTitle
    end if
-   Journal_RecordEntry "daily-lesson",tTitle,pData -- send to journal
+   Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
 end addJournalEntry
 
 
 on journalResume pData,pEntryA -- sent from journal stack
+   local tCd
    put pData["card"] into tCd
    go to card tCd
    --put pData["lessonNum"] into tNum
