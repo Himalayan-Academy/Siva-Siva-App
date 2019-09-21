@@ -92,7 +92,7 @@ command portal_GoStack cardOrStackObject
       set the destroyStack of this stack to false
    end if
    
-   --breakpoint
+
    close stack oStackName
    go cardOrStackObject
    
@@ -248,6 +248,7 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
+   breakpoint
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
    put ("youtube.com","1988-apple-video") into tRequiresLandscape
@@ -344,39 +345,7 @@ command portal_SetModulesList  tTarget
 end portal_SetModulesList
 
 function portal_GetModulesList stackName
+   --breakpoint
    return sLastModulesList  
 end portal_getModulesList
 
-
-############################
-on ___DEPRECATED
-end ___DEPRECATED
-############################
-
-## Previous handler Portal_GoStack but it turns out the for 9.0.4 onward
-## we can simply close the last stack 
-## go to the next one.
-
-
---   # it doesn't work to go in window from a Portrait to Landscape.
---   # need to use the old go stack
---   put "wordpuzzles,view_BrowserLandscape" into tLandScapeModeStacks
-
---   # we need to from landscape to portrait and backagain 
---   # closing one and open the other
-
---   ntinfo ("Portal_GoStack: " & portal_GoStack && cardOrStackObject )
---   if (cardOrStackObject  is not among the items of tLandScapeModeStacks) AND  \
---         (trueword 2 of cardOrStackObject  is not among the items of tLandScapeModeStacks) AND \
---         (oStackName is not among the items of  tLandScapeModeStacks) then
---      ntInfo "go stack in window of other stack"
---      close stack oStackName
---      go cardOrStackObject
-
---   else
---      ntInfo "close one; open next"
---      close stack oStackName
---      go cardOrStackObject
-
-
---   end if

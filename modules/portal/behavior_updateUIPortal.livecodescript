@@ -90,7 +90,6 @@ private function _brandImages
          "app-img_03-aghora_opt-80_552w-portrait" & cr & \
          "app-img_04-tatpurusha_opt-80_552w-portrait" & cr & \
          "app-img_05-ishana_opt-80_552w-portrait" & cr & \
-         "app-img_book_siva_face_736h-square" & cr & \
          "app-img_hap-0140_552w-portrait" & cr & \
          "app-img_sinha_9_552w-portrait" & cr & \
          "app-img_siva_552w-portrait"\
@@ -140,12 +139,6 @@ end _RESPONSIVE
 -- to deals with different cards
 ###############
 
---after preopencard
---   lock screen
---   setCardCoords "portrait"
---   updateUIPortal
---   unlock screen
---end preopencard
 
 
 on resizeStack x,y,ox,oy
@@ -173,6 +166,10 @@ command updateUIPortal
    
    put the long id of group "audioGlobalControl" of me into pControl
    topRightMe pControl,40,15
+   
+   put the long id of widget "globalNavTree" of me into pControl
+   centerMe pControl
+   set the right of pControl to 0
    
    put the long id of fld "Notification" of me into pControl
    topCenterMe pControl,150

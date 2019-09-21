@@ -1,117 +1,89 @@
 ﻿script "behavior_globalNavControl"
-###################
--- BR: 2018-12-4
--- the model for the global nav control 
--- which is be place on all card
--- for now will use the common library of SivaSivaPortal
--- all this need to do is call 
---  portal_DoRowLink tRowName
---  where to tRowName is the string we previous use
--- on the portals labels. 
--- not the string does now have a space. 
+--> ###################
+-- BR: 2019-09-20
+-- This behavior is assigned to the widget "globalNavTree" which, initially, is part of the
+-- Siva-Siva-Portal stack, card "home" 
+-- conceivably is could be implement "app wide" to take the user 
+-- where he wanted to go without going "Home" 
+-- so, with that in mind, we do not want to have this behavior dependent 
+-- on any "local stuff" which can only be found it the portal stack -> home card
+-- there are useful functions here, so we will keep the code intact for a while
 
-local sRowName, sMap, sFavoritesA
+local tRowdataA
 
-on preOpenCard
-   local pCard
+command createNavTree
+   set the numberformat to "00"
+   put getNavigationMap() into  sMap
+   --breakpoint
+   put sMap["portalData"]["home"]["rowdata"] into aProcessA
+   repeat for each key tKey in  aProcessA
+      put aProcessA[tKey][rowName] into aTreeA[tKey]
+      
+      portal_SetModulesList aTreeA[tKey]
+      put sMap["portalData"][aTreeA[tKey]]["rowdata"] into tRowdataA
+      set dgData of grp "modulesList" of me to tRowdataA
+      
+      put random(20) into tNo
+      put tNo into aTreeA[tKey][tNo]
+   end repeat
    
-   lock screen
-   put the short name of this card into pCard
-   setUpUI pCard
+   set array of widget "globalNavTree" to aTreeA
    
-   if getPhoneModel() is "iPhoneX" then
-      mobileShowStatusBar
+   --   set the numberformat to "000"
+   --   put 0 into tCt
+   --   repeat for each item x in "Red,Green,Blue,Yellow,Pink"
+   --      add 1 to tCt
+   --      put tCt && x into tKey
+   --      get random(8)
+   --      repeat it
+   --         add 1 to tCt
+   --         put tCt && any line of the weekdaynames into d
+   --         put empty into tArray[tKey][d]
+   --         --put "Hrim" into tArray[tKey][d]
+   --         put random(5) into tNum
+   --         repeat tNum
+   --            add 1 to tCt
+   --            put tCt && any line of the monthnames into i
+   --            put empty into tArray[tKey][d][i]
+   --            --put "Shrim" into tArray[tKey][d][I]
+   --         end repeat
+   --      end repeat
+   --   end repeat
+   
+end createNavTree
+
+
+
+
+on hiliteChanged
+   --  get the foldState of me -- something wonky here? Some keys with sub-arrays are missing.
+   --  breakpoint
+   
+   put the hilitedElement of me & the hilitedElementFoldState of me into tState
+   
+   put  the hilitedElement of me into tDestiny
+   delete char 1 to 2 of tDestiny
+   delete char -1 of tDestiny
+   --put tDestiny
+   move widget "globalNavTree"  to ( -420,vertCenter() ) in 10 ticks
+   save this stack
+   portal_GoStack tDestiny
+   
+   if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
+      set the foldstate of me to empty -- collapse all
    end if
-end preOpenCard
-
-
-on resizeStack
-   local pCard
-   
-   lock screen
-   put the short name of this card into pCard
-   setUpUI pCard
-   unlock screen
-end resizeStack
-
-
-on mouseup
-   local tTarget
-   
-   put empty into sFavoritesA
-   put the short name of the target into tTarget
-   if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
-      switch tTarget
-         --lock screen
-         
-         # Cases where we to go to stacks directly with no secondary navigation
-         case "Gems"
-         case "Surprise"
-         case "Listen"
-         case "Journal"
-            if the platform is "iPhone" then
-               # handle the shift of the main nav screen when returning
-               set the destroyStack of this stack to false
-            end if
-            portal_GoStack tTarget
-            break
-            
-            # cases that require connectivity
-         case "Look"
-         case "Websites"
-            if checkConnectionStop() then
-               getModuleList tTarget
-            end if
-            break
-            
-            # we need to get the modules, no connection required
-         case "Fun"
-         case "Practice"
-         case "Read"
-            getModuleList tTarget
-            break
-            
-            # load Journal Entries to My Home
-         case "My home"
-            go to card "modulesList"
-            loadFavoritesToMyHome
-            break
-      end switch
+   if the hilitedElement of me <> empty then
+      set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
+      send "clearHilites" to me in 200 milliseconds
    end if
-end mouseup
-
-
-on getModuleList tTarget
-   # we this on behavior on cards "MainNav"  and card "modulesList"
-   # so have to dispatch from one common behavior to the card name, specifically 
    
-   go to card "modulesList"
-   dispatch "loadModulesList" to card "modulesList" with tTarget 
-   
-end getModuleList
+end hiliteChanged
 
-
-on setUpUI pCard
-   # we hide some controls on one are or another
-   # this behavior it in both cards
-   # Be sure to pass to preopencard handle
-   switch pCard
-      case "Home"
-         break 
-      case "modulesList"
-         if the platform is "iPhone" then
-            # handle the shift of the main nav screen (return to original setting)
-            set the destroyStack of this stack to true
-         end if
-         show button "goToMainNav"
-         break
-      case "mainNav"
-         hide button "goToMainNav"
-         break
-   end switch
-   updateUI
-end setUpUi
-
+on clearHilites -- except for leafs
+   if the hilitedElementFoldState of me <> "leaf" then
+      set the hilitedElement of me to empty
+   end if
+end clearHilites
 
 function checkConnectionStop
    if connectivity_PingServer() = "false" then
@@ -123,9 +95,18 @@ function checkConnectionStop
    end if
 end checkConnectionStop
 
+--on getModuleList tTarget
+--   # we this on behavior on cards "MainNav"  and card "modulesList"
+--   # so have to dispatch from one common behavior to the card name, specifically 
+
+--   go to card "modulesList"
+--   dispatch "loadModulesList" to card "modulesList" with tTarget 
+
+--end getModuleList
 
 on loadModulesList tTarget
-   local tRowdataA
+   breakpoint
+   
    
    portal_SetModulesList tTarget
    put getNavigationMap() into sMap 
@@ -137,66 +118,237 @@ end loadModulesList
 
 
 command  loadFavoritesToMyHome
-   local tJournalEntriesA, y
+     local tJournalEntriesA, y
    
-   put Journal_GetEntries() into tJournalEntriesA
-   repeat for each key x in tJournalEntriesA
-      if tJournalEntriesA[x]["is_favorite"] = 1 then
-         add 1 to y
-         put tJournalEntriesA[x] into sFavoritesA[y]
-         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
-      end if
-   end repeat
-   if sFavoritesA is empty then
-      tellUserToGetFavorites
-      exit to top
-   end if
-   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
-   reSizeDataGrid 
-end  loadFavoritesToMyHome
-
-
-command reSizeDataGrid pNumOfRows
-   local tNumberOfRecords, tRowHeight
+     put Journal_GetEntries() into tJournalEntriesA
+     repeat for each key x in tJournalEntriesA
+        if tJournalEntriesA[x]["is_favorite"] = 1 then
+           add 1 to y
+           put tJournalEntriesA[x] into sFavoritesA[y]
+           put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
+        end if
+     end repeat
+     if sFavoritesA is empty then
+        tellUserToGetFavorites
+        exit to top
+     end if
+     set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
+     reSizeDataGrid 
+   end  loadFavoritesToMyHome
    
-   put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
-   put the dgProp ["row height"] of group "modulesList" into tRowHeight
-   Set the height of group "modulesList"  to min(12, tNumberOfRecords) * (tRowHeight) + 10 -- account for header and scrollbar
-   --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
-   --set top of group "modulesList" of me to 100
-end reSizeDataGrid
-
-
-command launchModule
-   local tLine, tDataA
+   --on formattedHeightChanged -- tree changed dimensions
+   --   LOG "FORMATTEDHEIGHTCHANGED"
+   --   updateMobileScroller (the short name of me)
+   --end formattedHeightChanged
    
-   put the dgHilitedLines of group "modulesList" into tLine
-   put the dgDataOfLine[tLine] of group "modulesList" into tDataA
-   if  tDataA["is_favorite"] is a number then
-      Journal_LaunchEntry tDataA["journal_id"]
-   else
-      portal_DoRowLink tDataA["rowName"]
-   end if
-end launchModule
-
-
-## GEOMETRY
-
-command updateUI
-   local pControl, tBottomMargin
    
-   if safeBottomMargin() > 0 then
-      put 0 into tBottomMargin
-   else
-      put 8 into tBottomMargin
-   end if
    
-   setCardCoords "portrait"
-   put the long id of grp "footer" into pControl
-   bottomCenterMe pControl,tBottomMargin
-   put the long id of btn "backgroundOverlay" into pControl
-   centerMe pControl
-   put the long id of of group "modulesList" into pControl
-   set the width of pControl to CardWidth() - 20
-   topCenterMe pControl,100
-end updateUI
+   
+   --> ###################
+   -- BR: 2019-09-20
+   -- Previous handlers were related to now deprecated global nav card and datagrid
+   -- There are useful functions here, so we will keep the code intact for a while
+   
+   --###################
+   ---- BR: 2018-12-4
+   ---- the model for the global nav control 
+   ---- which is be place on all card
+   ---- for now will use the common library of SivaSivaPortal
+   ---- all this need to do is call 
+   ----  portal_DoRowLink tRowName
+   ----  where to tRowName is the string we previous use
+   ---- on the portals labels. 
+   ---- not the string does now have a space. 
+   
+   --local sRowName, sMap, sFavoritesA
+   
+   --on preOpenCard
+   --   local pCard
+   
+   --   lock screen
+   --   put the short name of this card into pCard
+   --   setUpUI pCard
+   
+   --   if getPhoneModel() is "iPhoneX" then
+   --      mobileShowStatusBar
+   --   end if
+   --end preOpenCard
+   
+   
+   --on resizeStack
+   --   local pCard
+   
+   --   lock screen
+   --   put the short name of this card into pCard
+   --   setUpUI pCard
+   --   unlock screen
+   --end resizeStack
+   
+   
+   --on mouseup
+   --   local tTarget
+   
+   --   put empty into sFavoritesA
+   --   put the short name of the target into tTarget
+   --   if tTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
+   --      switch tTarget
+   --         --lock screen
+   
+   --         # Cases where we to go to stacks directly with no secondary navigation
+   --         case "Gems"
+   --         case "Surprise"
+   --         case "Listen"
+   --         case "Journal"
+   --            if the platform is "iPhone" then
+   --               # handle the shift of the main nav screen when returning
+   --               set the destroyStack of this stack to false
+   --            end if
+   --            portal_GoStack tTarget
+   --            break
+   
+   --            # cases that require connectivity
+   --         case "Look"
+   --         case "Websites"
+   --            if checkConnectionStop() then
+   --               getModuleList tTarget
+   --            end if
+   --            break
+   
+   --            # we need to get the modules, no connection required
+   --         case "Fun"
+   --         case "Practice"
+   --         case "Read"
+   --            getModuleList tTarget
+   --            break
+   
+   --            # load Journal Entries to My Home
+   --         case "My home"
+   --            go to card "modulesList"
+   --            loadFavoritesToMyHome
+   --            break
+   --      end switch
+   --   end if
+   --end mouseup
+   
+   
+   --on getModuleList tTarget
+   --   # we this on behavior on cards "MainNav"  and card "modulesList"
+   --   # so have to dispatch from one common behavior to the card name, specifically 
+   
+   --   go to card "modulesList"
+   --   dispatch "loadModulesList" to card "modulesList" with tTarget 
+   
+   --end getModuleList
+   
+   
+   --on setUpUI pCard
+   --   # we hide some controls on one are or another
+   --   # this behavior it in both cards
+   --   # Be sure to pass to preopencard handle
+   --   switch pCard
+   --      case "Home"
+   --         break 
+   --      case "modulesList"
+   --         if the platform is "iPhone" then
+   --            # handle the shift of the main nav screen (return to original setting)
+   --            set the destroyStack of this stack to true
+   --         end if
+   --         show button "goToMainNav"
+   --         break
+   --      case "mainNav"
+   --         hide button "goToMainNav"
+   --         break
+   --   end switch
+   --   updateUI
+   --end setUpUi
+   
+   --function checkConnectionStop
+   --   if connectivity_PingServer() = "false" then
+   --      dialog_CustomMsg "Connection required."
+   --      return "false"
+   --      exit to top
+   --   else
+   --      return "true"
+   --   end if
+   --end checkConnectionStop
+   
+   
+   --on loadModulesList tTarget
+   --   breakpoint
+   --   local tRowdataA
+   
+   --   portal_SetModulesList tTarget
+   --   put getNavigationMap() into sMap 
+   --   put sMap["portalData"][tTarget]["rowdata"] into tRowdataA
+   --   set dgData of grp "modulesList" of me to tRowdataA
+   --   reSizeDataGrid 
+   --   unlock screen
+   --end loadModulesList
+   
+   
+   --command  loadFavoritesToMyHome
+   --   local tJournalEntriesA, y
+   
+   --   put Journal_GetEntries() into tJournalEntriesA
+   --   repeat for each key x in tJournalEntriesA
+   --      if tJournalEntriesA[x]["is_favorite"] = 1 then
+   --         add 1 to y
+   --         put tJournalEntriesA[x] into sFavoritesA[y]
+   --         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
+   --      end if
+   --   end repeat
+   --   if sFavoritesA is empty then
+   --      tellUserToGetFavorites
+   --      exit to top
+   --   end if
+   --   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
+   --   reSizeDataGrid 
+   --end  loadFavoritesToMyHome
+   
+   
+   
+   
+   --command reSizeDataGrid pNumOfRows
+   --   local tNumberOfRecords, tRowHeight
+   
+   --   put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
+   --   put the dgProp ["row height"] of group "modulesList" into tRowHeight
+   --   Set the height of group "modulesList"  to min(12, tNumberOfRecords) * (tRowHeight) + 10 -- account for header and scrollbar
+   --   --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
+   --   --set top of group "modulesList" of me to 100
+   --end reSizeDataGrid
+   
+   
+   --command launchModule
+   --   local tLine, tDataA
+   
+   --   put the dgHilitedLines of group "modulesList" into tLine
+   --   put the dgDataOfLine[tLine] of group "modulesList" into tDataA
+   --   if  tDataA["is_favorite"] is a number then
+   --      Journal_LaunchEntry tDataA["journal_id"]
+   --   else
+   --      portal_DoRowLink tDataA["rowName"]
+   --   end if
+   --end launchModule
+   
+   
+   --## GEOMETRY
+   
+   --command updateUI
+   --   local pControl, tBottomMargin
+   
+   --   if safeBottomMargin() > 0 then
+   --      put 0 into tBottomMargin
+   --   else
+   --      put 8 into tBottomMargin
+   --   end if
+   
+   --   setCardCoords "portrait"
+   --   put the long id of grp "footer" into pControl
+   --   bottomCenterMe pControl,tBottomMargin
+   --   put the long id of btn "backgroundOverlay" into pControl
+   --   centerMe pControl
+   --   put the long id of of group "modulesList" into pControl
+   --   set the width of pControl to CardWidth() - 20
+   --   topCenterMe pControl,100
+   --end updateUI
