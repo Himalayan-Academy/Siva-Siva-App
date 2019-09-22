@@ -445,6 +445,7 @@
 "portalData": {
         "look": {
             "portalName": "look",
+            "portalLabel": "Look",
             "portalColor": "000,000,000",
             "rowData": {
                 "1": {
@@ -474,8 +475,18 @@
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
         },
+          "gems": {
+            "portalName": "gems",
+            "portalLabel": "Gems of Wisdom",
+            "rowData": {
+                "1": {
+                    }
+                },
+            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
+        },
         "fun": {
             "portalName": "fun",
+            "portalLabel": "Fun & Games",
             "rowData": {
                 "1": {
                     "rowName": "Word Puzzles"
@@ -485,6 +496,7 @@
         },
         "listen": {
             "portalName": "listen2",
+            "portalLabel": "Listen",
             "rowData": {
                 "1": {
                     "rowName": "Bodhinatha's Latest Inspired Talks"
@@ -521,6 +533,7 @@
         },
         "surprise": {
             "portalName": "surprise",
+            "portalLabel": "Surprise Me",
             "rowData": {
                 "1": {
                     "rowName": "Sacred Verses"
@@ -542,6 +555,7 @@
         },
         "websites": {
             "portalName": "websites",
+            "portalLabel": "Websites",
             "rowData": {
                 "1": {
                     "rowName": "Our Daily Blog"
@@ -572,6 +586,7 @@
         },
         "practice": {
             "portalName": "practice",
+            "portalLabel": "Practice",
             "rowData": {
                 "1": {
                     "rowName": "Lesson of the Day"
@@ -585,38 +600,9 @@
 			},
             "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png"
         },
-        "home": {
-            "portalName": "home",
-            "rowData": {
-                "1": {
-                    "rowName": "Gems of Wisdom"
-                },
-                "2": {
-                    "rowName": "Surprise Me"
-                },
-                "3": {
-                    "rowName": "Listen"
-                },
-                "4": {
-                    "rowName": "Look"
-                },
-                "5": {
-                    "rowName": "Practice"
-                },
-                "6": {
-                    "rowName": "Read"
-                },
-                "7": {
-                    "rowName": "Websites"
-                },
-                "8": {
-                    "rowName": "Fun & Games"
-                }
-            },
-            "headerImage": "hero_home_Who-Is-Siva.png"
-        },
         "read": {
             "portalName": "read",
+            "portalLabel": "Read",
             "rowData": {
                 "1": {
                     "rowName": "Path to Siva: A Catechism for Youth"

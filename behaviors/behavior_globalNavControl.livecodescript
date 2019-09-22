@@ -9,50 +9,49 @@
 -- on any "local stuff" which can only be found it the portal stack -> home card
 -- there are useful functions here, so we will keep the code intact for a while
 
-local tRowdataA
+local tRowdata,tTopMenu,tSkipSubMenu,sTarget
+
 
 command createNavTree
    set the numberformat to "00"
    put getNavigationMap() into  sMap
-   --breakpoint
-   put sMap["portalData"]["home"]["rowdata"] into aProcessA
-   repeat for each key tKey in  aProcessA
-      put aProcessA[tKey][rowName] into aTreeA[tKey]
+   set the uNavMap of me  to sMap
+   
+   put 0 into tCt
+   
+   #  manually set the modules that we go to directly to 
+   # eliminate the deprecated row data in the json file
+   
+   
+   put "gem,listen,surprise" into tSkipSubMenu
+   
+   repeat for each key tTarget in sMap["portalData"]
       
-      portal_SetModulesList aTreeA[tKey]
-      put sMap["portalData"][aTreeA[tKey]]["rowdata"] into tRowdataA
-      set dgData of grp "modulesList" of me to tRowdataA
+      set the numberformat to "00"
+      add 1 to tCt
+      put tCt && sMap["portalData"][tTarget]["portalLabel"] into tTopMenu
       
-      put random(20) into tNo
-      put tNo into aTreeA[tKey][tNo]
+      
+      put 0  into tSecondKey
+      
+      
+      if sMap["portalData"][tTarget] is not among the items of tSkipSubMenu then
+         
+         repeat for each key tSecondLevel in sMap["portalData"][tTarget]["rowdata"]
+            add 1 to tSecondKey
+            put sMap["portalData"][tTarget]["rowdata"][tSecondKey]["rowName"] into tRowName
+            put tSecondKey && tRowName into  tRowName
+            put  tRowname into aTreeA[tTopMenu][tRowName]
+         end repeat
+      end if
+      put empty into aTreeA[tTopMenu][tRowName]
+      
    end repeat
    
-   set array of widget "globalNavTree" to aTreeA
-   
-   --   set the numberformat to "000"
-   --   put 0 into tCt
-   --   repeat for each item x in "Red,Green,Blue,Yellow,Pink"
-   --      add 1 to tCt
-   --      put tCt && x into tKey
-   --      get random(8)
-   --      repeat it
-   --         add 1 to tCt
-   --         put tCt && any line of the weekdaynames into d
-   --         put empty into tArray[tKey][d]
-   --         --put "Hrim" into tArray[tKey][d]
-   --         put random(5) into tNum
-   --         repeat tNum
-   --            add 1 to tCt
-   --            put tCt && any line of the monthnames into i
-   --            put empty into tArray[tKey][d][i]
-   --            --put "Shrim" into tArray[tKey][d][I]
-   --         end repeat
-   --      end repeat
-   --   end repeat
+   breakpoint
+   set arraydata of widget "globalNavTree" to aTreeA
    
 end createNavTree
-
-
 
 
 on hiliteChanged
@@ -66,7 +65,7 @@ on hiliteChanged
    delete char -1 of tDestiny
    --put tDestiny
    move widget "globalNavTree"  to ( -420,vertCenter() ) in 10 ticks
-   save this stack
+breakpoint
    portal_GoStack tDestiny
    
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
