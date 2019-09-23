@@ -1,5 +1,21 @@
 {
 "portalRowDictionary": {
+		"Home": {
+             "link": {
+               "portal command": "portal_Link",
+                "portal param": "home"
+            },
+            "imageText": "",
+            "shortImageFile": ""
+        },	
+  		"Journal": {
+             "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "stack \"wordpuzzles\""
+            },
+            "imageText": "",
+            "shortImageFile": ""
+        },	
         "Video World": {
             "link": {
                 "portal command": "portal_GoStack",
@@ -475,6 +491,20 @@
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
         },
+        "journal": {
+            "portalName": "journal",
+            "portalLabel": "Journal",
+            "rowData": {
+                },
+            "headerImage": ""
+        },
+        "home": {
+            "portalName": "home",
+            "portalLabel": "My Home",
+            "rowData": {
+                },
+            "headerImage": ""
+        },
           "gems": {
             "portalName": "gems",
             "portalLabel": "Gems of Wisdom",
@@ -495,7 +525,7 @@
             "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
         },
         "listen": {
-            "portalName": "listen2",
+            "portalName": "listen",
             "portalLabel": "Listen",
             "rowData": {
                 "1": {

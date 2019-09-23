@@ -248,7 +248,7 @@ command portal_Link portalName
 end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel
-   breakpoint
+   --breakpoint
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
    put ("youtube.com","1988-apple-video") into tRequiresLandscape
