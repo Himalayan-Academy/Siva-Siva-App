@@ -9,16 +9,17 @@
 -- on any "local stuff" which can only be found it the portal stack -> home card
 -- there are useful functions here, so we will keep the code intact for a while
 
-local sTarget
+local sTarget,sFavoritesA
 
 
 
 on hiliteChanged
    
-   --breakpoint
+   put the uNavMap of me into sMap
+   
+   
    
    put  the hilitedElement of me into sTarget
-   
    
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
       set the foldstate of me to empty -- collapse all
@@ -29,25 +30,25 @@ on hiliteChanged
    else
       exit hiliteChanged
    end if
-   --breakpoint
-   put the uNavMap of me into sMap
    
-   --put the hilitedElementFoldState of me
    
    put the hilitedElement of me & the hilitedElementFoldState of me into tState
    
    put  the hilitedElement of me into sTarget 
    
    if sTarget is empty then exit hiliteChanged
-   
+   set the itemdelimiter to "|"
    if the number of items of sTarget > 1 then
       delete item 1 of sTarget # we get the top menu out.
    end if
+   set the itemdelimiter to comma
    delete char 1 to 3 of sTarget
    delete char -1 of sTarget
-   -- move widget "globalNavTree"  to ( -420,vertCenter() ) in 10 ticks
-   
-   
+   --breakpoint
+   if sTarget = "(Back to Main Menu)" then
+      createNavTree "MainMenu"
+      exit hiliteChanged
+   end if
    
    if sTarget is among the items of "Gems of Wisdom,Surprise Me,Listen,Look,Practice,Read,Websites,Fun & Games,Journal,My Home" then
       # These are top links, using the portaLabel, 
@@ -56,7 +57,6 @@ on hiliteChanged
       
       switch sTarget
          --lock screen
-         
          # Cases where we to go to stacks directly with no secondary navigation
          case "Gems of Wisdom"
             put "gems" into sTarget # portal stack in not its "label"
@@ -101,18 +101,15 @@ on hiliteChanged
          case "Read"
             break
             
-         case "My home"
-            hideShowGlobalNav "false"
-            go to card "modulesList"
+         case "My Home"
             loadFavoritesToMyHome
             break
       end switch
    else
       # otherwise we have a URL on a different module
       # pass to lib_SivaSivaPortal to resolve
-      hideShowGlobalNav "false"
+      hideShowGlobalNav "true"
       portal_DoRowLink sTarget
-      
    end if
    
    
@@ -120,13 +117,13 @@ end hiliteChanged
 
 command hideShowGlobalNav tBol
    switch tBol
-      case "true"
+      case "false"
          --if item 1 of the loc widget "globalNavTree"  = horizCenter() then
          move widget "globalNavTree" to -418,vertCenter()  in 10 ticks
          set the layer of button "backgroundOverlay" to 1
          set the blendlevel of button "backgroundOverlay" to 0
          break
-      case "false"
+      case "true"
          set the layer of button "backgroundOverlay" to (the layer of btn "openGlobalNav") -1
          set the blendlevel of button "backgroundOverlay" to 30
          move widget "globalNavTree" to cardLoc()  in 10 ticks
@@ -150,16 +147,35 @@ command  loadFavoritesToMyHome
       if tJournalEntriesA[x]["is_favorite"] = 1 then
          add 1 to y
          put tJournalEntriesA[x] into sFavoritesA[y]
-         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
       end if
    end repeat
+   
+   --breakpoint
    if sFavoritesA is empty then
       tellUserToGetFavorites
       exit to top
    end if
-   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
-   reSizeDataGrid 
+   
+   -----------------
+   # instead go out to a datagrid, we will try build a new array from the tree menu
+   
+   createNavTree "MyMenu"
+   
+   
 end  loadFavoritesToMyHome
+
+-- BM:  From MainNav card script
+command tellUserToGetFavorites 
+   doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
+         "Click the star by some of your Favorites. They will then appear in My Home", \
+         "OK","downloadAffirmed"
+end tellUserToGetFavorites
+
+command downloadAffirmed
+   lock screen
+   portal_GoStack "Journal"
+   unlock screen
+end downloadAffirmed
 
 
 function checkConnectionStop
@@ -177,55 +193,68 @@ end checkConnectionStop
 --   updateMobileScroller (the short name of me)
 --end formattedHeightChanged
 
-command createNavTree
+command createNavTree pMenu
    set the numberformat to "00"
-   put getNavigationMap() into  sMap
-   set the uNavMap of widget "globalNavTree"  to sMap
-   
    put 0 into tCt
    
-   
-   # set the order of appearance
-   put "gems,surprise,listen,look,fun,practice,read,websites,journal,home" into tSortTopMenu
-   
-   #  manually set the modules that we go to directly to 
-   # eliminate the deprecated row data in the json file
-   # argh! is not among does not work...
-   
-   put "gems,listen,surprise,journal,home" into tSkipSubMenu
-   
-   repeat with x = 1 to the number of items in tSortTopMenu # Later, will have to refactor.
-      
-      put item x of tSortTopMenu into sTarget
-      
-      --repeat for each key sTarget in sMap["portalData"]
-      
-      set the numberformat to "00"
-      add 1 to tCt
-      put tCt && sMap["portalData"][sTarget]["portalLabel"] into tTopMenu
-      
-      
-      put 0  into tSecondKey
-      
-      --breakpoint
-      put  sMap["portalData"][sTarget]["portalName"] 
-      if sMap["portalData"][sTarget]["portalName"] is not among the items of tSkipSubMenu then
+   switch pMenu
+      case "mainMenu"
          
-         repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
-            add 1 to tSecondKey
-            put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
-            put tSecondKey && tRowName into  tRowName
-            put  tRowname into aTreeA[tTopMenu][tRowName]
-            put empty into aTreeA[tTopMenu][tRowName]
+         put getNavigationMap() into  sMap
+         set the uNavMap of widget "globalNavTree"  to sMap
+         
+         # set the order of appearance
+         put "gems,surprise,listen,look,fun,practice,read,websites,journal,home" into tSortTopMenu
+         
+         #  manually set the modules that we go to directly to 
+         # eliminate the deprecated row data in the json file
+         # argh! is not among does not work...
+         
+         put "gems,listen,surprise,journal,home" into tSkipSubMenu
+         
+         repeat with x = 1 to the number of items in tSortTopMenu # Later, will have to refactor.
+            put item x of tSortTopMenu into sTarget
+            add 1 to tCt
+            put tCt && sMap["portalData"][sTarget]["portalLabel"] into tTopMenu
+            put 0  into tSecondKey
+            
+            --breakpoint
+            
+            if sMap["portalData"][sTarget]["portalName"] is not among the items of tSkipSubMenu then
+               
+               repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
+                  add 1 to tSecondKey
+                  put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
+                  put tSecondKey && tRowName into  tRowName
+                  put  tRowname into aTreeA[tTopMenu][tRowName]
+                  put empty into aTreeA[tTopMenu][tRowName]
+               end repeat
+               
+            else
+               # how to get rid of the row data being carried over to the next loop?
+               put empty into aTreeA[tTopMenu]
+               
+            end if
+            
          end repeat
-      else
-         # how to get rid of the row data being carried over to the next loop?
+         
+         break
+         
+      case "myMenu"
+         --breakpoint
+         repeat for each key myFavorites in sFavoritesA
+            add 1 to tCt
+            put tCt && sFavoritesA[myFavorites]["label"] into tTopMenu
+            put empty into aTreeA[tTopMenu]
+         end repeat
+         
+         add 1 to tCT
+         put tCt && "(Back to Main Menu)" into tTopMenu
          put empty into aTreeA[tTopMenu]
-         -- delete variable  tRowName in aTreeA[tTopMenu][tRowName]
-      end if
-      
-      
-   end repeat
+         
+         break
+         
+   end switch
    
    --breakpoint
    set arraydata of widget "globalNavTree" to aTreeA

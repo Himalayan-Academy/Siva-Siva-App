@@ -290,3 +290,7 @@ command updatePortalMap
    end repeat
    
 end updatePortalMap
+
+
+
+
