@@ -15,7 +15,7 @@ local sTarget
 
 on hiliteChanged
    
-   breakpoint
+   --breakpoint
    
    put  the hilitedElement of me into sTarget
    
@@ -32,7 +32,7 @@ on hiliteChanged
    --breakpoint
    put the uNavMap of me into sMap
    
-   put the hilitedElementFoldState of me
+   --put the hilitedElementFoldState of me
    
    put the hilitedElement of me & the hilitedElementFoldState of me into tState
    
@@ -46,8 +46,6 @@ on hiliteChanged
    delete char 1 to 3 of sTarget
    delete char -1 of sTarget
    -- move widget "globalNavTree"  to ( -420,vertCenter() ) in 10 ticks
-   
-   
    
    
    
@@ -142,6 +140,27 @@ end hideShowGlobalNav
 --      set the hilitedElement of me to empty
 --   end if
 --end clearHilites
+
+
+command  loadFavoritesToMyHome
+   local tJournalEntriesA, y
+   
+   put Journal_GetEntries() into tJournalEntriesA
+   repeat for each key x in tJournalEntriesA
+      if tJournalEntriesA[x]["is_favorite"] = 1 then
+         add 1 to y
+         put tJournalEntriesA[x] into sFavoritesA[y]
+         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
+      end if
+   end repeat
+   if sFavoritesA is empty then
+      tellUserToGetFavorites
+      exit to top
+   end if
+   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
+   reSizeDataGrid 
+end  loadFavoritesToMyHome
+
 
 function checkConnectionStop
    if connectivity_PingServer() = "false" then
