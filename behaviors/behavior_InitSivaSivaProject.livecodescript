@@ -88,6 +88,8 @@ command init_AppConfiguration
    init_Fonts
    logging "end  Fonts"
    
+   fetchNavigationMap # we need it for the tree menu, but call once
+   
    -- cacheGlobalNavImages
    
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
@@ -113,7 +115,6 @@ command init_AppConfiguration
    mobileRectSet
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
-   send "preparePortalMainNavImages" to me in 800 milliseconds
    
    -- AAG enable or disable network tracer
    if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then

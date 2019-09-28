@@ -459,6 +459,13 @@
         }
     },
 "portalData": {
+ 		"myMenu": {
+            "portalName": "myMenu",
+            "portalLabel": "My Menu",
+            "rowData": {
+                },
+            "headerImage": ""
+        },
         "look": {
             "portalName": "look",
             "portalLabel": "Look",
@@ -500,7 +507,7 @@
         },
         "home": {
             "portalName": "home",
-            "portalLabel": "My Home",
+            "portalLabel": "Home",
             "rowData": {
                 },
             "headerImage": ""

@@ -227,13 +227,24 @@ end Journal_GetEntries
 ----------------------------------------------
 
 
-command Journal_LaunchEntry pEntryID
-   dbWhere "journal_id", pEntryID
-   put dbGet("journal", JournalDB()) into tEntriesA
-   if the keys of tEntriesA[1] is empty then
-      return "journalerr, no such entry"
+command Journal_LaunchEntry pEntryID,pModule,pData
+   # if we need to get the data from the data base, pEntryID has value
+   # pModule and pData are empty
+   # if you already have data, the pEntryID is empty
+   # and we have last to param, pModule and pData already.
+   
+   if pEntryID <> empty then
+      dbWhere "journal_id", pEntryID
+      put dbGet("journal", JournalDB()) into tEntriesA
+      if the keys of tEntriesA[1] is empty then
+         return "journalerr, no such entry"
+      end if
+      put tEntriesA[1] into tEntryA
+   else
+      put pModule into tEntryA["module"]
+      put pData into tEntryA["data"]
    end if
-   put tEntriesA[1] into tEntryA
+   
    try
       put jsonimport(tEntryA["data"]) into tDataA
    catch n

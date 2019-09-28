@@ -9,18 +9,19 @@
 -- on any "local stuff" which can only be found it the portal stack -> home card
 -- there are useful functions here, so we will keep the code intact for a while
 
-local sTarget,sFavoritesA
+local sTarget,sFavoritesA,sWhichMenu,
 
 
 
 on hiliteChanged
-   
+   --breakpoint
+   set the pathDelimiter of me to "|"
    put the uNavMap of me into sMap
+   put the uWhichMenu of me into sWhichMenu
    
-   
-   
-   put  the hilitedElement of me into sTarget
-   
+  #  BR: we have to play with hilited node of the tree of make sure we can "hits"
+   # frankly, I don't have a handle on this yet, 
+    
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
       set the foldstate of me to empty -- collapse all
    end if
@@ -30,33 +31,61 @@ on hiliteChanged
    else
       exit hiliteChanged
    end if
+   ----------
+   put  the hilitedElement of me into sTarget
    
-   
-   put the hilitedElement of me & the hilitedElementFoldState of me into tState
+   --breakpoint
    
    put  the hilitedElement of me into sTarget 
-   
    if sTarget is empty then exit hiliteChanged
+   
+   put truncateTarget(sTarget) into sTarget
+   
+   # conceivably, various kind of menus could be presented
+   # handle each one separately (saves stepping thru code)
+   switch sWhichMenu 
+      case "MainMenu" 
+         goMainMenu
+         break 
+      case "myMenu"
+         goMyMenu
+         break
+   end switch
+   
+   # I think was are supposed to do something to the tree, 
+   # once we trigge menu item...??
+   
+end hiliteChanged
+
+function truncateTarget sTarget
    set the itemdelimiter to "|"
    if the number of items of sTarget > 1 then
-      delete item 1 of sTarget # we get the top menu out.
+      delete item 1 of sTarget # if is a leaf, delete first part of path
    end if
    set the itemdelimiter to comma
    delete char 1 to 3 of sTarget
-   delete char -1 of sTarget
-   --breakpoint
-   if sTarget = "(Back to Main Menu)" then
-      createNavTree "MainMenu"
-      exit hiliteChanged
+   if (char -1 of sTarget = ",")  OR (char -1 of sTarget = "|") then delete char -1 of sTarget
+   return sTarget
+end truncateTarget
+
+
+command goMainMenu
+   # if this is a "portal" node, it means that it has sublevel elements 
+   # and therefore, its only job it to expose the second level
+   # now, the tree widget does this automatically, so no code is necessary for
+   # but to save processing time: we explicity exit.
+   
+   if sTarget is among items of "Practice,Read,Fun & Games" then
+      exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,Listen,Look,Practice,Read,Websites,Fun & Games,Journal,My Home" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,Listen,Look,Websites,Journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
-      # other do nothing but expose content/other modules/pUrls on level two of the menu
-      
+      # Some have to trigger connectivity, but do nothing (look and websites)
+
       switch sTarget
-         --lock screen
+         
          # Cases where we to go to stacks directly with no secondary navigation
          case "Gems of Wisdom"
             put "gems" into sTarget # portal stack in not its "label"
@@ -73,7 +102,7 @@ on hiliteChanged
             portal_GoStack sTarget
             break
          case "Journal"
-            # may no longer by needed
+            # may no longer by needed?
             --            if the platform is "iPhone" then
             --               # handle the shift of the main nav screen when returning
             --               set the destroyStack of this stack to false
@@ -83,16 +112,16 @@ on hiliteChanged
             break
             
             # cases that require connectivity, 
-            # and there are sub-level menu
+            # and there are sub-level URLs or Modules
             
          case "Look"
          case "Websites"
             if checkConnectionStop() then
-               exit hiliteChanged
+               exit goMainMenu
             end if
             break
             
-            # no trigger ; Need to find out how the tree work... we should disabled these:
+            --               # no trigger ; Need to find out how the tree work... we should disabled these:
             
          case "Fun & Games"
             put "fun" into sTarget
@@ -101,31 +130,69 @@ on hiliteChanged
          case "Read"
             break
             
-         case "My Home"
+         case "My Menu"
             loadFavoritesToMyHome
             break
       end switch
    else
       # otherwise we have a URL on a different module
       # pass to lib_SivaSivaPortal to resolve
-      hideShowGlobalNav "true"
+      hideShowGlobalNav "false"
       portal_DoRowLink sTarget
    end if
+end goMainMenu
    
+command goMyMenu
    
-end hiliteChanged
+   # User want to switch menus
+   # avoid stepping thru unecessarily
+   
+   if sTarget = "(Back to Main Menu)" then
+      set arraydata of widget "globalNavTree" to (the uMainMenuArray of me)
+      set the uWhichMenu of me to "mainMenu"
+      exit goMyMenu
+   end if
+   
+   # Otherwise 
+   
+   put the arraydata of me into aTreeA 
+   
+   repeat for each key tKey in aTreeA
+      
+      put truncateTarget(tKey) into tMenuItem
+      if sTarget = tMenuItem then
+         --breakpoint
+         put item 1 of aTreeA[tKey] into pModule
+         put item 2  to -1 of aTreeA[tKey] into pData
+         
+         # see model_SivaSivaJournal for this next handler
+         # first parameter is a lookup ID from database 
+         # But we have the data already,  when made the tree array my My Menu
+         #  So we don't have to go to disk again... So leave it empty
+         hideShowGlobalNav "true" 
+         Journal_LaunchEntry ,pModule,pData 
+         exit repeat
+      end if
+      
+   end repeat
+   
+end goMyMenu
 
 command hideShowGlobalNav tBol
+   # tBol is vis of the tree,
+   # if it is true then we toogle to hide it
+   # otherwise, toggle to show it
    switch tBol
-      case "false"
-         --if item 1 of the loc widget "globalNavTree"  = horizCenter() then
+      case "true" --means we intend to hide the tree, should show main image
          move widget "globalNavTree" to -418,vertCenter()  in 10 ticks
          set the layer of button "backgroundOverlay" to 1
          set the blendlevel of button "backgroundOverlay" to 0
+         set the vis of me to false # easier than depending on location
          break
-      case "true"
+      case "false" --means we intend to show the tree, should overlay main image
+         set the vis of me to true # easier than depending on location
          set the layer of button "backgroundOverlay" to (the layer of btn "openGlobalNav") -1
-         set the blendlevel of button "backgroundOverlay" to 30
+         set the blendlevel of button "backgroundOverlay" to 30  
          move widget "globalNavTree" to cardLoc()  in 10 ticks
          break
    end switch
@@ -150,7 +217,6 @@ command  loadFavoritesToMyHome
       end if
    end repeat
    
-   --breakpoint
    if sFavoritesA is empty then
       tellUserToGetFavorites
       exit to top
@@ -166,8 +232,8 @@ end  loadFavoritesToMyHome
 
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 
-   doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
-         "Click the star by some of your Favorites. They will then appear in My Home", \
+   doAnswer "There are no Favorites in My Menu yet. Go to the Journal." && \
+         "Click the star by some of your Favorites. They will then appear in My Menu", \
          "OK","downloadAffirmed"
 end tellUserToGetFavorites
 
@@ -188,12 +254,20 @@ function checkConnectionStop
    end if
 end checkConnectionStop
 
+
+on closeCard
+   set the uWhichMenu of me to "mainMenu"
+   pass closecard
+end closeCard
+
 --on formattedHeightChanged -- tree changed dimensions
 --   LOG "FORMATTEDHEIGHTCHANGED"
 --   updateMobileScroller (the short name of me)
 --end formattedHeightChanged
 
 command createNavTree pMenu
+   set the pathDelimiter of me to "|"
+   
    set the numberformat to "00"
    put 0 into tCt
    
@@ -201,16 +275,18 @@ command createNavTree pMenu
       case "mainMenu"
          
          put getNavigationMap() into  sMap
-         set the uNavMap of widget "globalNavTree"  to sMap
+         set the uWhichMenu of me to "mainMenu"
          
+         set the uNavMap of widget "globalNavTree"  to sMap
+         --breakpoint
          # set the order of appearance
-         put "gems,surprise,listen,look,fun,practice,read,websites,journal,home" into tSortTopMenu
+         put "gems,surprise,listen,look,fun,practice,read,websites,journal,myMenu" into tSortTopMenu
          
          #  manually set the modules that we go to directly to 
          # eliminate the deprecated row data in the json file
          # argh! is not among does not work...
          
-         put "gems,listen,surprise,journal,home" into tSkipSubMenu
+         put "gems,listen,surprise,journal,myMenu" into tSkipSubMenu
          
          repeat with x = 1 to the number of items in tSortTopMenu # Later, will have to refactor.
             put item x of tSortTopMenu into sTarget
@@ -237,15 +313,23 @@ command createNavTree pMenu
             end if
             
          end repeat
-         
+         set the uMainMenuArray of me to aTreeA
          break
          
       case "myMenu"
-         --breakpoint
-         repeat for each key myFavorites in sFavoritesA
+         set the uWhichMenu of me to "myMenu"
+         
+         
+         
+         put the keys of sFavoritesA into tSortKey
+         sort lines of tSortKey
+         repeat for each line tKey in  tSortKey
             add 1 to tCt
-            put tCt && sFavoritesA[myFavorites]["label"] into tTopMenu
-            put empty into aTreeA[tTopMenu]
+            put tCt && sFavoritesA[tKey]["label"] into tTopMenu
+            --put empty into aTreeA[tTopMenu]
+            
+            put sFavoritesA[tKey]["module"]  &","  & sFavoritesA[tKey]["data"] into tData
+            put tdata into aTreeA[tTopMenu]
          end repeat
          
          add 1 to tCT
@@ -265,20 +349,17 @@ end createNavTree
 
 
 --> ###################
--- BR: 2019-09-20
+-- BR: 2019-09-26
 -- Previous handlers were related to now deprecated global nav card and datagrid
--- There are useful functions here, so we will keep the code intact for a while
+-- have deleted card: moduleList, mainNav, now only three card:
 
---###################
----- BR: 2018-12-4
----- the model for the global nav control 
----- which is be place on all card
----- for now will use the common library of SivaSivaPortal
----- all this need to do is call 
-----  portal_DoRowLink tRowName
-----  where to tRowName is the string we previous use
----- on the portals labels. 
----- not the string does now have a space. 
+-- Home
+-- Surprise Index 
+-- a bland card name "index-temp"
+
+-- Possibly some of the following geometry/responsive needs to re-done 
+
+
 
 --local sRowName, sMap, sFavoritesA
 
@@ -294,7 +375,6 @@ end createNavTree
 --   end if
 --end preOpenCard
 
-
 --on resizeStack
 --   local pCard
 
@@ -303,63 +383,6 @@ end createNavTree
 --   setUpUI pCard
 --   unlock screen
 --end resizeStack
-
-
---on mouseup
---   local sTarget
-
---   put empty into sFavoritesA
---   put the short name of the target into sTarget
---   if sTarget is among the items of "gems,surprise,listen,look,practice,read,websites,fun,journal,my home" then
---      switch sTarget
---         --lock screen
-
---         # Cases where we to go to stacks directly with no secondary navigation
---         case "Gems"
---         case "Surprise"
---         case "Listen"
---         case "Journal"
---            if the platform is "iPhone" then
---               # handle the shift of the main nav screen when returning
---               set the destroyStack of this stack to false
---            end if
---            portal_GoStack sTarget
---            break
-
---            # cases that require connectivity
---         case "Look"
---         case "Websites"
---            if checkConnectionStop() then
---               getModuleList sTarget
---            end if
---            break
-
---            # we need to get the modules, no connection required
---         case "Fun"
---         case "Practice"
---         case "Read"
---            getModuleList sTarget
---            break
-
---            # load Journal Entries to My Home
---         case "My home"
---            go to card "modulesList"
---            loadFavoritesToMyHome
---            break
---      end switch
---   end if
---end mouseup
-
-
---on getModuleList sTarget
---   # we this on behavior on cards "MainNav"  and card "modulesList"
---   # so have to dispatch from one common behavior to the card name, specifically 
-
---   go to card "modulesList"
---   dispatch "loadModulesList" to card "modulesList" with sTarget 
-
---end getModuleList
-
 
 --on setUpUI pCard
 --   # we hide some controls on one are or another
@@ -381,75 +404,6 @@ end createNavTree
 --   end switch
 --   updateUI
 --end setUpUi
-
---function checkConnectionStop
---   if connectivity_PingServer() = "false" then
---      dialog_CustomMsg "Connection required."
---      return "false"
---      exit to top
---   else
---      return "true"
---   end if
---end checkConnectionStop
-
-
---on loadModulesList sTarget
---   breakpoint
---   local tRowdataA
-
---   portal_SetModulesList sTarget
---   put getNavigationMap() into sMap 
---   put sMap["portalData"][sTarget]["rowdata"] into tRowdataA
---   set dgData of grp "modulesList" of me to tRowdataA
---   reSizeDataGrid 
---   unlock screen
---end loadModulesList
-
-
---command  loadFavoritesToMyHome
---   local tJournalEntriesA, y
-
---   put Journal_GetEntries() into tJournalEntriesA
---   repeat for each key x in tJournalEntriesA
---      if tJournalEntriesA[x]["is_favorite"] = 1 then
---         add 1 to y
---         put tJournalEntriesA[x] into sFavoritesA[y]
---         put sFavoritesA[y]["label"] into sFavoritesA[y]["rowname"]
---      end if
---   end repeat
---   if sFavoritesA is empty then
---      tellUserToGetFavorites
---      exit to top
---   end if
---   set dgData of grp "modulesList" of card "modulesList" to sFavoritesA
---   reSizeDataGrid 
---end  loadFavoritesToMyHome
-
-
-
-
---command reSizeDataGrid pNumOfRows
---   local tNumberOfRecords, tRowHeight
-
---   put the dgNumberOfRecords of group "modulesList"  into tNumberOfRecords
---   put the dgProp ["row height"] of group "modulesList" into tRowHeight
---   Set the height of group "modulesList"  to min(12, tNumberOfRecords) * (tRowHeight) + 10 -- account for header and scrollbar
---   --set the height of group "modulesList" of me to ( (67*pNumOfRows) )
---   --set top of group "modulesList" of me to 100
---end reSizeDataGrid
-
-
---command launchModule
---   local tLine, tDataA
-
---   put the dgHilitedLines of group "modulesList" into tLine
---   put the dgDataOfLine[tLine] of group "modulesList" into tDataA
---   if  tDataA["is_favorite"] is a number then
---      Journal_LaunchEntry tDataA["journal_id"]
---   else
---      portal_DoRowLink tDataA["rowName"]
---   end if
---end launchModule
 
 
 --## GEOMETRY
