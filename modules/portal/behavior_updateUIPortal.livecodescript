@@ -169,8 +169,8 @@ command updateUIPortal
    topRightMe pControl,40,15
    
    put the long id of widget "globalNavTree" of me into pControl
+   set the width of pControl to CardWidth()
    centerMe pControl
-   set the right of pControl to 0
    
    put the long id of fld "Notification" of me into pControl
    topCenterMe pControl,150

@@ -11,6 +11,7 @@ end preOpenStack
 
 
 on openStack
+   lock screen
    local tLastStack
    set the acceleratedRendering of this stack to true
    put portal_GetLastStack() into tLastStack
@@ -25,6 +26,7 @@ on openStack
       default
          go card "Home"
    end switch
+   unlock screen
 end openstack
 
 

@@ -13,7 +13,8 @@ local sAttribution,sStoryNumber
 
 
 on preopencontrol
-
+   
+  
    # fresh reboot these will be null. 
    # handle in initializeNarrative
    
@@ -88,9 +89,12 @@ end initializeNarrative
 command goNextScene
    local tImage, tPath
    
-   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
-   
    put  getCache("narrationScene") into sLastScene
+   put  getCache("SceneCount") into sTotalSceneCount
+   put  getCache("Quotes") into sQuoteList
+   put  getCache("ImageList") into sImageList
+   --breakpoint
+   --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
    if sLastScene= empty then
       # it means we are starting again
@@ -193,7 +197,7 @@ end loadNextQuote
 command showAttribution pAttribution
    lock screen
    hide sMainImage
-   put pAttribution into fld "homeStoryText"
+   put "(Story - Slideshow)" & cr & cr & pAttribution into fld "homeStoryText"
    unlock screen
 end showAttribution
 

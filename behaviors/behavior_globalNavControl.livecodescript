@@ -183,17 +183,13 @@ command hideShowGlobalNav tBol
    # if it is true then we toogle to hide it
    # otherwise, toggle to show it
    switch tBol
-      case "true" --means we intend to hide the tree, should show main image
-         move widget "globalNavTree" to -418,vertCenter()  in 10 ticks
-         set the layer of button "backgroundOverlay" to 1
-         set the blendlevel of button "backgroundOverlay" to 0
-         set the vis of me to false # easier than depending on location
+      case "true" --means we intend to show the tree, should overlay main image
+         hide grp "globalNav"  with visual effect "dissolve" very fast
+         hide button "brandLogo"  with visual effect "dissolve" very fast
          break
-      case "false" --means we intend to show the tree, should overlay main image
-         set the vis of me to true # easier than depending on location
-         set the layer of button "backgroundOverlay" to (the layer of btn "openGlobalNav") -1
-         set the blendlevel of button "backgroundOverlay" to 30  
-         move widget "globalNavTree" to cardLoc()  in 10 ticks
+      case "false" --means we intend to hide the tree, should show main image
+         show grp "globalNav"  with visual effect "dissolve" very fast 
+         show button "brandLogo"  with visual effect "dissolve" very fast
          break
    end switch
    
