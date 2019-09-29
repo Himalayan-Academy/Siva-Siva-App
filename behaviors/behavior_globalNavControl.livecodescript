@@ -269,20 +269,20 @@ command createNavTree pMenu
    
    switch pMenu
       case "mainMenu"
-         
+         breakpoint
          put getNavigationMap() into  sMap
          set the uWhichMenu of me to "mainMenu"
          
          set the uNavMap of widget "globalNavTree"  to sMap
          --breakpoint
          # set the order of appearance
-         put "gems,surprise,listen,look,fun,practice,read,websites,journal,myMenu" into tSortTopMenu
+         put "gems,surprise,listen,look,fun,practice,read,websites,journal,settings,myMenu" into tSortTopMenu
          
          #  manually set the modules that we go to directly to 
          # eliminate the deprecated row data in the json file
          # argh! is not among does not work...
          
-         put "gems,listen,surprise,journal,myMenu" into tSkipSubMenu
+         put "gems,listen,surprise,journal,settings,myMenu" into tSkipSubMenu
          
          repeat with x = 1 to the number of items in tSortTopMenu # Later, will have to refactor.
             put item x of tSortTopMenu into sTarget

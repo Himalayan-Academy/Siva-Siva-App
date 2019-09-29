@@ -7,6 +7,14 @@
             },
             "imageText": "",
             "shortImageFile": ""
+        },
+        "Settings": {
+            "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "stack \"settings\""
+            },
+            "imageText": "Setting",
+            "shortImageFile": ""
         },	
   		"Journal": {
              "link": {
@@ -459,6 +467,13 @@
         }
     },
 "portalData": {
+		"settings": {
+            "portalName": "settings",
+            "portalLabel": "Settings",
+            "rowData": {
+                },
+            "headerImage": ""
+        },
  		"myMenu": {
             "portalName": "myMenu",
             "portalLabel": "My Menu",
