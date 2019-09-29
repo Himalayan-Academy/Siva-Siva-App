@@ -1,13 +1,14 @@
 Script "stack_Siva-Siva-Portal_button_id_55328"
 
 /*
-# Name: button "goNext" of group "homeStory" of card "Home" of stack "Siva-Siva-Portal"
-# ID: button id 55328 of group id 8199 of card id 8169 of stack "Siva-Siva-Portal"
+# Name: button "goNext" of card "Home" of stack "Siva-Siva-Portal"
+# ID: button id 55328 of card id 8169 of stack "Siva-Siva-Portal"
 */
 
 
 on mouseup
    hide btn "brandLogo"
-   goNextScene
-end mouseup
-
+   # in case menu are visible:
+   dispatch "hideShowGlobalNav"  to widget "globalNavTree" with "true"
+   dispatch "goNextScene" to grp "homeStory"
+ end mouseup

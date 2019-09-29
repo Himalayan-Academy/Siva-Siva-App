@@ -86,13 +86,13 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
-   if pTrackdata["contentTarget"] is "stack wordpuzzles" \
-         and the platform is "iPhone" then
-      # handle the shift of the main nav screen when returning
-      set the destroyStack of this stack to false
-   end if
+   --   if pTrackdata["contentTarget"] is "stack wordpuzzles" \
+   --         and the platform is "iPhone" then
+   --      # handle the shift of the main nav screen when returning
+   --      set the destroyStack of this stack to false
+   --   end if
    
-
+   
    close stack oStackName
    go cardOrStackObject
    

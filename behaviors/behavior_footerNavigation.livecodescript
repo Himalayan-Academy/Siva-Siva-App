@@ -40,9 +40,9 @@ on mouseup
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is "Surprise" and \
-               there is a card "mainNav" then
+               there is a card "Home" then
             --set the visible of me to false
-            go to card "mainNav"
+            go to card "Home"
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if

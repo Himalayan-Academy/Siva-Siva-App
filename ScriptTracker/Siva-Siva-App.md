@@ -53,18 +53,6 @@
 * ID: image id 4000 of card id 1011 of stack "Siva-Siva-App"
 * [stack_Siva-Siva-App_image_id_4000](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_image_id_4000.livecodescript)
 
-**button "Reset Original" of card "Global Image Resource 1" of stack "Siva-Siva-App"**
-* ID: button id 10010 of card id 7644 of stack "Siva-Siva-App"
-* [stack_Siva-Siva-App_button_id_10010](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_10010.livecodescript)
-
-**button "Get image List" of card "Global Image Resource 1" of stack "Siva-Siva-App"**
-* ID: button id 10016 of card id 7644 of stack "Siva-Siva-App"
-* [stack_Siva-Siva-App_button_id_10016](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_10016.livecodescript)
-
-**button "prepareImageGrp1" of card "Global Image Resource 1" of stack "Siva-Siva-App"**
-* ID: button id 10092 of card id 7644 of stack "Siva-Siva-App"
-* [stack_Siva-Siva-App_button_id_10092](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_10092.livecodescript)
-
 **button "openGlobalNav" of card "custom-controls" of stack "Siva-Siva-App"**
 * ID: button id 10044 of card id 6385 of stack "Siva-Siva-App"
 * [stack_Siva-Siva-App_button_id_10044](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_10044.livecodescript)

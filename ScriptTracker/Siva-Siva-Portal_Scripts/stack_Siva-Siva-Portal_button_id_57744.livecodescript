@@ -7,7 +7,8 @@ Script "stack_Siva-Siva-Portal_button_id_57744"
 
 
 on mouseup
-   ntinfo "receive a click"
-   go to card "mainNav"
+   --breakpoint
+   dispatch "setGlobalNavVisible" to widget "globalNavTree" with not (the vis of grp "globalNav")
 end mouseup
+
 

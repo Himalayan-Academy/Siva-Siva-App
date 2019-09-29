@@ -15,7 +15,7 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- which we many need to deprecate and more the logic for behavior on the 
 -- old "panel" navigation to here. I will leave that to you.
 
-on preopenCard
+on preOpenCard
    local pControl, pCard
    put the short name of this card into pCard
    
@@ -25,32 +25,32 @@ on preopenCard
       case "Home"
          setUpBrandImage
          setDefaultImage
-         dispatch "hideShowGlobalNav"  to widget "globalNavTree" with "true"
+         dispatch "hideShowGlobalNav" to widget "globalNavTree" with "true"
          put empty into fld "homeStoryText"
          put the long id of fld "homeStoryText" into pControl
          centerMe pControl,0,5
          break
-      case "MainNav"
-         hide button "goToMainNav" of group "footer" of me
-         show button "goHome" of group "footer" of me
-         break
+         --      case "MainNav"
+         --         hide button "goToMainNav" of group "footer" of me
+         --         show button "goHome" of group "footer" of me
+         --         break
    end switch
    
    updateUIPortal
    audioIsRunning
    
    show btn "brandLogo"
-end preopenCard
+end preOpenCard
 
 on opencard
    News_Fetch
 end opencard
 
 
-command  setDefaultImage 
+command setDefaultImage 
    --breakpoint
    
-   local pImage, tPaths
+   local pImage, tPaths, tBrandImages, tTotalBrandImages
    
    put getCache("BrandImage") into sBrandImageNumber
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
@@ -59,12 +59,13 @@ command  setDefaultImage
    # will get this out when we close Sivasiva.app
    # the user get a new brand image only opening the app.
    
-   setCache TotalBrandImages, tTotalBrandImages
+   # variable is undefined at this point
+   --setCache "TotalBrandImages", tTotalBrandImages
    
    put line sBrandImageNumber of tBrandImages into pImage
    set the filename of sMainImage to brandImagePath(pImage)
    
-  #  UI responsive
+   #  UI responsive
    put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
@@ -76,7 +77,7 @@ command  setDefaultImage
    put the number of lines of tBrandImages into tTotalBrandImages
    setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
-end  setDefaultImage
+end setDefaultImage
 
 ## I suppose there is a better way to store these
 ## to KISS suggest we do it right here.
@@ -163,18 +164,6 @@ command updateUIPortal
       put 8 into tBottomMargin
    end if
    
-   # background group of all cards
-   
-   put the long id of group "audioGlobalControl" of me into pControl
-   topRightMe pControl,40,15
-   
-   put the long id of widget "globalNavTree" of me into pControl
-   set the width of pControl to CardWidth()
-   centerMe pControl
-   
-   put the long id of fld "Notification" of me into pControl
-   topCenterMe pControl,150
-   
    switch (the short name of this card)
       case "Home"
          if isMobile() then
@@ -194,11 +183,9 @@ command updateUIPortal
          put the long id of button "brandLogo" of me into pControl
          topCenterMe pControl,20
          
-         
          put long Id of img "HomeStoryMainImage" into pControl
          setImageToFullCardLoc pControl, "portrait", 0
          centerMe pControl, 0, 0
-         
          
          put the long id of btn "goNext" into pControl
          bottomCenterMe pControl,tBottomMargin    
@@ -206,6 +193,17 @@ command updateUIPortal
          
          put the long id of button "openGlobalNav" into pControl
          bottomRightMe pControl,0,tBottomMargin 
+         
+         put the long id of widget "globalNavTree" of me into pControl
+         set the rect of pControl to (0, the bottom of button "brandLogo" of me + 7, \
+               CardWidth(), the top of btn "goNext" of me - 7)
+         
+         break
+      
+      default
+         put the long id of widget "globalNavTree" of me into pControl
+         set the width of pControl to CardWidth()
+         centerMe pControl
          
          break
          
@@ -229,12 +227,20 @@ command updateUIPortal
          --         updatePortalMap
          
          --         break
-         
    end switch
    
+   # background group of all cards
+   
+   put the long id of group "audioGlobalControl" of me into pControl
+   topRightMe pControl,40,15
+   
+   put the long id of fld "Notification" of me into pControl
+   topCenterMe pControl,150
    
 end updateUIPortal
 
+
+# no longer needed when using tree widget
 
 --command updatePortalMap
 --   constant kMap = "Gems,Surprise,Listen,Look,Practice,Read,Websites,Fun,Journal,My Home"
@@ -291,7 +297,3 @@ end updateUIPortal
 --   end repeat
 
 --end updatePortalMap
-
-
-
-
