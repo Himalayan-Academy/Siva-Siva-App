@@ -4,7 +4,7 @@ Script "stack_Siva-Siva-Portal_bkgnd_id_55616"
 # Name: bkgnd "footer" of stack "Siva-Siva-Portal"
 # ID: bkgnd id 55616 of stack "Siva-Siva-Portal"
 
-# Background on card IDs: 51340, 53122
+# Background on card IDs: 53122
 */
 
 

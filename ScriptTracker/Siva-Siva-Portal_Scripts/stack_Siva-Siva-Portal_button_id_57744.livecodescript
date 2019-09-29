@@ -7,7 +7,10 @@ Script "stack_Siva-Siva-Portal_button_id_57744"
 
 
 on mouseup
-   ntinfo "receive a click"
-   go to card "mainNav"
+--breakpoint
+   put (the vis of grp "globalNav")  into tBol
+   dispatch "hideShowGlobalNav"  to widget "globalNavTree" with tBol
+   
 end mouseup
+
 
