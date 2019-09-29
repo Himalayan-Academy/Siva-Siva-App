@@ -14,32 +14,40 @@ local sTarget,sFavoritesA,sWhichMenu,
 
 
 on hiliteChanged
+   local sMap, tHilitedElement
+   
+   put the hilitedElement of me into tHilitedElement
+   
+   # need to check at the top of the handler since we manually clear the
+   # highlight after it is processed
+   if tHilitedElement is empty then exit hiliteChanged
+   
+   
    --breakpoint
    set the pathDelimiter of me to "|"
    put the uNavMap of me into sMap
    put the uWhichMenu of me into sWhichMenu
    
-  #  BR: we have to play with hilited node of the tree of make sure we can "hits"
+   #  BR: we have to play with hilited node of the tree of make sure we can "hits"
    # frankly, I don't have a handle on this yet, 
-    
+   
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
       set the foldstate of me to empty -- collapse all
    end if
-   if the hilitedElement of me <> empty then
-      set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
-      send "clearHilites" to me in 200 milliseconds
-   else
-      exit hiliteChanged
-   end if
-   ----------
-   put  the hilitedElement of me into sTarget
+   --   if the hilitedElement of me <> empty then
+   set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
+   --      send "clearHilites" to me in 200 milliseconds
+   --   else
+   --      exit hiliteChanged
+   --   end if
+   --   ----------
+   --   put  the hilitedElement of me into sTarget
    
    --breakpoint
    
-   put  the hilitedElement of me into sTarget 
-   if sTarget is empty then exit hiliteChanged
+   --   if sTarget is empty then exit hiliteChanged
    
-   put truncateTarget(sTarget) into sTarget
+   put truncateTarget(tHilitedElement) into sTarget
    
    # conceivably, various kind of menus could be presented
    # handle each one separately (saves stepping thru code)
@@ -52,9 +60,8 @@ on hiliteChanged
          break
    end switch
    
-   # I think was are supposed to do something to the tree, 
-   # once we trigge menu item...??
-   
+   # Clear the highlight after it is processed
+   set the hilitedElement of me to empty
 end hiliteChanged
 
 function truncateTarget sTarget
@@ -116,7 +123,8 @@ command goMainMenu
             
          case "Look"
          case "Websites"
-            if checkConnectionStop() then
+            if checkConnectionStop() is "false" then
+               set the foldState of me to empty
                exit goMainMenu
             end if
             break
@@ -143,6 +151,7 @@ command goMainMenu
 end goMainMenu
    
 command goMyMenu
+   local aTreeA, tMenuItem, pModule, pData
    
    # User want to switch menus
    # avoid stepping thru unecessarily
@@ -178,21 +187,34 @@ command goMyMenu
    
 end goMyMenu
 
+command setGlobalNavVisible tVisible
+   lock screen for visual effect
+   if tVisible is true or tVisible is "true" or tVisible is "yes" then
+      show grp "globalNav"
+      show button "brandLogo"
+   else
+      hide grp "globalNav"
+      hide button "brandLogo"
+   end if
+   unlock screen with visual effect "dissolve" very fast
+end setGlobalNavVisible
+
 command hideShowGlobalNav tBol
    # tBol is vis of the tree,
    # if it is true then we toogle to hide it
    # otherwise, toggle to show it
+   lock screen for visual effect
    switch tBol
       case "true" --means we intend to show the tree, should overlay main image
-         hide grp "globalNav"  with visual effect "dissolve" very fast
-         hide button "brandLogo"  with visual effect "dissolve" very fast
+         hide grp "globalNav"
+         hide button "brandLogo"
          break
       case "false" --means we intend to hide the tree, should show main image
-         show grp "globalNav"  with visual effect "dissolve" very fast 
-         show button "brandLogo"  with visual effect "dissolve" very fast
+         show grp "globalNav"
+         show button "brandLogo"
          break
    end switch
-   
+   unlock screen with visual effect "dissolve" very fast
 end hideShowGlobalNav
 
 --on clearHilites -- except for leafs
@@ -262,6 +284,7 @@ end closeCard
 --end formattedHeightChanged
 
 command createNavTree pMenu
+   local tCt, sMap, tSortTopMenu, tSkipSubMenu, tTopMenu, tSecondKey, tRowName, aTreeA, tSortKey, tData
    set the pathDelimiter of me to "|"
    
    set the numberformat to "00"

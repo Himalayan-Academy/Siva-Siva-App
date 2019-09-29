@@ -7,10 +7,8 @@ Script "stack_Siva-Siva-Portal_button_id_57744"
 
 
 on mouseup
---breakpoint
-   put (the vis of grp "globalNav")  into tBol
-   dispatch "hideShowGlobalNav"  to widget "globalNavTree" with tBol
-   
+   --breakpoint
+   dispatch "setGlobalNavVisible" to widget "globalNavTree" with not (the vis of grp "globalNav")
 end mouseup
 
 

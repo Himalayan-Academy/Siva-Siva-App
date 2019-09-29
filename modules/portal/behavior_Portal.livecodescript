@@ -18,10 +18,10 @@ on openStack
    switch tLastStack
       case "Siva-Siva-App"
       case empty
-         go card  "Home"
+         go card "Home"
          break
       case "Surprise"
-         go card  "Surprise"
+         go card "Surprise"
          break
       default
          go card "Home"
