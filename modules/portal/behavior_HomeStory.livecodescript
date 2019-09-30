@@ -87,9 +87,12 @@ end initializeNarrative
 
 
 command goNextScene
+   
+   --breakpoint
    local tImage, tPath
    
    put  getCache("narrationScene") into sLastScene
+   put  getCache("Attribution") into sAttribution
    put  getCache("SceneCount") into sTotalSceneCount
    put  getCache("Quotes") into sQuoteList
    put  getCache("ImageList") into sImageList
@@ -194,10 +197,10 @@ command loadNextQuote pQuoteNo
    unlock screen with visual effect "dissolve" 
 end loadNextQuote
 
-command showAttribution pAttribution
+command showAttribution sAttribution
    lock screen
    hide sMainImage
-   put "(Story - Slideshow)" & cr & cr & pAttribution into fld "homeStoryText"
+   put "(Story - Slideshow)" & cr & cr & sAttribution into fld "homeStoryText"
    unlock screen
 end showAttribution
 

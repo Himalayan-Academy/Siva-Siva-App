@@ -250,8 +250,8 @@ end  loadFavoritesToMyHome
 
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 
-   doAnswer "There are no Favorites in My Menu yet. Go to the Journal." && \
-         "Click the star by some of your Favorites. They will then appear in My Menu", \
+   doAnswer "No Favorites in My Menu. Go to the Journal." && \
+         "Click the star to chose Favorites. They will appear in My Menu", \
          "OK","downloadAffirmed"
 end tellUserToGetFavorites
 

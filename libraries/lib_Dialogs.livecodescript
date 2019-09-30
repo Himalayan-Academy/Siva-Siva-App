@@ -253,15 +253,18 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    set the label of btn "dialogCancel" of grp "answerDlgGrp" to toUpper(it)
    
    #geometry
+   --breakpoint
    put the width of this card into  tWidth
    put the height of this card into tHeight
    set the rect of grc "cover" to 0,0,tWidth+25,tHeight+25
    set the loc of grc "cover" to location of this card
-   set height fld "lbl-dialogPrompt" of grp "answerDlgGrp"  to (the formattedHeight of fld "lbl-dialogPrompt"  of grp "answerDlgGrp"+40)
+   set height fld "lbl-dialogPrompt" of grp "answerDlgGrp"  to (the formattedHeight of fld "lbl-dialogPrompt"  of grp "answerDlgGrp"+20)
    set the bottom of btn "dialogAffirm"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
    set the bottom of btn "dialogCancel"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
    
    # show it
+   --   put the long id of grp "answerDlgGrp" into pControl
+   --   centerMe pControl
    set the vis of grc "cover" to true
    show grp "answerDlgGrp"
    show btn "dialogAffirm" of grp "answerDlgGrp"
