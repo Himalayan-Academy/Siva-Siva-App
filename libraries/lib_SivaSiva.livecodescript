@@ -33,6 +33,7 @@ function isMobile
 end isMobile
   
 on setUpBrandImage
+   local tNextChangeUp, tBrandImage, tTotalBrandImages, tLastRunDate
    # we have to save the number, this was on next start up
    # it will change
    --breakpoint
@@ -44,7 +45,8 @@ on setUpBrandImage
    put getcache("NextBrandImageChange") into tNextChangeUp
    convert tNextChangeUp to seconds
    if tNextChangeUp > (the seconds) then
-      exit to top
+      # BM: if we exit to top, then the image never gets loaded unless changed
+      exit setUpBrandImage
    end if
    
    put getPref ("preferences/modules/portal/brandImageNumber") into tBrandImage
@@ -109,6 +111,7 @@ ON ___FETCH_NEWS
 end ___FETCH_NEWS
 
 command News_Fetch
+   local tLocalNewsFile, tServerNews, tTargetLine, tLocalNewsDate, tLatestNewsDate
    --breakpoint
    if connectivity_PingServer() = "false" then 
       news_NoNews # user has read the news, but is off line...
@@ -174,9 +177,10 @@ end news_NoNews
 
 
 command newcontent_Check
+   local tBool
    # Ping server for updates?
-   put "false"  into pBool # for now
-   put pBool into sThereIsNewContent 
+   put "false" into tBool # for now
+   put tBool into sThereIsNewContent 
 end newcontent_Check
 
 #use this in appropriate places where you may want updates later
@@ -203,7 +207,8 @@ end path_HomeLocal
 
 
 function path_Documents
-   put specialFolderPath("documents") into  tPath
+   local tPath
+   put specialFolderPath("documents") into tPath
    put "/" after tPath 
    # remember not to precede path strings to follow with a slash in your 
    # final slashes are added here
@@ -220,28 +225,32 @@ function path_Documents
 end path_Documents
 
 function path_Assets
-   put path_HomeLocal() into  tPath
+   local tPath
+   put path_HomeLocal() into tPath
    put "assets/" after tPath
    return tPath
 end path_Assets
 
 function path_Modules
-   put path_HomeLocal() into  tPath
+   local tPath
+   put path_HomeLocal() into tPath
    put "modules/" after tPath
    return tPath
 end path_Modules
 
 function path_Models
-   put path_HomeLocal() into  tPath
+   local tPath
+   put path_HomeLocal() into tPath
    put "models/" after tPath
    return tPath
 end path_Models
 
 command fetchNavigationMap
+   local tPath, tJSON
    put path_HomeLocal() into tPath
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
-   put url ("file:" & tPath) into pJson
-   put JSONToArray(pJSON) into sSivaSivaNavigation
+   put url ("file:" & tPath) into tJSON
+   put JSONToArray(tJSON) into sSivaSivaNavigation
 end fetchNavigationMap
 
 function getNavigationMap
@@ -277,7 +286,8 @@ end getNavigationMap
 # we want to end up with paths beginning with
 # /media (from public_html) or /assets, /modules (from /media/apps/sivasiva)
 
-function path_isFileOnDisk pURL  
+function path_isFileOnDisk pURL
+   local tFilePath
    put path_FileFromURL(pURL) into tFilePath
    if there is a file tFilePath then
       return (true,tFilePath)
@@ -286,6 +296,7 @@ function path_isFileOnDisk pURL
 end path_isFileOnDisk
 
 function path_FileFromURL pURL
+   local tDF, tBadFolderName, tFile, tFolderCount, tFolderToCreate, tCheckURL
    put path_Documents() into tDF
    
    # Clean up a bad bug in one folder name that may still exist in early installations.
@@ -366,7 +377,10 @@ function connectivity_CheckResult pResultVariable
    return true
 end connectivity_CheckResult
 
-function checkURLAvailable pSelectedURL     
+function checkURLAvailable pSelectedURL
+   local tHeaders, tSentHeaders, tResult, tBytes
+   
+   # BM: not sure about this call, where are these values obtained?
    put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
    
    ## get url pSelectedURL
@@ -420,6 +434,7 @@ command clearCache
 end clearCache
 
 on displayCache
+   local tOutput
    repeat for each key x in sCacheA
       put x & ": " & sCacheA[x] & cr after tOutput
    end repeat
@@ -469,28 +484,29 @@ ON ___UTILITIES
 end ___UTILITIES
 
 
- function removeQuotes pString
-    # Needed when passing some raw string to json for some functions like analytics
-    # quotes will break theAPI/Jdon
-    replace quote with "" in pString
-    replace "'" with "" in pString
-    return pString
- end removeQuotes
+function removeQuotes pString
+   # Needed when passing some raw string to json for some functions like analytics
+   # quotes will break theAPI/Jdon
+   replace quote with "" in pString
+   replace "'" with "" in pString
+   return pString
+end removeQuotes
  
- function stripHTMLTags pString
-    replace cr with empty in pString -- in case of multi-line tags
-    replace "<" with cr & "<" in pString
-    replace ">" with ">" & cr in pString
-    filter pString without "*<*"
-    filter pString without "*>*"
-    repeat for each line LNN in pString
+function stripHTMLTags pString
+   local newHtml
+   replace cr with empty in pString -- in case of multi-line tags
+   replace "<" with cr & "<" in pString
+   replace ">" with ">" & cr in pString
+   filter pString without "*<*"
+   filter pString without "*>*"
+   repeat for each line LNN in pString
       put word 1 to -1 of LNN  & cr after newHtml
    end repeat
    filter newHtml without empty
---now there are no leading/trailing spaces, no empty lines
+   --now there are no leading/trailing spaces, no empty lines
    replace cr with space in newHtml
    return newHtml
- end stripHTMLTags
+end stripHTMLTags
 
 on backkey # need for android
    if not (portal_GetLastStack() = "Siva-Siva-Portal") then
@@ -516,6 +532,7 @@ end setCurrentRealm
 # maybe later if we need one; can move then
 
 function text_TitleCase pString
+   local tTitleCasedString
    put toLower(pString) into pString # normalize all chars first
    
    # assume words separated by spaces
@@ -524,7 +541,7 @@ function text_TitleCase pString
       put toUpper(char 1 of x) into char  1 of x
       put x & space after tTitleCasedString
    end repeat
-   delete char -1 of tTitleCaseString
+   delete char -1 of tTitleCasedString
    return tTitleCasedString
    
 end text_TitleCase
@@ -532,7 +549,7 @@ end text_TitleCase
 
 # Returns a list of files with the full paths
 function listFilesWithPaths pFolder, pRecurse
-   local tTotalFiles, tCurrentFiles, tFolders
+   local tTotalFiles, tCurrentFiles, tFolders, tList
    
    set the directory to pFolder
    put filteredFilesWithPaths() into tCurrentFiles
@@ -547,8 +564,8 @@ function listFilesWithPaths pFolder, pRecurse
             return after tTotalFiles
    end repeat
    delete the last char of tTotalFiles
-   put tTotalFiles into pList
-   return filterDots(plist)
+   put tTotalFiles into tList
+   return filterDots(tlist)
 end listFilesWithPaths
 
 # Returns a list of files in the current directory including
