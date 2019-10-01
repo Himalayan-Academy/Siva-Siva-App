@@ -261,7 +261,7 @@ command doAnswer pMsg,pBtns,pHandleAffirm
    set height fld "lbl-dialogPrompt" of grp "answerDlgGrp"  to (the formattedHeight of fld "lbl-dialogPrompt"  of grp "answerDlgGrp"+20)
    set the bottom of btn "dialogAffirm"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
    set the bottom of btn "dialogCancel"  of grp "answerDlgGrp" to bottom of fld "lbl-dialogPrompt" of grp "answerDlgGrp"
-   
+   set the loc of grp "promptGroup"  of grp "answerDlgGrp" to location of this card
    # show it
    --   put the long id of grp "answerDlgGrp" into pControl
    --   centerMe pControl

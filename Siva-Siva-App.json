@@ -9,10 +9,6 @@
       "name": "behavior_HomeStory",
       "file": "modules/portal/behavior_HomeStory.livecodescript"
     },
-     {
-      "name": "aagNetworkTracer",
-      "file": "libraries/aagNetworkTracer.livecodescript"
-    },
     {
       "name": "model_Narratives",
       "file": "models/model_Narratives.livecodescript"
