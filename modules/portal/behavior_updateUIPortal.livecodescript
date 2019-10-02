@@ -30,10 +30,6 @@ on preOpenCard
          put the long id of fld "homeStoryText" into pControl
          centerMe pControl,0,5
          break
-         --      case "MainNav"
-         --         hide button "goToMainNav" of group "footer" of me
-         --         show button "goHome" of group "footer" of me
-         --         break
    end switch
    
    updateUIPortal
@@ -199,34 +195,13 @@ command updateUIPortal
                CardWidth(), the top of btn "goNext" of me - 7)
          
          break
-      
+         
       default
          put the long id of widget "globalNavTree" of me into pControl
          set the width of pControl to CardWidth()
          centerMe pControl
          
          break
-         
-         --      case  "mainNav"
-         --         if getPhoneModel() is "iPhoneX" then
-         --            mobileShowStatusBar
-         --         end if
-         
-         --         put the long id of grp "footer" into pControl
-         --         bottomCenterMe pControl,tBottomMargin
-         
-         --         put the long id of btn "backgroundOverlay" into pControl
-         --         centerMe pControl
-         
-         --         put the long id of button "brandLogo" of me into pControl
-         --         topCenterMe pControl,20
-         
-         --         put the long id of grp "globalPortalMap" into pControl
-         --         topCenterMe pControl,55
-         
-         --         updatePortalMap
-         
-         --         break
    end switch
    
    # background group of all cards
@@ -238,62 +213,3 @@ command updateUIPortal
    topCenterMe pControl,150
    
 end updateUIPortal
-
-
-# no longer needed when using tree widget
-
---command updatePortalMap
---   constant kMap = "Gems,Surprise,Listen,Look,Practice,Read,Websites,Fun,Journal,My Home"
---   constant kSpace = 15
---   constant kEdge = 10
---   constant kLogoOverlap = 26
---   constant kMaxHeight = 100
---   constant kMaxWidth = 190
-
---   local tTop, tLeft, tBottom, tRight, tWidth, tHeight, tButtonID, tFieldID
---   local tLeftLeft, tLeftRight, tRightLeft, tRightRight, tLeftSide, tRect, tExtraH, tExtraV
-
---   put the bottom of button "brandLogo" of me - kLogoOverlap into tTop
---   put the top of grp "footer" into tBottom
---   put max(kEdge, safeSideMargin()) into tLeft
---   put CardWidth() - tLeft into tRight
-
---   put ((tBottom - tTop) / 5) - kSpace into tHeight
---   if tHeight > kMaxHeight then
---      put tHeight - kMaxHeight into tExtraV
---      put kMaxHeight into tHeight
---   else
---      put 0 into tExtraV
---   end if
---   put (tRight - tLeft - kSpace) / 2 into tWidth
---   if tWidth > kMaxWidth then
---      put (tWidth - kMaxWidth) * 0.7 into tExtraH
---      put kMaxWidth into tWidth
---   else
---      put 0 into tExtraH
---      put 0 into tExtraV -- only add vertical space if horizontal space added
---   end if
---   put tLeft + tExtraH into tLeftLeft
---   put tLeftLeft + tWidth into tLeftRight
---   put tRight - tExtraH into tRightRight
---   put tRightRight - tWidth into tRightLeft
-
---   put true into tLeftSide
---   repeat for each item tObjectName in kMap
---      put the long id of btn tObjectName of grp "GlobalPortalMap" into tButtonID
---      put the long id of fld tObjectName of grp "GlobalPortalMap" into tFieldID
---      if tLeftSide then
---         put tTop + tHeight into tBottom
---         put (tLeftLeft, tTop, tLeftRight, tBottom) into tRect
---         put false into tLeftSide
---      else
---         put (tRightLeft, tTop, tRightRight, tBottom) into tRect
---         put tTop + tHeight + kSpace + tExtraV into tTop
---         put true into tLeftSide
---      end if
---      set the rect of tButtonID to tRect
---      set the width of tFieldID to tWidth
---      set the bottomLeft of tFieldID to the bottomLeft of tButtonID
---   end repeat
-
---end updatePortalMap

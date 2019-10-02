@@ -11,6 +11,6 @@ on mouseUp
       clearBoard
       hide grp "puzzleControls"
    end if
+   go card "blank"
    portal_GoStack ("Siva-Siva-Portal")
 end mouseUp
-

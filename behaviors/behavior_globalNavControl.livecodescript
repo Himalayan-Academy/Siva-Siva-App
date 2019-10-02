@@ -22,7 +22,6 @@ on hiliteChanged
    # highlight after it is processed
    if tHilitedElement is empty then exit hiliteChanged
    
-   
    --breakpoint
    set the pathDelimiter of me to "|"
    put the uNavMap of me into sMap
@@ -34,19 +33,10 @@ on hiliteChanged
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
       set the foldstate of me to empty -- collapse all
    end if
-   --   if the hilitedElement of me <> empty then
+   
    set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
-   --      send "clearHilites" to me in 200 milliseconds
-   --   else
-   --      exit hiliteChanged
-   --   end if
-   --   ----------
-   --   put  the hilitedElement of me into sTarget
    
    --breakpoint
-   
-   --   if sTarget is empty then exit hiliteChanged
-   
    put truncateTarget(tHilitedElement) into sTarget
    
    # conceivably, various kind of menus could be presented
@@ -63,6 +53,7 @@ on hiliteChanged
    # Clear the highlight after it is processed
    set the hilitedElement of me to empty
 end hiliteChanged
+
 
 function truncateTarget sTarget
    set the itemdelimiter to "|"
@@ -109,11 +100,6 @@ command goMainMenu
             portal_GoStack sTarget
             break
          case "Journal"
-            # may no longer by needed?
-            --            if the platform is "iPhone" then
-            --               # handle the shift of the main nav screen when returning
-            --               set the destroyStack of this stack to false
-            --            end if
             hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
@@ -199,6 +185,7 @@ command setGlobalNavVisible tVisible
    unlock screen with visual effect "dissolve" very fast
 end setGlobalNavVisible
 
+# BM: I think the name of this handler is confusing.  Suggest that we use the above one instead.
 command hideShowGlobalNav tBol
    # tBol is vis of the tree,
    # if it is true then we toogle to hide it
@@ -216,12 +203,6 @@ command hideShowGlobalNav tBol
    end switch
    unlock screen with visual effect "dissolve" very fast
 end hideShowGlobalNav
-
---on clearHilites -- except for leafs
---   if the hilitedElementFoldState of me <> "leaf" then
---      set the hilitedElement of me to empty
---   end if
---end clearHilites
 
 
 command  loadFavoritesToMyHome
@@ -278,10 +259,13 @@ on closeCard
    pass closecard
 end closeCard
 
+
+# will be needed when scroller is added
 --on formattedHeightChanged -- tree changed dimensions
 --   LOG "FORMATTEDHEIGHTCHANGED"
 --   updateMobileScroller (the short name of me)
 --end formattedHeightChanged
+
 
 command createNavTree pMenu
    local tCt, sMap, tSortTopMenu, tSkipSubMenu, tTopMenu, tSecondKey, tRowName, aTreeA, tSortKey, tData
@@ -363,85 +347,3 @@ command createNavTree pMenu
    set arraydata of widget "globalNavTree" to aTreeA
    
 end createNavTree
-
-
-
-
---> ###################
--- BR: 2019-09-26
--- Previous handlers were related to now deprecated global nav card and datagrid
--- have deleted card: moduleList, mainNav, now only three card:
-
--- Home
--- Surprise Index 
--- a bland card name "index-temp"
-
--- Possibly some of the following geometry/responsive needs to re-done 
-
-
-
---local sRowName, sMap, sFavoritesA
-
---on preOpenCard
---   local pCard
-
---   lock screen
---   put the short name of this card into pCard
---   setUpUI pCard
-
---   if getPhoneModel() is "iPhoneX" then
---      mobileShowStatusBar
---   end if
---end preOpenCard
-
---on resizeStack
---   local pCard
-
---   lock screen
---   put the short name of this card into pCard
---   setUpUI pCard
---   unlock screen
---end resizeStack
-
---on setUpUI pCard
---   # we hide some controls on one are or another
---   # this behavior it in both cards
---   # Be sure to pass to preopencard handle
---   switch pCard
---      case "Home"
---         break 
---      case "modulesList"
---         if the platform is "iPhone" then
---            # handle the shift of the main nav screen (return to original setting)
---            set the destroyStack of this stack to true
---         end if
---         show button "goToMainNav"
---         break
---      case "mainNav"
---         hide button "goToMainNav"
---         break
---   end switch
---   updateUI
---end setUpUi
-
-
---## GEOMETRY
-
---command updateUI
---   local pControl, tBottomMargin
-
---   if safeBottomMargin() > 0 then
---      put 0 into tBottomMargin
---   else
---      put 8 into tBottomMargin
---   end if
-
---   setCardCoords "portrait"
---   put the long id of grp "footer" into pControl
---   bottomCenterMe pControl,tBottomMargin
---   put the long id of btn "backgroundOverlay" into pControl
---   centerMe pControl
---   put the long id of of group "modulesList" into pControl
---   set the width of pControl to CardWidth() - 20
---   topCenterMe pControl,100
---end updateUI
