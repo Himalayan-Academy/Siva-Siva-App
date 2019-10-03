@@ -285,7 +285,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          set the httpheaders to "content-type: application/json"
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          if the result is not empty then 
-            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
+            put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
             portal_Link "Listen"
             exit to top
@@ -313,7 +313,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
          put URL tTocURL into tBookToc
          if the result is not empty then 
-            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
+            put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
             showBusyIndicator false
             exit to top

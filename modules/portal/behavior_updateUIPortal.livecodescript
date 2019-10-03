@@ -39,6 +39,7 @@ on preOpenCard
 end preOpenCard
 
 on opencard
+   audioIsRunning    
    News_Fetch
 end opencard
 
@@ -207,7 +208,7 @@ command updateUIPortal
    # background group of all cards
    
    put the long id of group "audioGlobalControl" of me into pControl
-   topRightMe pControl,40,15
+   topRightMe pControl,70,20
    
    put the long id of fld "Notification" of me into pControl
    topCenterMe pControl,150

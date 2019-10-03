@@ -175,7 +175,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    
    if checkURLAvailable(sSelectedURL) is "false" then 
       clearPlayer
-      put "Sound file unavailable. Do you have a connections? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
+      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
       doAnswer pMsg,"OK", answerURLunavailable
       exit to top
    end if

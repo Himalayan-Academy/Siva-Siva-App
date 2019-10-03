@@ -8,15 +8,27 @@ local sPortraitMargins, sLandscapeMargins, sSafeRect
 on __RESPONSIVE
 end __RESPONSIVE
 
+# checks
+
+command gotUILibrary
+   answer "Got UIHandler Lib" with "OK"
+end gotUILibrary
+
+command returnAudioIsPlaying
+   answer "Got message"
+   put sStopRunningAudio
+end returnAudioIsPlaying
+
+
+
 # because of inconsistency  we cannot be sure that resizeStack is invoked
 # so we are setting explicit setters and getters  for card geometry
 
 ########################
 -- Get card geometry 
 
-command gotUILibrary
-   answer "Got UIHandler Lib" with "OK"
-end gotUILibrary
+
+
 
 
 command setCardCoords pForceOrientation

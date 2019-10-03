@@ -279,7 +279,7 @@ end selectViewlist
 --         set the httpheaders to "content-type: application/json"
 --         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"
 --         if the result is not empty then 
---            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
+--            put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
 --            dialog_CustomMsg "Offline or Low Bandwidth"
 --            portal_Link "Listen"
 --            exit to top
@@ -307,7 +307,7 @@ end selectViewlist
 --         put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
 --         put URL tTocURL into tBookToc
 --         if the result is not empty then 
---            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
+--            put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
 --            dialog_CustomMsg "Offline or Low Bandwidth"
 --            showBusyIndicator false
 --            exit to top
@@ -326,7 +326,7 @@ end selectViewlist
 --         replace "'" with quote in pJSON
 --         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecords/json"         
 --         if the result is not empty then 
---            put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
+--            put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
 --            dialog_CustomMsg "Offline or Low Bandwidth"
 --            showBusyIndicator false
 --            exit to top
