@@ -7,11 +7,6 @@
 * ID: button id 6387 of bkgnd id 6386 of stack "Siva-Siva-App"
 * [stack_Siva-Siva-App_button_id_6387](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_6387.livecodescript)
 
-**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "Siva-Siva-App"**
-* ID: widget id 7642 of bkgnd id 7641 of stack "Siva-Siva-App"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-App_widget_id_7642](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_widget_id_7642.livecodescript)
-
 **card "InitializeApp" of stack "Siva-Siva-App"**
 * ID: card id 1002 of stack "Siva-Siva-App"
 * Behavior: stack "behavior_InitSivaSivaProject"

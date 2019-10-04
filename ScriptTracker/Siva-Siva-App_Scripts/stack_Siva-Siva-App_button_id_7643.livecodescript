@@ -8,8 +8,8 @@ Script "stack_Siva-Siva-App_button_id_7643"
 
 on mouseup
    if the hilite of me then
-      set the cNetworkTracerEnabled of this stack to true
+      set the cNetworkTracerEnabled of stack "Siva-Siva-App" to true
    else
-      set the cNetworkTracerEnabled of this stack to false
+      set the cNetworkTracerEnabled of stack "Siva-Siva-App" to false
    end if
 end mouseup

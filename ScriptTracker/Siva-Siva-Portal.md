@@ -18,16 +18,16 @@
 * Shared group on card IDs: 
 * [stack_Siva-Siva-Portal_bkgnd_id_53160](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_bkgnd_id_53160.livecodescript)
 
-**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "Siva-Siva-Portal"**
-* ID: widget id 53648 of bkgnd id 53647 of stack "Siva-Siva-Portal"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_Siva-Siva-Portal_widget_id_53648](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_53648.livecodescript)
-
 **bkgnd "footer" of stack "Siva-Siva-Portal"**
 * ID: bkgnd id 55616 of stack "Siva-Siva-Portal"
 
 * Background on card IDs: 53122
 * [stack_Siva-Siva-Portal_bkgnd_id_55616](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_bkgnd_id_55616.livecodescript)
+
+**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "Siva-Siva-Portal"**
+* ID: widget id 53648 of bkgnd id 53647 of stack "Siva-Siva-Portal"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_Siva-Siva-Portal_widget_id_53648](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_53648.livecodescript)
 
 **image "homeStoryMainImage" of group "homeStory" of card "Home" of stack "Siva-Siva-Portal"**
 * ID: image id 8189 of group id 8199 of card id 8169 of stack "Siva-Siva-Portal"
