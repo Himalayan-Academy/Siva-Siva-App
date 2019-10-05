@@ -7,10 +7,10 @@ Script "stack_wordpuzzles_button_id_11502"
 
 
 on mouseUp
+   show grc "blankScreen"
+   clearBoard
    if the platform is "iphone" then
-      clearBoard
-      hide grp "puzzleControls"
+      wait 50 milliseconds with messages
    end if
-   go card "blank"
    portal_GoStack ("Siva-Siva-Portal")
 end mouseUp

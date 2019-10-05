@@ -14,6 +14,7 @@ on preOpenStack
       mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
    end if
+   hide grc "blankScreen"
 end preOpenStack
 
 on closeStack
