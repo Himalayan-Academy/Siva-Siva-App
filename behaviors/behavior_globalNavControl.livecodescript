@@ -1,4 +1,4 @@
-﻿script "behavior_globalNavControl"
+﻿script "behavior_globalNavControl" with behavior "behavior_mobileScroller"
 --> ###################
 -- BR: 2019-09-20
 -- This behavior is assigned to the widget "globalNavTree" which, initially, is part of the
@@ -87,20 +87,20 @@ command goMainMenu
          # Cases where we to go to stacks directly with no secondary navigation
          case "Gems of Wisdom"
             put "gems" into sTarget # portal stack in not its "label"
-            hideShowGlobalNav "false"
+            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Surprise Me"
             put "surprise" into sTarget
-            hideShowGlobalNav "false"
+            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Listen"
-            hideShowGlobalNav "false"
+            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Journal"
-            hideShowGlobalNav "false"
+            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
             
@@ -131,7 +131,7 @@ command goMainMenu
    else
       # otherwise we have a URL on a different module
       # pass to lib_SivaSivaPortal to resolve
-      hideShowGlobalNav "false"
+      --hideShowGlobalNav "false"
       portal_DoRowLink sTarget
    end if
 end goMainMenu
@@ -164,7 +164,7 @@ command goMyMenu
          # first parameter is a lookup ID from database 
          # But we have the data already,  when made the tree array my My Menu
          #  So we don't have to go to disk again... So leave it empty
-         hideShowGlobalNav "true" 
+         --hideShowGlobalNav "true"
          Journal_LaunchEntry ,pModule,pData 
          exit repeat
       end if
@@ -178,9 +178,11 @@ command setGlobalNavVisible tVisible
    if tVisible is true or tVisible is "true" or tVisible is "yes" then
       show grp "globalNav"
       show button "brandLogo"
+      createScroller "globalNavTree"
    else
       hide grp "globalNav"
       hide button "brandLogo"
+      deleteMobileControl "globalNavTree"
    end if
    unlock screen with visual effect "dissolve" very fast
 end setGlobalNavVisible
@@ -256,15 +258,14 @@ end checkConnectionStop
 
 on closeCard
    set the uWhichMenu of me to "mainMenu"
+   deleteMobileControl (the short name of me)
    pass closecard
 end closeCard
 
 
-# will be needed when scroller is added
---on formattedHeightChanged -- tree changed dimensions
---   LOG "FORMATTEDHEIGHTCHANGED"
---   updateMobileScroller (the short name of me)
---end formattedHeightChanged
+on formattedHeightChanged -- tree changed dimensions
+   updateScroller (the short name of me)
+end formattedHeightChanged
 
 
 command createNavTree pMenu

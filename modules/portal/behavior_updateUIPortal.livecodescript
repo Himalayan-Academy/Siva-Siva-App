@@ -25,7 +25,7 @@ on preOpenCard
       case "Home"
          setUpBrandImage
          setDefaultImage
-         dispatch "hideShowGlobalNav" to widget "globalNavTree" with "true"
+         dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          put empty into fld "homeStoryText"
          put the long id of fld "homeStoryText" into pControl
          centerMe pControl,0,5

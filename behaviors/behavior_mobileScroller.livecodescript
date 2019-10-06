@@ -4,23 +4,39 @@ local sStacksHorizontal
 
 ######### Mobile Controls ############
 
-command CreateScroller pName -- scrolling fields
+command createScroller pName -- scrolling fields
    --set the acceleratedRendering of this stack to false
    if not isMobile() then exit CreateScroller
    deleteMobileControl pName -- delete any existing
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
-   put  ("0,0," & (the formattedwidth of control pName) & "," & the formattedheight of control pName + 20) into tRect
-   mobileControlSet pName, "contentRect" , tRect
-   mobileControlSet pName, "hScroll" , 0
-   mobileControlSet pName, "vScroll" , 0
-   mobileControlSet pName, "hIndicator" , false
+   put ("0,0," & (the formattedwidth of control pName) & "," & \
+         the formattedheight of control pName + 20) into tRect
+   mobileControlSet pName, "contentRect", tRect
+   mobileControlSet pName, "hScroll", 0
+   mobileControlSet pName, "vScroll", 0
+   mobileControlSet pName, "hIndicator", false
    if pName = "quote" then
       mobileControlSet pName, "vIndicator", true
    end if
    mobileControlSet pName, "visible",  true
-end CreateScroller
+end createScroller
+
+
+on updateScroller pName
+   local tRect
+   if not isMobile() then exit updateScroller
+   if pName is among the lines of mobileControls() then -- update
+      put ("0,0," & (the formattedwidth of control pName) & "," & \
+            the formattedheight of control pName + 20) into tRect
+      mobileControlSet pName, "contentRect", tRect
+      mobileControlSet pName, "hScroll", 0
+      mobileControlSet pName, "vScroll", the vScroll of control pName
+   else
+      createScroller pName
+   end if
+end updateScroller
 
 
 on scrollerDidScroll hScrolled, vScrolled
@@ -32,6 +48,7 @@ on scrollerDidScroll hScrolled, vScrolled
    -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 
+
 on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
    -- they are overlaid on the stack and will float over all cards
@@ -42,6 +59,7 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
    --set the acceleratedRendering of this stack to false --- jg: don't turn this off
 end deleteMobileControl
 
+
 on mouseDown
    if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
       put the mouseloc into sMouseLoc
@@ -49,6 +67,7 @@ on mouseDown
    end if
    pass mousedown
 end mouseDown
+
 
 on setScroll
    if the mouse is down then

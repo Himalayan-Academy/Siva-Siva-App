@@ -9,6 +9,6 @@ Script "stack_Siva-Siva-Portal_button_id_55328"
 on mouseup
    hide btn "brandLogo"
    # in case menu are visible:
-   dispatch "hideShowGlobalNav"  to widget "globalNavTree" with "true"
+   dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
    dispatch "goNextScene" to grp "homeStory"
- end mouseup
+end mouseup
