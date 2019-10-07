@@ -18,9 +18,10 @@ on mouseUp
    end if
    
    put the short name of the target into tTarget
-
+   
    if tTarget is not "share" then
       terminateBrowser
+      show grc "blankImage"
       
       -- give time for connection to close before close the stack
       -- maybe to helps

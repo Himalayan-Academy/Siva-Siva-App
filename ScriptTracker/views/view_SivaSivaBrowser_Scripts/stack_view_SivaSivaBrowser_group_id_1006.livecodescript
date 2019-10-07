@@ -21,6 +21,8 @@ on mouseUp
    
    if tTarget is not "share" then
       terminateBrowser
+      show grc "blankImage"
+      wait 10 milliseconds with messages
    end if
    
    switch tTarget
@@ -50,12 +52,6 @@ on mouseUp
          put the rect of tBrowser into tBrowserRect
          put the top of tControl into item 4 of tBrowserRect
          set the rect of tBrowser to tBrowserRect
-         --set the bottom of tBrowser to the top of tControl
-         --         put the height of this card into tCdHeight
-         --         put the height of tControl into tSharingHeight
-         --         set loc of tControl to\
-         --               (the width of this card/2),tCdHeight- (tSharingHeight/2 )
-         --         set the top of tBrowser to -(tSharingHeight/2)
          
          deleteMobileControl  "audioPlayer"
          show group "share-ui" with visual "dissolve" very fast

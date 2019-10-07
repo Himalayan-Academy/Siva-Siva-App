@@ -20,17 +20,20 @@ on preopenstack
    set the fullscreenmode of this stack to empty
    put the short name this stack into tBrowser
    put (tBrowser contains "landscape") into sLandscapeOnly
+   put "landscape left,landscape right" into tOrientations
+   if sLandscapeOnly then
+      put "landscape" into sOrientation
+      setCardCoords "landscape"
+   else
+      put "portrait,portrait upside down," before tOrientations
+      put "portrait" into sOrientation
+      setCardCoords
+   end if
    if isMobile() then
-      put "landscape left,landscape right" into tOrientations
-      if sLandscapeOnly then
-         put "landscape" into sOrientation
-      else
-         put "portrait,portrait upside down," before tOrientations
-         put "portrait" into sOrientation
-      end if
       mobileSetAllowedOrientations tOrientations
    end if
    resetUI
+   hide grc "blankImage"
 end preopenstack
 
 on resizeStack
@@ -75,16 +78,12 @@ command updateUI theOrientation
          
          subtract 50 from item 4 of sBrowserRect
          put item 4 of sBrowserRect + 25 into tEdge
-         --put (tWidth/2,(tHeight-50)/2) into tBrowserLoc
-         --put (0,0,tWidth,(tHeight - 50)) into tBrowserRect
          
-         --set loc group "footerNavigation" of card "SivaSivaBrowser" to ( round(tWidth/2),tEdge)
          put tWidth/4 into tUnit
          set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tUnit/2,tEdge)
          set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tUnit*1.5,tEdge)
          set the loc of button "share"  of card "SivaSivaBrowser" to (tUnit*2.5,tEdge)
          set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tUnit*3.5,tEdge)
-         --show group "footerNavigation" of card "SivaSivaBrowser"
          break
          
       case (tOrientation contains "landscape")
@@ -94,16 +93,12 @@ command updateUI theOrientation
          
          add 50 to item 1 of sBrowserRect
          put item 1 of sBrowserRect  - 25 into tEdge
-         --put (0,0,(tWidth- 50),tHeight) into tBrowserRect
-         --put ((tWidth+50)/2,tHeight/2) into tBrowserLoc
          
-         --set loc group "footerNavigation" of card "SivaSivaBrowser" to ( tEdge,tHeight/2)
          put tHeight/4 into tUnit
          set the loc of button "go-home-portal" of card "SivaSivaBrowser" to (tEdge,tUnit/2) 
          set the loc of button "add-favorites" of card "SivaSivaBrowser" to (tEdge,tUnit*1.5)
          set the loc of button "share"  of card "SivaSivaBrowser" to (tEdge, tUnit*2.5)
          set the loc of button "settings-gear" of card "SivaSivaBrowser" to (tEdge, tUnit*3.5)
-         --show group "footerNavigation" of card "SivaSivaBrowser"
          break
          
       default
@@ -112,11 +107,9 @@ command updateUI theOrientation
    end switch
    
    set the rect of tBrowser to sBrowserRect
-   --set the loc of tBrowser to tBrowserLoc
    set the rect of tLoader to sBrowserRect
-   --set the loc of tLoader to tBrowserLoc
    
-   --if (the lockscreen) then unlock screen
+   set the rect of grc "blankImage" to CardRect()
 end updateUI
 
 command repositionBrowser
@@ -238,6 +231,7 @@ command resetUI
 end resetUI
 
 on closestack
+   show grc "blankImage"
    # we never log the browers stacks as the sLastStack
    # because we may be coming to view a web page from any module
    # which should be designated as sLastStack and not these browers.
@@ -245,165 +239,3 @@ on closestack
       --mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
 end closestack
-
-
-####################
-# Brian's Original standalone test
-
-
---on preOpenStack
---   clearLog
---   addLog "preOpenStack"
-
---   # set up objects for geometry
---   put the long id of widget "body" of card "SivaSivaBrowser" into sBrowser
---   put the long id of widget "loader" of card "SivaSivaBrowser" into sLoader
---   put the long id of group "footerNavigation"  of card "SivaSivaBrowser" into sFooter
---   # widget the footer have to be located
---   put the long id of button "go-home-portal" of card "SivaSivaBrowser" into sGoHomeBtn
---   put the long id of button "add-favorites" of card "SivaSivaBrowser" into sAddFavoritesBtn
---   put the long id of button "share"  of card "SivaSivaBrowser" into sShareBtn
---   put the long id of button "settings-gear" of card "SivaSivaBrowser" into sSettingBtn
-
---   # this behavior  is used in two different stack
---   # the landscape one must be opened after closing a portrait stack
---   # you cannot go in window of the a portrait stack
-
---   put the short name this stack into sBrowserStack
-
---   if sBrowserStack contains "landscape" then
---      put  "landscape" into sBrowserStack
---      # use for video/YouTube Channel
---      put "landscape" into sBrowserOrientation
-
---   else 
---      put  "portrait" into sBrowserStack
---      # regular brower stack supports orientation changes
---      # Web site starts out in portrait mode
---      put "portrait" into sBrowserOrientation 
---   end if
-
---   if isMobile() then
---      if sBrowserOrientation = "landscape"   then
---         mobileSetAllowedOrientations "landscape left"
---      else
---         mobileSetAllowedOrientations "portrait,landscape left,landscape right"
---      end if
---      put mobileDeviceOrientation() into sBrowserOrientation
---   end if
---   setBrowserURL
---end preOpenStack
-
---on opencard
---   local x, y
---   put the width  of this card into x
---   put the height of this card into y
-
---   # Logging
---   addLog "openCard" && the short name of this card
---   addLog tab & "CardRect:" && the rect of this card
---   addLog tab & "Screenrect:" && the screenrect
-
---   # send initial layout
---   if sBrowserOrientation = "portrait" then
---      updateUI "portrait",x,y
---   else
---      updateUI "landscape",x,y
---   end if
---end opencard
-
---on orientationChanged
---   #put empty into fld "log"
---   clearLog
---   addlog "=================="
---   addLog "orientationChanged"
---   if isMobile () then
---      put mobileDeviceOrientation() into sBrowserOrientation
---      addLog tab & sBrowserOrientation
---   end if
---   #then a resizestack is called:
---end orientationChanged
-
---on resizeStack x,y,ox,oy
---   lock screen
---   addLog ("resizeStack " & x & ", " & y & ", " & ox & ", " & oy) 
---   addLog tab & "CardRect:" && the rect of this card
---   addLog tab & "Screenrect:" && the screenrect
---   updateUI sBrowserOrientation
---   unlock screen
---end resizeStack
-
---command updateUI theOrientation
-
---   --hide widget "body" # in case we want to see the log
-
-
---   local x,y, tBrowserRect, tBrowserLoc, tUnit
-
---   # get coords now after changes to screen
---   put the width  of this card into x
---   put the height of this card into y
-
---   put x into sCdWidth
---   put y into sCdHeight
-
---   #---- LOGGING
---   addLog "updateUI" && theOrientation
---   addLog tab & "Card X-Y:" && x & ", " & y
---   addLog tab & "CardRect:" && the rect of this card
---   addLog tab & "Screenrect:" && the screenrect
-
---   switch 
---      case (theOrientation contains "face up") 
---      case (theOrientation contains "unknown")  
---      case (theOrientation contains "portrait upside down") 
---      case (theOrientation contains "face down") 
---         exit to top
---         break
---      case (theOrientation contains "portrait") 
---         --hide widget "body" # in case we want to log
---         put (0,0,sCdWidth,(sCdHeight - 50)) into tBrowserRect
---         put (sCdWidth/2,((sCdHeight-50)/2) ) into tBrowserLoc
-
---         set the loc of fld "log" of cd "SivaSivaBrowser" to (sCdWidth/2,sCdHeight/2)
-
---         positionbody tBrowserRect, tBrowserLoc
---         set the loc of sFooter to ( round(sCdWidth/2),sCdHeight - 25)
---         put sCdWidth/4 into tUnit
---         set the loc of sGoHomeBtn to (tUnit/2,sCdHeight-25)
---         set the loc of sAddFavoritesBtn to (tUnit*1.5,sCdHeight-25)
---         set the loc of sShareBtn to (tUnit*2.5,sCdHeight-25)
---         set the loc of sSettingBtn to (tUnit*3.5,sCdHeight-25)
---         break
-
---      case (theOrientation contains "landscape")
---         put (0,0,sCdWidth-50,(sCdHeight)) into tBrowserRect
---         put ((sCdWidth/2+25),(sCdHeight/2)) into tBrowserLoc
---         --         put (0,350,sCdWidth-50,(sCdHeight)) into tBrowserRect
---         --         put ((sCdWidth/2+25),(sCdHeight-32)) into tBrowserLoc
---         positionbody tBrowserRect, tBrowserLoc
---         set loc sFooter to ( 25,sCdHeight/2)
---         put sCdHeight/4 into tUnit
---         set the loc of sGoHomeBtn to (25,tUnit/2) 
---         set the loc of sAddFavoritesBtn to (25,tUnit*1.5)
---         set the loc of sShareBtn to (25, tUnit*2.5)
---         set the loc of sSettingBtn to (25, tUnit*3.5)
---         break
---   end switch
-
---end updateUI
-
---command positionbody tBrowserRect, tBrowserLoc
---   --breakpoint
---   set the rect of sBrowser  to tBrowserRect
---   set the loc of sBrowser to  tBrowserLoc
---   set the rect of sLoader  to tBrowserRect
---   set the loc of sLoader to  tBrowserLoc
---      set the rect of fld "log" of cd "SivaSivaBrowser" to  (80,0,sCdWidth,sCdHeight-200)
---      set the topleft of btn "clear log" to 0,0
---   addLog "FinalBrowserRect" && the rect of sBrowser && the loc of sBrowser
---   addLog "the vis of widget Body" && the vis of widget "body"
---end positionbody
-
-
-
