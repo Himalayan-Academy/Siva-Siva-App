@@ -66,7 +66,10 @@ local sLastModulesList
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
 
+
 command portal_GoStack cardOrStackObject
+   tsNetLibUrlReuseConnection false
+   
    local oStackName, pTrackdata, pAction
    --breakpoint
    put the short name of this stack into oStackName
@@ -283,6 +286,7 @@ command portal_GoUrl pURL,pJournalLabel
 end portal_GoUrl
 
 command portal_LaunchUrl someURL
+   
    # leave Siva Siva app and open the native web app on the device
    launch url someURL    
 end portal_LaunchUrl
