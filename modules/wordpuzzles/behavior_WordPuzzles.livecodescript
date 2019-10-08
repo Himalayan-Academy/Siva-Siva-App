@@ -13,7 +13,7 @@ array that keeps the track tile locations.
 on openCard
    --if not (the lockscreen)  then lock screen
    --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
-   
+   disable btn "Clues"
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
@@ -176,6 +176,7 @@ on createWordPuzzle
    set the acceleratedRendering  of this stack to true
    show fld "wordPuzzleSubject"
    send "hideSubjectFld" to me in 10 seconds
+   enable btn "Clues"
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
@@ -549,6 +550,16 @@ end glowTile
 command hideSubjectFld
    hide fld "wordPuzzleSubject"
 end hideSubjectFld
+
+command revealQuote
+   set the layer of grp "quoteGroup" to top
+   show grp "quoteGroup" 
+   show fld "_Quote"
+   wait 1 seconds
+   hide grp "quoteGroup" 
+   hide fld "_Quote"
+   --losePoints # later
+end revealQuote
 
 on showClues
    put the uWordList of me into sClues
