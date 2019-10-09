@@ -79,18 +79,18 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_surprise_widget_id_1493](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1493.livecodescript)
 
-**bkgnd "share-ui" of stack "surprise"**
-* ID: bkgnd id 1509 of stack "surprise"
-* Behavior: stack "behavior_SocialShare"
-
-* Background on card IDs: 1494, 1037
-* [stack_surprise_bkgnd_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1509.livecodescript)
-
 **bkgnd "header" of stack "surprise"**
 * ID: bkgnd id 1282 of stack "surprise"
 
 * Background on card IDs: 1494, 1002, 1106, 1031, 1421, 1039, 1037
 * [stack_surprise_bkgnd_id_1282](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1282.livecodescript)
+
+**bkgnd "share-ui" of stack "surprise"**
+* ID: bkgnd id 1509 of stack "surprise"
+* Behavior: stack "behavior_SocialShare"
+
+* Background on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
+* [stack_surprise_bkgnd_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1509.livecodescript)
 
 **card "surprise" of stack "surprise"**
 * ID: card id 1494 of stack "surprise"
