@@ -17,6 +17,8 @@ on mouseUp
       journal_AddEntry
    end if
    
+   --tsNetLibUrlReuseConnection false # appear to work here... testing in lib_SivaSivaPortal
+   
    put the short name of the target into tTarget
    
    if tTarget is not "share" then

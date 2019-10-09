@@ -67,3 +67,15 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_Siva-Siva-Portal_widget_id_8159](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_8159.livecodescript)
 
+**group "answerDlgGrp" of card "Surprise" of stack "Siva-Siva-Portal"**
+* ID: group id 67359 of card id 7993 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_group_id_67359](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_group_id_67359.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "Surprise" of stack "Siva-Siva-Portal"**
+* ID: graphic id 67360 of group id 67359 of card id 7993 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_graphic_id_67360](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_67360.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "Surprise" of stack "Siva-Siva-Portal"**
+* ID: field id 67362 of group id 67361 of group id 67359 of card id 7993 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_field_id_67362](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_field_id_67362.livecodescript)
+
