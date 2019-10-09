@@ -11,9 +11,7 @@ array that keeps the track tile locations.
 --> Events
 -
 on openCard
-   --if not (the lockscreen)  then lock screen
-   --    put getPref("word puzzle","level") into sCurLevel  --### USE ANDRE'S LIB HERE
-   disable btn "Clues"
+   
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
@@ -27,6 +25,7 @@ on openCard
    send "showTitle false" to me in 90 ticks
    setTileGlow "small"
    put 0 into sCluesGiven
+   show grp "puzzleControls" with visual effect "dissolve" very fast
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
 end opencard
@@ -78,9 +77,6 @@ on createWordPuzzle
    set the blendlevel of fld "_quote" to 0  
    show grp "quoteGroup"
    show fld "_quote"
-   
-   
-   
    
    -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "quoteGroup"
@@ -185,7 +181,8 @@ on createWordPuzzle
    set the acceleratedRendering  of this stack to true
    show fld "wordPuzzleSubject"
    send "hideSubjectFld" to me in 10 seconds
-   enable btn "Clues"
+   show grp "puzzleInProgress"
+   
 end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
@@ -229,13 +226,14 @@ on checkLevel
 end checkLevel
 
 command showTitle pBool
-  if pBool then -- show title
-    hide grp "puzzleControls" with visual effect "dissolve" very fast
-    show fld "titleFld"
-  else -- hide title
-    hide fld "titleFld" with visual effect "dissolve" very fast
-    show grp "puzzleControls" with visual effect "dissolve" very fast
-  end if
+   if pBool then -- show title
+      hide grp "puzzleControls" with visual effect "dissolve" very fast
+      hide grp "puzzleinProgress" with visual effect "dissolve" very fast
+      show fld "titleFld"
+   else -- hide title
+      hide fld "titleFld" with visual effect "dissolve" very fast
+      show grp "puzzleControls" with visual effect "dissolve" very fast
+   end if
 end showTitle
 
 command fetchQuote
@@ -362,7 +360,8 @@ end getLocation
 --end distributeWords
 
 on clearBoard
-   --set the acceleratedRendering  of this stack to false
+   # use case: User want to leave the current puzzle and and new one
+
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
    hide group "prefsSelectorGrp"
@@ -388,6 +387,7 @@ on clearBoard
    end try
    end repeat
    set the uWordList of me to empty
+   hide grp "puzzleInProgress"
    unlock screen
 end clearBoard 
 
@@ -574,13 +574,16 @@ command hideSubjectFld
 end hideSubjectFld
 
 command revealQuote
-   set the layer of grp "quoteGroup" to top
+   set the layer of grc "blankScreen" to top
+   show grc "blankScreen"
+   set the layer of grp "quoteGroup"  to top
    show grp "quoteGroup" 
    show fld "_Quote"
-   wait 1 seconds
+   wait 2 seconds
    hide grp "quoteGroup" 
    hide fld "_Quote"
-   --losePoints # later
+   hide grc "blankScreen"
+   --losePoints # later when we give badges
 end revealQuote
 
 on showClues
@@ -684,7 +687,7 @@ on makeColorSets pList -- usually I pass the clipboarddata
       delete last char of tBgRGB
       put l & "|" & tBgRGB & cr after tColorList
    end repeat
-   breakpoint
+   --breakpoint
    set the uColorSets of me to tColorList
 end makeColorSets
  
@@ -722,6 +725,7 @@ end checkTileGlow
 
 
 command resetUI
+   --breakpoint
    showTitle True
    clearBoard
 end resetUI
