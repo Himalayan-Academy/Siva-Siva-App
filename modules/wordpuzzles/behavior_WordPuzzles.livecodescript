@@ -35,6 +35,7 @@ end opencard
 local tWordLoc
 
 on createWordPuzzle
+   local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
    end if
@@ -65,8 +66,8 @@ on createWordPuzzle
    put getColors() into tColors
    put line 1 of tColors into tRGB
    put line 2 of tColors into tTileBkgndRGB
-   set the foregroundcolor of fld _Quote to tRGB
-   set the backgroundColor of grc quoteBkgnd to tTileBkgndRGB
+   set the foregroundcolor of fld "_Quote" to tRGB
+   set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
    
    
    -- Set the quote in a field
@@ -99,7 +100,7 @@ on createWordPuzzle
       
       copy img "CurrentPuzzle" to this card
       set the name of the last image to "tempForCrop"
-      set the rect of the last image to the rect of fld _quote"
+      set the rect of the last image to the rect of fld "_quote"
       
       --make individual word tiles
       put the formattedRect of word x of fld "_quote" into tNextWordRect  
@@ -109,6 +110,11 @@ on createWordPuzzle
       add 6 to item 3 of tNextWordRect
       add 4 to item 4 of tNextWordRect
       
+      #####################################################################
+      ### BM: `tNextWord` is undefined on the first time through this loop.
+      put word x of fld "_quote" into tNextWord
+      local tWordCantBeTileName
+      ### BM: this block of code seems unnecessary
       if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
          put tNextWord into tWordCantBeTileName
          replace "---" with quote in tWordCantBeTileName
@@ -119,6 +125,8 @@ on createWordPuzzle
          crop image "tempForCrop" to tNextWordRect
          set the  name of image "tempForCrop"  to tNextWord
       end if
+      ### BM: line 132 below changes the image name again
+      #####################################################################
       
       -- name the tiles and apply the name as custom prop of the tile
       put ("word_"&x) into tTileName
@@ -151,6 +159,7 @@ on createWordPuzzle
    arrangeWords # Jacque's Method
    
    # set start indicator to the beginning of the first word
+   local pWord, tFirstWordPosition, tStartIconPosition
    put the cWord of image "word_1" into pWord
    put the  uWordLocation of image "word_1"  into tFirstWordPosition
    put sWordLocationsA[pWord][1] into tFirstWordPosition
@@ -164,7 +173,7 @@ on createWordPuzzle
    hide grp "quoteGroup"
    hide fld "_quote" -- comment this out to see the quote during dev
    
- 
+   local pTile, pTrackdata
    put the long id of image "word_1" into pTile
    setTileGlow "large" 
    relayer  pTile to front of card "word-puzzle"
@@ -181,7 +190,8 @@ end createWordPuzzle
 
 command getLocations tNextWord,tNextWordRect
    -- set up an array of the location(x) of a word.
-   put tNextWordRect into  tCoords
+   local tCoords, tLoc, theX, theY
+   put tNextWordRect into tCoords
    if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
          tNextWord is among the keys of sWordLocationsA then
       --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
@@ -204,6 +214,7 @@ end assignHomeLocations
 command loadNewBgImg -- change img for each new puzzle
    -- called by createWordPuzzle
    --if not (the lockscreen)  then lock screen
+   local pControl, tFolderPath, tFiles, tImgPath
    ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
@@ -219,15 +230,16 @@ end checkLevel
 
 command showTitle pBool
   if pBool then -- show title
-    hide grp "puzzleControls" with visual effect dissolve very fast
+    hide grp "puzzleControls" with visual effect "dissolve" very fast
     show fld "titleFld"
   else -- hide title
-    hide fld "titleFld" with visual effect dissolve very fast
-    show grp "puzzleControls" with visual effect dissolve very fast
+    hide fld "titleFld" with visual effect "dissolve" very fast
+    show grp "puzzleControls" with visual effect "dissolve" very fast
   end if
 end showTitle
 
 command fetchQuote
+   local tConnectionID, tSQL, tCurRange, aSelectedQuotes, tNo
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
    
@@ -247,10 +259,10 @@ command fetchQuote
    
    put dbGet("quote", tConnectionID) into aSelectedQuotes
    put random (the number of lines of the keys of aSelectedQuotes) into tNo
-   put textDecode ( aSelectedQuotes[tNo]["content"], UTF8)  into sQuote
-   put textDecode ( aSelectedQuotes[tNo]["subject"], UTF8)  into fld "wordPuzzleSubject"
-   put textDecode ( aSelectedQuotes[tNo]["source_url"], UTF8)  into sSourceURL
-  
+   put textDecode ( aSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
+   put textDecode ( aSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
+   put textDecode ( aSelectedQuotes[tNo]["source_url"], "UTF8")  into sSourceURL
+   
    #hack to deal with endline bug
    replace "\n" with space in sQuote
    
@@ -259,10 +271,11 @@ command fetchQuote
    replace (space & quote) with (space & "“") in sQuote 
    replace (quote& space) with ( "”"& space) in sQuote 
    
- 
+   
 end fetchQuote
  
- command setSizeAndLocationOfQuote sQuote
+command setSizeAndLocationOfQuote sQuote
+   local tCharCount, tRequiredHeight
    # we want to call quotes of different lengths
    # practically speaking 330 chars set to 30 px is the lower limit
    # for small tiles, and even this may be too small for small devices to pick with your finger
@@ -297,7 +310,7 @@ end fetchQuote
          break
    end switch
    
-   set the textstyle of fld "_quote" to bold
+   set the textstyle of fld "_quote" to "bold"
    
    put the formattedHeight of fld "_Quote" into tRequiredHeight
    set the height of fld "_quote" to tRequiredHeight
@@ -317,18 +330,20 @@ on movestopped
 end movestopped
 
 function getColors -- return a random RGB set
-  -- color sets stored in custom prop uColorSets in format: rgb1|rgb2
-  -- first item is text color, second is bg color
-  ## Still very ugly, sets were created by algorithm. Needs tweaking. ##
-  put any line of the uColorSets of me into tRGBSet
-  replace "|" with cr in tRGBSet
-  return tRGBSet
+   -- color sets stored in custom prop uColorSets in format: rgb1|rgb2
+   -- first item is text color, second is bg color
+   ## Still very ugly, sets were created by algorithm. Needs tweaking. ##
+   local tRGBSet
+   put any line of the uColorSets of me into tRGBSet
+   replace "|" with cr in tRGBSet
+   return tRGBSet
 end getColors
 
 function getLocation tCoords
-     put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
-      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
-      return (theX,theY)
+   local theX, theY
+   put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
+   put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+   return (theX,theY)
 end getLocation
 
 --on distributeWords
@@ -376,7 +391,8 @@ on clearBoard
    unlock screen
 end clearBoard 
 
-on checkCompletion 
+on checkCompletion
+   local tWords, tStatus
    put the uWordList of this card into tWords 
    repeat for each line x in tWords 
       put the uInPlace of img x & cr after tStatus
@@ -393,6 +409,7 @@ function randomInRange lowerLimit, upperLimit
 end randomInRange
 
 on unJumble
+   local tWords
    put the uWordList of this card into tWords
    repeat for each line x in tWords
       set the loc of Img x to (the uWordLocation of img x)
@@ -436,6 +453,7 @@ on trackTimePassed
 end trackTimePassed
 
 on setTilesBlendLevel pLevel
+   local tWords
    put the uWordList of this card into tWords
    repeat for each  line x in tWords
       set the blendlevel of img x to pLevel
@@ -449,6 +467,7 @@ on setTilesBlendLevel pLevel
  end setLevel
  
 command difficultyPicker pAction, pValue
+   local tPrompt, pLoc
    switch pAction
       case "pickLevel"  # group is hidden... user want to select now.
          put the uLevels of me into fld "prefsSelector"  # hard wire to 1 for now
@@ -481,6 +500,7 @@ end difficultyPicker
 
 on arrangeWords
    -- alternate distribution method; not sure it's much better but there will be no hidden overlaps
+   local tWords, tW, tH, tPt, tHalfW, tHalfH
    put the uWordList of this card into tWords
    sort lines of tWords by random(100) -- reorder
    put the width of this cd into tW
@@ -507,34 +527,36 @@ function anyIntersect pPt,pObjName
 end anyIntersect
 
 on deleteOccupiedLocation sOneHome,pWord
+   local tWords, sMyHomes
    put  the uWordList of this card into tWords 
    repeat for each line x in tWords
       if the cWord  of image x = pWord then
-      put the uWordLocations of image x into sMyHomes
-      delete variable sMyHomes[sOneHome]
-      set the uWordLocations of image x to sMyHomes
+         put the uWordLocations of image x into sMyHomes
+         delete variable sMyHomes[sOneHome]
+         set the uWordLocations of image x to sMyHomes
       end if
    end repeat
 end deleteOccupiedLocation
 
 command triggercompletion
-  if sTimerOnFlag <> true then exit triggercompletion -- already finished
-  stopTimer
-  -- if the uSourceURL of widget "context" <> empty then show widget "context"
-  put the number of lines in the uWordList of this card into tNumWords
-  get fld "Minutes"
-  if (word 1 of it) > 0 then
-    put it into tTime
-    if it < 2 then delete last char of tTime -- make it singular
-    put space after tTime
-  end if
-  put fld "seconds"  after tTime
-  put "Done!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
- dialog_CustomMsg tPrompt 
-  # later we ahve to save a puzzle solved to tracker for this module
-  # pop up the link to read in the book.
-  # more quotes and timer etc. for additional fun
-  show fld "wordPuzzleSubject"
+   local tNumWords, tTime, tPrompt
+   if sTimerOnFlag <> true then exit triggercompletion -- already finished
+   stopTimer
+   -- if the uSourceURL of widget "context" <> empty then show widget "context"
+   put the number of lines in the uWordList of this card into tNumWords
+   get fld "Minutes"
+   if (word 1 of it) > 0 then
+      put it into tTime
+      if it < 2 then delete last char of tTime -- make it singular
+      put space after tTime
+   end if
+   put fld "seconds"  after tTime
+   put "Done!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
+   dialog_CustomMsg tPrompt 
+   # later we ahve to save a puzzle solved to tracker for this module
+   # pop up the link to read in the book.
+   # more quotes and timer etc. for additional fun
+   show fld "wordPuzzleSubject"
 end triggercompletion
 
 command glowTile pTile, pState
@@ -562,8 +584,9 @@ command revealQuote
 end revealQuote
 
 on showClues
+   local pMsg
    put the uWordList of me into sClues
-   if tTiles is empty then
+   if sClues is empty then
       dialog_CustomMsg "Start a puzzle first."
       exit to top
    end if
@@ -631,8 +654,9 @@ end showClues
  
 
 on displayAbout pLevel
-  put the acceleratedRendering of this stack into sRendering
-  set the acceleratedRendering of this stack to true
+   local tPath, tAboutText
+   put the acceleratedRendering of this stack into sRendering
+   set the acceleratedRendering of this stack to true
    put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
    put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
    send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
@@ -651,23 +675,24 @@ end closeAbout
 ## This makes a list of color sets for the custom cd prop
 
 on makeColorSets pList -- usually I pass the clipboarddata
+   local tBgRGB, tColorList
    repeat for each line l in pList
-     put "" into tBgRGB
-     repeat for each item i in l
-       put i+100 & comma after tBgRGB
-     end repeat
-     delete last char of tBgRGB
-     put l & "|" & tBgRGB & cr after tColorList
+      put "" into tBgRGB
+      repeat for each item i in l
+         put i+100 & comma after tBgRGB
+      end repeat
+      delete last char of tBgRGB
+      put l & "|" & tBgRGB & cr after tColorList
    end repeat
    breakpoint
    set the uColorSets of me to tColorList
- end makeColorSets
+end makeColorSets
  
 on test -- use this to test correct dimensions
-  -- params: pShow,pMsg,pLoc,pWidth,pHeight:
-  
-  put "You did it!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
- dialog_CustomMsg tPrompt
+   -- params: pShow,pMsg,pLoc,pWidth,pHeight:
+   local tNumWords, tTime, tPrompt
+   put "You did it!" && tNumWords && "words in" && tTime & ". Use settings to get longer quotes." into tPrompt
+   dialog_CustomMsg tPrompt
 end test
 
 

@@ -7,9 +7,6 @@ Script "stack_wordpuzzles_button_id_1005"
 
 
 on mousedown
-   setTilesBlendLevel(50)
+   revealQuote
 end mousedown
-on mouseup
-   setTilesBlendLevel(0)
-end mouseup
 
