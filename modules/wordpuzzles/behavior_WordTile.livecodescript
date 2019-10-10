@@ -20,6 +20,7 @@ on mouseMove x,y
 end mouseMove
 
 function minMax pRect -- get a point within bounds
+   local x, y
    if pRect = "" then
       put the rect of this card into pRect
    end if
@@ -30,6 +31,7 @@ end minMax
 
 
 on mouseUp
+   local tWhatControl, tIsHome
    put me into tWhatControl
    -- outOfFrame
    put false into sDragging
@@ -41,6 +43,7 @@ on mouseUp
 end mouseUp
 
 command lockInPlace
+   local pWord
    # lock in place
    set the loc of me to sMyHomes[sOneHome]
    set the uInPlace  of me to "true" 
@@ -57,12 +60,18 @@ command lockInPlace
 end lockInPlace
 
 command clueGoHome
+   local tLoc
    put the uWordLocations of me into sMyHomes
    setTileGlow "large" 
    relayer me to front of card "word-puzzle"
    glowtile me, true
    put sMyHomes[1] into tLoc
-   move me from (the loc of  me) to  tLoc in 1500 milliseconds without messages
+   # BM: handle an already placed word picked as a clue
+   if tLoc is not empty then
+      move me from (the loc of  me) to tLoc in 1500 milliseconds without messages
+   else
+      wait 500 milliseconds
+   end if
    glowtile me, false
 end clueGoHome
 
@@ -75,11 +84,12 @@ end mouseRelease
 ## of the card:
 
 command outOfFrame
-
+   local tBounds, tMyLoc, tStartLoc, tVaxis, tOutOfBoundsFlag, tHaxis
+   
    put the rect of this card into tBounds
    put the loc of me into tMyLoc
    put tMyLoc into tStartLoc
-    
+   
    switch
       case  ( (item 2 of tMyLoc) > (item 4 of tBounds) )
          put  (item 4 of tBounds -20) into tVaxis
@@ -101,15 +111,16 @@ command outOfFrame
    end switch
    if  tOutOfBoundsFlag = 1 then
       set the loc of me to tMyLoc
-      put 0 into tOutOfBoundsFlat
+      put 0 into tOutOfBoundsFlag
    end if
    
    # MONITOR:
-     --put tStartLoc & cr & tMyLoc & cr & tBounds
+   --put tStartLoc & cr & tMyLoc & cr & tBounds
    
 end outOfFrame
 
 function checkHomeProximity # Cause tile to snap to location if close
+   local tLeftDistance, tTopDistance
    
    repeat for each key pLoc in sMyHomes
       put the abs of  (item 1 of the loc of me - item 1 of sMyHomes[pLoc]) into tLeftDistance

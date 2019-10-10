@@ -577,8 +577,8 @@ command revealQuote
    set the layer of grc "blankScreen" to top
    show grc "blankScreen"
    set the layer of grp "quoteGroup"  to top
-   show grp "quoteGroup" 
    show fld "_Quote"
+   show grp "quoteGroup" 
    wait 2 seconds
    hide grp "quoteGroup" 
    hide fld "_Quote"
@@ -588,6 +588,8 @@ end revealQuote
 
 on showClues
    local pMsg
+   if sTimerOnFlag <> true then exit showClues
+   
    put the uWordList of me into sClues
    if sClues is empty then
       dialog_CustomMsg "Start a puzzle first."
