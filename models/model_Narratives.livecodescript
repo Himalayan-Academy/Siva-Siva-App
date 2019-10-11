@@ -31,7 +31,7 @@ command  getContent pStoryNumber --  pPhotos,pText
       case "1" # Words of Our Master
          # this slideshow it based on the sImageList for totalSceneCount
          # It can but use for any text, narrative.
-         put randomPhotos("Dieties") into sImageList 
+         put randomPhotos("Deities") into sImageList 
          # scenes constrained by the number of Deity Photos
          put the number of lines of sImageList into sTotalSceneCount
          --ntInfo ("image list: " & line 1 of sImageList)

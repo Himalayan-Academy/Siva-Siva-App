@@ -4,7 +4,7 @@
 # line for the end in the query
 
 |
-selectCachedDeityPhotos
+selectCachedDeitiesPhotos
 
 SELECT  file_id
 FROM item

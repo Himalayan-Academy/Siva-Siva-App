@@ -14,7 +14,7 @@ local sAttribution,sStoryNumber
 
 on preopencontrol
    
-  
+  --breakpoint
    # fresh reboot these will be null. 
    # handle in initializeNarrative
    
@@ -40,7 +40,7 @@ command initializeNarrative
    --put 38 into sLastScene         
    
    # narrative is cached
-   if getCache("ContentFlag") = 1 then 
+   if getCache("storyIsCachedFlag") = 1 then 
       exit initializeNarrative #all content is cached
    end if
    
@@ -148,7 +148,7 @@ command showIsOver
    setCache("ContentFlag"),0
    put getCache("storyNumber") into sStoryNumber
    
-   if (sStoryNumber  = "" ) OR (sStoryNumber =2) then 
+   if (sStoryNumber  = "" ) OR (sStoryNumber =5) then 
       # new app user first run, or an upgrade: preference on story are empty..
       # or we are reach the end of stories... hard wired right now to 2
       put 1 into sStoryNumber
@@ -188,8 +188,8 @@ command loadNextQuote pQuoteNo
    lock screen for visual effect
    set the itemdel to "|"
    # random quote
-   put random(the number of lines of sQuoteList) into tLine
-   put item tLine  of sQuoteList into fld "homeStoryText"
+   put random(the number of items of sQuoteList) into tQuote
+   put item tQuote of sQuoteList into fld "homeStoryText"
    --put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
