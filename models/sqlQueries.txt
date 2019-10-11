@@ -20,6 +20,29 @@ WHERE media_type = "art/photography"
 AND `tags` LIKE "%Realm of Life%"
 AND `cached_on_disk` ="true"
 |
+selectCachedNaturePhotos
+
+SELECT  file_id
+FROM item
+WHERE media_type = "art/photography"
+AND `tags` LIKE "%Nature%"
+AND `cached_on_disk` ="true"
+|
+selectCachedSaintsPhotos
+
+SELECT  file_id
+FROM item
+WHERE media_type = "art/photography"
+AND `tags` LIKE "%Saints%"
+AND `cached_on_disk` ="true"
+|
+selectCachedSoulPhotos
+
+SELECT  file_id
+FROM item
+WHERE media_type = "art/photography"
+AND `tags` LIKE "%Realm of Soul%"
+AND `cached_on_disk` ="true"|
 selectQuotesCollection
 
 SELECT  *
