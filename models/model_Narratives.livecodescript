@@ -31,7 +31,7 @@ command  getContent pStoryNumber --  pPhotos,pText
       case "1" # Words of Our Master
          # this slideshow it based on the sImageList for totalSceneCount
          # It can but use for any text, narrative.
-         put randomDeityPhotos() into sImageList 
+         put randomPhotos("Dieties") into sImageList 
          # scenes constrained by the number of Deity Photos
          put the number of lines of sImageList into sTotalSceneCount
          --ntInfo ("image list: " & line 1 of sImageList)
@@ -42,11 +42,40 @@ command  getContent pStoryNumber --  pPhotos,pText
       case "2" # Atti Chudi
          
          --ntInfo ("image list: " & line 1 of sImageList)
-         put randomLifePhotos() into sImageList 
+         put randomPhotos("Life") into sImageList 
          put FetchQuotesCollection("Atti Chudi") into sQuoteList
          put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sQuoteList into sTotalSceneCount
+         
+         break
+      case "3" # Tayumanavar
+         
+         --ntInfo ("image list: " & line 1 of sImageList)
+         put randomPhotos("Soul") into sImageList 
+         put FetchQuotesCollection("Tayumanavar") into sQuoteList
+         put  ("Songs of Tayumanavar" & cr  & cr  & "By" & cr  & cr  & "Saint Tayumanavar" ) into sAttribution
+         #   scenes constrained by the number verses
+         put the number of lines of sImageList into sTotalSceneCount
+         break
+      case "4" # Vedas
+         
+         --ntInfo ("image list: " & line 1 of sImageList)
+         put randomPhotos("Nature") into sImageList 
+         put FetchQuotesCollection("Vedas") into sQuoteList
+         put  ("Verses" & cr  & cr  & "from the"  & cr  & cr &  "Vedas" ) into sAttribution
+         #   scenes constrained by the number verses
+         put the number of lines of sImageList into sTotalSceneCount
+         
+         break
+      case "5" # Tirukural
+         
+         --ntInfo ("image list: " & line 1 of sImageList)
+         put randomPhotos("Saints") into sImageList 
+         put FetchQuotesCollection("Tirukural") into sQuoteList
+         put  ("Tirukural" & cr  & cr  & "By" & cr  & cr  & "Saint Tiruvalluvar" ) into sAttribution
+         #   scenes constrained by the number verses
+         put the number of lines of sImageList into sTotalSceneCount
          
          break
    end switch
@@ -56,7 +85,7 @@ command  getContent pStoryNumber --  pPhotos,pText
    setCache Quotes, sQuoteList
    setCache Attribution, sAttribution
    setCache SceneCount, sTotalSceneCount
-   setCache ContentFlag, 1
+   setCache storyIsCachedFlag, 1
    
 end getContent
 
@@ -71,7 +100,7 @@ function loadNarrativeFromDisk pID
    if there is not a file tPath then 
       return "xmlerr: file doesn't exist"
    end if 
-
+   
    put revXMLCreateTreeFromFile(tPath, false, true, false) into tXML
    
    if tXML is not a number then 
@@ -150,30 +179,35 @@ end narrativeExtractItem
 on narrativeItemLoadImage @pItemA
    local tRecordA, tPath
    if pItemA["attributes"]["file-id"] is not empty then
-     put jnanamGetItem(pItemA["attributes"]["file-id"]) into tRecordA 
-     # AAG: BROKEN! Files on disk doesn't match media folder on hap. 
+      put jnanamGetItem(pItemA["attributes"]["file-id"]) into tRecordA 
+      # AAG: BROKEN! Files on disk doesn't match media folder on hap. 
    end if
-
+   
    if pItemA["attributes"]["path"] is not empty then
       put sivasiva_AssetFolder() & "img/" & pItemA["attributes"]["path"] into tPath
       if there is a file tPath then 
          put tPath into pItemA["path"]
       end if
    end if
-
+   
 end narrativeItemLoadImage
 
 
 
 -------------------------
 # we should optimize these two functions for any slides show
+# 
 
-function randomDeityPhotos
-   local tQueriesA, tSQL, tConnectionID, tImageList
+function randomPhotos pClass
+   local tQueriesA, tSQL, tConnectionID, tImageList, tSelectionQuery
+   put "selectCached" & pClass & "Photos"  into tSelectionQuery
+   # see /models/sqlQueries.txt  which is a library or queries
+   # turn into an array by lib_SivaSiva
+   
    --ntInfo ("getting RandomImage")
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
-      if tQueriesA[x]["queryName"] = "selectCachedDeityPhotos" then
+      if tQueriesA[x]["queryName"] = tSelectionQuery then
          put tQueriesA[x]["sqlQuery"] into tSQL
          exit repeat
       end if
@@ -188,29 +222,29 @@ function randomDeityPhotos
    --ntinfo ("put line 10: " & (line 10 of pImageList))
    return tImageList
    
-end randomDeityPhotos 
+end randomPhotos 
 
-function randomLifePhotos
-   local tQueriesA, tSQL, tConnectionID, tImageList
-   --ntInfo ("getting RandomImage")
-   put getSQLQueries() into tQueriesA
-   repeat for each key x in tQueriesA
-      if tQueriesA[x]["queryName"] = "selectCachedLifePhotos" then
-         put tQueriesA[x]["sqlQuery"] into tSQL
-         exit repeat
-      end if
-   end repeat
-   --ntinfo tSQL
-   put  JnanamDB() into tConnectionID
-   dbSetSQL tSQL
-   put dbGet(,tConnectionID) into tPhotoFileIDA
-   repeat for each key x in tPhotoFileIDA
-      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
-   end repeat
-   --ntinfo ("put line 10: " & (line 10 of pImageList))
-   return tImageList
-   
-end randomLifePhotos 
+--function randomLifePhotos
+--   local tQueriesA, tSQL, tConnectionID, tImageList
+--   ntInfo ("getting RandomImage")
+--   put getSQLQueries() into tQueriesA
+--   repeat for each key x in tQueriesA
+--      if tQueriesA[x]["queryName"] = "selectCachedLifePhotos" then
+--         put tQueriesA[x]["sqlQuery"] into tSQL
+--         exit repeat
+--      end if
+--   end repeat
+--   ntinfo tSQL
+--   put  JnanamDB() into tConnectionID
+--   dbSetSQL tSQL
+--   put dbGet(,tConnectionID) into tPhotoFileIDA
+--   repeat for each key x in tPhotoFileIDA
+--      put returnAssetPath("photography",tPhotoFileIDA[x]["file_id"]) & cr after tImageList
+--   end repeat
+--   ntinfo ("put line 10: " & (line 10 of pImageList))
+--   return tImageList
+
+--end randomLifePhotos 
 
 
 function fetchQuotesCollection pCollection
