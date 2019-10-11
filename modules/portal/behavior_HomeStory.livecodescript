@@ -193,8 +193,18 @@ command loadNextQuote pQuoteNo
    --put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
+   
+   
    hide sMainImage -- with effect "dissolve" 
    unlock screen with visual effect "dissolve" 
+   if isMobile() then
+      deleteMobileControl "homeStoryText"
+      # recreate:
+      if the formattedheight of fld "homeStoryText" > the height of fld "homeStoryText" then
+         send "CreateScroller homeStoryText" to fld "homeStoryText"
+      end if
+   end if
+   
 end loadNextQuote
 
 command showAttribution sAttribution
