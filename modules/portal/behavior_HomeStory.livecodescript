@@ -148,9 +148,12 @@ command showIsOver
    setCache("ContentFlag"),0
    put getCache("storyNumber") into sStoryNumber
    
-   if (sStoryNumber  = "" ) OR (sStoryNumber =5) then 
+   if (sStoryNumber  = "" ) OR (sStoryNumber =3) then 
       # new app user first run, or an upgrade: preference on story are empty..
       # or we are reach the end of stories... hard wired right now to 2
+      # we have 5 slideshows, but are not show 4 and 5 until a later release
+      # when we get the mobilescrolled working.
+      
       put 1 into sStoryNumber
    else
       add 1 to sStoryNumber
@@ -193,17 +196,17 @@ command loadNextQuote pQuoteNo
    --put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
+   hide sMainImage
+   unlock screen with visual effect "dissolve"  very fast
    
-   
-   hide sMainImage -- with effect "dissolve" 
-   unlock screen with visual effect "dissolve" 
-   if isMobile() then
-      deleteMobileControl "homeStoryText"
-      # recreate:
-      if the formattedheight of fld "homeStoryText" > the height of fld "homeStoryText" then
-         send "CreateScroller homeStoryText" to fld "homeStoryText"
-      end if
-   end if
+   --   breakpoint
+   --   if isMobile() then
+   --      deleteMobileControl "homeStoryText"
+   --      # recreate:
+   --      if the formattedheight of fld "homeStoryText" > the height of fld "homeStoryText" then
+   --         send "CreateScroller homeStoryText" to fld "homeStoryText"
+   --      end if
+   --end if
    
 end loadNextQuote
 

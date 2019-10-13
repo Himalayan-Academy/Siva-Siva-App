@@ -47,6 +47,9 @@ end opencard
 command setDefaultImage 
    --breakpoint
    
+   #  see lib_SivaSiva | setUpBrandImage  
+   # where we set the cache with a branc image number 
+   
    local pImage, tPaths, tBrandImages, tTotalBrandImages
    
    put getCache("BrandImage") into sBrandImageNumber

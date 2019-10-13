@@ -7,7 +7,7 @@ local sSivaSivaNavigation
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
-constant kBRAND_IMAGE_CHANGE= 240  # for production change to 12 hour = 1800 sec
+constant kBRAND_IMAGE_CHANGE= 900  # for production change to 12 hour = 1800 sec
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
 constant cRemoteNewsFile="siva-app-news_1-4.html"
@@ -61,7 +61,7 @@ on setUpBrandImage
       put 1 into  tBrandImage
    else 
       # or  12 hours has passed
-      if tNextChangeUp > tLastRunDate then 
+      if (the seconds) > tNextChangeUp then 
          add 1 to  tBrandImage
       end if
    end if

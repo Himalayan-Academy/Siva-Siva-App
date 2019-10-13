@@ -5,12 +5,15 @@
 #
 # DESCRIPTION
 # used a behavior but called in model because it gets for disk what is needed
-# is meant to serve as the code behind any  grp "narrative" which contains one or more images, fields, browser and audio that will be called
+# is meant to serve as the code behind any  grp "narrative"
+# which contains one or more images, fields, browser and audio that will be called
 # to a narrative/story, narrative/teaching, narrative/reference
-# the idea is to all an XML file to server narrative folders
+# the idea is to call an XML file to server narrative folders
 # then "informs" the user with story.
-# CHANGES: 2018-20-2019 Added a command to call a class of narrative (future use case, current a slideshow from the app) and random function 
-# CHANGES: 2018-20-2018 CREATED Brahmanathaswami
+
+# CHANGES  10-08-2019 Added a command to call a class of narrative (future use case, current a slideshow from the app) and random function 
+# CHANGES: 10-20-2018 CREATED Brahmanathaswami
+
 -----
 --command foundNarrativeScript
 --   answer "Yes, I am model_narrative and I am in the message Path!" with "OK"
@@ -24,6 +27,9 @@
 -- eventually: "classes" TBD, like vidoe, XML presention
 -- slideshow from the web etc.
 ############
+
+# TO DO: BR why am I just "random" These are just list of caches photos?
+# Legacy code. I use and SQL query model and probably removed the randon clause
 
 command  getContent pStoryNumber --  pPhotos,pText
    
@@ -49,15 +55,18 @@ command  getContent pStoryNumber --  pPhotos,pText
          put the number of lines of sQuoteList into sTotalSceneCount
          
          break
-      case "3" # Tayumanavar
+         
+      case "3" # Tirukural
          
          --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Soul") into sImageList 
-         put FetchQuotesCollection("Tayumanavar") into sQuoteList
-         put  ("Songs of Tayumanavar" & cr  & cr  & "By" & cr  & cr  & "Saint Tayumanavar" ) into sAttribution
+         put randomPhotos("Saints") into sImageList 
+         put FetchQuotesCollection("Tirukural") into sQuoteList
+         put  ("Tirukural" & cr  & cr  & "By" & cr  & cr  & "Saint Tiruvalluvar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sImageList into sTotalSceneCount
+         
          break
+         
       case "4" # Vedas
          
          --ntInfo ("image list: " & line 1 of sImageList)
@@ -68,15 +77,16 @@ command  getContent pStoryNumber --  pPhotos,pText
          put the number of lines of sImageList into sTotalSceneCount
          
          break
-      case "5" # Tirukural
+         
+         
+      case "5" # Tayumanavar
          
          --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Saints") into sImageList 
-         put FetchQuotesCollection("Tirukural") into sQuoteList
-         put  ("Tirukural" & cr  & cr  & "By" & cr  & cr  & "Saint Tiruvalluvar" ) into sAttribution
+         put randomPhotos("Soul") into sImageList 
+         put FetchQuotesCollection("Tayumanavar") into sQuoteList
+         put  ("Songs of Tayumanavar" & cr  & cr  & "By" & cr  & cr  & "Saint Tayumanavar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sImageList into sTotalSceneCount
-         
          break
    end switch
    

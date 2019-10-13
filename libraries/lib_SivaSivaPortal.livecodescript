@@ -69,6 +69,9 @@ local sLastModulesList
 
 command portal_GoStack cardOrStackObject
    tsNetLibUrlReuseConnection false
+   # in case the UI froze on internet connection the 
+   # use the user was banging in nav icons.
+   --mobileClearTouch 
    
    local oStackName, pTrackdata, pAction
    --breakpoint
