@@ -57,14 +57,12 @@ command  getContent pStoryNumber --  pPhotos,pText
          break
          
       case "3" # Tirukural
-         
          --ntInfo ("image list: " & line 1 of sImageList)
          put randomPhotos("Saints") into sImageList 
          put FetchQuotesCollection("Tirukural") into sQuoteList
          put  ("Tirukural" & cr  & cr  & "By" & cr  & cr  & "Saint Tiruvalluvar" ) into sAttribution
          #   scenes constrained by the number verses
          put the number of lines of sImageList into sTotalSceneCount
-         
          break
          
       case "4" # Vedas
@@ -258,7 +256,7 @@ end randomPhotos
 
 
 function fetchQuotesCollection pCollection
-   local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuotes
+   local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuote, tQuotes
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
       if tQueriesA[x]["queryName"] = "selectQuotesCollection" then
@@ -266,19 +264,24 @@ function fetchQuotesCollection pCollection
          exit repeat
       end if
    end repeat
-
+   
    ## It is taken from the "subject" column of the quote table
    ## where use the book title in many cases
-  
+   
    replace "#####" with pCollection in tSQL
    
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet(,tConnectionID) into tQuotesDataA
    repeat for each key x in tQuotesDataA
-      put tQuotesDataA[x]["content"] &cr & "|" after tQuotes
+      put textDecode (tQuotesDataA[x]["content"] , "UTF8")  into tQuote
+      put tQuote &cr & "|" after tQuotes
+      --put tQuotesDataA[x]["content"] &cr & "|" after tQuotes
    end repeat
    return tQuotes
+   
+   setLastQuoteID (aSelectedQuotes[1]["quote_id"])
+   replace "\n" with cr in tQuote
 end fetchQuotesCollection 
 
 
