@@ -52,11 +52,14 @@ on openstack
    -- put empty into fld "log"
    
    set the acceleratedRendering of this stack to true
-
+   
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA 
    
    portal_SetLastStack "Listen"
+   if isMobile() then
+      mobileShowStatusBar
+   end if
    
    # must have net connection, otherwise take to My Audio
 end openstack
