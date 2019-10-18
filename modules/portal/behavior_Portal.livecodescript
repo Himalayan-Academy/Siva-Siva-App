@@ -6,6 +6,7 @@ on preOpenStack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
+      iphoneSetAudioCategory "playback" 
    end if
 end preOpenStack
 

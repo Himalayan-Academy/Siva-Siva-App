@@ -40,7 +40,6 @@ end preOpenCard
 
 on opencard
    audioIsRunning    
-   News_Fetch
 end opencard
 
 

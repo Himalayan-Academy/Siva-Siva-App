@@ -34,6 +34,7 @@ on preopenstack
    if isMobile() then
       mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
       set the fullscreenmode of this stack to "showAll"
+      iphoneSetAudioCategory "playback" 
    end if
    
 end preopenstack

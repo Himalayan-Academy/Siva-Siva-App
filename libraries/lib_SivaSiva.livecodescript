@@ -7,10 +7,10 @@ local sSivaSivaNavigation
 constant kSHARED_LIBS_FOLDER = "libraries/"
 constant kSHARED_ASSETS_FOLDER = "assets/"
 constant kMODULES_FOLDER = "modules/"
-constant kBRAND_IMAGE_CHANGE= 900  # for production change to 12 hour = 1800 sec
+constant kBRAND_IMAGE_CHANGE= 3600  # for production change to 1 hour 3600 sec
 constant cMoveSpeed = 400 -- DTB
 constant cGroupMoveDistance = 400 -- DTB
-constant cRemoteNewsFile="siva-app-news_1-4.html"
+constant cRemoteNewsFile="siva-app-news.html"
 
 
 ON ___INIT
@@ -33,6 +33,10 @@ function isMobile
 end isMobile
   
 on setUpBrandImage
+   # we can use this scheduler to fetch News which was previously 
+   # piling up the pending messages queue
+   News_Fetch
+   
    local tNextChangeUp, tBrandImage, tTotalBrandImages, tLastRunDate
    # we have to save the number, this was on next start up
    # it will change
@@ -60,7 +64,7 @@ on setUpBrandImage
    if (tBrandImage = "false") OR (tBrandImage = 0) OR (tBrandImage>tTotalBrandImages)  then
       put 1 into  tBrandImage
    else 
-      # or  12 hours has passed
+      # or  1 hour has passed
       if (the seconds) > tNextChangeUp then 
          add 1 to  tBrandImage
       end if
@@ -76,6 +80,8 @@ on setUpBrandImage
    
    # cache 
    setCache "BrandImage", tBrandImage
+   
+   
    
 end setUpBrandImage
 
@@ -114,7 +120,6 @@ command News_Fetch
    local tLocalNewsFile, tServerNews, tTargetLine, tLocalNewsDate, tLatestNewsDate
    --breakpoint
    if connectivity_PingServer() = "false" then 
-      news_NoNews # user has read the news, but is off line...
       exit news_Fetch
    end if
    
@@ -149,21 +154,22 @@ command News_Fetch
       # TODO We should set a pref that tells that app of they did read the news
       # from the Setting Statck
       # otherwise to leave the flat the true
-      news_NoNews
+      --news_NoNews
       
    else 
       # save it
       put tServerNews into url ("file:"&tLocalNewsFile)
       put "true" into sNewNews
    end if
+   
    showNewNotification sNewNews
-   send "news_Fetch" to stack "lib_SivaSiva" in 1500 seconds # every 20 minutes
 end news_Fetch
 
 command showNewNotification pBool
+   --news_NoNews # user has read the news, but is off line...
    if exists(fld "notification") then
       visMessageToUser pBool
-      put  "You have news!" into fld "notification"
+      put  "You have news!" & cr & "View in Settings." into fld "notification"
    end if
 end showNewNotification
 
