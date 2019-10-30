@@ -3,16 +3,17 @@
 //> This script has parent behavior
 //> behavior_ListenUI
 
+-- there is no mouseup here but in the behavior_ListenUI
+-- Which calls handlers here when it in on this card
+
 //>LOCALS
 local sDownloadedAudioA
 
 on preopencard
-    hide player "audioPlayer"
-    put empty into fld  "currentTitleLabel"
-    put "Listen Off Line" into fld "title-label"
-    pass preopencard i
-    # the handler the work of them mode indicator are there
-    #  (the red underline showing you  what tab  you are in)
+   updateUI
+   pass preopencard 
+   # the handler the work of them mode indicator are there
+   #  (the red underline showing you  what tab  you are in)
 end preopencard
 
 on openCard
@@ -23,6 +24,8 @@ on openCard
    end if
    
    audioIsRunning
+   
+
    
 end openCard
 
@@ -37,8 +40,17 @@ function getSelection pLine
 end getSelection
 
 on passAudioSelection pLine,pTitle
+   
    hide widget "turnOffAudio"
    startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
+   
+   # try to solve the problem of no controller in iOS 13.1.3
+   # We just let use pause or continue audio
+   # no scrubbing  forward or back
+   # this may be a better UI on the long run... 
+   # see Audible and Book App -AudioBooks for a standard model.
+   togglePause true, true
+   
    metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1])
    Journal_AddEntry 
 end passAudioSelection
@@ -132,6 +144,19 @@ command loadtitles sTitles
    show fld "audioList"
    put the number of lines of sTitles into pLineCount
 end loadtitles
+
+command updateUI
+   # standard handle for responsive formatting 
+   # and other things related to the position and state of the UI
+   # this card
+   
+   hide player "audioPlayer"
+   put "Listen Off Line" into fld "title-label"
+   put empty  into fld "currentTitleLabel"
+   put the long id of group "pause-play" into pControl
+   set the loc of pControl to horizCenter(), (the bottom of widget "chevron-up-down" of me +30 ) 
+   togglePause false, true
+end updateUI
 
 on closecard
    deleteAllMobileControls 

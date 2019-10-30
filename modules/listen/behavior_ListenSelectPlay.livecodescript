@@ -2,7 +2,8 @@
 
 -----------------------------
 # This behavior has a parent behavior "behavior_ListenUI"
-# It has mouseup handlers also, but this card trap them first
+# But on the Listen-Browse card which calls remote audio
+#  the mouseup handlers are trapped here first
 
 -----------------------------
 # behavior_ListenSelectPlay
@@ -25,9 +26,10 @@
 ---------------------------------------------------------------------
 global sConfigA
 local sSelectionsA,sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
-
+local sTimeStamp
 on preopencard
-   hide player "audioPlayer"
+
+updateUI
    pass preopencard
 end preopencard
 
@@ -36,7 +38,8 @@ on openCard
    # card should already have the list installed after stack opens
    # pass sCurrentPlayListA from stack to card:  
    -- set GUI
-   put empty  into fld "currentTitleLabel"
+   updateUI
+ 
    playlist_Reset 
    audioIsRunning
 end openCard
@@ -60,6 +63,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
+   ntinfo "Mousup from from behavior Listen Select"
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
@@ -71,7 +75,7 @@ on mouseup
    
    put the target into pTarget
    put the short name of the Target  into tTarget   
-   
+   --breakpoint
    switch tTarget
       # card navigaton
       case "collections-label"
@@ -88,14 +92,37 @@ on mouseup
             setAudioListColors sLineNum,"0,0,0"
          end if
          put word 2 of clickline() into sSelectNum
+         
          put getLineNumber(sSelectNum) into sLineNum
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
+         
          put round(sSelectNum/2) into sSelectNum      
          select_Play # will use either the line number or item id
          break  
          
          # this if for showing lyric, artist or transcript
-         # add appears in 
+         # add appears iinterrupt()
+         # it have pass sTimeStamp before you touch the player
+         
+      case "pauseAudio"
+         if not isMobile() then
+            put  the currentTime of player "audioPlayer" into sTimeStamp
+         else
+            put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+         end if
+         
+         pausePlayer sTimeStamp
+         break
+         
+      case "playAudio"
+         --breakpoint
+         --  ntInfo sTimeStamp
+         if not isMobile() then
+            set  the currentTime of player "audioPlayer" to sTimeStamp
+         end if
+         playPausedAudio sTimeStamp
+         break
+         
       case "chevron-up-down" # this is simple enough to do here
          put the vis of fld "audioDetails" into detailVis
          if detailVis then
@@ -121,13 +148,6 @@ on mouseup
 end mouseup
 
 
-function getLineNumber sSelectNum
-   put sSelectNum into tLineNum
-   if (tLineNum mod 2) = 0 then
-      subtract 1 from tLineNum
-   end if
-   return tLinenum
-end getLineNumber
 
 ---------------------------------------------
 # Select, Play, Listen, Stop UI interactions
@@ -172,6 +192,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       put getMediaURL() into sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
+   put checkURLAvailable(sSelectedURL) into fld "localresult"
    
    if checkURLAvailable(sSelectedURL) is "false" then 
       clearPlayer
@@ -229,10 +250,18 @@ command downloadAffirmed
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 
-
-
-
-
+command updateUI
+   # standard handle for responsive formatting 
+   # and other things related to the position and state of the UI
+   # this card
+   hide player "audioPlayer"
+   put empty  into fld "currentTitleLabel"
+   put the long id of group "pause-play" into pControl
+   set the loc of pControl to horizCenter(), (the bottom of widget "chevron-up-down" of me +30 ) 
+   togglePause false, true
+end updateUI
+   
+   
 command share_Items 
    if sRemoteURL is empty then
       put "https://www.himalayanacademy.com/view/sivasiva" into  tURL

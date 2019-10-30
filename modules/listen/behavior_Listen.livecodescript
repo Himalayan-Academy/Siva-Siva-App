@@ -27,7 +27,7 @@
 local sCollectionA,sCollectionChoice
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-local sCached, sBrowseHeader
+local sCached, sBrowseHeader.sTimeStamp
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
@@ -81,9 +81,9 @@ command selectPlaylist pSelection
    
    # get extract JSON from sCollectionA 
    # which is an array that contain all collections
-   # the data we need to 
-   # the title and path to img file.
-   # you can rebuild the UI from the SivaSivaDec Tool.livecode stacks
+   # it include the data we need to the title and path to img file.
+   # but this pre-built for production
+   # you can rebuild the UI from the SivaSivaDev Tool.livecode stacks
    
    
    put the short name of pSelection into tPlayTarget
@@ -107,10 +107,10 @@ command selectPlaylist pSelection
    set the itemDelimiter to "-"
    put item 1 of tPlayTarget into tColl
    put item 2 of tPlayTarget into tPlay
-
-# Link each separate process to a 
-# specific handler
-playList_FetchData tColl,tPlay
+   
+   # Link each separate process to a 
+   # specific handler
+   playList_FetchData tColl,tPlay
 end selectPlaylist
 
 -----------------------------------------------------
@@ -140,7 +140,7 @@ function playlist_GetCurrent
 end playlist_GetCurrent
 
 # we may need to fetch files later
-# so another function return the key listen to build everything
+# so another function returns the key listen list to build everything
 # includes the metadata from the date base, the lyrics and the URL
 # use this to fetch data later for card behavior
 
@@ -171,7 +171,7 @@ end playlist_GetRecords
 -- # media_type, author, artist, record-type [latest | cached | audiobook], num-of-records,year, file_id
 -- # see /system/applications/ha/controllers/API3.lc  on the server for details on the remote call
 -- #  structure of remote query, for reference:
--- # Note we use "recordType" here instead of "playlistClass" because the API is agnostic about the type
+-- # Note we use "recordType" here instead of "playlistClass" because the API  pon the server is agnostic about the type
 -- # of records we are fetching... it could be artwork quotes, books anything... not only audio playLists.
 -- #   put "{'data': {'media_type': 'inspiredtalk','author':'Bodhinatha'},'recordType':'latest','recordCount':'30'}" into tJSON
 -- #
@@ -179,11 +179,10 @@ end playlist_GetRecords
 
 -- # Audio books are simpler, all we need is a path to the remote server directory, fetch the audio JSON file therein.
 -- # 
--- # Sorting differs by playlistClass: latest|descending by date, audiobook | per json index, cached | alpha by title or file_ID
+-- # Sorting differs by playlistClass: latest | descending by date, audiobook | per json index, cached | alpha by title or file_ID
 -- # usually trigger on arrival to this stack-card
--- # but also from action on UI (Home card later)
 
--- # PARAMS: pass numeric collection and the playlist from json file
+-- # PARAMS: pass numeric collection and the playlist from /modules/listen/collection.json file
 -- # CHANGES: 2018-04-09 - BR Created
 
 # secondary params"
@@ -196,7 +195,7 @@ end playlist_GetRecords
 --          put "master-course" into sPlaylistQueryA["file_id"]
 --          put "1970" into sPlaylistQueryA["date_created"]
 --          put "YES" into sPlaylistQueryA["approved_for_public"]
- 
+
 -----------------------------------------------------------------------
 
 on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
@@ -219,19 +218,19 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
       
       put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
       
-      # decides is cached on device, or from server and audio book
+      # decides if cached on device, or from server and audio book
       # this param is used here... not sent to the database. 
-      # but use to determine how the query show go: the server, audio book, in the jnanam (local dbase_
+      # but use to determine how the query show go: the server, audio book, in the local mySQL jnanam (local dbase_
       # get type of playlistL audio book, etc
       
       # first we need action the array from the json able 
-      # everyhing in needs to create a query
+      # everything in needs to create a query
       
       put "recordType,recordCount" into tRecordTypeCount
       
       # remember: tColl and tPlay are drawn from the mouseups
-      # see the nomenclature for what the mouseup delivers on the objects
-      # in the project browers
+      # see the nomenclature for what the mouseup calls for
+      # in the IDE project browser
       
       repeat for each item RT in tRecordTypeCount
          if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
@@ -260,7 +259,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    
    
    # we get records now, from server, or local jnanam.
-   # we are to each one based on where they come from
+   # we get each one based the on class, on where they come from
    
    switch tPlaylistClass
       case "latest" 
@@ -268,16 +267,21 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
          # we need because we can then use for different play lists on demand..          
          # the sPlayListQueryA  has the values needed for the API... 
-         # API requires construct data: set the query;  recordtype/Count  (we have set an number if the return
-         # set up how many to return which are 
+         # API requires taht we construct data: 
+         # set the query;  recordtype/Count  
+         # set up how many/limit the number of records to return which are 
          # different function in the API, SQL ; Note look at the API2.livecode ; getItemRecords handler
          # e.g. required format need single quotes to go thru the API
          #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
-         # It just set the WHERE clause in the query with what ever you request. then sorts on date sends bak the request number
-         # of records.
+         #  just sets the WHERE clause in the query with whatever you request. 
+         # Then sorts on date sends back the request number of records.
+         
          --breakpoint
+         
          put "Contacting server... " into fld "audioList" of card "listen-browse"
+         
+         # Set up the WHERE clause
          put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
          put sPlayListQueryA["author"] into queryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into queryData["recordType"]
@@ -287,7 +291,10 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
+         
+         ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
+         
          if the result is not empty then 
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -314,6 +321,8 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put sPlaylistQueryA["file_id"] into tFileID
          
          # CMS is straightforward, path is consistent, no magic code required
+         
+         ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
          put "https://www.himalayanacademy.com/media/audio/books/" & tfileID & "/audiobook.json"   into tTocURL
          put URL tTocURL into tBookToc
          if the result is not empty then 
@@ -334,6 +343,8 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
          set the httpheaders to "content-type: application/json"
          replace "'" with quote in pJSON
+         
+         ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
@@ -417,26 +428,26 @@ on  playlist_Instantiate sTargetPlayList
    
    --markCachedItems tKeys
    
-      showBusyIndicator false
+   showBusyIndicator false
    
-    # Now we switch cards, 
-    
+   # Now we switch cards, 
+   
    go to card "listen-browse"
-  
+   
    hide fld "audioList"
    put tTitles into fld "audioList"  
    typesetAudioList
    -- put the number of lines of tTitles into pLineCount
    --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
- 
-    repeat for each line x in sCached
+   
+   repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
    end repeat
-     replace cr with " " in sBrowseHeader
+   replace cr with " " in sBrowseHeader
    put sBrowseHeader into fld "title-label" of card "listen-browse"
-
+   
    show fld "audioList"
-  
+   
    
    # here is where we have to check to see if any files are stored locally or not
    
@@ -482,7 +493,7 @@ command select_ShowDetails  pSelection, pRecord
 end select_ShowDetails
 
 command typeSetAudioList
- put 0 into tX
+   put 0 into tX
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
       if (tX mod 2) = 0 then
@@ -492,15 +503,15 @@ command typeSetAudioList
          end if   
          set the textSize of line x of fld "audioList" to 15
       else
-               set the textSize of line x of fld "audioList" to 17
+         set the textSize of line x of fld "audioList" to 17
       end if
    end repeat 
- 
+   
 end typeSetAudioList
 
 command getPlayListURLs pKeys
    repeat for each line x in pKeys
-    --  put getItemURL(x) into sSelectedURL
+      --  put getItemURL(x) into sSelectedURL
       put getItemURL(x) into sCurrentPlayListA["audioFiles"][x]["myURL"]
    end repeat   
 end getPlayListURLs
@@ -573,6 +584,15 @@ command clearAudioListColor
    set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
 end clearAudioListColor
 
+function getLineNumber sSelectNum
+   put sSelectNum into tLineNum
+   if (tLineNum mod 2) = 0 then
+      subtract 1 from tLineNum
+   end if
+   return tLinenum
+end getLineNumber
+
+
 on preopencard
    # tweak the header for collections
    
@@ -596,43 +616,6 @@ on preopencard
       case "listen-my-audio"
          setAudioListcolors
          put the location of fld "my-audio-label" into tLabelLoc
-         put the width of fld "my-audio-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         hide fld "browse-label"
-         put "Downloaded Audio" into fld "title-label"
-         put empty into fld "audioList"
-          # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
-      case "listen-browse"
-         setAudioListcolors
-         put the location of fld "browse-label" into tLabelLoc
-         put the width of fld "browse-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         show fld "browse-label"
-         put playlist_GetCurrent() into  tBrowseHeader
-         replace cr with " " in tBrowseHeader
-         put tBrowseHeader into fld "title-label"
-          # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
-      case "listen-search"
-          put the location of fld "title-label" into tLabelLoc
-         put the width of fld "title-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         put "Search" into fld "title-label"
-         set the textsize of fld "title-label" to 18
-          # have nav bar
-         hide button "share"
-         hide button "add-favorites" 
-         break
-   end switch   
-end preopencard      put the location of fld "my-audio-label" into tLabelLoc
          put the width of fld "my-audio-label" into tLabelWidth
          set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
@@ -669,11 +652,92 @@ end preopencard      put the location of fld "my-audio-label" into tLabelLoc
          hide button "add-favorites" 
          break
    end switch   
+end preopencard      put the location of fld "my-audio-label" into tLabelLoc
+put the width of fld "my-audio-label" into tLabelWidth
+set the width of grc "modeIndicator" to tLabelWidth
+set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+hide fld "browse-label"
+put "Downloaded Audio" into fld "title-label"
+put empty into fld "audioList"
+# have nav bar
+show button "share"
+show button "add-favorites" 
+break
+case "listen-browse"
+   setAudioListcolors
+   put the location of fld "browse-label" into tLabelLoc
+   put the width of fld "browse-label" into tLabelWidth
+   set the width of grc "modeIndicator" to tLabelWidth
+   set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+   show fld "browse-label"
+   put playlist_GetCurrent() into  tBrowseHeader
+   replace cr with " " in tBrowseHeader
+   put tBrowseHeader into fld "title-label"
+   # have nav bar
+   show button "share"
+   show button "add-favorites" 
+   break
+case "listen-search"
+   put the location of fld "title-label" into tLabelLoc
+   put the width of fld "title-label" into tLabelWidth
+   set the width of grc "modeIndicator" to tLabelWidth
+   set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+   put "Search" into fld "title-label"
+   set the textsize of fld "title-label" to 18
+   # have nav bar
+   hide button "share"
+   hide button "add-favorites" 
+   break
+end switch   
 end preopencard
 
 
 command __UXHandlers
 end __UXHandlers
+
+command startPlayer  sSelectedURL, pTitle
+   
+   --  local sSelectedURL, tRect
+   
+   if isMobile() then
+      if the platform is "android" then
+         # the player is pretty ugly and covers up 120 vertical px
+         # we need to try to get it to fit nicely at the bottom:
+         put 70,625,350,659 into tRect    #90,630,340,675
+      else
+         put empty into tRect
+      end if
+      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
+   else
+      set the filename of player "audioPlayer" to sSelectedURL
+   end if
+   
+   
+   # 2019-100-23 BR we are not showing controller  because of iOS 13.0.3
+   # instead we are using the icons of grp "pause-pay"
+   
+   --showPlayer "true", "audioPlayer"
+   
+   if not isMobile() then
+      if sTimeStamp is empty then
+         put 0 into sTimeStamp
+      end if
+      --set the currenttime player "audioPlayer" to sTimeStamp
+      start player "audioPlayer"
+      get runningAudioIndicatorVis("true")
+   else
+      setMobileAudioPlayer "audioPlayer", "play"
+   end if
+   put  pTitle into fld "currentTitleLabel"
+   # Android player covers it! Because the controller higher that iOS one.
+   --if the platform is "Android" then
+      --set the bottom of fld "currentTitleLabel" to 600
+   --end if
+   if there is a control "DownloadSelection" then
+      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+   end if
+   togglePause true, true
+end startPlayer
 
 on stopPlayer
    if not isMobile() then
@@ -684,6 +748,29 @@ on stopPlayer
       deleteMobileControl "audioPlayer"
    end if
 end stopPlayer
+
+
+on pausePlayer sTimeStamp
+   if not isMobile() then
+      set the paused of  player "audioPlayer" to "true"
+   else  
+      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
+   end if
+   togglePause true, false
+end pausePlayer
+
+
+on playPausedAudio sTimeStamp
+   if not isMobile() then
+      set the currenttime  of player "audioPlayer" to sTimeStamp
+      start player "audioPlayer"
+   else
+      setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+   end if
+   togglePause true, true
+end playPausedAudio
+
+
 
 on clearPlayer
    showPlayer false, "audioPlayer"

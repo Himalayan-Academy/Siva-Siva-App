@@ -584,8 +584,30 @@ command audioIsRunning
       if there is a widget "turnOffAudio"  then 
          show widget "turnOffAudio" 
       end if
+      togglePause true, true
    end if
+  
 end audioIsRunning
+
+command togglePause pVisible, pState
+   # this in lieu of, or additional to a controller
+   # generic for any context we have a pause and play scenario
+   # hide the grp, or toggle it
+   # take two boolean params: 
+   #    1) true to hide the group the group
+   #    2) true to show that pause icon: which means audio is on
+   if exists (group "pause-play") then
+      set the vis grp "pause-play" to pVisible
+      
+      set the vis of widget "pauseAudio" to pState
+      # which means player is playing, giving user the  option to pause
+      
+      set the vis of widget "playAudio" to not pState
+      # which means player is pause, giving user the re-start playback
+      
+   end if
+end togglePause
+
 
 function runningAudioIndicatorVis visBool
    local tList
@@ -604,7 +626,7 @@ command turnOffAudio
    # called by the speaker "widget" if it is showing
    if  sStopRunningAudio is "true" then
       
-      # the audioPlayer exists, if may be paused.
+      # the audioPlayer exists, it may be paused.
       # we will start is again.  
       
       mobileControlDo "audioPlayer", "play"

@@ -39,10 +39,16 @@ local sPlayerId, sPlayerRect
 -- CHANGES
 --         07/20/2016: Brahmanathaswami - updated
 --         08/15/2019: BWM - add sPlayerRect, getMobileAudioPlayerRect for responsive use
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+-----------------------
+# This handler 
+-- create the player
+-- set it filename: could be a remote/service URL
+-- set a busy indicator an remote file
 
 command createMobileAudioPlayer pURL, pPlayerName, pRect
-   local tHeight
+   local tHeight,tPlayloc 
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
    end if
@@ -52,6 +58,9 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if pRect is empty then
       put the rect of player pPlayerName into pRect 
    end if
+   
+   ------------
+   # set the play control without a controller present 
    
    -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
    if the platform is "android" then
@@ -67,9 +76,10 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
       end if
    end if
    put pRect into sPlayerRect
-   mobileControlSet pPlayerName, "visible", true 
+   mobileControlSet pPlayerName, "visible", false 
+   mobileControlSet pPlayerName, "showcontroller", false
    mobileControlSet pPlayerName, "rect", pRect
-   mobileControlSet pPlayerName, "showController", true 
+   --mobileControlSet pPlayerName, "showController", true 
    mobileControlSet pPlayerName, "filename", pURL 
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
@@ -83,20 +93,32 @@ function getMobileAudioPlayerRect
    return sPlayerRect
 end getMobileAudioPlayerRect
 
+-----------------------
+# when the player has a property called "duration:
+-- It means that we can start it
+-- we toggle on our local widget to "pause" 
+
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    if theProperty is "duration" then
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
+      togglePause true,true
    end if
 end playerPropertyAvailable
 
+---------------------------------
+# here we get the player do play, pause or stop
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
+   
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
+   
    mobileControlDo pPlayerName, pState
+   
    if pState = "stop" then
       showBusyIndicator false -- in case it's still showing
+      mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
       put empty into sPlayerRect
@@ -104,13 +126,33 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
          mobileUnlockIdleTimer
       end if
       get runningAudioIndicatorVis("false")
-      # above is need to ensure we hide the icon that show audio is playing stop button/icon
-      # we set a local in the backscript lib_SivaSiva that we query when going 
+      # above is needed to ensure we hide the icon that shows audio is playing stop button/icon
+      # we set a local in the backscript lib_UIHandlers that we query when going 
       # to any context where this icon should appear
-   else
+   end if
+   
+   if pState = "pause" then
+      # user hit pause
+      put mobileControlGet ("currentTime")  into pTimeStamp
+      mobileControlDo pPlayerName, "pause"
+      
+      get runningAudioIndicatorVis("true")
+      # icon switch to "play"
+      togglePause true, false
+      
+      
+   end if
+   
+   if pState = "play" then # could be start from scratch after pausing
+      if sTimeStamp is empty then
+         put 0 into pTimeStamp
+      end if
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
+      mobileControlDo pPlayerName, "play"
       get runningAudioIndicatorVis("true")
    end if
+   
+   
 end setMobileAudioPlayer
 
 
@@ -119,8 +161,12 @@ on playerFinished -- sent on mobile when audio is done
    mobileControlDelete sPlayerId
    put empty into sPlayerRect
    get runningAudioIndicatorVis("false")
+   ------
+  togglePause false, true
+   
 end playerFinished
 
+-------------------------------
 
 command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
    -- if audio is playing, player is shown on audio card, hidden elsewhere;
@@ -130,7 +176,7 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
       mobileControlSet pPlayerName, "showController", pBool
       mobileControlSet pPlayerName, "visible", pBool
    else
-      set the vis of player pPlayerName to pBool
+       set the vis of player pPlayerName to pBool
    end if
 end showPlayer
 
@@ -143,6 +189,7 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
    repeat while pName is among the lines of mobileControls()
       mobileControlDelete pName
    end repeat
+   
 end deleteMobileControl
 
 on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks

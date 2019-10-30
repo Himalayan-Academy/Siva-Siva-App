@@ -1,15 +1,21 @@
 ﻿script "behavior_ListenUI"
+//> Parent UI for several cards
+-- on the Listen-Browser card.. is calling a player to an online audio
+-- on My-Audio it calls a downloaded file on disk
+-- the mouseup is trapped the card script of "listen-browse"
 
- //>LOCALS
+//>LOCALS
 local sSelectNum, sSingleAudioA,sCached,sLineNum
-local sAudioUI
+local sAudioUI, sTimeStamp
 
 on opencard
-   audioIsRunning
+   audioIsRunning 
 end opencard
   
   
 on mouseUp
+   ntinfo "Mouseup from behavior_Listen UI"
+   --breakpoint
    put the short name of the target into pTarget
    
    switch pTarget
@@ -23,26 +29,50 @@ on mouseUp
          go to card "listen-my-audio"
          break
       case "audioList"
-         
          if the short name of this card <> "listen-my-audio" then 
             offLineGoMyAudio
          end if
          if sLineNum <> empty then
-            set the backgroundcolor of line sLineNum of fld "audioList" to empty
+            setAudioListColors sLineNum,"0,0,0"
+            --set the backgroundcolor of line sLineNum of fld "audioList" to empty
          end if
          put word 2 of clickline() into sSelectNum
-         put sSelectNum into sLineNum
-         if (sLineNum mod 2) = 0 then
-            subtract 1 from sLineNum
-         end if
-         set the backgroundcolor of line sLineNum of fld "audioList" to 176,30,66
+         
+         put getLineNumber(sSelectNum) into sLineNum
+         set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
+         
+         --         put sSelectNum into sLineNum
+         --         if (sLineNum mod 2) = 0 then
+         --            subtract 1 from sLineNum
+         --         end if
+         --         set the backgroundcolor of line sLineNum of fld "audioList" to 176,30,66
          put line sLineNum fld "audioList" into pTitle
+         
          put round(sSelectNum/2) into sSelectNum
          # pass it back the cd script which has the main handlers
+         --  breakpoint
          passAudioSelection sSelectNum, pTitle 
          break
+         
+         
+      case "pauseAudio"
+         if not isMobile() then
+            put  the currentTime of player "audioPlayer" into sTimeStamp
+         else
+            put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+         end if
+         pausePlayer sTimeStamp
+         break
+         
+      case "playAudio"
+         if not isMobile() then
+            set  the currentTime of player "audioPlayer" to sTimeStamp
+         end if
+         playPausedAudio sTimeStamp
+         break
+         
       case "chevron-up-down" # this is simple enough to do here
-            passAudioDetails sSelectNum,pTarget
+         passAudioDetails sSelectNum,pTarget
          break
    end switch
 end mouseUp
@@ -99,39 +129,40 @@ command getAudioList
 end getAudioList
 
 
-command startPlayer  sSelectedURL, pTitle
-   
-   --  local sSelectedURL, tRect
-   
-   if isMobile() then
-      if the platform is "android" then
-         # the player is pretty ugly and covers up 120 vertical px
-         # we need to try to get it to fit nicely at the bottom:
-         put 70,625,350,659 into tRect    #90,630,340,675
-      else
-         put empty into tRect
-      end if
-      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
-   else
-      set the filename of player "audioPlayer" to sSelectedURL
-   end if
-   
-   showPlayer "true", "audioPlayer"
-   if not isMobile() then
-      start player "audioPlayer"
-      get runningAudioIndicatorVis("true")
-   else
-      setMobileAudioPlayer "audioPlayer", "play"
-   end if
-   put  pTitle into fld "currentTitleLabel"
-   # Android player covers it! Because the controller higher that iOS one.
-   if the platform is "Android" then
-      set the bottom of fld "currentTitleLabel" to 600
-   end if
-   if there is a control "DownloadSelection" then
-      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
-   end if
-end startPlayer
+--command startPlayer  sSelectedURL, pTitle
+
+--   --  local sSelectedURL, tRect
+
+--   if isMobile() then
+--      if the platform is "android" then
+--         # the player is pretty ugly and covers up 120 vertical px
+--         # we need to try to get it to fit nicely at the bottom:
+--         put 70,625,350,659 into tRect    #90,630,340,675
+--      else
+--         put empty into tRect
+--      end if
+--      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
+--   else
+--      set the filename of player "audioPlayer" to sSelectedURL
+--   end if
+
+--   showPlayer "true", "audioPlayer"
+--   if not isMobile() then
+--      start player "audioPlayer"
+--      get runningAudioIndicatorVis("true")
+--   else
+--      setMobileAudioPlayer "audioPlayer", "play"
+--   end if
+--   put  pTitle into fld "currentTitleLabel"
+--   # Android player covers it! Because the controller higher that iOS one.
+--   if the platform is "Android" then
+--      set the bottom of fld "currentTitleLabel" to 600
+--   end if
+--   if there is a control "DownloadSelection" then
+--      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+--   end if
+--   togglePause "true"
+--end startPlayer
 
 
 command markCachedItems pKeys
