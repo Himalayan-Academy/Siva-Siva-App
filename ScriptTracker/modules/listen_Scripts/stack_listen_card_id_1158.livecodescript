@@ -40,11 +40,11 @@ on touchMove pTouchID, pTouchX, pTouchY
       
       // Check for vertical scroll
       
-      if pTouchY > (sStartY + 20) or pTouchY < (sStartY - 20) then
+      if pTouchY > (sStartY + 60) or pTouchY < (sStartY -60) then
          set the vScroll of group "all-collections" to sStartYScroll + (sStartY-pTouchY)
       else
          
-         if pTouchX > (sStartX + 5) or pTouchX < (sStartX - 5) then
+         if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
             // Check for horizontal scroll
             
             put the long owner of the target into tHGroup  
