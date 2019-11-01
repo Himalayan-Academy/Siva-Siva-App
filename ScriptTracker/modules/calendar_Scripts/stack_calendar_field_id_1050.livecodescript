@@ -6,7 +6,6 @@ Script "stack_calendar_field_id_1050"
 */
 
 
-
 -- on mouseUp
 --   showYearList true
 -- end mouseUp

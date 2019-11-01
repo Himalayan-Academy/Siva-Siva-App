@@ -10,11 +10,12 @@ Script "stack_calendar_graphic_id_1104"
 constant kIcons = "locationSVG,editSVG,backSVG,forwardSVG,editSVG"
 
 on mouseUp -- catch taps on transparent icon regions on mobile
-  put the clickloc into tMouse
-  repeat for each item i in kIcons
-    if tMouse is within the rect of control i then
-      send "mouseup" to control i
-      exit repeat
-    end if
-  end repeat
+   local tMouse
+   put the clickloc into tMouse
+   repeat for each item i in kIcons
+      if tMouse is within the rect of control i then
+         send "mouseup" to control i
+         exit repeat
+      end if
+   end repeat
 end mouseUp

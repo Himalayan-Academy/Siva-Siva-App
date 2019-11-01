@@ -6,11 +6,11 @@ Script "stack_calendar_"
 */
 
 
-On preopencard
-   set the fullscreenmode of this stack to "showAll"
+on preopencard
+   --set the fullscreenmode of this stack to "showAll"
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,726"
+      --mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,726"
    end if
 end preopencard
 

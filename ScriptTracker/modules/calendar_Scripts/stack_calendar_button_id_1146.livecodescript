@@ -9,4 +9,3 @@ Script "stack_calendar_button_id_1146"
 on mouseup
    goMonth "prev"
 end mouseup
-

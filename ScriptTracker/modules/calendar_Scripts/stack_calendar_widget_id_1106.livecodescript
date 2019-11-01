@@ -7,7 +7,6 @@ Script "stack_calendar_widget_id_1106"
 */
 
 
-
 on mouseup -- user edit
   -- showReminderDialog -- DEFER
 end mouseup

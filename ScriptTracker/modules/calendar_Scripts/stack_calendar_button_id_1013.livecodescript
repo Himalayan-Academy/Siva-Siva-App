@@ -7,6 +7,7 @@ Script "stack_calendar_button_id_1013"
 
 
 on mouseup
+   local tDownloadNotice, tCityName, tYearRange, tICSPath
    put the long id of fld  "downloading" into tDownloadNotice
    if not connectivity_PingServer() then
       dialog_CustomMsg "Data is unavailable. Please enable network/internet connection."
@@ -32,7 +33,7 @@ on mouseup
       show grp "main-calendar-view" of this cd
       show grp "headerGrp" of this cd
       put tCityName into fld "cityDisplay"
-      unlock screen with visual effect dissolve very fast
+      unlock screen with visual effect "dissolve" very fast
       
       insertDayInfo the date
    end if

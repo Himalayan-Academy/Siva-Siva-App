@@ -7,17 +7,16 @@ Script "stack_calendar_field_id_1035"
 */
 
 
-
 on textChanged
-  if textFldEmpty() then
-    hide fld "citylist"
-    put "" into me
-    put the cCityList of fld "citylist" into fld "citylist"
-    showCityList true
-    exit to top
-  end if
-  get the cCityList of fld "citylist"
-  filter it with (me & "*")
-  put it & cr into fld "citylist"
-  createScroller "citylist" -- reset
+   if textFldEmpty() then
+      hide fld "citylist"
+      put "" into me
+      put the cCityList of fld "citylist" into fld "citylist"
+      showCityList true
+      exit to top
+   end if
+   get the cCityList of fld "citylist"
+   filter it with (me & "*")
+   put it & cr into fld "citylist"
+   createScroller "citylist" -- reset
 end textChanged
