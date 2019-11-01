@@ -36,17 +36,22 @@ on mouseup
    switch tTarget
       case "home"
          put the short name of this card into tCard
-         --lock screen
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is "Surprise" and \
                there is a card "Home" then
-            --set the visible of me to false
             go to card "Home"
+         else if tCard is "main-calendar" and \
+               the vis of grp "city-picker-view" then
+            unlock screen
+            lock screen for visual effect
+            hide grp "city-picker-view"
+            show grp "main-calendar-view"
+            show grp "headerGrp"
+            unlock screen with visual effect "dissolve" very fast
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
-         --unlock screen
          break
          
       case "journal"
@@ -63,7 +68,8 @@ on mouseup
          break
          
       case "share"
-         --lock screen
+         unlock screen
+         lock screen for visual effect
          put sConfigA["shareControl"] into tShareControl
          
          if (exists(group "share-ui" of this card) ) then
@@ -82,9 +88,7 @@ on mouseup
          end if
          
          deleteMobileControl  "audioPlayer"
-         --show group "share-ui" with visual "dissolve" very fast
-         show tControl
-         --unlock screen
+         show tControl with visual "dissolve" very fast
          break
          
       case "settings"

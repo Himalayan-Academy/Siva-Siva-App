@@ -3,12 +3,6 @@
 * ID: stack "calendar"
 * [stack_calendar_](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_.livecodescript)
 
-**bkgnd "footerNavigation" of stack "calendar"**
-* ID: bkgnd id 1004 of stack "calendar"
-
-* Background on card IDs: 1002
-* [stack_calendar_bkgnd_id_1004](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_bkgnd_id_1004.livecodescript)
-
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "calendar"**
 * ID: widget id 1121 of bkgnd id 1120 of stack "calendar"
 * Widget Kind: com.livecode.widget.svgpath

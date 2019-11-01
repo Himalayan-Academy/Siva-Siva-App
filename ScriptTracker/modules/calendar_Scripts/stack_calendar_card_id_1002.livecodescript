@@ -7,13 +7,6 @@ Script "stack_calendar_card_id_1002"
 */
 
 
-on preOpenCard
-   if isMobile() then
-      set the fullscreenMode of this stack to "showAll"
-      mobileSetAllowedOrientations "portrait,portrait upside down"
-   end if
-end preOpenCard
-
 on opencard
    local tYearRange, tCityName, tICSExists
    put calcYearRange() into tYearRange
@@ -41,7 +34,7 @@ end opencard
 on closeCard
    local tDataA, tTitle
    put "main-calendar" into tDataA["card"]
-   put  "Hindu Calendar - " & fld "CityDisplay" into tTitle
+   put "Hindu Calendar - " & fld "CityDisplay" into tTitle
    Journal_RecordEntry "calendar",tTitle,tDataA
 end closeCard
 
