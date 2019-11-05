@@ -4,7 +4,7 @@ EditingGuide\This is a very lean structured text schema. Array elements are sepa
 <p> Learn to be a free traveler through the mind as you bath yourself in the purity of color. <br /></p>
 
 <p>We offer three progressively more advanced levels of practice. Each one requires more mastery over the flow of awareness and takes a bit longer than the previous one.<br /></p>
-|levelsIndex\<p>Practice with your eyes open, looking at the screen. Later you will find you have the power to do this practice on your own, without use the phone. <br /></p>
+|levelsIndex\<p>Practice with your eyes open, looking at the screen. After you have mastered it, practice with eye closed, counting the seconds to yourself. Later you will find you have the power to do this practice on your own, without use the phone. <br /></p>
 |1\<p>In Level 1 we work with just three primary colors: red, blue and yellow. A level 1 round takes 1-3 minutes, depending on your breath count and pace, which you can adjust in settings. Your goal should be to reach 9 counts on the inbreath and 9 counts on the outbreath, following your hearbeat. <br /></p>
 <p>On the in breath, visualize red, then as you exhale, flood your whole body and aura with the color red. Breath in. Visualize blue. Exhale. Mentally bath yourself in blue. Breath in, visualize yellow and send out yellow through your aura as you exhale.<br /></p>
 <p>If you have difficulty visualizing color, imagine things like a can of red paint pouring over your head,  a blue sky or a yellow dress or flower.</p><p>Use the settings to change the breath interval and to turn the audio guide on or off.</p>

@@ -4,7 +4,7 @@
 		"modules": {
 			"color-meditation": {
 				"audioGuide": "true",
-				"breathCount": "5",
+				"breathCount": "4",
 				"breathPace": "1",
 				"cycles": "1",
 				"currentLevel": "1"
