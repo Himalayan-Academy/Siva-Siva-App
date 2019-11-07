@@ -9,7 +9,9 @@ local sColorName,sColorValue,sColorsTotal,sCurrentColor
 CONSTANT kLEVELS="Primary Colors,Tertiary Colors,Transmute to Whilte"
 
 # pass the user settings array units to locals for easeier coding
-
+# Note: Hide and show controls impact performance 
+# instead we are trying to leave all fields vis and text on empty into each field.
+ 
 
 on preopencard
    -- breakpoint
@@ -55,21 +57,20 @@ on preopencard
    
    # clear the stage in case anything left over from 
    # previous run
-   hide group "breathControl" 
    hide widget "pause"
    hide fld "progressMessage"
-   put empty into fld "progressMessage"
    put 0 into sStopFlag   
    
    # Need to store the current color count in the stack
    
 end preopencard
 
-on opencard
-   blinkStart "true"
-end opencard
+--on opencard
+--   blinkStart "true"
+--end opencard
 
 on mouseUp 
+   
    put short name  of the target into tTarget
    
    switch  tTarget
@@ -110,17 +111,17 @@ command setTitle pTitle
    put pTitle into fld "title" 
 end setTitle
 
-on toggleShow
-   if the vis of grp "breathControl"  then  # show is paused
-      # we need to start again
-      put 0 into sStopFlag
-      runLevel sLevel
-   else
-      put 1 into sStopFlag
-      interruptColorShow
-   end if
-   
-end toggleShow
+--on toggleShow
+--   if the vis of grp "breathControl"  then  # show is paused
+--      # we need to start again
+--      put 0 into sStopFlag
+--      runLevel sLevel
+--   else
+--      put 1 into sStopFlag
+--      interruptColorShow
+--   end if
+
+--end toggleShow
 
 command setUpLevel pLevel
    switch pLevel
@@ -149,22 +150,18 @@ on runLevel sLevel
    # clear the decks
    put 0 into sStopFlag
    hideTools
+   show widget "pause"
    
    # give user a chance to get ready
    put "Exhale"& cr & "Completely" into fld "practiceInstructions"
    
    put empty into fld "breathCount"  
    put empty into fld "breathPhase"
-   put empty into fld "progressMessage"
-   hide fld "ProgressMessage"
-   show grp "breathControl"
-   show widget "pause"
-   show fld "practiceInstructions"
    
-   wait 1 seconds
-   
-  -- put item sLevel of kLEVELS into pTrackdata["colorLevel"]
-  -- tracking_RecordActivity "Color Meditation", "practice/begin", pTrackdata
+   --wait 1 seconds
+   put empty into fld "practiceInstructions"
+   -- put item sLevel of kLEVELS into pTrackdata["colorLevel"]
+   -- tracking_RecordActivity "Color Meditation", "practice/begin", pTrackdata
    
    colorBreathingCycle sCycles
    
@@ -188,7 +185,7 @@ command colorBreathingCycle sCycles
    # number of cycles, default on app install is 1
    # there after calls the user setting that is save as a preference
    
-   wait 30 milliseconds with messages
+   --wait 30 milliseconds with messages
    
    put sCycles - 1 into sCycles
 
@@ -206,10 +203,12 @@ command colorHueBreath
       exit colorHueBreath
    end if
    
+   put empty into fld "breathPhase"
+   put empty into fld "breathCount"
    add 1 to sCurrentColor
    
    if sCurrentColor > sColorsTotal then
-      exit colorHueBreath # done with 
+      exit colorHueBreath # done with all colors
       colorBreathingCycle
    end if
    
@@ -232,7 +231,7 @@ command colorHueBreath
       set the backgroundcolor of grc "currentColor" to sColorValue 
    end if
    put  "Visualize" & cr &  sColorName  into fld "practiceInstructions"
-   show fld "practiceInstructions"
+
    
    -- Now we  inhale
    put 0 into sCountDown 
@@ -248,29 +247,26 @@ command colorInhalation
    put sCountDown +1 into sCountDown
    
    show grc "CurrentColor"
-   show fld "breathPhase"
-   show fld "breathCount"
    put "Inhale" into fld "breathPhase"
    put sCountDown into fld "breathCount"
    wait sBreathPace milliseconds with messages
    set the blendlevel of grc "currentColor" to 0
-   if sCountDown >1 then hide fld "practiceInstructions"  
+   if sCountDown >1 then 
+      put empty into fld "practiceInstructions"  
+   end if
    
-   
-   if sCountDown=sBreathCount then 
-      hide fld "breathPhase"
-      hide fld "breathCount"
-      put "Hold 1" into fld practiceInstructions
-      show fld "practiceInstructions"
+   if sCountDown=sBreathCount then  # stop repeat
+      put empty into fld "breathCount"
+      put "Hold" into fld "breathPhase"
+      put " 1"  into fld "breathCount"
       wait sBreathPace milliseconds with messages
       put 0 into sCountDown 
       colorExhalation
    else
-      colorInhalation  
+      colorInhalation   # repeat
    end if
    
    #  Inhalation Phase
-   
    
 end colorInhalation
 
@@ -284,19 +280,20 @@ command colorExhalation
       exit colorExhalation
    end if
    
-   
-   if sLevel = 3 then # need to reduce opacity of grc currentColor over time
-      put  ("Flood" && sColorName  &&  "with White into Light") into fld "practiceInstructions"    
+   if sCountDown =1 then 
+      if sLevel = 3   then # need to reduce opacity of grc currentColor over time
+         put  ("Flood" && sColorName  &&  "with White into Light") into fld "practiceInstructions"    
+      else
+         put  "Flood Yourself" &cr & "with" &&  sColorName into fld "practiceInstructions" 
+      end if
    else
-      put  "Flood Yourself" &cr & "with" &&  sColorName into fld "practiceInstructions" 
+      put empty into fld "practiceInstructions"
    end if
    
    put sCountDown +1 into sCountDown
    
    # set up the card
-   show grc "CurrentColor"
-   show fld "breathPhase"
-   show fld "breathCount"
+   
    put "Enhale" into fld "breathPhase"
    put sCountDown into fld "breathCount"
    
@@ -308,13 +305,16 @@ command colorExhalation
    # user is exhaling
    wait sBreathPace milliseconds with messages
    
-   if sCountDown >1 then hide fld "practiceInstructions"  
+   --      if sCountDown >1 then 
+   --         put empty into fld "practiceInstructions"  
+   --      end if
    
    if sCountDown=sBreathCount then 
-      hide fld "breathPhase"
-      hide fld "breathCount"
-      put "Hold 1" into fld practiceInstructions
-      show fld "practiceInstructions"
+      
+      put empty into fld practiceInstructions
+      put "Hold"into fld "breathPhase"
+      put "1" into fld "breathCount"
+      
       wait sBreathPace milliseconds with messages
       put 1 into sCountDown 
       colorHueBreath
@@ -337,25 +337,28 @@ end colorExhalation
 ## Inform user they can adjust settings to 
 
 on interruptColorShow
-   setUpLevel sLevel
+   if  isMobile() then
+      mobileClearTouches
+   end if
+
    put 1 into sStopFlag
-   hide grp "breathControl"
+   setUpLevel sLevel
    hide widget "pause"
    showTools
    put item sLevel of kLEVELS into pTrackdata["colorLevel"]
-     tracking_RecordActivity "Color Meditation", "practice/interrupted", pTrackdata
+   tracking_RecordActivity "Color Meditation", "practice/interrupted", pTrackdata
 end interruptColorShow
 
 on closeCard
    # cleanup 
    put empty into fld "title"
-   hide fld "ProgressMessage"  
+  put empty into fld "ProgressMessage"  
    hide grc "currentColor"
 end closeCard
 
 on showCompletion
+   
    setUpLevel sLevel
-   hide grp "breathControl"
    hide widget "Pause"
    hide grc "currentColor"
    visProgressMessage true
@@ -367,8 +370,13 @@ on showCompletion
       put " rounds." into tRounds
    end if
    put "Congratulations!" & cr & "You completed" & cr & sCycles & tRounds into fld "progressMessage"
-   clearLocalVariable
+   put sivasiva_AssetFolder() & "audio/angelic-ambience_lo-res.mp3" into pSoundFile
+   
    showTools
+   
+   playSound pSoundFile
+   clearLocalVariable
+   
    
    put item sLevel of kLEVELS into pTrackdata["colorLevel"]
    tracking_RecordActivity "Color Meditation", "practice/completed", pTrackdata
@@ -380,6 +388,8 @@ command getUserPrefs
    put tSettings["breathCount"] into sBreathCount
    #prefs for pace is saved as seconds but we use milleseconds the show
    # to handle seconds decimal values
+   # because timing is slow on mobile we set I second to 750 milliseconds 
+   # updating screen with labels takes time
    put tSettings["breathPace"] * 1000 into sBreathPace
    put tSettings["cycles"] into sCycles
    put tSettings["audioOn"]  into sAudioOn    
