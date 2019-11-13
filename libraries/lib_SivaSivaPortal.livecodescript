@@ -101,6 +101,9 @@ command portal_GoStack cardOrStackObject
    
    close stack oStackName
    go cardOrStackObject
+   if isMobile() = true then
+      mobileClearTouches
+   end if
    
    --if the lockScreen is true then unlock screen
    
