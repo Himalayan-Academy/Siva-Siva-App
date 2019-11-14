@@ -30,11 +30,16 @@ on hiliteChanged
    #  BR: we have to play with hilited node of the tree of make sure we can "hits"
    # frankly, I don't have a handle on this yet, 
    
+   lock screen
    if the number of items in the hilitedElement of me = 1 and the hilitedElementIsFolded of me then 
       set the foldstate of me to empty -- collapse all
    end if
    
    set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
+   
+   # Clear the highlight after it is processed
+   set the hilitedElement of me to empty
+   unlock screen
    
    --breakpoint
    put truncateTarget(tHilitedElement) into sTarget
@@ -50,8 +55,6 @@ on hiliteChanged
          break
    end switch
    
-   # Clear the highlight after it is processed
-   set the hilitedElement of me to empty
 end hiliteChanged
 
 
