@@ -154,7 +154,7 @@ command News_Fetch
       # TODO We should set a pref that tells that app of they did read the news
       # from the Setting Statck
       # otherwise to leave the flat the true
-      --news_NoNews
+      news_NoNews
       
    else 
       # save it
@@ -163,6 +163,10 @@ command News_Fetch
    end if
    
    showNewNotification sNewNews
+   if   sNewNews is empty then
+      put "yes, empty"
+   end if
+
 end news_Fetch
 
 command showNewNotification pBool
