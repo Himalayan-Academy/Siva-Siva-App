@@ -24,6 +24,7 @@ on mouseUp
       put getCalendarDayInfo(tDayNum) into tCalendar
       put tCalendar["allDayData"] into fld "allDataForOneDay"
       show fld "allDataForOneDay"
+      hide fld "current_days"
       put "allDataForOneDay" into tDailyInfo
       send "CreateScroller tDailyInfo" to fld "allDataForOneDay"
       show grp "resizeFonts"

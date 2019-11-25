@@ -20,5 +20,6 @@ on mouseUp
       deleteMobileControl the short name of me
       hide me
       hide grp "resizeFonts"
+      show fld "current_days"
    end if
 end  mouseup

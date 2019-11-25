@@ -6,8 +6,7 @@ Script "stack_calendar_graphic_id_1104"
 */
 
 
-
-constant kIcons = "locationSVG,editSVG,backSVG,forwardSVG,editSVG"
+constant kIcons = "locationSVG,editSVG,backSVG,forwardSVG"
 
 on mouseUp -- catch taps on transparent icon regions on mobile
    local tMouse
