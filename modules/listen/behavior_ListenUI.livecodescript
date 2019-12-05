@@ -178,3 +178,8 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
+
+
+on localNotificationReceived pMessage
+   
+end localNotificationReceived

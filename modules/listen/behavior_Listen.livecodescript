@@ -707,6 +707,7 @@ command startPlayer  sSelectedURL, pTitle
       else
          put empty into tRect
       end if
+      --breakpoint
       createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
    else
       set the filename of player "audioPlayer" to sSelectedURL
@@ -725,13 +726,13 @@ command startPlayer  sSelectedURL, pTitle
       --set the currenttime player "audioPlayer" to sTimeStamp
       start player "audioPlayer"
       get runningAudioIndicatorVis("true")
-   else
-      setMobileAudioPlayer "audioPlayer", "play"
+      --   else
+      --      setMobileAudioPlayer "audioPlayer", "play"
    end if
    put  pTitle into fld "currentTitleLabel"
    # Android player covers it! Because the controller higher that iOS one.
    --if the platform is "Android" then
-      --set the bottom of fld "currentTitleLabel" to 600
+   --set the bottom of fld "currentTitleLabel" to 600
    --end if
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
