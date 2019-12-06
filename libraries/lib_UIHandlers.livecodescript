@@ -54,8 +54,8 @@ command setCardCoords pForceOrientation
          put (0,0,sCardWidth,sCardHeight) into sCardRect
       end if
    end if
-   put sCardWidth/2 into sHorizCenter
-   put sCardHeight/2 into sVertCenter
+   put trunc(sCardWidth/2) into sHorizCenter
+   put trunc(sCardHeight/2) into sVertCenter
    put (sHorizCenter,sVertCenter) into sCardLoc
    put safeMargins(pForceOrientation) into sMargins
    put (sMargins["side"], sMargins["top"], sCardWidth-sMargins["side"], \
