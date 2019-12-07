@@ -225,7 +225,6 @@
         "playListImg": "Vedic_Stotram_shutterstock_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "audio/chant",
           "genre": "stotram",
           "approved_for_public": "YES"
         }
