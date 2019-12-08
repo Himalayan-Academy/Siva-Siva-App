@@ -29,10 +29,10 @@ on updateScroller pName
    if not isMobile() then exit updateScroller
    if pName is among the lines of mobileControls() then -- update
       put ("0,0," & (the formattedwidth of control pName) & "," & \
-            the formattedheight of control pName + 20) into tRect
+            the formattedheight of control pName + 60) into tRect
       mobileControlSet pName, "contentRect", tRect
       mobileControlSet pName, "hScroll", 0
-      mobileControlSet pName, "vScroll", the vScroll of control pName
+      mobileControlSet pName, "vScroll", 0 --the vScroll of control pName
    else
       createScroller pName
    end if
@@ -41,10 +41,10 @@ end updateScroller
 
 on scrollerDidScroll hScrolled, vScrolled
    put mobileControlTarget() into tControlID
-   if  vScrolled < 20 then 
+   if  vScrolled < 2 then 
       set the vscroll of control tControlID to 0
    else
-      set the vscroll of control tControlID to vscrolled + 20
+      set the vscroll of control tControlID to vscrolled + 60
    end if
    
    if  short name of this stack is among the items of sStacksHorizontal then
