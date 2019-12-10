@@ -48,7 +48,7 @@ local sPlayerId, sPlayerRect
 -- set a busy indicator an remote file
 
 command createMobileAudioPlayer pURL, pPlayerName, pRect
-   togglePause false,true
+   
    local tHeight,tPlayloc 
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
@@ -88,6 +88,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
+   togglePause true,true
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -103,8 +104,8 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    if theProperty is "duration" then
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
-      togglePause true,true
    end if
+   togglePause true,false
 end playerPropertyAvailable
 
 ---------------------------------

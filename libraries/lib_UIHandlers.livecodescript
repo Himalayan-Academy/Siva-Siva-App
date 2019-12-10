@@ -595,7 +595,9 @@ command togglePause pVisible, pState
    # hide the grp, or toggle it
    # take two boolean params: 
    #    1) true to hide the group the group
-   #    2) true to show that pause icon: which means audio is on
+   #    2) true to show that pause icon:  II which means audio is on and playing
+   #         false: shows that the triangle button, saying that the audio is pause
+   #                  and that you can click to resume
    if exists (group "pause-play") then
       set the vis grp "pause-play" to pVisible
       

@@ -8,6 +8,7 @@ command createScroller pName -- scrolling fields
    --set the acceleratedRendering of this stack to false
    if not isMobile() then exit CreateScroller
    deleteMobileControl pName -- delete any existing
+   --PUT CR & CR &" " AFTER CONTROL PNAME 
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
@@ -41,10 +42,11 @@ end updateScroller
 
 on scrollerDidScroll hScrolled, vScrolled
    put mobileControlTarget() into tControlID
-   if  vScrolled < 2 then
-      set the vscroll of control tControlID to 0 --vscrolled 	
+   if  vScrolled < 20 then
+      set the vscroll of control tControlID to vscrolled/2 --vscrolled 	
    else
       set the vscroll of control tControlID to vscrolled + 20
+      --set the vscroll of control tControlID to vscrolled 
    end if
    if  short name of this stack is among the items of sStacksHorizontal then
       set the hscroll of control tControlID to hScrolled
