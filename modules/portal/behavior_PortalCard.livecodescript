@@ -1,6 +1,7 @@
 ﻿script "behavior_PortalCard"
 local sStartLoc,sScreenRect
 
+
 on openCard
    local tLinksGroup, tControl, tRect, tFooter
    setCardCoords "portrait"
