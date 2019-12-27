@@ -281,14 +281,6 @@
             "imageText": "Humor",
             "shortImageFile": "thumb_humor.png"
         },
-        "Hindu Lexicon": {
-             "link": {
-                "portal param": "stack \"lexicon\"",
-                "portal command": "portal_GoStack"
-            },
-            "imageText": "Hindu\nLexicon",
-            "shortImageFile": "thumb_lexicon_shtrstk-26948821.png"
-        },
         "Word Puzzles": {
             "link": {
                 "portal command": "portal_GoStack",
@@ -660,207 +652,19 @@
                     "rowName": "Path to Siva: A Catechism for Youth"
                 },
                 "2": {
-                    "rowName": "Hindu Lexicon"
-                },
-                "3": {
                     "rowName": "The Master Course"
                 },
-                "4": {
+                "3": {
                     "rowName": "All Our On-Line Books"
                 },
-                  "5": {
+                  "4": {
                     "rowName": "Hinduism Today Magazine"
                 },
-                "6": {
+                "5": {
                     "rowName": "Educational Insights"
                 }
             },
             "headerImage": "hero_read_gurudeva-signing-book.png"
         }
-    },
-"disabledContent": {
-        "look": {
-            "portalName": "look",
-            "rowData": {
-                "2": {
-                    "rowName": "Slideshows"
-                }
-            },
-            "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
-        },
-        "fun": {
-            "portalName": "fun  & games",
-            "rowData": {
-                "1": {
-                    "rowName": "Humor"
-                },
-                "2": {
-                    "rowName": "Word Puzzles"
-                },
-                "3": {
-                    "rowName": "Coloring"
-                },
-                "4": {
-                    "rowName": "Image Puzzles"
-                }
-            },
-            "headerImage": "hero_fun-games_kids-sprawled-shtrstk-245394961.png"
-        },
-        "listen": {
-            "portalName": "listen",
-            "rowData": {
-                "1": {
-                    "rowName": "Bodhinatha's Latest Talks"
-                },
-                "2": {
-                    "rowName": "All of Bodhinatha's Talks"
-                },
-                "3": {
-                    "rowName": "Gurudeva's Inspired Talks"
-                },
-                "4": {
-                    "rowName": "Songs"
-                },
-                "5": {
-                    "rowName": "Sanskrit Chanting"
-                },
-                "6": {
-                    "rowName": "The Guru Chronicles"
-                }
-            },
-            "headerImage": "hero_listen_girl-head-phones.png"
-        },
-        "surprise": {
-            "portalName": "surprise",
-            "rowData": {
-                "1": {
-                    "rowName": "Sacred Verses"
-                },
-                "2": {
-                    "rowName": "Gurudeva Darshan"
-                },
-                "3": {
-                    "rowName": "Bodhinatha Darshan"
-                },
-                "4": {
-                    "rowName": "Hindu Art"
-                },
-                "5": {
-                    "rowName": "Audio World"
-                },
-                "6": {
-                    "rowName": "Video World"
-                }
-            },
-            "headerImage": "hero_surprise_boy-opens-suitcase.png"
-        },
-        "websites": {
-            "portalName": "websites",
-            "rowData": {
-                "1": {
-                    "rowName": "Our Daily Blog"
-                },
-                "2": {
-                    "rowName": "Meet the Monks"
-                },
-                "3": {
-                    "rowName": "Monthly News"
-                },
-                "4": {
-                    "rowName": "How to Visit"
-                },
-                "5": {
-                    "rowName": "Take a Virtual Tour"
-                },
-                "6": {
-                    "rowName": "About the Monastery"
-                },
-                "7": {
-                    "rowName": "Our Guru Lineage"
-                }
-            },
-            "headerImage": "hero_website_ha-com-home-screenshot.png"
-        },
-        "practice": {
-            "portalName": "practice",
-            "rowData": {
-                "4": {
-                    "rowName": "Mantras"
-                },
-                "5": {
-                    "rowName": "Spiritual Workout"
-                },
-                "6": {
-                    "rowName": "Affirmations"
-                },
-                "7": {
-                    "rowName": "Preparation for Meditation"
-                },
-                "8": {
-                    "rowName": "Instructions in Puja"
-                }
-            },
-            "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png"
-        },
-        "home": {
-            "portalName": "home",
-            "rowData": {
-                "1": {
-                    "rowName": "Gems of Wisdom"
-                },
-                "2": {
-                    "rowName": "Surprise Me"
-                },
-                "3": {
-                    "rowName": "Listen"
-                },
-                "4": {
-                    "rowName": "Look"
-                },
-                "5": {
-                    "rowName": "Practice"
-                },
-                "6": {
-                    "rowName": "Read"
-                },
-                "7": {
-                    "rowName": "Websites"
-                },
-                "8": {
-                    "rowName": "Fun & Games"
-                }
-            },
-            "headerImage": "hero_home_Who-Is-Siva.png"
-        },
-        "read": {
-            "portalName": "read",
-            "rowData": {
-                "1": {
-                    "rowName": "Path to Siva: A Catechism for Youth"
-                },
-                "2": {
-                    "rowName": "Frequently Asked Questions"
-                },
-                "3": {
-                    "rowName": "Hindu Lexicon"
-                },
-                "4": {
-                    "rowName": "The Master Course"
-                },
-                "5": {
-                    "rowName": "All Our On-Line Books"
-                },
-                "6": {
-                    "rowName": "A Character Building Workbook"
-                },
-                "7": {
-                    "rowName": "Gurudeva's Spiritual Toolbox"
-                },
-                "8": {
-                    "rowName": "Educational Insights"
-                }
-            },
-            "headerImage": "hero_read_gurudeva-signing-book.png"
-        }
-    }   
+    }  
 }
