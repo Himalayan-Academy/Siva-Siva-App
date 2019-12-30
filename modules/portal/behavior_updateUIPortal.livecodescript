@@ -33,8 +33,7 @@ on preOpenCard
    end switch
    
    updateUIPortal
-   audioIsRunning
-   
+
    show btn "brandLogo"
 end preOpenCard
 
@@ -191,7 +190,7 @@ command updateUIPortal
          ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         bottomRightMe pControl,0,tBottomMargin 
+         topLeftMe pControl, -16, 6
          
          put the long id of widget "globalNavTree" of me into pControl
          set the rect of pControl to (0, the bottom of button "brandLogo" of me + 15, \
