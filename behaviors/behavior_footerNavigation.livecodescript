@@ -103,6 +103,10 @@ command unHiliteBtn pTarget
    set the hilited of control pTarget to false
 end unHiliteBtn
 
+on updateUI
+   set the width of me to CardWidth()
+   bottomCenterMe (the long id of me), -safeBottomMargin()
+end updateUI
 
 on resizeControl
    local tHSpace, tV, tH, tControl, tRect
