@@ -182,7 +182,7 @@ command updateUIPortal
          # from the home 
          
          put the long id of button "brandLogo" of me into pControl
-         topCenterMe pControl,10
+         topCenterMe pControl,0
          
          put long Id of img "HomeStoryMainImage" into pControl
          setImageToFullCardLoc pControl, "portrait", 0
@@ -193,7 +193,7 @@ command updateUIPortal
          --         ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
-         topLeftMe pControl, -16, 6
+         topLeftMe pControl, -16, 0
          
          --         put the long id of widget "globalNavTree" of me into pControl
          --         set the rect of pControl to (0, the bottom of button "brandLogo" of me + 15, \

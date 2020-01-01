@@ -175,15 +175,17 @@ end goMyMenu
 command setGlobalNavVisible tVisible
    lock screen for visual effect
    if tVisible is true or tVisible is "true" or tVisible is "yes" then
+      hide grp "homeNav"
       show grp "globalNav"
       show button "brandLogo"
       createScroller "globalNavTree"
    else
+      show grp "homeNav"
       hide grp "globalNav"
       --hide button "brandLogo"
       deleteMobileControl "globalNavTree"
    end if
-   unlock screen with visual effect "dissolve" very fast
+   unlock screen with visual effect "dissolve" fast
 end setGlobalNavVisible
 
 # BM: I think the name of this handler is confusing.  Suggest that we use the above one instead.
@@ -194,12 +196,14 @@ command hideShowGlobalNav tBol
    lock screen for visual effect
    switch tBol
       case "true" --means we intend to show the tree, should overlay main image
-         hide grp "globalNav"
+         Show grp "globalNav" 
+         hide grp "homeNav"
          hide button "brandLogo"
          break
       case "false" --means we intend to hide the tree, should show main image
+         hide grp "homeNav"
          show grp "globalNav"
-         -- show button "brandLogo"
+         show button "brandLogo"
          break
    end switch
    unlock screen with visual effect "dissolve" very fast
