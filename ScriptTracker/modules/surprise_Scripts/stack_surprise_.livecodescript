@@ -96,8 +96,7 @@ end closeStack
 on updateUI
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to CardWidth()
-   bottomCenterMe tFooter
+   send "updateUI" to tFooter
    
    put the long id of grp "header" into tHeader
    set the width of tHeader to CardWidth()
