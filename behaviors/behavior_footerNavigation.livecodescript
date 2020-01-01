@@ -105,9 +105,9 @@ end unHiliteBtn
 
 
 on resizeControl
-   local tHSpace, tV, tH, tControl
+   local tHSpace, tV, tH, tControl, tRect
    put the width of me / (the number of items in sButtons) into tHSpace
-   put item 2 of the loc of me into tV
+   put item 2 of the loc of button 1 of me into tV
    put the left of me + (tHSpace / 2) into tH
    
    repeat for each item tName in sButtons
@@ -117,6 +117,7 @@ on resizeControl
       add tHSpace to tH
    end repeat
    
+   set the height of me to 50 + safeBottomMargin()
+   set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
-
