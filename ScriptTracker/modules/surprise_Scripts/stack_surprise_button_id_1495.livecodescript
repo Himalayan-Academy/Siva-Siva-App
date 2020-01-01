@@ -7,5 +7,5 @@ Script "stack_surprise_button_id_1495"
 
 
 on mouseup
-   setUpSurprise
-end mouseup
+   surpriseTouchEvents (the short name of me)
+end mouseUp

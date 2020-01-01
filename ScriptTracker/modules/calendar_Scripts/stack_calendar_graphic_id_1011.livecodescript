@@ -6,7 +6,6 @@ Script "stack_calendar_graphic_id_1011"
 */
 
 
-
 on mouseUp
   showCityList true
 end mouseUp

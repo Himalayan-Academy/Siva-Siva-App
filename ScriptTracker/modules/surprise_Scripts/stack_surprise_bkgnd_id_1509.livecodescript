@@ -43,8 +43,7 @@ on resizeControl
 end resizeControl
 
 on mouseUp
- share_MouseEvent
+   share_MouseEvent
 end mouseUp
-
 
 

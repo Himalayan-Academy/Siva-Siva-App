@@ -7,6 +7,7 @@ Script "stack_surprise_widget_id_1493"
 */
 
 
-on mouseUp
-   turnOffAudio
-end mouseUp
+on mouseup
+   surpriseTouchEvents (the short name of me)
+end mouseup
+

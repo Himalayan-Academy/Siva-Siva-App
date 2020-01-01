@@ -7,10 +7,11 @@ Script "stack_surprise_"
 
 
 local sMediaURL,sQuoteData,sOnline
-local sCollection
+local sCollection,sTimeStamp,sCard
 local sPlayerRect
 
 on preOpenStack
+   --breakpoint
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
@@ -19,6 +20,58 @@ end preOpenStack
 on preOpenCard
    updateUI
 end preOpenCard
+
+command setDefaultCard pCard
+   put pCard into sCard
+end setDefaultCard
+
+on surpriseTouchEvents tTarget
+   --put the short name of the target into tTarget
+   
+   if tTarget is "turnOffAudio" then turnOffAudio
+   
+   switch sCard
+      case "surprise"
+         setUpSurprise
+         break
+         
+      case "surprise_audio"
+         switch tTarget # START switch for audio card "surprise_audio"
+            case "go-next"
+               if isMobile() then
+                  mobileControlDelete "audioPlayer" 
+               end if
+               
+               pausePlayer 0
+               getNextItem
+               break
+               
+            case "pauseAudio"
+               if not isMobile() then
+                  put  the currentTime of player "audioPlayer" into sTimeStamp
+               else
+                  put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+               end if
+               pausePlayer sTimeStamp
+               break
+               
+            case "playAudio"
+               if not isMobile() then
+                  set  the currentTime of player "audioPlayer" to sTimeStamp
+               end if
+               playPausedAudio sTimeStamp
+               break
+               
+         end switch #END # START switch for audio card "surprise_audio"
+         break
+         
+      default 
+         getNextItem
+         
+         
+   end switch
+   
+end surpriseTouchEvents
 
 on resizeStack
    lock screen
@@ -32,6 +85,7 @@ on openstack
 end openstack
 
 on opencard
+   setDefaultCard(the short name of this card)
    audioIsRunning
 end opencard
 
@@ -64,18 +118,26 @@ on updateUI
       case "surprise_verse"
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
          put the long id of grp "go-next" into tNext
+         show tNext
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
          put the long id of grp "go-next" into tNext
+         show tNext
          break
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
          put the long id of grp "go-next" into tNext
+         show tNext
          break
       case "surprise_audio"
+         put the long id of grc "Loading..."  into tLoading
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
          put the long id of grp "go-next" into tNext
+         show tNext
+         put the long id of grp "pause-play" into tPausePlay
+         bottomCenterMe tLoading,120
+         bottomCenterMe tPausePlay,65
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
                into sPlayerRect
          set the rect of player "audioPlayer" to sPlayerRect
@@ -107,6 +169,7 @@ end updateUI
 command setUpSurprise
    local tTargets, tTarget, tCard
    if connectivity_PingServer() = "true" then 
+      --put "audio" into tTarget # for test one card only: comment out the following 2 lines
       put "verse,audio,darshan,art,video" into tTargets
       put item (random(5)) of tTargets into tTarget
       put "surprise_"&tTarget into tCard
@@ -122,6 +185,12 @@ command setUpSurprise
       go to card tCard
    end if
 end setUpSurprise
+
+--on toggleGoNext pBool
+--   try
+--      set the vis of grp "go-next" to pBool
+--   end try
+--end toggleGoNext
 
 command fetchRandomQuote pSubject  # same as sCollection
    local tSQL, tConnectionID, aSelectedQuotes, tQuote
@@ -192,9 +261,8 @@ function mediaUrl_Get
 end mediaUrl_Get
 
 on getNextItem
-   local tCard
-   put the short name of this card into tCard
-   switch tCard
+
+   switch sCard
       case "surprise_verse"
          insertRandomVerse # handled here in the stack script
          break
@@ -213,3 +281,25 @@ on getNextItem
          break
    end switch
 end getNextItem
+
+##------------ audio
+
+on pausePlayer sTimeStamp
+   if not isMobile() then
+      set the paused of  player "audioPlayer" to "true"
+   else  
+      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
+   end if
+   togglePause true, false
+end pausePlayer
+
+
+on playPausedAudio sTimeStamp
+   if not isMobile() then
+      set the currenttime  of player "audioPlayer" to sTimeStamp
+      start player "audioPlayer"
+   else
+      setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+   end if
+   togglePause true, true
+end playPausedAudio

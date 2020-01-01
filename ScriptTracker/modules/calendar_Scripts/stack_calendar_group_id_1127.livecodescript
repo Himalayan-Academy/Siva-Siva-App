@@ -7,6 +7,7 @@ Script "stack_calendar_group_id_1127"
 
 
 on mouseup
+   local tResizeText
    if the vis of fld "AllDataForOneDay" is true then
       put the long id fld "AllDataForOneDay" into tResizeText
       if the textSize of  tResizeText  = 28 then

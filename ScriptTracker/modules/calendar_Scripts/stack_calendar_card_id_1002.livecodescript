@@ -7,16 +7,8 @@ Script "stack_calendar_card_id_1002"
 */
 
 
-
-on preOpenCard
-   if isMobile() then
-      set the fullscreenMode of this stack to "showAll"
-      mobileSetAllowedOrientations "portrait,portrait upside down"
-   end if
-end preOpenCard
-
 on opencard
-   
+   local tYearRange, tCityName, tICSExists
    put calcYearRange() into tYearRange
    put getPref("preferences/modules/calendar/city") into tCityName -- empty if new launch
    put (there is a file pathToCalendarICS(tYearRange,tCityName,"bin")) into tICSExists
@@ -40,9 +32,10 @@ on opencard
 end opencard
 
 on closeCard
-   put "main-calendar" into pDataA["card"]
-   put  "Hindu Calendar - " & fld "CityDisplay" into pTitle
-   Journal_RecordEntry "calendar",pTitle,pDataA
+   local tDataA, tTitle
+   put "main-calendar" into tDataA["card"]
+   put "Hindu Calendar - " & fld "CityDisplay" into tTitle
+   Journal_RecordEntry "calendar",tTitle,tDataA
 end closeCard
 
 on mouseUp -- mobile: dismiss grp
