@@ -173,6 +173,9 @@ command updateUIPortal
          put the long id of btn "backgroundOverlay" into pControl
          centerMe pControl
          
+         put the long id of grp "homeNav" into pControl
+         centerMe pControl
+         
          # Main Image
          # Opens SivaSiva Brand Image, which we locate
          # subsequent in image of content and managed 
@@ -185,16 +188,16 @@ command updateUIPortal
          setImageToFullCardLoc pControl, "portrait", 0
          centerMe pControl, 0, 0
          
-         put the long id of btn "goNext" into pControl
-         bottomCenterMe pControl,tBottomMargin    
-         ntInfo ("Go Next loc: " & location of  btn "goNext" )
+         
+         --         bottomCenterMe pControl,tBottomMargin    
+         --         ntInfo ("Go Next loc: " & location of  btn "goNext" )
          
          put the long id of button "openGlobalNav" into pControl
          topLeftMe pControl, -16, 6
          
-         put the long id of widget "globalNavTree" of me into pControl
-         set the rect of pControl to (0, the bottom of button "brandLogo" of me + 15, \
-               CardWidth(), the top of btn "goNext" of me - 7)
+         --         put the long id of widget "globalNavTree" of me into pControl
+         --         set the rect of pControl to (0, the bottom of button "brandLogo" of me + 15, \
+         --               CardWidth(), the top of btn "goNext" of me - 7)
          
          break
          

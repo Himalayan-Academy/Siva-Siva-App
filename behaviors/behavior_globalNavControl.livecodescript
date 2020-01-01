@@ -90,20 +90,16 @@ command goMainMenu
          # Cases where we to go to stacks directly with no secondary navigation
          case "Gems of Wisdom"
             put "gems" into sTarget # portal stack in not its "label"
-            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Surprise Me"
             put "surprise" into sTarget
-            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Listen"
-            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
          case "Journal"
-            --hideShowGlobalNav "false"
             portal_GoStack sTarget
             break
             
@@ -184,7 +180,7 @@ command setGlobalNavVisible tVisible
       createScroller "globalNavTree"
    else
       hide grp "globalNav"
-      hide button "brandLogo"
+      --hide button "brandLogo"
       deleteMobileControl "globalNavTree"
    end if
    unlock screen with visual effect "dissolve" very fast
@@ -203,7 +199,7 @@ command hideShowGlobalNav tBol
          break
       case "false" --means we intend to hide the tree, should show main image
          show grp "globalNav"
-         show button "brandLogo"
+         -- show button "brandLogo"
          break
    end switch
    unlock screen with visual effect "dissolve" very fast
