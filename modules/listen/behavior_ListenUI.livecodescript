@@ -29,24 +29,19 @@ on mouseUp
          go to card "listen-my-audio"
          break
       case "audioList"
-         if the short name of this card <> "listen-my-audio" then 
-            offLineGoMyAudio
-         end if
+         --         if the short name of this card <> "listen-my-audio" then 
+         --            offLineGoMyAudio
+         --         end if
          if sLineNum <> empty then
             setAudioListColors sLineNum,"0,0,0"
-            --set the backgroundcolor of line sLineNum of fld "audioList" to empty
          end if
          put word 2 of clickline() into sSelectNum
          
          put getLineNumber(sSelectNum) into sLineNum
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
-         --         put sSelectNum into sLineNum
-         --         if (sLineNum mod 2) = 0 then
-         --            subtract 1 from sLineNum
-         --         end if
-         --         set the backgroundcolor of line sLineNum of fld "audioList" to 176,30,66
          put line sLineNum fld "audioList" into pTitle
+         
          
          put round(sSelectNum/2) into sSelectNum
          # pass it back the cd script which has the main handlers
@@ -183,3 +178,8 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
+
+
+on localNotificationReceived pMessage
+   
+end localNotificationReceived

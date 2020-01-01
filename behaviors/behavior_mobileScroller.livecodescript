@@ -9,11 +9,12 @@ command createScroller pName -- scrolling fields
    local tRect
    if not isMobile() then exit CreateScroller
    deleteMobileControl pName -- delete any existing
+   --PUT CR & CR &" " AFTER CONTROL PNAME 
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
    put ("0,0," & (the formattedwidth of control pName) & "," & \
-         the formattedheight of control pName + 20) into tRect
+         the formattedheight of control pName + 60) into tRect
    mobileControlSet pName, "contentRect", tRect
    mobileControlSet pName, "hScroll", 0
    mobileControlSet pName, "vScroll", 0
@@ -30,10 +31,10 @@ on updateScroller pName
    if not isMobile() then exit updateScroller
    if pName is among the lines of mobileControls() then -- update
       put ("0,0," & (the formattedwidth of control pName) & "," & \
-            the formattedheight of control pName + 20) into tRect
+            the formattedheight of control pName + 60) into tRect
       mobileControlSet pName, "contentRect", tRect
       mobileControlSet pName, "hScroll", 0
-      mobileControlSet pName, "vScroll", the vScroll of control pName
+      mobileControlSet pName, "vScroll", 0 --the vScroll of control pName
    else
       createScroller pName
    end if
@@ -43,11 +44,15 @@ end updateScroller
 on scrollerDidScroll hScrolled, vScrolled
    local tControlID
    put mobileControlTarget() into tControlID
-   set the vscroll of control tControlID to vscrolled
+   if  vScrolled < 20 then
+      set the vscroll of control tControlID to vscrolled/2 --vscrolled 	
+   else
+      set the vscroll of control tControlID to vscrolled + 20
+      --set the vscroll of control tControlID to vscrolled 
+   end if
    if  short name of this stack is among the items of sStacksHorizontal then
       set the hscroll of control tControlID to hScrolled
    end if
-   -- pass scrollerDidScroll -- jg: don't pass, it blocks scrolling when there are nested behaviors
 end scrollerDidScroll
 
 

@@ -6,6 +6,10 @@
   "models": "aagDataStorageLib,aagDBLib,jnanam,model_SivaSiva,model_SivaSivaConfig,model_SivaSivaFiles,model_SivaSivaLog,model_SivaSivaPrefs,model_SivaSivaJournal,model_SivaSivaTracking,model_Narratives",
   "stackfiles": [
   {
+      "name": "behavior_RunColors",
+      "file": "modules/color-meditation/behavior_RunColors.livecodescript"
+    },
+  {
       "name": "behavior_HomeStory",
       "file": "modules/portal/behavior_HomeStory.livecodescript"
     },

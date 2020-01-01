@@ -48,6 +48,7 @@ local sPlayerId, sPlayerRect
 -- set a busy indicator an remote file
 
 command createMobileAudioPlayer pURL, pPlayerName, pRect
+   
    local tHeight,tPlayloc 
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
@@ -79,7 +80,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    mobileControlSet pPlayerName, "visible", false 
    mobileControlSet pPlayerName, "showcontroller", false
    mobileControlSet pPlayerName, "rect", pRect
-   --mobileControlSet pPlayerName, "showController", true 
+   --mobileControlSet pPlayerName, "showController", true # reprecate with AVkit iOS
    mobileControlSet pPlayerName, "filename", pURL 
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
@@ -87,6 +88,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
+   togglePause true,true
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -102,8 +104,8 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    if theProperty is "duration" then
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
-      togglePause true,true
    end if
+   togglePause true,false
 end playerPropertyAvailable
 
 ---------------------------------
