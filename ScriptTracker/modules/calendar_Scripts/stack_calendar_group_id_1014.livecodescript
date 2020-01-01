@@ -7,34 +7,32 @@ Script "stack_calendar_group_id_1014"
 */
 
 
-
 # TO DO we should be getting city list for the so that would can update it easily
 on showCityList pBool
-  if pBool then -- show list
-    set the acceleratedRendering of this stack to false -- prevent window push-up
-    put the cCityList of fld "cityList" into fld "cityList"
-    put "" into fld "citySearch"
-    send "resetDefaultText" to fld "citySearch"
-    show grp "citySearchGrp"
-    if not the vis of fld "citylist" then
-      lock screen for visual effect in rect (the rect of fld "citylist")
-      show fld "citylist"
-      unlock screen with visual effect scroll down fast
-    end if
-    wait 10 milliseconds -- in case
-    createScroller "cityList"
-  else-- hide list
-    lock screen
-    hide grp "citySearchGrp"
-    hide fld "cityList"
-    unlock screen
-    deleteMobileControl "cityList"
-    wait 1 millisecond
-    set the acceleratedRendering of this stack to true -- restore
- end if
- show btn "submit"
+   if pBool then -- show list
+      set the acceleratedRendering of this stack to false -- prevent window push-up
+      put the cCityList of fld "cityList" into fld "cityList"
+      put "" into fld "citySearch"
+      send "resetDefaultText" to fld "citySearch"
+      show grp "citySearchGrp"
+      if not the vis of fld "citylist" then
+         lock screen for visual effect in rect (the rect of fld "citylist")
+         show fld "citylist"
+         unlock screen with visual effect scroll down fast
+      end if
+      wait 10 milliseconds -- in case
+      createScroller "cityList"
+   else -- hide list
+      lock screen
+      hide grp "citySearchGrp"
+      hide fld "cityList"
+      unlock screen
+      deleteMobileControl "cityList"
+      wait 1 millisecond
+      set the acceleratedRendering of this stack to true -- restore
+   end if
+   show btn "submit"
 end showCityList
-
 
 
 

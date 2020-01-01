@@ -3,12 +3,6 @@
 * ID: stack "calendar"
 * [stack_calendar_](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_.livecodescript)
 
-**bkgnd "footerNavigation" of stack "calendar"**
-* ID: bkgnd id 1004 of stack "calendar"
-
-* Background on card IDs: 1002
-* [stack_calendar_bkgnd_id_1004](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_bkgnd_id_1004.livecodescript)
-
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "calendar"**
 * ID: widget id 1121 of bkgnd id 1120 of stack "calendar"
 * Widget Kind: com.livecode.widget.svgpath
@@ -26,6 +20,10 @@
 **graphic "calDisplayBkgnd" of card "main-calendar" of stack "calendar"**
 * ID: graphic id 1026 of card id 1002 of stack "calendar"
 * [stack_calendar_graphic_id_1026](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_graphic_id_1026.livecodescript)
+
+**group "headerGrp" of card "main-calendar" of stack "calendar"**
+* ID: group id 1103 of card id 1002 of stack "calendar"
+* [stack_calendar_group_id_1103](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_group_id_1103.livecodescript)
 
 **graphic "backdrop" of group "headerGrp" of card "main-calendar" of stack "calendar"**
 * ID: graphic id 1104 of group id 1103 of card id 1002 of stack "calendar"
@@ -52,6 +50,10 @@
 * ID: widget id 1106 of group id 1103 of card id 1002 of stack "calendar"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_calendar_widget_id_1106](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_widget_id_1106.livecodescript)
+
+**group "main-calendar-view" of card "main-calendar" of stack "calendar"**
+* ID: group id 1017 of card id 1002 of stack "calendar"
+* [stack_calendar_group_id_1017](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_group_id_1017.livecodescript)
 
 **field "current_days" of group "main-calendar-view" of card "main-calendar" of stack "calendar"**
 * ID: field id 1015 of group id 1017 of card id 1002 of stack "calendar"

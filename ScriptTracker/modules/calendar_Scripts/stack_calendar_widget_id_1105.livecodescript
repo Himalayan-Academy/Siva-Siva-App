@@ -13,5 +13,5 @@ on mouseup
   hide grp "headerGrp"
   show grp "city-picker-view"
   hide btn "Submit"
-  unlock screen  with visual effect dissolve very fast
+  unlock screen  with visual effect "dissolve" very fast
 end mouseup
