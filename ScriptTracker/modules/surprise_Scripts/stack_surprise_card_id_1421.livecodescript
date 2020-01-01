@@ -7,6 +7,9 @@ Script "stack_surprise_card_id_1421"
 
 
 on opencard
+   
+   setDefaultCard(the short name of this card)
+   
    if connectivity_PingServer() = "false" then
       dialog_CustomMsg "Connection required. Going to Verses"
       go to card "surprise_verses"

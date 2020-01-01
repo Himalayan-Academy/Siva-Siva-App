@@ -8,13 +8,8 @@ Script "stack_surprise_card_id_1494"
 
 on preopencard
    local tBkgndPhoto, tImagePath
-   
    put the long id img "randomPhoto" into tBkgndPhoto
    put fetchRandomImageAsset("photography") into tImagePath
    set the filename of tBkgndPhoto to tImagePath
    updateUI
-   --   setRectOfCurrentGrc tBkgndPhoto
-   --   resizeToHeight tBkgndPhoto, CardHeight()
-   --   set the loc of tBkgndPhoto to CardLoc()
-   --   pass preOpenCard
 end preopencard

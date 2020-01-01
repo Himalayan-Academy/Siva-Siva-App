@@ -68,22 +68,15 @@
 * Behavior: stack "siva_fields_behavior"
 * [stack_surprise_field_id_1265](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1265.livecodescript)
 
-**bkgnd "go-next" of stack "surprise"**
-* ID: bkgnd id 1446 of stack "surprise"
-
-* Background on card IDs: 1106, 1031, 1039, 1037
-* [stack_surprise_bkgnd_id_1446](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1446.livecodescript)
+**widget "go-next" of bkgnd "go-next" of stack "surprise"**
+* ID: widget id 1447 of bkgnd id 1446 of stack "surprise"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_surprise_widget_id_1447](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1447.livecodescript)
 
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "surprise"**
 * ID: widget id 1493 of bkgnd id 1492 of stack "surprise"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_surprise_widget_id_1493](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1493.livecodescript)
-
-**bkgnd "header" of stack "surprise"**
-* ID: bkgnd id 1282 of stack "surprise"
-
-* Background on card IDs: 1494, 1002, 1106, 1031, 1421, 1039, 1037
-* [stack_surprise_bkgnd_id_1282](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1282.livecodescript)
 
 **bkgnd "share-ui" of stack "surprise"**
 * ID: bkgnd id 1509 of stack "surprise"
@@ -91,6 +84,16 @@
 
 * Background on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
 * [stack_surprise_bkgnd_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1509.livecodescript)
+
+**widget "playAudio" of bkgnd "pause-play" of stack "surprise"**
+* ID: widget id 1530 of bkgnd id 1529 of stack "surprise"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_surprise_widget_id_1530](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1530.livecodescript)
+
+**widget "pauseAudio" of bkgnd "pause-play" of stack "surprise"**
+* ID: widget id 1531 of bkgnd id 1529 of stack "surprise"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_surprise_widget_id_1531](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1531.livecodescript)
 
 **card "surprise" of stack "surprise"**
 * ID: card id 1494 of stack "surprise"
@@ -103,6 +106,10 @@
 **button "Surprise" of card "surprise" of stack "surprise"**
 * ID: button id 1495 of card id 1494 of stack "surprise"
 * [stack_surprise_button_id_1495](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1495.livecodescript)
+
+**card "surprise_verses" of stack "surprise"**
+* ID: card id 1002 of stack "surprise"
+* [stack_surprise_card_id_1002](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1002.livecodescript)
 
 **group "verse-collections" of card "surprise_verses" of stack "surprise"**
 * ID: group id 1303 of card id 1002 of stack "surprise"
@@ -120,10 +127,6 @@
 **card "surprise_audio" of stack "surprise"**
 * ID: card id 1031 of stack "surprise"
 * [stack_surprise_card_id_1031](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1031.livecodescript)
-
-**image "headset_portrait_bkgnd_opt-50.jpg" of card "surprise_audio" of stack "surprise"**
-* ID: image id 1118 of card id 1031 of stack "surprise"
-* [stack_surprise_image_id_1118](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_image_id_1118.livecodescript)
 
 **card "surprise_video" of stack "surprise"**
 * ID: card id 1421 of stack "surprise"
