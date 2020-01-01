@@ -19,7 +19,7 @@ on mouseUp
    local tDayNum, tCalendar, tDailyInfo
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then -- a tap
       put the metadata of the clickline into tDayNum
-      put tDayNum
+      --put tDayNum
       if tDayNum < 1 then exit mouseup
       put getCalendarDayInfo(tDayNum) into tCalendar
       put tCalendar["allDayData"] into fld "allDataForOneDay"
