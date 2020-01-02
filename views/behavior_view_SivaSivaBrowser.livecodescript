@@ -155,16 +155,17 @@ on browserDocumentLoadBegin pURL
    set htmltext of widget "Loader" to fld "loaderHTML"
    show widget "loader"
    show group "footerNavigation"
-   ntInfo ( (the lockscreen) & "; show the loader " &  pURL)
+   --ntInfo ( (the lockscreen) & "; show the loader " &  pURL)
 end browserDocumentLoadBegin
 
 
 on browserDocumentLoadComplete pURL
    local tBrowser
    
-   ntinfo ("download flag: " & sHackDownloadCompleteFlag)
+   --ntinfo ("download flag: " & sHackDownloadCompleteFlag)
    if pURL is not empty then
-      dispatch "hideloader" to me 
+      --dispatch "hideloader" to me 
+      hideLoader
    end if
    show widget "Body"
    show group "footerNavigation"
@@ -173,7 +174,7 @@ on browserDocumentLoadComplete pURL
    browser_SetLastURL pURL
    put short name of the target into tBrowser
    
-   ntInfo ( (the lockscreen) & "; show the target: " & tBrowser &"; " &  pURL)
+   --ntInfo ( (the lockscreen) & "; show the target: " & tBrowser &"; " &  pURL)
    
 end browserDocumentLoadComplete
 
