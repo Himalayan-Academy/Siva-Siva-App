@@ -47,8 +47,7 @@ on updateUI
    topCenterMe tHeader
    
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to tWidth
-   bottomCenterMe tFooter
+   send "updateUI" to tFooter
    
    set the rect of grc "calDisplayBkgnd" to \
          (0,0,tWidth,the top of tFooter)

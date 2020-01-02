@@ -9,9 +9,8 @@ on openCard
    audioIsRunning
    
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to CardWidth()
-   bottomCenterMe tFooter
-
+   send "updateUI" to tFooter
+   
    put "SivaSiva Portal Scrolling" into tLinksGroup
    put the long id of grp tLinksGroup into tControl
    topCenterMe tControl

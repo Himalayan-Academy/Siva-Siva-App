@@ -110,3 +110,13 @@
 * ID: button id 1157 of card id 1002 of stack "calendar"
 * [stack_calendar_button_id_1157](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_button_id_1157.livecodescript)
 
+**group "share-ui" of card "main-calendar" of stack "calendar"**
+* ID: group id 1268 of card id 1002 of stack "calendar"
+* Behavior: stack "behavior_SocialShare"
+* [stack_calendar_group_id_1268](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_group_id_1268.livecodescript)
+
+**widget "close-sharing" of group "share-ui" of card "main-calendar" of stack "calendar"**
+* ID: widget id 1270 of group id 1268 of card id 1002 of stack "calendar"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_calendar_widget_id_1270](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_widget_id_1270.livecodescript)
+

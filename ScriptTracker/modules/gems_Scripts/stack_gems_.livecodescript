@@ -30,8 +30,7 @@ end resizeStack
 on updateUI
    local tFooter, tQuote, tRect, tControl
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to CardWidth()
-   bottomCenterMe tFooter
+   send "updateUI" to tFooter
    put the long id of grp "quoteControl" into tControl
    put (0,321,CardWidth(),CardHeight()) into tRect
    set the rect of tControl to tRect
