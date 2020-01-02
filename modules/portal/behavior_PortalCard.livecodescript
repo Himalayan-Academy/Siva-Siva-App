@@ -51,7 +51,9 @@ on mouseUp
       end if
       put fld (tLInkNo &"_" &"portal-link-label") into tRowName
       replace cr with " " in tRowName
-      --  put tRowName
+      if tRowName = "Video World" then
+         portal_SetLastStack "Surprise"
+      end if
       portal_DoRowLink tRowName
    end if
 end  mouseup

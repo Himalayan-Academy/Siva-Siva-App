@@ -43,8 +43,11 @@ function getUserPreferences pPref
 end getUserPreferences
 
 on closestack
-   portal_SetLastStack "Siva-Siva-Portal"
+   if the short name of this card <> "Surprise" then
+      portal_SetLastStack "Siva-Siva-Portal"
+   end if
 end closestack
+
 
 
 

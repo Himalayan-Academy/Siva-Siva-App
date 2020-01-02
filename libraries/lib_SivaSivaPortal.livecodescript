@@ -136,6 +136,10 @@ command portal_DoRowLink rowName
    -- display_RowLink rowName
    
    switch linkCommand
+      case "getRandomVideo"
+         portal_SetLastStack "Surprise"
+         getRandomVideo
+         break
       case "portal_Link"
          portal_Link linkParam
          break

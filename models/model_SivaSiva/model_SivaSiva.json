@@ -26,8 +26,8 @@
         },	
         "Video World": {
             "link": {
-                "portal command": "portal_GoStack",
-                "portal param": "card \"surprise_video\" of stack \"surprise\""
+                "portal command": "getRandomVideo",
+                "portal param": "getRandomVideo"
             },
             "imageText": "Video\nWorld",
             "shortImageFile": "thumb_gurudeva_on-iphone.png",
