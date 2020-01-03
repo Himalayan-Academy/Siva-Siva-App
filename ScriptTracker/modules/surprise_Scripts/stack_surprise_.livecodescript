@@ -168,8 +168,12 @@ end updateUI
 command setUpSurprise
    local tTargets, tTarget, tCard
    if connectivity_PingServer() = "true" then 
-      --put "audio" into tTarget # for test one card only: comment out the following 2 lines
-      put "verse,audio,darshan,art,video" into tTargets
+      --put "video" into tTarget # for test one card only: comment out the following 2 lines
+      --put "verse,audio,darshan,art,video" into tTargets
+      # for some reason, video will not send the
+      # broader download complete or  hideLoader to the browser
+      # from this context so we are taking in out
+      put "verse,audio,darshan,art" into tTargets
       put item (random(5)) of tTargets into tTarget
       put "surprise_"&tTarget into tCard
    else
@@ -177,12 +181,26 @@ command setUpSurprise
       put "surprise_verse" into tCard
    end if
    ntInfo "surprise:" && tCard
-   if tCard is "surprise_verse" then
-      pokeACollection
-      insertRandomVerse # this take you to surprise_verse
-   else
-      go to card tCard
-   end if
+   
+   switch tCard
+      case "surprise_verse" 
+         pokeACollection
+         insertRandomVerse # this take you to surprise_verse
+         break
+      case "surprise_video"
+         portal_DoRowLink  "Video World"
+         break
+      default
+         go to card tCard
+   end switch
+   
+   
+   --   if tCard is "surprise_verse" then
+   --      pokeACollection
+   --      insertRandomVerse # this take you to surprise_verse
+   --   else
+   --      go to card tCard
+   --   end if
 end setUpSurprise
 
 --on toggleGoNext pBool

@@ -128,10 +128,6 @@
 * ID: card id 1031 of stack "surprise"
 * [stack_surprise_card_id_1031](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1031.livecodescript)
 
-**card "surprise_video" of stack "surprise"**
-* ID: card id 1421 of stack "surprise"
-* [stack_surprise_card_id_1421](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1421.livecodescript)
-
 **card "surprise_darshan" of stack "surprise"**
 * ID: card id 1039 of stack "surprise"
 * [stack_surprise_card_id_1039](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1039.livecodescript)
