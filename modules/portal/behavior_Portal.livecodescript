@@ -23,6 +23,7 @@ on openStack
          break
       case "Surprise"
          go card "Surprise"
+         wait 1 milliseconds with messages
          break
       default
          go card "Home"
