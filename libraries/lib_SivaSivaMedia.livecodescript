@@ -340,7 +340,7 @@ function convertYouTubeURL pURL
    set the itemdel to "?"
    put item 2 of pURL into tQueryString
    split tQueryString with "&" and "="
-   return "https://www.youtube.com/embed/" & tQueryString["v"]&"?rel=0"
+   return "https://www.youtube.com/embed/" & tQueryString["v"]&"?playsinline=1"
 end convertYouTubeURL
 
 

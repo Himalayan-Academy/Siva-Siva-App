@@ -47,8 +47,7 @@ end resizeStack
 on updateUI
    local tFooter, tTitle, tRect, tControl
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to CardWidth()
-   bottomCenterMe tFooter
+   send "updateUI" to tFooter
    put the long id of fld "Title" into tTitle
    topCenterMe tTitle, 7
    put the long id of btn "right-arrow" into tControl

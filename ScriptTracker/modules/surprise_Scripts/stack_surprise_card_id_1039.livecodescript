@@ -7,10 +7,12 @@ Script "stack_surprise_card_id_1039"
 
 
 on preopencard
-   hide img "darshan"
+   hide img "surprise-image"
+  pass preopencard
 end preopencard
 
 on opencard
+   setDefaultCard(the short name of this card)
    if connectivity_PingServer() = "false" then
       dialog_CustomMsg "Connection required. Going to Verses"
       go to card "surprise_verses"
@@ -21,36 +23,42 @@ on opencard
 end opencard
 
 on closeCard
-   set the loc of image "darshan" to the loc of this card
-   set the filename of img "darshan" to empty
-  -- journal_addEntry
+   set the loc of image "surprise-image" to the loc of this card
+   set the filename of img "surprise-image" to empty
+   -- journal_addEntry
 end closeCard
 
 command getAnImage 
-    showBusyIndicator true
-      hide grp "go-next"
-      put the long id of img "darshan" into tImgTarget
-      hide img "darshan" with visual effect dissolve very fast
-      put "Subramuniyaswami,Bodhinatha,Deities" into tCollections
-      put item ( random(3) ) of tCollections into tCollection
-      put fetchRandomMediaItem ("media_type","art/photography","tags",tCollection) into GotIt
-      put getMediaURL ("med,whatever") into sURL
-      set the filename of img "darshan" to sURL
-      insertImageDimensions (the long ID of img "darshan")
-      mediaUrl_Set sURL
-      if the formattedwidth of tImgTarget > the width of this card then
-         put "true" into tSizeIsBig
-         toggleImgSize tImgTarget,tSizeIsBig,(the width of this card) 
-      end if     
-      showBusyIndicator false
-      set the loc of img "darshan" to the loc of this card
-      send showDarshan  to me in  20 milliseconds
+   showBusyIndicator true
+   disable grp "go-next"
+   --hide grp "go-next"
+   put the long id of img "surprise-image" into tImgTarget
+   hide img "surprise-image" with visual effect dissolve very fast
+   put "Subramuniyaswami,Bodhinatha,Deities" into tCollections
+   put item ( random(3) ) of tCollections into tCollection
+   put fetchRandomMediaItem ("media_type","art/photography","tags",tCollection) into GotIt
+   put getMediaURL ("med,whatever") into sURL
+   set the filename of img "surprise-image" to sURL
+   insertImageDimensions (the long ID of img "surprise-image")
+   mediaUrl_Set sURL
+   if the formattedwidth of tImgTarget > the width of this card then
+      put "true" into tSizeIsBig
+      toggleImgSize tImgTarget,tSizeIsBig,(the width of this card) 
+   end if     
+   showBusyIndicator false
+   set the loc of img "surprise-image" to the loc of this card
+   send showSurprise  to me in  20 milliseconds
+   if isMobile() then
+      mobileClearTouches
+   end if
+   enable grp "go-next"
 end getAnImage
 
-command showDarshan
-   show img "darshan"  with visual effect reveal right very fast
+command showSurprise
+   show img "surprise-image"  with visual effect reveal right very fast
    show grp "go-next"
-end showDarshan
+   enable grp "go-next"
+end showSurprise
 
 command share_Items 
    put mediaUrl_Get() into  sShareItemsA["url"]  
@@ -58,14 +66,4 @@ command share_Items
    put "Darshan from SivaSiva app." into sShareItemsA["text"] 
    return sShareItemsA
 end share_Items
-
--- on journal_AddEntry
---  put the short name of this card into pDataA["card"]
---    put "Darshan - God, Gods and Guru" into tJournalTitle
---    put mediaUrl_Get() into pDataA["url"]
---    Journal_RecordEntry "surprise", tJournalTitle, pDataA
--- end journal_AddEntry
-
-
-
 

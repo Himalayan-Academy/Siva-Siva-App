@@ -9,9 +9,8 @@ on openCard
    audioIsRunning
    
    put the long id of grp "footerNavigation" into tFooter
-   set the width of tFooter to CardWidth()
-   bottomCenterMe tFooter
-
+   send "updateUI" to tFooter
+   
    put "SivaSiva Portal Scrolling" into tLinksGroup
    put the long id of grp tLinksGroup into tControl
    topCenterMe tControl
@@ -51,7 +50,9 @@ on mouseUp
       end if
       put fld (tLInkNo &"_" &"portal-link-label") into tRowName
       replace cr with " " in tRowName
-      --  put tRowName
+      if tRowName = "Video World" then
+         portal_SetLastStack "Surprise"
+      end if
       portal_DoRowLink tRowName
    end if
 end  mouseup

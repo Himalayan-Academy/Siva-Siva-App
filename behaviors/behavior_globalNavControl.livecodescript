@@ -2,6 +2,7 @@
 --> ###################
 -- BR: 2019-09-20
 -- This behavior is assigned to the widget "globalNavTree" which, initially, is part of the
+-- And to grp "navMandala"
 -- Siva-Siva-Portal stack, card "home" 
 -- conceivably is could be implement "app wide" to take the user 
 -- where he wanted to go without going "Home" 
@@ -11,6 +12,15 @@
 
 local sTarget,sFavoritesA,sWhichMenu,
 
+# mouseUp does not get call from the Tree 
+# because the have the own script and we do not pass mouseup
+
+# so this applies to anythiing else of screen, most importantly the navMandal
+
+on mouseup
+   put the short name of the target into sTarget
+   goMainMenu
+end mouseup
 
 
 on hiliteChanged
@@ -42,6 +52,8 @@ on hiliteChanged
    unlock screen
    
    --breakpoint
+   
+   # only call from the Tree
    put truncateTarget(tHilitedElement) into sTarget
    
    # conceivably, various kind of menus could be presented
@@ -80,11 +92,11 @@ command goMainMenu
       exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,Listen,Look,Websites,Journal,My Menu" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Look,Websites,Journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
       # Some have to trigger connectivity, but do nothing (look and websites)
-
+      
       switch sTarget
          
          # Cases where we to go to stacks directly with no secondary navigation
@@ -94,6 +106,7 @@ command goMainMenu
             break
          case "Surprise Me"
             put "surprise" into sTarget
+         Case "surprise"
             portal_GoStack sTarget
             break
          case "Listen"
@@ -173,41 +186,23 @@ command goMyMenu
 end goMyMenu
 
 command setGlobalNavVisible tVisible
+   
    lock screen for visual effect
+   show btn "backgroundOverlay"
    if tVisible is true or tVisible is "true" or tVisible is "yes" then
-      hide grp "homeNav"
-      show grp "globalNav"
+      hide grp "navMandala"
+      show grp "globalNavTree"
       show button "brandLogo"
       createScroller "globalNavTree"
    else
-      show grp "homeNav"
-      hide grp "globalNav"
-      --hide button "brandLogo"
+      show grp "navMandala"
+      hide img "homeMainImage"
+      hide grp "globalNavTree"
       deleteMobileControl "globalNavTree"
    end if
    unlock screen with visual effect "dissolve" fast
 end setGlobalNavVisible
 
-# BM: I think the name of this handler is confusing.  Suggest that we use the above one instead.
-command hideShowGlobalNav tBol
-   # tBol is vis of the tree,
-   # if it is true then we toogle to hide it
-   # otherwise, toggle to show it
-   lock screen for visual effect
-   switch tBol
-      case "true" --means we intend to show the tree, should overlay main image
-         Show grp "globalNav" 
-         hide grp "homeNav"
-         hide button "brandLogo"
-         break
-      case "false" --means we intend to hide the tree, should show main image
-         hide grp "homeNav"
-         show grp "globalNav"
-         show button "brandLogo"
-         break
-   end switch
-   unlock screen with visual effect "dissolve" very fast
-end hideShowGlobalNav
 
 
 command  loadFavoritesToMyHome
@@ -351,3 +346,8 @@ command createNavTree pMenu
    set arraydata of widget "globalNavTree" to aTreeA
    
 end createNavTree
+
+
+on mouseRelease pButtonNumber
+   
+end mouseRelease

@@ -1,11 +1,9 @@
-Script "stack_surprise_bkgnd_id_1509"
+Script "stack_calendar_group_id_1268"
 
 /*
-# Name: bkgnd "share-ui" of stack "surprise"
-# ID: bkgnd id 1509 of stack "surprise"
+# Name: group "share-ui" of card "main-calendar" of stack "calendar"
+# ID: group id 1268 of card id 1002 of stack "calendar"
 # Behavior: stack "behavior_SocialShare"
-
-# Background on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
 */
 
 
@@ -43,7 +41,8 @@ on resizeControl
 end resizeControl
 
 on mouseUp
-   share_MouseEvent
+ share_MouseEvent
 end mouseUp
+
 
 

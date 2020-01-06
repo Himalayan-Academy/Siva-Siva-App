@@ -18,22 +18,33 @@ local sLastImage, sMainImage,sBrandImageNumber
 on preOpenCard
    local pControl, pCard
    put the short name of this card into pCard
-   
    setCardCoords "portrait"
+   put the long id of img "homeMainImage" of card "Home" into sMainImage
    
+   
+   # init set up
+   
+   hide img  "homeMainImage" 
+   show  btn "backgroundOverlay" 
+   show img  "hideNavMandala" 
+   hide img  "showNavMandala" 
+   dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
    switch pCard
       case "Home"
+         show grp "navMandala" 
          setUpBrandImage
          setDefaultImage
-         dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
-         put empty into fld "homeStoryText"
-         put the long id of fld "homeStoryText" into pControl
-         centerMe pControl,0,5
          break
+      case "read-menu"
+         --set the filename of sMainImage to brandImagePath(pImage)
+         
+         
+         break
+         
    end switch
    
    updateUIPortal
-
+   
    show btn "brandLogo"
 end preOpenCard
 
@@ -41,6 +52,43 @@ on opencard
    audioIsRunning    
 end opencard
 
+
+#######################
+
+command _USER_INTERACTION
+end _USER_INTERACTION
+
+on mouseup 
+   local tTarget
+   put the short name of the target into tTarget
+   
+   --switch (the short name of this card)
+      --case "Home"
+         switch tTarget
+            case "hideNavMandala"
+               hide btn "brandLogo"
+               hide grp "globalNavTree"
+               hide grp "navMandala"
+               hide btn "backgroundOverlay"
+               show img "homeMainImage"
+               show img "showNavMandala"
+               hide img "hideNavMandala"
+               break
+            case "showNavMandala"
+               show btn "brandLogo"
+               hide grp "globalNavTree"
+               show btn "backgroundOverlay"
+               hide img "homeMainImage"
+               show grp "navMandala"
+               hide img "showNavMandala"
+               show img "hideNavMandala"
+               break
+         end switch
+         
+ --end switch
+end mouseup
+
+#######################
 
 command setDefaultImage 
    --breakpoint
@@ -51,7 +99,7 @@ command setDefaultImage
    local pImage, tPaths, tBrandImages, tTotalBrandImages
    
    put getCache("BrandImage") into sBrandImageNumber
-   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   put the long id of img "homeMainImage" of card "Home" into sMainImage
    put _brandImages() into tBrandImages
    
    # will get this out when we close Sivasiva.app
@@ -64,7 +112,7 @@ command setDefaultImage
    set the filename of sMainImage to brandImagePath(pImage)
    
    #  UI responsive
-   put the long id of img "homeStoryMainImage" of card "Home" into sMainImage
+   put the long id of img "homeMainImage" of card "Home" into sMainImage
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    show btn "brandLogo"
@@ -168,43 +216,43 @@ command updateUIPortal
             mobileHideStatusBar
          end if
          
-         # Backgrond
-         
-         put the long id of btn "backgroundOverlay" into pControl
-         centerMe pControl
-         
-         put the long id of grp "homeNav" into pControl
-         centerMe pControl
-         
-         # Main Image
-         # Opens SivaSiva Brand Image, which we locate
-         # subsequent in image of content and managed 
-         # from the home 
+         # background
          
          put the long id of button "brandLogo" of me into pControl
          topCenterMe pControl,0
          
-         put long Id of img "HomeStoryMainImage" into pControl
+         put the long id of btn "backgroundOverlay" into pControl
+         centerMe pControl
+         
+         # home image
+         
+         put long Id of img "HomeMainImage" into pControl
          setImageToFullCardLoc pControl, "portrait", 0
          centerMe pControl, 0, 0
          
+         # bButtons and Nav
          
-         --         bottomCenterMe pControl,tBottomMargin    
-         --         ntInfo ("Go Next loc: " & location of  btn "goNext" )
+         put the long id of grp "navMandala" into pControl
+         topCenterMe pControl,120
+         -- centerMe pControl
          
-         put the long id of button "openGlobalNav" into pControl
+         put the long id of img "hideNavMandala" into pControl
+         bottomCenterMe pControl,20
+         
+         
+         put the long id of img "showNavMandala" into pControl
+         bottomCenterMe pControl,20
+         
+         put the long id of button "openGlobalNavTree" into pControl
          topLeftMe pControl, -16, 0
          
-         --         put the long id of widget "globalNavTree" of me into pControl
-         --         set the rect of pControl to (0, the bottom of button "brandLogo" of me + 15, \
-         --               CardWidth(), the top of btn "goNext" of me - 7)
          
          break
          
       default
          put the long id of widget "globalNavTree" of me into pControl
          set the width of pControl to CardWidth()
-         centerMe pControl
+         topCenterMe pControl,60
          
          break
    end switch
@@ -218,3 +266,8 @@ command updateUIPortal
    topCenterMe pControl,150
    
 end updateUIPortal
+
+
+on pushNotificationRegistrationError pErrorMessage
+   
+end pushNotificationRegistrationError

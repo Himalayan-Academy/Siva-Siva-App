@@ -6,25 +6,32 @@ Script "stack_surprise_card_id_1031"
 */
 
 
+local sTimestamp
+
 on opencard
+   setDefaultCard(the short name of this card)
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if  
+   hide fld "audioDetails"
+   togglePause false, true
    put empty into fld "audioDetails"  
    
    if connectivity_PingServer() = "false" then
       dialog_CustomMsg "Sorry, an Internet connection is required to view this content. You can view Verses offline instead."
       go to card "surprise_verses"
    else
+      show graphic "Loading..."
       getRandomAudio
    end if
 end opencard
 
 on getRandomAudio
+   if isMobile() then
+      mobileClearTouches
+   end if
+   disable grp "go-next"
    local gotIt, tURL
-   hide fld "audioDetails"
-   -- showBusyIndicator true,"Loading"
-   
    # Test UTF8 Diacriticals
    # fetchRandomMediaItem ("media_type","audio", "file_id","guruparampara-vandana_pmp")
    
@@ -41,10 +48,16 @@ on getRandomAudio
       exit to top
    end if
    mediaUrl_Set tURL
-   send "showAudioDetails" to me in 1 second
+   
+   
+   if isMobile() then
+      mobileClearTouches
+   end if
    startAudioPlayer tURL
+   enable grp "go-next"
    
 end getRandomAudio
+
 
 on startAudioPlayer pURL, pTimestamp
    if connectivity_PingServer() = "false" then
@@ -54,23 +67,25 @@ on startAudioPlayer pURL, pTimestamp
    end if
    
    if isMobile() then
-      createMobileAudioPlayer pURL, "audioPlayer", getPlayerRect()
+      createMobileAudioPlayer pURL, "audioPlayer"
    else
       set the filename of player "audioPlayer" to pURL
-   end if
-   if not isMobile() then 
-      show player "audioPlayer"
       start player "audioPlayer"
-   else
-      setMobileAudioPlayer "audioPlayer",  "play", pTimestamp
+      togglePause true, true
    end if
+   hide graphic "Loading..."
+   send "showAudioDetails" to me in 50 millisecondS
+   
+   
+   --setMobileAudioPlayer "audioPlayer",  "play", pTimestamp
 end startAudioPlayer
-  
+
+
 on closeCard
    -- journal_AddEntry
    hide fld "audioDetails"
    put empty into fld "audioDetails"
-   showPlayer "false", "audioPlayer"
+   togglePause true, true
 end closeCard
 
 command showAudioDetails
@@ -113,6 +128,8 @@ command showAudioDetails
    set the vscrollbar of fld "AudioDetails" to not isMobile()
    show fld "audioDetails" with visual effect "reveal right"
 end showAudioDetails
+
+
 
 command share_Items
    local tShareItemsA

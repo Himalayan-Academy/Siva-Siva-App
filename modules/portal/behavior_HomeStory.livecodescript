@@ -108,7 +108,7 @@ command goNextScene
       exit goNextScene
    end if
    
-   put empty into fld "HomeStoryText"
+   put empty into fld "homeMainImage"
    
    if (sLastScene is 0 )  then add 1 to sLastScene
    

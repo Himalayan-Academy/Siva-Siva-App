@@ -23,6 +23,7 @@ on openStack
          break
       case "Surprise"
          go card "Surprise"
+         wait 1 milliseconds with messages
          break
       default
          go card "Home"
@@ -43,8 +44,11 @@ function getUserPreferences pPref
 end getUserPreferences
 
 on closestack
-   portal_SetLastStack "Siva-Siva-Portal"
+   if the short name of this card <> "Surprise" then
+      portal_SetLastStack "Siva-Siva-Portal"
+   end if
 end closestack
+
 
 
 

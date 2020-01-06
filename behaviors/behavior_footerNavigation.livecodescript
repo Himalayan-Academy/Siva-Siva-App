@@ -36,13 +36,19 @@ on mouseup
    switch tTarget
       case "home"
          put the short name of this card into tCard
-       
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is "Surprise" and \
                there is a card "Home" then
-         
             go to card "Home"
+         else if tCard is "main-calendar" and \
+               the vis of grp "city-picker-view" then
+            unlock screen
+            lock screen for visual effect
+            hide grp "city-picker-view"
+            show grp "main-calendar-view"
+            show grp "headerGrp"
+            unlock screen with visual effect "dissolve" very fast
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
@@ -62,6 +68,8 @@ on mouseup
          break
          
       case "share"
+         unlock screen
+         lock screen for visual effect
          put sConfigA["shareControl"] into tShareControl
          
          if (exists(group "share-ui" of this card) ) then
@@ -80,7 +88,7 @@ on mouseup
          end if
          
          deleteMobileControl  "audioPlayer"
-         show tControl
+         show tControl with visual "dissolve" very fast
          break
          
       case "settings"
@@ -95,11 +103,15 @@ command unHiliteBtn pTarget
    set the hilited of control pTarget to false
 end unHiliteBtn
 
+on updateUI
+   set the width of me to CardWidth()
+   bottomCenterMe (the long id of me), -safeBottomMargin()
+end updateUI
 
 on resizeControl
-   local tHSpace, tV, tH, tControl
+   local tHSpace, tV, tH, tControl, tRect
    put the width of me / (the number of items in sButtons) into tHSpace
-   put item 2 of the loc of me into tV
+   put item 2 of the loc of button 1 of me into tV
    put the left of me + (tHSpace / 2) into tH
    
    repeat for each item tName in sButtons
@@ -109,6 +121,7 @@ on resizeControl
       add tHSpace to tH
    end repeat
    
+   set the height of me to 50 + safeBottomMargin()
+   set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
-

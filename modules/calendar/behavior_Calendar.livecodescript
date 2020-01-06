@@ -29,77 +29,80 @@ local sCityName -- city name as used in URL
 # once we get that going we can tweak the text styles/formatting. 
 
 command parseUserICSfile  pCityName,pYearRange -- loads the calendar script local
-  -- pCityName = readable English name from city list
-  -- pYearRange = the calendar year range
-  -- called from preOpenCard, insertDayInfo, and Submit btn
-  if pCityName = "" then loadCityName -- loads script local
-  if pCityName = "" and sCityName = "" then
-    doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
-    exit parseUserICSfile
-  else if sCityName = "" then
-    put pCityName into sCityName
-  end if
-  put  pathToCalendarICS(pYearRange,pCityName,"bin") into tBinPath -- binary array file
-  if there is a file tBinPath then -- preOpenCard or insertDayInfo
-    get url ("binfile:" & tBinPath)
-    put arrayDecode(it) into sHinduCalendarA
-  else  -- no file or user is reloading, get download:
-    put pathToCalendarICS(pYearRange,pCityName,"ics") into tICSPath
-    put convertCityToURL(pCityName,pYearRange) into tURL
-    try
-      put url tURL into url ("binfile:/" & tICSPath)
-    catch tErr -- sys err
-      doAnswer "Could not retrieve calendar file." &cr& tErr,"OK"
-      exit to top
-    end try
-    --   PUT THE MILLISECONDS INTO TSTART
-    put vObjectSplit("VEvent", tICSPath)  into tCalendarArrayA -- much faster to read file directly
-    if tCalendarArrayA[1] contains "https:" then -- web 404 or redirect
-      doAnswer "Could not retrieve calendar file.","OK"
-      delete file tICSPath
-      exit to top
-    end if
-    put 0 into tDayNo
-    put "" into sHinduCalendarA
-    repeat with x = 1 to ((item 2 of the extents of tCalendarArrayA)+1)
-      put tCalendarArrayA[x] into tEvent 
-      # key info is the Summary or "title" of the event
-      # and the date... we extract for each event in the whole file
-      # but date follows ISO standard  yyyymmdd  no delimiters.
-      put GetvObjectPropertyValue(tEvent, "Summary")  into tMoonDay
-      put  GetvObjectPropertyValue(tEvent, "DTSTART")  into tDate
-      # Let's first check and skip what we don't want to pay attention to:
-      if (word 1 of tMoonDay = "Sun") OR  (tMoonDay contains "Retreat Star-") then # we will continue parsing the event
-        add 1 to tDayNo
-        # first get our moon day designation and date
-        if not (tMoonDay contains "Sun") then
-          put the itemDelimiter into tIDel
-          set the itemdel to "-"
-          put item 2 of tMoonDay into tMoonDay
-          set the itemDelimiter to tIDel
-        end if
-        put tMoonDay into sHinduCalendarA[tDayNo][moonDay]
-        put tDate into sHinduCalendarA[tDayNo][icsdateString]
-        put extractLongDate(tDate) into sHinduCalendarA[tDayNo][longDate]
-        
-        put GetvObjectPropertyValue(tEvent, "Description") into tRawDescription
-        put extractFullEntry(tRawDescription,tMoonDay,tDayNo) into sHinduCalendarA[tDayNo][allDayData]
-        
+   local tBinPath, tICSPath, tURL, tCalendarArrayA, tDayNo, tEvent, tMoonDay, tDate, tIDel, tRawDescription
+   -- pCityName = readable English name from city list
+   -- pYearRange = the calendar year range
+   -- called from preOpenCard, insertDayInfo, and Submit btn
+   if pCityName = "" then loadCityName -- loads script local
+   if pCityName = "" and sCityName = "" then
+      doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
+      exit parseUserICSfile
+   else if sCityName = "" then
+      put pCityName into sCityName
+   end if
+   put  pathToCalendarICS(pYearRange,pCityName,"bin") into tBinPath -- binary array file
+   if there is a file tBinPath then -- preOpenCard or insertDayInfo
+      get url ("binfile:" & tBinPath)
+      put arrayDecode(it) into sHinduCalendarA
+   else  -- no file or user is reloading, get download:
+      put pathToCalendarICS(pYearRange,pCityName,"ics") into tICSPath
+      put convertCityToURL(pCityName,pYearRange) into tURL
+      try
+         put url tURL into url ("binfile:/" & tICSPath)
+      catch tErr -- sys err
+         doAnswer "Could not retrieve calendar file." &cr& tErr,"OK"
+         exit to top
+      end try
+      --   PUT THE MILLISECONDS INTO TSTART
+      put vObjectSplit("VEvent", tICSPath)  into tCalendarArrayA -- much faster to read file directly
+      if tCalendarArrayA[1] contains "https:" then -- web 404 or redirect
+         doAnswer "Could not retrieve calendar file.","OK"
+         delete file tICSPath
+         exit to top
       end if
-    end repeat
-    --   PUT THE MILLISECONDS - TSTART -- 335 ms
-    put arrayEncode(sHinduCalendarA) into url ("binfile:" & tBinPath)
-    delete file tICSPath
-    deleteOldCalendars
-  end if
+      put 0 into tDayNo
+      put "" into sHinduCalendarA
+      repeat with x = 1 to ((item 2 of the extents of tCalendarArrayA)+1)
+         put tCalendarArrayA[x] into tEvent 
+         # key info is the Summary or "title" of the event
+         # and the date... we extract for each event in the whole file
+         # but date follows ISO standard  yyyymmdd  no delimiters.
+         put GetvObjectPropertyValue(tEvent, "Summary")  into tMoonDay
+         put  GetvObjectPropertyValue(tEvent, "DTSTART")  into tDate
+         # Let's first check and skip what we don't want to pay attention to:
+         if (word 1 of tMoonDay = "Sun") OR  (tMoonDay contains "Retreat Star-") then # we will continue parsing the event
+            add 1 to tDayNo
+            # first get our moon day designation and date
+            if not (tMoonDay contains "Sun") then
+               put the itemDelimiter into tIDel
+               set the itemdel to "-"
+               put item 2 of tMoonDay into tMoonDay
+               set the itemDelimiter to tIDel
+            end if
+            put tMoonDay into sHinduCalendarA[tDayNo]["moonDay"]
+            put tDate into sHinduCalendarA[tDayNo]["icsdateString"]
+            put extractLongDate(tDate) into sHinduCalendarA[tDayNo]["longDate"]
+            
+            put GetvObjectPropertyValue(tEvent, "Description") into tRawDescription
+            put extractFullEntry(tRawDescription,tMoonDay,tDayNo) into sHinduCalendarA[tDayNo]["allDayData"]
+            
+         end if
+      end repeat
+      --   PUT THE MILLISECONDS - TSTART -- 335 ms
+      put arrayEncode(sHinduCalendarA) into url ("binfile:" & tBinPath)
+      delete file tICSPath
+      deleteOldCalendars
+   end if
 end parseUserICSfile
 
-function getCityList 
+function getCityList
+   local tCitiesListFile
    put path_Modules() & "calendar/latestCityList.txt" into tCitiesListFile
    return ( url ("file:" & tCitiesListFile ))
 end getCityList
 
 function convertCityToURL pCityName,pYearRange
+   local tURL
    put "https://www.minimela.com/panchangam/" into tURL
    if pYearRange = "" then -- use a range that includes today
       put calcYearRange() into pYearRange
@@ -135,41 +138,43 @@ end convertCityToURL
 # if the selected date in ahead of the range, 
 # we offer to download the next year.
 function calcYearRange pDate -- get the year range that contains pDate; if empty, use today
-  if pDate = "" then put the date into pDate
-  convert pDate to dateitems
-  if item 2 of pDate >= 5 then
-    put item 1 of pDate & "-" & item 1 of pDate + 1 into tRange
-  else
-    put item 1 of pDate - 1 & "-" & item 1 of pDate into tRange 
-  end if
-  return tRange
+   local tRange
+   if pDate = "" then put the date into pDate
+   convert pDate to dateitems
+   if item 2 of pDate >= 5 then
+      put item 1 of pDate & "-" & item 1 of pDate + 1 into tRange
+   else
+      put item 1 of pDate - 1 & "-" & item 1 of pDate into tRange 
+   end if
+   return tRange
 end calcYearRange
 
 function getCalendarDayInfo pDay -- return data for a single array key (one day), or all days
-  -- pDay = array key integer
-  if pDay <> "" then -- called from click in current_days fld
-    return sHinduCalendarA[pDay]
-  else
-    return sHinduCalendarA
-  end if
+   -- pDay = array key integer
+   if pDay <> "" then -- called from click in current_days fld
+      return sHinduCalendarA[pDay]
+   else
+      return sHinduCalendarA
+   end if
 end getCalendarDayInfo
 
 function extractFullEntry pDescription,pMoonDay,pDayNo
-  replace "\n" with cr in pDescription
-  
-  # we want to get a few items from here for the top view
-  # pass Nakshatra "moonstar" to the top keys
-  put line (lineOffset("nakshatra", pDescription)) of pDescription into sHinduCalendarA[pDayNo][nakshatra]
-  put line (lineOffset("tithi", pDescription)) of pDescription into sHinduCalendarA[pDayNo][tithi]
-  put word (wordOffset("pakshe", pDescription))-1 of pDescription into sHinduCalendarA[pDayNo][paksha]
-  # For now we will add the date at the top
-  put pMoonDay  & cr & sHinduCalendarA[pDayNo][longDate] & cr & cr before pDescription
-  return pDescription
+   replace "\n" with cr in pDescription
+   
+   # we want to get a few items from here for the top view
+   # pass Nakshatra "moonstar" to the top keys
+   put line (lineOffset("nakshatra", pDescription)) of pDescription into sHinduCalendarA[pDayNo]["nakshatra"]
+   put line (lineOffset("tithi", pDescription)) of pDescription into sHinduCalendarA[pDayNo]["tithi"]
+   put word (wordOffset("pakshe", pDescription))-1 of pDescription into sHinduCalendarA[pDayNo]["paksha"]
+   # For now we will add the date at the top
+   put pMoonDay  & cr & sHinduCalendarA[pDayNo]["longDate"] & cr & cr before pDescription
+   return pDescription
 end extractFullEntry 
 
 
 function extractLongDate tEntryDate
    # Get from YYYYMMDD to Livecode Date string
+   local tLongDate
    put char 5 to 6 of tEntryDate & "/" &\  # month 
          char 7 to 8 of tEntryDate & "/" & \  # day 
          char 3 to 4 of tEntryDate into tLongDate   # year 
@@ -189,33 +194,34 @@ end extractLongDate
 **/
 
 function vObjectSplit pObjectType,pFileName -- FROM FILE: 291ms
-  put "BEGIN:" & toUpper(pObjectType) into tHeader
-  put "END:" & toUpper(pObjectType) into tFooter
-  --   PUT THE MILLISECONDS INTO TSTART
-  open file pFileName for UTF8 read 
-  read from file pFileName for 8 lines -- initial data block, extract city name and discard
-  put line lineoffset("X-WR-CALNAME:",it) of it into tCity
-  delete char 1 to offset(colon,tCity) of tCity
-  --   put tCity into fld "cityName" of grp "city-picker-view"
-  
-  repeat
-    if the shiftkey is down then -- dev
-      close file pFileName
-      breakpoint
-    end if
-    read from file pFileName until tHeader
-    if it = "" or it contains "END:VCALENDAR" then exit repeat
-    put it into tText
-    read from file pFileName until tFooter
-    put it after tText
-    filter tText without empty
-    put tText & numToChar(4) after tRetVal
-  end repeat
-  close file pFileName
-  --   PUT THE MILLISECONDS - TSTART
-  delete char -1 of tRetVal
-  split tRetVal by numToChar(4)
-  return tRetVal
+   local tHeader, tFooter, tCity, tText, tRetVal
+   put "BEGIN:" & toUpper(pObjectType) into tHeader
+   put "END:" & toUpper(pObjectType) into tFooter
+   --   PUT THE MILLISECONDS INTO TSTART
+   open file pFileName for "UTF8" read 
+   read from file pFileName for 8 lines -- initial data block, extract city name and discard
+   put line lineoffset("X-WR-CALNAME:",it) of it into tCity
+   delete char 1 to offset(colon,tCity) of tCity
+   --   put tCity into fld "cityName" of grp "city-picker-view"
+   
+   repeat
+      if the shiftkey is down then -- dev
+         close file pFileName
+         breakpoint
+      end if
+      read from file pFileName until tHeader
+      if it = "" or it contains "END:VCALENDAR" then exit repeat
+      put it into tText
+      read from file pFileName until tFooter
+      put it after tText
+      filter tText without empty
+      put tText & numToChar(4) after tRetVal
+   end repeat
+   close file pFileName
+   --   PUT THE MILLISECONDS - TSTART
+   delete char -1 of tRetVal
+   split tRetVal by numToChar(4)
+   return tRetVal
 end vObjectSplit
 
 /** GetvObjectPropertyValue **
@@ -228,45 +234,48 @@ end vObjectSplit
 **/
 
 function GetvObjectPropertyValue pObject, pPropName
-  if pObject contains pPropName then
-    put lineoffset(cr & pPropName & ";", cr & pObject) into tPropLocation
-    if tPropLocation is "0" then put lineoffset(cr & pPropName & ":", cr & pObject) into tPropLocation
-    if tPropLocation is "0" then put lineoffset("." & pPropName & ";", pObject) into tPropLocation
-    if tPropLocation is "0" then put lineoffset("." & pPropName & ":", pObject) into tPropLocation
-    
-    set the itemdel to ":"
-    get line tPropLocation of pObject
-    get item 2 to -1 of it
-    replace "*" with empty in it
-    return it
-  else
-    return false
-  end if
+   local tPropLocation
+   if pObject contains pPropName then
+      put lineoffset(cr & pPropName & ";", cr & pObject) into tPropLocation
+      if tPropLocation is "0" then put lineoffset(cr & pPropName & ":", cr & pObject) into tPropLocation
+      if tPropLocation is "0" then put lineoffset("." & pPropName & ";", pObject) into tPropLocation
+      if tPropLocation is "0" then put lineoffset("." & pPropName & ":", pObject) into tPropLocation
+      
+      set the itemdel to ":"
+      get line tPropLocation of pObject
+      get item 2 to -1 of it
+      replace "*" with empty in it
+      return it
+   else
+      return false
+   end if
 end GetvObjectPropertyValue
- 
+
 function pathToCalendarICS pYearRange,pCityName,pType -- return path to ICS file
-  -- pYearRange = two years separated by hyphen
-  -- pType = "ics" or "bin" (a binary LC array already parsed)
+   -- pYearRange = two years separated by hyphen
+   -- pType = "ics" or "bin" (a binary LC array already parsed)
    -- called from parseUserICSfile, preOpenCard, and Submit btn
    put pCityName into sCityname
-  if pYearRange = "" then put calcYearRange() into pYearRange
-  if pCityName = "" then put getPref ("preferences/modules/calendar/city") into pCityName
-  replace space with "_" in pCityName
-  return path_Documents() & "modules/calendar/" & pCityName & pYearRange & "." & pType
+   if pYearRange = "" then put calcYearRange() into pYearRange
+   if pCityName = "" then put getPref ("preferences/modules/calendar/city") into pCityName
+   replace space with "_" in pCityName
+   return path_Documents() & "modules/calendar/" & pCityName & pYearRange & "." & pType
 end pathToCalendarICS
 
 function calendarExists pRequestDate,pCityName -- return a year range if a file contains the date requested
-  -- pRequestDate = a date in LC format
-  -- sent from insertDayInfo
-  put calcYearRange(pRequestDate) into tYearRange
-  put  pathToCalendarICS(tYearRange,pCityName,"bin") into tBinPath
-  if there is no file tBinPath then return false
-  return tYearRange
+   -- pRequestDate = a date in LC format
+   -- sent from insertDayInfo
+   local tYearRange, tBinPath
+   put calcYearRange(pRequestDate) into tYearRange
+   put  pathToCalendarICS(tYearRange,pCityName,"bin") into tBinPath
+   if there is no file tBinPath then return false
+   return tYearRange
 end calendarExists
-  
+
 on calendarDownload -- download a calendar one year later than this year's
    
    -- sent from doAnswer in insertDayInfo when current date is in range but not in the current calendar; get next year
+   local tDownLoadNotice, tYear, tYearRange
    put the long  id of fld "downloading" into tDownLoadNotice
    bottomCenterMe tDownLoadNotice,50
    show tDownLoadNotice
@@ -283,115 +292,123 @@ on calendarDownload -- download a calendar one year later than this year's
 end calendarDownload
 
 function calcStartDay pStartDay -- returns integer for first month entry
-  -- pStartDay = Julian date
-  -- called by insertDayInfo
-  put char 1 to 6 of pStartDay into tMonth
-  repeat with x = 1 to item 2 of the extents of sHinduCalendarA
-    if sHinduCalendarA[x]["icsDateString"] begins with tMonth then
-      return x
-    end if
-  end repeat
-  return false
+   -- pStartDay = Julian date
+   -- called by insertDayInfo
+   local tMonth
+   put char 1 to 6 of pStartDay into tMonth
+   repeat with x = 1 to item 2 of the extents of sHinduCalendarA
+      if sHinduCalendarA[x]["icsDateString"] begins with tMonth then
+         return x
+      end if
+   end repeat
+   return false
 end calcStartDay
 
 function getDateRecordNum pDate -- find the array key for a particular date
-  -- pDate = a date in LC format
-  convert pDate to long date
-  repeat with x = 1 to item 2 of the extents of sHinduCalendarA
-    if sHinduCalendarA[x]["longdate"] = pDate then
-      return x
-    end if
-  end repeat
-  return false
+   -- pDate = a date in LC format
+   convert pDate to long date
+   repeat with x = 1 to item 2 of the extents of sHinduCalendarA
+      if sHinduCalendarA[x]["longdate"] = pDate then
+         return x
+      end if
+   end repeat
+   return false
 end getDateRecordNum
 
 on loadCityName -- retrieve city name from prefs or from existing array, load script local
-  -- called from calendarDownload, parseUserICSfile
-  put getPref ("preferences/modules/calendar/city") into tCityName
-  if tCityName = "" and sHinduCalendarA is an array then -- try the array
-    put sHinduCalendarA[1]["allDayData"] into tData
-    put word 3 to -1 of line lineoffset("calculated for",tData) of tData into tData
-    delete word -2 to -1 of tData
-    put tData into tCityName -- empty if array is missing
-  end if
-  put tCityName into sCityName -- script local
+   -- called from calendarDownload, parseUserICSfile
+   local tCityName, tData
+   put getPref ("preferences/modules/calendar/city") into tCityName
+   if tCityName = "" and sHinduCalendarA is an array then -- try the array
+      put sHinduCalendarA[1]["allDayData"] into tData
+      put word 3 to -1 of line lineoffset("calculated for",tData) of tData into tData
+      delete word -2 to -1 of tData
+      put tData into tCityName -- empty if array is missing
+   end if
+   put tCityName into sCityName -- script local
 end loadCityName
 
 function inRange pRequestDate -- calc if request date is within this or next year
-  -- pRequestDate = date in LC format
-  -- called by insertDayInfo
-  put calcYearRange(pRequestDate) into tRequestRange
-  put calcYearRange(the date) into tTodayRange
-  put (trueword 1 of tTodayRange)+1 & "-" & (trueword 2 of tTodayRange) +1 into tNextYearRange
-  return (tRequestRange = tTodayRange) or (tRequestRange = tNextYearRange)
+   -- pRequestDate = date in LC format
+   -- called by insertDayInfo
+   local tRequestRange, tTodayRange, tNextYearRange
+   put calcYearRange(pRequestDate) into tRequestRange
+   put calcYearRange(the date) into tTodayRange
+   put (trueword 1 of tTodayRange)+1 & "-" & (trueword 2 of tTodayRange) +1 into tNextYearRange
+   return (tRequestRange = tTodayRange) or (tRequestRange = tNextYearRange)
 end inRange
 
 on deleteOldCalendars -- remove files older than today's calendar
-  -- called from parseUserICSfile when a new calendar is downloaded
-  put path_Documents() & "modules/calendar/" into tDir
-  put files(tDir) into tFList
-  filter tFList without ".*"
-  put trueword 2 of calcYearRange(the date) into tCurYear
-  repeat for each line l in tFList
-    if trueword 2 of l >= tCurYear then next repeat
-    put tDir & slash & l into tFilePath
-    delete file tFilePath
-  end repeat
+   -- called from parseUserICSfile when a new calendar is downloaded
+   local tDir, tFList, tCurYear, tFilePath
+   put path_Documents() & "modules/calendar/" into tDir
+   put files(tDir) into tFList
+   filter tFList without ".*"
+   put trueword 2 of calcYearRange(the date) into tCurYear
+   repeat for each line l in tFList
+      if trueword 2 of l >= tCurYear then next repeat
+      put tDir & slash & l into tFilePath
+      delete file tFilePath
+   end repeat
 end deleteOldCalendars
 
 command __UserCalendar -- DEFERRED 2/28/18 in favor of future database
 end __UserCalendar
 
 on showReminderDialog -- show the user entry dialog group
-  -- called from Edit btn -- INACTIVE FOR NOW
-  if the vis of fld "allDataForOneDay" then
-    put line 2 of fld "allDataForOneDay" into tDate
-  else
-    put getUserDate(tDate) into tDate -- returns seconds
-  end if
-  convert tDate to short date
-  put "Reminder for" && tDate into fld "lbl-dialogDate" of grp "userEntryGrp"
-  if sUserCalendarA = "" then loadUserArray
-  put getDateRecordNum(tDate) into tRecordNum
-  put sUserCalendarA[tRecordNum]["entry"] into fld "lbl-dialogEntry"  of grp "userEntryGrp"-- any existing entry
-  put "Time:" && sUserCalendarA[tRecordNum]["time"] into fld "lbl-dialogTime"  of grp "userEntryGrp"-- any existing entry
-  show grp "userEntryGrp"
+   -- called from Edit btn -- INACTIVE FOR NOW
+   local tDate, tRecordNum
+   if the vis of fld "allDataForOneDay" then
+      put line 2 of fld "allDataForOneDay" into tDate
+   else
+      put getUserDate(tDate) into tDate -- returns seconds
+   end if
+   convert tDate to short date
+   put "Reminder for" && tDate into fld "lbl-dialogDate" of grp "userEntryGrp"
+   if sUserCalendarA = "" then loadUserArray
+   put getDateRecordNum(tDate) into tRecordNum
+   put sUserCalendarA[tRecordNum]["entry"] into fld "lbl-dialogEntry"  of grp "userEntryGrp"-- any existing entry
+   put "Time:" && sUserCalendarA[tRecordNum]["time"] into fld "lbl-dialogTime"  of grp "userEntryGrp"-- any existing entry
+   show grp "userEntryGrp"
 end showReminderDialog
 
 on doAEditResponse -- respond to user edit dialog, add entry to private user array
-  -- sent from userEntryGrp when user enters a custom reminder -- DEFERRED
-  get the dialogData
-  if it contains "cancel" then
-    exit to top
-  else  -- add the entry to the user array
-    put word 3 to -1 of fld "lbl-dialogDate" of grp "userEntryGrp" into tDate
-    put word 2 to -1 of fld "lbl-dialogTime" of grp "userEntryGrp" into tTime
-    put fld "lbl-dialogEntry" of grp "userEntryGrp" into tEntry
-    put getDateRecordNum(tDate) into tRecordNum
-    updateUserArray tRecordNum,tTime,tEntry
-    insertDayInfo tDate
-  end if
+   -- sent from userEntryGrp when user enters a custom reminder -- DEFERRED
+   local tDate, tTime, tEntry, tRecordNum
+   get the dialogData
+   if it contains "cancel" then
+      exit to top
+   else  -- add the entry to the user array
+      put word 3 to -1 of fld "lbl-dialogDate" of grp "userEntryGrp" into tDate
+      put word 2 to -1 of fld "lbl-dialogTime" of grp "userEntryGrp" into tTime
+      put fld "lbl-dialogEntry" of grp "userEntryGrp" into tEntry
+      put getDateRecordNum(tDate) into tRecordNum
+      updateUserArray tRecordNum,tTime,tEntry
+      insertDayInfo tDate
+   end if
 end doAEditResponse
 
 on updateUserArray pRecordNum,pTime,pEntry -- add a user entry; save array to disk
-  -- ptRecordNum = numerical key matching main calendar date key
-  -- pTime = time of event
-  -- pEntry = user entry, combined with any previous text for the reminder
-  -- called by doEditResponse -- INACTIVE FOR NOW
-  if sUserCalendarA = "" then loadUserArray
-  put pTime into sUserCalendarA[pRecordNum]["time"]
-  put pEntry into sUserCalendarA[pRecordNum]["entry"]
-  put path_Documents() & "modules/calendar/" & "userCalendar.bin" into tBinPath -- binary array file
-  put arrayEncode(sUserCalendarA) into url ("binfile:" & tBinPath) -- save to disk
+   -- ptRecordNum = numerical key matching main calendar date key
+   -- pTime = time of event
+   -- pEntry = user entry, combined with any previous text for the reminder
+   -- called by doEditResponse -- INACTIVE FOR NOW
+   local tBinPath
+   if sUserCalendarA = "" then loadUserArray
+   put pTime into sUserCalendarA[pRecordNum]["time"]
+   put pEntry into sUserCalendarA[pRecordNum]["entry"]
+   put path_Documents() & "modules/calendar/" & "userCalendar.bin" into tBinPath -- binary array file
+   put arrayEncode(sUserCalendarA) into url ("binfile:" & tBinPath) -- save to disk
 end updateUserArray
 
 on loadUserArray
-  EXIT LOADUSERARRAY -- DEFERRED
-  put path_Documents() & "modules/calendar/" & "userCalendar.bin" into tBinPath -- binary array file
-  if there is a file tBinPath then
-    get url ("binfile:" & tBinPath)
-    put arrayDecode(it) into sUserCalendarA
-  end if  
+   EXIT LOADUSERARRAY -- DEFERRED
+   local tBinPath
+   put path_Documents() & "modules/calendar/" & "userCalendar.bin" into tBinPath -- binary array file
+   if there is a file tBinPath then
+      get url ("binfile:" & tBinPath)
+      put arrayDecode(it) into sUserCalendarA
+   end if  
 end loadUserArray
 
 command __UIUXHandlers
@@ -403,6 +420,8 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
    # upgrade later to 3 months; 1 month for now
    # does not include user reminders
    
+   local tRequestDate, tDisplayMonth, tDateRange, tOneDayTemplate, tCurDay, tOneDayDisplay, \
+         tTop, tAllDaysTopInfo, tMainCalendar
    if pStartDay = "" then -- use first month in calendar
       put sHinduCalendarA[1]["longDate"] into pStartDay
    end if
@@ -478,105 +497,110 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
 end insertDayInfo
 
 on goMonth pDir -- go to a designated month
-  -- pDir = "next" or "prev"
-  -- called from directional arrow btns
-  put the metadata of line 1 of fld "current_days" into tDayNum
-  put sHinduCalendarA[tDayNum]["longDate"] into tDate
-  convert tDate to dateitems
-  if pDir = "next" then
-    add 1 to item 2 of tDate
-  else
-    subtract 1 from item 2 of tDate
-  end if
-  convert tDate to short date
-  insertDayInfo tDate
+   -- pDir = "next" or "prev"
+   -- called from directional arrow btns
+   local tDayNum, tDate
+   put the metadata of line 1 of fld "current_days" into tDayNum
+   put sHinduCalendarA[tDayNum]["longDate"] into tDate
+   convert tDate to dateitems
+   if pDir = "next" then
+      add 1 to item 2 of tDate
+   else
+      subtract 1 from item 2 of tDate
+   end if
+   convert tDate to short date
+   insertDayInfo tDate
 end goMonth
 
 on scrollToDate pDate -- scroll to a date if it's  in the current display
-  -- pDate = a date in any LC format
-  if pDate = "" then put the date into pDate
-  convert pDate to dateitems
-  set the itemdel to tab
-  put item 2 of line 1 of fld "current_days" into tDisplayMonth
-  set the itemdel to comma
-  convert tDisplayMonth to dateitems
-  if item 1 to 2 of pDate = item 1 to 2 of tDisplayMonth then -- target month
-    convert pDate to long date
-    put lineoffset(pDate,fld "current_days") into tLineNum
-    if tLineNum = 0 then exit scrollToDate
-    put the formattedheight of line 1 to tLineNum of fld "current_days" into tScroll
-    set the scroll of fld "current_days" to tScroll - the effective textheight of fld "current_days"
-    if isMobile() and "current_days" is among the lines of mobileControls() then
-      mobileControlSet "current_days","vScroll",the vScroll of fld "current_days"
-    end if
-  end if
+   -- pDate = a date in any LC format
+   local tDisplayMonth, tLineNum, tScroll
+   if pDate = "" then put the date into pDate
+   convert pDate to dateitems
+   set the itemdel to tab
+   put item 2 of line 1 of fld "current_days" into tDisplayMonth
+   set the itemdel to comma
+   convert tDisplayMonth to dateitems
+   if item 1 to 2 of pDate = item 1 to 2 of tDisplayMonth then -- target month
+      convert pDate to long date
+      put lineoffset(pDate,fld "current_days") into tLineNum
+      if tLineNum = 0 then exit scrollToDate
+      put the formattedheight of line 1 to tLineNum of fld "current_days" into tScroll
+      set the scroll of fld "current_days" to tScroll - the effective textheight of fld "current_days"
+      if isMobile() and "current_days" is among the lines of mobileControls() then
+         mobileControlSet "current_days","vScroll",the vScroll of fld "current_days"
+      end if
+   end if
 end scrollToDate
 
 on datePicker -- UI for choosing a date to display in the event list
-  -- called from datePick SVG
-  put getUserDate() into tDate -- seconds
-  if tDate > 0 then
-    convert tDate to short date
-    insertDayInfo tDate
-  end if
+   -- called from datePick SVG
+   local tDate
+   put getUserDate() into tDate -- seconds
+   if tDate > 0 then
+      convert tDate to short date
+      insertDayInfo tDate
+   end if
 end datePicker
 
 function getUserDate pDefaultDate -- show a date picker, return the result in seconds
-  -- pDefaultDate = date for initial display; today if empty
-  if pDefaultDate = "" then put the date into pDefaultDate
-  if isMobile() then
-    put sHinduCalendarA[1]["longDate"] into tRangeStart -- the minimum date; can't load earlier calendars
-    put calcYearRange() into tRangeEnd -- calcs from today
-    put "4/30/" & last trueWord of tRangeEnd + 1 into tRangeEnd -- only allow 2 year span
-    --    put item 2 of the extents of sHinduCalendarA into tEndDay
-    --    put sHinduCalendarA[tEndDay]["longDate"] into tRangeEnd
-    
-    convert pDefaultDate to seconds
-    convert tRangeStart to seconds
-    convert tRangeEnd to seconds
-    
-    mobilePickDate "date", pDefaultDate, tRangeStart, tRangeEnd
-    put the result into tDate
-    if tDate = "cancel" or tDate = "" then
-      put 0 into tDate
-    end if
-  else -- desktop, dev only, choose a date within 2 years of today, there's no error checking
-    ask "Enter a date:" with pDefaultDate
-    put it into tDate
-    if tDate = "" then put 0 into tDate
-    convert tDate to seconds
-  end if
-  return tDate
+   -- pDefaultDate = date for initial display; today if empty
+   local tRangeStart, tRangeEnd, tDate
+   if pDefaultDate = "" then put the date into pDefaultDate
+   if isMobile() then
+      put sHinduCalendarA[1]["longDate"] into tRangeStart -- the minimum date; can't load earlier calendars
+      put calcYearRange() into tRangeEnd -- calcs from today
+      put "4/30/" & last trueWord of tRangeEnd + 1 into tRangeEnd -- only allow 2 year span
+      --    put item 2 of the extents of sHinduCalendarA into tEndDay
+      --    put sHinduCalendarA[tEndDay]["longDate"] into tRangeEnd
+      
+      convert pDefaultDate to seconds
+      convert tRangeStart to seconds
+      convert tRangeEnd to seconds
+      
+      mobilePickDate "date", pDefaultDate, tRangeStart, tRangeEnd
+      put the result into tDate
+      if tDate = "cancel" or tDate = "" then
+         put 0 into tDate
+      end if
+   else -- desktop, dev only, choose a date within 2 years of today, there's no error checking
+      ask "Enter a date:" with pDefaultDate
+      put it into tDate
+      if tDate = "" then put 0 into tDate
+      convert tDate to seconds
+   end if
+   return tDate
 end getUserDate
 
 on getTime pDefaultTime -- show a time picker, display in dialog in LC time format
-  -- pDefaultTime = default display time, right now if empty
-  -- called from fld "lbl-dialogTime" in user reminder dlog
-  if pDefaultTime = "" then put the time into pDefaultTime -- default
-  if isMobile() then    
-    mobilePickDate "time"
-    put the result into tTime
-    if tTime = "cancel" or tTime = "" then
-      put 0 into tTime
-    end if
-  else -- desktop, dev only, choose a date within 2 years of today, there's no error checking
-    ask "Enter a time:" with pDefaultTime
-    put it into tTime
-    if tTime = "" then put 0 into tTime
-    convert tTime to seconds
-  end if
-  convert tTime to short time
-  put "Time:" && tTime into fld "lbl-dialogTime" of grp "userEntryGrp"
+   -- pDefaultTime = default display time, right now if empty
+   -- called from fld "lbl-dialogTime" in user reminder dlog
+   local tTime
+   if pDefaultTime = "" then put the time into pDefaultTime -- default
+   if isMobile() then    
+      mobilePickDate "time"
+      put the result into tTime
+      if tTime = "cancel" or tTime = "" then
+         put 0 into tTime
+      end if
+   else -- desktop, dev only, choose a date within 2 years of today, there's no error checking
+      ask "Enter a time:" with pDefaultTime
+      put it into tTime
+      if tTime = "" then put 0 into tTime
+      convert tTime to seconds
+   end if
+   convert tTime to short time
+   put "Time:" && tTime into fld "lbl-dialogTime" of grp "userEntryGrp"
 end getTime
 
 command __UNUSED
 end __Unused
 
 end __UNUSED
-   ####### --------- UNUSED FROM THE MONASTERY CALENDAR PROCESSORS  
+####### --------- UNUSED FROM THE MONASTERY CALENDAR PROCESSORS  
 ## IF WE GET THE KA ICS AVAILABLE WE MAY USE THESE LATER.
 
-function crunchDescription tRawDescriptionn
+function crunchDescription tRawDescription
    set the itemdel to "\"
    delete item 1 of tRawDescription
    delete char 1 of tRawDescription
@@ -606,6 +630,7 @@ end crunchSummary
 
 # we don't need this because we can get the weekday name from the long date
 function getWeekDay tEntryDate
+   local tTransformDate
    put extractDate( tEntryDate) into tTransformDate
    convert tTransformDate to long date
    return item 1 of tTransformDate
@@ -613,18 +638,19 @@ function getWeekDay tEntryDate
 end getWeekDay
 
 command fetchFile
+   local sICSStoreOriginal -- if code is from elsewhere, this possibly should be a script local
    answer file "find your .ics calendar file" with "OK"
    if it is empty then
       exit to top
    else
       put url ("binfile:/" & it)  into sICSStoreOriginal
    end if
- end fetchFile
- 
- on showLocals
-  get sHinduCalendarA
-  get sCityName
-  breakpoint
+end fetchFile
+
+on showLocals
+   get sHinduCalendarA
+   get sCityName
+   breakpoint
 end showLocals
 
 on clearLocals
