@@ -9,46 +9,24 @@
 -- so, with that in mind, we do not want to have this behavior dependent 
 -- on any "local stuff" which can only be found it the portal stack -> home card
 -- there are useful functions here, so we will keep the code intact for a while
+-- to call these handlers and functions use a dispatch from any other script ot behavior
 
 local sTarget,sFavoritesA,sWhichMenu,
 
-
-# mouseUp does not get call from the Tree 
-# because the have the own script and we do not pass mouseup
-# so this applies to anythiing else of screen, most importantly the navMandal
-
-on mouseup
-   local tTarget
+on pokeSubMenu sTarget
    
-   put short name of the target into tTarget
+   put getNavigationMap() into  sMap
    
-   -- poke image
-   hideMandala
-   setMenuBkgndImage tTarget
-   show  img "menuBkgnd"
-   
-   switch tTarget
-      case "read"
-         -- need function
-         -- hide Nav/Mandala group
-         -- hide/show mandala buttons
-         
-         -- show a field or the tree agai
-         -- access navMap to the category
-         -- poke a locked field
-         -- GO to module
-         -- on close card: reset 
-         # Hide image; show  mandala; show "hideNavMandala"
-         
-         break
-         
-   end switch
-   
-   
-   goMainMenu
-end mouseup
+   repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
+      add 1 to tSecondKey
+      put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
+      put  tRowname & cr &cr after tOutput
+   end repeat
+   put tOutput into fld "subNav"
+end pokeSubMenu
 
 
+######### -- Tree Widget Handlers -- ##########
 on hiliteChanged
    local sMap, tHilitedElement
    
@@ -172,7 +150,7 @@ command goMainMenu
             break
       end switch
    else
-      # otherwise we have a URL on a different module
+      # otherwise we have a URL or a different module
       # pass to lib_SivaSivaPortal to resolve
       --hideShowGlobalNav "false"
       portal_DoRowLink sTarget
@@ -285,6 +263,13 @@ function checkConnectionStop
 end checkConnectionStop
 
 
+
+
+
+on formattedHeightChanged -- tree changed dimensions
+   updateScroller (the short name of me)
+end formattedHeightChanged
+
 on closeCard
    showMandala
    set the uWhichMenu of me to "mainMenu"
@@ -292,10 +277,9 @@ on closeCard
    pass closecard
 end closeCard
 
-
-on formattedHeightChanged -- tree changed dimensions
-   updateScroller (the short name of me)
-end formattedHeightChanged
+###### ###-- Utility Handlers -- ###########
+# Run to create a new array an  save it to the tree 
+# before production
 
 
 command createNavTree pMenu
@@ -353,8 +337,6 @@ command createNavTree pMenu
       case "myMenu"
          set the uWhichMenu of me to "myMenu"
          
-         
-         
          put the keys of sFavoritesA into tSortKey
          sort lines of tSortKey
          repeat for each line tKey in  tSortKey
@@ -379,7 +361,3 @@ command createNavTree pMenu
    
 end createNavTree
 
-
-on mouseRelease pButtonNumber
-   
-end mouseRelease

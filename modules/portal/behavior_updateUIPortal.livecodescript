@@ -57,23 +57,38 @@ command _USER_INTERACTION
 end _USER_INTERACTION
 
 on mouseup
-   local tTarget
-   
+   local tTarget,tTargetOwner
+   put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
-  
+   
    # one set of actions occurs if the user hits grp ""bkgndcontrol"
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
    # and not abpout the UI perse
- 
+   
+   switch tTargetOwner
+      case "bkgndControls"
          switch tTarget
-            case "hideNavMandala"
-               hideMandala
-               break
-            case "showNavMandala"
-               showMandala
-               break
-         end switch
-        
+            break
+         case "hideNavMandala"
+            hideMandala
+            break
+         case "showNavMandala"
+            showMandala
+            break
+      end switch
+      break
+      
+   case "navMandala"
+      hideMandala
+      setMenuBkgndImage tTarget
+      show  img "menuBkgnd"
+      dispatch "pokeSubMenu" to grp "navMandala" with tTarget
+      wait 400 milliseconds
+      show grp "SubNavFld" with visual effect dissolve fast 
+end switch
+
+--goMainMenuend mouseup
+
 end mouseup
 
 #######################
@@ -82,6 +97,7 @@ end mouseup
 command showMandala
    hide img "menuBkgnd"
    hide grp "globalNavTree"
+   hide grp "subNavFld"
    show btn "brandLogo"
    hide grp "globalNavTree"
    show btn "backgroundOverlay"
@@ -157,7 +173,7 @@ command setMenuBkgndImage pMenu
          
          break
          
-      case "video"
+      case "video-slideshows"
          put "portal-screens/listen_Rajam-bhajan-BB20_DxO_opt-80.jpg" into tPath
          break
          
