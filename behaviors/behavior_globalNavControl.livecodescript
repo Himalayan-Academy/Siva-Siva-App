@@ -12,13 +12,39 @@
 
 local sTarget,sFavoritesA,sWhichMenu,
 
+
 # mouseUp does not get call from the Tree 
 # because the have the own script and we do not pass mouseup
-
 # so this applies to anythiing else of screen, most importantly the navMandal
 
 on mouseup
-   put the short name of the target into sTarget
+   local tTarget
+   
+   put short name of the target into tTarget
+   
+   -- poke image
+   hideMandala
+   setMenuBkgndImage tTarget
+   show  img "menuBkgnd"
+   
+   switch tTarget
+      case "read"
+         -- need function
+         -- hide Nav/Mandala group
+         -- hide/show mandala buttons
+         
+         -- show a field or the tree agai
+         -- access navMap to the category
+         -- poke a locked field
+         -- GO to module
+         -- on close card: reset 
+         # Hide image; show  mandala; show "hideNavMandala"
+         
+         break
+         
+   end switch
+   
+   
    goMainMenu
 end mouseup
 
@@ -80,6 +106,11 @@ function truncateTarget sTarget
    if (char -1 of sTarget = ",")  OR (char -1 of sTarget = "|") then delete char -1 of sTarget
    return sTarget
 end truncateTarget
+
+
+--> ####### GoMainMenu #####
+-- This is Tree Specific and 
+-- 
 
 
 command goMainMenu
@@ -188,15 +219,15 @@ end goMyMenu
 command setGlobalNavVisible tVisible
    
    lock screen for visual effect
-   show btn "backgroundOverlay"
+   
    if tVisible is true or tVisible is "true" or tVisible is "yes" then
-      hide grp "navMandala"
+      hideMandala
+      hide img "homeMainImage"
+      show btn "backgroundOverlay"
       show grp "globalNavTree"
-      show button "brandLogo"
       createScroller "globalNavTree"
    else
-      show grp "navMandala"
-      hide img "homeMainImage"
+      showMandala
       hide grp "globalNavTree"
       deleteMobileControl "globalNavTree"
    end if
@@ -255,6 +286,7 @@ end checkConnectionStop
 
 
 on closeCard
+   showMandala
    set the uWhichMenu of me to "mainMenu"
    deleteMobileControl (the short name of me)
    pass closecard

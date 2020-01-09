@@ -22,16 +22,14 @@ on preOpenCard
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    
    
-   # init set up
    
-   hide img  "homeMainImage" 
-   show  btn "backgroundOverlay" 
-   show img  "hideNavMandala" 
-   hide img  "showNavMandala" 
-   dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
+   
    switch pCard
       case "Home"
-         show grp "navMandala" 
+         # init set up
+         hide grp "globalNavTree"
+         showMandala
+         dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          setUpBrandImage
          setDefaultImage
          break
@@ -58,39 +56,55 @@ end opencard
 command _USER_INTERACTION
 end _USER_INTERACTION
 
-on mouseup 
+on mouseup
    local tTarget
-   put the short name of the target into tTarget
    
-   --switch (the short name of this card)
-      --case "Home"
+   put the short name of the target into tTarget
+  
+   # one set of actions occurs if the user hits grp ""bkgndcontrol"
+   # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
+   # and not abpout the UI perse
+ 
          switch tTarget
             case "hideNavMandala"
-               hide btn "brandLogo"
-               hide grp "globalNavTree"
-               hide grp "navMandala"
-               hide btn "backgroundOverlay"
-               show img "homeMainImage"
-               show img "showNavMandala"
-               hide img "hideNavMandala"
+               hideMandala
                break
             case "showNavMandala"
-               show btn "brandLogo"
-               hide grp "globalNavTree"
-               show btn "backgroundOverlay"
-               hide img "homeMainImage"
-               show grp "navMandala"
-               hide img "showNavMandala"
-               show img "hideNavMandala"
+               showMandala
                break
          end switch
-         
- --end switch
+        
 end mouseup
 
 #######################
 
-command setDefaultImage 
+# use the return state of home screen
+command showMandala
+   hide img "menuBkgnd"
+   hide grp "globalNavTree"
+   show btn "brandLogo"
+   hide grp "globalNavTree"
+   show btn "backgroundOverlay"
+   hide img "homeMainImage"
+   show grp "navMandala"
+   hide img "showNavMandala"
+   show img "hideNavMandala"
+end showMandala
+
+# or to just see the image and priod to show 
+# the sub-nav menu on screen
+command hideMandala
+   hide btn "brandLogo"
+   hide grp "globalNavTree"
+   hide grp "navMandala"
+   hide btn "backgroundOverlay"
+   show img "homeMainImage"
+   show img "showNavMandala"
+   hide img "hideNavMandala"
+end hideMandala
+
+   
+   command setDefaultImage pContext
    --breakpoint
    
    #  see lib_SivaSiva | setUpBrandImage  
@@ -109,27 +123,58 @@ command setDefaultImage
    --setCache "TotalBrandImages", tTotalBrandImages
    
    put line sBrandImageNumber of tBrandImages into pImage
-   set the filename of sMainImage to brandImagePath(pImage)
-   
-   #  UI responsive
-   put the long id of img "homeMainImage" of card "Home" into sMainImage
-   setImageToFullCardLoc sMainImage,"portrait",0,0
-   centerMe sMainImage,0,0
-   show btn "brandLogo"
-   show sMainImage with visual effect "dissolve"
+   set the filename of sMainImage to photoImagePath(pImage)
    
    # optimize disk operations *after* the display is finished updating
    
    put the number of lines of tBrandImages into tTotalBrandImages
    setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
-end setDefaultImage
+end setDefaultImage 
+      
+      
+      
+command setMenuBkgndImage pMenu
+   local tMenuBkgnd, pImage, tPortalScreens
+   
+   put the long id of img "menuBkgnd" into tMenuBkgnd
+   
+   switch pMenu
+      case "read"
+         put "portal-screens/Iravan-pillars-ceiling_opt-80.jpg" into tPath
+         break
+         
+      case "stories"
+         put "portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg" into tPath
+         break
+         
+      case "fun-games"
+         put "portal-screens/Ganesha-Muruga-and-children_opt-80.jpg" into tPath
+         break
+         
+      case "practice"
+         put "photography/app-img_dias_monks_brains_552w-portrait/app-img_dias_monks_brains_552w-portrait_med.jpg" into tPath
+         
+         break
+         
+      case "video"
+         put "portal-screens/listen_Rajam-bhajan-BB20_DxO_opt-80.jpg" into tPath
+         break
+         
+      case "surprise"
+         put "portal-screens/Orion_Nebula_-_Hubble_2006_mosaic_18000_opt-70.jpg" into tPath
+         break
+   end switch
+   put path_Assets() & "img/"  before tPath
+   set the filename of tMenuBkgnd to tPath
+   
+end setMenuBkgndImage
 
 ## I suppose there is a better way to store these
 ## to KISS suggest we do it right here.
 ## see the close stack handler for the number increment
 
-private function _brandImages
+private function _brandImages 
    local tBrandImages
    put "app-img_who-is-siva_1200x800" & cr & \
          "app-img_06-sadasiva_opt-80_552w-portrait" & cr & \
@@ -145,12 +190,12 @@ private function _brandImages
    return tBrandImages
 end _brandImages
 
-function brandImagePath pImage
+function PhotoImagePath pImage
    local tPath
    put path_Assets() & "img/photography/" & pImage & "/" \
          & pImage & "_med.jpg" into tPath
    return tPath
-end brandImagePath
+end PhotoImagePath
 
 --on closestack
 --   saveUserPrefs sBrandImageNumber
@@ -203,6 +248,16 @@ end resizeStack
 command updateUIPortal
    
    local pControl, tBrandImage, tBottomMargin
+   
+   #  UI responsive
+   put the long id of img "homeMainImage" of card "Home" into sMainImage
+   put the long id of img "menuBkgnd" of card "Home" into sMenuBkgnd
+   setImageToFullCardLoc sMainImage,"portrait",0,0
+   centerMe sMainImage,0,0
+   setImageToFullCardLoc sMenuBkgnd,"portrait",0,0
+   centerMe sMenuBkgnd,0,0
+   show btn "brandLogo"
+   --show sMainImage with visual effect "dissolve"
    
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
