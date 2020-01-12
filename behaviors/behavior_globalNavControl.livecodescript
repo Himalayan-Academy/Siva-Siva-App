@@ -13,7 +13,7 @@
 
 local sTarget,sFavoritesA,sWhichMenu,
 
-on pokeSubMenu sTarget
+on fetchSubMenu sTarget
    
    put getNavigationMap() into  sMap
    
@@ -22,8 +22,8 @@ on pokeSubMenu sTarget
       put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
       put  tRowname & cr &cr after tOutput
    end repeat
-   put tOutput into fld "subNav"
-end pokeSubMenu
+   put tOutput into fld "subNavfld"
+end fetchSubMenu
 
 
 ######### -- Tree Widget Handlers -- ##########
@@ -101,7 +101,7 @@ command goMainMenu
       exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Look,Websites,Journal,My Menu" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
       # Some have to trigger connectivity, but do nothing (look and websites)
@@ -128,7 +128,7 @@ command goMainMenu
             # cases that require connectivity, 
             # and there are sub-level URLs or Modules
             
-         case "Look"
+         case "Video"
          case "Websites"
             if checkConnectionStop() is "false" then
                set the foldState of me to empty
@@ -194,11 +194,11 @@ command goMyMenu
    
 end goMyMenu
 
-command setGlobalNavVisible tVisible
+command setGlobalNavVisible pVisible
    
    lock screen for visual effect
    
-   if tVisible is true or tVisible is "true" or tVisible is "yes" then
+   if pVisible is true then
       hideMandala
       hide img "homeMainImage"
       show btn "backgroundOverlay"

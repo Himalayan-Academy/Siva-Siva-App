@@ -73,18 +73,35 @@ on mouseup
             hideMandala
             break
          case "showNavMandala"
+            if the vis of  grp "subNav" is true then
+               hide  grp "subNav"
+               exit Mouseup
+            end if
             showMandala
             break
       end switch
       break
       
    case "navMandala"
+      if tTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
+         # These are top links, some go  directly to another module stack
+         portal_GoStack tTarget
+         exit mouseup
+      end if
+    
       hideMandala
-      setMenuBkgndImage tTarget
-      show  img "menuBkgnd"
-      dispatch "pokeSubMenu" to grp "navMandala" with tTarget
+      setSubNavBkgndImage tTarget
+      show  img "subNavBkgImage"
+      dispatch "fetchSubMenu" to grp "navMandala" with tTarget
       wait 400 milliseconds
-      show grp "SubNavFld" with visual effect dissolve fast 
+      show grp "SubNav" with visual effect dissolve fast 
+      break
+   case "subNav"
+      put the value of clickline()  into tTarget
+      portal_DoRowLink tTarget
+      
+      
+      break
 end switch
 
 --goMainMenuend mouseup
@@ -95,9 +112,8 @@ end mouseup
 
 # use the return state of home screen
 command showMandala
-   hide img "menuBkgnd"
    hide grp "globalNavTree"
-   hide grp "subNavFld"
+   hide grp "subNav"
    show btn "brandLogo"
    hide grp "globalNavTree"
    show btn "backgroundOverlay"
@@ -119,8 +135,12 @@ command hideMandala
    hide img "hideNavMandala"
 end hideMandala
 
-   
-   command setDefaultImage pContext
+command hideSubNav
+   hide grp "SubNav"
+end hideSubNav
+
+
+command setDefaultImage pContext
    --breakpoint
    
    #  see lib_SivaSiva | setUpBrandImage  
@@ -150,10 +170,10 @@ end setDefaultImage
       
       
       
-command setMenuBkgndImage pMenu
+command setSubNavBkgndImage pMenu
    local tMenuBkgnd, pImage, tPortalScreens
    
-   put the long id of img "menuBkgnd" into tMenuBkgnd
+   put the long id of img "subNavBkgImage" into tMenuBkgnd
    
    switch pMenu
       case "read"
@@ -164,7 +184,7 @@ command setMenuBkgndImage pMenu
          put "portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg" into tPath
          break
          
-      case "fun-games"
+      case "fun"
          put "portal-screens/Ganesha-Muruga-and-children_opt-80.jpg" into tPath
          break
          
@@ -173,7 +193,7 @@ command setMenuBkgndImage pMenu
          
          break
          
-      case "video-slideshows"
+      case "look"
          put "portal-screens/listen_Rajam-bhajan-BB20_DxO_opt-80.jpg" into tPath
          break
          
@@ -184,7 +204,7 @@ command setMenuBkgndImage pMenu
    put path_Assets() & "img/"  before tPath
    set the filename of tMenuBkgnd to tPath
    
-end setMenuBkgndImage
+end setSubNavBkgndImage 
 
 ## I suppose there is a better way to store these
 ## to KISS suggest we do it right here.
@@ -267,7 +287,7 @@ command updateUIPortal
    
    #  UI responsive
    put the long id of img "homeMainImage" of card "Home" into sMainImage
-   put the long id of img "menuBkgnd" of card "Home" into sMenuBkgnd
+   put the long id of img "subNavBkgImage" of card "Home" into sMenuBkgnd
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    setImageToFullCardLoc sMenuBkgnd,"portrait",0,0
@@ -338,7 +358,3 @@ command updateUIPortal
    
 end updateUIPortal
 
-
-on pushNotificationRegistrationError pErrorMessage
-   
-end pushNotificationRegistrationError

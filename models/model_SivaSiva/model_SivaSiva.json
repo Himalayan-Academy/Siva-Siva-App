@@ -24,6 +24,14 @@
             "imageText": "",
             "shortImageFile": ""
         },	
+        "Stories": {
+            "link": {
+                "portal command": "portal_GoStack",
+                "portal param": "stack \"narratives\""
+            },
+            "imageText": "narratives",
+            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+        },
         "Video World": {
             "link": {
                 "portal command": "getRandomVideo",
@@ -237,12 +245,12 @@
             "imageText": "All Our\nOn-Line\nBooks",
             "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.png"
         },
-        "Path to Siva: A Catechism for Youth": {
+        "Path to Siva": {
             "link": {
                 "portal command": "portal_GoStack",
                 "portal param": "stack \"pathtosiva\""
             },
-            "imageText": "Path to Siva:\nA Catechism\nfor Youth",
+            "imageText": "Path to Siva",
             "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
         },
          "Hinduism Today Magazine": {
@@ -512,6 +520,13 @@
                 },
             "headerImage": ""
         },
+        "narratives": {
+            "portalName": "narratives",
+            "portalLabel": "Stories",
+            "rowData": {
+                },
+            "headerImage": ""
+        },
         "home": {
             "portalName": "home",
             "portalLabel": "Home",
@@ -649,7 +664,7 @@
             "portalLabel": "Read",
             "rowData": {
                 "1": {
-                    "rowName": "Path to Siva: A Catechism for Youth"
+                    "rowName": "Path to Siva"
                 },
                 "2": {
                     "rowName": "The Master Course"

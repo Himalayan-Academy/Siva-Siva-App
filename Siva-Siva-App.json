@@ -11,7 +11,7 @@
     },
   {
       "name": "behavior_HomeStory",
-      "file": "modules/portal/behavior_HomeStory.livecodescript"
+      "file": "modules/narratives/behavior_HomeStory.livecodescript"
     },
     {
       "name": "model_Narratives",
@@ -168,6 +168,10 @@
     {
       "name": "lexicon",
       "file": "modules/lexicon/lexicon.livecode"
+    },
+    {
+      "name": "narratives",
+      "file": "modules/narratives/narratives.livecode"
     },
     {
       "name": "aagNetworkTracer",
