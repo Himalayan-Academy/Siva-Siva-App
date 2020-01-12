@@ -23,6 +23,7 @@ on fetchSubMenu sTarget
       put  tRowname & cr &cr after tOutput
    end repeat
    put tOutput into fld "subNavfld"
+   createscroller "subNavfld"
 end fetchSubMenu
 
 
@@ -274,6 +275,7 @@ on closeCard
    showMandala
    set the uWhichMenu of me to "mainMenu"
    deleteMobileControl (the short name of me)
+   deleteMobileControl ("SubNavfld")
    pass closecard
 end closeCard
 

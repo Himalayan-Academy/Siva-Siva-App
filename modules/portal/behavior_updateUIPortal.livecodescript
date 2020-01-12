@@ -68,44 +68,47 @@ on mouseup
    switch tTargetOwner
       case "bkgndControls"
          switch tTarget
-            break
-         case "hideNavMandala"
-            hideMandala
-            break
-         case "showNavMandala"
-            if the vis of  grp "subNav" is true then
-               hide  grp "subNav"
-               exit Mouseup
-            end if
-            showMandala
-            break
-      end switch
-      break
-      
-   case "navMandala"
-      if tTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
-         # These are top links, some go  directly to another module stack
-         portal_GoStack tTarget
-         exit mouseup
-      end if
-    
-      hideMandala
-      setSubNavBkgndImage tTarget
-      show  img "subNavBkgImage"
-      dispatch "fetchSubMenu" to grp "navMandala" with tTarget
-      wait 400 milliseconds
-      show grp "SubNav" with visual effect dissolve fast 
-      break
-   case "subNav"
-      put the value of clickline()  into tTarget
-      portal_DoRowLink tTarget
-      
-      
-      break
-end switch
-
---goMainMenuend mouseup
-
+            case "hideNavMandala"
+               hideMandala
+               break
+            case "showNavMandala"
+               if the vis of  grp "subNav" is true then
+                hide grp "subNav"
+                  exit Mouseup
+               else
+                  showMandala
+               end if
+               break
+         end switch
+         break
+         
+      case "navMandala"
+         if tTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
+            # These are top links, some go  directly to another module stack
+            portal_GoStack tTarget
+            exit mouseup
+         end if
+         
+         hideMandala
+         setSubNavBkgndImage tTarget
+         show  img "subNavBkgImage"
+         dispatch "fetchSubMenu" to grp "navMandala" with tTarget
+         wait 400 milliseconds
+         
+         show grp "SubNav" with visual effect dissolve fast 
+         --createScroller "subNavFld"
+         break
+      case "subNav"
+         put the value of clickline()  into tTarget
+         portal_DoRowLink tTarget
+         
+         --deleteScroller "subNavFld"
+         
+         break
+   end switch
+   
+   --goMainMenuend mouseup
+   
 end mouseup
 
 #######################
@@ -118,6 +121,7 @@ command showMandala
    hide grp "globalNavTree"
    show btn "backgroundOverlay"
    hide img "homeMainImage"
+   hide img "subNavBkgImage"
    show grp "navMandala"
    hide img "showNavMandala"
    show img "hideNavMandala"
