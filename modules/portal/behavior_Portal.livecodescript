@@ -10,31 +10,12 @@ on preOpenStack
    end if
 end preOpenStack
 
-
 on openStack
-   lock screen
-   local tLastStack
    set the acceleratedRendering of this stack to true
-   put portal_GetLastStack() into tLastStack
-   switch tLastStack
-      case "Siva-Siva-App"
-      case empty
-         go card "Home"
-         break
-      case "Surprise"
-         go card "Surprise"
-         wait 1 milliseconds with messages
-         break
-      default
-         go card "Home"
-   end switch
-   unlock screen
 end openstack
-
 
 # set a hidden preference of disk to call of 5 - 10
 # brand images. We will make it generic and save just integer
-
 
 function getUserPreferences pPref
    local tPortalPreferences, tPref

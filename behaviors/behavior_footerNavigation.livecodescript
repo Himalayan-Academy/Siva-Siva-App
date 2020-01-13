@@ -38,9 +38,8 @@ on mouseup
          put the short name of this card into tCard
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
-         else if tCard is "Surprise" and \
-               there is a card "Home" then
-            go to card "Home"
+         else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
+            go to card "surprise_menu"
          else if tCard is "main-calendar" and \
                the vis of grp "city-picker-view" then
             unlock screen

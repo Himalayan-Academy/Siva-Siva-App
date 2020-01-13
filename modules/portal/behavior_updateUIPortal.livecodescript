@@ -83,7 +83,7 @@ on mouseup
          break
          
       case "navMandala"
-         if tTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
+         if tTarget is among the items of "Stories,Gems of Wisdom,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
             # These are top links, some go  directly to another module stack
             portal_GoStack tTarget
             exit mouseup

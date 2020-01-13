@@ -1,23 +1,23 @@
-﻿script "model_Narratives"
+﻿script "model_Stories"
 
 -----------------------------------------------------
-# model_Narrative
+# model_Stories
 #
 # DESCRIPTION
 # used a behavior but called in model because it gets for disk what is needed
-# is meant to serve as the code behind any  grp "narrative"
+# is meant to serve as the code behind any  grp "story"
 # which contains one or more images, fields, browser and audio that will be called
-# to a narrative/story, narrative/teaching, narrative/reference
-# the idea is to call an XML file to server narrative folders
+# to a story/story, story/teaching, story/reference
+# the idea is to call an XML file to server story folders
 # then "informs" the user with story.
 
-# CHANGES  10-08-2019 Added a command to call a class of narrative (future use case, current a slideshow from the app) and random function 
+# CHANGES  10-08-2019 Added a command to call a class of story (future use case, current a slideshow from the app) and random function 
 # CHANGES: 10-20-2018 CREATED Brahmanathaswami
 
 -----
---command foundNarrativeScript
---   answer "Yes, I am model_narrative and I am in the message Path!" with "OK"
---end foundNarrativeScript
+--command foundStoryScript
+--   answer "Yes, I am model_story and I am in the message Path!" with "OK"
+--end foundStoryScript
 
 #### GETCONTENT 
 ## BR: 09-03-2019
@@ -36,7 +36,7 @@ command  getContent pStoryNumber --  pPhotos,pText
    switch pStoryNumber
       case "1" # Words of Our Master
          # this slideshow it based on the sImageList for totalSceneCount
-         # It can but use for any text, narrative.
+         # It can but use for any text, story.
          put randomPhotos("Deities") into sImageList 
          # scenes constrained by the number of Deity Photos
          put the number of lines of sImageList into sTotalSceneCount
@@ -97,13 +97,13 @@ command  getContent pStoryNumber --  pPhotos,pText
    
 end getContent
 
-command showNarrative pNarrativeA
-   dispatch "showNarrative" to stack "narrative" with pNarrativeA
-end showNarrative
+command showStory pStoryA
+   dispatch "showStory" to stack "story" with pStoryA
+end showStory
 
-function loadNarrativeFromDisk pID
-   local tPath, tXML, tNarrativeA, tFirstChild, i, tNextSibling
-   put sivasiva_AssetFolder() & "narratives/" & pID & ".xml" into tPath 
+function loadStoryFromDisk pID
+   local tPath, tXML, tStoryA, tFirstChild, i, tNextSibling
+   put sivasiva_AssetFolder() & "storys/" & pID & ".xml" into tPath 
    
    if there is not a file tPath then 
       return "xmlerr: file doesn't exist"
@@ -115,12 +115,12 @@ function loadNarrativeFromDisk pID
       return tXML
    end if 
    
-   put tXML into tNarrativeA["xml document id"]
-   put revXMLRootNode(tXML) into tNarrativeA["xml root node"]
-   put revXMLNumberOfChildren(tXML,tNarrativeA["xml root node"],,0) into tNarrativeA["number of scenes"]
-   put revxmlfirstchild(tXML, tNarrativeA["xml root node"]) into tFirstChild
+   put tXML into tStoryA["xml document id"]
+   put revXMLRootNode(tXML) into tStoryA["xml root node"]
+   put revXMLNumberOfChildren(tXML,tStoryA["xml root node"],,0) into tStoryA["number of scenes"]
+   put revxmlfirstchild(tXML, tStoryA["xml root node"]) into tFirstChild
    put 1 into i
-   put narrativeExtractScene(tXML, tFirstChild) into tNarrativeA["scenes"][i]
+   put storyExtractScene(tXML, tFirstChild) into tStoryA["scenes"][i]
    put tFirstChild into tNextSibling
    
    repeat while tNextSibling is not empty
@@ -129,17 +129,17 @@ function loadNarrativeFromDisk pID
          exit repeat
       end if
       add 1 to i 
-      put narrativeExtractScene(tXML, tNextSibling) into tNarrativeA["scenes"][i]
+      put storyExtractScene(tXML, tNextSibling) into tStoryA["scenes"][i]
    end repeat
    
-   return tNarrativeA
-end loadNarrativeFromDisk
+   return tStoryA
+end loadStoryFromDisk
 
-function narrativeExtractScene pXML, pPath
+function storyExtractScene pXML, pPath
    local tFirstItem, i, tSceneA, tNextItem
    put revxmlfirstchild(pXML, pPath) into tFirstItem
    put 1 into i
-   put narrativeExtractItem(pXML, tFirstItem) into tSceneA[i]
+   put storyExtractItem(pXML, tFirstItem) into tSceneA[i]
    put tFirstItem into tNextItem
    
    repeat while tNextItem is not empty
@@ -148,14 +148,14 @@ function narrativeExtractScene pXML, pPath
          exit repeat
       end if
       add 1 to i 
-      put narrativeExtractItem(pXML, tNextItem) into tSceneA[i]
+      put storyExtractItem(pXML, tNextItem) into tSceneA[i]
    end repeat
    
    return tSceneA
-end narrativeExtractScene
+end storyExtractScene
 
 
-function narrativeExtractItem pXML, pPath 
+function storyExtractItem pXML, pPath 
    local tAttributesA, tContents, tNodeName, tR
    put pPath
    put revXMLAttributes(pXML, pPath, tab, cr) into tAttributesA
@@ -175,16 +175,16 @@ function narrativeExtractItem pXML, pPath
    
    switch tNodeName
       case "image"
-         narrativeItemLoadImage tR
+         storyItemLoadImage tR
          break
       case "text"
          break
    end switch
    
    return tR
-end narrativeExtractItem
+end storyExtractItem
 
-on narrativeItemLoadImage @pItemA
+on storyItemLoadImage @pItemA
    local tRecordA, tPath
    if pItemA["attributes"]["file-id"] is not empty then
       put jnanamGetItem(pItemA["attributes"]["file-id"]) into tRecordA 
@@ -198,7 +198,7 @@ on narrativeItemLoadImage @pItemA
       end if
    end if
    
-end narrativeItemLoadImage
+end storyItemLoadImage
 
 
 
