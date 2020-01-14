@@ -81,9 +81,11 @@ on mouseup
                break
          end switch
          break
-         
+      case "globalNavTree"
+         hide grp "subNav"
+         break
       case "navMandala"
-         if tTarget is among the items of "Stories,Gems of Wisdom,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
+         if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
             # These are top links, some go  directly to another module stack
             portal_GoStack tTarget
             exit mouseup
@@ -328,7 +330,7 @@ command updateUIPortal
          # bButtons and Nav
          
          put the long id of grp "navMandala" into pControl
-         topCenterMe pControl,120
+         topCenterMe pControl,95
          -- centerMe pControl
          
          put the long id of img "hideNavMandala" into pControl

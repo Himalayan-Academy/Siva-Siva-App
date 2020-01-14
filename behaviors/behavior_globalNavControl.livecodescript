@@ -200,6 +200,7 @@ command setGlobalNavVisible pVisible
    lock screen for visual effect
    
    if pVisible is true then
+      hide grp "subNav"
       hideMandala
       hide img "homeMainImage"
       show btn "backgroundOverlay"
