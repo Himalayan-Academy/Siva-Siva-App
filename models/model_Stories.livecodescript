@@ -7,7 +7,7 @@
 # used a behavior but called in model because it gets for disk what is needed
 # is meant to serve as the code behind any  grp "story"
 # which contains one or more images, fields, browser and audio that will be called
-# to a story/story, story/teaching, story/reference
+# to a story/narrative, story/teaching, story/reference
 # the idea is to call an XML file to server story folders
 # then "informs" the user with story.
 
@@ -15,9 +15,9 @@
 # CHANGES: 10-20-2018 CREATED Brahmanathaswami
 
 -----
---command foundStoryScript
---   answer "Yes, I am model_story and I am in the message Path!" with "OK"
---end foundStoryScript
+command foundStoryModel
+  answer "Yes, I am model_story and I am in the message Path!" with "OK"
+end foundStoryModel
 
 #### GETCONTENT 
 ## BR: 09-03-2019

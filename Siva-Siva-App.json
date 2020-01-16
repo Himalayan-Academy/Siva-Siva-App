@@ -10,8 +10,8 @@
       "file": "modules/color-meditation/behavior_RunColors.livecodescript"
     },
   {
-      "name": "behavior_HomeStory",
-      "file": "modules/stories/behavior_HomeStory.livecodescript"
+      "name": "behavior_Stories",
+      "file": "modules/stories/behavior_Stories.livecodescript"
     },
     {
       "name": "model_Stories",
