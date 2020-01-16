@@ -2,7 +2,8 @@
 global sConfigA
 local sButtons
 
-on preOpenControl
+on preOpenControl--
+   --breakpoint
    local tStack
    put the short name of this stack into tStack
    if tStack is "gems" or tStack is "lib_CustomControls" then

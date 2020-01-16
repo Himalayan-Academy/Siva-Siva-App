@@ -98,18 +98,12 @@ on mouseup
          wait 400 milliseconds
          
          show grp "SubNav" with visual effect dissolve fast 
-         --createScroller "subNavFld"
          break
       case "subNav"
          put the value of clickline()  into tTarget
          portal_DoRowLink tTarget
-         
-         --deleteScroller "subNavFld"
-         
          break
    end switch
-   
-   --goMainMenuend mouseup
    
 end mouseup
 
@@ -343,15 +337,12 @@ command updateUIPortal
          put the long id of button "openGlobalNavTree" into pControl
          topLeftMe pControl, -16, 0
          
-         
-         break
-         
-      default
          put the long id of widget "globalNavTree" of me into pControl
          set the width of pControl to CardWidth()
          topCenterMe pControl,60
-         
+            
          break
+
    end switch
    
    # background group of all cards

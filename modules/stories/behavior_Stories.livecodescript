@@ -52,28 +52,28 @@ end updateUI
 
 --/assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg
 
-on preopencontrol pControl
-   if pControl is empty then exist preOpenControl
-   
-  --breakpoint
-   # fresh reboot these will be null. 
-   # handle in initializeNarrative
-   
-   put getPref ("preferences/modules/portal/story/storyNumber") into sStoryNumber
-   if sStoryNumber is "false" then # no prefs, first time app being loaded
-      put 1 into sStoryNumber
-   end if
-   setCache"storyNumber", sStoryNumber
-   
-   put getPref ("preferences/modules/portal/story/storyScene") into sLastScene
-   if sLastScene is "false" then      # no prefs, first time app being loaded
-      put "" into sLastScene           # must be null to start by showing Attribution
-   end if
-   setCache "storyScene",sLastScene
-   
-   initializeNarrative
-   
-end preopencontrol
+--on preopencontrol pControl
+--   if pControl is empty then exist preOpenControl
+
+--  --breakpoint
+--   # fresh reboot these will be null. 
+--   # handle in initializeNarrative
+
+--   put getPref ("preferences/modules/portal/story/storyNumber") into sStoryNumber
+--   if sStoryNumber is "false" then # no prefs, first time app being loaded
+--      put 1 into sStoryNumber
+--   end if
+--   setCache"storyNumber", sStoryNumber
+
+--   put getPref ("preferences/modules/portal/story/storyScene") into sLastScene
+--   if sLastScene is "false" then      # no prefs, first time app being loaded
+--      put "" into sLastScene           # must be null to start by showing Attribution
+--   end if
+--   setCache "storyScene",sLastScene
+
+--   initializeNarrative
+
+--end preopencontrol
 
 command initializeStory
    
