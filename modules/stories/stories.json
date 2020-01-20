@@ -1,0 +1,39 @@
+{
+  "Stories": {
+    "Vedas": {
+      "slidesLimit": "images", 
+      "textSource": "local-dbase-quotes", 
+      "quotesCollection": "Vedas", 
+      "Attribution": "Ancient Rishis", 
+      "imageTags": "Deities"
+    }, 
+    "Tirukural": {
+      "slidesLimit": "images", 
+      "textSource": "local-dbase-quotes", 
+      "quotesCollection": "Tirukural", 
+      "attribution": "Saint Tiruvalluvar", 
+      "imageTags": "Saints"
+    }, 
+    "Atti Chudi": {
+      "slidesLimit": "quotes", 
+      "textSource": "local-dbase-quotes", 
+      "quotesCollection": "Atti Chudi", 
+      "attribution": "Saint Auvaiyar", 
+      "imageTags": "Life"
+    }, 
+    "Songs of Tayumanavar": {
+      "slidesLimit": "images", 
+      "textSource": "local-dbase-quotes", 
+      "quotesCollection": "Tayumanavar", 
+      "attribution": "Saint Tayumanavar", 
+      "imageTags": "Soul"
+    }, 
+    "Words of Our Master": {
+      "slidesLimit": "images", 
+      "textSource": "local-dbase-quotes", 
+      "quotesCollection": "Words of Our Master", 
+      "attribution": "Siva Yogaswami", 
+      "imageTags": "Deities"
+    }
+  }
+}

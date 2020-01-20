@@ -14,10 +14,15 @@
 # CHANGES  10-08-2019 Added a command to call a class of story (future use case, current a slideshow from the app) and random function 
 # CHANGES: 10-20-2018 CREATED Brahmanathaswami
 
------
-command foundStoryModel
-  answer "Yes, I am model_story and I am in the message Path!" with "OK"
-end foundStoryModel
+local  sStoriesMetaArray 
+
+
+function loadStoriesMetadata 
+   local tStoryData
+   put url ("binfile:" & path_Modules()& "stories/stories.json") into tStoryData
+   put JSONToArray(tStoryData) into sStoriesMetaArray 
+   return sStoriesMetaArray
+end loadStoriesMetadata
 
 #### GETCONTENT 
 ## BR: 09-03-2019
@@ -31,63 +36,20 @@ end foundStoryModel
 # TO DO: BR why am I just "random" These are just list of caches photos?
 # Legacy code. I use and SQL query model and probably removed the randon clause
 
-command  getContent pStoryNumber --  pPhotos,pText
+
+command  getContent pStoryTitle # keys of the stories.json 
    
-   switch pStoryNumber
-      case "1" # Words of Our Master
-         # this slideshow it based on the sImageList for totalSceneCount
-         # It can but use for any text, story.
-         put randomPhotos("Deities") into sImageList 
-         # scenes constrained by the number of Deity Photos
-         put the number of lines of sImageList into sTotalSceneCount
-         --ntInfo ("image list: " & line 1 of sImageList)
-         
-         put FetchQuotesCollection("Words of Our Master") into sQuoteList
-         put ("Words of Our Master" & cr  & cr  & "By" & cr  & cr  & "Siva Yogaswami" )  into sAttribution
-         break
-      case "2" # Atti Chudi
-         
-         --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Life") into sImageList 
-         put FetchQuotesCollection("Atti Chudi") into sQuoteList
-         put  ("Atti Chudi" & cr  & cr  & "By" & cr  & cr  & "Saint Auvaiyar" ) into sAttribution
-         #   scenes constrained by the number verses
-         put the number of lines of sQuoteList into sTotalSceneCount
-         
-         break
-         
-      case "3" # Tirukural
-         --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Saints") into sImageList 
-         put FetchQuotesCollection("Tirukural") into sQuoteList
-         put  ("Tirukural" & cr  & cr  & "By" & cr  & cr  & "Saint Tiruvalluvar" ) into sAttribution
-         #   scenes constrained by the number verses
-         put the number of lines of sImageList into sTotalSceneCount
-         break
-         
-      case "4" # Vedas
-         
-         --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Nature") into sImageList 
-         put FetchQuotesCollection("Vedas") into sQuoteList
-         put  ("Verses" & cr  & cr  & "from the"  & cr  & cr &  "Vedas" ) into sAttribution
-         #   scenes constrained by the number verses
-         put the number of lines of sImageList into sTotalSceneCount
-         
-         break
-         
-         
-      case "5" # Tayumanavar
-         
-         --ntInfo ("image list: " & line 1 of sImageList)
-         put randomPhotos("Soul") into sImageList 
-         put FetchQuotesCollection("Tayumanavar") into sQuoteList
-         put  ("Songs of Tayumanavar" & cr  & cr  & "By" & cr  & cr  & "Saint Tayumanavar" ) into sAttribution
-         #   scenes constrained by the number verses
-         put the number of lines of sImageList into sTotalSceneCount
-         break
-   end switch
+   local sImageList, sQuoteList, sAttribution, sTotalSceneCount
    
+   put sStoriesMetaArray["Stories"][pStoryTitle]["attribution"] into sAttribution
+   put randomPhotos(sStoriesMetaArray["Stories"][pStoryTitle]["imageTags"]) into sImageList 
+   put FetchQuotesCollection(sStoriesMetaArray["Stories"][pStoryTitle]["quotesCollection"]) into sQuoteList
+   
+   if sStoriesMetaArray["Stories"][pStoryTitle][slidesLimit] = "quotes" then
+      put the number of lines of  sQuoteList into sTotalSceneCount
+   else
+      put the number of lines of  sImageList into sTotalSceneCount
+   end if
    
    setCache imageList, sImageList
    setCache Quotes, sQuoteList
@@ -330,6 +292,11 @@ end returnAssetPath
 --set the loc of tBkgndPhoto to the loc of this card
 
 
+-----
+command foundStoryModel
+  answer "Yes, I am model_story and I am in the message Path!" with "OK"
+end foundStoryModel
+-----
 
 
 

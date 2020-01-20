@@ -5,32 +5,51 @@ This script  is the behavior  stack "modules/stories.livecode"
 It is nested under a parent behavior: behavior "model_Stories"
 Revised 2020-01-15:
 BR: In order not to proliferate more and more files, 
-I am try to use the same behaviour for
+I am tryoing to use the same behavior for
 a) the stack layout/responsiveness as a whole
-b) using it one other cards as the behaviour for presenting stories
+b) using it for the specific UI/UX of the stack/card; using it one other cards 
+as the behaviour for presenting stories
 So, rather that settng up multi-file are behaviors, this requires us to 
 pass parameters to the common handler and use switch statements instead.
+but make sure the any handler in the "model" category an don't there
 */
 
+
 global sConfigA,sDefaultImage,sMainImage
+local sStoriesMetaArray  # get the metadata for each story; and parameters
 local  sImageList,sLastImage,sQuoteList,sLastQuote,sLastScene,sTotalSceneCount
 local sAttribution,sStoryNumber
 
-
 on preopenstack
    if isMobile() then
-      mobileHideStatusBar
+      mobileShowStatusBar
    end if
+   put loadStoriesMetadata() into sStoriesMetaArray
 end preopenstack
 
-#########
-# we want to be able  come back to the story
 
---on journalResume  pDataA, pEntryA
---   dispatch "restoreFromJournalEntry" to card #####" with pDataA
---end journalResume
+/** 
+UI-UX to the stack and card
+*/
+on mouseup
+   local tTarget,tTargetOwner,pStoryTitle
+   put the short name of the owner of the target into tTargetOwner
+   put the short name of the target into tTarget
+   
+   switch tTarget
+      case "storiesMenuFld"
+         put value(clickLine() ) into pStoryTitle
+         getcontent pStoryTitle
+         break
+   end switch
+   
+end mouseup
 
-#############
+
+on journalResume  pDataA, pEntryA
+   # need to return to story and the same place they left off
+   # dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
+end journalResume
 
 on resizeStack
    lock screen
@@ -40,15 +59,63 @@ on resizeStack
 end resizeStack
 
 on updateUI
-   local tFooter, tQuote, tRect, tControl
-   put the long id of grp "footerNavigation" into tFooter
-   send "updateUI" to tFooter
-
+   local tFooter, tBody
+   
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7
    end if
+   
+   put the long id of grp "footer" into tFooter
+   send "updateUI" to tFooter
+   
+   put the long id of grp "storiesMenu" into tBody
+   centerMe tBody
+   
 end updateUI
+
+
+
+/** Per Card Layout and UX
+
+Summary: We are putting layout of UI/UX here
+Based on the card name
+
+*/
+
+on preOpenCard
+   local tCard 
+   put the short name of this card into tCard
+   
+   switch tCard
+      case "storiesHome"
+         put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
+         break
+   end switch
+   
+end preopenCard
+
+
+--local sCurrentScene
+--local sStoriesA
+--on mouseup
+--   if the altKey is down then
+--      delete group "controls"
+--   end if
+
+--   if there is not a group "controls" then
+--      put loadStoriesFromDisk("test") into sStoriesA
+--      put 1 into sCurrentScene
+--      showStories sStoriesA, sCurrentScene
+--   else
+--      add 1 to sCurrentScene
+--      if sCurrentScene > sStoriesA["number of scenes"] then
+--         put 1 into sCurrentScene
+--      end if
+--      showStories sStoriesA, sCurrentScene
+--   end if
+--end mouseup
+
 
 --/assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg
 
@@ -404,5 +471,9 @@ end closestack
 --   launch url pText
 --end linkClicked
 
+
+on closestack
+   portal_SetLastStack "stories" 
+end closestack
 
 
