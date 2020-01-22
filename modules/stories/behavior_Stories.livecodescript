@@ -15,10 +15,11 @@ but make sure the any handler in the "model" category an don't there
 */
 
 
-global sConfigA,sDefaultImage,sMainImage
+global sConfigA, sDefaultImage,
 local sStoriesMetaArray  # get the metadata for each story; and parameters
-local  sImageList,sLastImage,sQuoteList,sLastQuote,sLastScene,sTotalSceneCount
-local sAttribution,sStoryNumber
+local  sImageList, sLastImage, sQuoteList, sLastQuote
+local sLastScene, sTotalSceneCount,sBackgroundImage,sStoryImage
+local sAttribution, sStoryTitle
 
 on preopenstack
    if isMobile() then
@@ -28,22 +29,89 @@ on preopenstack
 end preopenstack
 
 
+/** Per Card Layout and UI
+
+Summary: We are putting layout of UI here
+Based on the card name
+
+*/
+
+on preOpenCard
+   local tCard 
+   put the short name of this card into tCard
+   
+   switch tCard
+      case "storiesHome"
+         
+         # assume opening img if a story in not in play
+         # load the menu in any case:
+         put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
+         put the long id of img "currentStoryBkgImg" into sStoryImage
+         put the long id of img "StoryHomeBkgnd" into sBackgroundImage
+         showStoryMenu
+         # no prefs, first time app being loaded
+         # check to see where we are
+         
+         
+         
+         
+         /**
+         ##Pseudo code: 
+         -- determine from prefs, and cache
+         --if a story had been chosen and is in "play mode"
+         
+         if it is 
+         -- then hide the menu group
+         -- show the homeStory group
+         --Last image or quote seen (base on cache
+         
+      ELSE
+         -- nhow menu field, let them pick up a story
+         
+         )
+         */
+         
+         break
+   end switch
+   
+end preopenCard
+
+
+
+
 /** 
-UI-UX to the stack and card
+UX for user for the stack and card
 */
 on mouseup
-   local tTarget,tTargetOwner,pStoryTitle
+   local tTarget,tTargetOwner
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    
    switch tTarget
       case "storiesMenuFld"
-         put value(clickLine() ) into pStoryTitle
-         getcontent pStoryTitle
+         put value(clickLine() ) into sStoryTitle
+         getcontent sStoryTitle
+         showAttribution sAttribution
+         showStory
          break
    end switch
    
 end mouseup
+
+command showStory
+   set the filename of sBackgroundImage to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
+   show grp "homeStory"
+   hide grp "storiesMenu"
+end showStory
+
+command showStoryMenu
+   
+   set the filename of sBackgroundImage to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   # we show menu
+   # no story is cached
+   hide grp "homeStory"
+   show grp "storiesMenu"
+end showStoryMenu
 
 
 on journalResume  pDataA, pEntryA
@@ -74,30 +142,10 @@ on updateUI
    
 end updateUI
 
+-------------------
+on _showStories
+end _showStories
 
-
-/** Per Card Layout and UX
-
-Summary: We are putting layout of UI/UX here
-Based on the card name
-
-*/
-
-on preOpenCard
-   local tCard 
-   put the short name of this card into tCard
-   
-   switch tCard
-      case "storiesHome"
-         put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
-         break
-   end switch
-   
-end preopenCard
-
-
---local sCurrentScene
---local sStoriesA
 --on mouseup
 --   if the altKey is down then
 --      delete group "controls"
@@ -126,11 +174,7 @@ end preopenCard
 --   # fresh reboot these will be null. 
 --   # handle in initializeNarrative
 
---   put getPref ("preferences/modules/portal/story/storyNumber") into sStoryNumber
---   if sStoryNumber is "false" then # no prefs, first time app being loaded
---      put 1 into sStoryNumber
---   end if
---   setCache"storyNumber", sStoryNumber
+
 
 --   put getPref ("preferences/modules/portal/story/storyScene") into sLastScene
 --   if sLastScene is "false" then      # no prefs, first time app being loaded
@@ -157,8 +201,8 @@ command initializeStory
       setCache"storyNumber",1
    end if
    
-   put getCache("storyNumber")  into sStoryNumber
-   getContent sStoryNumber
+   put getCache("storyNumber")  into sStoryTitle
+   getContent sStoryTitle
    
    # Load local  with images and text
    put getCache("imageList") into simageList
@@ -172,7 +216,6 @@ command initializeStory
    
    ntinfo "Initialize scene"
    
-   put the long id of img "storyBgkImage" into sMainImage
    
    if (the lockscreen) then unlock screen
    
@@ -195,11 +238,11 @@ end initializeStory
 
 
 command goNextScene
-   
+   lock screen
    --breakpoint
    local tImage, tPath
-   
-   put  getCache("narrationScene") into sLastScene
+   put  getCache("storyTitle") into sStoryTitle
+   put  getCache("storyScene") into sLastScene
    put  getCache("Attribution") into sAttribution
    put  getCache("SceneCount") into sTotalSceneCount
    put  getCache("Quotes") into sQuoteList
@@ -207,16 +250,16 @@ command goNextScene
    --breakpoint
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
-   if sLastScene= empty then
+   if sLastScene= false then
       # it means we are starting again
       # TO DO we should have attributions as part of the story content
       # that is called from the model, so that it is not hard wired into the UI handlers
       showAttribution sAttribution
-      setCache "storyScene",1
+      setCache "storyScene",0
       exit goNextScene
    end if
    
-   put empty into fld "homeMainImage"
+   put empty into fld "homeStoryText"
    
    if (sLastScene is 0 )  then add 1 to sLastScene
    
@@ -233,50 +276,37 @@ command goNextScene
    
    # We have not reached then end. We are in the middle of a story
    # so we can actually "go next" 
-   
-   if not (the vis of sMainImage) then
+   # the card background a blue fld sBackgroundImage at this point
+   if the vis of sStoryImage then
+      loadNextQuote sLastImage
+   els
       put random(the number of lines of sImageList) into tLine
       put line tLine of sImageList into tPath
       # put line  sLastImage of sImageList into tPath
       loadNewImage tPath
-   else
-      loadNextQuote sLastImage
    end if
    
    
    add 1 to sLastScene
-   setCache "narrationScene",sLastScene 
-   
+   setCache "storyScene",sLastScene 
+   unlock Screen
 end goNextScene
+
+command showAttribution sAttribution
+   lock screen
+   put  getCache("Attribution") into sAttribution
+   put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
+   unlock screen
+end showAttribution
+
 
 command showIsOver
    # story if finished. back to default and prepare to 
    # increment to the next story 
    put empty into sLastScene
    setCache("ContentFlag"),0
-   put getCache("storyNumber") into sStoryNumber
-   
-   if (sStoryNumber  = "" ) OR (sStoryNumber =3) then 
-      # new app user first run, or an upgrade: preference on story are empty..
-      # or we are reach the end of stories... hard wired right now to 2
-      # we have 5 slideshows, but are not show 4 and 5 until a later release
-      # when we get the mobilescrolled working.
-      
-      put 1 into sStoryNumber
-   else
-      add 1 to sStoryNumber
-   end if
-   setCache ("storyNumber"),sStoryNumber
-   setCache "narrationScene",""
-   setDefaultImage
-   
-   # get the new story
-   getContent sStoryNumber
-   put getCache("imageList") into sImageList
-   put getCache("Quotes") into sQuoteList
-   put getCache("Attribution") into sAttribution
-   put getCache("SceneCount")  into sTotalSceneCount
-   setCache ContentFlag, 1
+   setCacher("StoryNumber"),""
+   showStoryMenu
 end showIsOver
 
 
@@ -287,24 +317,25 @@ end showIsOver
 
 command loadNewImage pPath
    lock screen for visual effect
-   set the filename of sMainImage to pPath
-   setImageToFullCardLoc sMainImage, "portrait", 0,0
+   set the filename of sStoryImage to pPath
+   setImageToFullCardLoc sStoryImage, "portrait", 0,0
    centerMe sMainImage,0,0
-   show sMainImage --with visual effect "dissolve" 
+   show   sStoryImagee --with visual effect "dissolve" 
    unlock screen with visual effect "dissolve" 
 end loadNewImage
 
 command loadNextQuote pQuoteNo
    local tControl
    lock screen for visual effect
+   hide sStoryImage
    set the itemdel to "|"
    # random quote
    put random(the number of items of sQuoteList) into tQuote
-   put item tQuote of sQuoteList into fld "preferences"
-   --put item pQuoteNo  of sQuoteList into fld "homeStoryText"
+   --put item tQuote of sQuoteList into fld "preferences"
+   put item pQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
-   hide sMainImage
+
    unlock screen with visual effect "dissolve"  very fast
    
    --   breakpoint
@@ -318,12 +349,6 @@ command loadNextQuote pQuoteNo
    
 end loadNextQuote
 
-command showAttribution sAttribution
-   lock screen
-   hide sMainImage
-   put "(Story - Slideshow)" & cr & cr & sAttribution into fld "homeStoryText"
-   unlock screen
-end showAttribution
 
 command fitFieldToContent  pField
    set the height of pField to the formattedHeight of pField
@@ -333,11 +358,11 @@ command hideShowField pField,pBool
    set the vis of pField to pBool
 end hideShowField
 
-on closeControl
-   setPref "preferences/modules/portal/story/storyNumber", getCache("storyNumber")
-   setPref "preferences/modules/portal/story/storyScene/", sLastScene
-end closeControl
-
+on closeCard
+   setPref "preferences/modules/stories/storyTitle", sStoryTitle
+   setPref "preferences/modules/stories/storyScene/", sLastScene
+   showStoryMenu
+end closecard
 
 on closestack
    portal_SetLastStack "stories" 

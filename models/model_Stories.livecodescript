@@ -37,15 +37,16 @@ end loadStoriesMetadata
 # Legacy code. I use and SQL query model and probably removed the randon clause
 
 
-command  getContent pStoryTitle # keys of the stories.json 
+command  getContent sStoryTitle # keys of the stories.json 
    
    local sImageList, sQuoteList, sAttribution, sTotalSceneCount
    
-   put sStoriesMetaArray["Stories"][pStoryTitle]["attribution"] into sAttribution
-   put randomPhotos(sStoriesMetaArray["Stories"][pStoryTitle]["imageTags"]) into sImageList 
-   put FetchQuotesCollection(sStoriesMetaArray["Stories"][pStoryTitle]["quotesCollection"]) into sQuoteList
    
-   if sStoriesMetaArray["Stories"][pStoryTitle][slidesLimit] = "quotes" then
+   put sStoriesMetaArray["Stories"][sStoryTitle]["attribution"] into sAttribution
+   put randomPhotos(sStoriesMetaArray["Stories"][sStoryTitle]["imageTags"]) into sImageList 
+   put FetchQuotesCollection(sStoriesMetaArray["Stories"][sStoryTitle]["quotesCollection"]) into sQuoteList
+   
+   if sStoriesMetaArray["Stories"][sStoryTitle][slidesLimit] = "quotes" then
       put the number of lines of  sQuoteList into sTotalSceneCount
    else
       put the number of lines of  sImageList into sTotalSceneCount
@@ -56,12 +57,12 @@ command  getContent pStoryTitle # keys of the stories.json
    setCache Attribution, sAttribution
    setCache SceneCount, sTotalSceneCount
    setCache storyIsCachedFlag, 1
-   
+   setCache storyTitle, sStoryTitle
 end getContent
 
-command showStory pStoryA
-   dispatch "showStory" to stack "story" with pStoryA
-end showStory
+--command showStory pStoryA
+--   dispatch "showStory" to stack "story" with pStoryA
+--end showStory
 
 function loadStoryFromDisk pID
    local tPath, tXML, tStoryA, tFirstChild, i, tNextSibling
