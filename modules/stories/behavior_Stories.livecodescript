@@ -39,8 +39,8 @@ Based on the card name
 on preOpenCard
    local tCard 
    put the short name of this card into tCard
-  getPref "preferences/modules/stories/storyTitle", sStoryTitle
-   getPref "preferences/modules/stories/storyScene/", sLastScene
+   put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
+   put getPref("preferences/modules/stories/storyScene/") into  sLastScene
    
    switch tCard
       case "storiesHome"
@@ -52,8 +52,12 @@ on preOpenCard
          put the long id of img "StoryBkgndImage" into sStoryBkgnd
          put the long id of img "StoryImage" into sStoryImage
          
-         showStoryMenu
-         
+         if sStoryTitle is "false" or sStoryTitle is empty then
+            showStoryMenu
+         else
+            showStory
+            goNextScene
+         end if
          break
    end switch
    
@@ -250,6 +254,7 @@ command goNextScene
    
    if sLastScene > sTotalSceneCount then 
       showIsOver
+      showStoryMenu
       exit goNextScene
    end if
    
@@ -284,7 +289,7 @@ command showIsOver
    # increment to the next story 
    put empty into sLastScene
    setCache("ContentFlag"),0
-   setCacher("StoryNumber"),""
+   setCache("StoryNumber"),""
    showStoryMenu
 end showIsOver
 
