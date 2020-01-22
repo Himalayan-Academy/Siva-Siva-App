@@ -18,7 +18,7 @@ but make sure the any handler in the "model" category an don't there
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray  # get the metadata for each story; and parameters
 local  sImageList, sLastImage, sQuoteList, sLastQuote
-local sLastScene, sTotalSceneCount,sBackgroundImage,sStoryImage
+local sLastScene, sTotalSceneCount,sCardBkgnd,sStoryBkgnd,sStoryImage
 local sAttribution, sStoryTitle
 
 on preopenstack
@@ -39,37 +39,20 @@ Based on the card name
 on preOpenCard
    local tCard 
    put the short name of this card into tCard
+  getPref "preferences/modules/stories/storyTitle", sStoryTitle
+   getPref "preferences/modules/stories/storyScene/", sLastScene
    
    switch tCard
       case "storiesHome"
-         
          # assume opening img if a story in not in play
          # load the menu in any case:
          put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
-         put the long id of img "currentStoryBkgImg" into sStoryImage
-         put the long id of img "StoryHomeBkgnd" into sBackgroundImage
+         
+         put the long id of img "HomeCardBkgnd" into sCardBkgnd
+         put the long id of img "StoryBkgndImage" into sStoryBkgnd
+         put the long id of img "StoryImage" into sStoryImage
+         
          showStoryMenu
-         # no prefs, first time app being loaded
-         # check to see where we are
-         
-         
-         
-         
-         /**
-         ##Pseudo code: 
-         -- determine from prefs, and cache
-         --if a story had been chosen and is in "play mode"
-         
-         if it is 
-         -- then hide the menu group
-         -- show the homeStory group
-         --Last image or quote seen (base on cache
-         
-      ELSE
-         -- nhow menu field, let them pick up a story
-         
-         )
-         */
          
          break
    end switch
@@ -99,14 +82,14 @@ on mouseup
 end mouseup
 
 command showStory
-   set the filename of sBackgroundImage to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
+   set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
    show grp "homeStory"
    hide grp "storiesMenu"
 end showStory
 
 command showStoryMenu
-   
-   set the filename of sBackgroundImage to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   #sCardBkgnd,sStoryBkgnd,sStoryImage
+   set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    # we show menu
    # no story is cached
    hide grp "homeStory"
@@ -250,13 +233,9 @@ command goNextScene
    --breakpoint
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
-   if sLastScene= false then
+   if sLastScene= empty then
       # it means we are starting again
-      # TO DO we should have attributions as part of the story content
-      # that is called from the model, so that it is not hard wired into the UI handlers
-      showAttribution sAttribution
       setCache "storyScene",0
-      exit goNextScene
    end if
    
    put empty into fld "homeStoryText"
@@ -279,7 +258,7 @@ command goNextScene
    # the card background a blue fld sBackgroundImage at this point
    if the vis of sStoryImage then
       loadNextQuote sLastImage
-   els
+   else
       put random(the number of lines of sImageList) into tLine
       put line tLine of sImageList into tPath
       # put line  sLastImage of sImageList into tPath
@@ -316,36 +295,29 @@ end showIsOver
 # perhaps this script falls in that category?  
 
 command loadNewImage pPath
+   # sCardBkgnd,sStoryBkgnd,sStoryImage
    lock screen for visual effect
    set the filename of sStoryImage to pPath
    setImageToFullCardLoc sStoryImage, "portrait", 0,0
-   centerMe sMainImage,0,0
-   show   sStoryImagee --with visual effect "dissolve" 
+   centerMe sStoryImage,0,0
+   show   sStoryImage --with visual effect "dissolve" 
    unlock screen with visual effect "dissolve" 
 end loadNewImage
 
 command loadNextQuote pQuoteNo
-   local tControl
+   
+   local tControl,tQuoteNo
    lock screen for visual effect
    hide sStoryImage
    set the itemdel to "|"
    # random quote
-   put random(the number of items of sQuoteList) into tQuote
+   put random(the number of items of sQuoteList) into tQuoteNo
    --put item tQuote of sQuoteList into fld "preferences"
-   put item pQuoteNo  of sQuoteList into fld "homeStoryText"
+   put item tQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
    centerMe tControl,0,5
-
-   unlock screen with visual effect "dissolve"  very fast
    
-   --   breakpoint
-   --   if isMobile() then
-   --      deleteMobileControl "homeStoryText"
-   --      # recreate:
-   --      if the formattedheight of fld "homeStoryText" > the height of fld "homeStoryText" then
-   --         send "CreateScroller homeStoryText" to fld "homeStoryText"
-   --      end if
-   --end if
+   unlock screen with visual effect "dissolve"  very fast
    
 end loadNextQuote
 
