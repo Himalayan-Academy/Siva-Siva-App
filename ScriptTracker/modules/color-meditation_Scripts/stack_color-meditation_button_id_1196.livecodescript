@@ -7,6 +7,7 @@ Script "stack_color-meditation_button_id_1196"
 
 
 on mouseUp
+   local tWhereAmI
    
    put getCurrentLevel() into tWhereAmI
    switch tWhereAmI
@@ -28,5 +29,4 @@ on mouseUp
          go to card "levelsIndex"
          
    end switch
-   break
 end mouseUp
