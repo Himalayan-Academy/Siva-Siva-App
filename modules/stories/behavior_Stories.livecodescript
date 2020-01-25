@@ -203,7 +203,6 @@ command initializeStory
    
    ntinfo "Initialize scene"
    
-   
    if (the lockscreen) then unlock screen
    
 end initializeStory
@@ -234,6 +233,8 @@ command goNextScene
    put  getCache("SceneCount") into sTotalSceneCount
    put  getCache("Quotes") into sQuoteList
    put  getCache("ImageList") into sImageList
+   
+   
    --breakpoint
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
@@ -253,8 +254,15 @@ command goNextScene
    # we have reach the end.
    
    if sLastScene > sTotalSceneCount then 
+      unlock Screen
+      # Notify the user
+      hide sStoryImage
+      put  cr & cr &"The End"  into fld "homeStoryText"
+      wait 750 milliseconds
+      
       showIsOver
       showStoryMenu
+      
       exit goNextScene
    end if
    
@@ -280,19 +288,30 @@ command showAttribution sAttribution
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
-   setCache storyScene,0
+   
+   # for dev: go the end to the story to watch the UX
+   # comment out if you want to whole story
+   if the environment is "development" then
+      setCache storyScene,sTotalSceneCount-2
+      put sTotalSceneCount-2 into sLastScene
+   else
+      setCache storyScene,0
+   end if
    unlock screen
 end showAttribution
 
-
 command showIsOver
-   # story if finished. back to default and prepare to 
-   # increment to the next story 
+   
+   # Resent cache and preferences to "nada"
+   hide sStoryImage
    put empty into sLastScene
    setCache ContentFlag,0
    setCache StoryTitle,""
    setCache storyScene,0
+   setPref "preferences/modules/stories/storyTitle", ""
+   setPref "preferences/modules/stories/storyScene/", 0
    showStoryMenu
+   --displayCache
 end showIsOver
 
 
@@ -481,3 +500,7 @@ on closestack
 end closestack
 
 
+
+on mouseDoubleDown pButtonNumber
+   
+end mouseDoubleDown
