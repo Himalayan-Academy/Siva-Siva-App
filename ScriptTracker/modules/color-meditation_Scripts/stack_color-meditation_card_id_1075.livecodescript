@@ -14,6 +14,7 @@ on preopencard
    setBackGroundGradient "0,200,0" --"255,6,23"
    setCurrentLevel "LevelsIndex"
    hide grc "start"
+   pass preOpenCard
 end preopencard
 
 getProp iAmVisible  # just playing with virtual properties... trying to see how to use these things
@@ -21,7 +22,9 @@ getProp iAmVisible  # just playing with virtual properties... trying to see how 
 end iAmVisible
 
 on showLevelsIndex  # not happening.. maybe later
-  show grp "levelsLinks"
+   -- BM: adding variable declarations just for strict compilation
+   local sLastLevel, sConfigColor
+   show grp "levelsLinks"
    put  sConfigColor["color-meditation"]["progress"]["level"] into sLastLevel
    repeat with x = 1 to sLastLevel 
       show group ("level" & x)
@@ -29,7 +32,7 @@ on showLevelsIndex  # not happening.. maybe later
 end showLevelsIndex
 
 command selectionHilites
-  -- put the target
+   -- put the target
    resetHiLites
    set the outerglow["color"] of the target to "200,200,200"
 end selectionHilites

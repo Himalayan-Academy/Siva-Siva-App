@@ -62,7 +62,7 @@ on preopencard
    put 0 into sStopFlag   
    
    # Need to store the current color count in the stack
-   
+   pass preOpenCard
 end preopencard
 
 --on opencard
