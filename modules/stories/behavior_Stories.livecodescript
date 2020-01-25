@@ -280,6 +280,7 @@ command showAttribution sAttribution
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
+   setCache storyScene,0
    unlock screen
 end showAttribution
 
@@ -288,8 +289,9 @@ command showIsOver
    # story if finished. back to default and prepare to 
    # increment to the next story 
    put empty into sLastScene
-   setCache("ContentFlag"),0
-   setCache("StoryNumber"),""
+   setCache ContentFlag,0
+   setCache StoryTitle,""
+   setCache storyScene,0
    showStoryMenu
 end showIsOver
 
