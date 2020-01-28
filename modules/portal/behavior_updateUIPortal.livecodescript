@@ -21,9 +21,6 @@ on preOpenCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    
-   
-   
-   
    switch pCard
       case "Home"
          # init set up

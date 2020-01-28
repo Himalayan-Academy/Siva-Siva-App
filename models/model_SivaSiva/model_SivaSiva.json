@@ -27,9 +27,9 @@
         "Stories": {
             "link": {
                 "portal command": "portal_GoStack",
-                "portal param": "stack \"narratives\""
+                "portal param": "stack \"stories\""
             },
-            "imageText": "narratives",
+            "imageText": "stories",
             "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
         },
         "Video World": {
@@ -129,7 +129,7 @@
             "imageText": "Take a\nVirtual Tour",
             "shortImageFile": "thumb_virtual-tour.png"
         },
-        "Hindu History, Ancient Times, Pt 1": {
+        "History, Pt 1, Ancient Times": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/dBZRTzXARWM?rel=0&start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -137,7 +137,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Hindu History, 300-1000ce, Pt 2": {
+         "History, Pt 2, 300-1000ce": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/j0kLX2aPgo8?rel=0&start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -145,7 +145,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Hindu History, 1000-1850 ce, Pt 3": {
+         "History, Pt 3, 1000-1850ce": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/Lr8Qx0SyrYI?rel=0&start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -153,7 +153,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Hindu History, 1850 to 1947, Pt 4": {
+         "History, Pt 4, 1850 to 1947": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/nx_vSuduwAk?rel=0&start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -161,7 +161,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "Hindu History, 1947 to Present, Pt 5": {
+         "History, Pt 5, 1947 to Present": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/eVnqJHO3PcY?rel=0&start=12&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -169,7 +169,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-         "History Song, 6000 Years": {
+         "Song, 6000 Years": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/YHS7dyN6sgM?rel=0&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -177,7 +177,7 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-        "History Song, What Hindu's Believe": {
+        "Song, What Hindu's Believe": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/PAzBZa-FBOo?rel=0&playsinline=1",
                 "portal command": "portal_GoUrl"
@@ -185,9 +185,45 @@
             "imageText": "History\nMovie",
             "shortImageFile": "thumb_history-movie.png"
         },
-        "History Song, Love Celebrations": {
+        "Song, Love Celebrations": {
              "link": {
                 "portal param": "https://www.youtube.com/embed/URoNuvY1wx4?rel=0&playsinline=1",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        }
+        ,
+        "Song, Ten Centuries of Progress": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/pFOTcm0Jq_4?rel=0&playsinline=1",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        }
+        ,
+        "Song, City and Village Life": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/CsNaeE4bgBY?rel=0&playsinline=1",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        }
+        ,
+        "Song, India's Golden Age": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/z3zfjXNDIEU?rel=0&playsinline=1",
+                "portal command": "portal_GoUrl"
+            },
+            "imageText": "History\nMovie",
+            "shortImageFile": "thumb_history-movie.png"
+        }
+        ,
+        "Song, Hard Times Fell Upon India": {
+             "link": {
+                "portal param": "https://www.youtube.com/embed/H8U-A-2BXrw?rel=0&playsinline=1",
                 "portal command": "portal_GoUrl"
             },
             "imageText": "History\nMovie",
@@ -495,28 +531,40 @@
             "portalColor": "000,000,000",
             "rowData": {
                 "1": {
-                    "rowName": "Hindu History, Ancient Times, Pt 1"
+                    "rowName": "History, Pt 1, Ancient Times"
                 },
                 "2": {
-                    "rowName": "Hindu History, 300-1000ce, Pt 2"
+                    "rowName": "History, Pt 2, 300-1000ce"
                 },
                 "3": {
-                    "rowName": "Hindu History, 1000-1850 ce, Pt 3"
+                    "rowName": "History, Pt 3, 1000-1850ce"
                 },
                 "4": {
-                    "rowName": "Hindu History, 1850 to 1947, Pt 4"
+                    "rowName": "History, Pt 4, 1850 to 1947"
                 },
                 "5": {
-                    "rowName": "Hindu History, 1947 to Present, Pt 5"
+                    "rowName": "History, Pt 5, 1947 to Present"
                 },
                 "6": {
-                    "rowName": "History Song, 6000 Years"
+                    "rowName": "Song, 6000 Years"
                 },
                 "7": {
-                    "rowName": "History Song, What Hindu's Believe"
+                    "rowName": "Song, What Hindu's Believe"
                 },
                 "8": {
-                    "rowName": "History Song, Love Celebrations"
+                    "rowName": "Song, Love Celebrations"
+                },
+                "9": {
+                    "rowName": "Song, Ten Centuries of Progress"
+                },
+                "10": {
+                    "rowName": "Song, City and Village Life"
+                },
+                "11": {
+                    "rowName": "Song, India's Golden Age"
+                },
+                "12": {
+                    "rowName": "Song, Hard Times Fell Upon India"
                 }
             },
             "headerImage": "hero_look_big-eye-shtrstk-13603590.png"
@@ -528,8 +576,8 @@
                 },
             "headerImage": ""
         },
-        "narratives": {
-            "portalName": "narratives",
+        "stories": {
+            "portalName": "Stories",
             "portalLabel": "Stories",
             "rowData": {
                 },

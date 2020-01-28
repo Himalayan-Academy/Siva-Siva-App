@@ -14,13 +14,15 @@
 local sTarget,sFavoritesA,sWhichMenu,
 
 on fetchSubMenu sTarget
-   
+   local tKeys
    put getNavigationMap() into  sMap
    
-   repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
+   put the keys of sMap["portalData"][sTarget]["rowdata"] into tKeys
+   sort lines of tKeys ascending numeric
+   repeat for each line tSecondLevel in tKeys
       add 1 to tSecondKey
       put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
-      put  tRowname & cr &cr after tOutput
+      put  tRowname &cr after tOutput
    end repeat
    put tOutput into fld "subNavfld"
    createscroller "subNavfld"
@@ -136,8 +138,6 @@ command goMainMenu
                exit goMainMenu
             end if
             break
-            
-            --               # no trigger ; Need to find out how the tree work... we should disabled these:
             
          case "Fun & Games"
             put "fun" into sTarget
@@ -287,6 +287,7 @@ end closeCard
 
 command createNavTree pMenu
    local tCt, sMap, tSortTopMenu, tSkipSubMenu, tTopMenu, tSecondKey, tRowName, aTreeA, tSortKey, tData
+   local tKeys
    set the pathDelimiter of me to "|"
    
    set the numberformat to "00"
@@ -318,8 +319,10 @@ command createNavTree pMenu
             --breakpoint
             
             if sMap["portalData"][sTarget]["portalName"] is not among the items of tSkipSubMenu then
-               
-               repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
+               put the keys of sMap["portalData"][sTarget]["rowdata"] into tKeys
+               sort lines of tKeys ascending numeric
+               --repeat for each key tSecondLevel in sMap["portalData"][sTarget]["rowdata"]
+               repeat for each line tSecondLevel in tKeys
                   add 1 to tSecondKey
                   put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
                   put tSecondKey && tRowName into  tRowName
