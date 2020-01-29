@@ -27,9 +27,10 @@ on mouseUp
       
       -- give time for connection to close before close the stack
       -- maybe to helps
-      
+      if isMobile() then
       wait 1 milliseconds with messages
       mobileClearTouches
+      end if
    end if
    
    switch tTarget

@@ -1,8 +1,8 @@
-Script "stack_Siva-Siva-Portal_group_id_67359"
+Script "stack_surprise_group_id_1538"
 
 /*
-# Name: group "answerDlgGrp" of card "Surprise" of stack "Siva-Siva-Portal"
-# ID: group id 67359 of card id 7993 of stack "Siva-Siva-Portal"
+# Name: group "answerDlgGrp" of card "surprise_menu" of stack "surprise"
+# ID: group id 1538 of card id 1539 of stack "surprise"
 */
 
 

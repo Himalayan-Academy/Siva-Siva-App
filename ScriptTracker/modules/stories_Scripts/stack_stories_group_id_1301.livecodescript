@@ -1,8 +1,8 @@
-Script "stack_Siva-Siva-Portal_group_id_8157"
+Script "stack_stories_group_id_1301"
 
 /*
-# Name: group "share-ui" of card "Surprise" of stack "Siva-Siva-Portal"
-# ID: group id 8157 of card id 7993 of stack "Siva-Siva-Portal"
+# Name: group "share-ui" of card "storiesHome" of stack "stories"
+# ID: group id 1301 of card id 1002 of stack "stories"
 # Behavior: stack "behavior_SocialShare"
 */
 

@@ -136,6 +136,28 @@
 * ID: card id 1037 of stack "surprise"
 * [stack_surprise_card_id_1037](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1037.livecodescript)
 
+**group "share-ui" of card "surprise_menu" of stack "surprise"**
+* ID: group id 1536 of card id 1539 of stack "surprise"
+* Behavior: stack "behavior_SocialShare"
+* [stack_surprise_group_id_1536](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1536.livecodescript)
+
+**widget "close-sharing" of group "share-ui" of card "surprise_menu" of stack "surprise"**
+* ID: widget id 1568 of group id 1536 of card id 1539 of stack "surprise"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_surprise_widget_id_1568](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1568.livecodescript)
+
+**group "answerDlgGrp" of card "surprise_menu" of stack "surprise"**
+* ID: group id 1538 of card id 1539 of stack "surprise"
+* [stack_surprise_group_id_1538](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1538.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "surprise_menu" of stack "surprise"**
+* ID: graphic id 1575 of group id 1538 of card id 1539 of stack "surprise"
+* [stack_surprise_graphic_id_1575](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_graphic_id_1575.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "surprise_menu" of stack "surprise"**
+* ID: field id 1577 of group id 1576 of group id 1538 of card id 1539 of stack "surprise"
+* [stack_surprise_field_id_1577](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1577.livecodescript)
+
 **card "image-resources" of stack "surprise"**
 * ID: card id 1023 of stack "surprise"
 * [stack_surprise_card_id_1023](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1023.livecodescript)
