@@ -27,7 +27,7 @@ on preOpenCard
          hide grp "globalNavTree"
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
-         setUpBrandImage
+         --setUpBrandImage
          setDefaultImage
          break
       case "read-menu"
@@ -66,14 +66,16 @@ on mouseup
       case "bkgndControls"
          switch tTarget
             case "hideNavMandala"
+               setDefaultImage
                hideMandala
                break
             case "showNavMandala"
                if the vis of  grp "subNav" is true then
-                hide grp "subNav"
+                  hide grp "subNav"
                   exit Mouseup
                else
                   showMandala
+                  
                end if
                break
          end switch
@@ -145,7 +147,7 @@ command setDefaultImage pContext
    
    local pImage, tPaths, tBrandImages, tTotalBrandImages
    
-   put getCache("BrandImage") into sBrandImageNumber
+   --put getCache("BrandImage") into sBrandImageNumber
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    put _brandImages() into tBrandImages
    
@@ -154,7 +156,8 @@ command setDefaultImage pContext
    
    # variable is undefined at this point
    --setCache "TotalBrandImages", tTotalBrandImages
-   
+   put the number of lines of tBrandImages into tTotalBrandImages
+   put random(tTotalBrandImages) into sBrandImageNumber
    put line sBrandImageNumber of tBrandImages into pImage
    set the filename of sMainImage to photoImagePath(pImage)
    

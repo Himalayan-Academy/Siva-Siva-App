@@ -32,6 +32,7 @@ function isMobile
    return the environment is "mobile"
 end isMobile
   
+/* this command is deprecated it has a useful model for timing
 on setUpBrandImage
    # we can use this scheduler to fetch News which was previously 
    # piling up the pending messages queue
@@ -84,6 +85,7 @@ on setUpBrandImage
    
    
 end setUpBrandImage
+*/
 
 
 

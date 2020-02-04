@@ -9,6 +9,14 @@
       "name": "behavior_RunColors",
       "file": "modules/color-meditation/behavior_RunColors.livecodescript"
     },
+    {
+      "name": "behavior_Shum",
+      "file": "modules/shum/behavior_Shum.livecodescript"
+    },
+    {
+      "name": "shum",
+      "file": "modules/shum/shum.livecode"
+    },
   {
       "name": "behavior_Stories",
       "file": "modules/stories/behavior_Stories.livecodescript"
