@@ -70,40 +70,35 @@ on mouseup
                hideMandala
                break
             case "showNavMandala"
-               if the vis of  grp "subNav" is true then
-                  hide grp "subNav"
-                  exit Mouseup
-               else
-                  showMandala
-                  
-               end if
-               break
-         end switch
-         break
-      case "globalNavTree"
-         hide grp "subNav"
-         break
-      case "navMandala"
-         if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
-            # These are top links, some go  directly to another module stack
-            portal_GoStack tTarget
-            exit mouseup
-         end if
-         
-         hideMandala
-         setSubNavBkgndImage tTarget
-         show  img "subNavBkgImage"
-         dispatch "fetchSubMenu" to grp "navMandala" with tTarget
-         wait 400 milliseconds
-         
-         show grp "SubNav" with visual effect dissolve fast 
-         break
-      case "subNav"
-         put the value of clickline()  into tTarget
-         portal_DoRowLink tTarget
-         break
-   end switch
-   
+               if the vis of  grp "subNav" is true then hide grp "subNav"
+               showMandala
+            break
+      end switch
+      break
+   case "globalNavTree"
+      hide grp "subNav"
+      break
+   case "navMandala"
+      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
+         # These are top links, some go  directly to another module stack
+         portal_GoStack tTarget
+         exit mouseup
+      end if
+      
+      hideMandala
+      setSubNavBkgndImage tTarget
+      show  img "subNavBkgImage"
+      dispatch "fetchSubMenu" to grp "navMandala" with tTarget
+      wait 400 milliseconds
+      
+      show grp "SubNav" with visual effect dissolve fast 
+      break
+   case "subNav"
+      put the value of clickline()  into tTarget
+      portal_DoRowLink tTarget
+      break
+end switch
+
 end mouseup
 
 #######################
@@ -111,15 +106,16 @@ end mouseup
 # use the return state of home screen
 command showMandala
    hide grp "globalNavTree"
+   # hide sub nav menu
    hide grp "subNav"
+  hide img "homeMainImage"
+   hide img "subNavBkgImage"
    show btn "brandLogo"
    hide grp "globalNavTree"
    show btn "backgroundOverlay"
-   hide img "homeMainImage"
-   hide img "subNavBkgImage"
    show grp "navMandala"
-   hide img "showNavMandala"
-   show img "hideNavMandala"
+   hide img "showNavMandala" # button
+   show img "hideNavMandala" # button
 end showMandala
 
 # or to just see the image and priod to show 
@@ -352,7 +348,7 @@ command updateUIPortal
    topRightMe pControl,70,20
    
    put the long id of fld "Notification" of me into pControl
-   topCenterMe pControl,150
+  bottomCenterMe pControl,100
    
 end updateUIPortal
 

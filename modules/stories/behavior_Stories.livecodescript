@@ -55,9 +55,9 @@ on preOpenCard
          put the long id of img "StoryImage" into sStoryImage
          
          if sStoryTitle is "false" or sStoryTitle is empty then
-            showStoryMenu
+            showStoryText
          else
-            showStory
+            showStoryText
             goNextScene
          end if
          break
@@ -89,25 +89,29 @@ on mouseup
          put value(clickLine() ) into sStoryTitle
          getcontent sStoryTitle
          showAttribution sAttribution
-         showStory
+         showStoryText
          break
       case "tips"
-            put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
-            set the htmltext of fld "homeStoryText" to tTips
-            showStory  
+         lock screen
+         put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
+         set the htmltext of fld "homeStoryText" to tTips
+         showStoryText  
+         unlock screen
          break
    end switch
    
 end mouseup
 
-command showStory
+command showStoryText
+   hide img "StoryImage"
    set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
    show grp "homeStoryBkgnd"
+   show fld "homeStoryText"
    show grp "textDisplay"
    hide grp "storiesMenu"
-end showStory
+end showStoryText
 
-command showStoryMenu
+command showStoryText
    #sCardBkgnd,sStoryBkgnd,sStoryImage
    set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    # we show menu
@@ -115,13 +119,8 @@ command showStoryMenu
    hide grp "homeStoryBkgnd"
    hide grp "textDisplay"
    show grp "storiesMenu"
-end showStoryMenu
+end showStoryText
 
-
-on journalResume  pDataA, pEntryA
-   # need to return to story and the same place they left off
-   # dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
-end journalResume
 
 on resizeStack
    lock screen
@@ -129,33 +128,6 @@ on resizeStack
    updateUI
    unlock screen
 end resizeStack
-
-on updateUI
-   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage
-   
-   if there is a control "Title" then
-      put the long id of fld "Title" into tControl
-      topCenterMe tControl, 7
-   end if
-   
-   put the long id of grp "storiesMenu" into tMenu
-   centerMe tMenu
-   
-   
-   put the long id of img "StoryBkgndImage" into tStoryBkgndImage
-   CenterMe tStoryBkgndImage
-   
-   put the long id of img "StoryImage" into tStoryImage
-   CenterMe tStoryImage
-   
-   put the long id of grp "textDisplay" into tTextDisplay
-   topCenterMe tTextDisplay,10
-   
-   put the long id of grp "footer" into tFooter
-   send "updateUI" to tFooter
-   
-end updateUI
-
 
 
 command initializeStory
@@ -239,8 +211,7 @@ command goNextScene
       wait 750 milliseconds
       
       showIsOver
-      showStoryMenu
-      
+      showStoryText
       exit goNextScene
    end if
    
@@ -264,6 +235,7 @@ end goNextScene
 
 command showAttribution sAttribution
    lock screen
+   showStoryText
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
    setCache storyScene,0
@@ -293,7 +265,7 @@ command showIsOver
    setPref "preferences/modules/stories/storyScene/", ""
    
    # showMenu
-   showStoryMenu
+   showStoryText
    
    --displayCache
 end showIsOver
@@ -306,8 +278,6 @@ command endInTwoScenes
 end endInTwoScenes
 
 
-
-
 ## we think for following handle my belong to the "model"
 # but this a UI call  to show something in the "view"
 # in MVC architecture, this would be part of a "controller"
@@ -317,8 +287,10 @@ command loadNewImage pPath
    # sCardBkgnd,sStoryBkgnd,sStoryImage
    lock screen for visual effect
    set the filename of sStoryImage to pPath
-   setImageToFullCardLoc sStoryImage, "portrait", 0,0
+   setImageToFullCardLoc sStoryImage, "portrait"
+   centerMe sStoryImage
    show   sStoryImage --with visual effect "dissolve" 
+   hide fld "homeStoryText"
    unlock screen with visual effect "dissolve" 
 end loadNewImage
 
@@ -333,7 +305,7 @@ command loadNextQuote pQuoteNo
    --put item tQuote of sQuoteList into fld "preferences"
    put item tQuoteNo  of sQuoteList into fld "homeStoryText"
    put the long id of fld "homeStoryText" into tControl
-   
+   showStoryText
    unlock screen with visual effect "dissolve"  very fast
    
 end loadNextQuote
@@ -350,33 +322,69 @@ end hideShowField
 on closeCard
    setPref "preferences/modules/stories/storyTitle", sStoryTitle
    setPref "preferences/modules/stories/storyScene/", sLastScene
-   showStoryMenu
+   showStoryText
 end closecard
 
 on closestack
+   addJournalEntry
+   tracking_RecordActivity "Stories: " & sStoryTitle, "navigation/exit", pTrackdata
    portal_SetLastStack "stories" 
 end closestack
-
-
-
---on resizeToHeight pImage,pSize
-
---   put the width of pImage into tOrigImgWidth
---   put the height of pImage into tOrigImgHeight
---   put pSize/tOrigImgHeight  into tRatio
---   put tOrigImgWidth * tRatio into tNewWidth
---   put tOrigImgHeight * tRatio into tNewHeight
---   set the rect of pImage to 0,0,tNewWidth,tNewHeight  
---end resizeToHeight
-
-
 
 on closestack
    portal_SetLastStack "stories" 
 end closestack
 
+--global sConfigA, sDefaultImage,
+--local sStoriesMetaArray  # get the metadata for each story; and parameters
+--local  sImageList, sLastImage, sQuoteList, sLastQuote
+--local sCardBkgnd,sStoryBkgnd,sStoryImage
+--# story control variables, stored cache
+--# must wipe them on end of story
+--local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
+
+command addJournalEntry 
+   local pData, tTitle
+   put "storiesHome"into pData["card"]
+   put "goNextScene" into pData["nextAction"]
+   put "Stories: " &  sStoryTitle  into tTitle
+   Journal_RecordEntry "stories",tTitle,pData -- send to journal
+end addJournalEntry
+
+on journalResume pDataA, pEntryA
+   local pLevel -- BWM looks like this value is unused
+   go to card  pDataA["card"] 
+   dispatch pDataA["nextAction"] to me
+end journalResume
 
 
-on mouseDoubleUp pButtonNumber
+-------------------- GEOMETRY
+
+on updateUI
+   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage
    
-end mouseDoubleUp
+   if there is a control "Title" then
+      put the long id of fld "Title" into tControl
+      topCenterMe tControl, 7
+   end if
+   
+   put the long id of grp "storiesMenu" into tMenu
+   centerMe tMenu
+   
+   
+   put the long id of img "StoryBkgndImage" into tStoryBkgndImage
+   CenterMe tStoryBkgndImage
+   
+   put the long id of img "StoryImage" into tStoryImage
+   CenterMe tStoryImage
+   
+   put the long id of fld "homeStoryText" into tTextDisplay
+   topCenterMe tTextDisplay,10
+   
+   put the long id of grp "footer" into tFooter
+   send "updateUI" to tFooter
+   
+end updateUI
+
+
+
