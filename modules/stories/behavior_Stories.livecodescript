@@ -24,14 +24,11 @@ local sCardBkgnd,sStoryBkgnd,sStoryImage
 local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
 
 on preopenstack
-   if isMobile() then
-      mobileShowStatusBar
-   end if
    put loadStoriesMetadata() into sStoriesMetaArray
 end preopenstack
 
 
-/** Per Card Layout and UI
+/* Per Card Layout and UI
 
 Summary: We are putting layout of UI here
 Based on the card name
@@ -55,8 +52,10 @@ on preOpenCard
          put the long id of img "StoryImage" into sStoryImage
          
          if sStoryTitle is "false" or sStoryTitle is empty then
+            display_SetStatusBarVis true
             showStoryMenu
          else
+            display_SetStatusBarVis false
             showStoryText
             goNextScene
          end if
@@ -68,15 +67,15 @@ on preOpenCard
    # comment out if you want to whole story
    # or watch the another story, after opening the stack
    # and this not be called
-
-      endInTwoScenes
-
+   
+   endInTwoScenes
+   
 end preopenCard
 
 
 
 
-/** 
+/*
 UX for user for the stack and card
 */
 on mouseup
@@ -118,19 +117,12 @@ command showStoryMenu
 end showStoryMenu
 
 
-on journalResume  pDataA, pEntryA
-   # need to return to story and the same place they left off
-   # dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
-end journalResume
-
 on resizeStack
    lock screen
    setCardCoords
    updateUI
    unlock screen
 end resizeStack
-
-
 
 
 
@@ -328,21 +320,37 @@ end hideShowField
 on closeCard
    setPref "preferences/modules/stories/storyTitle", sStoryTitle
    setPref "preferences/modules/stories/storyScene/", sLastScene
+   addJournalEntry
    showStoryMenu
 end closecard
 
-on closestack
+on closestack  
    portal_SetLastStack "stories" 
 end closestack
 
+on pingBehavior
+   answer "got cha"
+end pingBehavior
 
 
-on closestack
-   portal_SetLastStack "stories" 
-end closestack
+-------
+
+--local sCardBkgnd,sStoryBkgnd,sStoryImage
+--local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
+
+command addJournalEntry -- save a bookmark to db
+   put "storiesHome" into pData["card"]
+   Journal_RecordEntry "stories",("Story: " & sStoryTitle), pData -- send to journal
+end addJournalEntry
+
+
+on journalResume pData -- sent from journal stack
+   put pData["card"] into tCd
+   goCd tCd
+end journalResume
 
 on updateUI
-   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage
+   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext
    
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
@@ -360,7 +368,11 @@ on updateUI
    CenterMe tStoryImage
    
    put the long id of grp "textDisplay" into tTextDisplay
-   topCenterMe tTextDisplay,10
+   topCenterMe tTextDisplay,100
+   
+   
+   put the long id of btn "goNext" into tGoNext
+   bottomCenterMe tGoNext,50
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter

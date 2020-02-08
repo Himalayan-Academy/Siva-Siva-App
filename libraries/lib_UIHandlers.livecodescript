@@ -498,11 +498,13 @@ command visMessageToUser pBool
 end visMessageToUser
 
 command display_SetStatusBarVis visBoolean
-   if visBoolean then
-      mobileShowStatusBar
-   else
-      mobileHideStatusBar
-   end if        
+   if isMobile() then
+      if visBoolean then
+         mobileShowStatusBar
+      else
+         mobileHideStatusBar
+      end if   
+   end if     
 end display_SetStatusBarVis
 
 command showLoaderGIF pBool

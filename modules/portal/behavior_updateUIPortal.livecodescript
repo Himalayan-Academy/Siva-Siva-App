@@ -199,6 +199,7 @@ command setSubNavBkgndImage pMenu
    end switch
    put path_Assets() & "img/"  before tPath
    set the filename of tMenuBkgnd to tPath
+   centerMe tMenuBkgnd
    setImageToFullCardLoc tMenuBkgnd,"portrait",0,0
    
 end setSubNavBkgndImage 
