@@ -18,7 +18,7 @@ but make sure the any handler in the "model" category an don't there
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray  # get the metadata for each story; and parameters
 local  sImageList, sLastImage, sQuoteList, sLastQuote
-local sCardBkgnd,sStoryBkgnd,sStoryImage
+local sCardBkgnd, sStoryBkgnd, sStoryImage,sImageloc
 # story control variables, stored cache
 # must wipe them on end of story
 local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
@@ -91,14 +91,54 @@ on mouseup
          showStoryText
          break
       case "tips"
-            put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
-            set the htmltext of fld "homeStoryText" to tTips
-            showStoryText
+         put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
+         set the htmltext of fld "homeStoryText" to tTips
+         showStoryText
          break
+      case "goNext"
+         if fld "homeStoryText" contains "User Guide" then
+            showStoryMenu
+         else
+            goNextScene
+         end if
+         break
+      case "StoryImage"
+         local tCurrentLoc,tHShift,tVShift,tIsTap
+         put the long id of img "StoryImage" into sStoryImage
+         put the loc of sStoryImage  into tCurrentLoc
+         
+         #detect tap: I would like to put in UIHandlers, but now it is here
+         put (item 1 of sImageLoc) - (item 1 of tCurrentLoc) into tHShift
+         put (item 2 of sImageLoc) - (item 2 of tCurrentLoc) into tVShift --jg: account for both horiz & vert shifts
+         put abs(tHShift)  < 20 and abs(tVShift)  < 20 into tIsTap --jg: no significant movement either direction
+         
+         if tIsTap then --jg: tapping now toggles img size      
+            switchViewImageState sStoryImage
+         else
+            put tCurrentLoc into sImageLoc
+         end if
+         
+         --switchViewImageState sStoryImage
+         break
+         
    end switch
    
 end mouseup
 
+on mousedown
+   local tTarget,tTargetOwner,tTips
+   put the short name of the owner of the target into tTargetOwner
+   put the short name of the target into tTarget
+   switch tTarget
+      case "StoryImage"
+         grab img "StoryImage"
+         put the loc of  img "StoryImage" into sImageLoc
+         break
+   end switch
+   break
+end mouseDown
+
+   	
 command showStoryText
    set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
    show grp "homeStoryBkgnd"
@@ -176,11 +216,13 @@ end initializeStory
 
 
 command goNextScene
+   local tLine	
    lock screen
    --breakpoint
    local tImage, tPath
    put  getCache("storyTitle") into sStoryTitle
    put  getCache("storyScene") into sLastScene
+   if sLastScene < 0 then put 0 into sLastScene	
    put  getCache("Attribution") into sAttribution
    put  getCache("SceneCount") into sTotalSceneCount
    put  getCache("Quotes") into sQuoteList
@@ -234,7 +276,7 @@ command showAttribution sAttribution
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
-   setCache storyScene,0
+   setCache "storyScene",0
    unlock screen
 end showAttribution
 
@@ -250,11 +292,11 @@ command showIsOver
    put "" into sTotalSceneCount
    
    # wipe cache
-   setCache ContentFlag,0
-   setCache StoryTitle,""
-   setCache storyScene,""
-   setCache SceneCount,""
-   setCache Attribution, ""
+   setCache "ContentFlag",0
+   setCache "StoryTitle",""
+   setCache "storyScene",""
+   setCache "SceneCount",""
+   setCache "Attribution", ""
    
    #wipe preferemces
    setPref "preferences/modules/stories/storyTitle", ""
@@ -268,7 +310,7 @@ end showIsOver
 
 command endInTwoScenes
    if the environment is "development" then
-      setCache storyScene,sTotalSceneCount-2
+      setCache "storyScene",sTotalSceneCount-2
       put sTotalSceneCount-2 into sLastScene
    end if
 end endInTwoScenes
@@ -334,24 +376,21 @@ end pingBehavior
 
 
 -------
-
---local sCardBkgnd,sStoryBkgnd,sStoryImage
---local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
+local pData,  tCd,  
 
 command addJournalEntry -- save a bookmark to db
-   put "storiesHome" into pData["card"]
+   put "storiesHome" into pData["Card"]
    Journal_RecordEntry "stories",("Story: " & sStoryTitle), pData -- send to journal
 end addJournalEntry
-
-
+		
 on journalResume pData -- sent from journal stack
-   put pData["card"] into tCd
+   put pData["Card"] into tCd
    goCd tCd
 end journalResume
 
 on updateUI
-   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext
-   
+   local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext,tControl
+
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7

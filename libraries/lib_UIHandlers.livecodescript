@@ -3,6 +3,8 @@ local sCardRect, sCardWidth, sCardHeight, sCardLoc, sHorizCenter, sVertCenter, s
 Local sCurrentGraphicRect,sStopRunningAudio
 local sPhoneModel = "unknown"
 local sPortraitMargins, sLandscapeMargins, sSafeRect
+# Images
+local sViewImageState
 
 ************************
 on __RESPONSIVE
@@ -352,21 +354,20 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
 end setImageToFullCardLoc
 
 on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
-   local tFWd, tFHt
-   # we may not always this rect of the images from  the metadata
-   # May as well just find out what it is right here.
+   local tFWd, tFHt, tLocation
+   
    # pImage is the long ID of the image
-   # you do not use "img ## to refer to it... just "pImage"
+   # if second param is empty we toggle it; otherwise set it as specified;
+   # called from main img script when tapped and when main cd closes to reset
    
-   -- if second param is empty we toggle it; otherwise set it as specified;
-   -- called from main img script when tapped and when main cd closes to reset
+   put the loc of pImage into tLocation
+   put the formattedWidth of pImage into tFWd
+   put the formattedHeight of pImage into tFHt
    
-   if pFullSize = "" then -- calculate if it's already full size
+   if pFullSize = "" then --  assume if width is bigger than the card:, its fullSize
       put (the width of pImage > sCardWidth) into pFullSize
       # true for landscape (width is greater); false for portrait (height is greater)
    end if
-   put the formattedWidth of pImage into tFWd
-   put the formattedHeight of pImage into tFHt
    
    if pFullSize then -- reduce to fit
       resizeToWidth pImage,pTargetSize
@@ -376,12 +377,59 @@ on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    
    # set the location of image, 
    # it is empty, assume to card rect
-   if pLocation = empty then
+   if tLocation = empty then
       set the loc of pImage to sCardLoc
    else
-      set the loc of pImage to pLocation
+      set the loc of pImage to tLocation
    end if
 end toggleImgSize
+
+command switchViewImageState pImage
+   if sViewImageState is empty then put 1 into sViewImageState
+   switch sViewImageState   
+      case 1  # quote is hidden but image is full size
+         toggleImgSize pImage,,(the width of this card) 
+         set the loc of pImage to sCardLoc
+         put 2 into sViewImageState
+         break
+      case  2 #  image is full size, shrink to card
+         toggleImgSize  pImage,,(the formattedwidth of pImage) 
+         
+         put 1 into sViewImageState     
+   end switch
+end switchViewImageState
+
+--on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
+--   local tFWd, tFHt
+--   # we may not always this rect of the images from  the metadata
+--   # May as well just find out what it is right here.
+--   # pImage is the long ID of the image
+--   # you do not use "img ## to refer to it... just "pImage"
+
+--   -- if second param is empty we toggle it; otherwise set it as specified;
+--   -- called from main img script when tapped and when main cd closes to reset
+
+--   if pFullSize = "" then -- calculate if it's already full size
+--      put (the width of pImage > sCardWidth) into pFullSize
+--      # true for landscape (width is greater); false for portrait (height is greater)
+--   end if
+--   put the formattedWidth of pImage into tFWd
+--   put the formattedHeight of pImage into tFHt
+
+--   if pFullSize then -- reduce to fit
+--      resizeToWidth pImage,pTargetSize
+--   else -- return to full size
+--      resizeToHeight pImage,max(tFHt,sCardHeight)
+--   end if
+
+--   # set the location of image, 
+--   # it is empty, assume to card rect
+--   if pLocation = empty then
+--      set the loc of pImage to sCardLoc
+--   else
+--      set the loc of pImage to pLocation
+--   end if
+--end toggleImgSize
 
 
 
@@ -503,8 +551,8 @@ command display_SetStatusBarVis visBoolean
          mobileShowStatusBar
       else
          mobileHideStatusBar
-      end if   
-   end if     
+      end if 
+   end if
 end display_SetStatusBarVis
 
 command showLoaderGIF pBool
