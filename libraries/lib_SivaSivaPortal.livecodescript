@@ -35,7 +35,7 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 --> Variables
 -
 local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle,sNavMap
-local sLastModulesList
+local sLastModulesList,sOrientation
 
 
 ------------- Navigation section -------------------
@@ -68,6 +68,7 @@ local sLastModulesList
 
 
 command portal_GoStack cardOrStackObject
+   
    tsNetLibUrlReuseConnection false
    # in case the UI froze on internet connection the 
    # use the user was banging in nav icons.
@@ -86,41 +87,50 @@ command portal_GoStack cardOrStackObject
       deleteAllMobileControls # will destroy all except audioPlayer
    end if
    
-   
    ## Do not change to the acceleratedRending true | false at this point
    ## it causes a blank black screen going form one stack to another
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
-   --   if pTrackdata["contentTarget"] is "stack wordpuzzles" \
-   --         and the platform is "iPhone" then
-   --      # handle the shift of the main nav screen when returning
-   --      set the destroyStack of this stack to false
-   --   end if
+   
+   if getOrientionOfStacks(oStackName) then
+      put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into cardOrStackObject
+            end if
+      
+      close stack oStackName
+      go cardOrStackObject
+      if isMobile() = true then
+         mobileClearTouches
+      end if
+      
+      --if the lockScreen is true then unlock screen
+      
+      if oStackName is "Siva-Siva-Portal" then 
+         put "navigation/topindex" into pAction
+      else 
+         put "navigation/goContent" into pAction
+      end if
+      
+      if oStackName is "Siva-Siva-Portal" then
+         news_Fetch
+      end if
+      
+      put oStackName into pTrackData["exitFrom"]
+      tracking_RecordActivity "Portal", pAction, pTrackdata 
+   end portal_GoStack
+   
+function getOrientionOfStacks oStackName, cardOrStackObject
+   local tLandscapeModules, tPortraitModules
+   # go for lanscape to portrait requires us to manually load and blank
+   # screen to all for rendering change to happen
+   
+   put "wordpuzzles,view_BrowserLandscape" into tLandscapeModules
+   put "siva-siva-portal, journal, settings" into tPortraitModules
+   
+   return (oStackName is among the items of  tLandscapeModules)
    
    
-   close stack oStackName
-   go cardOrStackObject
-   if isMobile() = true then
-      mobileClearTouches
-   end if
-   
-   --if the lockScreen is true then unlock screen
-   
-   if oStackName is "Siva-Siva-Portal" then 
-      put "navigation/topindex" into pAction
-   else 
-      put "navigation/goContent" into pAction
-   end if
-   
-   if oStackName is "Siva-Siva-Portal" then
-      news_Fetch
-   end if
-   
-   put oStackName into pTrackData["exitFrom"]
-   tracking_RecordActivity "Portal", pAction, pTrackdata 
-   
-end portal_GoStack
+end getOrientionOfStacks
 
 command portal_DoRowLink rowName
    local linkArray, linkCommand, linkParam
