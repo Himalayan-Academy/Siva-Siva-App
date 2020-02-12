@@ -10,7 +10,7 @@ global sConfigA
 
 on mouseUp
    local tTarget, tShareControl, tControl, tBrowser
-   local tCdHeight, tSharingHeight
+   local tCdHeight, tSharingHeight,tParam
    
    -- record the last URL they were on
    if not (the vis of widget "loader") then
@@ -28,14 +28,15 @@ on mouseUp
       -- give time for connection to close before close the stack
       -- maybe to helps
       if isMobile() then
-      wait 1 milliseconds with messages
-      mobileClearTouches
+         wait 1 milliseconds with messages
+         mobileClearTouches
       end if
    end if
    
    switch tTarget
       case "go-home-portal"
-         portal_GoStack ("Siva-Siva-Portal")
+         --put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into tParam
+         portal_GoStack "Siva-Siva-Portal"
          break
          
       Case "settings-gear"

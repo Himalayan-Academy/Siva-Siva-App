@@ -7,10 +7,12 @@ Script "stack_wordpuzzles_button_id_11502"
 
 
 on mouseUp
+   local tParam
    show grc "blankScreen"
    clearBoard
    if the platform is "iphone" then
       wait 50 milliseconds with messages
    end if
-   portal_GoStack ("Siva-Siva-Portal")
+   --put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into tParam
+   portal_GoStack "Siva-Siva-Portal"
 end mouseUp

@@ -95,6 +95,7 @@ end closeStack
 
 on updateUI
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground
+   local tLoading, tPausePlay
    put the long id of grp "footerNavigation" into tFooter
    send "updateUI" to tFooter
    

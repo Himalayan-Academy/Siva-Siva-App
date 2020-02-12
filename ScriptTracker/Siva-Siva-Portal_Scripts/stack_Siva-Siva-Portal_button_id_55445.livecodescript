@@ -7,5 +7,13 @@ Script "stack_Siva-Siva-Portal_button_id_55445"
 
 
 on mouseup
-   go card "mainNav"
+   if not isMobile() then
+      portal_GoStack "shum"
+   else
+      ask password "Secret Gateway"
+      if it is "10008shum" then
+         portal_GoStack "shum"
+      end if
+   end if
+   
 end mouseup

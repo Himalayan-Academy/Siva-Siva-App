@@ -53,3 +53,7 @@
 * ID: button id 67132 of card id 8169 of stack "Siva-Siva-Portal"
 * [stack_Siva-Siva-Portal_button_id_67132](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_67132.livecodescript)
 
+**card "loader" of stack "Siva-Siva-Portal"**
+* ID: card id 67353 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_card_id_67353](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_card_id_67353.livecodescript)
+

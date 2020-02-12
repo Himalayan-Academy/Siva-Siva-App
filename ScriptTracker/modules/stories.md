@@ -1,8 +1,4 @@
 # stories
-**button "goNext" of group "homeStoryBkgnd" of card "storiesHome" of stack "stories"**
-* ID: button id 1312 of group id 1308 of card id 1002 of stack "stories"
-* [stack_stories_button_id_1312](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1312.livecodescript)
-
 **group "share-ui" of card "storiesHome" of stack "stories"**
 * ID: group id 1301 of card id 1002 of stack "stories"
 * Behavior: stack "behavior_SocialShare"
