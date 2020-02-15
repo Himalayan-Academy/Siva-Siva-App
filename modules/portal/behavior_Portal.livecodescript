@@ -11,7 +11,7 @@ on preOpenStack
 end preOpenStack
 
 on openStack
-   set the acceleratedRendering of this stack to true
+   set the acceleratedRendering of this stack to false
 end openstack
 
 # set a hidden preference of disk to call of 5 - 10

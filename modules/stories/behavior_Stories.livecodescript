@@ -43,7 +43,7 @@ on preOpenCard
    
    switch tCard
       case "storiesHome"
-         # assume opening img if a story in not in play
+         # assume opening img if a story has not been started by user
          # load the menu in any case:
          put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
          
@@ -68,7 +68,7 @@ on preOpenCard
    # or watch the another story, after opening the stack
    # and this not be called
    
-   endInTwoScenes
+
    
 end preopenCard
 
@@ -76,19 +76,21 @@ end preopenCard
 
 
 /*
-UX for user for the stack and card
+UX for user for the stack and cardi
 */
 on mouseup
    local tTarget,tTargetOwner,tTips
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
-   
+   endInTwoScenes
    switch tTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
          getcontent sStoryTitle
          showAttribution sAttribution
          showStoryText
+         
+         
          break
       case "tips"
          put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
@@ -99,7 +101,9 @@ on mouseup
          if fld "homeStoryText" contains "User Guide" then
             showStoryMenu
          else
+            
             goNextScene
+            
          end if
          break
       case "StoryImage"
@@ -117,9 +121,6 @@ on mouseup
          else
             put tCurrentLoc into sImageLoc
          end if
-         
-         --switchViewImageState sStoryImage
-         break
          
    end switch
    
@@ -167,25 +168,19 @@ end resizeStack
 
 
 command initializeStory
-   
+   local imageList,storyIsCachedFlag
    # for testin,set last scene toward the and
    --put 38 into sLastScene         
    
    # story is cached
-   if getCache("storyIsCachedFlag") = 1 then 
+   if getCache(storyIsCachedFlag) = 1 then 
       exit initializeStory #all content is cached
    end if
    
-   #first run; story number is was not save to pref and is null
-   if getCache("storyNumber") = "" then 
-      setCache"storyNumber",1
-   end if
-   
-   put getCache("storyNumber")  into sStoryTitle
-   getContent sStoryTitle
+   #first run; 
    
    # Load local  with images and text
-   put getCache("imageList") into simageList
+   put getCache(imageList) into simageList
    put getCache("Quotes") into sQuoteList
    put getCache("Attribution") into sAttribution 
    put getCache("sceneCount") into sTotalSceneCount
@@ -214,9 +209,8 @@ end initializeStory
 
 # later should be  in model_Narratives
 
-
 command goNextScene
-   local tLine	
+   local tLine
    lock screen
    --breakpoint
    local tImage, tPath
@@ -228,7 +222,7 @@ command goNextScene
    put  getCache("Quotes") into sQuoteList
    put  getCache("ImageList") into sImageList
    
-   
+
    --breakpoint
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
@@ -265,7 +259,6 @@ command goNextScene
       # put line  sLastImage of sImageList into tPath
       loadNewImage tPath
    end if
-   
    
    add 1 to sLastScene
    setCache "storyScene",sLastScene 
@@ -310,8 +303,11 @@ end showIsOver
 
 command endInTwoScenes
    if the environment is "development" then
-      setCache "storyScene",sTotalSceneCount-2
-      put sTotalSceneCount-2 into sLastScene
+      if sTotalSceneCount  > 5 then
+         put 6 into sTotalSceneCount
+         setCache "SceneCount",6
+         put 6 into sLastScene
+      end if
    end if
 end endInTwoScenes
 
@@ -390,7 +386,8 @@ end journalResume
 
 on updateUI
    local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext,tControl
-
+   local tGoTips
+   
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7
@@ -407,11 +404,13 @@ on updateUI
    CenterMe tStoryImage
    
    put the long id of grp "textDisplay" into tTextDisplay
-   topCenterMe tTextDisplay,100
-   
+   topCenterMe tTextDisplay,50
    
    put the long id of btn "goNext" into tGoNext
    bottomCenterMe tGoNext,50
+   
+   put the long id of btn "tips"  into tGoTips
+   bottomCenterMe tGoTips,60
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter

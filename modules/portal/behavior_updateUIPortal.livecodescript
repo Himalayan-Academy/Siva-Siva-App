@@ -91,7 +91,7 @@ on mouseup
       dispatch "fetchSubMenu" to grp "navMandala" with tTarget
       wait 400 milliseconds
       
-      show grp "SubNav" with visual effect dissolve fast 
+      show grp "SubNav" with visual effect "dissolve fast"
       break
    case "subNav"
       put the value of clickline()  into tTarget
@@ -167,7 +167,7 @@ end setDefaultImage
       
       
 command setSubNavBkgndImage pMenu
-   local tMenuBkgnd, pImage, tPortalScreens
+   local tMenuBkgnd, pImage, tPortalScreens, tPath
    
    put the long id of img "subNavBkgImage" into tMenuBkgnd
    
@@ -281,7 +281,7 @@ end resizeStack
 
 command updateUIPortal
    
-   local pControl, tBrandImage, tBottomMargin
+   local pControl, tBrandImage, tBottomMargin, sMenuBkgnd
    
    #  UI responsive
    put the long id of img "homeMainImage" of card "Home" into sMainImage
@@ -322,7 +322,7 @@ command updateUIPortal
          # bButtons and Nav
          
          put the long id of grp "navMandala" into pControl
-         topCenterMe pControl,95
+         topCenterMe pControl,75
          -- centerMe pControl
          
          put the long id of img "hideNavMandala" into pControl
@@ -338,9 +338,9 @@ command updateUIPortal
          put the long id of widget "globalNavTree" of me into pControl
          set the width of pControl to CardWidth()
          topCenterMe pControl,60
-            
+         
          break
-
+         
    end switch
    
    # background group of all cards
@@ -349,7 +349,7 @@ command updateUIPortal
    topRightMe pControl,70,20
    
    put the long id of fld "Notification" of me into pControl
-  bottomCenterMe pControl,100
+   bottomCenterMe pControl,100
    
 end updateUIPortal
 

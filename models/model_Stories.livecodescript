@@ -14,7 +14,7 @@
 # CHANGES  10-08-2019 Added a command to call a class of story (future use case, current a slideshow from the app) and random function 
 # CHANGES: 10-20-2018 CREATED Brahmanathaswami
 
-local  sStoriesMetaArray 
+local  sStoriesMetaArray, sStoryTitle
 
 
 function loadStoriesMetadata 
@@ -39,8 +39,8 @@ end loadStoriesMetadata
 
 command  getContent sStoryTitle # keys of the stories.json 
    
-   local sImageList, sQuoteList, sAttribution, sTotalSceneCount
-   
+   local sImageList, sQuoteList, sAttribution, sTotalSceneCount, slidesLimit
+   local imageList, Quotes, Attribution, SceneCount, storyIsCachedFlag, storyTitle
    
    put sStoriesMetaArray["Stories"][sStoryTitle]["attribution"] into sAttribution
    put randomPhotos(sStoriesMetaArray["Stories"][sStoryTitle]["imageTags"]) into sImageList 
@@ -52,12 +52,12 @@ command  getContent sStoryTitle # keys of the stories.json
       put the number of lines of  sImageList into sTotalSceneCount
    end if
    
-   setCache imageList, sImageList
-   setCache Quotes, sQuoteList
-   setCache Attribution, sAttribution
-   setCache SceneCount, sTotalSceneCount
-   setCache storyIsCachedFlag, 1
-   setCache storyTitle, sStoryTitle
+   setCache "imageList", sImageList
+   setCache "Quotes", sQuoteList
+   setCache "Attribution", sAttribution
+   setCache "SceneCount", sTotalSceneCount
+   setCache "storyIsCachedFlag", 1
+   setCache "storyTitle", sStoryTitle
 end getContent
 
 --command showStory pStoryA
@@ -171,6 +171,7 @@ end storyItemLoadImage
 
 function randomPhotos pClass
    local tQueriesA, tSQL, tConnectionID, tImageList, tSelectionQuery
+   Local tPhotoFileIDA
    put "selectCached" & pClass & "Photos"  into tSelectionQuery
    # see /models/sqlQueries.txt  which is a library or queries
    # turn into an array by lib_SivaSiva
@@ -220,6 +221,8 @@ end randomPhotos
 
 function fetchQuotesCollection pCollection
    local tQueriesA, tSQL, tConnectionID, tQuotesDataA, tQuote, tQuotes
+   local aSelectedQuotes
+   
    put getSQLQueries() into tQueriesA
    repeat for each key x in tQueriesA
       if tQueriesA[x]["queryName"] = "selectQuotesCollection" then

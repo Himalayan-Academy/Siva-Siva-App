@@ -442,15 +442,19 @@ local sJournalFlag,sJournalData
 local sCacheA
 
 command clearCache
-   put empty into sCacheA
+   if not isMobile() then
+      put empty into sCacheA
+   end if
 end clearCache
 
 on displayCache
-   local tOutput
-   repeat for each key x in sCacheA
-      put x & ": " & sCacheA[x] & cr after tOutput
-   end repeat
-   put tOutput
+   if not isMobile() then
+      local tOutput
+      repeat for each key x in sCacheA
+         put x & ": " & sCacheA[x] & cr after tOutput
+      end repeat
+      put tOutput
+   end if
 end displayCache
 
 command setCache pKey, pValue

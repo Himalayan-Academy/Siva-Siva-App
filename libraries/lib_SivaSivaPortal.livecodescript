@@ -121,14 +121,13 @@ command portal_GoStack cardOrStackObject
    
 function getOrientionOfStacks oStackName, cardOrStackObject
    local tLandscapeModules, tPortraitModules
-   # go for lanscape to portrait requires us to manually load and blank
-   # screen to all for rendering change to happen
+   # go for landscape to portrait requires us to manually load a blank
+   # screen to allow the rendering change to happen while screen is blank
    
    put "wordpuzzles,view_BrowserLandscape" into tLandscapeModules
    put "siva-siva-portal, journal, settings" into tPortraitModules
    
    return (oStackName is among the items of  tLandscapeModules)
-   
    
 end getOrientionOfStacks
 
