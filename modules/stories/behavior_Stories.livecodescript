@@ -17,10 +17,14 @@ but make sure the any handler in the "model" category an don't there
 
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray  # get the metadata for each story; and parameters
-local  sImageList, sLastImage, sQuoteList, sLastQuote
-local sCardBkgnd, sStoryBkgnd, sStoryImage,sImageloc
+
+# geometry vars
+local sCardBkgnd, sStoryBkgnd, sStoryImage,sImageloc,sHomeText
+
+
 # story control variables, stored cache
 # must wipe them on end of story
+local  sImageList, sLastImage, sQuoteList, sLastQuote
 local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
 
 on preopenstack
@@ -41,15 +45,19 @@ on preOpenCard
    put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
    put getPref("preferences/modules/stories/storyScene/") into  sLastScene
    
+   # we going to manipulate these controls across many handlers
+   # declare them here instead of in the handlers
+   put the long id of fld "homeStoryText" into sHomeText
+   put the long id of img "HomeCardBkgnd" into sCardBkgnd
+   put the long id of img "StoryBkgndImage" into sStoryBkgnd
+   put the long id of img "StoryImage" into sStoryImage
+   
+   
    switch tCard
       case "storiesHome"
          # assume opening img if a story has not been started by user
          # load the menu in any case:
          put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
-         
-         put the long id of img "HomeCardBkgnd" into sCardBkgnd
-         put the long id of img "StoryBkgndImage" into sStoryBkgnd
-         put the long id of img "StoryImage" into sStoryImage
          
          if sStoryTitle is "false" or sStoryTitle is empty then
             display_SetStatusBarVis true
@@ -61,15 +69,7 @@ on preOpenCard
          end if
          break
    end switch
-   
-   # for dev: 
-   # go the end to the story to watch the UX
-   # comment out if you want to whole story
-   # or watch the another story, after opening the stack
-   # and this not be called
-   
 
-   
 end preopenCard
 
 
@@ -80,6 +80,7 @@ UX for user for the stack and cardi
 */
 on mouseup
    local tTarget,tTargetOwner,tTips
+  
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    endInTwoScenes
@@ -89,12 +90,11 @@ on mouseup
          getcontent sStoryTitle
          showAttribution sAttribution
          showStoryText
-         
-         
          break
       case "tips"
          put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
-         set the htmltext of fld "homeStoryText" to tTips
+         set the htmltext of sHomeText to tTips
+         --optimizeField sHomeText
          showStoryText
          break
       case "goNext"
@@ -266,9 +266,11 @@ command goNextScene
 end goNextScene
 
 command showAttribution sAttribution
+ 
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
+   optimizeField sHomeText,34,"center"
    setCache "storyScene",0
    unlock screen
 end showAttribution
@@ -332,24 +334,40 @@ end loadNewImage
 
 command loadNextQuote pQuoteNo
    
-   local tControl,tQuoteNo
+   local tControl,tQuoteNo, pField
+   local tSmallText,tTextAlign,tTextSize
    lock screen for visual effect
    hide sStoryImage
    set the itemdel to "|"
    # random quote
    put random(the number of items of sQuoteList) into tQuoteNo
-   --put item tQuote of sQuoteList into fld "preferences"
+   
    put item tQuoteNo  of sQuoteList into fld "homeStoryText"
-   --put the long id of fld "homeStoryText" into tControl
+   put the long id of fld "homeStoryText" into tControl
+   
+   ----
+   # hack size and align. We will find a global way to is the model getContent
+   # each story will have its own text size etc.
+   
+   --   put "Vedas,Song of Tayumanavar" into tSmallText
+   --   if sStoryTitle is among the items of tSmalltext then
+   #why does the above not work?
+   
+   if (sStoryTitle = "Vedas") OR (sStoryTitle = "Songs of Tayumanavar") then
+      put 24 into tTextSize
+      put "left" into tTextalign
+   else 
+      put 34 into tTextSize
+      put "center" into tTextalign
+   end if
+   --------
+   
+   optimizeField tControl,tTextSize,tTextalign
+   
    showStoryText
    unlock screen with visual effect "dissolve"  very fast
    
 end loadNextQuote
-
-
-command fitFieldToContent  pField
-   set the height of pField to the formattedHeight of pField
-end fitFieldToContent
 
 command hideShowField pField,pBool
    set the vis of pField to pBool
@@ -369,7 +387,6 @@ end closestack
 on pingBehavior
    answer "got cha"
 end pingBehavior
-
 
 -------
 local pData,  tCd,  
@@ -407,10 +424,10 @@ on updateUI
    topCenterMe tTextDisplay,50
    
    put the long id of btn "goNext" into tGoNext
-   bottomCenterMe tGoNext,50
+   bottomCenterMe tGoNext,65
    
    put the long id of btn "tips"  into tGoTips
-   bottomCenterMe tGoTips,60
+   bottomCenterMe tGoTips,80
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter

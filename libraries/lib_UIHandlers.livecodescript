@@ -222,7 +222,7 @@ end centerMe
 
 
 command topCenterMe pControl, y
-   # place a control at the bottom of the screen
+   # place a control at the top of the screen
    # can be any width, even beyond the width the card.
    # y is single integer which is from the top of card
    # It empty, defaults to center to screen
@@ -279,6 +279,38 @@ command bottomCenterMe pControl, y
    set the loc of pControl to sCardLoc
    set the bottom of pControl to sCardHeight - y - sMargins["bottom"]
 end bottomCenterMe 
+
+####################
+on ___FIELDManipulation
+end ___FIELDManipulation
+
+/*later we can investage Ralph DiMola library 
+to add handles or parameters;
+for now we just handle the height of the field
+and add a scroller if the text is too long.
+eventually I would add textSize and Lineheight etc.
+*/
+
+command optimizeField pControl,pTextSize,pTextAlign
+   local tHeight
+   if pTextsize is not empty then
+      set the textSize of pControl to pTextSize
+      set the textalign  of pControl to pTextAlign
+   end if
+   put the formattedheight of pControl  into tHeight
+   
+   if tHeight > 527 then
+      set the height of pControl to 527
+      topCenterMe pControl, 50
+      if the formattedheight of pControl > the height of pControl then
+         dispatch "CreateScroller"  to pControl with "pControl" 
+      end if
+   else
+      set the height of pControl to tHeight
+      CenterMe pControl
+   end if
+   
+end optimizeField
 
 ####################
 on ___IMAGEManipulation
