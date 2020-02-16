@@ -7,24 +7,25 @@ Script "stack_lexicon_card_id_1056"
 
 
 on preOpenCard
+   local tUrl
    
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
    setCardCoords
    set the rect of widget "Browser" of me to safeRect()
-   --set the rect of widget "Browser" of me to the rect of this card
    
    --put "this is preOpenStack"
-   if the environment is not "development" then
-      set the url of widget "Browser" to ("file:" & (specialFolderPath("resources") & "/modules/lexicon/web/index.html") )
-   else
-      if platform()= "android" then
-         set the url of widget "Browser" to (specialFolderPath("resources") & "/web/index.html") 
-      else 
-         set the url of widget "Browser" to ("file:" & (specialFolderPath("resources") & "/web/index.html") )
-      end if
+   put specialFolderPath("resources") into tUrl
+   if the platform is not "android" then
+      put "file://" before tUrl
    end if
+   if the environment is not "development" then
+      put "/modules/lexicon/web/index.html" after tUrl
+   else
+      put "/web/index.html" after tUrl
+   end if
+   set the url of widget "Browser" to tUrl
    
    if getPhoneModel() is "iPhoneX" then
       mobileShowStatusBar
