@@ -17,9 +17,13 @@ on preOpenCard
    
    --put "this is preOpenStack"
    if the environment is not "development" then
-      set the url of widget "Browser" to ("file://" & (specialFolderPath("resources") & "/modules/lexicon/web/index.html") )
+      set the url of widget "Browser" to ("file:" & (specialFolderPath("resources") & "/modules/lexicon/web/index.html") )
    else
-      set the url of widget "Browser" to ("file://" & (specialFolderPath("resources") & "/web/index.html") )
+      if platform()= "android" then
+         set the url of widget "Browser" to (specialFolderPath("resources") & "/web/index.html") 
+      else 
+         set the url of widget "Browser" to ("file:" & (specialFolderPath("resources") & "/web/index.html") )
+      end if
    end if
    
    if getPhoneModel() is "iPhoneX" then
