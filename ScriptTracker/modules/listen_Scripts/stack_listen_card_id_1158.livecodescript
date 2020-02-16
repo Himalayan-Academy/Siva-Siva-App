@@ -7,7 +7,7 @@ Script "stack_listen_card_id_1158"
 
 
 local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll
-
+local tHGroup, 
 ## touch commands to scroll the groups
 on preopencard
    
@@ -17,7 +17,9 @@ end preopencard
 
 on opencard
      audioIsRunning
-end opencard
+  end opencard
+  
+
 
 on touchStart pTouchID
    put empty into sStartX
@@ -74,6 +76,7 @@ on mouseDown
 end mouseDown
 
 on mouseup
+   local pSelection
    if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
      put the target into pSelection
       selectPlayList pSelection # handles collection and other clicks on the UI

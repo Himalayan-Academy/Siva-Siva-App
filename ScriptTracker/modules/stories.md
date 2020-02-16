@@ -13,6 +13,10 @@
 * ID: button id 1297 of group id 1298 of card id 1002 of stack "stories"
 * [stack_stories_button_id_1297](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1297.livecodescript)
 
+**button "delete local-cache" of group "Tools" of card "storiesHome" of stack "stories"**
+* ID: button id 1316 of group id 1298 of card id 1002 of stack "stories"
+* [stack_stories_button_id_1316](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1316.livecodescript)
+
 **widget "goNext" of group "storyBoard" of card "showStories" of stack "stories"**
 * ID: widget id 1295 of group id 1294 of card id 1291 of stack "stories"
 * Widget Kind: com.livecode.widget.svgpath
