@@ -95,6 +95,10 @@ private command _setPhoneModel
       else if tW is 812 or tW is 896 then
          --iPhone with a notch, landscape
          put "iPhoneX" into sPhoneModel
+      else if (tW is 1024 and tH is 1366) or \
+            (tH is 1024 and tW is 1366) then
+         --iPad Pro 12.9
+         put "iPadPro12.9" into sPhoneModel
       else
          put "iPhone" into sPhoneModel
       end if
@@ -112,6 +116,14 @@ private command _setPhoneModel
          put 0 into sLandscapeMargins["top"] -- 32 if status bar visible
          put 23 into sLandscapeMargins["bottom"]
          put 44 into sLandscapeMargins["side"]
+         break
+      case "iPadPro12.9"
+         put 0 into sPortraitMargins["top"]
+         put 34 into sPortraitMargins["bottom"]
+         put 0 into sPortraitMargins["side"]
+         put 0 into sLandscapeMargins["top"]
+         put 23 into sLandscapeMargins["bottom"]
+         put 0 into sLandscapeMargins["side"]
          break
       default
          put 0 into sPortraitMargins["top"]
