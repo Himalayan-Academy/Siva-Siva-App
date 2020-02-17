@@ -58,6 +58,9 @@ command  getContent sStoryTitle # keys of the stories.json
    setCache "SceneCount", sTotalSceneCount
    setCache "storyIsCachedFlag", 1
    setCache "storyTitle", sStoryTitle
+   if not isMobile() then
+      displayCache
+   end if
 end getContent
 
 --command showStory pStoryA

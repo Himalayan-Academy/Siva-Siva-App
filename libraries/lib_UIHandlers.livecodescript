@@ -303,27 +303,24 @@ and add a scroller if the text is too long.
 eventually I would add textSize and Lineheight etc.
 */
 
-command optimizeField pControl,pDefault,pTextSize,pTextAlign
+command optimizeField pControl,pTextSize,pTextAlign
    local tHeight
-   if pDefault = true then
-      set the rect of pControl to 30,60,380,620 # not responsive! should be..
-   else
-      if pTextsize is not empty then
-         set the textSize of pControl to pTextSize
-         set the textalign  of pControl to pTextAlign
-      end if
-      put the formattedheight of pControl  into tHeight
+   put the formattedheight of pControl  into tHeight
+   if pTextsize is not empty then
+      set the textSize of pControl to pTextSize
+      set the textalign  of pControl to pTextAlign
+   end if
+   
+   if tHeight > 500 then
+      set the height of pControl to 527
+      topCenterMe pControl, 50
       
-      if tHeight > 527 then
-         set the height of pControl to 527
-         topCenterMe pControl, 50
-         if the formattedheight of pControl > the height of pControl then
-            dispatch "CreateScroller"  to pControl with "pControl" 
-         end if
-      else
-         set the height of pControl to tHeight
-         CenterMe pControl
-      end if
+   else
+      set the height of pControl to tHeight
+      topCenterMe pControl, 150
+   end if
+   if the formattedheight of pControl > the height of pControl then
+      dispatch "CreateScroller"  to pControl with "pControl" 
    end if
 end optimizeField
 

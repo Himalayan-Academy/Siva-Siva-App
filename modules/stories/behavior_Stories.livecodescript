@@ -19,13 +19,17 @@ global sConfigA, sDefaultImage,
 local sStoriesMetaArray  # get the metadata for each story; and parameters
 
 # geometry vars
-local sCardBkgnd, sStoryBkgnd, sStoryImage,sImageloc,sHomeText
+local sCardBkgnd, sStoryBkgnd, sStoryImage,sImageloc
 
 
 # story control variables, stored cache
 # must wipe them on end of story
 local  sImageList, sLastImage, sQuoteList, sLastQuote
 local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
+
+# various screen display options
+local sTarget, sTargetOwner
+local sWhatText,sHomeText,sUserGuideFld
 
 on preopenstack
    put loadStoriesMetadata() into sStoriesMetaArray
@@ -51,6 +55,7 @@ on preOpenCard
    put the long id of img "HomeCardBkgnd" into sCardBkgnd
    put the long id of img "StoryBkgndImage" into sStoryBkgnd
    put the long id of img "StoryImage" into sStoryImage
+   put the long id of fld "userGuide" into sUserGuideFld
    
    
    switch tCard
@@ -69,7 +74,7 @@ on preOpenCard
          end if
          break
    end switch
-
+   
 end preopenCard
 
 
@@ -79,27 +84,25 @@ end preopenCard
 UX for user for the stack and cardi
 */
 on mouseup
-   local tTarget,tTargetOwner,tTips
+   local tTips
    
-   put the short name of the owner of the target into tTargetOwner
-   put the short name of the target into tTarget
+   put the short name of the owner of the target into sTargetOwner
+   put the short name of the target into sTarget
    endInTwoScenes
-   switch tTarget
+   switch sTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
          getcontent sStoryTitle
          showAttribution sAttribution
-         showStoryText
+         showStoryText "quotes"
          break
       case "tips"
-         optimizeField sHomeText,true
          put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
-         set the htmltext of sHomeText to tTips
-         
-         showStoryText
+         set the htmltext of sUserGuideFld to tTips
+         showStoryText sUserGuideFld
          break
       case "goNext"
-         if fld "homeStoryText" contains "User Guide" then
+        if (the vis of sUserGuideFld) is true then
             showStoryMenu
          else
             
@@ -128,10 +131,7 @@ on mouseup
 end mouseup
 
 on mousedown
-   local tTarget,tTargetOwner,tTips
-   put the short name of the owner of the target into tTargetOwner
-   put the short name of the target into tTarget
-   switch tTarget
+   switch sTarget
       case "StoryImage"
          grab img "StoryImage"
          put the loc of  img "StoryImage" into sImageLoc
@@ -139,33 +139,6 @@ on mousedown
    end switch
    break
 end mouseDown
-
-   	
-command showStoryText
-   set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
-   show grp "homeStoryBkgnd"
-   show grp "textDisplay"
-   hide grp "storiesMenu"
-end showStoryText
-
-command showStoryMenu
-   #sCardBkgnd,sStoryBkgnd,sStoryImage
-   set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-   # we show menu
-   # no story is cached
-   hide grp "homeStoryBkgnd"
-   hide grp "textDisplay"
-   show grp "storiesMenu"
-end showStoryMenu
-
-
-on resizeStack
-   lock screen
-   setCardCoords
-   updateUI
-   unlock screen
-end resizeStack
-
 
 
 command initializeStory
@@ -213,6 +186,10 @@ end initializeStory
 command goNextScene
    local tLine
    lock screen
+   if sTarget is "Tips" then
+      showStoryText sUserGuideFld
+      exit goNextScene
+   end if
    --breakpoint
    local tImage, tPath
    put  getCache("storyTitle") into sStoryTitle
@@ -223,7 +200,7 @@ command goNextScene
    put  getCache("Quotes") into sQuoteList
    put  getCache("ImageList") into sImageList
    
-
+   
    --breakpoint
    --ntinfo ("last Image: " & sLastImage && "ImageCount:" &sTotalSceneCount)
    
@@ -266,12 +243,43 @@ command goNextScene
    unlock Screen
 end goNextScene
 
+command showStoryText sWhatText
+   set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
+   show grp "homeStoryBkgnd"
+   show grp "textDisplay"
+   switch sWhatText
+      case (sWhatText is empty) # default
+      case "quotes"
+         show sHomeText
+         hide fld "userGuide"
+         break
+      case sUserGuideFld
+         hide sHomeText
+         show sUserGuideFld
+         topCenterMe sUserGuideFld,50
+         break
+   end switch
+   
+   hide grp "storiesMenu"
+end showStoryText
+
+command showStoryMenu
+   #sCardBkgnd,sStoryBkgnd,sStoryImage
+   set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   # we show menu
+   # no story is cached
+   hide grp "homeStoryBkgnd"
+   hide sHomeText
+   hide sUserGuideFld
+   show grp "storiesMenu"
+end showStoryMenu
+
 command showAttribution sAttribution
  
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
-   optimizeField sHomeText,true,34,"center"
+   optimizeField sHomeText,34,"center"
    setCache "storyScene",0
    unlock screen
 end showAttribution
@@ -344,15 +352,6 @@ command loadNextQuote pQuoteNo
    put random(the number of items of sQuoteList) into tQuoteNo
    
    put item tQuoteNo  of sQuoteList into fld "homeStoryText"
-   put the long id of fld "homeStoryText" into tControl
-   
-   ----
-   # hack size and align. We will find a global way to is the model getContent
-   # each story will have its own text size etc.
-   
-   --   put "Vedas,Song of Tayumanavar" into tSmallText
-   --   if sStoryTitle is among the items of tSmalltext then
-   #why does the above not work?
    
    if (sStoryTitle = "Vedas") OR (sStoryTitle = "Songs of Tayumanavar") then
       put 24 into tTextSize
@@ -363,9 +362,9 @@ command loadNextQuote pQuoteNo
    end if
    --------
    
-   optimizeField tControl,false,tTextSize,tTextalign
+   optimizeField sHomeText,tTextSize,tTextalign
    
-   showStoryText
+   showStoryText sHomeText
    unlock screen with visual effect "dissolve"  very fast
    
 end loadNextQuote
@@ -402,6 +401,15 @@ on journalResume pData -- sent from journal stack
    goCd tCd
 end journalResume
 
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+
 on updateUI
    local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext,tControl
    local tGoTips
@@ -428,7 +436,7 @@ on updateUI
    bottomCenterMe tGoNext,65
    
    put the long id of btn "tips"  into tGoTips
-   bottomCenterMe tGoTips,80
+   bottomCenterMe tGoTips,70
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
