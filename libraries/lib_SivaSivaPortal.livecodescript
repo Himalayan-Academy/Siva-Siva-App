@@ -94,30 +94,31 @@ command portal_GoStack cardOrStackObject
    
    
    if getOrientionOfStacks(oStackName) then
-      put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into cardOrStackObject
-            end if
-      
-      close stack oStackName
-      go cardOrStackObject
-      if isMobile() = true then
-         mobileClearTouches
-      end if
-      
-      --if the lockScreen is true then unlock screen
-      
-      if oStackName is "Siva-Siva-Portal" then 
-         put "navigation/topindex" into pAction
-      else 
-         put "navigation/goContent" into pAction
-      end if
-      
-      if oStackName is "Siva-Siva-Portal" then
-         news_Fetch
-      end if
-      
-      put oStackName into pTrackData["exitFrom"]
-      tracking_RecordActivity "Portal", pAction, pTrackdata 
-   end portal_GoStack
+      ##put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into cardOrStackObject
+      put the long id of stack "blank" into cardOrStackObject
+   end if
+   
+   close stack oStackName
+   go cardOrStackObject
+   if isMobile() = true then
+      mobileClearTouches
+   end if
+   
+   --if the lockScreen is true then unlock screen
+   
+   if oStackName is "Siva-Siva-Portal" then 
+      put "navigation/topindex" into pAction
+   else 
+      put "navigation/goContent" into pAction
+   end if
+   
+   if oStackName is "Siva-Siva-Portal" then
+      news_Fetch
+   end if
+   
+   put oStackName into pTrackData["exitFrom"]
+   tracking_RecordActivity "Portal", pAction, pTrackdata 
+end portal_GoStack
    
 function getOrientionOfStacks oStackName, cardOrStackObject
    local tLandscapeModules, tPortraitModules

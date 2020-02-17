@@ -10,7 +10,7 @@ global sConfigA
 
 on mouseUp
    local tTarget, tShareControl, tControl, tBrowser
-   local tCdHeight, tSharingHeight,tParam
+   local tCdHeight, tSharingHeight, tParam, tWaitTime
    
    -- record the last URL they were on
    if not (the vis of widget "loader") then
@@ -28,7 +28,12 @@ on mouseUp
       -- give time for connection to close before close the stack
       -- maybe to helps
       if isMobile() then
-         wait 1 milliseconds with messages
+         if the platform is "iphone" then
+            put 50 into tWaitTime
+         else
+            put 1 into tWaitTime
+         end if
+         wait tWaitTime milliseconds with messages
          mobileClearTouches
       end if
    end if
@@ -36,7 +41,9 @@ on mouseUp
    switch tTarget
       case "go-home-portal"
          --put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into tParam
+         lock screen
          portal_GoStack "Siva-Siva-Portal"
+         unlock screen
          break
          
       Case "settings-gear"
