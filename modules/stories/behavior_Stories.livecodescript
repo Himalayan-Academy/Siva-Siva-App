@@ -80,7 +80,7 @@ UX for user for the stack and cardi
 */
 on mouseup
    local tTarget,tTargetOwner,tTips
-  
+   
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    endInTwoScenes
@@ -92,9 +92,10 @@ on mouseup
          showStoryText
          break
       case "tips"
+         optimizeField sHomeText,true
          put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
          set the htmltext of sHomeText to tTips
-         --optimizeField sHomeText
+         
          showStoryText
          break
       case "goNext"
@@ -270,7 +271,7 @@ command showAttribution sAttribution
    lock screen
    put  getCache("Attribution") into sAttribution
    put "(Story - Slideshow)" & cr & cr &sStoryTitle & cr &cr & "by" & cr &cr & sAttribution into fld "homeStoryText"
-   optimizeField sHomeText,34,"center"
+   optimizeField sHomeText,true,34,"center"
    setCache "storyScene",0
    unlock screen
 end showAttribution
@@ -362,7 +363,7 @@ command loadNextQuote pQuoteNo
    end if
    --------
    
-   optimizeField tControl,tTextSize,tTextalign
+   optimizeField tControl,false,tTextSize,tTextalign
    
    showStoryText
    unlock screen with visual effect "dissolve"  very fast
