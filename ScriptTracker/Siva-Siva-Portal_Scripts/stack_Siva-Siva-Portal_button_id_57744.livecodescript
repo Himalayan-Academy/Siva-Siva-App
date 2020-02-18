@@ -8,7 +8,7 @@ Script "stack_Siva-Siva-Portal_button_id_57744"
 
 on mouseup
    --breakpoint
-   dispatch "setGlobalNavVisible" to widget "globalNavTree" with not (the vis of grp "globalNavTree")
+   dispatch "setGlobalNavVisible" to widget "globalNavTree" with not (the vis of grp "globalNavigation")
 end mouseup
 
 

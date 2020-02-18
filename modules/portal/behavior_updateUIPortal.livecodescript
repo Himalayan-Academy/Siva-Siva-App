@@ -24,7 +24,7 @@ on preOpenCard
    switch pCard
       case "Home"
          # init set up
-         hide grp "globalNavTree"
+         hide grp "globalNavigation"
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          --setUpBrandImage
@@ -105,13 +105,13 @@ end mouseup
 
 # use the return state of home screen
 command showMandala
-   hide grp "globalNavTree"
+   hide grp "globalNavigation"
    # hide sub nav menu
    hide grp "subNav"
   hide img "homeMainImage"
    hide img "subNavBkgImage"
    show btn "brandLogo"
-   hide grp "globalNavTree"
+   hide grp "globalNavigation"
    show btn "backgroundOverlay"
    show grp "navMandala"
    hide img "showNavMandala" # button
@@ -122,7 +122,7 @@ end showMandala
 # the sub-nav menu on screen
 command hideMandala
    hide btn "brandLogo"
-   hide grp "globalNavTree"
+   hide grp "globalNavigation"
    hide grp "navMandala"
    hide btn "backgroundOverlay"
    show img "homeMainImage"

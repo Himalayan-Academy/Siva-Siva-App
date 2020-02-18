@@ -205,11 +205,11 @@ command setGlobalNavVisible pVisible
       hideMandala
       hide img "homeMainImage"
       show btn "backgroundOverlay"
-      show grp "globalNavTree"
+      show grp "globalNavigation"
       createScroller "globalNavTree"
    else
       showMandala
-      hide grp "globalNavTree"
+      hide grp "globalNavigation"
       deleteMobileControl "globalNavTree"
    end if
    unlock screen with visual effect "dissolve" fast
