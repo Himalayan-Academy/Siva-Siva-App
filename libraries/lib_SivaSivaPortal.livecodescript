@@ -34,8 +34,8 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 
 --> Variables
 -
-local LocalArray, sCurrentPortal,sLastStack,sLaunchStack,sLastLinkTitle,sNavMap
-local sLastModulesList,sOrientation
+local LocalArray, sCurrentPortal, sLastStack, sLaunchStack, sLastLinkTitle, sNavMap
+local sLastModulesList, sOrientation, sDestinationCardOrStack
 
 
 ------------- Navigation section -------------------
@@ -92,10 +92,13 @@ command portal_GoStack cardOrStackObject
    
    ntInfo "about to change stacks from: " & oStackName & " to " & cardOrStackObject
    
-   
-   if getOrientionOfStacks(oStackName) then
-      ##put format ("card \"loader\" of stack \"Siva-Siva-Portal\"") into cardOrStackObject
+   if currentlyLandscape() then
+      -- need to transition through a blank card/stack to allow rotation to happen
+      -- before attempting to draw the new portrait card
+      put cardOrStackObject into sDestinationCardOrStack
       put the long id of stack "blank" into cardOrStackObject
+   else
+      put empty into sDestinationCardOrStack
    end if
    
    close stack oStackName
@@ -103,8 +106,6 @@ command portal_GoStack cardOrStackObject
    if isMobile() = true then
       mobileClearTouches
    end if
-   
-   --if the lockScreen is true then unlock screen
    
    if oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
@@ -119,6 +120,15 @@ command portal_GoStack cardOrStackObject
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
 end portal_GoStack
+
+command portal_FinishGoStack
+   # used to complete the navigation from a landscape stack to a portrait stack
+   if sDestinationCardOrStack is empty then
+      exit portal_FinishGoStack
+   end if
+   go sDestinationCardOrStack
+   put empty into sDestinationCardOrStack
+end portal_FinishGoStack
    
 function getOrientionOfStacks oStackName, cardOrStackObject
    local tLandscapeModules, tPortraitModules

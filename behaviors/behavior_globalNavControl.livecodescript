@@ -104,7 +104,7 @@ command goMainMenu
       exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Video,Websites,Journal,My Menu" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Look,Video,Websites,Journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
       # Some have to trigger connectivity, but do nothing (look and websites)
@@ -131,6 +131,7 @@ command goMainMenu
             # cases that require connectivity, 
             # and there are sub-level URLs or Modules
             
+         case "Look"
          case "Video"
          case "Websites"
             if checkConnectionStop() is "false" then
@@ -271,6 +272,11 @@ end checkConnectionStop
 on formattedHeightChanged -- tree changed dimensions
    updateScroller (the short name of me)
 end formattedHeightChanged
+
+on openCard
+   -- path delimiter is not currently saved with the widget
+   set the pathDelimiter of me to "|"
+end openCard
 
 on closeCard
    showMandala

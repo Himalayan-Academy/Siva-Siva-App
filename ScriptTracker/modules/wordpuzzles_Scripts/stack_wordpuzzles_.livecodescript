@@ -15,6 +15,7 @@ on preOpenStack
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
    end if
    hide grc "blankScreen"
+   setCardCoords "landscape"
 end preOpenStack
 
 on closeStack

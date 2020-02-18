@@ -161,6 +161,10 @@ function vertCenter
    return sVertCenter
 end vertCenter
 
+function currentlyLandscape
+   return (sCardWidth > sCardHeight)
+end currentlyLandscape
+
 -- To account for various device notch designs, make functions
 -- available to return the amount of space to allow.
 -- Values will be returned based on current orientation.
