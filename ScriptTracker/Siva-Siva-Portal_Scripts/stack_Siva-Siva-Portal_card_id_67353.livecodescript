@@ -7,6 +7,6 @@ Script "stack_Siva-Siva-Portal_card_id_67353"
 
 
 on opencard
-   wait 1000 milliseconds
+   wait 20 milliseconds
    go to card "home"
 end opencard
