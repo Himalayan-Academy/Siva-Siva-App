@@ -31,7 +31,7 @@ array that we can change dynamically depending on tne context requirments.
 -- 2017-06-12, Brahmanatahswami: created
 ------------------------------------------------
 global sConfigA
-local sShowTime
+local sShowTime,  tImagePath, tTextPath, someURL
 on displayInfo pVis, pSubject, pBackground
    if pVis = "1" then   # We are showing the control
       --lock screen
@@ -74,7 +74,7 @@ on displayInfo pVis, pSubject, pBackground
       # but for Android we had to take the field out!  It's on it's own layer on top of the card
       
       
-      show group "info-container" with visual effect dissolve very fast
+      show group "info-container" with visual "effect" dissolve very fast
       show widget "fontResize"
       show  fld "info-text" with visual scroll down very fast
       send "CreateScroller info-text" to fld "info-text"
@@ -82,7 +82,7 @@ on displayInfo pVis, pSubject, pBackground
    else 
       hide widget "fontResize" 
       hide  fld "info-text"
-      hide group "info-container" with visual effect dissolve very fast
+      hide group "info-container" with visual effect "dissolve" very fast
       hide image "info-bkgnd-img"
       deleteMobileControl "info-text" 
    end if
@@ -90,6 +90,7 @@ on displayInfo pVis, pSubject, pBackground
 end displayInfo
 
 on sendFeedBack
+   local tRecipient,tSubject,tBody
    put "sivasiva@hindu.org" into tRecipient
    put "SivaSiva App Feedback" into tSubject
    put ("Bug reports: " & cr & cr & "Describe what you did: " & cr &cr \
@@ -130,7 +131,8 @@ end fieldLinkClicked
 
 
 command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
-   
+   local tDialogControl, tLocalToast,tCdWidth,tCdHeight,tmsgLines
+   local tBtnHeight, tDialogHeight
    # short notification at bottom of screen goes away of itself
    # use the DoAnswer option for more interactions.
    
@@ -149,8 +151,8 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    
    if pBtn is empty then
       hide btn "DIALOGAFFIRM" of tLocalToast --of grp "botton"
-      set the textalign of fld "lbl-dialogPrompt" of tLocalToast   to center
-      set the textalign of line 1 of fld "lbl-dialogPrompt"  of tLocalToast  to center
+      set the textalign of fld "lbl-dialogPrompt" of tLocalToast  to "center"
+      set the textalign of line 1 of fld "lbl-dialogPrompt"  of tLocalToast  to "center"
    else
       set the label of btn "DIALOGAFFIRM" of tLocalToast  to pBtn
       set the textalign of fld "lbl-dialogPrompt"   of tLocalToast  to left
@@ -224,7 +226,7 @@ This library dispatches that back to the calling handler.
 local sHandleAffirm
 
 command doAnswer pMsg,pBtns,pHandleAffirm
-   
+   local tDialogControl,  tDoAnswer, tWidth, tHeight
    put pHandleAffirm into sHandleAffirm
    
    # copy the control

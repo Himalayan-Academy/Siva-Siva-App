@@ -1,7 +1,7 @@
 ﻿script "behavior_WordPuzzles"
-local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
-local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues
-
+doAnswer "Could not find your city. Tap the location pin to choose one.","OK"local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
+local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
+local sSourceURL
 
 /*
 The important handles for the tiles are  located in the script
@@ -35,6 +35,7 @@ local tWordLoc
 
 on createWordPuzzle
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
+   local sWordCount
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
    end if
@@ -238,6 +239,7 @@ end showTitle
 
 command fetchQuote
    local tConnectionID, tSQL, tCurRange, aSelectedQuotes, tNo
+   
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
    

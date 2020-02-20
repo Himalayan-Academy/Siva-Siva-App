@@ -55,7 +55,8 @@ on mouseup
          break
          
       case "journal"
-         portal_GoStack "Journal"
+         AddJournalEntry
+         dialog_CustomMsg "Saved to Journal"
          break
          
       case "save"
