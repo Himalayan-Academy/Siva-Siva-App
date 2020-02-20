@@ -14,9 +14,6 @@ on openStack
    set the acceleratedRendering of this stack to false
 end openstack
 
-# set a hidden preference of disk to call of 5 - 10
-# brand images. We will make it generic and save just integer
-
 function getUserPreferences pPref
    local tPortalPreferences, tPref
    put getPref ("preferences/modules/portal") into tPortalPreferences
@@ -25,9 +22,7 @@ function getUserPreferences pPref
 end getUserPreferences
 
 on closestack
-   if the short name of this card <> "Surprise" then
       portal_SetLastStack "Siva-Siva-Portal"
-   end if
 end closestack
 
 

@@ -27,17 +27,9 @@ on preOpenCard
          hide grp "globalNavigation"
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
-         --setUpBrandImage
          setDefaultImage
          break
-      case "read-menu"
-         --set the filename of sMainImage to brandImagePath(pImage)
-         
-         
-         break
-         
    end switch
-   
    updateUIPortal
    
    show btn "brandLogo"
@@ -105,6 +97,7 @@ end mouseup
 
 # use the return state of home screen
 command showMandala
+   lock screen
    hide grp "globalNavigation"
    # hide sub nav menu
    hide grp "subNav"
@@ -116,6 +109,7 @@ command showMandala
    show grp "navMandala"
    hide img "showNavMandala" # button
    show img "hideNavMandala" # button
+   unlock screen
 end showMandala
 
 # or to just see the image and priod to show 
@@ -156,7 +150,8 @@ command setDefaultImage pContext
    put random(tTotalBrandImages) into sBrandImageNumber
    put line sBrandImageNumber of tBrandImages into pImage
    set the filename of sMainImage to photoImagePath(pImage)
-   
+   setImageToFullCardLoc sMainImage,"portrait"
+   centerMe sMainImage
    # optimize disk operations *after* the display is finished updating
    
    put the number of lines of tBrandImages into tTotalBrandImages
@@ -219,7 +214,21 @@ private function _brandImages
          "app-img_05-ishana_opt-80_552w-portrait" & cr & \
          "app-img_hap-0140_552w-portrait" & cr & \
          "app-img_sinha_9_552w-portrait" & cr & \
-         "app-img_siva_552w-portrait"\
+         "app-img_siva_552w-portrait"& cr & \
+         "app-img_kadavul_nataraja_shrine_552w-portrait" & cr & \
+         "app-img_img_1444_736h-landscape_med" & cr & \
+         "app-img_ganagta02_l_552w-portrait" & cr & \
+         "app-img_dscn1092_552w-portrait" & cr & \
+         "app-img_book_siva_yogi_big_736h-square" & cr & \
+         "app-img_book_siva_face_736h-square" & cr & \
+         "app-img_agamasivadancing_736h-square" & cr & \
+         "app-img_70s_siva_poster_552w-portrait" & cr & \
+         "app-img_44_sharma_siva_552w-portrait" & cr & \
+         "app-img_34_linga_liberation_552w-portrait" & cr & \
+         "app-img_sinha_10_552w-portrait" & cr & \
+         "app-img_sinha_3_552w-portrait" & cr & \
+         "app-img_sinha_6_552w-portrait" & cr & \
+         "app-img_sinha_8_552w-portrait"  \
          into tBrandImages
    return tBrandImages
 end _brandImages
