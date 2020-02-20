@@ -77,9 +77,11 @@ on mouseup
          exit mouseup
       end if
       
+      lock screen
       hideMandala
       setSubNavBkgndImage tTarget
       show  img "subNavBkgImage"
+      unlock screen
       dispatch "fetchSubMenu" to grp "navMandala" with tTarget
       wait 400 milliseconds
       
