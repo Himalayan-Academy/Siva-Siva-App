@@ -305,6 +305,7 @@ on addJournalEntry pContext
          put  browser_GetLastPageTitle() into tTitle
          Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end switch
+   dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
 
 command switchViewState 

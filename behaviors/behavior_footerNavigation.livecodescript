@@ -6,13 +6,19 @@ on preOpenControl--
    --breakpoint
    local tStack
    put the short name of this stack into tStack
-   if tStack is "gems" or tStack is "lib_CustomControls" then
-      put "home,journal,save,share,settings" into sButtons
-   else
-      put "home,journal,share,settings" into sButtons
-      hide btn "save" of me
-      send "resizeControl" to me
-   end if
+   switch tStack
+      case "gems"
+         put "home,save,share,settings" into sButtons
+         break
+      case "lib_CustomControls" 
+         put "home,journal,save,share,settings" into sButtons
+         break
+      default
+         put "home,journal,share,settings" into sButtons
+         hide btn "save" of me
+         send "resizeControl" to me
+   end switch
+   
 end preOpenControl
 
 on mouseup
@@ -61,12 +67,12 @@ on mouseup
          break
          
       case "save"
-         AddJournalEntry "pReadQuote"
          unlock screen
          set the hilited of control tTarget to true
          move control target relative 0,-100 in 500 milliseconds
          move control target relative 0,100 in 110 milliseconds
          send "unHiliteBtn tTarget" to me in 1 seconds
+         AddJournalEntry "pReadQuote"
          break
          
       case "share"
