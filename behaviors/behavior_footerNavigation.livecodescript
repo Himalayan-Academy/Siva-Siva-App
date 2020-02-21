@@ -55,6 +55,7 @@ on mouseup
          break
          
       case "journal"
+         unlock screen
          AddJournalEntry
          dialog_CustomMsg "Saved to Journal"
          break
@@ -126,3 +127,8 @@ on resizeControl
    set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
+
+
+on mouseMove pNewMouseH, pNewMouseV
+   
+end mouseMove

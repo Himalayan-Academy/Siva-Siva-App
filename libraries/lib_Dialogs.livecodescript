@@ -183,7 +183,8 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    unlock screen
    show group "bottomToast"   
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
-   wait 2 seconds 
+   set the layer of grp "BottomToast" to top 
+   wait 1 seconds 
    move grp "BottomToast" relative 0,tDialogHeight+400 in 800 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
