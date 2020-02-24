@@ -23,7 +23,16 @@ end ___LOCAL_Dbase
 -- users are double pair such as "media_type,audio,artist,Manivelu"
 -- assume the pair match columns the dbase
 
+local tConnectionID, selectedItemsA, tRetValA, pCollection, tPath, tFolderList
+local tImageID, tImageList, pMediaType, pServerPath, pURL, tSQL, 
+local tLyricsA, tLyrics, tViewData, tTitle, tSubTitle, tArtists, tAuthor
+local tDescription, tDateCreated, tTranscript, tLyricsFields, tFields, tCard
+local tAssetpath, pImageList, GotIt, sURL, tQueryString, tServerPath
+local tYear, tArtDirectory, tFileName,
+
+
 function fetchRandomMediaItem
+  
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -40,7 +49,7 @@ function fetchRandomMediaItem
    put dbGet("item", tConnectionID) into selectedItemsA
    put selectedItemsA[1] into tRetValA
    repeat for each key k in tRetValA
-      put textDecode ( tRetValA[k], UTF8)  into tRetValA[k]
+      put textDecode ( tRetValA[k], "UTF8")  into tRetValA[k]
    end repeat
    put tRetValA into sMediaMetaA
 end fetchRandomMediaItem
@@ -50,6 +59,7 @@ end fetchRandomMediaItem
 -- all record the match a query
 
 function fetchMediaItems tSearchA
+   
    #Typically we are no passing and explicitlist
    # but a pre-set array   
    
@@ -151,7 +161,7 @@ function getSongLyrics pItemID
    put dbGet(,tConnectionID) into tLyricsA
    put "original_script,diacritical_transliteration,transliteration" into tLyrics
    repeat for each item x in tLyrics
-      get textDecode (tLyricsA[1][x], UTF8) 
+      get textDecode (tLyricsA[1][x], "UTF8") 
       if it is not empty then put it into sMediaMetaA[x] 
    end repeat
 end getSongLyrics
@@ -295,6 +305,7 @@ command imageDecompressAndCache pImageList
 end imageDecompressAndCache
 
 command cacheGlobalNavImages
+   local x, y
    --breakpoint
    # image are on card 4 of Siva-Siva-App
    # we want them in card 
@@ -484,8 +495,19 @@ on addSpaceBelowListLines pField, pLineCount, pSpace
    unlock screen
 end addSpaceBelowListLines
 
-  
+function ReturnTitleCase pText
+   local x
+   
+   # does not handle hyphentated words
+   replace "-" with space in pText
+   repeat with x = 1 to (the number of truewords in pText)
+      put  toUpper(char 1 of trueword x of pText) into char 1 of trueword x of pText
+   end repeat
+   return pText
+end ReturnTitleCase
+
 function htmlTagger pStyle,  pText
+   local tMarkedUp,tTag,
    put "<#S#>#T#</#S#>" into tMarkedUp
    switch pStyle
       case "bold"
@@ -527,6 +549,7 @@ end normalizeFiletoTitle
 ## we need to just target the tags and leave enclosed strings.
 
 function stripHTML pText
+   local tPlaintext
    set the htmlText of the templateField to pText
    put the text of the  templateField into tPlainText
    reset the templateField
@@ -535,6 +558,7 @@ end stripHTML
 
  
 function truncateText pText,pNumChars,pEllipsisBool  # last parameter is "true" or "false"
+   Local tTruncatedText
    put char 1 to  pNumChars of pText into tTruncatedText
    if pEllipsisBool then put "..." after tTruncatedText
    return tTruncatedText
@@ -586,7 +610,7 @@ command _old_fetchRandomMediaItem pSelectParams
    
    #### ABOVE CALLS THE API ON THE SERVER
    #### BELOW WE USE THE LOCAL DATABASE
-   
+   local tColumn, tValue,aSelectedItem
    
    put char 2 to -2 of word 2 of the params into tColumn
    
@@ -606,20 +630,20 @@ command _old_fetchRandomMediaItem pSelectParams
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet("item", tConnectionID) into aSelectedItem
-   put textDecode ( aSelectedItem[1]["item_id"], UTF8)  into sMediaMetaA["item_id"]
-   put textDecode ( aSelectedItem[1]["approved_for_public"], UTF8)  into sMediaMetaA["approved_for_public"] 
-   put textDecode ( aSelectedItem[1]["file_id"], UTF8)  into sMediaMetaA["file_id"]
-   put textDecode ( aSelectedItem[1]["media_type"], UTF8)  into sMediaMetaA["media_type"]
-   put textDecode ( aSelectedItem[1]["date_created"], UTF8)  into sMediaMetaA["date_created"]
-   put textDecode ( aSelectedItem[1]["genre"], UTF8)  into sMediaMetaA["genre"]
-   put textDecode ( aSelectedItem[1]["deity"], UTF8)  into sMediaMetaA["deity"]
-   put textDecode ( aSelectedItem[1]["title"], UTF8)  into sMediaMetaA["title"]
-   put textDecode ( aSelectedItem[1]["sub_title"], UTF8)  into sMediaMetaA["sub_title"] 
-   put textDecode ( aSelectedItem[1]["artists"], UTF8)  into sMediaMetaA["artists"]
-   put textDecode ( aSelectedItem[1]["author"], UTF8)  into tAuthor
+   put textDecode ( aSelectedItem[1]["item_id"], "UTF8")  into sMediaMetaA["item_id"]
+   put textDecode ( aSelectedItem[1]["approved_for_public"], "UTF8")  into sMediaMetaA["approved_for_public"] 
+   put textDecode ( aSelectedItem[1]["file_id"], "UTF8")  into sMediaMetaA["file_id"]
+   put textDecode ( aSelectedItem[1]["media_type"], "UTF8")  into sMediaMetaA["media_type"]
+   put textDecode ( aSelectedItem[1]["date_created"], "UTF8")  into sMediaMetaA["date_created"]
+   put textDecode ( aSelectedItem[1]["genre"], "UTF8")  into sMediaMetaA["genre"]
+   put textDecode ( aSelectedItem[1]["deity"], "UTF8")  into sMediaMetaA["deity"]
+   put textDecode ( aSelectedItem[1]["title"], "UTF8")  into sMediaMetaA["title"]
+   put textDecode ( aSelectedItem[1]["sub_title"], "UTF8")  into sMediaMetaA["sub_title"] 
+   put textDecode ( aSelectedItem[1]["artists"], "UTF8")  into sMediaMetaA["artists"]
+   put textDecode ( aSelectedItem[1]["author"], "UTF8")  into tAuthor
    # deal with extra cr in this field
    put line 1 of tAuthor into sMediaMetaA["author"]
-   put textDecode ( aSelectedItem[1]["description"], UTF8)  into sMediaMetaA["description"]
+   put textDecode ( aSelectedItem[1]["description"], "UTF8")  into sMediaMetaA["description"]
    
    getformatData (sMediaMetaA["item_id"])
 end _old_fetchRandomMediaItem

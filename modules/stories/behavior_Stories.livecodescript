@@ -399,13 +399,19 @@ end pingBehavior
 local pData,  tCd,  
 
 command addJournalEntry -- save a bookmark to db
+   local tTitle
+   if sStoryTitle is "false" then 
+      put "Main Menu" into tTitle 
+   else 
+      put sStoryTitle into tTitle
+   end if
    put "storiesHome" into pData["Card"]
-   Journal_RecordEntry "stories",("Story: " & sStoryTitle), pData -- send to journal
+   Journal_RecordEntry "stories",("Story: " & tTitle), pData -- send to journal
 end addJournalEntry
 		
 on journalResume pData -- sent from journal stack
    put pData["Card"] into tCd
-   goCd tCd
+   go to card tCd
 end journalResume
 
 

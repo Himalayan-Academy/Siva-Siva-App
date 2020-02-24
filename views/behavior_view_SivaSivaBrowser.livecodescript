@@ -186,12 +186,14 @@ end hideLoader
 
 on journal_AddEntry
    -- should pData be a parameter?
-   local pData, tTitle
-   try
-      parseTheHTML (the htmlText of widget "body"),"Title"
-   end try
+   local pData, tTitle, tOutput
+   
+   
+   set the itemdelimiter to "/"
+   
+   put ReturnTitleCase(last item of sBrowserURL) into tTitle
+
    put browser_GetLastURL() into pData["weburl"] 
-   put browser_GetLastPageTitle() into tTitle
    if sLandscapeOnly then
       --if sBrowserOrientation = "landscape" then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  

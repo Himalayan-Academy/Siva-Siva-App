@@ -19,6 +19,7 @@ local sLastWebPageTitle, sLastWebURL
 command parseTheHTML pHtmlText, pTargetString
    # use for scraping out anything from the htmltext of a browser widget
    # must call *after* URL loads
+   local tStartTitle,tEndTitle,tRawTitle
    switch pTargetString
       case "Title"
          put (offset ("<Title>", pHTMLText) +7) into tStartTitle
@@ -131,6 +132,7 @@ end launchBook
 
 
 command launchURL pOrientation, pURL
+   local tViewerType, tNewViewer,tOldviewer
    ntInfo pURL
    if pOrientation = "" then -- try to determine based on media type
       put getOrientationByType(pURL) into tViewerType
