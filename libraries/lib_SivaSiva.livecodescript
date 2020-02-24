@@ -757,6 +757,82 @@ function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this
    return the environment is "development"
 end dev
 
+/*=========== LOGGING ======================
+BR: 2020-02-23
+1) we have created a log control in the stack "lib_CustomControls"
+-- see card "viewLogControl" | group "viewLogging"
+-- We have added this to the global array sConfigA["viewLogging"]
+2) on the  card SivaSiva.livecode stack and a checkbox/button called "Enable Logging" which set the uBuildMode to "release" or "log"
+
+--see "behavior_InitSivaSivaProject"  Where we hvae
+
+if the uBuildMode of this stack is "release" then
+   set the logMessage to empty
+else
+   set the logMessage to "log"
+end if
+
+
+hiliting  "enable Logging" will invoke to following where we have it.
+
+3) on any "preOpenCard" handler use this (there is no over head to leaving this in the code)
+
+if the logMessage <> empty then
+   copyLogControl
+end if
+
+4) you can put log messages anywhere e.g.
+
+log "the vis of sHomeText" # htere is no overhead to leaving these in the code
+
+Logging will be turn on mobile.
+
+You can also just leave it "off" on init and use the message for
+
+set the logMessage to "log"  OR
+set the logMessage to empty
+
+Note of course, you save the binary with the log enable, the group is save with the card.
+In theory this not  problem as long it is it hidden and Enable Logging it OFF for a release
+
+*/
+
+local   tLogResult
+
+command copyLogControl
+   
+   # invoke this from msg
+   # save stack and the group is saved
+   # on mobile stack are not saved.
+   
+   local tLogControl
+   # first instantiate the group to the local context
+   put sConfigA["viewLogging"] into tLogControl
+   if (exists(group "viewLogging" of this card) ) then 
+      #  do nothing... assume vis of the group is off...
+   else
+      copy tLogControl to this card
+   end if
+end copyLogControl
+
+on log pLog 
+   put cr & pLog before tLogResult # latest on top
+   showLogging
+end log
+
+on clearLog
+   put empty into tLogResult
+end clearlog
+
+on showLogging
+   if there is a grp "viewLogging" then
+      set the layer grp "viewLogging" to top
+      show grp "viewLogging"
+      put tLogResult into fld "log"
+   end if 
+end showLogging
+
+
 
 
 

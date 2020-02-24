@@ -9,7 +9,7 @@ I am tryoing to use the same behavior for
 a) the stack layout/responsiveness as a whole
 b) using it for the specific UI/UX of the stack/card; using it one other cards 
 as the behaviour for presenting stories
-So, rather that settng up multi-file are behaviors, this requires us to 
+So, ratheAr that settng up multi-file are behaviors, this requires us to 
 pass parameters to the common handler and use switch statements instead.
 but make sure the any handler in the "model" category an don't there
 */
@@ -44,6 +44,10 @@ Based on the card name
 */
 
 on preOpenCard
+   if the logMessage <> empty then
+      copyLogControl
+   end if
+   
    local tCard 
    put the short name of this card into tCard
    put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
@@ -88,7 +92,7 @@ on mouseup
    
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
-   endInTwoScenes
+   --endInTwoScenes
    switch sTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
@@ -184,6 +188,7 @@ end initializeStory
 # later should be  in model_Narratives
 
 command goNextScene
+   
    local tLine
    lock screen
    if sTarget is "Tips" then
@@ -199,6 +204,7 @@ command goNextScene
    put  getCache("SceneCount") into sTotalSceneCount
    put  getCache("Quotes") into sQuoteList
    put  getCache("ImageList") into sImageList
+   
    
    
    --breakpoint
@@ -241,7 +247,8 @@ command goNextScene
    add 1 to sLastScene
    setCache "storyScene",sLastScene 
    unlock Screen
-end goNextScene
+   log (the vis of fld "homeStoryText")
+   end goNextScene
 
 command showStoryText sWhatText
    set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
@@ -364,7 +371,7 @@ command loadNextQuote pQuoteNo
    
    optimizeField sHomeText,tTextSize,tTextalign
    
-   showStoryText sHomeText
+   showStoryText "quotes"
    unlock screen with visual effect "dissolve"  very fast
    
 end loadNextQuote

@@ -333,6 +333,14 @@
             "imageText": "Hindu\nLexicon",
             "shortImageFile": "thumb_lexicon_shtrstk-26948821.png"
         },
+        "Pillars of Iraivan": {
+            "link": {
+                "portal param": "https://www.himalayanacademy.com/pillars-of-iraivan/",
+                "portal command": "portal_GoURL"
+            },
+            "imageText": "Pillars of Iraivan",
+            "shortImageFile": "thumb_books_bookshelf-shtrstk-169396664.png"
+        },
         "Word Puzzles": {
             "link": {
                 "portal command": "portal_GoStack",
@@ -726,15 +734,18 @@
                     "rowName": "Hindu Lexicon"
                 },
                 "3": {
-                    "rowName": "The Master Course"
+                    "rowName": "Pillars of Iraivan"
                 },
                 "4": {
+                    "rowName": "The Master Course"
+                },
+                "5": {
                     "rowName": "All Our On-Line Books"
                 },
-                  "5": {
+                  "6": {
                     "rowName": "Hinduism Today Magazine"
                 },
-                "6": {
+                "7": {
                     "rowName": "Educational Insights"
                 }
             },
