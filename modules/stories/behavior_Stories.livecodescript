@@ -248,7 +248,7 @@ command goNextScene
    setCache "storyScene",sLastScene 
    unlock Screen
    log (the vis of fld "homeStoryText")
-   end goNextScene
+end goNextScene
 
 command showStoryText sWhatText
    set the filename of sStoryBkgnd to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
@@ -399,7 +399,7 @@ local pData,  tCd,
 
 command addJournalEntry -- save a bookmark to db
    local tTitle
-   if sStoryTitle is "false" then 
+   if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle 
    else 
       put sStoryTitle into tTitle

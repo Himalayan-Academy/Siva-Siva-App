@@ -30,18 +30,13 @@ on mouseup
    put short name of the target into tTarget
    put (there is a widget "body") into tBrowserExists
    
-   if tBrowserExists then
-      if not (the vis of widget "loader") then
-         -- record the last URL they were on
-         journal_AddEntry
-      end if
-      if tTarget is not "share" then
-         terminateBrowser
-      end if
-   end if
+   
    
    switch tTarget
       case "home"
+         if tBrowserExists then
+            terminateBrowser
+         end if
          put the short name of this card into tCard
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
@@ -100,6 +95,9 @@ on mouseup
          break
          
       case "settings"
+         if tBrowserExists then
+               terminateBrowser
+         end if
          portal_GoStack "settings"
          break
    end switch

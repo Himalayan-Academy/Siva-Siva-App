@@ -338,6 +338,20 @@ function inRange pRequestDate -- calc if request date is within this or next yea
    return (tRequestRange = tTodayRange) or (tRequestRange = tNextYearRange)
 end inRange
 
+command addJournalEntry -- save a bookmark to db
+   local  tTitle,pData
+   if sCityName is empty then
+      dialog_CustomMsg "Pick and Submit a City"
+      exit to top
+   end if
+   
+   put "Hindu Calendar - " & sCityName into tTitle
+   put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
+   
+   Journal_RecordEntry "calendar",tTitle,pData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
+end addJournalEntry
+
 on deleteOldCalendars -- remove files older than today's calendar
    -- called from parseUserICSfile when a new calendar is downloaded
    local tDir, tFList, tCurYear, tFilePath
