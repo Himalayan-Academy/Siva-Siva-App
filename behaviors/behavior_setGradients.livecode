@@ -32,6 +32,7 @@ constant kSoftRed="255,6,23"
 # setRamp pStart,pEnd,pColor,kSoftGreen,pAlpha
 
 command setFillGradient pStartPosition,pEndPosition,pColor1, pColor2,pAlpha1,pAlpha2
+   local tGradientRamp
 	if pStartPosition is empty then put kDefaultStart into pStartPosition
 	if pEndPosition is empty then put kDefaultEnd into pEndPosition
 	if pColor1 is empty then put kPureWhite into pColor1
