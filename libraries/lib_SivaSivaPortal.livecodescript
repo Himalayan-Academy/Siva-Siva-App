@@ -35,7 +35,7 @@ we Realy should separate all thehandler pertaining to the "views" and move them 
 --> Variables
 -
 local LocalArray, sCurrentPortal, sLastStack, sLaunchStack, sLastLinkTitle, sNavMap
-local sLastModulesList, sOrientation, sDestinationCardOrStack
+local sLastModulesList, sOrientation, sDestinationCardOrStack, sDisplayLabel
 
 
 ------------- Navigation section -------------------
@@ -153,8 +153,6 @@ command portal_DoRowLink rowName
    put linkArray ["portal command"] into linkCommand
    put linkArray ["portal param"] into linkParam
    
-   -- display_RowLink rowName
-   
    switch linkCommand
       case "getRandomVideo"
          portal_SetLastStack "Surprise"
@@ -170,7 +168,7 @@ command portal_DoRowLink rowName
          portal_Go linkParam
          break
       case "portal_GoUrl"
-         portal_GoUrl linkParam
+         portal_GoUrl linkParam, rowName
          break
       case "portal_GoLandscapeUrl"
          portal_GoLandscapeUrl linkParam
@@ -227,6 +225,9 @@ command portal_GoUrl pURL,pJournalLabel
       exit to top
    end if
    
+   # need to store a proper for the web to refer to in journal
+   portal_SetLabel pJournalLabel
+   
    put the short name of this stack into oStackName
    repeat for each item x  in tRequiresLandscape
       if  pURL contains x then
@@ -251,6 +252,14 @@ command portal_LaunchUrl someURL
    # leave Siva Siva app and open the native web app on the device
    launch url someURL    
 end portal_LaunchUrl
+
+command portal_SetLabel pJournalLabel
+   put pJournalLabel into sDisplayLabel
+end portal_SetLabel
+
+function portal_GetLabel
+   return sDisplayLabel
+end portal_GetLabel
 
 command portal_GoLandscapeUrl someURL
    set the browser_URL [true] of stack "view_SivaSivaBrowser" to someURL

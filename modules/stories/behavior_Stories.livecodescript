@@ -92,7 +92,7 @@ on mouseup
    
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
-   --endInTwoScenes
+   endInTwoScenes
    switch sTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
@@ -383,7 +383,6 @@ end hideShowField
 on closeCard
    setPref "preferences/modules/stories/storyTitle", sStoryTitle
    setPref "preferences/modules/stories/storyScene/", sLastScene
-   addJournalEntry
    showStoryMenu
 end closecard
 
@@ -405,7 +404,7 @@ command addJournalEntry -- save a bookmark to db
    else 
       put sStoryTitle into tTitle
    end if
-   put "storiesHome" into pData["Card"]
+   put "storiesHome" into pData["card"]
    Journal_RecordEntry "stories",("Story: " & tTitle), pData -- send to journal
 end addJournalEntry
 		

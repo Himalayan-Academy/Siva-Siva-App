@@ -191,8 +191,8 @@ on journal_AddEntry
    
    set the itemdelimiter to "/"
    
-   put ReturnTitleCase(last item of sBrowserURL) into tTitle
-
+   put portal_GetLabel() into tTitle
+   
    put browser_GetLastURL() into pData["weburl"] 
    if sLandscapeOnly then
       --if sBrowserOrientation = "landscape" then
@@ -200,7 +200,7 @@ on journal_AddEntry
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end if
-   
+   dialog_CustomMsg "Saved to Journal"
 end journal_AddEntry
 
 
@@ -217,7 +217,7 @@ command share_Items
    put browser_GetLastURL() into tWebPage
    put tWebPage into sShareItemsA["url"]  
    if tWebPage contains "Youtube" then # we have a video
-      put "Watch this Video!" into sShareItemsA["subject"]
+      put "Watch this Video!" into sShareItemsA["subject"] 
       put "Shared from the new SivaSiva App." into sShareItemsA["text"]
    else
       put "Check out this web page!" into sShareItemsA["subject"]

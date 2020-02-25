@@ -14,6 +14,7 @@
 local sTarget,sFavoritesA,sWhichMenu,
 
 on fetchSubMenu sTarget
+   local sMap,tSecondKey,tRowName,tOutput
    local tKeys
    put getNavigationMap() into  sMap
    

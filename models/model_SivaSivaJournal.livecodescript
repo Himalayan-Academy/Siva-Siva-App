@@ -21,7 +21,7 @@ local LocalArray
 
 --> Events
 -
-on librarystack
+on librarystack,journalDB
    -- best not to place this here as it will get called every time
    if the long id of the target is not the long id of me then
       pass librarystack
@@ -33,23 +33,16 @@ on librarystack
    
 end librarystack
 
--- function checkDBaseSetUp
---    return sLoaded 
--- end checkDBaseSetUp
-
--- command setUpJournalDbase
---     _setupDatabase
--- end setUpJournalDbase
 
 
---> Journal | Files
--
 function Journal_GetCompressedFilePath
+   local JournalCompressedFilePath
    put Journal_GetModelFolder() & "journal.sqlite.gz" into JournalCompressedFilePath
    return JournalCompressedFilePath
 end Journal_GetCompressedFilePath
 
 function Journal_GetModelFolder
+   local JournalModelFolder,modelName
    set the itemdelimiter to slash
    put the filename of me into JournalModelFolder
    put the short name of me into modelName
@@ -59,6 +52,7 @@ function Journal_GetModelFolder
 end Journal_GetModelFolder
 
 function journal_convertDate pDateTime
+   local tCurr12HrTime,tHasTime,tDate,tTime,tYear,tMonth,tDay
    -- YYYY-MM-DD HH:MM
    -- pDateTime could be a date only, or a date and time, so check first
    -- from: https://sonsothunder.com/devres/livecode/tips/data005.htm
@@ -120,9 +114,11 @@ end Journal_GetDatabasePath
 --         2017-04-01: Andre - Created
 ---------------------------------------------------------------------------------------
 
-command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
-   put pModule into tDataA["module"]
 
+command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
+   local tTempA,tResult,tDataA
+   put pModule into tDataA["module"]
+   
    if the keys of pData is empty then
       if pData is not empty then
          put pData into tTempA["data"]
@@ -131,35 +127,36 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    else
       put jsonexport(pData) into tDataA["data"]
    end if
-
+   
    if pTags is not empty then
       put pTags into tDataA["tags"]
    end if
-
+   
    if pImage is not empty then
       put pImage into tDataA["image"]
    end if
-
+   
    if pLabel is not empty then
       put pLabel into tDataA["label"]
    else
       put pModule into tDataA["label"]
    end if
-
+   
    -- fix encodings
    put textEncode(tDataA["label"], "UTF8") into tDataA["label"]
    put textEncode(tDataA["data"], "UTF8") into tDataA["data"]
    put textEncode(tDataA["tags"], "UTF8") into tDataA["tags"]
-
-
+   
+   
    put journal_convertDate(the date && the time) into tDataA["date"]
-
+   
    put dbInsert("journal", tDataA, JournalDB()) into tResult
    ntInfo "saving journal entry for" && pModule
    return tResult
 end Journal_RecordEntry
 
 command Journal_SetFavoriteFlag pEntryID, pValue
+   local tResult,tDataA
    if pValue is not a number then
       if pValue then
          put 1 into tDataA["is_favorite"]
@@ -176,18 +173,20 @@ command Journal_SetFavoriteFlag pEntryID, pValue
 end Journal_SetFavoriteFlag
 
 function Journal_GetEntriesForModule pModule, pOffset
+   local tEntriesA
    if pOffset is empty then
       dbLimit 100
    else
       dbLimit 100, pOffset
    end if
-
+   
    dbLike "module", pModule
    put dbGet("journal", JournalDB()) into tEntriesA
    return tEntriesA
 end Journal_GetEntriesForModule
 
 function Journal_GetEntriesForDate pStartDate, pEndDate, pOffset
+   local tEntriesA
    if pOffset is empty then
       dbLimit 100
    else
@@ -199,6 +198,7 @@ function Journal_GetEntriesForDate pStartDate, pEndDate, pOffset
 end Journal_GetEntriesForDate
 
 function Journal_GetEntries pOffset
+   local  tEntriesA
    if pOffset is empty then
       dbLimit 100
    else
@@ -228,6 +228,7 @@ end Journal_GetEntries
 
 
 command Journal_LaunchEntry pEntryID,pModule,pData
+   local tEntriesA,tEntryA,tDataA
    # if we need to get the data from the data base, pEntryID has value
    # pModule and pData are empty
    # if you already have data, the pEntryID is empty
@@ -274,6 +275,7 @@ end journalresume
 
 
 function Journal_makeInlineArray
+   local tTempA
    repeat with x = 1 to the paramcount step 2
       put param(x+1) into tTempA[param(x)]
    end repeat
@@ -296,11 +298,12 @@ end JournalDB
 --> Private
 -
 private command _setupDatabase
+   local JournalDatabasePath
    put Journal_GetDatabasePath() into JournalDatabasePath
    if there is not a file JournalDatabasePath then  --or the environment is "development" then
       _copyAndDecompress
    end if
-
+   
    if sID is not a number then
       _loadDatabase
    end if
@@ -308,8 +311,9 @@ private command _setupDatabase
 end _setupDatabase
 
 private command _copyAndDecompress
+   local  compressedFile,tDF
    put Journal_GetCompressedFilePath() into compressedFile
-
+   
    put the defaultfolder into tDF
    set the itemdel to "/"
    set the defaultfolder to item 1 to -2 of the effective filename of this stack
@@ -319,8 +323,9 @@ private command _copyAndDecompress
 end _copyAndDecompress
 
 private command _loadDatabase
+   local sqliteFile
    put Journal_GetDatabasePath() into sqliteFile
-
+   
    get revOpenDatabase("sqlite", sqliteFile)
    if it is not a number then
       throw it
