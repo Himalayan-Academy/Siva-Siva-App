@@ -42,7 +42,7 @@ end getSelection
 on passAudioSelection pLine,pTitle
    
    hide widget "turnOffAudio"
-   startPlayer  sDownloadedAudioA[pLine][localURL],pTitle
+   startPlayer  sDownloadedAudioA["pLine"]["localURL"],pTitle
    
    # try to solve the problem of no controller in iOS 13.1.3
    # We just let use pause or continue audio
@@ -55,29 +55,25 @@ on passAudioSelection pLine,pTitle
    Journal_AddEntry 
 end passAudioSelection
 
-on Journal_AddEntry 
-   if the short name of this card =  "listen-my-audio"  then
-      put "listen-my-audio" into pDataA["card"]
-      Journal_RecordEntry "listen",( "My Downloaded Audio"), pDataA
-   end if
-end Journal_AddEntry
+
 
 on passAudioDetails sSelectNum,pTarget
-   put the vis of fld "audioDetails" into detailVis
-   if detailVis then
+   local tDetailVis
+   put the vis of fld "audioDetails" into tDetailVis
+   if tDetailVis then
       deleteMobileControl "audioDetails"
-      hide fld "audioDetails" with visual effect wipe down very fast
+      hide fld "audioDetails" with visual effect" wipe down" very fast
       send  "CreateScroller audioList" to fld "audioList"
    else
       select_ShowDetails  "downloaded",(sDownloadedAudioA[sSelectNum][metadata][1])
    end if
    
-   set the flipped of widget pTarget to not detailVis
+   set the flipped of widget pTarget to not tDetailVis
    break 
 end passAudioDetails
 
 command getDownloadedAudio
-   local tList, tSearchA, tURL
+   local tList, tSearchA, tURL,pFolder,tTitle,tTitles
    
    put empty into sDownloadedAudioA
    # do directory walk of the media/audio folder
@@ -86,11 +82,11 @@ command getDownloadedAudio
    put listFilesWithPaths(pFolder, "true")  into tList
    repeat with x = 1 to (the number of lines of  tList)
       put line x of tList into tURL
-      put tURl into sDownloadedAudioA[x][localURL]
+      put tURl into sDownloadedAudioA[x]["localURL"]
       set the itemdel to "/"
-      put item -2 of tURL into sDownloadedAudioA[x][file_id]
+      put item -2 of tURL into sDownloadedAudioA[x]["file_id"]
       repeat for each  line tKey in the keys of sDownloadedAudioA
-         put sDownloadedAudioA[tKey][file_id]   into tSearchA["file_id"]
+         put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
          put  fetchMediaItems(tSearchA) into  sDownloadedAudioA[tKey][metadata]
       end repeat
    end repeat
@@ -98,31 +94,31 @@ command getDownloadedAudio
    # first look in the dates base
    
    repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)
-      if  sDownloadedAudioA[x][file_id] contains "-audiobook" then
+      if  sDownloadedAudioA[x]["file_id"] contains "-audiobook" then
          # get in from file names
          set the itemdel to "/"
-         put  item -1 of sDownloadedAudioA[x][localURL] into aTitle
-         put normalizeFileToTitle(aTitle) after sTitles
-         put cr & cr after sTitles
+         put  item -1 of sDownloadedAudioA[x]["localURL"] into tTitle
+         put normalizeFileToTitle(tTitle) after tTitles
+         put cr & cr after tTitles
          next repeat
       end if
-      put sDownloadedAudioA[x][metadata][1]["title"] into aTitle
+      put sDownloadedAudioA[x][metadata][1]["title"] into tTitle
       
-      if aTitle is empty then
-         put sDownloadedAudioA[x][file_id] into aTitle
-         put normalizeFileToTitle(aTitle) after sTitles
+      if tTitle is empty then
+         put sDownloadedAudioA[x]["file_id"] into tTitle
+         put normalizeFileToTitle(tTitle) after tTitles
       else
-         put aTitle after sTitles
+         put tTitle after tTitles
       end if
-      put cr after sTitles
+      put cr after tTitles
       if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
-         put sDownloadedAudioA[x][metadata][1]["artists"] after sTitles
+         put sDownloadedAudioA[x][metadata][1]["artists"] after tTitles
       end if
-      put cr after sTitles
+      put cr after tTitles
       
    end repeat
    
-   loadTitles sTitles
+   loadTitles tTitles
    
    # If file_id not into data base  register a message that the
    #  transcription/Lyrics  for this file is not available.
@@ -137,15 +133,17 @@ command getDownloadedAudio
 end getDownloadedAudio
 
 
-command loadtitles sTitles   
+command loadtitles pTitles   
+   local pLineCount
    hide fld "audioList"
-   put sTitles into fld "audioList"
+   put pTitles into fld "audioList"
    typeSetAudioList
    show fld "audioList"
-   put the number of lines of sTitles into pLineCount
+   put the number of lines of pTitles into pLineCount
 end loadtitles
 
 command updateUI
+   local pControl
    # standard handle for responsive formatting 
    # and other things related to the position and state of the UI
    # this card

@@ -24,10 +24,10 @@
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
 
-local sCollectionA,sCollectionChoice
+local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-local sCached, sBrowseHeader.sTimeStamp
+local sCached, sBrowseHeader, sTimeStamp
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
@@ -50,7 +50,7 @@ on openstack
    #
    # first, load the json
    
-   -- put empty into fld "log"
+local tContainer
    
    set the acceleratedRendering of this stack to true
    
@@ -74,6 +74,7 @@ end getCollectionsJson
 
 
 command selectPlaylist pSelection
+   local tPlayTarget,tColl,tPlay
    
    # use has  made choice from card 
    
@@ -199,6 +200,10 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
+   local tPlaylistClass, tRecordTypeCount, tDbaseColumns
+   local  queryData, pJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
+   
+   
    showBusyIndicator true,"Loading"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
@@ -396,7 +401,7 @@ end playList_FetchData
 
 
 on  playlist_Instantiate sTargetPlayList    
-   
+   Local tKeys, tTitles, pData
    # using: model_SivaSiva, which has functions to get json info we need:
    
    switch sPlaylistQueryA["playlistClass"] 
@@ -488,11 +493,12 @@ command select_ShowDetails  pSelection, pRecord
    set the textstyle of line 3 of fld "audioDetails" to "italic"
    set the rect of fld "AudioDetails" to rect of fld "audioList" 
    
-   show fld "audioDetails" with visual effect wipe up very fast
+   show fld "audioDetails" with visual "effect wipe" up very fast
    send "CreateScroller audioDetails" to fld "audioDetails"
 end select_ShowDetails
 
 command typeSetAudioList
+   local tX
    put 0 into tX
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
@@ -517,6 +523,7 @@ command getPlayListURLs pKeys
 end getPlayListURLs
 
 function getItemURL pRecordNum
+
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
    # but Audio books are completely different CMS: they have no item records for their audio files
    
@@ -546,6 +553,7 @@ function getItemURL pRecordNum
 end getItemURL
 
 command markCachedItems pKeys
+   local pURL, tLocalStatus, tIsCached
    repeat for each line x in pKeys
       # this as good a place as any to check for the existence of files  
       # and get the URL for every one in the play list... so we only do this once.
@@ -564,11 +572,38 @@ command markCachedItems pKeys
    end repeat
 end markCachedItems
 
+
+command addJournalEntry-- save a bookmark to db
+   local tData,pDataA, tTitle, tURL
+   if the name of this card is "listen-collections" then
+      put  "listen-collecitons" into pDataA["card"]  
+   else
+      put getMediaMeta() into tData
+      put tData["item_id"] into pDataA["item_id"]
+      put tData["title"] into pDataA["title"]
+      put  tData["url"] into pDataA["url"] 
+      put "listen-file" into pDataA["card"]  
+   end if
+   Journal_RecordEntry "listen",tTitle,pDataA -- send to jofrnal
+   dialog_CustomMsg "Save To Journal"
+end addJournalEntry
+
+
 on journalResume  pDataA, pEntryA
    -- breakpoint
-   deleteMobileControl "audioPlayer"
-   go to card "listen-my-audio"
    
+   local tCard
+   
+   put pDataA["card"] into tCard
+   go to card tCard
+   
+   if tCard= "listen-file"  then
+      # using has want to listen you one unique audio file
+      # we have set to the card up....  in the the future
+      # we can integrate is this listen behavior .
+      dispatch "playSingle" to card "listen-file" with pDataA
+   end if
+
 end journalResume
 
 
@@ -585,6 +620,7 @@ command clearAudioListColor
 end clearAudioListColor
 
 function getLineNumber sSelectNum
+   local tLineNum
    put sSelectNum into tLineNum
    if (tLineNum mod 2) = 0 then
       subtract 1 from tLineNum
@@ -594,6 +630,7 @@ end getLineNumber
 
 
 on preopencard
+   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
    # tweak the header for collections
    
    --deleteMobileControl "audioList"  
@@ -696,7 +733,7 @@ command __UXHandlers
 end __UXHandlers
 
 command startPlayer  sSelectedURL, pTitle
-   
+   local tRect
    --  local sSelectedURL, tRect
    
    if isMobile() then
@@ -735,7 +772,7 @@ command startPlayer  sSelectedURL, pTitle
    --set the bottom of fld "currentTitleLabel" to 600
    --end if
    if there is a control "DownloadSelection" then
-      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
    end if
    togglePause true, true
 end startPlayer
@@ -779,6 +816,7 @@ on clearPlayer
 end clearPlayer
 
 command offLineGoMyAudio
+   local pFolder, tList
    if not connectivity_PingServer() then
       put (path_Documents() & "media/audio") into pFolder
       put listFilesWithPaths(pFolder, "true")  into tList

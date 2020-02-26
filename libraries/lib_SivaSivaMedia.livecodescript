@@ -110,6 +110,9 @@ function fetchRandomImageAsset pCollection
    return tPath
 end fetchRandomImageAsset
 
+function getMediaMeta
+   return sMediaMetaA
+end getMediaMeta
 
 #############
 --> GETMEDIAURL

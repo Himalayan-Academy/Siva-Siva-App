@@ -63,6 +63,7 @@ end checkPlayList
 -----------------------------------------------------------------------
 
 on mouseup
+   local pTarget, tTarget, detailVis
    ntinfo "Mousup from from behavior Listen Select"
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
@@ -72,7 +73,7 @@ on mouseup
    # this just a mouse/touch event router. 
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
-   
+ 
    put the target into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
@@ -127,7 +128,7 @@ on mouseup
          put the vis of fld "audioDetails" into detailVis
          if detailVis then
             deleteMobileControl "audioDetails"
-            hide fld "audioDetails" with visual effect wipe down very fast
+            hide fld "audioDetails" with visual effect "wipe down" very fast
             send  "CreateScroller audioList" to fld "audioList"
          else
             select_ShowDetails 
@@ -172,7 +173,8 @@ end mouseup
 ---------------------------------------------
 
 on select_Play  pitemID  # if item id is empty then defaults to the click line number
-   
+   local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
+   local pTitle
    # if we are coming from a click on the card list then the pItemID will be empty
    # but we may be dropping in from the journal or another type of list that
    # simple passes the item_id for the record.. and there is no pSelectedLIne
@@ -237,12 +239,13 @@ command downloadSelection pTarget
 end downloadSelection
 
 command downloadAffirmed   
+   local pTitle
    if sSelectionsA["playListClass"] ="audiobook" then
       put sSelectionsA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
    else
       put  sSelectionsA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
-   put "listen" into sConfigA[last_stack]
+   put "listen" into sConfigA["last_stack"]
    --hide stack "listen"
    go stack "view_Download"
    wait 100 milliseconds with messages
@@ -251,6 +254,7 @@ command downloadAffirmed
 end downloadAffirmed
 
 command updateUI
+   local pControl
    # standard handle for responsive formatting 
    # and other things related to the position and state of the UI
    # this card
@@ -263,6 +267,7 @@ end updateUI
    
    
 command share_Items 
+   local tURL,  sShareItemsA
    if sRemoteURL is empty then
       put "https://www.himalayanacademy.com/view/sivasiva" into  tURL
    else

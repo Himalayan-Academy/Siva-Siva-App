@@ -48,11 +48,13 @@ end jnanam_UpdatePhotoCache
 --> Jnanam | Files
 -
 function jnanam_GetCompressedFilePath
+   local jnanamCompressedFilePath
    put jnanam_GetModelFolder() & "jnanam.sqlite.gz" into jnanamCompressedFilePath
    return jnanamCompressedFilePath
 end jnanam_GetCompressedFilePath
 
 function jnanam_GetModelFolder
+   local jnanamModelFolder, modelName
    set the itemdelimiter to slash
    put the filename of me into jnanamModelFolder
    put the short name of me into modelName
@@ -62,7 +64,7 @@ function jnanam_GetModelFolder
 end jnanam_GetModelFolder
 
 private function asset_GetFileFromItemArray pItemA
-   -- was "pathForItem"
+   local assetFolder, fileID, assetFile
    put path_Assets() into assetFolder
    put pItemA ["file_id"] into fileID
    
@@ -92,6 +94,7 @@ end jnanamDB
 --> Private
 -
 command _setupDatabase
+   local jnanamDatabasePath
    put jnanam_GetDatabasePath() into jnanamDatabasePath
    if there is not a file jnanamDatabasePath  or _CheckSumDoesntMatch(jnanamDatabasePath)  then
       _copyAndDecompress
@@ -104,14 +107,16 @@ command _setupDatabase
 end _setupDatabase
 
 function _CheckSumDoesntMatch jnanamDatabasePath
+   local  tDbaseCheckPath, tCheckSum, tLatestCheckSum
    put jnanamDatabasePath into tDbaseCheckPath
    put ".txt" after tDbaseCheckPath
    put url ("binfile:" & tDbaseCheckPath) into tCheckSum
    put  the md5Digest of URL ("binfile:" & jnanam_GetCompressedFilePath()) into tLatestCheckSum
- return tCheckSum<>tLatestCheckSum
+   return tCheckSum<>tLatestCheckSum
 end _CheckSumDoesntMatch
    
 private command _copyAndDecompress
+   local compressedFile, tDF
    put jnanam_GetCompressedFilePath() into compressedFile
    put the defaultfolder into tDF
    set the itemdel to "/"
@@ -123,6 +128,7 @@ private command _copyAndDecompress
 end _copyAndDecompress
 
 private command _loadDatabase
+   local  sqliteFile
    put jnanam_GetDatabasePath() into sqliteFile
    
    get revOpenDatabase("sqlite", sqliteFile)
@@ -134,7 +140,9 @@ private command _loadDatabase
    end if
 end _loadDatabase
 
-private command updateCache pMediaType   
+private command updateCache pMediaType  
+   local tPathToPhotos, tFileIDs, pSQL, pDatabaseConnectionID,
+   local tItemsA, tTotal, itemArray, tFilePath, fileID, tNewDataA, tResult
    switch pMediaType
       case "art/photography"
          put path_Assets() & "img/photography/" into tPathToPhotos
@@ -177,6 +185,7 @@ private command updateCache pMediaType
 end updateCache
 
 function quoteValuesforSQLparam pValueList
+   local tQuotedList 
    # pass a list of items comma separated and return with quotes
    put empty into tQuotedList # just in case
    repeat for each item x in pValueList
@@ -187,6 +196,7 @@ function quoteValuesforSQLparam pValueList
 end quoteValuesforSQLparam
 
 function jnanam_GetItem pFileID 
+   local tA 
    dbWhere "file_id", pFileID 
    put dbGet("item") into tA 
    return tA[1]
