@@ -9,15 +9,14 @@ Script "stack_view_SivaSivaBrowser_group_id_1006"
 global sConfigA
 
 on mouseUp
-
+   
    local tTarget, tShareControl, tControl, tBrowser, tBrowserRect
    local tCdHeight, tSharingHeight
    
-   
-   
    put the short name of the target into tTarget
    
-   if tTarget is not "add-favorites" then
+   if tTarget is not "add-favorites" and \
+         tTarget is not "share" then
       terminateBrowser
       show grc "blankImage"
       wait 10 milliseconds with messages
