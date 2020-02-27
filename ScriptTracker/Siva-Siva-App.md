@@ -16,6 +16,10 @@
 * ID: button id 7643 of card id 1002 of stack "Siva-Siva-App"
 * [stack_Siva-Siva-App_button_id_7643](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_7643.livecodescript)
 
+**button "Enable Logging" of card "InitializeApp" of stack "Siva-Siva-App"**
+* ID: button id 10117 of card id 1002 of stack "Siva-Siva-App"
+* [stack_Siva-Siva-App_button_id_10117](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_10117.livecodescript)
+
 **button "Go Log" of group "Log Test" of card id 4075 of stack "Siva-Siva-App"**
 * ID: button id 4078 of group id 4076 of card id 4075 of stack "Siva-Siva-App"
 * [stack_Siva-Siva-App_button_id_4078](./ScriptTracker/Siva-Siva-App_Scripts/stack_Siva-Siva-App_button_id_4078.livecodescript)

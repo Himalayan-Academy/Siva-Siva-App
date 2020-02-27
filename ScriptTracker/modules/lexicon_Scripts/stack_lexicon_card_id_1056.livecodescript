@@ -1,7 +1,7 @@
 Script "stack_lexicon_card_id_1056"
 
 /*
-# Name: card id 1056 of stack "lexicon"
+# Name: card "mainCard" of stack "lexicon"
 # ID: card id 1056 of stack "lexicon"
 */
 
@@ -41,19 +41,26 @@ on resizeStack
    set the rect of widget "Browser" of me to the rect of this card
 end resizeStack
 
-on goHome
+on goHome   
+   addJournalEntry
    if getPhoneModel() is "iPhoneX" then
       mobileHideStatusBar
    end if
-   go first card
+   --go first card
+   
    portal_GoStack "Siva-Siva-Portal"
 end goHome
 
 on goSettings
-   go first card
+   --go first card
    portal_GoStack "settings"
 end goSettings
-   
+
+local pData,  tCd,  
+
+
+end journalResume
+
 on browserLoadRequested pUrl, pType
    put pURL, pType
 end browserLoadRequested

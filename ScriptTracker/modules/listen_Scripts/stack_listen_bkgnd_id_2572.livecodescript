@@ -4,13 +4,14 @@ Script "stack_listen_bkgnd_id_2572"
 # Name: bkgnd "footerNavigation" of stack "listen"
 # ID: bkgnd id 2572 of stack "listen"
 
-# Background on card IDs: 1158, 1002, 2052, 2000
+# Background on card IDs: 1158, 1002, 2052, 2000, 2680, 2660
 */
 
 
 global sConfigA
 
 on mouseUp
+   local tTarget, tShareControl, pControl, tMediaMetaData
    put the short name of the target into tTarget
    switch tTarget
       case "go-home-portal"
@@ -45,12 +46,15 @@ on mouseUp
          bottomCenterMe pControl
          
          deleteMobileControl  "audioPlayer"
-         show group "share-ui" with visual dissolve very fast
+         show group "share-ui" with visual "dissolve" very fast
          unlock screen
          break
          
       case "add-favorites"
-         portal_GoStack "Journal"
+         addJournalEntry
+         
+         --         put getMediaMeta() into tMediaMetaData
+         --         put tMediaMetaData["title"]
          break
    end switch
 end mouseup

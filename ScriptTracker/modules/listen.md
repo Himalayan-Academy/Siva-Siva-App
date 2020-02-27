@@ -86,8 +86,30 @@
 **bkgnd "footerNavigation" of stack "listen"**
 * ID: bkgnd id 2572 of stack "listen"
 
-* Background on card IDs: 1158, 1002, 2052, 2000
+* Background on card IDs: 1158, 1002, 2052, 2000, 2680, 2660
 * [stack_listen_bkgnd_id_2572](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2572.livecodescript)
+
+**widget "playAudio" of bkgnd "pause-play" of stack "listen"**
+* ID: widget id 2663 of bkgnd id 2654 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2663](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2663.livecodescript)
+
+**widget "pauseAudio" of bkgnd "pause-play" of stack "listen"**
+* ID: widget id 2664 of bkgnd id 2654 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2664](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2664.livecodescript)
+
+**bkgnd "share-ui" of stack "listen"**
+* ID: bkgnd id 2656 of stack "listen"
+* Behavior: stack "behavior_SocialShare"
+
+* Background on card IDs: 2660
+* [stack_listen_bkgnd_id_2656](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2656.livecodescript)
+
+**widget "go-next" of bkgnd "go-next" of stack "listen"**
+* ID: widget id 2679 of bkgnd id 2659 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2679](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2679.livecodescript)
 
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
@@ -136,4 +158,8 @@
 **button "Misc Tests" of group "devtools" of card "listen-my-audio" of stack "listen"**
 * ID: button id 2001 of group id 1993 of card id 2000 of stack "listen"
 * [stack_listen_button_id_2001](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2001.livecodescript)
+
+**card "listen-file" of stack "listen"**
+* ID: card id 2660 of stack "listen"
+* [stack_listen_card_id_2660](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_2660.livecodescript)
 

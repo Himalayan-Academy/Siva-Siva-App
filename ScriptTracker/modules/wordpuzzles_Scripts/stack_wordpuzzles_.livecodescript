@@ -20,7 +20,6 @@ end preOpenStack
 
 on closeStack
    local pTrackdata -- BWM looks like something is missing
-   addJournalEntry
    tracking_RecordActivity "Word Puzzles", "navigation/exit", pTrackdata
    if isMobile() then
       mobileSetFullScreenRectForOrientations "landscape left,landscape right"
@@ -49,10 +48,11 @@ command addJournalEntry
    put "word-puzzle" into pData["card"]
    put "Word Puzzles" into tTitle
    Journal_RecordEntry "wordpuzzles",tTitle,pData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
 
 on journalResume pDataA, pEntryA
-   local pLevel -- BWM looks like this value is unused
+   local pLevel
    go to card  pDataA["card"] 
    put pDataA["lastLevel"] into pLevel
 end journalResume

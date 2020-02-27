@@ -47,6 +47,11 @@
 * ID: field id 6993 of group id 6991 of card id 1028 of stack "wordpuzzles"
 * [stack_wordpuzzles_field_id_6993](./../../ScriptTracker/modules/wordpuzzles_Scripts/stack_wordpuzzles_field_id_6993.livecodescript)
 
+**widget "saveToJournal" of group "prefsSelectorGrp" of card "word-puzzle" of stack "wordpuzzles"**
+* ID: widget id 11972 of group id 6991 of card id 1028 of stack "wordpuzzles"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_wordpuzzles_widget_id_11972](./../../ScriptTracker/modules/wordpuzzles_Scripts/stack_wordpuzzles_widget_id_11972.livecodescript)
+
 **button "back-arrow" of card "word-puzzle" of stack "wordpuzzles"**
 * ID: button id 11502 of card id 1028 of stack "wordpuzzles"
 * [stack_wordpuzzles_button_id_11502](./../../ScriptTracker/modules/wordpuzzles_Scripts/stack_wordpuzzles_button_id_11502.livecodescript)

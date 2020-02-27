@@ -9,7 +9,7 @@ Script "stack_Siva-Siva-Portal_bkgnd_id_8191"
 */
 
 
-local tapFlag
+local tapFlag,tGroupContainer,tControlWidth,tShareOptions
 
 on resizeControl
    set the clipstorect of me to true

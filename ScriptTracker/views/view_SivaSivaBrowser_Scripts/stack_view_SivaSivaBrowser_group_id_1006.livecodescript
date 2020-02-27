@@ -9,17 +9,14 @@ Script "stack_view_SivaSivaBrowser_group_id_1006"
 global sConfigA
 
 on mouseUp
+   
    local tTarget, tShareControl, tControl, tBrowser, tBrowserRect
    local tCdHeight, tSharingHeight
    
-   -- record the last URL they were on
-   if not (the vis of widget "loader") then
-      journal_AddEntry
-   end if
-   
    put the short name of the target into tTarget
    
-   if tTarget is not "share" then
+   if tTarget is not "add-favorites" and \
+         tTarget is not "share" then
       terminateBrowser
       show grc "blankImage"
       wait 10 milliseconds with messages
@@ -59,7 +56,10 @@ on mouseUp
          break
          
       case "add-favorites"
-         portal_GoStack "Journal"
+         -- record the last URL they were on
+         if not (the vis of widget "loader") then
+            journal_AddEntry
+         end if
          break
    end switch
 end mouseup
