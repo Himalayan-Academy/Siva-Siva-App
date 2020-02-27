@@ -16,8 +16,8 @@ on resizeControl
    set the top of tControl to the top of me + 3
    
    put the long id of fld "Title" of me into tControl
-   set the loc of tControl to the loc of me
+   topCenterMe tControl,10
    
-   set the rect of grc "portal-title-bkgnd" of me to the rect of me
+  
 end resizeControl
 

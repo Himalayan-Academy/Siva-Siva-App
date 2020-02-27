@@ -21,10 +21,14 @@ end mouseup
 on opencard
    if the environment is not "development" then
       hide button "enable network tracer"
+      hide button "cancel Logging"
    else
       show button "enable network tracer"
+      show button "cancel Logging"
       choose browse tool
    end if
    
    pass opencard
 end opencard
+
+

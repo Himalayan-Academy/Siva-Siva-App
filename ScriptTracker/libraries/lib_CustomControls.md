@@ -23,6 +23,14 @@
 * ID: button id 6447 of bkgnd id 6446 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_button_id_6447](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_button_id_6447.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "lib_CustomControls"**
+* ID: button id 6482 of bkgnd id 6480 of stack "lib_CustomControls"
+* [stack_lib_CustomControls_button_id_6482](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_button_id_6482.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "lib_CustomControls"**
+* ID: button id 6483 of bkgnd id 6480 of stack "lib_CustomControls"
+* [stack_lib_CustomControls_button_id_6483](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_button_id_6483.livecodescript)
+
 **card "Custom Controls Home" of stack "lib_CustomControls"**
 * ID: card id 1002 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_card_id_1002](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_card_id_1002.livecodescript)
@@ -53,13 +61,9 @@
 * ID: graphic id 6419 of group id 6418 of card id 6417 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_graphic_id_6419](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_graphic_id_6419.livecodescript)
 
-**field "lbl-dialogPrompt" of group "answerDlgGrp" of card "answerDlgGrp" of stack "lib_CustomControls"**
-* ID: field id 6420 of group id 6418 of card id 6417 of stack "lib_CustomControls"
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "answerDlgGrp" of stack "lib_CustomControls"**
+* ID: field id 6420 of group id 6478 of group id 6418 of card id 6417 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_field_id_6420](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_field_id_6420.livecodescript)
-
-**button "DIALOGAFFIRM" of group "answerDlgGrp" of card "answerDlgGrp" of stack "lib_CustomControls"**
-* ID: button id 6421 of group id 6418 of card id 6417 of stack "lib_CustomControls"
-* [stack_lib_CustomControls_button_id_6421](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_button_id_6421.livecodescript)
 
 **group "bottomToast" of card "dialog_CustomMsg" of stack "lib_CustomControls"**
 * ID: group id 6423 of card id 6424 of stack "lib_CustomControls"

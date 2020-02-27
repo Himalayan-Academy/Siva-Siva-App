@@ -62,7 +62,6 @@ end showTools
 
 
 on closeStack
-   addJournalEntry
    portal_SetLastStack "color-meditation"
 end closeStack
 
@@ -367,9 +366,9 @@ end resetUI
 command addJournalEntry -- save a bookmark to db
    local pData, tTitle
    put "runColors" into pData["card"] 
-   put sLastLevel into pData["colorLevel"]
-   put ("Color Meditation - Level " & sLastLevel) into tTitle
+   put ("Color Meditation") into tTitle
    Journal_RecordEntry "color-meditation",tTitle,pData -- send to journal
+   dialog_CustomMsg "Save to Journal"
 end addJournalEntry
 
 

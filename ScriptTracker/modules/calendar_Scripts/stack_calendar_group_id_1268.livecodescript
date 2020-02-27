@@ -7,7 +7,7 @@ Script "stack_calendar_group_id_1268"
 */
 
 
-local tapFlag
+local tapFlag,tGroupContainer,tControlWidth, tShareOptions
 
 on resizeControl
    set the clipstorect of me to true

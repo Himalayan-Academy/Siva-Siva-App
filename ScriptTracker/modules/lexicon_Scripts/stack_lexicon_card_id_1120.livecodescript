@@ -1,7 +1,7 @@
 Script "stack_lexicon_card_id_1120"
 
 /*
-# Name: card id 1120 of stack "lexicon"
+# Name: card "loader" of stack "lexicon"
 # ID: card id 1120 of stack "lexicon"
 */
 

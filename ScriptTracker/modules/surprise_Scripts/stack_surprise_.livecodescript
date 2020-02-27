@@ -321,3 +321,16 @@ on playPausedAudio sTimeStamp
    end if
    togglePause true, true
 end playPausedAudio
+
+command addJournalEntry-- save a bookmark to db
+   local tData,pDataA, tTitle, tURL
+   
+   put getMediaMeta() into tData
+   put tData["item_id"] into pDataA["item_id"]
+   put tData["title"] into pDataA["title"]
+   put tData["title"] into tTitle
+   put mediaUrl_Get() into pDataA["url"] 
+   put "listen-file" into pDataA["card"]  
+   Journal_RecordEntry "listen",tTitle,pDataA -- send to journal
+   --dialog_CustomMsg "Saved to Journal"
+end addJournalEntry

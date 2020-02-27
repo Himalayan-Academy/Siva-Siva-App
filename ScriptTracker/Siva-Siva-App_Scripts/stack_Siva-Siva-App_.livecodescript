@@ -13,7 +13,7 @@ on mobileStandaloneSaved
 end mobileStandaloneSaved
 
 on closestack
-   local tDate
+   local tDate, tBrandImage, tTotal
    
    --> being brand image handling
    
