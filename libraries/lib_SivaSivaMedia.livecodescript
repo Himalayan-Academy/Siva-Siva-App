@@ -13,8 +13,16 @@ local  sLastQuoteID, sLastImagePath
 on ___LOCAL_Dbase
 end ___LOCAL_Dbase
 
+
+local tConnectionID, selectedItemsA, tRetValA, pCollection, tPath, tFolderList
+local tImageID, tImageList, pMediaType, pServerPath, pURL, tSQL, 
+local tLyricsA, tViewData, tTitle, tSubTitle, tArtists, tAuthor
+local tDescription, tDateCreated, tTranscript, tLyricsFields, tFields, tCard
+local tAssetpath, pImageList, GotIt, sURL, tQueryString, tServerPath
+local tYear, tArtDirectory, tFileName,
+
 ##################### 
---> FETCH RANDOM
+--> FETCH MEDIA ITEMS METADATA
 -- the local "sMediaMetaA"
 -- will always have the last record 
 -- will check in data base for
@@ -23,12 +31,27 @@ end ___LOCAL_Dbase
 -- users are double pair such as "media_type,audio,artist,Manivelu"
 -- assume the pair match columns the dbase
 
-local tConnectionID, selectedItemsA, tRetValA, pCollection, tPath, tFolderList
-local tImageID, tImageList, pMediaType, pServerPath, pURL, tSQL, 
-local tLyricsA, tLyrics, tViewData, tTitle, tSubTitle, tArtists, tAuthor
-local tDescription, tDateCreated, tTranscript, tLyricsFields, tFields, tCard
-local tAssetpath, pImageList, GotIt, sURL, tQueryString, tServerPath
-local tYear, tArtDirectory, tFileName,
+############################
+--> FETCHMEDIAITEM
+-- all record the match a query
+
+function fetchMediaItems tSearchA
+   
+   #Typically we are no passing and explicitlist
+   # but a pre-set array   
+   
+   put  JnanamDB() into tConnectionID
+   repeat for each key x in tSearchA
+      if tSearchA[x]is not empty then
+         dbLike x,tSearchA[x]
+      end if
+   end repeat
+   put dbGet("item", tConnectionID) into selectedItemsA
+   # often used to query a single item, 
+   # set the sMetaDataA to the first  (and only) record
+   metadata_SetRecord selectedItemsA[1]
+   return selectedItemsA
+end fetchMediaItems
 
 
 function fetchRandomMediaItem
@@ -54,24 +77,6 @@ function fetchRandomMediaItem
    put tRetValA into sMediaMetaA
 end fetchRandomMediaItem
 
-############################
---> FETCHMEDIAITEM
--- all record the match a query
-
-function fetchMediaItems tSearchA
-   
-   #Typically we are no passing and explicitlist
-   # but a pre-set array   
-   
-   put  JnanamDB() into tConnectionID
-   repeat for each key x in tSearchA
-      if tSearchA[x]is not empty then
-         dbLike x,tSearchA[x]
-      end if
-   end repeat
-   put dbGet("item", tConnectionID) into selectedItemsA
-   return selectedItemsA
-end fetchMediaItems
 
 -----------------------------------------------------------
 -- fetchRandomImageAsset
@@ -157,6 +162,7 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
 end getMediaURL
 
 function getSongLyrics pItemID    
+   local tLyrics
    put "SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.diacritical_transliteration,item.lyrics_id" \ 
          &  " FROM song_lyrics JOIN  item ON item.lyrics_id= song_lyrics.lyrics_id WHERE item.item_id = " & pItemID into tSQL
    put  JnanamDB() into tConnectionID
@@ -179,6 +185,7 @@ end getSongLyrics
 -- which we show when use to read of.
 
 function getMediaItemMetadata pRecords
+   local tLyrics
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
@@ -187,8 +194,12 @@ function getMediaItemMetadata pRecords
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put "Artist: " & sMediaMetaA["artists"] into tArtists
-   put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
+   if sMediaMetaA["artists"] <> empty then
+      put "Artist: " & sMediaMetaA["artists"] into tArtists
+   end if
+   if sMediaMetaA["author"] <> empty then
+      put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
+   end if
    put sMediaMetaA["description"] into tDescription
    replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
    put sMediaMetaA["date_created"] into tDateCreated

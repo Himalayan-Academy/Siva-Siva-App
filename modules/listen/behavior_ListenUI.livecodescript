@@ -14,11 +14,12 @@ end opencard
   
   
 on mouseUp
+   local tTarget, tTitle
    ntinfo "Mouseup from behavior_Listen UI"
    --breakpoint
-   put the short name of the target into pTarget
+   put the short name of the target into tTarget
    
-   switch pTarget
+   switch tTarget
       case "collections-label"
          go to card "listen-collection"
          break
@@ -40,13 +41,13 @@ on mouseUp
          put getLineNumber(sSelectNum) into sLineNum
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
-         put line sLineNum fld "audioList" into pTitle
+         put line sLineNum fld "audioList" into tTitle
          
          
          put round(sSelectNum/2) into sSelectNum
          # pass it back the cd script which has the main handlers
          --  breakpoint
-         passAudioSelection sSelectNum, pTitle 
+         passAudioSelection sSelectNum, tTitle 
          break
          
          
@@ -67,7 +68,7 @@ on mouseUp
          break
          
       case "chevron-up-down" # this is simple enough to do here
-         passAudioDetails sSelectNum,pTarget
+         passAudioDetails sSelectNum,tTarget
          break
    end switch
 end mouseUp
@@ -75,6 +76,7 @@ end mouseUp
 
 
 command switchAudioUi sAudioUI
+   local pUI
    if sAudioUI is empty then
       put "hideUI" into sAudioUI
    end if
@@ -124,43 +126,44 @@ command getAudioList
 end getAudioList
 
 
---command startPlayer  sSelectedURL, pTitle
-
---   --  local sSelectedURL, tRect
-
---   if isMobile() then
---      if the platform is "android" then
---         # the player is pretty ugly and covers up 120 vertical px
---         # we need to try to get it to fit nicely at the bottom:
---         put 70,625,350,659 into tRect    #90,630,340,675
---      else
---         put empty into tRect
---      end if
---      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
---   else
---      set the filename of player "audioPlayer" to sSelectedURL
---   end if
-
---   showPlayer "true", "audioPlayer"
---   if not isMobile() then
---      start player "audioPlayer"
---      get runningAudioIndicatorVis("true")
---   else
---      setMobileAudioPlayer "audioPlayer", "play"
---   end if
---   put  pTitle into fld "currentTitleLabel"
---   # Android player covers it! Because the controller higher that iOS one.
---   if the platform is "Android" then
---      set the bottom of fld "currentTitleLabel" to 600
---   end if
---   if there is a control "DownloadSelection" then
---      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
---   end if
---   togglePause "true"
---end startPlayer
+command startPlayer  sSelectedURL, pTitle
+   
+   local  tRect, sSelectedItemA
+   
+   if isMobile() then
+      if the platform is "android" then
+         # the player is pretty ugly and covers up 120 vertical px
+         # we need to try to get it to fit nicely at the bottom:
+         put 70,625,350,659 into tRect    #90,630,340,675
+      else
+         put empty into tRect
+      end if
+      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
+   else
+      set the filename of player "audioPlayer" to sSelectedURL
+   end if
+   
+   showPlayer "true", "audioPlayer"
+   if not isMobile() then
+      start player "audioPlayer"
+      get runningAudioIndicatorVis("true")
+   else
+      setMobileAudioPlayer "audioPlayer", "play"
+   end if
+   put  pTitle into fld "currentTitleLabel"
+   # Android player covers it! Because the controller higher that iOS one.
+   if the platform is "Android" then
+      set the bottom of fld "currentTitleLabel" to 600
+   end if
+   if there is a control "DownloadSelection" then
+      set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
+   end if
+   togglePause "true"
+end startPlayer
 
 
 command markCachedItems pKeys
+   local pURL,tLocalStatus,tIsCached, sCurrentPlayListA
    repeat for each line x in pKeys
       # this as good a place as any to check for the existence of files  
       # and get the URL for every one in the play list... so we only do this once.
@@ -178,8 +181,3 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
-
-
-on localNotificationReceived pMessage
-   
-end localNotificationReceived

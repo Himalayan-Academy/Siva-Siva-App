@@ -42,7 +42,7 @@ end getSelection
 on passAudioSelection pLine,pTitle
    
    hide widget "turnOffAudio"
-   startPlayer  sDownloadedAudioA["pLine"]["localURL"],pTitle
+   startPlayer  sDownloadedAudioA[pLine]["localURL"],pTitle
    
    # try to solve the problem of no controller in iOS 13.1.3
    # We just let use pause or continue audio
@@ -52,7 +52,7 @@ on passAudioSelection pLine,pTitle
    togglePause true, true
    
    metadata_SetRecord (sDownloadedAudioA[pLine][metadata][1])
-   Journal_AddEntry 
+
 end passAudioSelection
 
 
@@ -72,65 +72,65 @@ on passAudioDetails sSelectNum,pTarget
    break 
 end passAudioDetails
 
-command getDownloadedAudio
-   local tList, tSearchA, tURL,pFolder,tTitle,tTitles
-   
-   put empty into sDownloadedAudioA
-   # do directory walk of the media/audio folder
-   
-   put (path_Documents() & "media/audio") into pFolder
-   put listFilesWithPaths(pFolder, "true")  into tList
-   repeat with x = 1 to (the number of lines of  tList)
-      put line x of tList into tURL
-      put tURl into sDownloadedAudioA[x]["localURL"]
-      set the itemdel to "/"
-      put item -2 of tURL into sDownloadedAudioA[x]["file_id"]
-      repeat for each  line tKey in the keys of sDownloadedAudioA
-         put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
-         put  fetchMediaItems(tSearchA) into  sDownloadedAudioA[tKey][metadata]
-      end repeat
-   end repeat
-   
-   # first look in the dates base
-   
-   repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)
-      if  sDownloadedAudioA[x]["file_id"] contains "-audiobook" then
-         # get in from file names
-         set the itemdel to "/"
-         put  item -1 of sDownloadedAudioA[x]["localURL"] into tTitle
-         put normalizeFileToTitle(tTitle) after tTitles
-         put cr & cr after tTitles
-         next repeat
-      end if
-      put sDownloadedAudioA[x][metadata][1]["title"] into tTitle
-      
-      if tTitle is empty then
-         put sDownloadedAudioA[x]["file_id"] into tTitle
-         put normalizeFileToTitle(tTitle) after tTitles
-      else
-         put tTitle after tTitles
-      end if
-      put cr after tTitles
-      if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
-         put sDownloadedAudioA[x][metadata][1]["artists"] after tTitles
-      end if
-      put cr after tTitles
-      
-   end repeat
-   
-   loadTitles tTitles
-   
-   # If file_id not into data base  register a message that the
-   #  transcription/Lyrics  for this file is not available.
-   
-   #  get a URL locally for the files
-   
-   # If the metadata for the files  is available then the get from database
-   
-   #  ======
-   
-   # display titles and
-end getDownloadedAudio
+--command getDownloadedAudio
+--   local tList, tSearchA, tURL,pFolder,tTitle,tTitles
+
+--   put empty into sDownloadedAudioA
+--   # do directory walk of the media/audio folder
+
+--   put (path_Documents() & "media/audio") into pFolder
+--   put listFilesWithPaths(pFolder, "true")  into tList
+--   repeat with x = 1 to (the number of lines of  tList)
+--      put line x of tList into tURL
+--      put tURL into sDownloadedAudioA[x]["localURL"]
+--      set the itemdel to "/"
+--      put item -2 of tURL into sDownloadedAudioA[x]["file_id"]
+--      repeat for each  line tKey in the keys of sDownloadedAudioA
+--         put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
+--         put  fetchMediaItems(tSearchA) into  sDownloadedAudioA[tKey][metadata]
+--      end repeat
+--   end repeat
+
+--   # first look in the dates base
+
+--   repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)
+--      if  sDownloadedAudioA[x]["file_id"] contains "-audiobook" then
+--         # get in from file names
+--         set the itemdel to "/"
+--         put  item -1 of sDownloadedAudioA[x]["localURL"] into tTitle
+--         put normalizeFileToTitle(tTitle) after tTitles
+--         put cr & cr after tTitles
+--         next repeat
+--      end if
+--      put sDownloadedAudioA[x][metadata][1]["title"] into tTitle
+
+--      if tTitle is empty then
+--         put sDownloadedAudioA[x]["file_id"] into tTitle
+--         put normalizeFileToTitle(tTitle) after tTitles
+--      else
+--         put tTitle after tTitles
+--      end if
+--      put cr after tTitles
+--      if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
+--         put sDownloadedAudioA[x][metadata][1]["artists"] after tTitles
+--      end if
+--      put cr after tTitles
+
+--   end repeat
+
+--   loadTitles tTitles
+
+--   # If file_id not into data base  register a message that the
+--   #  transcription/Lyrics  for this file is not available.
+
+--   #  get a URL locally for the files
+
+--   # If the metadata for the files  is available then the get from database
+
+--   #  ======
+
+--   # display titles and
+--end getDownloadedAudio
 
 
 command loadtitles pTitles   

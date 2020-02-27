@@ -24,7 +24,7 @@
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
 
-local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL
+local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloadedAudioA
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 local sCached, sBrowseHeader, sTimeStamp
@@ -36,7 +36,6 @@ on preopenstack
       set the fullscreenmode of this stack to "showAll"
       iphoneSetAudioCategory "playback" 
    end if
-   
 end preopenstack
 
 on openstack 
@@ -523,15 +522,15 @@ command getPlayListURLs pKeys
 end getPlayListURLs
 
 function getItemURL pRecordNum
-
+   local tURL
    # send of to lib_SivaSivaMedia, which knows all about our media CMS
    # but Audio books are completely different CMS: they have no item records for their audio files
    
    if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
       # everything happens via Jnanam table structure record array
-      put  sCurrentPlayListA["audioFiles"][pRecordNum] into sSelectedItemA
+      put  sCurrentPlayListA["audioFiles"][pRecordNum] into tURL
       metadata_SetRecord sSelectedItemA
-      put getMediaURL (sSelectedItemA["item_id"]) into sSelectedURL
+      put getMediaURL (sSelectedItemA["item_id"]) into tURL
       
       # but lib_SivaSivaMedia won't have string for the latest item
       # fortunately there is easily solution for audio:
@@ -545,12 +544,72 @@ function getItemURL pRecordNum
       end if       
    else
       # its an audio book
-      put getMediaURL("audioBook") into sSelectedURL
-      put  sCurrentPlayListA["audioBookMetadata"]["file_id"] & "/" after sSelectedURL
-      put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after sSelectedURL
+      put getMediaURL("audioBook") into tURL
+      put  sCurrentPlayListA["audioBookMetadata"]["file_id"] & "/" after tURL
+      put  sCurrentPlayListA["audioFiles"]["toc"][pRecordNum]["file"] after tURL
    end if
-   return sSelectedURL
+   return tURL
 end getItemURL
+
+command getDownloadedAudio
+   local tList, tSearchA, tURL,pFolder,tTitle,tTitles
+   
+   put empty into sDownloadedAudioA
+   # do directory walk of the media/audio folder
+   
+   put (path_Documents() & "media/audio") into pFolder
+   put listFilesWithPaths(pFolder, "true")  into tList
+   repeat with x = 1 to (the number of lines of  tList)
+      put line x of tList into tURL
+      put tURL into sDownloadedAudioA[x]["localURL"]
+      set the itemdel to "/"
+      put item -2 of tURL into sDownloadedAudioA[x]["file_id"]
+      repeat for each  line tKey in the keys of sDownloadedAudioA
+         put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
+         put  fetchMediaItems(tSearchA) into  sDownloadedAudioA[tKey][metadata]
+      end repeat
+   end repeat
+   
+   # first look in the dates base
+   
+   repeat with x = 1 to (the number lines of keys of sDownloadedAudioA)
+      if  sDownloadedAudioA[x]["file_id"] contains "-audiobook" then
+         # get in from file names
+         set the itemdel to "/"
+         put  item -1 of sDownloadedAudioA[x]["localURL"] into tTitle
+         put normalizeFileToTitle(tTitle) after tTitles
+         put cr & cr after tTitles
+         next repeat
+      end if
+      put sDownloadedAudioA[x][metadata][1]["title"] into tTitle
+      
+      if tTitle is empty then
+         put sDownloadedAudioA[x]["file_id"] into tTitle
+         put normalizeFileToTitle(tTitle) after tTitles
+      else
+         put tTitle after tTitles
+      end if
+      put cr after tTitles
+      if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
+         put sDownloadedAudioA[x][metadata][1]["artists"] after tTitles
+      end if
+      put cr after tTitles
+      
+   end repeat
+   
+   loadTitles tTitles
+   
+   # If file_id not into data base  register a message that the
+   #  transcription/Lyrics  for this file is not available.
+   
+   #  get a URL locally for the files
+   
+   # If the metadata for the files  is available then the get from database
+   
+   #  ======
+   
+   # display titles and
+end getDownloadedAudio
 
 command markCachedItems pKeys
    local pURL, tLocalStatus, tIsCached
@@ -575,13 +634,16 @@ end markCachedItems
 
 command addJournalEntry-- save a bookmark to db
    local tData,pDataA, tTitle, tURL
+  log sSelectedURL
+   
    if the name of this card is "listen-collections" then
-      put  "listen-collecitons" into pDataA["card"]  
+      put  "listen-collections" into pDataA["card"]  
    else
       put getMediaMeta() into tData
       put tData["item_id"] into pDataA["item_id"]
       put tData["title"] into pDataA["title"]
       put  tData["url"] into pDataA["url"] 
+      log pDataA["url"]
       put "listen-file" into pDataA["card"]  
    end if
    Journal_RecordEntry "listen",tTitle,pDataA -- send to jofrnal
@@ -732,7 +794,7 @@ end preopencard
 command __UXHandlers
 end __UXHandlers
 
-command startPlayer  sSelectedURL, pTitle
+command startPlayer  pURL, pTitle
    local tRect
    --  local sSelectedURL, tRect
    
@@ -745,9 +807,9 @@ command startPlayer  sSelectedURL, pTitle
          put empty into tRect
       end if
       --breakpoint
-      createMobileAudioPlayer sSelectedURL, "audioPlayer",tRect
+      createMobileAudioPlayer pURL, "audioPlayer",tRect
    else
-      set the filename of player "audioPlayer" to sSelectedURL
+      set the filename of player "audioPlayer" to pURL
    end if
    
    
@@ -816,6 +878,7 @@ on clearPlayer
 end clearPlayer
 
 command offLineGoMyAudio
+   
    local pFolder, tList
    if not connectivity_PingServer() then
       put (path_Documents() & "media/audio") into pFolder

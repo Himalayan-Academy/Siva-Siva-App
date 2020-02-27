@@ -39,9 +39,13 @@ on openCard
    # pass sCurrentPlayListA from stack to card:  
    -- set GUI
    updateUI
- 
+   
    playlist_Reset 
    audioIsRunning
+   if the logMessage <> empty then
+      copyLogControl
+   end if
+   
 end openCard
 
 
@@ -194,7 +198,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
       put getMediaURL() into sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
-   put checkURLAvailable(sSelectedURL) into fld "localresult"
+   --put checkURLAvailable(sSelectedURL) into fld "localresult"
    
    if checkURLAvailable(sSelectedURL) is "false" then 
       clearPlayer

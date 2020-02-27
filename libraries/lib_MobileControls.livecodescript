@@ -146,7 +146,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    end if
    
    if pState = "play" then # could be start from scratch after pausing
-      if sTimeStamp is empty then
+      if pTimeStamp is empty then
          put 0 into pTimeStamp
       end if
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
