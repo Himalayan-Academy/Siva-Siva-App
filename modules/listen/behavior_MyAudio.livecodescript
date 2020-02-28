@@ -17,23 +17,18 @@ on preopencard
 end preopencard
 
 on openCard
-   getDownloadedAudio
+   getDownloadedAudio 
+   put the result into sDownloadedAudioA
    
    if (fld "audioList" is empty) then
       dialog_CustomMsg "You have not downloaded any audio"
    end if
-   
    audioIsRunning
-   
-
-   
 end openCard
 
 command doAnswerAffirmed
    hide grp "AnswerDlgGrp"
 end doAnswerAffirmed
-
-
 
 function getSelection pLine  
    return sDownloadedAudioA[pLine]

@@ -598,6 +598,7 @@ command getDownloadedAudio
    end repeat
    
    loadTitles tTitles
+   return sDownloadedAudioA
    
    # If file_id not into data base  register a message that the
    #  transcription/Lyrics  for this file is not available.
@@ -639,7 +640,6 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
-
 
 command addJournalEntry-- save a bookmark to db
    local tData,pDataA, tTitle, tURL

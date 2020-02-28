@@ -15,7 +15,7 @@ end opencard
   
 on mouseUp
    local tTarget, tTitle
-   ntinfo "Mouseup from behavior_Listen UI"
+   --ntinfo "Mouseup from behavior_Listen UI"
    --breakpoint
    put the short name of the target into tTarget
    
@@ -162,22 +162,4 @@ command startPlayer  sSelectedURL, pTitle
 end startPlayer
 
 
-command markCachedItems pKeys
-   local pURL,tLocalStatus,tIsCached, sCurrentPlayListA
-   repeat for each line x in pKeys
-      # this as good a place as any to check for the existence of files  
-      # and get the URL for every one in the play list... so we only do this once.
-      put getItemURL(x) into pURL
-      # Check and create folders here
-      put path_isFileOnDisk(pURL) into tLocalStatus
-      put item 1 of tLocalStatus into tIsCached
-      put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
-      if tIsCached then  # need to colored cached files on theUI
-         # store line numbers
-         put x & cr after sCached
-         put item 2 of tLocalStatus into  sCurrentPlayListA["audioFiles"][x]["myURL"]
-      else
-         put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
-      end if
-   end repeat
-end markCachedItems
+
