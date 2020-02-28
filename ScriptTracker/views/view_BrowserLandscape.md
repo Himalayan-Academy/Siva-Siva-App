@@ -51,14 +51,14 @@
 * ID: button id 1431 of card id 1002 of stack "view_BrowserLandscape"
 * [stack_view_BrowserLandscape_button_id_1431](./../ScriptTracker/views/view_BrowserLandscape_Scripts/stack_view_BrowserLandscape_button_id_1431.livecodescript)
 
+**group "footerNavigation" of card "SivaSivaBrowser" of stack "view_BrowserLandscape"**
+* ID: group id 1006 of card id 1002 of stack "view_BrowserLandscape"
+* [stack_view_BrowserLandscape_group_id_1006](./../ScriptTracker/views/view_BrowserLandscape_Scripts/stack_view_BrowserLandscape_group_id_1006.livecodescript)
+
 **group "share-ui" of card "SivaSivaBrowser" of stack "view_BrowserLandscape"**
 * ID: group id 1432 of card id 1002 of stack "view_BrowserLandscape"
 * Behavior: stack "behavior_SocialShare"
 * [stack_view_BrowserLandscape_group_id_1432](./../ScriptTracker/views/view_BrowserLandscape_Scripts/stack_view_BrowserLandscape_group_id_1432.livecodescript)
-
-**group "footerNavigation" of card "SivaSivaBrowser" of stack "view_BrowserLandscape"**
-* ID: group id 1006 of card id 1002 of stack "view_BrowserLandscape"
-* [stack_view_BrowserLandscape_group_id_1006](./../ScriptTracker/views/view_BrowserLandscape_Scripts/stack_view_BrowserLandscape_group_id_1006.livecodescript)
 
 **button "Change URL" of card id 1405 of stack "view_BrowserLandscape"**
 * ID: button id 1408 of card id 1405 of stack "view_BrowserLandscape"

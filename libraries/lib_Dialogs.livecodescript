@@ -180,6 +180,10 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    set the bottomright of btn "DIALOGAFFIRM"   of tLocalToast to tCdwidth-24,tCdheight-15
    set the top of  group "bottomToast"  to tCdHeight+400  # make sure it off screen
    
+   if there is a widget "body" of this cd and CardWidth()>CardHeight() then
+      set the top of widget "body" of this cd to -tDialogHeight+safeBottomMargin()
+   end if
+   
    unlock screen
    show group "bottomToast"   
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
@@ -188,6 +192,10 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    move grp "BottomToast" relative 0,tDialogHeight+400 in 800 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
+   
+   if there is a widget "body" of this cd and CardWidth()>CardHeight() then
+      set the top of widget "body" of this cd to safeTopMargin()
+   end if
 end dialog_CustomMsg
 
 
