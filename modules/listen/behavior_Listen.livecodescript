@@ -23,11 +23,12 @@
 #
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
-
+global sConfigA
 local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloadedAudioA
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
-local sCached, sBrowseHeader, sTimeStamp
+local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
+local sSelectionsA,sLastTarget,sLineNum,sSelectNum
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
@@ -463,6 +464,143 @@ on  playlist_Instantiate sTargetPlayList
    tracking_RecordActivity "Listen", "navigation/playlist", pData
 end playlist_Instantiate
 
+on playlist_Reset
+   put playlist_GetRecords() into  sCurrentPlayListA
+end playlist_Reset
+
+function checkPlayList
+   return the keys of  sCurrentPlayListA
+end checkPlayList
+
+--on playlist_Reset
+--   put playlist_GetRecords() into sSelectionsA   
+--end playlist_Reset
+
+--function checkPlayList
+--   return the keys of sSelectionsA
+--end checkPlayList
+
+-----------------------------------------------
+--# Select, Play, Listen, Stop UI interactions
+-----------------------------------------------
+--#
+--# DESCRIPTION: Only two jobs here
+--#     - show the title
+--#     - set the URL for the player
+--#    -  do the necessary for the mobile player
+--#     - start the player
+--# we should move common handlers off to a global  lib (may have them already)
+--# because we are going to be doing audio all over the app,
+--# not just here.
+--# 
+--# PARAMS: The selected line get the array element
+--# and away we go
+--#
+--# CHANGES: 2020-02-28, BR: explicit vars entered, moving up msg path to behavior_listen
+--# CHANGES: 2017-06-22, BR: CREATED 
+-----------------------------------------------
+
+on select_Play  sSelectNum, pitemID, sCardName
+   # if item id is empty then defaults to the click line number
+   
+   local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
+   local pTitle,audioFiles
+   # if we are coming from a click on the card list then the pItemID will be empty
+   # but we may be dropping in from the journal or another type of list that
+   # simple passes the item_id for the record.. and there is no pSelectedLIne
+   
+   if pItemID is empty then # search from the click line
+      put getItemURL(sSelectNum) into sRemoteURL
+      Put "Connecting..." into fld "currentTitleLabel"
+      --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+      put sCurrentPlayListA["audioFiles"][sSelectNum  ] into sSelectedItemA   
+      metadata_SetRecord sSelectedItemA
+      put sCurrentPlayListA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+   else
+      put pitemID into tSearchA["item_id"]
+      put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
+      put tTargetRecordA[1] into sSelectedItemA
+      metadata_SetRecord sSelectedItemA
+      put getMediaURL() into sSelectedURL
+      put path_isFileOnDisk(sSelectedURL) into tLocalStatus
+   end if
+   --put checkURLAvailable(sSelectedURL) into fld "localresult"
+   
+   if checkURLAvailable(sRemoteURL) is "false" then 
+      clearPlayer
+      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
+      doAnswer pMsg,"OK", answerURLunavailable
+      exit to top
+   end if
+   
+   
+   # Lyrics fetch is a separate function, see lib_SivaSiva Media
+   
+   get getSongLyrics(sSelectedItemA["item_id"])
+   
+   if sRemoteURL = "" then -- jg: don't continue
+      put "Media not found" into fld "audioDetails"
+      set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
+      showBusyIndicator false
+      exit to top
+   end if
+   
+   startPlayer sRemoteURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
+   --Journal_AddEntry  sSelectedItemA["item_id"]
+   put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
+   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
+end select_Play
+
+
+--on select_Play  sSelectNum, pitemID  # if item id is empty then defaults to the click line number
+--   local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
+--   local pTitle,audioFiles
+--   # if we are coming from a click on the card list then the pItemID will be empty
+--   # but we may be dropping in from the journal or another type of list that
+--   # simple passes the item_id for the record.. and there is no pSelectedLIne
+
+--   if pItemID is empty then # search from the click line
+--      put getItemURL("sSelectNum") into sRemoteURL
+--      Put "Connecting..." into fld "currentTitleLabel"
+--      --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
+--      put sSelectionsA["audioFiles"]["sSelectNum"] into sSelectedItemA   
+--      metadata_SetRecord sSelectedItemA
+--      put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+--   else
+--      put pitemID into tSearchA["item_id"]
+--      put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
+--      put tTargetRecordA[1] into sSelectedItemA
+--      metadata_SetRecord sSelectedItemA
+--      put getMediaURL() into sSelectedURL
+--      put path_isFileOnDisk(sSelectedURL) into tLocalStatus
+--   end if
+--   --put checkURLAvailable(sSelectedURL) into fld "localresult"
+
+--   if checkURLAvailable(sRemoteURL) is "false" then 
+--      clearPlayer
+--      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
+--      doAnswer pMsg,"OK", answerURLunavailable
+--      exit to top
+--   end if
+
+
+--   # Lyrics fetch is a separate function, see lib_SivaSiva Media
+
+--   get getSongLyrics(sSelectedItemA["item_id"])
+
+--   if sRemoteURL = "" then -- jg: don't continue
+--      put "Media not found" into fld "audioDetails"
+--      set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
+--      showBusyIndicator false
+--      exit to top
+--   end if
+
+--   startPlayer sRemoteURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
+--   --Journal_AddEntry  sSelectedItemA["item_id"]
+--   put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
+--   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
+--end select_Play
+
 # V2 Link to transcript
 
 command select_ShowDetails  pSelection, pRecord
@@ -600,17 +738,34 @@ command getDownloadedAudio
    loadTitles tTitles
    return sDownloadedAudioA
    
-   # If file_id not into data base  register a message that the
-   #  transcription/Lyrics  for this file is not available.
-   
-   #  get a URL locally for the files
-   
-   # If the metadata for the files  is available then the get from database
-   
-   #  ======
-   
-   # display titles and
 end getDownloadedAudio
+
+command downloadSelection sSelectNum, pTarget
+   put the long id of pTarget into sLastTarget 
+   # NOTE: we need this because the down stack will need to come back where
+   # it and we pass this to pRequestBy
+   if sSelectNum <> empty then  # we have a selection
+      doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
+   else
+      put "Pick a Title to Download It." into fld "currentTitleLabel"
+   end if
+end downloadSelection
+
+
+command downloadAffirmed   
+   local pTitle
+   if  sCurrentPlayListA["playListClass"] ="audiobook" then
+      put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
+   else
+      put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into pTitle
+   end if
+   put "listen" into sConfigA["last_stack"]
+   hide stack "listen"
+   go stack "view_Download"
+   wait 100 milliseconds with messages
+   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
+   # sLastTarget becomes params pRequest by to the download stack
+end downloadAffirmed
 
 command loadtitles pTitles   
    local pLineCount
@@ -689,15 +844,6 @@ end setAudioListColors
 command clearAudioListColor
    set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
 end clearAudioListColor
-
-function getLineNumber sSelectNum
-   local tLineNum
-   put sSelectNum into tLineNum
-   if (tLineNum mod 2) = 0 then
-      subtract 1 from tLineNum
-   end if
-   return tLinenum
-end getLineNumber
 
 
 on preopencard
