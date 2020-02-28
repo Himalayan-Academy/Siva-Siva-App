@@ -616,29 +616,6 @@ command showLoaderGIF pBool
 end showLoaderGIF
 
 
-# adopted from Gurudeva app by jacqueline land,am gay
-on setGrpVis pGrpName,pLabel, pVis --jg: manages favorites and share groups with one handler
-   -- Uses "move" which eliminates visual effect issues on Android
-   --   -- pGrpName = short name of target grp 
-   --   -- pLabel = message label
-   --   -- pVis = boolean
-   
-   --   set the layerMode of grp pGrpName to "dynamic"
-   --   if pVis then -- show it
-   --      set the top of grp pGrpName to the height of this cd
-   --      set the vis of grp pGrpName to true
-   --      moveGrp pGrpName, -tVDist, cMoveSpeed
-   --      highlightSelectedTab pLabel
-   --      set the vis of grp "statusMessageControls" to pVis --jg: do it last on show, first on hide
-   --   else -- hide it
-   --      set the vis of grp "statusMessageControls" to pVis
-   --      put the height of this cd - the top of grp pGrpName into tVDist
-   --      moveGrp pGrpName, tVDist, cMoveSpeed
-   --      set the vis of grp pGrpName to false
-   --      clearTabHighlights
-   --   end if
-   --   set the layerMode of grp pGrpName to "static"
-end setGrpVis
 
 on revealSearchControls pVis --jg: combined reveal/hide handlers
    -- pVis = boolean

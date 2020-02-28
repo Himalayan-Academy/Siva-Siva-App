@@ -143,7 +143,7 @@ command startPlayer  sSelectedURL, pTitle
       set the filename of player "audioPlayer" to sSelectedURL
    end if
    
-   showPlayer "true", "audioPlayer"
+   showPlayer "false", "audioPlayer"
    if not isMobile() then
       start player "audioPlayer"
       get runningAudioIndicatorVis("true")
@@ -158,7 +158,7 @@ command startPlayer  sSelectedURL, pTitle
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not (sSelectedItemA["cached"] )
    end if
-   togglePause "true"
+   togglePause "true","true"
 end startPlayer
 
 

@@ -200,7 +200,7 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    end if
    --put checkURLAvailable(sSelectedURL) into fld "localresult"
    
-   if checkURLAvailable(sSelectedURL) is "false" then 
+   if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
       put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
       doAnswer pMsg,"OK", answerURLunavailable
@@ -212,14 +212,14 @@ on select_Play  pitemID  # if item id is empty then defaults to the click line n
    
    get getSongLyrics(sSelectedItemA["item_id"])
    
-   if sSelectedURL = "" then -- jg: don't continue
+   if sRemoteURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
       showBusyIndicator false
       exit to top
    end if
    
-   startPlayer sSelectedURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
+   startPlayer sRemoteURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
    --Journal_AddEntry  sSelectedItemA["item_id"]
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata

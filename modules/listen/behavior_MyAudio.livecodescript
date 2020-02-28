@@ -133,14 +133,7 @@ end passAudioDetails
 --end getDownloadedAudio
 
 
-command loadtitles pTitles   
-   local pLineCount
-   hide fld "audioList"
-   put pTitles into fld "audioList"
-   typeSetAudioList
-   show fld "audioList"
-   put the number of lines of pTitles into pLineCount
-end loadtitles
+
 
 command updateUI
    local pControl

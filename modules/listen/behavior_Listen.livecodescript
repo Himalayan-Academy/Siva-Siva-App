@@ -528,7 +528,7 @@ function getItemURL pRecordNum
    
    if ( sCurrentPlayListA["playlistClass"] = "latest")  OR ( sCurrentPlayListA["playlistClass"] ="cached") then
       # everything happens via Jnanam table structure record array
-      put  sCurrentPlayListA["audioFiles"][pRecordNum] into tURL
+      put  sCurrentPlayListA["audioFiles"][pRecordNum] into sSelectedItemA
       metadata_SetRecord sSelectedItemA
       put getMediaURL (sSelectedItemA["item_id"]) into tURL
       
@@ -610,6 +610,15 @@ command getDownloadedAudio
    
    # display titles and
 end getDownloadedAudio
+
+command loadtitles pTitles   
+   local pLineCount
+   hide fld "audioList"
+   put pTitles into fld "audioList"
+   typeSetAudioList
+   show fld "audioList"
+   put the number of lines of pTitles into pLineCount
+end loadtitles
 
 command markCachedItems pKeys
    local pURL, tLocalStatus, tIsCached
