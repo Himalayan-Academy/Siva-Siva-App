@@ -62,7 +62,7 @@ on mouseUp
          put the height of tControl into tSharingHeight
          set loc of tControl to\
                (the width of this card/2),tCdHeight- (tSharingHeight/2 )
-         set the top of tBrowser to -tSharingHeight
+         set the top of tBrowser to -tSharingHeight+safeBottomMargin()
          
          deleteMobileControl  "audioPlayer"
          show group "share-ui" with visual "dissolve" very fast
@@ -70,13 +70,10 @@ on mouseUp
          break
          
       case "add-favorites"
-         hide widget "Body"
          -- record the last URL they were on
          if not (the vis of widget "loader") then
             journal_AddEntry
          end if
-         --wait 1 seconds with messages
-         show widget "body"
          break
    end switch
 end mouseup
