@@ -161,6 +161,8 @@ function getMediaURL pFormat # usually 1... but extract as item to in case more 
    
 end getMediaURL
 
+# the following function adds more data to the sMediaMetaA array
+
 function getSongLyrics pItemID    
    local tLyrics
    put "SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.diacritical_transliteration,item.lyrics_id" \ 
@@ -194,9 +196,11 @@ function getMediaItemMetadata pRecords
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
+   put sMediaMetaA["artists"] into tArtists
    if sMediaMetaA["artists"] <> empty then
       put "Artist: " & sMediaMetaA["artists"] into tArtists
    end if
+   put sMediaMetaA["artists"] into tAuthor
    if sMediaMetaA["author"] <> empty then
       put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
    end if

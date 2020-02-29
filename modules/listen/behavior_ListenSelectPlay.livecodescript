@@ -72,7 +72,7 @@ on mouseup
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
    
-   put the target into pTarget
+   put long id of the target into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
    switch tTarget
@@ -84,6 +84,7 @@ on mouseup
          go to card "listen-my-audio"
          break
       case "AudioList"
+         local tTitle,localURL
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
@@ -106,16 +107,20 @@ on mouseup
          if (sLineNum mod 2) = 0 then
             subtract 1 from sLineNum
          end if
-         
+         put line sLineNum of fld "audiolist" into tTitle
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
+         # if the use had downloaded audio it appears on my-audio card
+         # we can start the player; get the audio locally:\
          if sCardName = "listen-my-audio" then 
-            put sSelectNum into sDownloadedAudioA[sSelectNum]
+            --command startPlayer  pURL, pTitle,sCardName,sSelectNum
+            startPlayer  "",tTitle,sCardName,sSelectNum
+         else
+            select_Play sSelectNum,,sCardName  # will use either the line number or item id
          end if
-         select_Play sSelectNum,,sCardName  # will use either the line number or item id
          break  
          
          # this if for showing lyric, artist or transcript
@@ -142,13 +147,19 @@ on mouseup
          break
          
       case "chevron-up-down" # this is simple enough to do here
+         local tSelection,tRecord
          put the vis of fld "audioDetails" into detailVis
+         set the flipped of pTarget to detailVis
          if detailVis then
             deleteMobileControl "audioDetails"
             hide fld "audioDetails" with visual effect "wipe down" very fast
             send  "CreateScroller audioList" to fld "audioList"
          else
-            select_ShowDetails 
+            if sCardName = "listen-my-audio" then
+               put "downloaded" into tSelection
+               put sDownloadedAudioA[sSelectNum][metadata][1] into tRecord
+            end if 
+            select_ShowDetails tSelection,tRecord
          end if
          set the flipped of pTarget to not detailVis
          break

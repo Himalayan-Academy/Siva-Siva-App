@@ -468,6 +468,16 @@ on playlist_Reset
    put playlist_GetRecords() into  sCurrentPlayListA
 end playlist_Reset
 
+command fetchSingleMetadata pItemID
+   local tSearchA,tTargetRecordA
+   put pItemID  into tSearchA["file_id"]
+   put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
+   put tTargetRecordA[1] into sSelectedItemA
+   metadata_SetRecord sSelectedItemA
+   get getSongLyrics(pItemID)    
+   put getMediaMeta() into it
+end fetchSingleMetadata
+
 function checkPlayList
    return the keys of  sCurrentPlayListA
 end checkPlayList
@@ -500,7 +510,7 @@ end checkPlayList
 --# CHANGES: 2017-06-22, BR: CREATED 
 -----------------------------------------------
 
-on select_Play  sSelectNum, pitemID, sCardName
+on select_Play  sSelectNum, pitemID
    # if item id is empty then defaults to the click line number
    
    local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
@@ -552,55 +562,6 @@ on select_Play  sSelectNum, pitemID, sCardName
 end select_Play
 
 
---on select_Play  sSelectNum, pitemID  # if item id is empty then defaults to the click line number
---   local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
---   local pTitle,audioFiles
---   # if we are coming from a click on the card list then the pItemID will be empty
---   # but we may be dropping in from the journal or another type of list that
---   # simple passes the item_id for the record.. and there is no pSelectedLIne
-
---   if pItemID is empty then # search from the click line
---      put getItemURL("sSelectNum") into sRemoteURL
---      Put "Connecting..." into fld "currentTitleLabel"
---      --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
---      put sSelectionsA["audioFiles"]["sSelectNum"] into sSelectedItemA   
---      metadata_SetRecord sSelectedItemA
---      put sSelectionsA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
---   else
---      put pitemID into tSearchA["item_id"]
---      put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
---      put tTargetRecordA[1] into sSelectedItemA
---      metadata_SetRecord sSelectedItemA
---      put getMediaURL() into sSelectedURL
---      put path_isFileOnDisk(sSelectedURL) into tLocalStatus
---   end if
---   --put checkURLAvailable(sSelectedURL) into fld "localresult"
-
---   if checkURLAvailable(sRemoteURL) is "false" then 
---      clearPlayer
---      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
---      doAnswer pMsg,"OK", answerURLunavailable
---      exit to top
---   end if
-
-
---   # Lyrics fetch is a separate function, see lib_SivaSiva Media
-
---   get getSongLyrics(sSelectedItemA["item_id"])
-
---   if sRemoteURL = "" then -- jg: don't continue
---      put "Media not found" into fld "audioDetails"
---      set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
---      showBusyIndicator false
---      exit to top
---   end if
-
---   startPlayer sRemoteURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
---   --Journal_AddEntry  sSelectedItemA["item_id"]
---   put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
---   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
---end select_Play
-
 # V2 Link to transcript
 
 command select_ShowDetails  pSelection, pRecord
@@ -610,6 +571,13 @@ command select_ShowDetails  pSelection, pRecord
       case (fld "audioList" is empty)
          Put "You have not downloaded any audio yet." into  fld "audioDetails" 
          break
+         
+         # or its from a downloaded file in My Audio
+         # this case must come for one after it.
+      case (pSelection="downloaded")
+         put  getMediaItemMetadata(pRecord) into  fld "audioDetails"   
+         break   
+         
       case (sCurrentPlayListA["playlistClass"] = "latest")  OR (sCurrentPlayListA["playlistClass"] ="cached")
          put getMediaItemMetadata() into fld "audioDetails"
          break
@@ -619,10 +587,7 @@ command select_ShowDetails  pSelection, pRecord
          put "Transcripts for audio books are available here." &cr & cr &  "Read the original book." into fld "audioDetails"
          break        
          
-         # or its from a downloaded file in My Audio
-      case (pSelection="downloaded")
-         put  getMediaItemMetadata(pRecord) into  fld "audioDetails"   
-         break   
+         
    end switch
    
    set the textsize of line 1 of fld "audioDetails" to 22
@@ -949,9 +914,14 @@ end preopencard
 command __UXHandlers
 end __UXHandlers
 
-command startPlayer  pURL, pTitle
-   local tRect
-   --  local sSelectedURL, tRect
+command startPlayer  pURL,pTitle,sCardName,sSelectNum
+   local tRect, localURL,  pItemID
+   if sCardName = "listen-my-audio" then
+      put sDownloadedAudioA[sSelectNum]["localURL"] into pURL
+      put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
+      fetchSingleMetadata pItemID
+   end if
+   
    
    if isMobile() then
       if the platform is "android" then
