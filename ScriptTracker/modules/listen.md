@@ -86,7 +86,7 @@
 **bkgnd "footerNavigation" of stack "listen"**
 * ID: bkgnd id 2572 of stack "listen"
 
-* Background on card IDs: 1158, 1002, 2052, 2000, 2680, 2660
+* Background on card IDs: 1158, 1002, 2052, 2000, 2660
 * [stack_listen_bkgnd_id_2572](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2572.livecodescript)
 
 **widget "playAudio" of bkgnd "pause-play" of stack "listen"**
@@ -111,6 +111,30 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_listen_widget_id_2679](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2679.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2694 of bkgnd id 2692 of stack "listen"
+* [stack_listen_button_id_2694](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2694.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2695 of bkgnd id 2692 of stack "listen"
+* [stack_listen_button_id_2695](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2695.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2689 of bkgnd id 2687 of stack "listen"
+* [stack_listen_button_id_2689](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2689.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2690 of bkgnd id 2687 of stack "listen"
+* [stack_listen_button_id_2690](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2690.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2707 of bkgnd id 2705 of stack "listen"
+* [stack_listen_button_id_2707](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2707.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2708 of bkgnd id 2705 of stack "listen"
+* [stack_listen_button_id_2708](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2708.livecodescript)
+
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
 * [stack_listen_card_id_1158](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_1158.livecodescript)
@@ -129,10 +153,6 @@
 * ID: card id 1002 of stack "listen"
 * Behavior: stack "behavior_ListenSelectPlay"
 * [stack_listen_card_id_1002](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_1002.livecodescript)
-
-**button "Misc Tests" of group "devtools" of card "listen-browse" of stack "listen"**
-* ID: button id 1090 of group id 1092 of card id 1002 of stack "listen"
-* [stack_listen_button_id_1090](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_1090.livecodescript)
 
 **group "answerDlgGrp" of card "listen-browse" of stack "listen"**
 * ID: group id 2632 of card id 1002 of stack "listen"
