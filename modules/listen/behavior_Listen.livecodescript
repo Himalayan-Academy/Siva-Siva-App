@@ -765,7 +765,8 @@ command markCachedItems pKeys
 end markCachedItems
 
 command addJournalEntry-- save a bookmark to db
-   local tData,pDataA, tTitle, tURL, tNoSavingCards,tMsg, tTarget, tBool,pItemID
+   local pDataA, tTitle, tURL, tNoSavingCards,tMsg
+   
    put "listen-collection,listen-file,listen-search " into tNoSavingCards
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to Save to Journal Here" into tMsg
@@ -776,11 +777,10 @@ command addJournalEntry-- save a bookmark to db
       end if
    else
       metadata_SetRecord sSelectedItemA
-      get getSongLyrics(pItemID)   
-      put getMediaMeta() into tData
-      put tData["item_id"] into pDataA["item_id"]
-      put tData["title"] into pDataA["title"]
-      put  tData["url"] into pDataA["url"] 
+      put sSelectedItemA["title"] into tTitle
+      put tTitle into pDataA["title"]
+      put sSelectedItemA["item_id"] into pDataA["item_id"]
+      put sSelectedURL into pDataA["url"] 
       put "listen-file" into pDataA["card"]  
       Journal_RecordEntry "listen",tTitle,pDataA 
       put "Save to Journal" into tMsg
