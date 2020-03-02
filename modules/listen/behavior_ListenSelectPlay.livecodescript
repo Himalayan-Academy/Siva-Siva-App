@@ -40,6 +40,9 @@ on openCard
             dialog_CustomMsg "You have not downloaded any audio"
          end if
          break
+      case "listen-browse"
+         clearSelection
+         break
    end switch
    
    # starts out with the entire play list unfiltered

@@ -16,9 +16,16 @@ constant cRemoteNewsFile="siva-app-news.html"
 ON ___INIT
 end ___INIT
 
+
 on libraryStack
    mobileRectSet
    fetchNavigationMap
+   if the uBuildMode of  stack "Siva-Siva-App" is "release" then
+      set the logMessage to empty
+   else
+      set the logMessage to "log"
+   end if
+   
 end libraryStack
 
 # disable ntinfo
@@ -796,6 +803,18 @@ Note of course, you save the binary with the log enable, the group is save with 
 In theory this not  problem as long it is it hidden and Enable Logging it OFF for a release
 
 */
+
+
+function examineArray pArray
+   local tSort,tOutput
+   put the keys of pArray into tSort
+   sort  lines of tSort 
+   repeat for each line x in tSort
+      put x & tab & pArray[x] & cr after tOutput
+   end repeat
+   return tOutput
+end examineArray
+
 
 local   tLogResult
 

@@ -57,6 +57,10 @@ on mouseup
          
       case "journal"
          unlock screen
+         set the hilited of control tTarget to true
+         move control target relative 0,-100 in 100 milliseconds
+         move control target relative 0,100 in 70 milliseconds
+         send "unHiliteBtn tTarget" to me in 1 seconds
          AddJournalEntry
          dialog_CustomMsg "Saved to Journal"
          break
@@ -64,8 +68,8 @@ on mouseup
       case "save"
          unlock screen
          set the hilited of control tTarget to true
-         move control target relative 0,-100 in 500 milliseconds
-         move control target relative 0,100 in 110 milliseconds
+         move control target relative 0,-100 in 100 milliseconds
+         move control target relative 0,100 in 70 milliseconds
          send "unHiliteBtn tTarget" to me in 1 seconds
          AddJournalEntry "pReadQuote"
          break
@@ -96,7 +100,7 @@ on mouseup
          
       case "settings"
          if tBrowserExists then
-               terminateBrowser
+            terminateBrowser
          end if
          portal_GoStack "settings"
          break

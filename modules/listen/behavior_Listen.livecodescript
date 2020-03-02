@@ -28,7 +28,7 @@ local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloaded
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
-local sSelectionsA,sLastTarget,sLineNum,sSelectNum
+local sSelectionsA,sLastTarget,sSelectNum
 
 on preopenstack
    set the fullscreenmode of this stack to "showAll"
@@ -482,13 +482,12 @@ function checkPlayList
    return the keys of  sCurrentPlayListA
 end checkPlayList
 
---on playlist_Reset
---   put playlist_GetRecords() into sSelectionsA   
---end playlist_Reset
-
---function checkPlayList
---   return the keys of sSelectionsA
---end checkPlayList
+# we need to determine when that card is open that the user
+# cannot have made a selection. Since the local var persists
+# we have put empty into something
+on clearSelection
+   put empty into sSelectedItemA
+end clearSelection
 
 -----------------------------------------------
 --# Select, Play, Listen, Stop UI interactions
@@ -526,10 +525,14 @@ on select_Play  sSelectNum, pitemID
       put sCurrentPlayListA["audioFiles"][sSelectNum  ] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sCurrentPlayListA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+      log sSelectedURL
+      log examineArray(sSelectedItemA)
    else
       put pitemID into tSearchA["item_id"]
       put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
       put tTargetRecordA[1] into sSelectedItemA
+      log examineArray(sSelectedItemA)
+      
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
@@ -762,22 +765,31 @@ command markCachedItems pKeys
 end markCachedItems
 
 command addJournalEntry-- save a bookmark to db
-   local tData,pDataA, tTitle, tURL
-  log sSelectedURL
-   
-   if the name of this card is "listen-collections" then
-      put  "listen-collections" into pDataA["card"]  
+   local tData,pDataA, tTitle, tURL, tNoSavingCards,tMsg, tTarget, tBool,pItemID
+   put "listen-collection,listen-file,listen-search " into tNoSavingCards
+   if the short name of this card is among the items of tNoSavingCards then
+      put "Nothing to Save to Journal Here" into tMsg
    else
+      if sSelectedItemA is empty then
+         put "You Must Select a Title" into tMsg
+         dialog_CustomMsg tMsg
+      end if
+   else
+      metadata_SetRecord sSelectedItemA
+      get getSongLyrics(pItemID)   
       put getMediaMeta() into tData
       put tData["item_id"] into pDataA["item_id"]
       put tData["title"] into pDataA["title"]
       put  tData["url"] into pDataA["url"] 
-      log pDataA["url"]
       put "listen-file" into pDataA["card"]  
+      Journal_RecordEntry "listen",tTitle,pDataA 
+      put "Save to Journal" into tMsg
    end if
-   Journal_RecordEntry "listen",tTitle,pDataA -- send to jofrnal
-   dialog_CustomMsg "Save To Journal"
+   dialog_CustomMsg tMsg
 end addJournalEntry
+
+
+
 
 
 on journalResume  pDataA, pEntryA
