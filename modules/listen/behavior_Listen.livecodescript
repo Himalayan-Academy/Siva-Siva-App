@@ -524,7 +524,7 @@ on select_Play  sSelectNum, pitemID
       --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
       put sCurrentPlayListA["audioFiles"][sSelectNum  ] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
-      put sCurrentPlayListA["audioFiles"][sSelectNum]["myURL"] into sSelectedURL
+      put sCurrentPlayListA["audioFiles"][sSelectNum]["myURL"]["filename"] into sSelectedURL
       log sSelectedURL
       log examineArray(sSelectedItemA)
    else
@@ -535,6 +535,7 @@ on select_Play  sSelectNum, pitemID
       
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
+      log sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
    --put checkURLAvailable(sSelectedURL) into fld "localresult"
@@ -558,8 +559,9 @@ on select_Play  sSelectNum, pitemID
       exit to top
    end if
    
-   startPlayer sRemoteURL, sSelectedItemA["title"]  #see nested behavior_ListenUI
-   --Journal_AddEntry  sSelectedItemA["item_id"]
+   startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
+   # skip the card name Parameter in this context.
+   
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
@@ -645,8 +647,9 @@ function getItemURL pRecordNum
       --         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
       --      end if   
       --      breakpoint
-      if char -1 of sSelectedURL = "/" then
-         put  sCurrentPlayListA["audioFiles"][pRecordNum]["filename"]  after sSelectedURL
+      if char -1 of tURL = "/" then
+         put  sCurrentPlayListA["audioFiles"][pRecordNum]["filename"]  after tURL
+         put tURL  into sSelectedURL
       end if       
    else
       # its an audio book
@@ -781,20 +784,9 @@ command addJournalEntry-- save a bookmark to db
       exit addJournalEntry
    end if
    
-   if tCard = "listen-my-audio"  then
-      # we already set the data for downloaded audio
-      # on startPlayer
-      put getJournalData() into pDataA
-      put pDataA["title"] into tTitle
-   else
-      metadata_SetRecord sSelectedItemA
-      put sSelectedItemA["title"] into tTitle
-      put tTitle into pDataA["title"]
-      put sSelectedItemA["item_id"] into pDataA["item_id"]
-      put sSelectedURL into pDataA["url"] 
-   end if
-   
-   put "listen-file" into pDataA["card"]  
+   put getJournalData() into pDataA   
+   put pDataA["title"] into tTitle
+
    Journal_RecordEntry "listen",tTitle,pDataA 
    put "Saved to Journal" into tMsg
    dialog_CustomMsg tMsg
@@ -940,7 +932,21 @@ command __UXHandlers
 end __UXHandlers
 
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
-   local tRect, localURL,  pItemID,pDataA
+   local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   put pTitle into tLineValue
+   if pTitle is empty then
+      put sSelectNum*2 into tLineNum
+      if (tLineNum mod 2) = 0 then
+         subtract 1 from tLineNum
+      end if
+      put line tLineNum of fld "audioList" into tLineValue
+   end if
+   
+   put pURL into pDataA["url"]
+   put tLineValue into pDataA["title"]
+   put "listen-file" into pDataA["card"]  
+   setJournalData pDataA
+   
    if sCardName = "listen-my-audio" then
       put sSelectNum into sSelectNum
       # we have to deal with downloaded files, and the local path/url
@@ -949,9 +955,6 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
       put pItemID into pDataA["item_id"]
       put pTitle  into pDataA["title"]
-      put pURL into pDataA["url"]
-      put "listen-file" into pDataA["card"]  
-      setJournalData pDataA
       fetchSingleMetadata pItemID
    end if
    
