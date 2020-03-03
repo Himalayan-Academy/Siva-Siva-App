@@ -50,7 +50,7 @@ on openstack
    #
    # first, load the json
    
-local tContainer
+   local tContainer
    
    set the acceleratedRendering of this stack to true
    
@@ -765,27 +765,40 @@ command markCachedItems pKeys
 end markCachedItems
 
 command addJournalEntry-- save a bookmark to db
-   local pDataA, tTitle, tURL, tNoSavingCards,tMsg
-   
+   local pDataA, tTitle, tURL, tNoSavingCards,tMsg, tCard
+   put the short name of this card into tCard
    put "listen-collection,listen-file,listen-search " into tNoSavingCards
+   
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to Save to Journal Here" into tMsg
-   else
-      if sSelectedItemA is empty then
-         put "You Must Select a Title" into tMsg
-         dialog_CustomMsg tMsg
-      end if
+      exit addJournalEntry
+   end if
+   
+   
+   if sSelectedItemA is empty then
+      put "You Must Select a Title" into tMsg
+      dialog_CustomMsg tMsg
+      exit addJournalEntry
+   end if
+   
+   if tCard = "listen-my-audio"  then
+      # we already set the data for downloaded audio
+      # on startPlayer
+      put getJournalData() into pDataA
+      put pDataA["title"] into tTitle
    else
       metadata_SetRecord sSelectedItemA
       put sSelectedItemA["title"] into tTitle
       put tTitle into pDataA["title"]
       put sSelectedItemA["item_id"] into pDataA["item_id"]
       put sSelectedURL into pDataA["url"] 
-      put "listen-file" into pDataA["card"]  
-      Journal_RecordEntry "listen",tTitle,pDataA 
-      put "Save to Journal" into tMsg
    end if
+   
+   put "listen-file" into pDataA["card"]  
+   Journal_RecordEntry "listen",tTitle,pDataA 
+   put "Saved to Journal" into tMsg
    dialog_CustomMsg tMsg
+   
 end addJournalEntry
 
 
@@ -927,10 +940,18 @@ command __UXHandlers
 end __UXHandlers
 
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
-   local tRect, localURL,  pItemID
+   local tRect, localURL,  pItemID,pDataA
    if sCardName = "listen-my-audio" then
+      put sSelectNum into sSelectNum
+      # we have to deal with downloaded files, and the local path/url
+      # to get them in to journal....
       put sDownloadedAudioA[sSelectNum]["localURL"] into pURL
       put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
+      put pItemID into pDataA["item_id"]
+      put pTitle  into pDataA["title"]
+      put pURL into pDataA["url"]
+      put "listen-file" into pDataA["card"]  
+      setJournalData pDataA
       fetchSingleMetadata pItemID
    end if
    
