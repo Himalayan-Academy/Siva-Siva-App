@@ -87,7 +87,7 @@ on updateUI
    
    put the long id of grp "contentCardHeader" into tHeader
    set the width of tHeader to CardWidth()
-   topCenterMe tHeader
+   topCenterMe tHeader, 10
    
    put the long id of grp "colorMedsToolbar" into tFooter
    bottomCenterMe tFooter, 24

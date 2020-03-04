@@ -16,8 +16,6 @@ on resizeControl
    set the top of tControl to the top of me + 3
    
    put the long id of fld "Title" of me into tControl
-   topCenterMe tControl,10
-   
-  
+   set the loc of tControl to the loc of me
 end resizeControl
 
