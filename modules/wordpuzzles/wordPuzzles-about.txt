@@ -1,4 +1,9 @@
-<p>Unjumble word puzzles offers a fun way to explore quotations and absorb bite-sized bits of wisdom. Your job is to drag scattered tiles into proper order. A starting arrow in the upper left shows where to drop the first word.<br /></p>
+<p>Unjumble word puzzles offers a fun way to explore quotations and absorb bite-sized bits of wisdom. </p>
+<p></p>
+Click on the Journal icon to the right to add the Word Puzzle to the your Journal
+<p></p>
+
+<p>Your job is to drag scattered tiles into proper order. A starting arrow in the upper left shows where to drop the first word.<br /></p>
 
 <p>Use the <i>Settings,</i> button to control the difficulty of the puzzles. Higher levels have more words.<br /></p>
 

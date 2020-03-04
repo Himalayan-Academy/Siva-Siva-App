@@ -798,8 +798,8 @@ end addJournalEntry
 
 
 on journalResume  pDataA, pEntryA
-   -- breakpoint
-   
+
+   lock screen
    local tCard
    
    put pDataA["card"] into tCard
@@ -811,7 +811,7 @@ on journalResume  pDataA, pEntryA
       # we can integrate is this listen behavior .
       dispatch "playSingle" to card "listen-file" with pDataA
    end if
-
+   unlock screen
 end journalResume
 
 

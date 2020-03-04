@@ -339,16 +339,17 @@ function inRange pRequestDate -- calc if request date is within this or next yea
 end inRange
 
 command addJournalEntry -- save a bookmark to db
-   local  tTitle,pData
+   local  tTitle,pDataA
    if sCityName is empty then
       dialog_CustomMsg "Pick and Submit a City"
       exit to top
    end if
    
-   put "Hindu Calendar - " & sCityName into tTitle
+   put "Hindu Calendar,  " & sCityName into tTitle
    put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
+   put tTitle into pDataA["title"]
    
-   Journal_RecordEntry "calendar",tTitle,pData -- send to journal
+   Journal_RecordEntry "calendar",tTitle,pDataA -- send to journal
    dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
 

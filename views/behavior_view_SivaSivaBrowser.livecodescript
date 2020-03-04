@@ -193,7 +193,7 @@ on journal_AddEntry
    
    put portal_GetLabel() into tTitle
    
-   put browser_GetLastURL() into pData["weburl"] 
+   put browser_GetLastURL() into pData["url"] 
    if sLandscapeOnly then
       --if sBrowserOrientation = "landscape" then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
@@ -207,7 +207,9 @@ end journal_AddEntry
 on journalResume  pDataA, pEntryA
    local tBrowser
    put the long id of widget "Body" of cd "SivaSivaBrowser"  into tBrowser 
-   set the URL of tBrowser to pDataA["weburl"]
+   set the URL of tBrowser  to pDataA["url"]
+   hideLoader
+   show tBrowser
 end journalResume
 
 -- not sure where this variable declaration really goes

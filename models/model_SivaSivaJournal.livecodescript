@@ -253,16 +253,12 @@ command Journal_LaunchEntry pEntryID,pModule,pData
    end try
    put tEntryA["module"] into pData["returnTo"]
    tracking_RecordActivity "Journal","resume/activity", pData
-   -- AAG: BUG: This should be in surprise not in journal.
-   if tEntryA["module"]="surprise" then
-      dialog_CustomMsg "Surprise journal entries are currently disabled."
-   else
-      ntInfo "resuming journal activity for" && tEntryA["module"]
-      portal_GoStack tEntryA["module"]
-      dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
-      if it is among the items of "unhandled,passed" then
-         return "journalerr, no module could handle this activity"
-      end if
+   
+   ntInfo "resuming journal activity for" && tEntryA["module"]
+   portal_GoStack tEntryA["module"]
+   dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
+   if it is among the items of "unhandled,passed" then
+      return "journalerr, no module could handle this activity"
    end if
    
 end Journal_LaunchEntry
