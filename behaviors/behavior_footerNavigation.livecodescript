@@ -67,10 +67,10 @@ on mouseup
          
       case "save"
          unlock screen
-         set the hilited of control tTarget to true
+        
          move control target relative 0,-100 in 100 milliseconds
          move control target relative 0,100 in 70 milliseconds
-         send "unHiliteBtn tTarget" to me in 1 seconds
+        
          AddJournalEntry "pReadQuote"
          break
          

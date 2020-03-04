@@ -72,6 +72,9 @@ function getCollectionsJson
    return sCollectionA
 end getCollectionsJson
 
+command setSelectNumber pNum
+   put pNum into sSelectNum
+end setSelectNumber
 
 command selectPlaylist pSelection
    local tPlayTarget,tColl,tPlay
@@ -470,7 +473,7 @@ end playlist_Reset
 
 command fetchSingleMetadata pItemID
    local tSearchA,tTargetRecordA
-   put pItemID  into tSearchA["file_id"]
+   put pItemID  into tSearchA["item_id"]
    put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
    put tTargetRecordA[1] into sSelectedItemA
    metadata_SetRecord sSelectedItemA
@@ -711,7 +714,11 @@ command getDownloadedAudio
    
 end getDownloadedAudio
 
+
+
+
 command downloadSelection sSelectNum, pTarget
+   setSelectNumber sSelectNum
    put the long id of pTarget into sLastTarget 
    # NOTE: we need this because the down stack will need to come back where
    # it and we pass this to pRequestBy
@@ -734,7 +741,7 @@ command downloadAffirmed
    hide stack "listen"
    go stack "view_Download"
    wait 100 milliseconds with messages
-   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sSelectedURL,sSelectNum,sLastTarget
+   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 

@@ -302,10 +302,3 @@ command doAnswerResponse
 end doAnswerResponse
 
 
-on libraryStack
-   
-end libraryStack
-
-on mouseRelease pButtonNumber
-   
-end mouseRelease
