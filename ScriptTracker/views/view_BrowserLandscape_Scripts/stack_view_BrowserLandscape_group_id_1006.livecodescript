@@ -72,6 +72,8 @@ on mouseUp
       case "add-favorites"
          -- record the last URL they were on
          if not (the vis of widget "loader") then
+            move control target relative 0,-70 in 200 milliseconds
+            move control target relative 0,70 in 70 milliseconds
             journal_AddEntry
          end if
          break

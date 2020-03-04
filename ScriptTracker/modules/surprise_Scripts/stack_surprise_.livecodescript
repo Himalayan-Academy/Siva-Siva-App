@@ -325,12 +325,28 @@ end playPausedAudio
 command addJournalEntry-- save a bookmark to db
    local tData,pDataA, tTitle, tURL
    
-   put getMediaMeta() into tData
-   put tData["item_id"] into pDataA["item_id"]
-   put tData["title"] into pDataA["title"]
-   put tData["title"] into tTitle
-   put mediaUrl_Get() into pDataA["url"] 
-   put "listen-file" into pDataA["card"]  
-   Journal_RecordEntry "listen",tTitle,pDataA -- send to journal
+   if sCard <> "surprise_audio" then 
+      put "Surprise" into pDataA["title"] 
+      put "surprise" into pDataA["card"] 
+      Journal_RecordEntry "surprise","Surprise",pDataA
+   else
+      put getMediaMeta() into tData
+      put tData["item_id"] into pDataA["item_id"]
+      put tData["title"] into pDataA["title"]
+      put tData["title"] into tTitle
+      put mediaUrl_Get() into pDataA["url"] 
+      put "listen-file" into pDataA["card"] 
+      Journal_RecordEntry "listen",tTitle,pDataA
+   end if
+   
+   -- send to journal
    --dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
+
+on journalResume pData,pEntryA -- sent from journal stack
+   lock screen
+   local tCd
+   put pData["card"] into tCd
+   go to card tCd
+   unlock screen
+end journalResume
