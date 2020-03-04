@@ -23,12 +23,11 @@ on preopenstack
    put "landscape left,landscape right" into tOrientations
    if sLandscapeOnly then
       put "landscape" into sOrientation
-      setCardCoords "landscape"
    else
       put "portrait,portrait upside down," before tOrientations
       put "portrait" into sOrientation
-      setCardCoords
    end if
+   setCardCoords sOrientation
    if isMobile() then
       mobileSetAllowedOrientations tOrientations
    end if
@@ -43,31 +42,23 @@ on resizeStack
    unlock screen
 end resizeStack
 
-command updateUI theOrientation
+command updateUI
    local tBrowser, tLoader, tOrientation, tHeight, tWidth, tUnit
    local tSafeRect, tEdge
    
    put the long id of widget "body" of card "SivaSivaBrowser" into tBrowser
    put the long id of widget "loader" of card "SivaSivaBrowser" into tLoader
-   if isMobile() then
-      --put mobileDeviceOrientation() into tOrientation
-      put mobileOrientation() into tOrientation
-   else
-      put sOrientation into tOrientation
-   end if
-   put the width of this card into tWidth
-   put the height of this card into tHeight
+   put CardWidth() into tWidth
+   put CardHeight() into tHeight
    put safeRect() into tSafeRect
    put tSafeRect into sBrowserRect
    
-   -- initial orientations of "face up", "face down", or "unknown" will
-   -- not be drawn correctly if not manually determined like this
-   if tOrientation begins with "f" or tOrientation begins with "u" then
-      if tWidth < tHeight then
-         put "portrait" into tOrientation
-      else
-         put "landscape" into tOrientation
-      end if
+   -- reported orientation is unreliable so figure it out
+   -- manually based on geometry
+   if tWidth < tHeight then
+      put "portrait" into tOrientation
+   else
+      put "landscape" into tOrientation
    end if
    
    switch 
