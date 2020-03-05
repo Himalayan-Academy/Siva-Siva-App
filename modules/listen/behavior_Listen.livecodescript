@@ -949,10 +949,10 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       put line tLineNum of fld "audioList" into tLineValue
    end if
    
-   put pURL into pDataA["url"]
+   
    put tLineValue into pDataA["title"]
-   put "listen-file" into pDataA["card"]  
-   setJournalData pDataA
+   
+   
    
    if sCardName = "listen-my-audio" then
       put sSelectNum into sSelectNum
@@ -965,6 +965,9 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       fetchSingleMetadata pItemID
    end if
    
+   put "listen-file" into pDataA["card"]  
+   put pURL into pDataA["url"]
+   setJournalData pDataA
    
    if isMobile() then
       if the platform is "android" then
@@ -997,7 +1000,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       --      setMobileAudioPlayer "audioPlayer", "play"
    end if
    put  pTitle into fld "currentTitleLabel"
-
+   
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
    end if
