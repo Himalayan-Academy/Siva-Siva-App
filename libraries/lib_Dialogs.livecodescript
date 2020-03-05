@@ -64,7 +64,7 @@ on displayInfo pVis, pSubject, pBackground
             put path_Assets()&"info/credits.html" into tTextPath
             break
          case "User Guide"
-            portal_GoURL someURL ## youtube of mp4 later
+            put path_Assets()&"info/user-guide.html" into tTextPath
             break
       end switch
       set the htmltext of  fld "info-text" to url ("file:" &tTextPath)

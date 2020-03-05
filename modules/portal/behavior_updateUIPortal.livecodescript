@@ -71,7 +71,7 @@ on mouseup
       hide grp "subNav"
       break
    case "navMandala"
-      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu" then
+      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
          # These are top links, some go  directly to another module stack
          portal_GoStack tTarget
          exit mouseup
