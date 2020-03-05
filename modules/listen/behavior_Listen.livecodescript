@@ -561,7 +561,7 @@ on select_Play  sSelectNum, pitemID
       showBusyIndicator false
       exit to top
    end if
-   
+
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
    
@@ -997,10 +997,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       --      setMobileAudioPlayer "audioPlayer", "play"
    end if
    put  pTitle into fld "currentTitleLabel"
-   # Android player covers it! Because the controller higher that iOS one.
-   --if the platform is "Android" then
-   --set the bottom of fld "currentTitleLabel" to 600
-   --end if
+
    if there is a control "DownloadSelection" then
       set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
    end if
@@ -1027,7 +1024,6 @@ on pausePlayer sTimeStamp
    togglePause true, false
 end pausePlayer
 
-
 on playPausedAudio sTimeStamp
    if not isMobile() then
       set the currenttime  of player "audioPlayer" to sTimeStamp
@@ -1037,8 +1033,6 @@ on playPausedAudio sTimeStamp
    end if
    togglePause true, true
 end playPausedAudio
-
-
 
 on clearPlayer
    showPlayer false, "audioPlayer"
@@ -1065,3 +1059,37 @@ end offLineGoMyAudio
 on closeStack
    portal_SetLastStack "Listen"
 end closeStack
+
+command __Geometry
+end __Geometry
+
+on resizeStack x,y,ox,oy
+   lock screen
+   -- When coming from a landscape stack, card rect is not updated correctly
+   -- and the resizeStack is called with a landscape rect.  If an answer is
+   -- inserted here, a second resizeStack gets sent with the correct rect.
+   setCardCoords "portrait"
+   updateUIListen
+   unlock screen
+end resizeStack
+
+command updateUIListen
+   # UI Responsive
+   local pControl, sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
+   local tFooter
+   switch (the short name of this card)
+      case "listen-file"
+         put the long id of img "app-bkgnd"  into sMainBkgnd
+         put the long id of img "headset"  into sCardBkgnd
+         
+         setImageToFullCardLoc sMainBkgnd,"portrait",0,0
+         setImageToFullCardLoc sCardBkgnd,"portrait",0,0
+         
+   end switch
+   
+   put the long id of grp "footerNavigation" into tFooter
+   set the height of tFooter to 50 + safeBottomMargin()
+   set the bottom of tFooter to CardHeight()
+   --set the rect of grc "footerBackground" to the rect of me
+   
+end updateUIListen
