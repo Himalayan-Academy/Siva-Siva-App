@@ -9,7 +9,7 @@ Script "stack_pathtosiva_card_id_1083"
 global sConfigA
 
 on openCard
-show button "svg Menu"
+   show button "svg Menu"
 end openCard
 
 local sCurrentLesson, tText,tHTML, pLessonNumber
@@ -32,7 +32,6 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    --   set the height of fld "caption" to (the formattedheight of fld "caption") + 4 -- extra underhang
    --   set the bottom of fld "caption" to the bottom of img "heroImg" + \
    --         (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
-   --   set the flipped of button "expander" to true
    --   set the bottom of button "expander" to (the bottom of fld "caption")-8
    resetCaption
    
@@ -55,11 +54,11 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
 end loadLesson
 
 command resetCaption
-  set the height of fld "caption" to (the formattedheight of fld "caption") + 4 -- extra underhang
-  set the bottom of fld "caption" to the bottom of img "heroImg" + \
-        (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
-  set the flipped of button "expander" to true
-  set the bottom of button "expander" to (the bottom of fld "caption")+6
+   set the height of fld "caption" to (the formattedheight of fld "caption") + 4 -- extra underhang
+   set the bottom of fld "caption" to the bottom of img "heroImg" + \
+         (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
+ set the flipped of widget "expander" to false
+   set the bottom of widget "expander" to (the bottom of fld "caption")-6
 end resetCaption
 
 command resizeToWidth pImgName
