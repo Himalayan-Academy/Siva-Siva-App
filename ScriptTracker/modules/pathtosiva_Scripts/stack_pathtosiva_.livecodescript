@@ -92,7 +92,7 @@ command goCd pCdName,pEffect -- optional effect param
    local tIslesson
    ntInfo pCdName && pEffect
    if pCdName is empty then
-      ntInfo "tried going to empty card"
+      ntInfo "tried going to empty card"
       exit goCd
    end if
    if the short name of this cd = pCdName then exit goCd

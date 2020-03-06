@@ -114,9 +114,18 @@
 * ID: group id 1093 of card id 1083 of stack "pathtosiva"
 * [stack_pathtosiva_group_id_1093](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_1093.livecodescript)
 
+**image "heroImg" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
+* ID: image id 1096 of group id 1093 of card id 1083 of stack "pathtosiva"
+* [stack_pathtosiva_image_id_1096](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_image_id_1096.livecodescript)
+
 **button "expander" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
 * ID: button id 51305 of group id 1093 of card id 1083 of stack "pathtosiva"
 * [stack_pathtosiva_button_id_51305](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51305.livecodescript)
+
+**widget "expander" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
+* ID: widget id 51310 of group id 1093 of card id 1083 of stack "pathtosiva"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_pathtosiva_widget_id_51310](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51310.livecodescript)
 
 **button "prevLesson" of group "lessonNav" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
 * ID: button id 51303 of group id 51299 of group id 1093 of card id 1083 of stack "pathtosiva"

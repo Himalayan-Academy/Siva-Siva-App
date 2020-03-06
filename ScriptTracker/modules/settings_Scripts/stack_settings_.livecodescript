@@ -14,6 +14,8 @@ on preopenstack
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileShowStatusBar
    end if
+   # Livecode is terrible running animation 
+   # Or I have yet to figure out the method, but Gif animation does not well.
    --runFishAnimation
 end preopenstack
 

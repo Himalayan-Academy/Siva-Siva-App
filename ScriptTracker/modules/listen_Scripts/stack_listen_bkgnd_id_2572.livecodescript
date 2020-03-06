@@ -51,10 +51,11 @@ on mouseUp
          break
          
       case "add-favorites"
+         move control target relative 0,-100 in 200 milliseconds
+         move control target relative 0,100 in 70 milliseconds
          addJournalEntry
          
-         --         put getMediaMeta() into tMediaMetaData
-         --         put tMediaMetaData["title"]
+         
          break
    end switch
 end mouseup

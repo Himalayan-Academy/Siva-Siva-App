@@ -14,18 +14,16 @@ local sOnline
 
 
 on openCard
-   if connectivity_PingServer()  = "true"  then 
-      send showNewNews to me in 200 milliseconds  
-   end if
+   News_Fetch
    
    set the acceleratedRendering of this stack to true
    audioIsRunning  
-   showNewNews
+   send "showNewNews" to me in 500 milliseconds
 end opencard
 
 
 command showNewNews
-      set the vis of widget "newNews" to news_Check()
+   set the vis of widget "newNews" to news_Check()
 end showNewNews
 
 
@@ -48,20 +46,6 @@ command fetchInfo pInfo
       end if      
    end if
 end fetchInfo
-
-command toggleReadNews pVis
-   if pVis = "true" then
-      set the htmlText of widget "readNews" to url ("file:/" &  path_Documents() & "assets/info/siva-app-news.html")
-      # turn off the "You Have News!" in lib_SivaSiva
-      # because we now assume  the user had is read it
-      news_NoNews 
-      news_Fetch
-   end if
-   set the vis of widget cancel to pVis
-   set the vis of widget "ReadNews" to pVis
-   tracking_RecordActivity "Settings", "read/appnews"
-end toggleReadNews
-
 
 on quitApp
    quit

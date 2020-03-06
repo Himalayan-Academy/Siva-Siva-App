@@ -35,22 +35,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_settings_widget_id_1385](./../../ScriptTracker/modules/settings_Scripts/stack_settings_widget_id_1385.livecodescript)
 
-**group "answerDlgGrp" of card "settings-home" of stack "settings"**
-* ID: group id 1417 of card id 1002 of stack "settings"
-* [stack_settings_group_id_1417](./../../ScriptTracker/modules/settings_Scripts/stack_settings_group_id_1417.livecodescript)
-
-**graphic "cover" of group "answerDlgGrp" of card "settings-home" of stack "settings"**
-* ID: graphic id 1418 of group id 1417 of card id 1002 of stack "settings"
-* [stack_settings_graphic_id_1418](./../../ScriptTracker/modules/settings_Scripts/stack_settings_graphic_id_1418.livecodescript)
-
-**field "lbl-dialogPrompt" of group "answerDlgGrp" of card "settings-home" of stack "settings"**
-* ID: field id 1419 of group id 1417 of card id 1002 of stack "settings"
-* [stack_settings_field_id_1419](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1419.livecodescript)
-
-**button "DIALOGAFFIRM" of group "answerDlgGrp" of card "settings-home" of stack "settings"**
-* ID: button id 1420 of group id 1417 of card id 1002 of stack "settings"
-* [stack_settings_button_id_1420](./../../ScriptTracker/modules/settings_Scripts/stack_settings_button_id_1420.livecodescript)
-
 **card "info" of stack "settings"**
 * ID: card id 1363 of stack "settings"
 * [stack_settings_card_id_1363](./../../ScriptTracker/modules/settings_Scripts/stack_settings_card_id_1363.livecodescript)
@@ -83,24 +67,20 @@
 * Behavior: stack "behavior_mobileScroller"
 * [stack_settings_field_id_1292](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1292.livecodescript)
 
-**group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
-* ID: group id 1312 of card id 1261 of stack "settings"
-* [stack_settings_group_id_1312](./../../ScriptTracker/modules/settings_Scripts/stack_settings_group_id_1312.livecodescript)
-
-**graphic "cover" of group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
-* ID: graphic id 1313 of group id 1312 of card id 1261 of stack "settings"
-* [stack_settings_graphic_id_1313](./../../ScriptTracker/modules/settings_Scripts/stack_settings_graphic_id_1313.livecodescript)
-
-**field "lbl-dialogPrompt" of group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
-* ID: field id 1314 of group id 1312 of card id 1261 of stack "settings"
-* [stack_settings_field_id_1314](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1314.livecodescript)
-
-**button "DIALOGAFFIRM" of group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
-* ID: button id 1315 of group id 1312 of card id 1261 of stack "settings"
-* [stack_settings_button_id_1315](./../../ScriptTracker/modules/settings_Scripts/stack_settings_button_id_1315.livecodescript)
-
 **widget "turnOffAudio" of card "disk_data_overview" of stack "settings"**
 * ID: widget id 1384 of card id 1261 of stack "settings"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_settings_widget_id_1384](./../../ScriptTracker/modules/settings_Scripts/stack_settings_widget_id_1384.livecodescript)
+
+**group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
+* ID: group id 1430 of card id 1261 of stack "settings"
+* [stack_settings_group_id_1430](./../../ScriptTracker/modules/settings_Scripts/stack_settings_group_id_1430.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
+* ID: graphic id 1431 of group id 1430 of card id 1261 of stack "settings"
+* [stack_settings_graphic_id_1431](./../../ScriptTracker/modules/settings_Scripts/stack_settings_graphic_id_1431.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "disk_data_overview" of stack "settings"**
+* ID: field id 1433 of group id 1432 of group id 1430 of card id 1261 of stack "settings"
+* [stack_settings_field_id_1433](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1433.livecodescript)
 

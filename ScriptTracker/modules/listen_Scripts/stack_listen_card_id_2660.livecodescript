@@ -21,17 +21,20 @@ on opencard
 end opencard
 
 command playSingle pDataA
-   local tSearchA,x,item_id
+   local tSearchA,x,tItem_id
    put empty into sSelectedItemA
    
    put pDataA["url"] into sURL
-   put pDataA["item_id"] into tSearchA["item_id"]
-   put fetchMediaItems(tSearchA) into sSelectedItemA
+   put pDataA["item_id"] into tItem_id
+   
    startPlayer sURL,pDataA["title"] 
-   select_ShowDetails  "downloaded"
+   if  "audio/book" is not in sURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
 end playSingle
 
 on closeCard
+   put empty into fld "audioDetails"
    hide fld "audioDetails"
    put empty into fld "audioDetails"
    togglePause true, true

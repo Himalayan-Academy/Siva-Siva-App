@@ -7,6 +7,7 @@ Script "stack_settings_group_id_1215"
 
 
 on mouseup 
+   local tMouseEvent, tAction
    put the short name of the target  into tMouseEvent
    switch tMouseEvent
       case "App News"
@@ -33,10 +34,10 @@ on mouseup
          go to cd "disk_data_overview"
          break
       case "User Guide"
-         # send people to a video tutorial
+         go to card "info"
+         displayInfo 1,"User Guide"
          break
       case "Close App"
-         doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
          doAnswer "Closing SivaSiva. Goodbye!","OK,Cancel","quitApp"
          break
    end switch
