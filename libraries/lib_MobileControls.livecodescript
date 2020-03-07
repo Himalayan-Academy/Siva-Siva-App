@@ -226,21 +226,22 @@ end deleteAllMobileControls
 --   end if
 --end showBusyIndicator
 
-local sLoadingIndicator,sLoadingFlag, sLabel, sLoadProgress
+local sLoadingIndicator,sLoadingGroup,sLoadingFlag, sLabel, sLoadProgress
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   if there is a control "loading" then
+   if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       put sMsg into sLoadProgress # this string will change through the loop below.
-      put the long id of control "loading" into sLoadingIndicator
+      put the long id of control "loadingGroup" into sLoadingGroup
+      put the long id of grc "loading" into sLoadingIndicator
       set the label of sLoadingIndicator to sLabel
       if there is a  sLoadingIndicator then
-         set the vis of sLoadingIndicator to pBool
+         set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
             dispatch "loadingInProgress" to me 
          else
             put false into sLoadingFlag
-            set the vis of sLoadingIndicator to pBool
+            set the vis of sLoadingGroup to pBool
             put empty into sLoadProgress
             set the label of sLoadingIndicator to ""
          end if
@@ -251,11 +252,12 @@ end showBusyIndicator
 
 command loadingInProgress
    if sLoadingFlag is true then
-
+      
       if sLoadProgress contains ". . . . . . . . . . ." then
          if sLoadProgress contains "Loading" then
             put "Tap to Stop" into sLoadProgress
          else
+            
             put sLabel into sLoadProgress
          end if
       end if
