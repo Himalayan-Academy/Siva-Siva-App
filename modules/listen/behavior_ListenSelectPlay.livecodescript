@@ -175,6 +175,10 @@ on mouseup
          
          downloadSelection sSelectNum, pTarget
          break
+      case "Loading"
+         showBusyIndicator false
+         stopPlayer
+         break
    end switch
    
    

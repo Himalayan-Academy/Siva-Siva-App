@@ -207,7 +207,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    local  queryData, pJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
    
-   showBusyIndicator true,"Loading"
+   showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
    --  dispatch "cleanUpGui" to card "listen-browse"      
@@ -304,13 +304,14 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          
          if the result is not empty then 
+            # we did not get anything. Turn  off loader, inform the users
+            showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
             portal_Link "Listen"
             exit to top
          else 
             put it into tRecords
-            
             put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
@@ -405,6 +406,12 @@ end playList_FetchData
 
 on  playlist_Instantiate sTargetPlayList    
    Local tKeys, tTitles, pData
+   
+   # we have data from local or the server: 
+   # turn off loader...
+   
+   showBusyIndicator false
+   
    # using: model_SivaSiva, which has functions to get json info we need:
    
    switch sPlaylistQueryA["playlistClass"] 
@@ -436,7 +443,7 @@ on  playlist_Instantiate sTargetPlayList
    
    --markCachedItems tKeys
    
-   showBusyIndicator false
+   
    
    # Now we switch cards, 
    
@@ -521,6 +528,8 @@ on select_Play  sSelectNum, pitemID
    # but we may be dropping in from the journal or another type of list that
    # simple passes the item_id for the record.. and there is no pSelectedLIne
    
+   showBusyIndicator true,"Loading Audio"
+   
    if pItemID is empty then # search from the click line
       put getItemURL(sSelectNum) into sRemoteURL
       Put "Connecting..." into fld "currentTitleLabel"
@@ -545,6 +554,7 @@ on select_Play  sSelectNum, pitemID
    
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
+      showBusyIndicator false
       put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
       doAnswer pMsg,"OK", answerURLunavailable
       exit to top
@@ -561,10 +571,10 @@ on select_Play  sSelectNum, pitemID
       showBusyIndicator false
       exit to top
    end if
-
+   
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
-   
+   showBusyIndicator false
    put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
 end select_Play
@@ -941,6 +951,10 @@ end __UXHandlers
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
    local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
    put pTitle into tLineValue
+   
+   # assume we have data 
+   showBusyIndicator false
+   
    if pTitle is empty then
       put sSelectNum*2 into tLineNum
       if (tLineNum mod 2) = 0 then

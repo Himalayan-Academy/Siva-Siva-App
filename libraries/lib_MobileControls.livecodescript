@@ -46,6 +46,7 @@ local sPlayerId, sPlayerRect
 -- create the player
 -- set it filename: could be a remote/service URL
 -- set a busy indicator an remote file
+-- BR 2020-03-06 -deprecating the mobilebusy because user has no control
 
 command createMobileAudioPlayer pURL, pPlayerName, pRect
    
@@ -80,7 +81,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    mobileControlSet pPlayerName, "visible", false 
    mobileControlSet pPlayerName, "showcontroller", false
    mobileControlSet pPlayerName, "rect", pRect
-   --mobileControlSet pPlayerName, "showController", true # reprecate with AVkit iOS
+   --mobileControlSet pPlayerName, "showController", true # deprecate with AVkit iOS
    mobileControlSet pPlayerName, "filename", pURL 
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
@@ -164,7 +165,7 @@ on playerFinished -- sent on mobile when audio is done
    put empty into sPlayerRect
    get runningAudioIndicatorVis("false")
    ------
-  togglePause false, true
+   togglePause false, true
    
 end playerFinished
 
@@ -178,7 +179,7 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
       mobileControlSet pPlayerName, "showController", pBool
       mobileControlSet pPlayerName, "visible", pBool
    else
-       set the vis of player pPlayerName to pBool
+      set the vis of player pPlayerName to pBool
    end if
 end showPlayer
 
@@ -211,18 +212,57 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    end repeat
 end deleteAllMobileControls
 
-command showBusyIndicator pBool, pMsg --jg: for both desktop and mobile
-   if isMobile() then
-      if pBool = true then
-         mobileBusyIndicatorStart "square", pMsg -- add loading indicator until duration is available
-      else
-         mobileBusyIndicatorStop
-      end if
-   else
-      if there is a btn "loading" then
-         set the vis of btn "loading" to pBool
+--command showBusyIndicator pBool, pMsg --jg: for both desktop and mobile
+--   if isMobile() then
+--      if pBool = true then
+--         mobileBusyIndicatorStart "square", pMsg -- add loading indicator until duration is available
+--      else
+--         mobileBusyIndicatorStop
+--      end if
+--   else
+--      if there is a btn "loading" then
+--         set the vis of btn "loading" to pBool
+--      end if
+--   end if
+--end showBusyIndicator
+
+local sLoadingIndicator,sLoadingFlag, sLabel, sLoadProgress
+command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
+   if there is a control "loading" then
+      put sMsg into sLabel # stable string
+      put sMsg into sLoadProgress # this string will change through the loop below.
+      put the long id of control "loading" into sLoadingIndicator
+      set the label of sLoadingIndicator to sLabel
+      if there is a  sLoadingIndicator then
+         set the vis of sLoadingIndicator to pBool
+         if pBool is true then
+            put true into sLoadingFlag
+            dispatch "loadingInProgress" to me 
+         else
+            put false into sLoadingFlag
+            set the vis of sLoadingIndicator to pBool
+            put empty into sLoadProgress
+            set the label of sLoadingIndicator to ""
+         end if
       end if
    end if
 end showBusyIndicator
+
+
+command loadingInProgress
+   if sLoadingFlag is true then
+
+      if sLoadProgress contains ". . . . . . . . . . ." then
+         if sLoadProgress contains "Loading" then
+            put "Tap to Stop" into sLoadProgress
+         else
+            put sLabel into sLoadProgress
+         end if
+      end if
+      put ". " after sLoadProgress
+      set the label of sLoadingIndicator  to sLoadProgress
+      send "loadingInProgress" to me in 300 milliseconds
+   end if
+end loadingInProgress
 
 
