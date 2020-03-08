@@ -18,19 +18,27 @@ end setLastactivity
 
 on preOpenStack
    if isMobile() then
-      set the fullscreenMode of this stack to "showAll"
+      --set the fullscreenMode of this stack to "showAll"
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
 end preOpenStack
+
+on preOpenCard
+   updateUI
+end preOpenCard
 
 on openStack
    set the acceleratedRendering of this stack to "true"
 end openStack
 
-
 on opencard
    audioIsRunning  
 end opencard
+
+on resizeStack
+   setCardCoords
+   updateUI
+end resizeStack
 
 on closestack
    portal_SetLastStack "pathtosiva"
@@ -203,3 +211,49 @@ command share_Items
    return sShareItemsA
 end share_Items
 
+private command ___GEOMETRY___
+end ___GEOMETRY___
+
+on updateUI
+   if the cLayoutRect of this card is CardRect() then exit updateUI
+   switch the short name of this card
+      case "cover"
+         updateCoverUI
+         break
+      case "photo index"
+         updatePhotoIndexUI
+         break
+   end switch
+   set the cLayoutRect of this card to CardRect()
+end updateUI
+
+private command updateCoverUI
+   local tControl, tLoc, tTopSpace
+   
+   put the long id of img "01-cover_YS-Walking-Siva-_366w_opt.jpg" into tControl
+   bottomCenterMe tControl
+   put the top of tControl - safeTopMargin() into tTopSpace
+   put the loc of tControl into tLoc
+   subtract 12 from item 1 of tLoc
+   subtract 58 from item 2 of tLoc
+   set the loc of img "Fire1.gif" to tLoc
+   bottomCenterMe the long id of img "Tiger", 1
+   topCenterMe the long id of widget "SVG title", tTopSpace*.09
+   topCenterMe the long id of widget "SVG subtitle", tTopSpace*.23
+   topCenterMe the long id of widget "SVG author", tTopSpace*.52
+end updateCoverUI
+
+private command updatePhotoIndexUI
+   local tControl, tRect
+   
+   put the long id of grp "headerGrp" into tControl
+   topCenterMe tControl
+   set the left of btn "SVG Back" of grp "headerGrp" to -11
+   set the right of btn "SVG Menu" of grp "headerGrp" to CardWidth()+2
+   put the rect of tControl into tRect
+   put item 4 of tRect into item 2 of tRect
+   put CardHeight() into item 4 of tRect
+   set the rect of grp "indexGrp" to tRect
+   
+   topRightMe the long id of widget "turnOffAudio" of grp "audioGlobalControl", 18, 74
+end updatePhotoIndexUI

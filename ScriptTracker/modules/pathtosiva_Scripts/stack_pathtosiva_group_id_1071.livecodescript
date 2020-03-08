@@ -7,14 +7,14 @@ Script "stack_pathtosiva_group_id_1071"
 */
 
 
-
 command doScrollerTap  -- navigate
+   local tNum, tLesson, tTrackdata
    setPref "index","photo index"
    put char 1 to 2 of the short name of the mousecontrol into tNum
    set the numberformat to "0"
    add 0 to tNum -- remove any leading zero
    put "lesson" && tNum into tLesson
    goCd tLesson,"reveal left"
-   put tLesson into pTrackdata["targetContent"]
-   tracking_RecordActivity "Path To Siva", "navigation/goContent", pTrackdata
+   put tLesson into tTrackdata["targetContent"]
+   tracking_RecordActivity "Path To Siva", "navigation/goContent", tTrackdata
 end doScrollerTap
