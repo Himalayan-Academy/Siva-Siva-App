@@ -14,33 +14,34 @@ Script "stack_pathtosiva_button_id_1252"
 local sMouseLoc,sStartLoc
 
 on mouseDown
-  if the owner of the target is not me then exit mouseDown
-  put the mouseloc into sMouseLoc
-  put sMouseLoc into sStartLoc
+   if the owner of the target is not me then exit mouseDown
+   put the mouseloc into sMouseLoc
+   put sMouseLoc into sStartLoc
 end mouseDown
 
 on mouseUp
-  put "" into sMouseLoc
-  if the short name of the owner of the target is not "menuGrp" then
-    if tocVisible() then
-      toggleMenu
-      exit mouseUp
-    end if
-  end if
-  if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
-    send "doScrollerTap" to the target in 0
-  end if
+   put "" into sMouseLoc
+   if the short name of the owner of the target is not "menuGrp" then
+      if tocVisible() then
+         toggleMenu
+         exit mouseUp
+      end if
+   end if
+   if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+      send "doScrollerTap" to the target in 0
+   end if
 end  mouseup
 
 on mouseMove x,y -- desktop scrolling
-  if isMobile() or sMouseLoc = "" then pass mouseMove
-  put abs(y - item 2 of sMouseLoc) into tVDist
-  if item 2 of sMouseLoc > y then -- pushing up
-    set the vscroll of me to the vscroll of me + tVDist
-  else if item 2 of sMouseLoc < y then -- pushing down
-    set the vscroll of me to the vscroll of me - tVDist
-  end if
-  put x,y into sMouseLoc
+   local tVDist
+   if isMobile() or sMouseLoc = "" then pass mouseMove
+   put abs(y - item 2 of sMouseLoc) into tVDist
+   if item 2 of sMouseLoc > y then -- pushing up
+      set the vscroll of me to the vscroll of me + tVDist
+   else if item 2 of sMouseLoc < y then -- pushing down
+      set the vscroll of me to the vscroll of me - tVDist
+   end if
+   put x,y into sMouseLoc
 end mouseMove
 
 on mouseRelease

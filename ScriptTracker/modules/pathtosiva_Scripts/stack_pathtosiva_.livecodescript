@@ -29,6 +29,9 @@ end preOpenCard
 
 on openStack
    set the acceleratedRendering of this stack to "true"
+   if getPhoneModel() is "iPhoneX" then
+      mobileShowStatusBar
+   end if
 end openStack
 
 on opencard
@@ -220,8 +223,23 @@ on updateUI
       case "cover"
          updateCoverUI
          break
+      case "choose your path"
+         updateChooseYourPathUI
+         break
       case "photo index"
          updatePhotoIndexUI
+         break
+      case "explore realms"
+         updateExploreRealmsUI
+         break
+      case "lessonview"
+         updateLessonViewUI
+         break
+      case "about"
+         updateAboutUI
+         break
+      case "glossary"
+         updateGlossaryUI
          break
    end switch
    set the cLayoutRect of this card to CardRect()
@@ -241,19 +259,149 @@ private command updateCoverUI
    topCenterMe the long id of widget "SVG title", tTopSpace*.09
    topCenterMe the long id of widget "SVG subtitle", tTopSpace*.23
    topCenterMe the long id of widget "SVG author", tTopSpace*.52
+   updateMenuGrpUI
 end updateCoverUI
 
-private command updatePhotoIndexUI
-   local tControl, tRect
+private command updateChooseYourPathUI
+   local tControl, tFooterTop, tOldLoc, tNewLoc, tDeltaX, tDeltaY
    
+   # footerNavigation needs to be a "background" so that the "preOpenControl" message
+   # is received before "preOpenCard" is sent otherwise "updateUI" will crash with div by 0
+   put the long id of grp "footerNavigation" into tControl
+   send "updateUI" to tControl
+   put the top of tControl into tFooterTop
+   
+   put the long id of img "app-img_dsc_0209_736h-landscape_med.jpg" into tControl
+   put the loc of tControl into tOldLoc
+   set the bottom of tControl to tFooterTop
+   put the loc of tControl into tNewLoc
+   
+   # adjust everything left for narrower screens
+   if CardWidth() < 414 then
+      subtract CardWidth()-414 from item 1 of tNewLoc
+      set the loc of tControl to tNewLoc
+   end if
+   
+   # calculate offsets to use for icons, label, and background
+   put item 1 of tNewLoc - item 1 of tOldLoc into tDeltaX
+   put item 2 of tNewLoc - item 2 of tOldLoc into tDeltaY
+   
+   adjustLoc the long id of grc "iconBkgnd", tDeltaX, tDeltaY
+   
+   # move label and icons down for shorter screens
+   if CardHeight() < 736 then
+      subtract CardHeight()-736 from tDeltaY
+   end if
+   
+   adjustLoc the long id of fld "lbl-choose your path", tDeltaX, tDeltaY
+   adjustLoc the long id of widget "Lesson 0", tDeltaX, tDeltaY
+   adjustLoc the long id of widget "photo index", tDeltaX, tDeltaY
+   adjustLoc the long id of widget "explore realms", tDeltaX, tDeltaY
+   adjustLoc the long id of widget "about", tDeltaX, tDeltaY
+end updateChooseYourPathUI
+   
+private command updatePhotoIndexUI
+   local tControl, tRect, tRight
+   
+   updateHeaderGrpUI
    put the long id of grp "headerGrp" into tControl
-   topCenterMe tControl
-   set the left of btn "SVG Back" of grp "headerGrp" to -11
-   set the right of btn "SVG Menu" of grp "headerGrp" to CardWidth()+2
    put the rect of tControl into tRect
    put item 4 of tRect into item 2 of tRect
    put CardHeight() into item 4 of tRect
    set the rect of grp "indexGrp" to tRect
    
-   topRightMe the long id of widget "turnOffAudio" of grp "audioGlobalControl", 18, 74
+   put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
+   repeat with tNum = 1 to 68 
+      set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
+   end repeat
 end updatePhotoIndexUI
+
+private command updateExploreRealmsUI
+   local tControl, tRect, tRight
+   
+   updateHeaderGrpUI
+   centerMe the long id of img "map.jpg"
+end updateExploreRealmsUI
+
+private command updateLessonViewUI
+   local tControl, tRect, tRight, tLoc
+   
+   updateHeaderGrpUI
+   set the rect of grp "bodytextGrp" to safeRect()
+   set the width of fld "bodytext" to CardWidth()-2*safeSideMargin()
+   set the left of fld "bodytext" to safeSideMargin()
+   topCenterMe the long id of img "heroImg"
+   topCenterMe the long id of fld "caption", 163
+   topCenterMe the long id of btn "expander", 432
+   topCenterMe the long id of widget "expander", 267
+   set the left of btn "prevLesson" of grp "lessonNav" to -14
+   set the right of btn "nextLesson" of grp "lessonNav" to CardWidth()-17
+   
+   put the long id of fld "glossaryDef" into tControl
+   put the loc of tControl into tLoc
+   put item 1 of the loc of img "heroImg" into item 1 of tLoc
+   set the loc of tControl to tLoc
+end updateLessonViewUI
+
+private command updateAboutUI
+   local tControl, tRect
+   
+   updateHeaderGrpUI
+   put the long id of img "C_Introduction_366w_opt.jpg" into tControl
+   topCenterMe tControl, 67
+   set the bottom of fld "aboutTitle" to the bottom of tControl
+   set the right of fld "aboutTitle" to CardWidth()-max(safeSideMargin(),12)
+   
+   put the long id of grp "aboutTextGrp" into tControl
+   put (max(safeSideMargin(),12), the bottom of fld "aboutTitle"+6, \
+         the right of fld "aboutTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
+   set the rect of tControl to tRect
+   set the width of fld "aboutFld" to the width of tControl
+   set the topLeft of fld "aboutFld" to the topLeft of tControl
+end updateAboutUI
+
+private command updateGlossaryUI
+   local tControl, tRect
+   
+   updateHeaderGrpUI
+   put the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tControl
+   topCenterMe tControl, 67
+   set the bottom of fld "glossaryTitle" to the bottom of tControl
+   set the right of fld "glossaryTitle" to CardWidth()-max(safeSideMargin(),12)
+   
+   put the long id of grp "glossaryTextGrp" into tControl
+   put (max(safeSideMargin(),12), the bottom of fld "glossaryTitle"+6, \
+         the right of fld "glossaryTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
+   set the rect of tControl to tRect
+   set the width of fld "glossaryText" to the width of tControl
+   set the topLeft of fld "glossaryText" to the topLeft of tControl
+end updateGlossaryUI
+
+private command updateHeaderGrpUI
+   local tControl
+   
+   put the long id of grp "headerGrp" into tControl
+   if the cLayoutRect of tControl is CardRect() then exit updateHeaderGrpUI
+   
+   topCenterMe tControl
+   set the left of btn "SVG Back" of grp "headerGrp" to -11
+   set the right of btn "SVG Menu" of grp "headerGrp" to CardWidth()+2
+   
+   topRightMe the long id of widget "turnOffAudio" of grp "audioGlobalControl", 18, 74
+   
+   updateMenuGrpUI
+   
+   set the cLayoutRect of tControl to CardRect()
+end updateHeaderGrpUI
+
+private command updateMenuGrpUI
+   local tControl
+   
+   put the long id of grp "menuGrp" into tControl
+   if the cLayoutRect of tControl is CardRect() then exit updateMenuGrpUI
+   
+   set the top of fld "TOC" to safeTopMargin()
+   set the top of widget "showTerms" to safeTopMargin()
+   
+   set the cLayoutRect of tControl to CardRect()
+end updateMenuGrpUI

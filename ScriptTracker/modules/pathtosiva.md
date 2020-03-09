@@ -18,26 +18,6 @@
 * ID: button id 51302 of bkgnd id 1078 of stack "pathtosiva"
 * [stack_pathtosiva_button_id_51302](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51302.livecodescript)
 
-**widget "settings-gear" of bkgnd "homeScreensBottomNav" of stack "pathtosiva"**
-* ID: widget id 51280 of bkgnd id 51278 of stack "pathtosiva"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_pathtosiva_widget_id_51280](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51280.livecodescript)
-
-**widget "share" of bkgnd "homeScreensBottomNav" of stack "pathtosiva"**
-* ID: widget id 51281 of bkgnd id 51278 of stack "pathtosiva"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_pathtosiva_widget_id_51281](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51281.livecodescript)
-
-**widget "add-favorites" of bkgnd "homeScreensBottomNav" of stack "pathtosiva"**
-* ID: widget id 51282 of bkgnd id 51278 of stack "pathtosiva"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_pathtosiva_widget_id_51282](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51282.livecodescript)
-
-**widget "go-home-portal" of bkgnd "homeScreensBottomNav" of stack "pathtosiva"**
-* ID: widget id 51283 of bkgnd id 51278 of stack "pathtosiva"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_pathtosiva_widget_id_51283](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51283.livecodescript)
-
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "pathtosiva"**
 * ID: widget id 51292 of bkgnd id 51291 of stack "pathtosiva"
 * Widget Kind: com.livecode.widget.svgpath

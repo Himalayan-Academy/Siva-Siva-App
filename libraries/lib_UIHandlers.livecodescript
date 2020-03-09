@@ -296,6 +296,15 @@ command bottomCenterMe pControl, y
    set the bottom of pControl to sCardHeight - y - sMargins["bottom"]
 end bottomCenterMe 
 
+command adjustLoc pControl, pDeltaX, pDeltaY
+   local tLoc
+   put the loc of pControl into tLoc
+   add pDeltaX to item 1 of tLoc
+   add pDeltaY to item 2 of tLoc
+   set the loc of pControl to tLoc
+end adjustLoc
+
+
 ####################
 on ___FIELDManipulation
 end ___FIELDManipulation
