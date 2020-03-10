@@ -6,8 +6,8 @@ Script "stack_pathtosiva_card_id_1246"
 */
 
 
-
 on preOpenCard
+   local tPath
    put the filename of this stack into tPath
    set the itemdel to slash
    put "about.html" into last item of tPath
@@ -20,4 +20,6 @@ on preOpenCard
    set the scroll of fld "aboutFld" to 0
    setLastactivity "about" # for Journal entry
    createScroller "aboutTextGrp"
+   
+   pass preOpenCard
 end preOpenCard

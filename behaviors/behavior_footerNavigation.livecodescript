@@ -2,7 +2,10 @@
 global sConfigA
 local sButtons
 
-on preOpenControl--
+# footerNavigation needs to be a "background" so that the "preOpenControl" message
+# is received before "preOpenCard" is sent otherwise "updateUI" will crash with div by 0
+
+on preOpenControl
    --breakpoint
    local tStack
    put the short name of this stack into tStack
@@ -18,8 +21,8 @@ on preOpenControl--
          hide btn "save" of me
          send "resizeControl" to me
    end switch
-   
 end preOpenControl
+
 
 on mouseup
    local tTarget, tShareControl, tControl, tCard
@@ -29,8 +32,6 @@ on mouseup
    lock screen
    put short name of the target into tTarget
    put (there is a widget "body") into tBrowserExists
-   
-   
    
    switch tTarget
       case "home"
@@ -113,10 +114,12 @@ command unHiliteBtn pTarget
    set the hilited of control pTarget to false
 end unHiliteBtn
 
+
 on updateUI
    set the width of me to CardWidth()
    bottomCenterMe (the long id of me), -safeBottomMargin()
 end updateUI
+
 
 on resizeControl
    local tHSpace, tV, tH, tControl, tRect
@@ -138,5 +141,4 @@ end resizeControl
 
 
 on mouseMove pNewMouseH, pNewMouseV
-   
 end mouseMove
