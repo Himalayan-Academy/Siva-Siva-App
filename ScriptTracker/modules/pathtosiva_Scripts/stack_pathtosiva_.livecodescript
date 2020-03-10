@@ -278,7 +278,7 @@ private command updateChooseYourPathUI
    
    # adjust everything left for narrower screens
    if CardWidth() < 414 then
-      subtract CardWidth()-414 from item 1 of tNewLoc
+      subtract 414-CardWidth() from item 1 of tNewLoc
       set the loc of tControl to tNewLoc
    end if
    

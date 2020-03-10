@@ -27,12 +27,8 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    set the filename of img "heroImg" to (pathToImgs() & tText["image"]) -- load photo; will resize
    resizeToWidth "heroImg"
    set the vScroll of grp "bodytextGrp" to 0
-   set the top of img "heroImg" to 0
+   topCenterMe the long id of img "heroImg"
    put tText["caption"] & cr & space into fld "caption" -- overhang by one line
-   --   set the height of fld "caption" to (the formattedheight of fld "caption") + 4 -- extra underhang
-   --   set the bottom of fld "caption" to the bottom of img "heroImg" + \
-   --         (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
-   --   set the bottom of button "expander" to (the bottom of fld "caption")-8
    resetCaption
    
    -- bodytext:  -- CH. 17 and 47: list/instructions come after quote 
