@@ -12,7 +12,7 @@ on preopencard
 end preopencard
 
 on opencard
-   setDefaultCard(the short name of this card)
+  
    if connectivity_PingServer() = "false" then
       dialog_CustomMsg "Connection required. Going to Verses"
       go to card "surprise_verses"
@@ -28,15 +28,16 @@ on closeCard
 end closeCard
 
 command getAnImage
-   showBusyIndicator true
+   local tImgTarget,gotIt,  sURL,  tSizeIsBig
+   showBusyIndicator true, "Loading Art"
    disable grp "go-next"
    --hide grp "go-next"
    put the long id of img "surprise-image" into tImgTarget
-   hide image "surprise-image" with visual effect dissolve very fast
+   hide image "surprise-image" with visual effect "dissolve" very fast
    put fetchRandomMediaItem ("media_type","art/painting") into gotIt
    put getMediaURL ("med,whatever") into sURL
    set the filename of img "surprise-image" to sURL
-
+   
    insertImageDimensions (the long ID of img "surprise-image")
    mediaUrl_Set sURL
    if the formattedwidth of tImgTarget > the width of this card then
@@ -45,7 +46,7 @@ command getAnImage
    end if
    showBusyIndicator false
    set the loc of img "surprise-image" to the loc of this card
-   send showSurprise  to me in  20 milliseconds
+   send "showSurprise"  to me in  20 milliseconds
    if isMobile() then
       mobileClearTouches
    end if
@@ -53,12 +54,14 @@ command getAnImage
 end getAnImage
 
 command showSurprise
-   show img "surprise-image"  with visual effect reveal right very fast
+
+   show img "surprise-image"  with visual effect "reveal right" very fast
    show grp "go-next"
    enable grp "go-next"
 end showSurprise
 
 command share_Items 
+   local sShareItemsA
    put mediaUrl_Get() into  sShareItemsA["url"]  
    put "Look at This!" into sShareItemsA["subject"]
    put "Images from the SivaSiva app." into sShareItemsA["text"] 

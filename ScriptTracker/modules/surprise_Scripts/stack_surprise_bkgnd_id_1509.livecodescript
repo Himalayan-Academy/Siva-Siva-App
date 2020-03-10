@@ -5,7 +5,7 @@ Script "stack_surprise_bkgnd_id_1509"
 # ID: bkgnd id 1509 of stack "surprise"
 # Behavior: stack "behavior_SocialShare"
 
-# Background on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
+# Shared group on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
 */
 
 

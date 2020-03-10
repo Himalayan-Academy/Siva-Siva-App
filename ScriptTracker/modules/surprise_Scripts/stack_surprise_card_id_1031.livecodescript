@@ -9,7 +9,6 @@ Script "stack_surprise_card_id_1031"
 local sTimestamp
 
 on opencard
-   setDefaultCard(the short name of this card)
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if  
@@ -21,7 +20,6 @@ on opencard
       dialog_CustomMsg "Sorry, an Internet connection is required to view this content. You can view Verses offline instead."
       go to card "surprise_verses"
    else
-      show graphic "Loading..."
       getRandomAudio
    end if
 end opencard
@@ -38,6 +36,8 @@ on getRandomAudio
    # Test with record that has commas in description:
    # fetchRandomMediaItem ("media_type","audio", "file_id","gr_2000-10-09_culture-crisis")   
    --fetchRandomMediaItem ("media_type","audio", "item_id","2023")
+   
+   showBusyIndicator true,"Loading Audio"
    
    put fetchRandomMediaItem ("media_type","audio","approved_for_public","YES") into gotIt
    put getMediaURL () into tURL
@@ -73,11 +73,10 @@ on startAudioPlayer pURL, pTimestamp
       start player "audioPlayer"
       togglePause true, true
    end if
-   hide graphic "Loading..."
+   
    send "showAudioDetails" to me in 50 millisecondS
+   showBusyIndicator false
    
-   
-   --setMobileAudioPlayer "audioPlayer",  "play", pTimestamp
 end startAudioPlayer
 
 

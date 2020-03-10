@@ -77,10 +77,6 @@ command share_Items
    return tShareItemsA
 end share_Items
 
-on opencard
-   setDefaultCard the short name of this card
-   pass opencard
-end opencard
 
 
 
