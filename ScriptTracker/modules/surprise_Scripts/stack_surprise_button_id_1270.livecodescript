@@ -10,11 +10,12 @@ local sImageLoc,sViewState --jg: script local var handles this now
 
 on mousedown
    insertImageDimensions (the long id of me)
-  put the loc of me into sImageLoc
-  grab me
+   put the loc of me into sImageLoc
+   grab me
 end mousedown
 
 on mouseup
+   local tCurrentLoc, tHShift, tVShift, tIsTap
    if sViewState is empty then put 1 into sViewState
    put the loc of me  into tCurrentLoc
    # On mobile the image if very sensitive and moves
@@ -33,18 +34,18 @@ on mouseup
       --       put the height of this cd into tHt
       
       --       if (the left of me > 0 or the right of me < tRt) \
-         --             or (the top of me > 0 or the bottom of me < tHt) then
+      --             or (the top of me > 0 or the bottom of me < tHt) then
       --          set the loc of me to the loc of this cd --jg: only snap to center
       --       end if
       
       put tCurrentLoc into sImageLoc
    end if
 end mouseup
- 
+
 command switchViewState 
    switch sViewState          
       case 1  
-            toggleImgSize (me),,(the width of this card -10) 
+         toggleImgSize (me),,(the width of this card -10) 
          put 2 into sViewState      
          break
       case  2 #  image is full size, shrink to card

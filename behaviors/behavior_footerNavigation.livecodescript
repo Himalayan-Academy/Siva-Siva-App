@@ -104,6 +104,9 @@ on mouseup
          end if
          portal_GoStack "settings"
          break
+      default
+         unlock screen
+         pass mouseUp
    end switch
    unlock screen
 end mouseup
