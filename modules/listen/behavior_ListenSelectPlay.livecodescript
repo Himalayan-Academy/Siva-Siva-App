@@ -193,8 +193,7 @@ command updateUI
    hide player "audioPlayer"
    put empty  into fld "currentTitleLabel"
    put the long id of group "pause-play" into pControl
-   set the loc of pControl to horizCenter(), (the bottom of widget "chevron-up-down" of me +30 ) 
-   togglePause false, true
+   set the loc of pControl to horizCenter(), (the top of group "footerNavigation" -30)
 end updateUI
    
   

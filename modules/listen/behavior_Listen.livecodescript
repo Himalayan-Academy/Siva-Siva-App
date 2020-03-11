@@ -811,9 +811,6 @@ command addJournalEntry-- save a bookmark to db
 end addJournalEntry
 
 
-
-
-
 on journalResume  pDataA, pEntryA
 
    lock screen
@@ -981,6 +978,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    
    put "listen-file" into pDataA["card"]  
    put pURL into pDataA["url"]
+   put pItemID into pDataA["item_id"]
    setJournalData pDataA
    
    if isMobile() then
@@ -1110,3 +1108,8 @@ command updateUIListen
    --set the rect of grc "footerBackground" to the rect of me
    
 end updateUIListen
+
+
+on mouseDown pButtonNumber
+   
+end mouseDown
