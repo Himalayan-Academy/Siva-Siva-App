@@ -102,7 +102,7 @@ end getMobileAudioPlayerRect
 -- we toggle on our local widget to "pause" 
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
-   if theProperty is "duration" then
+      if theProperty is "duration" then
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
    end if
@@ -228,7 +228,7 @@ end deleteAllMobileControls
 
 local sLoadingIndicator,sLoadingGroup,sLoadingFlag, sLabel, sLoadProgress
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   if there is a control "loadingGroup" then
+if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       put sMsg into sLoadProgress # this string will change through the loop below.
       put the long id of control "loadingGroup" into sLoadingGroup

@@ -812,7 +812,6 @@ end addJournalEntry
 
 
 on journalResume  pDataA, pEntryA
-
    lock screen
    local tCard
    
@@ -974,6 +973,8 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       put pItemID into pDataA["item_id"]
       put pTitle  into pDataA["title"]
       fetchSingleMetadata pItemID
+   else
+      put sSelectedItemA["item_id"] into pItemID
    end if
    
    put "listen-file" into pDataA["card"]  
@@ -1109,7 +1110,3 @@ command updateUIListen
    
 end updateUIListen
 
-
-on mouseDown pButtonNumber
-   
-end mouseDown

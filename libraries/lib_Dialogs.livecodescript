@@ -131,6 +131,7 @@ end fieldLinkClicked
 
 
 command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
+   mobileClearTouches
    local tDialogControl, tLocalToast,tCdWidth,tCdHeight,tmsgLines
    local tBtnHeight, tDialogHeight
    # short notification at bottom of screen goes away of itself
@@ -185,10 +186,12 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    end if
    
    unlock screen
+   mobileClearTouches
    show group "bottomToast"   
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
    set the layer of grp "BottomToast" to top 
    wait 1 seconds 
+   mobileClearTouches
    move grp "BottomToast" relative 0,tDialogHeight+400 in 800 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
