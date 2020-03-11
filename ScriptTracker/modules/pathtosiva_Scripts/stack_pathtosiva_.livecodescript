@@ -301,7 +301,7 @@ private command updateChooseYourPathUI
 end updateChooseYourPathUI
    
 private command updatePhotoIndexUI
-   local tControl, tRect, tRight
+   local tControl, tRect, tRight, tTextSize
    
    updateHeaderGrpUI
    put the long id of grp "headerGrp" into tControl
@@ -314,6 +314,10 @@ private command updatePhotoIndexUI
    repeat with tNum = 1 to 68 
       set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
    end repeat
+   if CardWidth() < 414 then
+      put the textSize of grp "indexGrp" into tTextSize
+      set the textSize of grp "indexGrp" to tTextSize-1
+   end if
 end updatePhotoIndexUI
 
 private command updateExploreRealmsUI
@@ -335,7 +339,7 @@ private command updateLessonViewUI
    topCenterMe the long id of btn "expander", 432
    topCenterMe the long id of widget "expander", 267
    set the left of btn "prevLesson" of grp "lessonNav" to -14
-   set the right of btn "nextLesson" of grp "lessonNav" to CardWidth()-17
+   set the right of btn "nextLesson" of grp "lessonNav" to CardWidth()+14
    
    put the long id of fld "glossaryDef" into tControl
    put the loc of tControl into tLoc
@@ -400,6 +404,10 @@ private command updateMenuGrpUI
    put the long id of grp "menuGrp" into tControl
    if the cLayoutRect of tControl is CardRect() then exit updateMenuGrpUI
    
+   set the right of tControl to CardWidth()+91
+   set the height of tControl to CardHeight()
+   set the top of tControl to 0
+   set the height of fld "TOC" to ((the formattedheight of fld "TOC")+safeBottomMargin())
    set the top of fld "TOC" to safeTopMargin()
    set the top of widget "showTerms" to safeTopMargin()
    
