@@ -117,7 +117,9 @@ command goCd pCdName,pEffect -- optional effect param
       send "loadLesson (word 2 of pCdName)" to this cd
    else if pCdName = "home" then -- return to project
       put "push right" into pEffect
-      send "portal_Link read" to me in 0
+      --send "portal_Link read" to me in 0
+      portal_GoStack "Siva-Siva-Portal"
+      unlock screen with visual effect pEffect fast
       exit goCd
    end if
    toggleHeader not tIslesson and (the number of cd pCdName > 2)
@@ -407,7 +409,7 @@ private command updateMenuGrpUI
    set the right of tControl to CardWidth()+91
    set the height of tControl to CardHeight()
    set the top of tControl to 0
-   set the height of fld "TOC" to ((the formattedheight of fld "TOC")+safeBottomMargin())
+   set the height of fld "TOC" to ((the formattedheight of fld "TOC")+safeBottomMargin()+24)
    set the top of fld "TOC" to safeTopMargin()
    set the top of widget "showTerms" to safeTopMargin()
    
