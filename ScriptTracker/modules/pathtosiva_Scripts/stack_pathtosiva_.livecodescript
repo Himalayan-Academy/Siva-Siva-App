@@ -18,7 +18,6 @@ end setLastactivity
 
 on preOpenStack
    if isMobile() then
-      --set the fullscreenMode of this stack to "showAll"
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
 end preOpenStack
@@ -90,13 +89,12 @@ on journalResume pData,pEntryA -- sent from journal stack
    local tCd,tNum
    close stack "journal"
    put pData["card"] into tCd
-   goCd tCd
    if tCd begins with "lesson" then
       put pData["lessonNum"] into tNum
-      send "loadLesson tNum" to this cd
+      put tCd && tNum into tCd
    end if
+   goCd tCd
 end journalResume
-
 
 
 command goCd pCdName,pEffect -- optional effect param
@@ -117,7 +115,6 @@ command goCd pCdName,pEffect -- optional effect param
       send "loadLesson (word 2 of pCdName)" to this cd
    else if pCdName = "home" then -- return to project
       put "push right" into pEffect
-      --send "portal_Link read" to me in 0
       portal_GoStack "Siva-Siva-Portal"
       unlock screen with visual effect pEffect fast
       exit goCd
@@ -132,80 +129,81 @@ local sMenuLine = 0 -- current cd's TOC line, tracked for text hiliting
 command toggleMenu
    local tMenu,tRect,tLineNum,tName
    
-  put the long id of grp "menuGrp" into tMenu
-  put the rect of tMenu into tRect
-  subtract 7 from item 1 of tRect -- for shadow
-  lock screen for visual effect in rect tRect
-  set the textcolor of line sMenuLine of fld "toc" to empty
-  if tocVisible() then -- onscreen
-    deleteMobileControl (the short name of tMenu)
-    hide tMenu -- avoid shadow artifacts
-    unlock screen with visual effect "reveal right" fast-- need different effects depending on direction
-    put the hilitedline of fld "toc" into tLineNum
-    set the backcolor of line tLineNum of fld "toc" to the metadata of line tLineNum of fld "toc" -- restore
-    set the textcolor of line tLineNum of fld "toc" to empty
-  else -- offscreen
-    set the layer of tMenu to top
-    set the hilitedline of fld "toc" to 0
-    get the short name of this cd
-    if it begins with "lesson" then get line 1 of fld "bodytext"
-    put lineoffset(it, fld "toc") into tLineNum
-    set the textcolor of line tLineNum of fld "toc" to "black"
-    put tLineNum into sMenuLine
-    show tMenu
-    if isMobile() then
-      put the short name of tMenu into tName
-      createScroller tName
-    end if
-    unlock screen with visual effect scroll left fast -- for left direction
-  end if
+   put the long id of grp "menuGrp" into tMenu
+   put the rect of tMenu into tRect
+   subtract 7 from item 1 of tRect -- for shadow
+   lock screen for visual effect in rect tRect
+   set the textcolor of line sMenuLine of fld "toc" to empty
+   if tocVisible() then -- onscreen
+      deleteMobileControl (the short name of tMenu)
+      hide tMenu -- avoid shadow artifacts
+      unlock screen with visual effect "reveal right" fast-- need different effects depending on direction
+      put the hilitedline of fld "toc" into tLineNum
+      set the backcolor of line tLineNum of fld "toc" to the metadata of line tLineNum of fld "toc" -- restore
+      set the textcolor of line tLineNum of fld "toc" to empty
+   else -- offscreen
+      set the layer of tMenu to top
+      set the hilitedline of fld "toc" to 0
+      get the short name of this cd
+      if it begins with "lesson" then get line 1 of fld "bodytext"
+      put lineoffset(it, fld "toc") into tLineNum
+      set the textcolor of line tLineNum of fld "toc" to "black"
+      put tLineNum into sMenuLine
+      show tMenu
+      if isMobile() then
+         put the short name of tMenu into tName
+         createScroller tName
+      end if
+      unlock screen with visual effect scroll left fast -- for left direction
+   end if
 end toggleMenu
 
 command toggleHeader pBool -- show/hide header
-  if there is no grp "headergrp" of this cd then exit toggleHeader
-  if pBool = "" then put not the vis of grp "headerGrp" into pBool
-  get (the short name of this cd = "lessonView" and pBool = true)
-  set the blendlevel of grp "headerGrp" to item itemOffset(it,"true,false") of "40,0"
-  set the vis of grp "headerGrp" to pBool
+   if there is no grp "headergrp" of this cd then exit toggleHeader
+   if pBool = "" then put not the vis of grp "headerGrp" into pBool
+   get (the short name of this cd = "lessonView" and pBool = true)
+   set the blendlevel of grp "headerGrp" to item itemOffset(it,"true,false") of "40,0"
+   set the vis of grp "headerGrp" to pBool
 end toggleHeader
 
 local sPrefsArray
 
 command setPref pType,pVal -- using script local, later link into project?
-  put pVal into sPrefsArray[pType]
+   put pVal into sPrefsArray[pType]
 end setPref
 
 function getPref pPref  -- using script local; only one pref so far
-  get sPrefsArray[pPref]
-  if it = "" and pPref = "index" then get "photo index" -- default
-  return it
+   get sPrefsArray[pPref]
+   if it = "" and pPref = "index" then get "photo index" -- default
+   return it
 end getPref
 
 
--- utility --
+private command __UTILITY__
+end __UTILITY__
 
 on backKey
-  if there is a widget "SVG Back" then
-    send "mouseUp" to widget "SVG Back"
-  end if
+   if there is a widget "SVG Back" then
+      send "mouseUp" to widget "SVG Back"
+   end if
 end backKey
 
 function tocVisible
-  --   put the long id of grp "menuGrp" into tMenu
-  --   return the right of tMenu <= the right of this cd
-  return the vis of grp "menuGrp"
+   --   put the long id of grp "menuGrp" into tMenu
+   --   return the right of tMenu <= the right of this cd
+   return the vis of grp "menuGrp"
 end tocVisible
 
 function pathToImgs  -- path to lesson imgs
-  return sivasiva_GetModuleFolder(the short name of me) & "img/lesson/"
+   return sivasiva_GetModuleFolder(the short name of me) & "img/lesson/"
 end pathToImgs
 
 function isMobile
-  return the environment is "mobile"
+   return the environment is "mobile"
 end isMobile
 
 command doScrollerTap
-  -- trap
+   -- trap
 end doScrollerTap
 
 local sShareItemsA
@@ -216,8 +214,8 @@ command share_Items
    return sShareItemsA
 end share_Items
 
-private command ___GEOMETRY___
-end ___GEOMETRY___
+private command __GEOMETRY__
+end __GEOMETRY__
 
 on updateUI
    if the cLayoutRect of this card is CardRect() then exit updateUI
@@ -301,7 +299,7 @@ private command updateChooseYourPathUI
    adjustLoc the long id of widget "explore realms", tDeltaX, tDeltaY
    adjustLoc the long id of widget "about", tDeltaX, tDeltaY
 end updateChooseYourPathUI
-   
+
 private command updatePhotoIndexUI
    local tControl, tRect, tRight, tTextSize
    
