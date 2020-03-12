@@ -289,6 +289,30 @@
             "imageText": "Path to Siva",
             "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
         },
+        "Dancing with Siva": {
+            "link": {
+                "portal command": "portal_GoURL",
+                "portal param": "https://www.himalayanacademy.com/media/books/dancing-with-siva/web/"
+            },
+            "imageText": "dws",
+            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+        },
+        "Living with Siva": {
+            "link": {
+                "portal command": "portal_GoURL",
+                "portal param": "https://www.himalayanacademy.com/media/books/living-with-siva/web/"
+            },
+            "imageText": "lws",
+            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+        } ,
+        "Merging with Siva": {
+            "link": {
+                "portal command": "portal_GoURL",
+                "portal param": "https://www.himalayanacademy.com/media/books/merging-with-siva/web/"
+            },
+            "imageText": "Path to Siva",
+            "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+        },
          "Hinduism Today Magazine": {
             "link": {
                 "portal param": "https://mydigitalpublication.com/publication?m=45852&l=1",
@@ -737,15 +761,24 @@
                     "rowName": "Pillars of Iraivan"
                 },
                 "4": {
-                    "rowName": "The Master Course"
+                    "rowName": "Dancing with Siva"
                 },
                 "5": {
-                    "rowName": "All Our On-Line Books"
+                    "rowName": "Living with Siva"
                 },
-                  "6": {
+                "6": {
+                    "rowName": "Merging with Siva"
+                },
+                  "7": {
                     "rowName": "Hinduism Today Magazine"
                 },
-                "7": {
+                "8": {
+                    "rowName": "The Master Course"
+                },
+                "9": {
+                    "rowName": "All Our On-Line Books"
+                },
+                "10": {
                     "rowName": "Educational Insights"
                 }
             },

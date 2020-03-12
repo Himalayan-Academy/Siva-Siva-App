@@ -588,6 +588,7 @@ command select_ShowDetails  pSelection, pRecord
    switch
       case (fld "audioList" is empty)
          Put "You have not downloaded any audio yet." into  fld "audioDetails" 
+        
          break
          
          # or its from a downloaded file in My Audio
@@ -1063,6 +1064,7 @@ command offLineGoMyAudio
       put listFilesWithPaths(pFolder, "true")  into tList
       if tList is empty then
          dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
+         go to card "listen-collection"
          exit to top
       else
          dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
@@ -1081,32 +1083,43 @@ end __Geometry
 
 on resizeStack x,y,ox,oy
    lock screen
-   -- When coming from a landscape stack, card rect is not updated correctly
-   -- and the resizeStack is called with a landscape rect.  If an answer is
-   -- inserted here, a second resizeStack gets sent with the correct rect.
    setCardCoords "portrait"
-   updateUIListen
+   updateUI
    unlock screen
 end resizeStack
 
-command updateUIListen
-   # UI Responsive
-   local pControl, sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
-   local tFooter
+command updateUI
+   local sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
+   local tFooter,tPausePlay
+   
+   put the long id of group "pause-play" into tPausePlay
+   put the long id of grp "footerNavigation" into tFooter
+   
+   set the height of tFooter to 50 + safeBottomMargin()
+   set the bottom of tFooter to CardHeight()
+   
    switch (the short name of this card)
+      case "listen-collection"
+         break
+      case "listen-browse"
+      case "listen-my-audio"
+         
+         set the loc of tPausePlay to bottomCenterMe tPausePlay,80
+         break
+         
       case "listen-file"
          put the long id of img "app-bkgnd"  into sMainBkgnd
          put the long id of img "headset"  into sCardBkgnd
          
          setImageToFullCardLoc sMainBkgnd,"portrait",0,0
          setImageToFullCardLoc sCardBkgnd,"portrait",0,0
+      case "listen-search"
+         set the loc of tPausePlay to bottomCenterMe tPausePlay,80
+         break
          
    end switch
    
-   put the long id of grp "footerNavigation" into tFooter
-   set the height of tFooter to 50 + safeBottomMargin()
-   set the bottom of tFooter to CardHeight()
-   --set the rect of grc "footerBackground" to the rect of me
    
-end updateUIListen
+   
+end updateUI
 
