@@ -4,7 +4,7 @@ Script "stack_listen_bkgnd_id_2572"
 # Name: bkgnd "footerNavigation" of stack "listen"
 # ID: bkgnd id 2572 of stack "listen"
 
-# Background on card IDs: 1158, 1002, 2052, 2000, 2660
+# Background on card IDs: 1158, 1002, 2000, 2660, 2052
 */
 
 

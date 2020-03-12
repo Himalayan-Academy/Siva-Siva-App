@@ -3,6 +3,7 @@ Script "stack_listen_card_id_2660"
 /*
 # Name: card "listen-file" of stack "listen"
 # ID: card id 2660 of stack "listen"
+# Behavior: stack "behavior_ListenSelectPlay"
 */
 
 
@@ -21,13 +22,15 @@ on opencard
 end opencard
 
 command playSingle pDataA
+   
    local tSearchA,x,tItem_id
    put empty into sSelectedItemA
    
    put pDataA["url"] into sURL
    put pDataA["item_id"] into tItem_id
    
-   startPlayer sURL,pDataA["title"] 
+   startPlayer sURL,pDataA["title"]
+   showBusyIndicator false
    if  "audio/book" is not in sURL then # no display details
       select_ShowDetails "downloaded"
    end if 
@@ -37,6 +40,7 @@ on closeCard
    put empty into fld "audioDetails"
    hide fld "audioDetails"
    put empty into fld "audioDetails"
+   put empty into fld "currentTitleLabel"
    togglePause true, true
 end closeCard
 

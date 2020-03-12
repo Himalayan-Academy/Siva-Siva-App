@@ -7,67 +7,80 @@ Script "stack_listen_card_id_1158"
 
 
 local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll
-local tHGroup, 
+local tHGroup, sLoadingIndicator
 ## touch commands to scroll the groups
+
 on preopencard
-   
+   put the long id of control "loading" into sLoadingIndicator
    setCardCoords
    pass preopencard
 end preopencard
 
+
 on opencard
-     audioIsRunning
-  end opencard
-  
+   audioIsRunning
+end opencard
 
 
 on touchStart pTouchID
-   put empty into sStartX
-   put empty into sStartY
-   
-   put the vScroll of grp "all-collections" into sStartYScroll
-   
-   put the long owner of the target into tHGroup  
-   put the hScroll of tHGroup into sStartHScroll
+   if the short name target is "Loading"then
+      showBusyIndicator false
+      if isMobile() then
+         mobileClearTouches
+      end if
+      exit top 
+   else
+      put empty into sStartX
+      put empty into sStartY
+      
+      put the vScroll of grp "all-collections" into sStartYScroll
+      
+      put the long owner of the target into tHGroup  
+      put the hScroll of tHGroup into sStartHScroll
+   end if
 end touchStart
 
+
 on touchMove pTouchID, pTouchX, pTouchY
-      if sStartY is empty then 
-         put pTouchY into sStartY
-      end if
+   if sStartY is empty then 
+      put pTouchY into sStartY
+   end if
+   
+   if sStartX is empty then
+      put pTouchX into sStartX
+   end if
+   
+   // Check for vertical scroll
+   
+   if pTouchY > (sStartY + 60) or pTouchY < (sStartY -60) then
+      set the vScroll of group "all-collections" to sStartYScroll + (sStartY-pTouchY)
+   else
       
-      if sStartX is empty then
-         put pTouchX into sStartX
-      end if
-      
-      // Check for vertical scroll
-      
-      if pTouchY > (sStartY + 60) or pTouchY < (sStartY -60) then
-         set the vScroll of group "all-collections" to sStartYScroll + (sStartY-pTouchY)
-      else
+      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
+         // Check for horizontal scroll
          
-         if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
-            // Check for horizontal scroll
-            
-            put the long owner of the target into tHGroup  
-            set the hScroll of tHGroup to sStartHScroll + (sStartX-pTouchX)
-            
-         end if
+         put the long owner of the target into tHGroup  
+         set the hScroll of tHGroup to sStartHScroll + (sStartX-pTouchX)
+         
       end if
-      
-   end touchMove
+   end if
+   
+end touchMove
+
 
 on touchEnd pTouchID
-  -- code
+   -- code
 end touchEnd
+
 
 on touchRelease pTouchID
    -- code
 end touchRelease
 
+
 ## responds to user to interaction
 
-on mouseDown     
+on mouseDown 
    put the mouseloc into sStartLoc
    put the long owner of the target into tHGroup 
    if not isMobile() then -- jg: mobile will use stack handlers to scroll instead    
@@ -75,13 +88,15 @@ on mouseDown
    end if
 end mouseDown
 
+
 on mouseup
    local pSelection
    if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
-     put the target into pSelection
+      put the target into pSelection
       selectPlayList pSelection # handles collection and other clicks on the UI
    end if
 end mouseup
+
 
 ----------------------------------------------
 ## Desktop scrolling

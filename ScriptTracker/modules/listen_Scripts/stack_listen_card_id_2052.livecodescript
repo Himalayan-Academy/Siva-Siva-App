@@ -3,7 +3,7 @@ Script "stack_listen_card_id_2052"
 /*
 # Name: card "listen-search" of stack "listen"
 # ID: card id 2052 of stack "listen"
-# Behavior: stack "behavior_ListenUI"
+# Behavior: stack "behavior_ListenSelectPlay"
 */
 
 
