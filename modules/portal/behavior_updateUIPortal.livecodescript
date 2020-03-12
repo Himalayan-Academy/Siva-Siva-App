@@ -54,6 +54,11 @@ on mouseup
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
    # and not abpout the UI perse
    
+   if tTarget = "Topics" then
+      portal_GoUrl  "https://dev.himalayanacademy.com/topics"
+      exit mouseup
+   end if
+   
    switch tTargetOwner
       case "bkgndControls"
          switch tTarget
@@ -64,35 +69,35 @@ on mouseup
             case "showNavMandala"
                if the vis of  grp "subNav" is true then hide grp "subNav"
                showMandala
-            break
-      end switch
-      break
-   case "globalNavTree"
-      hide grp "subNav"
-      break
-   case "navMandala"
-      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
-         # These are top links, some go  directly to another module stack
-         portal_GoStack tTarget
-         exit mouseup
-      end if
-      
-      lock screen
-      hideMandala
-      setSubNavBkgndImage tTarget
-      show  img "subNavBkgImage"
-      unlock screen
-      dispatch "fetchSubMenu" to grp "navMandala" with tTarget
-      wait 400 milliseconds
-      
-      show grp "SubNav" with visual effect "dissolve fast"
-      break
-   case "subNav"
-      put the value of clickline()  into tTarget
-      portal_DoRowLink tTarget
-      break
-end switch
-
+               break
+         end switch
+         break
+      case "globalNavTree"
+         hide grp "subNav"
+         break
+      case "navMandala"
+         if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
+            # These are top links, some go  directly to another module stack
+            portal_GoStack tTarget
+            exit mouseup
+         end if
+         
+         lock screen
+         hideMandala
+         setSubNavBkgndImage tTarget
+         show  img "subNavBkgImage"
+         unlock screen
+         dispatch "fetchSubMenu" to grp "navMandala" with tTarget
+         wait 400 milliseconds
+         
+         show grp "SubNav" with visual effect "dissolve fast"
+         break
+      case "subNav"
+         put the value of clickline()  into tTarget
+         portal_DoRowLink tTarget
+         break
+   end switch
+   
 end mouseup
 
 #######################

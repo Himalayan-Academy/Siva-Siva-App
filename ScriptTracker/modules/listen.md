@@ -86,7 +86,7 @@
 **bkgnd "footerNavigation" of stack "listen"**
 * ID: bkgnd id 2572 of stack "listen"
 
-* Background on card IDs: 1158, 1002, 2052, 2000, 2660
+* Background on card IDs: 1158, 1002, 2000, 2660, 2052
 * [stack_listen_bkgnd_id_2572](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2572.livecodescript)
 
 **widget "playAudio" of bkgnd "pause-play" of stack "listen"**
@@ -161,9 +161,18 @@
 * ID: field id 2635 of group id 2634 of group id 2632 of card id 1002 of stack "listen"
 * [stack_listen_field_id_2635](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2635.livecodescript)
 
+**button "Misc Tests" of group "devtools" of card "listen-my-audio" of stack "listen"**
+* ID: button id 2001 of group id 1993 of card id 2000 of stack "listen"
+* [stack_listen_button_id_2001](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2001.livecodescript)
+
+**card "listen-file" of stack "listen"**
+* ID: card id 2660 of stack "listen"
+* Behavior: stack "behavior_ListenSelectPlay"
+* [stack_listen_card_id_2660](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_2660.livecodescript)
+
 **card "listen-search" of stack "listen"**
 * ID: card id 2052 of stack "listen"
-* Behavior: stack "behavior_ListenUI"
+* Behavior: stack "behavior_ListenSelectPlay"
 * [stack_listen_card_id_2052](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_2052.livecodescript)
 
 **button "Misc Tests" of group "devtools" of card "listen-search" of stack "listen"**
@@ -181,12 +190,4 @@
 **field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "listen-search" of stack "listen"**
 * ID: field id 2713 of group id 2712 of group id 2710 of card id 2052 of stack "listen"
 * [stack_listen_field_id_2713](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2713.livecodescript)
-
-**button "Misc Tests" of group "devtools" of card "listen-my-audio" of stack "listen"**
-* ID: button id 2001 of group id 1993 of card id 2000 of stack "listen"
-* [stack_listen_button_id_2001](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2001.livecodescript)
-
-**card "listen-file" of stack "listen"**
-* ID: card id 2660 of stack "listen"
-* [stack_listen_card_id_2660](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_2660.livecodescript)
 

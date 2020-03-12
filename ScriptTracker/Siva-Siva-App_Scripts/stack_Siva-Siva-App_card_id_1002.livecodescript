@@ -18,16 +18,26 @@ on mouseup
    end if
 end mouseup
 
+on preopencard
+   hide button "enable network tracer"
+   hide button "Enable Logging"
+end preopencard
+
 on opencard
-   if the environment is not "development" then
-      hide button "enable network tracer"
-      hide button "cancel Logging"
-   else
-      show button "enable network tracer"
-      show button "cancel Logging"
-      choose browse tool
-   end if
-   
+   local tCard
+   put the short name of this card into tCard
+   switch tCard
+      case "InitializeApp"
+         if isMobile() then
+            hide button "enable network tracer"
+            hide button "Enable Logging"
+         else
+            show button "enable network tracer"
+            show button "Enable Logging"
+            choose browse tool
+         end if
+         break
+   end switch
    pass opencard
 end opencard
 
