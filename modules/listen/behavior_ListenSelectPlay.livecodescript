@@ -21,11 +21,6 @@ global sConfigA
 local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 local sTimeStamp, sSelectionsA, sDownloadedAudioA,sCardName
 
-on preopencard
-   
-   updateUI
-   pass preopencard
-end preopencard
 
 on openCard
    local tCardName
@@ -43,13 +38,13 @@ on openCard
       case "listen-browse"
          clearSelection
          break
+      case "listen-file"
+         clearSelection
+         put empty  into fld "currentTitleLabel"
+         put   empty into  fld "audio-details"
+         break 
    end switch
    
-   # starts out with the entire play list unfiltered
-   # card should already have the list installed after stack opens
-   # pass sCurrentPlayListA from stack to card:  
-   -- set GUI
-   updateUI
    playlist_Reset 
    audioIsRunning
    if the logMessage <> empty then
@@ -185,18 +180,6 @@ on mouseup
 end mouseup
 
 
-command updateUI
-   local pControl
-   # standard handle for responsive formatting 
-   # and other things related to the position and state of the UI
-   # this card
-   hide player "audioPlayer"
-   put empty  into fld "currentTitleLabel"
-   put the long id of group "pause-play" into pControl
-   set the loc of pControl to horizCenter(), (the top of group "footerNavigation" -30)
-end updateUI
-   
-  
 command share_Items 
    local tURL,  sShareItemsA
    if sRemoteURL is empty then
