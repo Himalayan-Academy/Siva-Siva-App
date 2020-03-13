@@ -176,7 +176,7 @@ end hideLoader
 
 
 on journal_AddEntry
-   -- should pData be a parameter?
+ 
    local pData, tTitle, tOutput
    
    
@@ -186,7 +186,7 @@ on journal_AddEntry
    
    put browser_GetLastURL() into pData["url"] 
    if sLandscapeOnly then
-      --if sBrowserOrientation = "landscape" then
+ 
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   

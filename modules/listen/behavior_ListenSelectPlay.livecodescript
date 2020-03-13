@@ -125,8 +125,8 @@ on mouseup
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
          
-      case "pauseAudio"
-         if not isMobile() then
+      case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
+         if not isMobile() then\
             put  the currentTime of player "audioPlayer" into sTimeStamp
          else
             put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
@@ -135,7 +135,7 @@ on mouseup
          pausePlayer sTimeStamp
          break
          
-      case "playAudio"
+      case "playAudio" # audio it stopped; Icon is a right facing triangle
          --breakpoint
          --  ntInfo sTimeStamp
          if not isMobile() then

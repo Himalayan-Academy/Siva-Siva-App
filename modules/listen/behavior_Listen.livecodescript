@@ -1046,6 +1046,9 @@ on playPausedAudio sTimeStamp
       set the currenttime  of player "audioPlayer" to sTimeStamp
       start player "audioPlayer"
    else
+      if sTimeStamp is empty then 
+         put 0 into sTimeStamp
+      end if
       setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
    end if
    togglePause true, true
