@@ -16,12 +16,12 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- old "panel" navigation to here. I will leave that to you.
 
 on preOpenCard
-   local pControl, pCard
-   put the short name of this card into pCard
+   local tControl, tCard
+   put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    
-   switch pCard
+   switch tCard
       case "Home"
          # init set up
          hide grp "globalNavigation"
@@ -295,9 +295,11 @@ on resizeStack x,y,ox,oy
 end resizeStack
 
 
+constant kMargin = 8
+
 command updateUIPortal
    
-   local pControl, tBrandImage, tBottomMargin, sMenuBkgnd
+   local tControl, tBrandImage, tBottomMargin, sMenuBkgnd, tTop, tBottom
    
    #  UI responsive
    put the long id of img "homeMainImage" of card "Home" into sMainImage
@@ -323,37 +325,44 @@ command updateUIPortal
          
          # background
          
-         put the long id of button "brandLogo" of me into pControl
-         topCenterMe pControl,0
+         put the long id of button "brandLogo" of me into tControl
+         topCenterMe tControl,0
+         put (the bottom of tControl)+kMargin into tTop
          
-         put the long id of btn "backgroundOverlay" into pControl
-         centerMe pControl
+         put the long id of btn "backgroundOverlay" into tControl
+         centerMe tControl
          
          # home image
          
-         put long Id of img "HomeMainImage" into pControl
-         setImageToFullCardLoc pControl, "portrait", 0
-         centerMe pControl, 0, 0
+         put long Id of img "HomeMainImage" into tControl
+         setImageToFullCardLoc tControl, "portrait", 0
+         centerMe tControl, 0, 0
          
-         # bButtons and Nav
+         # Buttons and Nav
          
-         put the long id of grp "navMandala" into pControl
-         topCenterMe pControl,75
-         -- centerMe pControl
+         put the long id of img "hideNavMandala" into tControl
+         bottomCenterMe tControl,20
+         put (the top of tControl)-kMargin into tBottom
          
-         put the long id of img "hideNavMandala" into pControl
-         bottomCenterMe pControl,20
+         put the long id of img "showNavMandala" into tControl
+         bottomCenterMe tControl,20
          
+         put the long id of button "openGlobalNavTree" into tControl
+         topLeftMe tControl, -16, 0
          
-         put the long id of img "showNavMandala" into pControl
-         bottomCenterMe pControl,20
+         put the long id of grp "navMandala" into tControl
+         if CardHeight() < 736 then
+            set the textSize of tControl to 14
+            set the rect of tControl to (0,tTop,CardWidth(),tBottom)
+            updateNavMandalaUI
+         else
+            topCenterMe tControl,75
+         end if
          
-         put the long id of button "openGlobalNavTree" into pControl
-         topLeftMe pControl, -16, 0
-         
-         put the long id of widget "globalNavTree" of me into pControl
-         set the width of pControl to CardWidth()
-         topCenterMe pControl,60
+         put the long id of widget "globalNavTree" of me into tControl
+         -- need to actually set the rect vice just position
+         set the width of tControl to CardWidth()
+         topCenterMe tControl,60
          
          break
          
@@ -361,11 +370,87 @@ command updateUIPortal
    
    # background group of all cards
    
-   put the long id of group "audioGlobalControl" of me into pControl
-   topRightMe pControl,70,20
+   put the long id of group "audioGlobalControl" of me into tControl
+   topRightMe tControl,70,20
    
-   put the long id of fld "Notification" of me into pControl
-   bottomCenterMe pControl,100
+   put the long id of fld "Notification" of me into tControl
+   bottomCenterMe tControl,100
    
 end updateUIPortal
 
+private command updateNavMandalaUI
+   local tGroup, tHeight, tWidth, tLoc, tMidX, tMidY, tDiameter, tControl, tRadius, tDeltaX, tDeltaY
+   
+   put the long id of grp "navMandala" into tGroup
+   put the width of tGroup into tWidth
+   put the height of tGroup into tHeight
+   put the loc of tGroup into tLoc
+   put item 1 of tLoc into tMidX
+   
+   setBottomAndLoc the long id of widget "Topics", the bottom of tGroup, tMidX
+   
+   setTopAndLoc the long id of fld "gems", the top of tGroup, tMidX
+   setTopAndLoc the long id of grc "gems", the bottom of fld "gems", tMidX
+   
+   setTopAndLoc the long id of fld "read", (the bottom of grc "gems")+kMargin, tMidX
+   setTopAndLoc the long id of grc "read", the bottom of fld "read", tMidX
+   set the loc of widget "read" to the loc of grc "read"
+   
+   setBottomAndLoc the long id of fld "Practice", (the top of widget "Topics")-15-kMargin, tMidX
+   setBottomAndLoc the long id of grc "Practice", the top of fld "Practice", tMidX
+   set the loc of widget "Practice" to the loc of grc "Practice"
+   
+   put (the top of grc "Practice" - the bottom of grc "read")+8 into tDiameter
+   put (the bottom of grc "read" + the top of grc "Practice")*.5 into tMidY
+   put tMidY into item 2 of tLoc
+   set the width of grc "Surprise" to the formattedWidth of fld "Surprise"
+   set the height of grc "Surprise" to the formattedWidth of fld "Surprise"
+   set the loc of fld "Surprise" to tLoc
+   set the loc of grc "Surprise" to tLoc
+   
+   put the long id of grc "upTriangle" into tControl
+   set the height of tControl to tDiameter
+   set the width of tControl to tDiameter
+   set the loc of tControl to tLoc
+   
+   put the long id of grc "downTriangle" into tControl
+   set the height of tControl to tDiameter
+   set the width of tControl to tDiameter
+   set the loc of tControl to tLoc
+   
+   put (tDiameter - 8) / 2 into tRadius
+   put tRadius/2 into tDeltaY
+   put tDeltaY*sqrt(3) into tDeltaX
+   
+   set the loc of grc "Stories" to (tMidX-tDeltaX, tMidY-tDeltaY)
+   set the loc of widget "Stories" to the loc of grc "Stories"
+   setBottomAndLoc the long id of fld "Stories", the top of grc "Stories", tMidX-tDeltaX
+   set the loc of grc "listen" to (tMidX+tDeltaX, tMidY-tDeltaY)
+   set the loc of widget "listen" to the loc of grc "listen"
+   setBottomAndLoc the long id of fld "listen", the top of grc "listen", tMidX+tDeltaX
+   set the loc of grc "fun" to (tMidX-tDeltaX, tMidY+tDeltaY)
+   set the loc of widget "fun" to the loc of grc "fun"
+   setTopAndLoc the long id of fld "fun", the bottom of grc "fun", tMidX-tDeltaX
+   set the loc of grc "look" to (tMidX+tDeltaX, tMidY+tDeltaY)
+   set the loc of widget "look" to the loc of grc "look"
+   setTopAndLoc the long id of fld "look", the bottom of grc "look", tMidX+tDeltaX
+   
+   setBottomAndLoc the long id of widget "Journal", (the bottom of tGroup)-15, tMidX-tDeltaX
+   setBottomAndLoc the long id of button "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX
+   set the bottom of widget "Journal" to (the bottom of tGroup)-15
+   set the bottom of button "Settings" to (the bottom of tGroup)-15
+end updateNavMandalaUI
+
+private command setTopAndLoc pControl, pTop, pXLoc
+   local tLoc
+   set the top of pControl to pTop
+   put the loc of pControl into tLoc
+   set the loc of pControl to (pXLoc, item 2 of tLoc)
+end setTopAndLoc
+
+private command setBottomAndLoc pControl, pBottom, pXLoc
+   local tLoc
+   set the bottom of pControl to pBottom
+   put the loc of pControl into tLoc
+   set the loc of pControl to (pXLoc, item 2 of tLoc)
+end setBottomAndLoc
