@@ -87,7 +87,8 @@ on mouseup
          setSubNavBkgndImage tTarget
          show  img "subNavBkgImage"
          unlock screen
-         dispatch "fetchSubMenu" to grp "navMandala" with tTarget
+         --dispatch "fetchSubMenu" to grp "navMandala" with tTarget
+         fetchSubMenu tTarget
          wait 400 milliseconds
          
          show grp "SubNav" with visual effect "dissolve fast"
@@ -113,6 +114,12 @@ on fetchSubMenu pTarget
       put tMap["portalData"][pTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
       put tRowname & cr after tOutput
    end repeat
+   -- use to get rect of device from user
+   if pTarget is "fun" then
+      put cr & the screenrect & cr after tOutput
+      put CardRect() & cr after tOutput
+   end if
+   --
    put tOutput into fld "subNavfld"
    dispatch "createscroller" to fld "subNavFld" with "subNavFld"
 end fetchSubMenu
