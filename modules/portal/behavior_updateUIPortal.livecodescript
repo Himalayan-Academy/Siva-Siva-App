@@ -87,19 +87,24 @@ on mouseup
          setSubNavBkgndImage tTarget
          show  img "subNavBkgImage"
          unlock screen
-         --dispatch "fetchSubMenu" to grp "navMandala" with tTarget
          fetchSubMenu tTarget
          wait 400 milliseconds
          
          show grp "SubNav" with visual effect "dissolve fast"
          break
       case "subNav"
-         put the value of clickline()  into tTarget
-         portal_DoRowLink tTarget
+         if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
+            put the value of clickline() into tTarget
+            portal_DoRowLink tTarget
+         end if
          break
    end switch
-   
 end mouseup
+
+
+on mouseDown
+   put the mouseLoc into sStartLoc
+end mouseDown
 
 
 on fetchSubMenu pTarget
@@ -115,10 +120,10 @@ on fetchSubMenu pTarget
       put tRowname & cr after tOutput
    end repeat
    -- use to get rect of device from user
-   if pTarget is "fun" then
-      put cr & the screenrect & cr after tOutput
-      put CardRect() & cr after tOutput
-   end if
+   --   if pTarget is "fun" then
+   --      put cr & the screenrect & cr after tOutput
+   --      put CardRect() & cr after tOutput
+   --   end if
    --
    put tOutput into fld "subNavfld"
    dispatch "createscroller" to fld "subNavFld" with "subNavFld"

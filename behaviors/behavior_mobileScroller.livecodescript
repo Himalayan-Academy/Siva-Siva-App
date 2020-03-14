@@ -44,13 +44,12 @@ end updateScroller
 on scrollerDidScroll hScrolled, vScrolled
    local tControlID
    put mobileControlTarget() into tControlID
-   if  vScrolled < 20 then
-      set the vscroll of control tControlID to vscrolled/2 --vscrolled 	
+   if vScrolled < 20 then
+      set the vscroll of control tControlID to vScrolled * 2
    else
-      set the vscroll of control tControlID to vscrolled + 20
-      --set the vscroll of control tControlID to vscrolled 
+      set the vscroll of control tControlID to vScrolled + 20
    end if
-   if  short name of this stack is among the items of sStacksHorizontal then
+   if short name of this stack is among the items of sStacksHorizontal then
       set the hscroll of control tControlID to hScrolled
    end if
 end scrollerDidScroll
