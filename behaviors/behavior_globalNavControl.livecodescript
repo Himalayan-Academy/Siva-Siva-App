@@ -11,23 +11,7 @@
 -- there are useful functions here, so we will keep the code intact for a while
 -- to call these handlers and functions use a dispatch from any other script ot behavior
 
-local sTarget,sFavoritesA,sWhichMenu,
-
-on fetchSubMenu sTarget
-   local sMap,tSecondKey,tRowName,tOutput
-   local tKeys
-   put getNavigationMap() into  sMap
-   
-   put the keys of sMap["portalData"][sTarget]["rowdata"] into tKeys
-   sort lines of tKeys ascending numeric
-   repeat for each line tSecondLevel in tKeys
-      add 1 to tSecondKey
-      put sMap["portalData"][sTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
-      put  tRowname &cr after tOutput
-   end repeat
-   put tOutput into fld "subNavfld"
-   createscroller "subNavfld"
-end fetchSubMenu
+local sTarget,sFavoritesA,sWhichMenu
 
 
 ######### -- Tree Widget Handlers -- ##########

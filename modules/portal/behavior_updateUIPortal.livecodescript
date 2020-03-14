@@ -100,6 +100,24 @@ on mouseup
    
 end mouseup
 
+
+on fetchSubMenu pTarget
+   local tMap,tSecondKey,tRowName,tOutput
+   local tKeys
+   put getNavigationMap() into tMap
+   
+   put the keys of tMap["portalData"][pTarget]["rowdata"] into tKeys
+   sort lines of tKeys ascending numeric
+   repeat for each line tSecondLevel in tKeys
+      add 1 to tSecondKey
+      put tMap["portalData"][pTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
+      put tRowname & cr after tOutput
+   end repeat
+   put tOutput into fld "subNavfld"
+   dispatch "createscroller" to fld "subNavFld" with "subNavFld"
+end fetchSubMenu
+
+
 #######################
 
 # use the return state of home screen
@@ -295,19 +313,19 @@ on resizeStack x,y,ox,oy
 end resizeStack
 
 
-constant kMargin = 8
+constant kMargin = 12
 
 command updateUIPortal
    
-   local tControl, tBrandImage, tBottomMargin, sMenuBkgnd, tTop, tBottom
+   local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    
    #  UI responsive
    put the long id of img "homeMainImage" of card "Home" into sMainImage
-   put the long id of img "subNavBkgImage" of card "Home" into sMenuBkgnd
+   put the long id of img "subNavBkgImage" of card "Home" into tMenuBkgnd
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
-   setImageToFullCardLoc sMenuBkgnd,"portrait",0,0
-   centerMe sMenuBkgnd,0,0
+   setImageToFullCardLoc tMenuBkgnd,"portrait",0,0
+   centerMe tMenuBkgnd,0,0
    show btn "brandLogo"
    --show sMainImage with visual effect "dissolve"
    
@@ -352,7 +370,7 @@ command updateUIPortal
          
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
-            set the textSize of tControl to 14
+            set the textSize of tControl to 12
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             updateNavMandalaUI
          else
@@ -360,10 +378,17 @@ command updateUIPortal
          end if
          
          put the long id of widget "globalNavTree" of me into tControl
-         -- need to actually set the rect vice just position
-         set the width of tControl to CardWidth()
-         topCenterMe tControl,60
+         set the rect of tControl to (0,tTop,CardWidth(),tBottom)
          
+         put the long id of grc "subNavBkgnd" into tControl
+         put the rect of tControl into tRect
+         put tBottom into item 4 of tRect
+         set the rect of tControl to tRect
+         
+         put the long id of fld "subNavFld" into tControl
+         put the rect of tControl into tRect
+         put tBottom into item 4 of tRect
+         set the rect of tControl to tRect
          break
          
    end switch
@@ -396,11 +421,11 @@ private command updateNavMandalaUI
    setTopAndLoc the long id of grc "read", the bottom of fld "read", tMidX
    set the loc of widget "read" to the loc of grc "read"
    
-   setBottomAndLoc the long id of fld "Practice", (the top of widget "Topics")-15-kMargin, tMidX
+   setBottomAndLoc the long id of fld "Practice", (the top of widget "Topics")-kMargin, tMidX
    setBottomAndLoc the long id of grc "Practice", the top of fld "Practice", tMidX
    set the loc of widget "Practice" to the loc of grc "Practice"
    
-   put (the top of grc "Practice" - the bottom of grc "read")+8 into tDiameter
+   put (the top of grc "Practice" - the top of grc "read") into tDiameter
    put (the bottom of grc "read" + the top of grc "Practice")*.5 into tMidY
    put tMidY into item 2 of tLoc
    set the width of grc "Surprise" to the formattedWidth of fld "Surprise"
