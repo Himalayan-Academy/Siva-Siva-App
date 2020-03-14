@@ -99,6 +99,14 @@ command doScrollerTap
    end switch
 end doScrollerTap
 
+command scrollingDown
+   toggleHeader false
+end scrollingDown
+
+command scrollingUp
+   toggleHeader true
+end scrollingUp
+
 command turnPage pDir -- navigate to another lesson
    local tLesson, tEffect
    -- pDir = "next" or "prev"
