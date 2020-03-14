@@ -384,17 +384,15 @@ command updateUIPortal
             topCenterMe tControl,75
          end if
          
+         put (0,tTop,CardWidth(),tBottom) into tRect
          put the long id of widget "globalNavTree" of me into tControl
-         set the rect of tControl to (0,tTop,CardWidth(),tBottom)
+         set the rect of tControl to tRect
          
          put the long id of grc "subNavBkgnd" into tControl
-         put the rect of tControl into tRect
-         put tBottom into item 4 of tRect
          set the rect of tControl to tRect
          
          put the long id of fld "subNavFld" into tControl
-         put the rect of tControl into tRect
-         put tBottom into item 4 of tRect
+         put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
          break
          
