@@ -16,41 +16,62 @@ local sLastWebPageTitle, sLastWebURL
 # hopefully this will clue the user into what page they were viewing.
 # requires the web site has "intelligent" titles, which most pages do for SEO reasons)
 
-command parseTheHTML pHtmlText, pTargetString
+function parseTheHTML pHtmlText, pTargetString
    # use for scraping out anything from the htmltext of a browser widget
    # must call *after* URL loads
-   local tStartTitle,tEndTitle,tRawTitle
+   local tStartTitle,tEndTitle,tStartSubHead,tEndSubHead,tClass,tBookMark,tSubHead
    switch pTargetString
-      case "Title"
+      case "bookmark"
          put (offset ("<Title>", pHTMLText) +7) into tStartTitle
          put (offset ("</Title>", pHTMLText) -1) into tEndTitle
-         put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
-         replace cr with "" in tRawTitle
-         replace tab with "" in tRawTitle
-         # we are inconsistent in the title delimiter passed in our CMS
-         # sometime the leading "realm" is separated by a colon, other time a dash
-         replace ": " with "-" in tRawTitle # normalize all those...
-         set the itemdel to "-" # set up for two part titles
-         if tRawTitle contains "YouTube" then # leave it alone
-            put "YouTube" into sLastWebPageTitle  # upgrade this later... 
-         else # from our web site
-            if browser_GetLastURL() contains "/book/" then
-               # pass just the first words
-               put word 1 to 5 of tRawTitle into tRawTitle
-            else
-               # not a book page...
-               if the number of items of tRawTitle = 2 then
-                  put item 2 of tRawTitle into tRawtitle
+         put  (char tStartTitle to tEndTitle of pHTMLText) into tBookmark
+         replace cr with "" in tBookmark
+         replace tab with "" in tBookmark
+         
+         # You is already send for you
+         ##if tBookmark contains "YouTube" then # leave it alone
+         ## put "YouTube" into sLastWebPageTitle  # upgrade this later... 
+         ##else # from our web site
+         put  browser_GetLastURL() into tClass 
+         # we know our CMS and the page will be have 2 or 3  classes
+         
+         switch
+            case (tClass contains "media/books/")
+               # we are looking at  static web page inside book
+               put word 1 to 5 of tBookmark into tBookmark
+               put ", " after tBookmark
+               
+               put (offset ("book-content", pHTMLText) +13) into tStartSubHead
+               put (offset ("</h3>", pHTMLText) -1) into tEndSubHead
+               put  (char tStartSubHead to tEndSubHead of pHTMLText) into tSubHead
+               replace cr with "" in tSubHead
+               put  stripHTMLTags(tSubHead)  after tBookmark
+               break
+            case  (tClass contains "/views")
+               # one a revIgnitie media page
+               break
+            default
+               # any other html page
+               # we are inconsistent in the title delimiter passed in our CMS
+               # sometime the leading "realm" is separated by a colon, other time a dash
+               replace ": " with "-" in tBookmark # normalize all those...
+               set the itemdel to "-" # set up for two part titles
+               
+               if the number of items of tBookmark = 2 then
+                  put item 2 of tBookmark into tBookmark
                end if
-               If char 1 of tRawTitle = " " then 
-                  delete char 1 of tRawTitle
+               If char 1 of tBookmark = " " then 
+                  delete char 1 of tBookmark
                end if   
-            end if
-            
-         end if
-         put tRawTitle into sLastWebPageTitle
+               
+         end switch
+         
+         put tBookmark into sLastWebPageTitle
          break
+         
    end switch
+   
+   return tBookmark
 end parseTheHTML
 
 function browser_GetLastPageTitle
@@ -64,92 +85,6 @@ end browser_SetLastURL
 function browser_GetLastURL
    return sLastWebURL
 end browser_GetLastURL
-
-########### MOSTLY OBSOLETE: 
-
---> MetaData
-
--- license: GPLv3
--- name: lib_SivaSivaBrowser
--- type: library
--- version: 0.1 by: David Bovill
-
-
---> From API | Web Browser API
-/*
-Objective: library stack that provides auxiliary routines and UI for:
-
-- viewing web pages,
-- listening to audio and watching videos.
-
-Its public API may be called from any stack. It will cause a defaultstack change as it takes over the app. 
-Buttons for going "recent card" are provided and an optional  "relaunch" message is sent to the cards when going back
-
-== PUBLIC API =-
-
--  launchURL <pOrientation>,<pURL>: launches given web page.
--  launchAudio <pURL>, [pOptionalImage]: launches the audio with an optional cover image.
--  launchBook <pFileID>: just a convenience method for launching books, internally it calls launchURL.
-
-== Note ==
-
-The browser widget has issues with dynamic resizing and repositioning (when using "set the fullscreenmode of this stack to 'showAll'").
-This dynamic resizing works fine when a stack in the default (empty) - "set the fullscreenmode of this stack to empty"
-
-While using 'showAll' it is not possible to have two cards in the same stack one portrait orientation and then dynamically change the size of the stack and resize the browser widget.
-There are currently two fixes:
-
-1) to have two different stacks preset for portrait or landscape. So we have to pass the orientation to fork to the correct Stack(s) which are put into use on start up as a lib
-2) use responsive design and "set the fullscreenmode of this stack to empty"
-
-BR: Note this stack offers options to use 1) above to fork  between
-hapMediaViewerPortraitLib and hapMediaViewerLandscapeLib
-but as of V1 these are not in use and all URLs are passed viea Portal_GoURL
-to Davids responsive view_SivaSivaBrowser stack
-which defaults to portrait orientation and responds 
-when and if the users rotates the device.
-
-But since this lib is put into use on init, we can use it to our advantage for all
-all "vars needed for web browsing.  e.g. to store the last URL viewed in the web browser stack as a local 
-so that value can be accessed by the journal before it is wiped out and also use to go back if necessary,
-to the same web page.
-
-*/
-
---> Browser | Public API
---> BR: all the following apply to the two HapMedia viewer stacks, mostly deprecated 
-
-
-command launchAudio pURL, pOptionalImage
-   -- temporarily using launchURL for this one.
-   launchURL pURL
-end launchAudio
-
-command launchBook pFileID
-   get "https://www.himalayanacademy.com/book/" & pFileID
-   launchURL it
-end launchBook
-
-
-command launchURL pOrientation, pURL
-   local tViewerType, tNewViewer,tOldviewer
-   ntInfo pURL
-   if pOrientation = "" then -- try to determine based on media type
-      put getOrientationByType(pURL) into tViewerType
-   end if
-   if pOrientation="portrait" then
-      put "hapMediaViewerPortraitLib" into tNewViewer
-      put "hapMediaViewerLandscapeLib" into tOldViewer
-   else
-      put "hapMediaViewerLandscapeLib" into tNewViewer
-      put "hapMediaViewerPortraitLib" into tOldViewer
-   end if
-   if "hapMediaViewer" is in the openstacks then deleteMobileControl "browser" -- in case any exist
-   go card "web viewer" of stack tNewViewer
-   set the URL of widget "browser" of stack tNewViewer to pURL
-   if tOldViewer is in the openStacks then delete stack tOldViewer -- device was rotated; close orig viewer
-end launchURL
-
 
 --> Browser | Utility handlers
 -

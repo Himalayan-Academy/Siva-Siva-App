@@ -168,7 +168,8 @@ command portal_DoRowLink rowName
          portal_Go linkParam
          break
       case "portal_GoUrl"
-         portal_GoUrl linkParam, rowName
+         portal_GoUrl linkParam, rowName 
+         # rowname become sJournalLabel unless it modified after the page loads
          break
       case "portal_GoLandscapeUrl"
          portal_GoLandscapeUrl linkParam

@@ -176,17 +176,29 @@ end hideLoader
 
 
 on journal_AddEntry
- 
+   
    local pData, tTitle, tOutput
-   
-   
-   set the itemdelimiter to "/"
-   
-   put portal_GetLabel() into tTitle
+   if sBrowserURL contains "YouTube" then
+      # the journal label is taken from the JSON of out navigation dictionary
+      # which are appears on this sub nav list.
+      # for now, this implemention of Video is contrain to that list
+      # leave it for now
+      put portal_GetLabel() into tTitle
+   else
+      # we have some web page, probably in portrait mode
+      # it could be HAP page form the /html folder, or a revOIgniter built media page, 
+      # or a internal page of some books that Andre build from exploded ePub/Zip
+      # the challenge is to get a proper label, especially from the books.
+      
+      put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
+
+   end if
+   put tTitle
+   exit to top
    
    put browser_GetLastURL() into pData["url"] 
    if sLandscapeOnly then
- 
+      
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
