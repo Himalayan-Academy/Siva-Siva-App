@@ -53,6 +53,53 @@ command parseTheHTML pHtmlText, pTargetString
    end switch
 end parseTheHTML
 
+function titleFromURL pURL
+   put false into tFileID   
+   set the itemdel to slash
+   put item 4 of pURL into tSlug
+   switch tSlug
+      case "media"
+         put item 6 of pURL into tFileID
+         break
+      case "view"
+         put item 5 of pURL into tFileID
+         break
+   end switch
+   if tFileID is not false then
+      put jnanam_GetItem(tFileID) into tItemA
+      switch tItemA["media_type"]
+         case "text/book"
+            put the merge of "https://dev.himalayanacademy.com/media/books/[[tFileID]]/web/toc.html" into tTocURL
+            put url tTocURL into tTocHTML
+            put item -1 of pURL into tFilename
+            if tFilename is tFileID then
+               return tItemA["title"]
+            end if
+            put offset(tFilename, tTocHTML) into tStart
+            put tStart + offset("</a>", tTocHTML, tStart) into tEnd
+            put char tStart to tEnd of tTocHTML into tChunk
+            put the merge of "<a href=\'[[tChunk]]/a>" into tHTMLChunk
+            create inv field "htmltitle"
+            set the htmltext of field "htmltitle" to tHTMLChunk
+            put the text of field "htmltitle" into tTitle
+            delete field "htmltitle"
+            return tItemA["title"] & ":" && tTitle
+            break
+         default
+            return tItemA["title"]
+      end switch
+   else
+      // not an item from jnanam
+      put url pURL into tHTML
+      put matchText(tHTML, "<title>(.*?)</title>", tTitle) into tHasTitle
+      if tHasTitle then
+         return tTitle
+      else
+         return "Unknown title"
+      end if
+   end if
+end titleFromURL
+
 function browser_GetLastPageTitle
    return sLastWebPageTitle
 end browser_GetLastPageTitle
