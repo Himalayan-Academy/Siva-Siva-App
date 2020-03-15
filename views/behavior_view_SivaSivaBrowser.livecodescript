@@ -193,9 +193,7 @@ on journal_AddEntry
       put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
 
    end if
-   put tTitle
-   exit to top
-   
+ 
    put browser_GetLastURL() into pData["url"] 
    if sLandscapeOnly then
       
