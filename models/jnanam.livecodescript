@@ -84,7 +84,7 @@ end jnanam_GetDatabasePath
 --> Jnanam
 -
 function jnanamDB
-      if sID is not a number then
+   if sID is not a number then
       _loadDatabase
    end if
    return sID
@@ -196,8 +196,12 @@ function quoteValuesforSQLparam pValueList
 end quoteValuesforSQLparam
 
 function jnanam_GetItem pFileID 
+   if sID is not a number then
+      _loadDatabase
+   end if
    local tA 
    dbWhere "file_id", pFileID 
-   put dbGet("item") into tA 
+   put dbGet("item", jnanamDB()) into tA 
+   put dbLastSQL()
    return tA[1]
 end jnanam_GetItem
