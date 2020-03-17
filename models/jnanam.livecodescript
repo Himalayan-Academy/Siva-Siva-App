@@ -198,6 +198,6 @@ end quoteValuesforSQLparam
 function jnanam_GetItem pFileID 
    local tA 
    dbWhere "file_id", pFileID 
-   put dbGet("item") into tA 
+   put dbGet("item",jnanamDB()) into tA 
    return tA[1]
 end jnanam_GetItem

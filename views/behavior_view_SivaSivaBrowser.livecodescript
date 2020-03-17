@@ -178,6 +178,7 @@ end hideLoader
 on journal_AddEntry
    
    local pData, tTitle, tOutput
+   
    if sBrowserURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
       # which are appears on this sub nav list.
@@ -190,11 +191,13 @@ on journal_AddEntry
       # or a internal page of some books that Andre build from exploded ePub/Zip
       # the challenge is to get a proper label, especially from the books.
       
-      put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
-
+      --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
+      put titleFromURL(browser_GetLastURL())  into tTitle
+      
    end if
- 
+   
    put browser_GetLastURL() into pData["url"] 
+   
    if sLandscapeOnly then
       
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
