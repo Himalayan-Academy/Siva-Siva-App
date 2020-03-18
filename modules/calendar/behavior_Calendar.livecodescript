@@ -28,6 +28,12 @@ local sCityName -- city name as used in URL
 # then push the entire description, as is, into the "complete look at the day"
 # once we get that going we can tweak the text styles/formatting. 
 
+# NOTE TO Updata the city list:
+# 1. edit the file on disk module/calendar/latestCityList.txt
+# 2. from the msg box :
+# set the cCityList of fld "cityList" to empty
+# 
+
 command parseUserICSfile  pCityName,pYearRange -- loads the calendar script local
    local tBinPath, tICSPath, tURL, tCalendarArrayA, tDayNo, tEvent, tMoonDay, tDate, tIDel, tRawDescription
    -- pCityName = readable English name from city list

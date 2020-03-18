@@ -294,7 +294,7 @@ command colorExhalation
    
    # set up the card
    
-   put "Enhale" into fld "breathPhase"
+   put "Exhale" into fld "breathPhase"
    put sCountDown into fld "breathCount"
    
    # set up for level 3 / progressive change of tint
