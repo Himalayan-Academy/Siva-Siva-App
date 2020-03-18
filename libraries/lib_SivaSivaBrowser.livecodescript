@@ -119,7 +119,7 @@ function titleFromURL pURL
             end if
             put titleFromToc(tFilename, tTocHTML) into tTitle
             if tTitle is false then
-               return tItemA["tile"]
+               return tItemA["title"]
             else 
                return tItemA["title"] & ":" && tTitle
             end if
@@ -130,8 +130,16 @@ function titleFromURL pURL
    else
       // not an item from jnanam
       put url pURL into tHTML
-      put matchText(tHTML, "<title>(.*?)</title>", tTitle) into tHasTitle
-      if tHasTitle then
+      
+      --put matchText(tHTML, "<title>(.*?)</title>", tTitle) into tHasTitle
+      
+      put (offset ("<Title>", tHTML) +7) into tStartTitle
+      put (offset ("</Title>", tHTML) -1) into tEndTitle
+      put  (char tStartTitle to tEndTitle of tHTML) into tTitle
+      replace cr with "" in tTitle
+      replace tab with "" in tTitle
+      
+      if tTitle <> empty then
          return tTitle
       else
          return "Unknown title"
