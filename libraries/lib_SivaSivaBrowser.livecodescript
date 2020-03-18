@@ -73,6 +73,27 @@ function parseTheHTML pHtmlText, pTargetString
    
    return tBookmark
 end parseTheHTML
+function titleFromTOC pFilename, pTocHTML, pSkip
+   if pSkip is not a number then
+      put 0 into pSkip
+   end if
+   
+   put offset(pFilename, pTocHTML, pSkip) into tStart
+   put tStart + offset("</a>", pTocHTML, pSkip + tStart) into tEnd
+   put char pSkip+tStart to pSkip+tEnd of pTocHTML into tChunk
+   put the merge of "<a href=\'[[tChunk]]/a>" into tHTMLChunk
+   create inv field "htmltitle"
+   set the htmltext of field "htmltitle" to tHTMLChunk
+   put the text of field "htmltitle" into tTitle
+   delete field "htmltitle"
+   if the length of tTitle > 2 then
+      return  tTitle
+   else if pSkip is 0 then
+      return tTitle && "-" && titleFromToc(pFilename, pTocHTML, tEnd)
+   else 
+      return false 
+   end if
+end titleFromTOC
 
 function titleFromURL pURL
    put false into tFileID   
@@ -96,15 +117,12 @@ function titleFromURL pURL
             if tFilename is tFileID then
                return tItemA["title"]
             end if
-            put offset(tFilename, tTocHTML) into tStart
-            put tStart + offset("</a>", tTocHTML, tStart) into tEnd
-            put char tStart to tEnd of tTocHTML into tChunk
-            put the merge of "<a href=\'[[tChunk]]/a>" into tHTMLChunk
-            create inv field "htmltitle"
-            set the htmltext of field "htmltitle" to tHTMLChunk
-            put the text of field "htmltitle" into tTitle
-            delete field "htmltitle"
-            return tItemA["title"] & ":" && tTitle
+            put titleFromToc(tFilename, tTocHTML) into tTitle
+            if tTitle is false then
+               return tItemA["tile"]
+            else 
+               return tItemA["title"] & ":" && tTitle
+            end if
             break
          default
             return tItemA["title"]
