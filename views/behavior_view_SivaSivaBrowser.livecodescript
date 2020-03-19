@@ -191,8 +191,8 @@ on journal_AddEntry
       # or a internal page of some books that Andre build from exploded ePub/Zip
       # the challenge is to get a proper label, especially from the books.
       
-      --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
-      put titleFromURL(browser_GetLastURL())  into tTitle
+      put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
+      --put titleFromURL(browser_GetLastURL())  into tTitle
       
    end if
    

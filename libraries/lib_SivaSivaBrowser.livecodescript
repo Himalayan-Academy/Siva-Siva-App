@@ -1,14 +1,5 @@
 ﻿script "lib_SivaSivaBrowser"
-/* Brahmanathawami June 2017 --
 
-David's code below target the two HAP media stacks. 
-These are pretty much deprecated but we retain the code here for possible future utility
-New functions/Commands on top. These are to handle any calls form anywhere relating
-to web browsing, the browser widget so we hae all this in one place.  
-IIf you are tempted to write code pertaining to a browser widget in our module. 
-Think first: can we put those functons andcommands here, so they can be used universally later.
-
-*/
 
 local sLastWebPageTitle, sLastWebURL
 
@@ -46,7 +37,7 @@ function parseTheHTML pHtmlText, pTargetString
                put  (char tStartSubHead to tEndSubHead of pHTMLText) into tSubHead
                replace cr with "" in tSubHead
                put  stripHTMLTags(tSubHead)  after tBookmark
-               break
+               
             case  (tClass contains "/views")
                # one a revIgnitie media page
                break
@@ -71,8 +62,11 @@ function parseTheHTML pHtmlText, pTargetString
          
    end switch
    
+   put truncateText(tBookmark,33,true) into tBookmark
    return tBookmark
 end parseTheHTML
+
+
 function titleFromTOC pFilename, pTocHTML, pSkip
    if pSkip is not a number then
       put 0 into pSkip
@@ -129,8 +123,9 @@ function titleFromURL pURL
       end switch
    else
       // not an item from jnanam
-      put url pURL into tHTML
+      put the htmltext of widget "body" into tHTML
       
+      --put url pURL into tHTML--
       --put matchText(tHTML, "<title>(.*?)</title>", tTitle) into tHasTitle
       
       put (offset ("<Title>", tHTML) +7) into tStartTitle
@@ -178,3 +173,8 @@ function getOrientationByType pURL -- return correct orientation for a URL;
          return "any" -- allows rotation
    end switch
 end getOrientationByType
+
+
+on mouseEnter
+   
+end mouseEnter
