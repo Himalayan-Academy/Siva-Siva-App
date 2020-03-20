@@ -6,7 +6,7 @@ local sMediaURL,sBrowserURL
 #local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
 local sHackDownloadCompleteFlag
 
-local sLandscapeOnly, sOrientation, sBrowserRect
+local sLandscapeOnly, sOrientation, sBrowserRect,sHtmlText
 
 # this stack intend to make the UI responsive
 # by getting rect of the screen and using those coordinator
@@ -164,7 +164,7 @@ on browserDocumentLoadComplete pURL
    put pURL into sBrowserURL
    browser_SetLastURL pURL
    put short name of the target into tBrowser
-   
+   put url pURL into sHtmlText
    --ntInfo ( (the lockscreen) & "; show the target: " & tBrowser &"; " &  pURL)
    
 end browserDocumentLoadComplete
@@ -177,7 +177,13 @@ end hideLoader
 
 on journal_AddEntry
    
-   local pData, tTitle, tOutput
+   local pData, tTitle, tOutput,tHardToParsePages
+   
+   # this is a hack  until we figure out the regEx for matchText 
+   # for the <title class="whatever"....> in find in Gatsby and other pages
+   # we get the title from the original mouseup of the portal screen
+   
+   put "Pillars of Iraivan" into tHardToParsePages
    
    if sBrowserURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
@@ -190,8 +196,14 @@ on journal_AddEntry
       # it could be HAP page form the /html folder, or a revOIgniter built media page, 
       # or a internal page of some books that Andre build from exploded ePub/Zip
       # the challenge is to get a proper label, especially from the books.
+      put getJournalData() into tTitle
       
-      put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
+      if tTitle is not among the items of tHardToParsePages then
+         put parseTheHTML(sHTMLtext,"bookmark") into tTitle
+      end if
+      
+      --put titleFromURL(browser_GetLastURL())  into tTitle
+      --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
       --put titleFromURL(browser_GetLastURL())  into tTitle
       
    end if

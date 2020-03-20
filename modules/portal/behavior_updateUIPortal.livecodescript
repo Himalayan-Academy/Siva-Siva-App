@@ -95,7 +95,14 @@ on mouseup
       case "subNav"
          if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
             put the value of clickline() into tTarget
+            
+            # pass the target to journal data. It may be overwritten later
+            # but in some cases that will be the only title we can use 
+            # for a journal entry
+            
+            setJournalData tTarget
             portal_DoRowLink tTarget
+            
          end if
          break
    end switch

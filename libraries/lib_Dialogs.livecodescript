@@ -198,7 +198,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    if isMobile() then
       mobileClearTouches
    end if
-   move grp "BottomToast" relative 0,tDialogHeight+400 in 200 milliseconds
+   move grp "BottomToast" relative 0,tDialogHeight+400 in 400 milliseconds
    hide grp "BottomToast"
    delete grp "BottomToast"
    
