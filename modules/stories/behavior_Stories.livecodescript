@@ -48,8 +48,7 @@ on preOpenCard
       copyLogControl
    end if
    
-   local tCard 
-   put the short name of this card into tCard
+
    put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
    put getPref("preferences/modules/stories/storyScene/") into  sLastScene
    
@@ -61,6 +60,14 @@ on preOpenCard
    put the long id of img "StoryImage" into sStoryImage
    put the long id of fld "userGuide" into sUserGuideFld
    
+   
+   
+   
+end preopenCard
+
+on opencard
+   local tCard 
+   put the short name of this card into tCard
    
    switch tCard
       case "storiesHome"
@@ -79,7 +86,8 @@ on preOpenCard
          break
    end switch
    
-end preopenCard
+end opencard
+
 
 
 
