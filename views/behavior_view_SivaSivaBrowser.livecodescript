@@ -216,7 +216,7 @@ on journal_AddEntry
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end if
-   dialog_CustomMsg "Saved to Journal"
+   --dialog_CustomMsg "Saved to Journal"
 end journal_AddEntry
 
 
