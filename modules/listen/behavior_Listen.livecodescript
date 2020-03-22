@@ -806,8 +806,6 @@ command addJournalEntry-- save a bookmark to db
    put pDataA["title"] into tTitle
 
    Journal_RecordEntry "listen",tTitle,pDataA 
-   put "Saved to Journal" into tMsg
-   dialog_CustomMsg tMsg
    
 end addJournalEntry
 
