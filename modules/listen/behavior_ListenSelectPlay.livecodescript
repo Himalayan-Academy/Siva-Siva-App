@@ -180,6 +180,43 @@ on mouseup
 end mouseup
 
 
+command switchAudioUi sAudioUI
+   if sAudioUI is empty then
+      put "hideUI" into sAudioUI
+   end if
+   # talks UI
+   put empty into fld "searchString"
+   put sAudioUI into pUI
+   switch pUI
+      case "hideUI"
+         hide grp "titleDescription"
+         hide grp "author"
+         hide grp "songproperties"
+         hide grp "searchControls"
+         set the hilitedButton of group "collectionChoice" to empty
+         break
+      case  "Inspired Talks" 
+         hide grp "songProperties"
+         show grp "author" 
+         set the top of grp "titleDescription" to 295
+         show grp "titleDescription"   
+         show grp "searchControls"
+         break
+         
+         # song UI   
+      case  "songs" 
+         
+         hide grp "author"
+         set the top of  grp "titleDescription" to 157
+         show grp "titleDescription"
+         show grp "songProperties"
+         set the hilited of btn "Title" to true -- group "titleDescription" to empty
+         set the hilited of btn "Artists" to false
+         show grp "searchControls"
+   end switch
+end switchAudioUi
+
+
 command share_Items 
    local tURL,  sShareItemsA
    if sRemoteURL is empty then
