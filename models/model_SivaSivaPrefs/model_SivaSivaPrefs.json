@@ -1,17 +1,21 @@
 {
-	"preferences": {
-		"global": "",
-		"modules": {
-			"color-meditation": {
-				"audioGuide": "true",
-				"breathCount": "4",
-				"breathPace": "1",
-				"cycles": "1",
-				"currentLevel": "1"
-			},
-			"portal": {
-				"brandImageNumber": 0
-			}
-		}
-	}
+  "preferences": {
+    "global": "", 
+    "modules": {
+      "stories": {
+        "storyTitle": "", 
+        "storyScene": 0
+      }, 
+      "color-meditation": {
+        "breathCount": "4", 
+        "currentLevel": "1", 
+        "cycles": "1", 
+        "audioGuide": "true", 
+        "breathPace": "1"
+      }, 
+      "portal": {
+        "brandImageNumber": 0
+      }
+    }
+  }
 }
