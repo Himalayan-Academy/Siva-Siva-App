@@ -38,7 +38,7 @@ end ntInfo
 function isMobile
    return the environment is "mobile"
 end isMobile
-  
+
 /* this command is deprecated it has a useful model for timing
 on setUpBrandImage
    # we can use this scheduler to fetch News which was previously 
@@ -175,7 +175,7 @@ command News_Fetch
    if   sNewNews is empty then
       put "yes, empty"
    end if
-
+   
 end news_Fetch
 
 command showNewNotification pBool
@@ -514,7 +514,7 @@ function removeQuotes pString
    replace "'" with "" in pString
    return pString
 end removeQuotes
- 
+
 function stripHTMLTags pString
    local newHtml
    replace cr with empty in pString -- in case of multi-line tags
@@ -633,7 +633,7 @@ end filteredFolders
 
 /* Thanks to Ralph DiMola ! for this function
 
- This function does a lot but takes care of the bad screen rect on startup.
+This function does a lot but takes care of the bad screen rect on startup.
 It also allows for either sliding up the screen or shrinking the screen. It
 also allows for the iPhone X safe area. If you get the aspect ratio in the
 IDE like the iPhone X you can see how the app will look in the safe area. I
@@ -745,19 +745,19 @@ function getCardRect
             break
          case Dev() and the width of this card / the height of this card >= .455 and  \
                the width of this card / the height of this card <= .467  -- Portrait iPhone X
-         return (R1,R2+(132*(the height of this card / 2436)),R3,R4-(102*(the height of this card / 2436)))
-         break
-      case Dev() and the height of this card / the width of this card >= .455 and  \
-            the height of this card / the width of this card <= .467  -- Landscape iPhone X
-      return (R1+(48*(the width of this card / 2436)),R2+(96*(the height of this card /1125)),R3-(48*(the width of this card / 2436)),R4-(69*(the height of this card / 1125)))
-      break
-   default
+            return (R1,R2+(132*(the height of this card / 2436)),R3,R4-(102*(the height of this card / 2436)))
+            break
+         case Dev() and the height of this card / the width of this card >= .455 and  \
+               the height of this card / the width of this card <= .467  -- Landscape iPhone X
+            return (R1+(48*(the width of this card / 2436)),R2+(96*(the height of this card /1125)),R3-(48*(the width of this card / 2436)),R4-(69*(the height of this card / 1125)))
+            break
+         default
+            return (R1,R2,R3,R4)
+      end switch
+   else
       return (R1,R2,R3,R4)
-end switch
-else
-   return (R1,R2,R3,R4)
-end if
-
+   end if
+   
 end getCardRect
 
 function dev -- Thanks to Jacqueline Landman Gay @ HyperActive Software for this one.
@@ -816,7 +816,12 @@ function examineArray pArray
 end examineArray
 
 
+###########
+on _LOGGING
+end _LOGGING
+
 local   tLogResult
+
 
 command copyLogControl
    

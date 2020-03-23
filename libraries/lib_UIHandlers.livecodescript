@@ -683,6 +683,7 @@ command togglePause pVisible, pState
    #    2) true to show that pause icon:  II which means audio is on and playing
    #         false: shows that the triangle button, saying that the audio is pause
    #                  and that you can click to resume
+   ntInfo "about to hide/show pause-play"
    if exists (group "pause-play") then
       set the vis grp "pause-play" to pVisible
       

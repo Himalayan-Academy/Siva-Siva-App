@@ -60,7 +60,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if pRect is empty then
       put the rect of player pPlayerName into pRect 
    end if
-   
+   ntInfo "The Play Rect: " & pRect
    ------------
    # set the play control without a controller present 
    
@@ -89,6 +89,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
+   ntInfo "Should be showing audio toggle"
    togglePause true,true
 end createMobileAudioPlayer 
 
