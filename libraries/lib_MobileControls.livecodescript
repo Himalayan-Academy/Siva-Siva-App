@@ -229,7 +229,7 @@ end deleteAllMobileControls
 
 local sLoadingIndicator,sLoadingGroup,sLoadingFlag, sLabel, sLoadProgress
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-if there is a control "loadingGroup" then
+   if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       put sMsg into sLoadProgress # this string will change through the loop below.
       put the long id of control "loadingGroup" into sLoadingGroup
@@ -241,10 +241,10 @@ if there is a control "loadingGroup" then
             put true into sLoadingFlag
             dispatch "loadingInProgress" to me 
          else
-            put false into sLoadingFlag
             set the vis of sLoadingGroup to pBool
             put empty into sLoadProgress
             set the label of sLoadingIndicator to ""
+            put false into sLoadingFlag
          end if
       end if
    end if

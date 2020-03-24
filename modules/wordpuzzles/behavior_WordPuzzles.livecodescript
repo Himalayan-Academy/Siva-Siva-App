@@ -20,6 +20,7 @@ on openCard
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
+
    loadNewBgImg
    showTitle true
    send "showTitle false" to me in 90 ticks
@@ -46,6 +47,7 @@ on createWordPuzzle
    stopTimer
    --hide widget "context"
    loadNewBgImg
+   show graphic "startHere"
    if sCurLevel < 1 then difficultyPicker-- not yet initialized, should never happen
    --getPixieList # deprecated for now... 
    put empty into sQuote
@@ -390,6 +392,7 @@ on clearBoard
    end repeat
    set the uWordList of me to empty
    hide grp "puzzleInProgress"
+   hide graphic "startHere" of me
    unlock screen
 end clearBoard 
 
@@ -735,6 +738,7 @@ command resetUI
 end resetUI
 
 on closeCard
+   hide graphic "startHere"
    storeCurrentLevel sCurLevel
    showTitle true
    ntInfo "closing word puzzle card"

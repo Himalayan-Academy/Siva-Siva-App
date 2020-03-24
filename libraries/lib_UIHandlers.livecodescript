@@ -304,6 +304,15 @@ command adjustLoc pControl, pDeltaX, pDeltaY
    set the loc of pControl to tLoc
 end adjustLoc
 
+function checkIsLoading
+   if there is a group "loadingGroup" then
+      if the vis of group "loadingGroup" is true then
+         return true
+      end if
+      return false
+   end if
+end checkIsLoading
+
 
 ####################
 on ___FIELDManipulation

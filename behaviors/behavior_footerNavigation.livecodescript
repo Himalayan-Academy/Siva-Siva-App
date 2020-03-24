@@ -38,6 +38,7 @@ on mouseup
          if tBrowserExists then
             terminateBrowser
          end if
+        if checkIsLoading() is true then exit mouseup
          put the short name of this card into tCard
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
@@ -62,7 +63,7 @@ on mouseup
          moveMe  target, 0,-100, 200
          moveMe target, 0,100, 70
          AddJournalEntry
-     
+         
          break
          
       case "save"
