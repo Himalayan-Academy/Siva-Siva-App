@@ -17,6 +17,9 @@ on preOpenStack
    end if
 end preOpenStack
 
+on preOpenCard
+   updateUI
+end preOpenCard
 
 --on openstack
 --   set the acceleratedRendering of this stack to true
@@ -25,7 +28,7 @@ end preOpenStack
 on opencard
    audioIsRunning
    copyLogControl
-   put the short name  this card into sCard
+   put the short name of this card into sCard
 end opencard
 
 on closeStack
@@ -280,11 +283,21 @@ on resizeStack
    unlock screen
 end resizeStack
 
-log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me & "; Rect: "  & the rect of group "go-next" of me)
-   local tHeader, tFooter, tCard, tLoc, tNext, tBackground
+
+on updateUI
+   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me & "; Rect: "  & the rect of group "go-next" of me)
+   local tHeader, tFooter, tCard, tLoc, tNext, tBackground, tRect
    local tLoading, tPausePlay, tLoader
    put the long id of grp "footerNavigation" into tFooter
    send "updateUI" to tFooter
+   
+   if there is a grp "viewLogging" then
+      set the bottom of btn "Hide" of grp "viewLogging" to the top of tFooter - 20
+      set the bottom of btn "Clear" of grp "viewLogging" to the top of tFooter - 20
+      put the rect of fld "log" of grp "viewLogging" into tRect
+      put the top of btn "Hide" of grp "viewLogging" - 2 into item 4 of tRect
+      set the rect of fld "log" of grp "viewLogging" to tRect
+   end if
    
    put the long id of grp "loadingGroup" into tLoader
    CenterMe tLoader
