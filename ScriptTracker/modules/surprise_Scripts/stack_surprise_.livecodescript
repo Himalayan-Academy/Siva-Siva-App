@@ -17,16 +17,15 @@ on preOpenStack
    end if
 end preOpenStack
 
-on preOpenCard
-   updateUI
-end preOpenCard
 
-on openstack
-   set the acceleratedRendering of this stack to true
-end openstack
+--on openstack
+--   set the acceleratedRendering of this stack to true
+--end openstack
 
 on opencard
    audioIsRunning
+   copyLogControl
+   put the short name  this card into sCard
 end opencard
 
 on closeStack
@@ -36,15 +35,17 @@ end closeStack
 
 on mouseup 
    local tTarget
-   
-   put the short name of the target into tTarget
    put the short name of this card into sCard
+   put the short name of the target into tTarget
+   
    
    if tTarget is "turnOffAudio" then turnOffAudio
    
    switch sCard
       case "surprise"
-         setUpSurprise
+         if tTarget = "Surprise" then
+            setUpSurprise
+         end if
          break
          
       case "surprise_audio" 
@@ -125,19 +126,8 @@ command setUpSurprise
    end switch
    
    
-   --   if tCard is "surprise_verse" then
-   --      pokeACollection
-   --      insertRandomVerse # this take you to surprise_verse
-   --   else
-   --      go to card tCard
-   --   end if
 end setUpSurprise
 
---on toggleGoNext pBool
---   try
---      set the vis of grp "go-next" to pBool
---   end try
---end toggleGoNext
 
 command fetchRandomQuote pSubject  # same as sCollection
    local tSQL, tConnectionID, aSelectedQuotes, tQuote
@@ -255,9 +245,11 @@ command addJournalEntry-- save a bookmark to db
    local tData,pDataA, tTitle, tURL
    
    if sCard <> "surprise_audio" then 
-      put "Surprise" into pDataA["title"] 
-      put "surprise" into pDataA["card"] 
-      Journal_RecordEntry "surprise","Surprise",pDataA
+      put sCard into pDataA["title"] 
+      put sCard into tTitle
+      put sCard into pDataA["card"] 
+      --put "surprise" into pDataA["card"] 
+      Journal_RecordEntry "surprise",tTitle,pDataA
    else
       put getMediaMeta() into tData
       put tData["item_id"] into pDataA["item_id"]
@@ -268,8 +260,6 @@ command addJournalEntry-- save a bookmark to db
       Journal_RecordEntry "listen",tTitle,pDataA
    end if
    
-   -- send to journal
-   --dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
 
 on journalResume pData,pEntryA -- sent from journal stack
@@ -290,7 +280,7 @@ on resizeStack
    unlock screen
 end resizeStack
 
-on updateUI
+log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me & "; Rect: "  & the rect of group "go-next" of me)
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground
    local tLoading, tPausePlay, tLoader
    put the long id of grp "footerNavigation" into tFooter
@@ -360,3 +350,5 @@ on updateUI
       set the top of grp "audioGlobalControl" to safeTopMargin() + 7
    end if
 end updateUI
+
+

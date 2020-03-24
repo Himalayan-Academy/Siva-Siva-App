@@ -28,21 +28,3 @@ on mouseup
    tracking_RecordActivity "Surprise", "navigation/gocontent", tTrackdata
 end mouseup
 
--- on journal_AddEntry
---    put "surprise_verse" into pDataA["card"]
---    --put the short name of this card into pDataA["card"]
---    put sCollection into pDataA["collection"]
---    put "Sacred Verses-" & sCollection into tJournalTitle
---    Journal_RecordEntry "surprise", tJournalTitle, pDataA
--- end journal_AddEntry
-
---on insertRandomVerse
---   local tCollection, tTrackdata
---   put getCurrentCollection() into tCollection
---   fetchRandomQuote (tCollection)
---   # get it over there first
---   send "setUpQuote" to card "surprise_verse"
---   go next card
---   put "surprise-random-"& tCollection into tTrackdata["contentTarget"]
---   tracking_RecordActivity "Surprise", "navigation/gocontent", tTrackdata
---end insertRandomVerse

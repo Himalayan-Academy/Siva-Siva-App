@@ -30,7 +30,7 @@ end closeCard
 command getAnImage
    local tImgTarget,gotIt,  sURL,  tSizeIsBig
    showBusyIndicator true, "Loading Art"
-   disable grp "go-next"
+   --disable grp "go-next"
    --hide grp "go-next"
    put the long id of img "surprise-image" into tImgTarget
    hide image "surprise-image" with visual effect "dissolve" very fast
@@ -50,14 +50,16 @@ command getAnImage
    if isMobile() then
       mobileClearTouches
    end if
-   enable grp "go-next"
+   --enable grp "go-next"
 end getAnImage
 
 command showSurprise
-
+   
    show img "surprise-image"  with visual effect "reveal right" very fast
    show grp "go-next"
-   enable grp "go-next"
+   set layer of grp "go-next" to  top
+   
+   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me & "; Rect: "  & the rect of group "go-next" of me)
 end showSurprise
 
 command share_Items 

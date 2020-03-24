@@ -6,16 +6,7 @@ Script "stack_surprise_card_id_1106"
 */
 
 
-# moved to insertRandomVerse
---on opencard
---   positionQuote
---   pass opencard
---end opencard
 
-on closeCard
-   put empty into fld "random-verse"
-   dispatch "deleteMobileControl" to fld "random-verse" with "random-verse"
-end closeCard
 
 on setUpQuote
    local aQuoteDetails
@@ -37,12 +28,7 @@ on setUpQuote
    set the textalign of line -1 of   fld "random-verse" to right
 end setUpQuote
 
-#  was not being used; ncluded in insertRandomVerse
---on SetUpCard 
---   #called by the go next group/widget
---   # each media type may have different requirements.
---   positionQuote
---end SetUpCard
+
 
 on positionQuote
    local tRequiredHeight, tAvailableHeight
@@ -66,6 +52,7 @@ on positionQuote
       dispatch "deleteMobileControl" to fld "random-verse" with "random-verse"
    end if
    unlock screen
+   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me)
 end positionQuote
 
 command share_Items
@@ -76,6 +63,11 @@ command share_Items
    put fld "random-verse" & cr & cr & "From the SivaSiva app." into tShareItemsA["text"]
    return tShareItemsA
 end share_Items
+
+on closeCard
+   put empty into fld "random-verse"
+   dispatch "deleteMobileControl" to fld "random-verse" with "random-verse"
+end closeCard
 
 
 

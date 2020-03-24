@@ -24,14 +24,11 @@ end opencard
 on closeCard
    set the loc of image "surprise-image" to the loc of this card
    set the filename of img "surprise-image" to empty
-   -- journal_addEntry
 end closeCard
 
 command getAnImage 
    local tImgTarget, tCollections,tCollection,GotIt,sURL, tSizeIsBig
    showBusyIndicator true, "Loading Darshan"
-   disable grp "go-next"
-   --hide grp "go-next"
    put the long id of img "surprise-image" into tImgTarget
    hide img "surprise-image" with visual effect "dissolve" very fast
    put "Subramuniyaswami,Bodhinatha,Deities" into tCollections
@@ -51,13 +48,13 @@ command getAnImage
    if isMobile() then
       mobileClearTouches
    end if
-   enable grp "go-next"
+ 
 end getAnImage
 
 command showSurprise
    show img "surprise-image"  with visual effect "reveal right" very fast
-   show grp "go-next"
-   enable grp "go-next"
+   set layer of grp "go-next" to  top
+   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me & "; Rect: "  & the rect of group "go-next" of me)
 end showSurprise
 
 command share_Items 

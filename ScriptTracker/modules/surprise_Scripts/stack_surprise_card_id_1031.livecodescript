@@ -22,13 +22,14 @@ on opencard
    else
       getRandomAudio
    end if
+   pass openCard
 end opencard
 
 on getRandomAudio
    if isMobile() then
       mobileClearTouches
    end if
-   disable grp "go-next"
+   --disable grp "go-next"grp "go-next"grp "go-next"
    local gotIt, tURL
    # Test UTF8 Diacriticals
    # fetchRandomMediaItem ("media_type","audio", "file_id","guruparampara-vandana_pmp")
@@ -54,8 +55,7 @@ on getRandomAudio
       mobileClearTouches
    end if
    startAudioPlayer tURL
-   enable grp "go-next"
-   
+
 end getRandomAudio
 
 
@@ -70,18 +70,27 @@ on startAudioPlayer pURL, pTimestamp
       createMobileAudioPlayer pURL, "audioPlayer"
    else
       set the filename of player "audioPlayer" to pURL
-      start player "audioPlayer"
-      togglePause true, true
+      start player "audioPlayer" 
    end if
+   
+   
+   
    
    send "showAudioDetails" to me in 50 millisecondS
    showBusyIndicator false
+   wait  10 milliseconds with messages
+   ntInfo "showing audio toggler"
+   togglePause true, true
    
+   unlock screen
+   set layer of grp "go-next" to  top
+   set the layer grp "pause-play" to top
+   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me  & "; Rect: "  & the rect of group "go-next" of me)
+   log ("pause-play: Layer: " &  the layer of grp "pause-play"  & "; vis: "  & the vis of grp "pause-play" & "; Rect: "  & the rect of  grp "pause-play" of me)
 end startAudioPlayer
 
 
 on closeCard
-   -- journal_AddEntry
    hide fld "audioDetails"
    put empty into fld "audioDetails"
    togglePause true, true

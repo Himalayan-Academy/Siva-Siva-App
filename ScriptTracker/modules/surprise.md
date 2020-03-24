@@ -68,11 +68,6 @@
 * Behavior: stack "siva_fields_behavior"
 * [stack_surprise_field_id_1265](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1265.livecodescript)
 
-**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "surprise"**
-* ID: widget id 1493 of bkgnd id 1492 of stack "surprise"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_surprise_widget_id_1493](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_widget_id_1493.livecodescript)
-
 **bkgnd "share-ui" of stack "surprise"**
 * ID: bkgnd id 1509 of stack "surprise"
 * Behavior: stack "behavior_SocialShare"
@@ -86,6 +81,54 @@
 * Background on card IDs: 1607
 * [stack_surprise_bkgnd_id_1606](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1606.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1663 of bkgnd id 1661 of stack "surprise"
+* [stack_surprise_button_id_1663](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1663.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1664 of bkgnd id 1661 of stack "surprise"
+* [stack_surprise_button_id_1664](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1664.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1683 of bkgnd id 1681 of stack "surprise"
+* [stack_surprise_button_id_1683](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1683.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1684 of bkgnd id 1681 of stack "surprise"
+* [stack_surprise_button_id_1684](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1684.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1678 of bkgnd id 1676 of stack "surprise"
+* [stack_surprise_button_id_1678](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1678.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1679 of bkgnd id 1676 of stack "surprise"
+* [stack_surprise_button_id_1679](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1679.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1673 of bkgnd id 1671 of stack "surprise"
+* [stack_surprise_button_id_1673](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1673.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1674 of bkgnd id 1671 of stack "surprise"
+* [stack_surprise_button_id_1674](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1674.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1658 of bkgnd id 1656 of stack "surprise"
+* [stack_surprise_button_id_1658](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1658.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1659 of bkgnd id 1656 of stack "surprise"
+* [stack_surprise_button_id_1659](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1659.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1668 of bkgnd id 1666 of stack "surprise"
+* [stack_surprise_button_id_1668](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1668.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
+* ID: button id 1669 of bkgnd id 1666 of stack "surprise"
+* [stack_surprise_button_id_1669](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1669.livecodescript)
+
 **card "surprise" of stack "surprise"**
 * ID: card id 1494 of stack "surprise"
 * [stack_surprise_card_id_1494](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1494.livecodescript)
@@ -93,6 +136,18 @@
 **image "randomPhoto" of card "surprise" of stack "surprise"**
 * ID: image id 1496 of card id 1494 of stack "surprise"
 * [stack_surprise_image_id_1496](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_image_id_1496.livecodescript)
+
+**group "bottomToast" of card "surprise" of stack "surprise"**
+* ID: group id 1623 of card id 1494 of stack "surprise"
+* [stack_surprise_group_id_1623](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1623.livecodescript)
+
+**field "lbl-dialogPrompt" of group "bottomToast" of card "surprise" of stack "surprise"**
+* ID: field id 1624 of group id 1623 of card id 1494 of stack "surprise"
+* [stack_surprise_field_id_1624](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1624.livecodescript)
+
+**button "DIALOGAFFIRM" of group "bottomToast" of card "surprise" of stack "surprise"**
+* ID: button id 1625 of group id 1623 of card id 1494 of stack "surprise"
+* [stack_surprise_button_id_1625](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1625.livecodescript)
 
 **group "verse-collections" of card "surprise_verses" of stack "surprise"**
 * ID: group id 1303 of card id 1002 of stack "surprise"
