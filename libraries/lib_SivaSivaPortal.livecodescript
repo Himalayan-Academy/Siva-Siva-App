@@ -210,7 +210,7 @@ command portal_Link portalName
    
 end portal_Link
 
-command portal_GoUrl pURL,pJournalLabel
+command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    --breakpoint
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
@@ -235,12 +235,15 @@ command portal_GoUrl pURL,pJournalLabel
          put "goLandscape" into tBrowserView
       end if
    end repeat
+   
+   if pTimeDelay is empty then put 100 into pTimeDelay
+   
    if  tBrowserView = "goLandscape" then
       portal_GoStack "view_BrowserLandscape"
-      send "setBrowserURL pURL"  to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in 100 milliseconds
+      send "setBrowserURL pURL"  to cd "SivaSivaBrowser" of stack "view_BrowserLandscape" in pTimeDelay milliseconds
    else
       portal_GoStack "view_SivaSivaBrowser"     
-      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in 100 milliseconds
+      send "setBrowserURL pURL" to cd "SivaSivaBrowser" of stack "view_SivaSivaBrowser" in pTimeDelay milliseconds
    end if
    
    put pURL into pTrackdata["webUrl"]

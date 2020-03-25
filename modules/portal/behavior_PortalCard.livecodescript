@@ -5,7 +5,7 @@ local sStartLoc,sScreenRect
 on openCard
    local tLinksGroup, tControl, tRect, tFooter
    setCardCoords "portrait"
-   portal_SetCurrentPortal (the short name of this card)
+  
    audioIsRunning
    
    put the long id of grp "footerNavigation" into tFooter
@@ -31,20 +31,15 @@ end mouseDown
 on mouseUp
    local tRow, tLinkNo, tCard
    
-   if isMobile() then
-      mobileClearTouches
-   end if
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
-
+      
       put the short name of the target into tRow
       set the itemDelimiter to "_"
       put item 1 of tRow into tCard
-
-      if tCard = "Video World" then
-         portal_SetLastStack "Surprise"
-         portal_DoRowLink tCard
-      else
-         go to card ("surprise_" & tCard)
+      
+      if tCard = "Video" then
+         getRandomVideo
       end if
+      go to card ("surprise_" & tCard)
    end if
 end  mouseup

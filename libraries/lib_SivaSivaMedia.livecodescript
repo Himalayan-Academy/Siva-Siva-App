@@ -357,7 +357,8 @@ command getRandomVideo
    # the above just fetches a record from the item table 
    # to get the path or URL we have to query the format table:
    put getMediaURL ("url") into sURL
-   portal_GoUrl sURL
+   put sMediaMetaA["title"] into pJournalLabel
+   portal_GoUrl sURL,pJournalLabel,1000
 end getRandomVideo
 
 

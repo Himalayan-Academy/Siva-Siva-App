@@ -112,17 +112,14 @@ on mouseup
    unlock screen
 end mouseup
 
-
 command unHiliteBtn pTarget
    set the hilited of control pTarget to false
 end unHiliteBtn
-
 
 on updateUI
    set the width of me to CardWidth()
    bottomCenterMe (the long id of me), -safeBottomMargin()
 end updateUI
-
 
 on resizeControl
    local tHSpace, tV, tH, tControl, tRect
@@ -141,7 +138,3 @@ on resizeControl
    set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
-
-
-on mouseMove pNewMouseH, pNewMouseV
-end mouseMove
