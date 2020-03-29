@@ -268,4 +268,43 @@ command loadingInProgress
    end if
 end loadingInProgress
 
+# Cover the screen with touchTrap graphic
+# Control scripts discard mouseDown/mouseUp events
+command lockTouches
+   local tControl
+   lock screen
+   --
+   if there is not a grc "touchTrap" then
+      copy grc "touchTrap" of cd "curtain" of stack "lib_CustomControls" to this cd
+   end if
+   put the long id of grc "touchTrap" into tControl
+   set the visible of tControl to true
+   --
+   if isMobile() then
+      put line 1 of mobileControls() into tControl
+      if tControl is not empty then
+         mobileControlSet tControl, "visible", false
+      end if
+   end if
+   --
+   unlock screen
+end lockTouches
 
+# Delete touchTrap graphic to reenable touch input
+command unlockTouches
+   local tControl
+   lock screen
+   --
+   if there is a grc "touchTrap" then
+      delete grc "touchTrap"
+   end if
+   --
+   if isMobile() then
+      put line 1 of mobileControls() into tControl
+      if tControl is not empty then
+         mobileControlSet tControl, "visible", true
+      end if
+   end if
+   --
+   unlock screen
+end unlockTouches

@@ -38,9 +38,6 @@ on hiliteChanged
    end if
    
    set the hilitedElementIsFolded of me to not the hilitedElementIsFolded of me -- doesn't effect a leaf
-   
-   # Clear the highlight after it is processed
-   set the hilitedElement of me to empty
    unlock screen
    
    --breakpoint
@@ -59,6 +56,8 @@ on hiliteChanged
          break
    end switch
    
+   # Clear the highlight after it is processed
+   set the hilitedElement of me to empty
 end hiliteChanged
 
 
