@@ -242,6 +242,22 @@
           "file_id": "the-guru-chronicles-audiobook"
         }
       },
+       {
+        "playListTitle": "Dancing with Siva",
+        "playListImg": "audio-book_DWS_330.jpg",
+        "playlistClass": "audiobook",
+        "data_query": {
+          "file_id": "dancing-with-siva-audiobook"
+        }
+      },
+       {
+        "playListTitle": "Path To Siva",
+        "playListImg": "audio-book-P2S_330.jpg",
+        "playlistClass": "audiobook",
+        "data_query": {
+          "file_id": "path-to-siva-audiobook"
+        }
+      },
       {
         "playListTitle": "Gurujati\nDancing with Siva",
         "playListImg": "audio-book-DWS-Gujarati_330.jpg",

@@ -102,6 +102,8 @@ command portal_GoStack cardOrStackObject
    end if
    
    close stack oStackName
+   unlock screen
+   
    go cardOrStackObject
    if isMobile() = true then
       mobileClearTouches
@@ -212,6 +214,8 @@ end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    --breakpoint
+   
+   lock screen
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
    put ("youtube.com","1988-apple-video") into tRequiresLandscape
