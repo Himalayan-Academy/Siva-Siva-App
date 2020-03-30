@@ -382,7 +382,7 @@ command updateUIPortal
          put (the top of tControl)-kMargin into tBottom
          
          put the long id of img "showNavMandala" into tControl
-         bottomCenterMe tControl,20
+         bottomCenterMe tControl,25
          
          put the long id of button "openGlobalNavTree" into tControl
          topLeftMe tControl, -16, 0

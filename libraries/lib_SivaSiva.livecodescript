@@ -399,8 +399,13 @@ end connectivity_CheckResult
 function checkURLAvailable pSelectedURL
    local tHeaders, tSentHeaders, tResult, tBytes
    
-   # BM: not sure about this call, where are these values obtained?
-   put  tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes)  into tHeaders  # into tHeaders
+   lockTouches
+   
+   # useful to simulate a slow connection
+   --   wait 5 seconds with messages
+   put tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes) into tHeaders
+   
+   unlockTouches
    
    ## get url pSelectedURL
    if  (tResult is 200) then

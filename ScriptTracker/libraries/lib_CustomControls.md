@@ -105,3 +105,7 @@
 * ID: field id 6458 of group id 6452 of card id 6451 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_field_id_6458](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_field_id_6458.livecodescript)
 
+**graphic "touchTrap" of card "curtain" of stack "lib_CustomControls"**
+* ID: graphic id 6487 of card id 6486 of stack "lib_CustomControls"
+* [stack_lib_CustomControls_graphic_id_6487](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_graphic_id_6487.livecodescript)
+
