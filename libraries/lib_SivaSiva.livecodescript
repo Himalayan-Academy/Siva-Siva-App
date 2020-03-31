@@ -402,7 +402,8 @@ function checkURLAvailable pSelectedURL
    lockTouches
    
    # useful to simulate a slow connection
-   --   wait 5 seconds with messages
+   --wait 5 seconds with messages
+   
    put tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes) into tHeaders
    
    unlockTouches
