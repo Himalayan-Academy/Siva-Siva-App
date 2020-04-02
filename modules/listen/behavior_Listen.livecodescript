@@ -207,7 +207,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    local  queryData, pJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
    
-   showBusyIndicator true,"Loading Collection"
+   --showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
    --  dispatch "cleanUpGui" to card "listen-browse"      
@@ -286,6 +286,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          # Then sorts on date sends back the request number of records.
          
          --breakpoint
+         showBusyIndicator true,"Loading Collection"
          
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          
@@ -303,6 +304,10 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
          POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          
+         # we need to check of back character in the dbase which breaks JSONtoARRAY
+         # typically there CR in columns that shouldn't be there.
+         --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
+         
          if the result is not empty then 
             # we did not get anything. Turn  off loader, inform the users
             showBusyIndicator false
@@ -312,7 +317,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
             exit to top
          else 
             put it into tRecords
-            put jsonToArray (tRecords) into sCurrentPlayListA["audioFiles"]
+            put jsonToArray(tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
@@ -324,6 +329,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
+         showBusyIndicator true,"Loading Collection"
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          # a simple call to the server to get the TOC
          # can chose different books base on file_id
@@ -550,7 +556,7 @@ on select_Play  sSelectNum, pitemID
       log sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
-   --put checkURLAvailable(sSelectedURL) into fld "localresult"
+   
    
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
@@ -1105,7 +1111,7 @@ command updateUI
       case "listen-browse"
       case "listen-my-audio"
          
-         set the loc of tPausePlay to bottomCenterMe tPausePlay,80
+        bottomCenterMe tPausePlay,80
          break
          
       case "listen-file"
@@ -1115,7 +1121,7 @@ command updateUI
          setImageToFullCardLoc sMainBkgnd,"portrait",0,0
          setImageToFullCardLoc sCardBkgnd,"portrait",0,0
       case "listen-search"
-         set the loc of tPausePlay to bottomCenterMe tPausePlay,80
+         bottomCenterMe tPausePlay,80
          break
          
    end switch

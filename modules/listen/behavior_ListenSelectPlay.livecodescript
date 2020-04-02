@@ -181,6 +181,7 @@ end mouseup
 
 
 command switchAudioUi sAudioUI
+   local pUI
    if sAudioUI is empty then
       put "hideUI" into sAudioUI
    end if
