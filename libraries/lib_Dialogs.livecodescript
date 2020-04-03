@@ -104,24 +104,10 @@ on sendFeedBack
 end sendFeedBack
 
 on fieldLinkClicked pLink
-   hide fld "info-text" # otherwise we get new page right away with no bkgnd
+   --hide fld "info-text" # otherwise we get new page right away with no bkgnd
    switch pLink
-      case "Terms of Service, Privacy Policy, EULA"
-         displayInfo 1,"tos-privacy-eula"
-         break
-         # new link
-      case "Release Notes"
-         displayInfo 1,"release-notes"
-         break
-      case "Credits"
-         displayInfo 1,"credits"
-         break
-      case "About"
-         displayInfo 1,"about"
-         break
-      case "Send Feedback"
-         sendFeedBack
-         break
+      case "User-Manual"
+         portal_GoURL "https://www.himalayanacademy.com/looklisten/apps/sivasiva/sivasiva_user-guide"
    end switch
 end fieldLinkClicked
 
