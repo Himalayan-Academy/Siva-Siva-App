@@ -54,10 +54,17 @@ on mouseup
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
    # and not abpout the UI perse
    
-   if tTarget = "Topics" then
-      portal_GoUrl  "https://dev.himalayanacademy.com/topics"
-      exit mouseup
-   end if
+   switch tTarget
+      local tMsg
+      case "Topics"
+         portal_GoUrl  "https://dev.himalayanacademy.com/topics"
+         exit mouseup
+         break
+      case "loading"
+         showbusyIndicator false
+         exit Mouseup
+         break
+   end switch
    
    switch tTargetOwner
       case "bkgndControls"
@@ -338,10 +345,12 @@ constant kMargin = 12
 command updateUIPortal
    
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
-   
+   local tLoadingNotice, tTouchTrap
    #  UI responsive
+   
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    put the long id of img "subNavBkgImage" of card "Home" into tMenuBkgnd
+   
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    setImageToFullCardLoc tMenuBkgnd,"portrait",0,0
@@ -418,6 +427,11 @@ command updateUIPortal
    
    put the long id of fld "Notification" of me into tControl
    bottomCenterMe tControl,100
+   
+   put the long id of grc "touchTrap" of me into tTouchTrap
+   put the long id of grc "loading" of me into tLoadingNotice
+   set the rect of tTouchTrap to cardRect()
+   bottomCenterMe tLoadingNotice,100
    
 end updateUIPortal
 

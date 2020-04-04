@@ -100,7 +100,9 @@ command portal_GoStack cardOrStackObject
    else
       put empty into sDestinationCardOrStack
    end if
-   
+   if there is a grp "loadingGroup" then
+      showBusyIndicator false
+   end if
    close stack oStackName
    unlock screen
    
@@ -214,8 +216,13 @@ end portal_Link
 
 command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    --breakpoint
+   local tMsg 
+   put "Loading" into tMsg
+   setBusySemphore (true) 
+   send "showBusyIndicator true, tMsg" to this stack in 2 seconds
+   --showBusyIndicator true, tMsg
    
-   lock screen
+   --lock screen
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
    put ("youtube.com","1988-apple-video") into tRequiresLandscape
@@ -252,7 +259,7 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    
    put pURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   
+   lock screen
 end portal_GoUrl
 
 command portal_LaunchUrl someURL

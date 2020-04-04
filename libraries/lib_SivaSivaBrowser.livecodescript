@@ -68,6 +68,7 @@ end parseTheHTML
 
 
 function titleFromTOC pFilename, pTocHTML, pSkip
+   local tStart,tEnd,tChunk,tHTMLChunk,tTitle
    if pSkip is not a number then
       put 0 into pSkip
    end if
@@ -90,6 +91,8 @@ function titleFromTOC pFilename, pTocHTML, pSkip
 end titleFromTOC
 
 function titleFromURL pURL
+   Local tFileID,  tSlug,tItemA,tTocURL, tTocHTML, tFilename,tTitle
+   local  tHTML.tStartTitle, tHTML,tStartTitle, tEndTitle
    put false into tFileID   
    set the itemdel to slash
    put item 4 of pURL into tSlug
@@ -174,7 +177,3 @@ function getOrientationByType pURL -- return correct orientation for a URL;
    end switch
 end getOrientationByType
 
-
-on mouseEnter
-   
-end mouseEnter

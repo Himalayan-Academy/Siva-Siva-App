@@ -401,20 +401,17 @@ function connectivity_CheckResult pResultVariable
 end connectivity_CheckResult
 
 function checkURLAvailable pSelectedURL
-   local tHeaders, tSentHeaders, tResult, tBytes
-   
-   lockTouches
-   
+   local tHeaders, tSentHeaders, tResult, tBytes,tMsg
+
    # useful to simulate a slow connection
    --wait 5 seconds with messages
    
    put tsNetHeadSync(pSelectedURL, tSentHeaders, tResult, tBytes) into tHeaders
    
-   unlockTouches
-   
    ## get url pSelectedURL
    if  (tResult is 200) then
       return true
+      setBusySemphore  false
    else
       ntInfo tResult && pSelectedURL
       return false
