@@ -22,7 +22,8 @@ function getUserPreferences pPref
 end getUserPreferences
 
 on closestack
-      portal_SetLastStack "Siva-Siva-Portal"
+   hide fld "notification"
+   portal_SetLastStack "Siva-Siva-Portal"
 end closestack
 
 

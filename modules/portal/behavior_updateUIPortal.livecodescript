@@ -159,6 +159,7 @@ end showMandala
 # or to just see the image and priod to show 
 # the sub-nav menu on screen
 command hideMandala
+   hide fld "notification"
    hide btn "brandLogo"
    hide grp "globalNavigation"
    hide grp "navMandala"

@@ -590,7 +590,8 @@ end __MOTION
 on moveMe pControlName, pHorz, pVert, pSpeed -- use move instead of visual effect to prevent Android issues
    local tPt
    # "moveControl" is a reserve message in LC 
-   # hence the name "move Me" -- pass 0 pHorz for vertical move and 0 to pVert to horizontal move
+   # hence the name "move Me" 
+  # pass 0 pHorz for vertical move and 0 to pVert to horizontal move
    put pHorz,pVert into tPt
    move control pControlName relative tPt in pSpeed milliseconds
 end moveMe
