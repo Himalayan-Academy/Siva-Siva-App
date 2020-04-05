@@ -954,7 +954,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    put pTitle into tLineValue
    
    # assume we have data 
-   showBusyIndicator false
+   showBusyIndicator true, "Loading"
    
    if pTitle is empty then
       put sSelectNum*2 into tLineNum
