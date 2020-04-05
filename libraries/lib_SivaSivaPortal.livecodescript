@@ -219,7 +219,7 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    local tMsg 
    put "Loading" into tMsg
    setBusySemphore (true) 
-   send "showBusyIndicator true, tMsg" to this stack in 2 seconds
+   showBusyIndicator true, tMsg
    --showBusyIndicator true, tMsg
    
    --lock screen

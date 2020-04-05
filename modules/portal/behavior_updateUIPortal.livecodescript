@@ -20,7 +20,7 @@ on preOpenCard
    put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
-   
+   hide grp "loadingGroup"
    switch tCard
       case "Home"
          # init set up
@@ -431,7 +431,7 @@ command updateUIPortal
    put the long id of grc "touchTrap" of me into tTouchTrap
    put the long id of grc "loading" of me into tLoadingNotice
    set the rect of tTouchTrap to cardRect()
-   bottomCenterMe tLoadingNotice,100
+   bottomCenterMe tLoadingNotice,173
    
 end updateUIPortal
 
