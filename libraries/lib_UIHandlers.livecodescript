@@ -674,11 +674,7 @@ command setBusySemphore pBool
 end setBusySemphore
 
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   if sBusySemaphore is false then
-      put true into sBusySemaphore
-      exit showBusyIndicator
-   end if
-   
+
    if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       put sMsg into sLoadProgress # this string will change through the loop below.
@@ -699,7 +695,6 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
       end if
    end if
 end showBusyIndicator
-
 
 command loadingInProgress
    if sLoadingFlag is true then

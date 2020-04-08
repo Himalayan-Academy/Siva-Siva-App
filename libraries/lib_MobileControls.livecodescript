@@ -21,7 +21,7 @@ The suggestion is to split this into general and more specific libraires - for i
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId, sPlayerRect
+local sPlayerId, sPlayerRect,sDuration
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -49,7 +49,7 @@ local sPlayerId, sPlayerRect
 -- BR 2020-03-06 -deprecating the mobilebusy because user has no control
 
 command createMobileAudioPlayer pURL, pPlayerName, pRect
-   
+   log "createMobilePlayer"
    local tHeight,tPlayloc 
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
@@ -83,14 +83,16 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    mobileControlSet pPlayerName, "rect", pRect
    --mobileControlSet pPlayerName, "showController", true # deprecate with AVkit iOS
    mobileControlSet pPlayerName, "filename", pURL 
+   log  pURL
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
-   ntInfo "Should be showing audio toggle"
+
    togglePause true,true
+
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -103,25 +105,33 @@ end getMobileAudioPlayerRect
 -- we toggle on our local widget to "pause" 
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
-      if theProperty is "duration" then
+   Log "duration available"
+   if theProperty is "duration" then
+      log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
    end if
    togglePause true,false
 end playerPropertyAvailable
 
+function setDuration 
+   return sDuration
+end setDuration
+
 ---------------------------------
 # here we get the player do play, pause or stop
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
+   showBusyIndicator false -- in case it's still showing
    
+   log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
    
    mobileControlDo pPlayerName, pState
    
    if pState = "stop" then
-      showBusyIndicator false -- in case it's still showing
+      
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
@@ -148,6 +158,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    end if
    
    if pState = "play" then # could be start from scratch after pausing
+      
       if pTimeStamp is empty then
          put 0 into pTimeStamp
       end if
@@ -194,7 +205,9 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
       mobileControlDelete pName
    end repeat
    
+   put "" into sDuration
 end deleteMobileControl
+
 
 on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
    local tList
