@@ -103,11 +103,12 @@ on sendFeedBack
    end if
 end sendFeedBack
 
-on fieldLinkClicked pLink
+on fieldLinkClicked pLink #
    --hide fld "info-text" # otherwise we get new page right away with no bkgnd
    switch pLink
-      case "User-Manual"
-         portal_GoURL "https://www.himalayanacademy.com/looklisten/apps/sivasiva/sivasiva_user-guide"
+      case "user-guide"
+         portal_GoURL "https://www.himalayanacademy.com/looklisten/apps/sivasiva/sivasiva_user-guide","User Guide",1000
+         break
    end switch
 end fieldLinkClicked
 

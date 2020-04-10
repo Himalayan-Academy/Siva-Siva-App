@@ -259,7 +259,6 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    
    put pURL into pTrackdata["webUrl"]
    tracking_RecordActivity oStackName, "navigation/webview", pTrackdata
-   lock screen
 end portal_GoUrl
 
 command portal_LaunchUrl someURL

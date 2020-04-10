@@ -953,8 +953,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
    put pTitle into tLineValue
    
-   # assume we have data 
-   showBusyIndicator true, "Loading"
+   
    
    if pTitle is empty then
       put sSelectNum*2 into tLineNum
@@ -979,6 +978,8 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       put pTitle  into pDataA["title"]
       fetchSingleMetadata pItemID
    else
+      # assume we have data 
+      showBusyIndicator true, "Loading"
       put sSelectedItemA["item_id"] into pItemID
    end if
    
