@@ -48,9 +48,12 @@ on preOpenCard
       copyLogControl
    end if
    
-
+   /*
+   deprecated:
    put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
    put getPref("preferences/modules/stories/storyScene/") into  sLastScene
+   */
+   
    
    # we going to manipulate these controls across many handlers
    # declare them here instead of in the handlers
@@ -317,9 +320,11 @@ command showIsOver
    setCache "SceneCount",""
    setCache "Attribution", ""
    
+   /*
    #wipe preferemces
    setPref "preferences/modules/stories/storyTitle", ""
    setPref "preferences/modules/stories/storyScene/", ""
+   */
    
    # showMenu
    showStoryMenu
@@ -389,8 +394,12 @@ command hideShowField pField,pBool
 end hideShowField
 
 on closeCard
+   
+   /*
    setPref "preferences/modules/stories/storyTitle", sStoryTitle
    setPref "preferences/modules/stories/storyScene/", sLastScene
+   */
+   
    showStoryMenu
 end closecard
 

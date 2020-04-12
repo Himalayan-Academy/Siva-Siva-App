@@ -2,10 +2,6 @@
   "preferences": {
     "global": "", 
     "modules": {
-      "stories": {
-        "storyTitle": "", 
-        "storyScene": 0
-      }, 
       "color-meditation": {
         "breathCount": "4", 
         "currentLevel": "1", 

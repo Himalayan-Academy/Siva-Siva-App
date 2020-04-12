@@ -95,8 +95,7 @@ end hideMe
 
 on displayInfo pVis, pSubject
    if pVis = "1" then   # We are showing the control
-      lock screen
-      
+   
       # set up background image first, if no param 
       # then use landscapes as default
       
@@ -123,12 +122,8 @@ on displayInfo pVis, pSubject
             put path_Assets()&"info/user-guide.html" into tTextPath
             break
       end switch
-      set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
+      set the htmltext of  fld "info-text" of card "info" to url ("file:" &tTextPath)
       
-      # but for Android we had to take the field out!  It's on it's own layer on top of the card
-      send "CreateScroller info-text" to fld "info-text"
-      
-      unlock screen
    else 
      put empty into fld "info-text"
       deleteMobileControl "info-text" 
