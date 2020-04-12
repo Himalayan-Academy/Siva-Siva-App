@@ -15,79 +15,8 @@ We should get all the params for setting the template field into an
 array that we can change dynamically depending on tne context requirments.
 
 */
-----------------------------------------------
---> displayInfo
--- DESCRIPTION: 
--- used by the group control "display-info"  for showing text on top of any card in any stack
--- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
--- some time we may move it to a generic location and copy on demand when needed.
--- for now if you need it, make a copy to your stack, It is normally hidden and is responsive.
--- PARAMETERS
--- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
--- pSubject... use as a case in the switch to determine what info is placed in the display-text field
--- can call some html file like from /assets/info/*.html 
--- or could come from a specific module folder to a specific module "how to" info 
--- CHANGES:
--- 2017-06-12, Brahmanatahswami: created
-------------------------------------------------
+
 global sConfigA
-local sShowTime,  tImagePath, tTextPath, someURL
-on displayInfo pVis, pSubject, pBackground
-   if pVis = "1" then   # We are showing the control
-      --lock screen
-      
-      # set up background image first, if no param 
-      # then use landscapes as default
-      
-      if pBackground is empty then 
-         put  "bkgnds/nature/landscape/"  into pBackground
-      end if
-      put fetchRandomImageAsset(pBackground) into tImagePath  # see lib_SivaSivaMedia
-      set the filename of img "info-bkgnd-img" to tImagePath
-      show image "info-bkgnd-img"
-      wait 400 milliseconds
-      # next insert the text we need, either stored on the app somewhere or from a web URL
-      switch pSubject
-         case "App News"
-            put path_Documents() & "assets/info/siva-app-news.html" into tTextPath
-            break
-         case "About"
-            put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
-            break
-         case "tos-privacy-eula"
-            put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
-            break
-         case "release-notes"
-            put path_Assets()&"info/release-notes.html" into tTextPath
-            break
-         case "credits"
-            put path_Assets()&"info/credits.html" into tTextPath
-            break
-         case "User Guide"
-            put path_Assets()&"info/user-guide.html" into tTextPath
-            break
-      end switch
-      set the htmltext of  fld "info-text" to url ("file:" &tTextPath)
-      
-      send "resizeControl" to grp "display-info" # just in case we need to get the geometry updated.
-      
-      # but for Android we had to take the field out!  It's on it's own layer on top of the card
-      
-      
-      show group "info-container" with visual "effect" dissolve very fast
-      show widget "fontResize"
-      show  fld "info-text" with visual scroll down very fast
-      send "CreateScroller info-text" to fld "info-text"
-      
-   else 
-      hide widget "fontResize" 
-      hide  fld "info-text"
-      hide group "info-container" with visual effect "dissolve" very fast
-      hide image "info-bkgnd-img"
-      deleteMobileControl "info-text" 
-   end if
-   
-end displayInfo
 
 on sendFeedBack
    local tRecipient,tSubject,tBody
@@ -114,8 +43,6 @@ end fieldLinkClicked
 
 ---------------------------------------
 ## Bottom Toast notification "snackbar" in android Material-UI
-
-
 
 command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    if isMobile() then
