@@ -1,7 +1,7 @@
 Script "stack_Siva-Siva-App_button_id_6375"
 
 /*
-# Name: button "Reposition SE" of group "Log Test" of card id 4075 of stack "Siva-Siva-App"
+# Name: button "Reposition SE" of group "Log Test" of card "development" of stack "Siva-Siva-App"
 # ID: button id 6375 of group id 4076 of card id 4075 of stack "Siva-Siva-App"
 */
 

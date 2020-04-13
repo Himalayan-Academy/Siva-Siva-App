@@ -10,10 +10,11 @@ global sConfigA
 
 on mouseUp
    
-   local tTarget, tShareControl, tControl, tBrowser, tBrowserRect
-   local tCdHeight, tSharingHeight
+   local tTarget,tShareControl, tControl, tBrowser, tBrowserRect
+   local tCdHeight, tSharingHeight,tLongTarget
    
    put the short name of the target into tTarget
+   put the long id of the target into tLongTarget
    
    if tTarget is not "add-favorites" and \
          tTarget is not "share" then
@@ -58,8 +59,8 @@ on mouseUp
       case "add-favorites"
          -- record the last URL they were on
          if not (the vis of widget "loader") then
-            move control target relative 0,-100 in 200 milliseconds
-            move control target relative 0,100 in 70 milliseconds
+            moveMe tTarget, 0,-100,200
+            moveMe tTarget, 0,100,70
             journal_AddEntry
          end if
          break

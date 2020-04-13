@@ -7,6 +7,7 @@ Script "stack_lib_CustomControls_graphic_id_6487"
 
 
 on mouseUp
+   -- answer "Stop Connecting?" with "yes" or "no"
    -- trap
 end mouseUp
 

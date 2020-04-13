@@ -11,36 +11,41 @@ on mouseup
    put the short name of the target  into tMouseEvent
    switch tMouseEvent
       case "App News"
-         go to card "info"
          displayInfo 1,"App News"
-         news_NoNews # see lib_SivaSiva, Getter/Setter sets it "false"
+         go to card "info"
          break
+      
       case "About"
-         go to card "info"
          displayInfo 1,"About"
-         break
-      case "Release Notes"
          go to card "info"
-         displayInfo 1,"release-notes"
          break
+         
+      case "Release Notes"
+         displayInfo 1,"release-notes"
+         go to card "info"
+         break
+         
       case "Feedback"
          sendFeedBack
          break
+         
       case "Credits"
-         go to card "info"
          displayInfo 1,"Credits"
+         go to card "info"
          break
+         
       case "My Data"
          go to cd "disk_data_overview"
          break
+         
       case "User Guide"
-         go to card "info"
          displayInfo 1,"User Guide"
-         break
-      case "Close App"
-         doAnswer "Closing SivaSiva. Goodbye!","OK,Cancel","quitApp"
+         go to card "info"
          break
    end switch
+
+   send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
+   
    put "read/" & tMouseEvent into tAction
    tracking_RecordActivity "Settings", tAction
 end mouseup

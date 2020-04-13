@@ -12,6 +12,7 @@ on preopencard
 end preopencard
 
 on opencard
+
    if connectivity_PingServer() = "false" then
       dialog_CustomMsg "Connection required. Going to Verses"
       go to card "surprise_verses"

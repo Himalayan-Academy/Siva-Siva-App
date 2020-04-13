@@ -11,6 +11,5 @@ on preopencard
    put the long id img "randomPhoto" into tBkgndPhoto
    put fetchRandomImageAsset("photography") into tImagePath
    set the filename of tBkgndPhoto to tImagePath
-   updateUI
 end preopencard
 

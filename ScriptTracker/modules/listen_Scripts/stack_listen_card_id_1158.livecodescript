@@ -91,11 +91,19 @@ end mouseDown
 
 on mouseup
    local pSelection
-   if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
-      put the target into pSelection
-      selectPlayList pSelection # handles collection and other clicks on the UI
+   if the short name target is "Loading"then
+      showBusyIndicator false
+      if isMobile() then
+         mobileClearTouches
+      end if
+      exit top 
    end if
-end mouseup
+   
+      if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
+         put the target into pSelection
+         selectPlayList pSelection # handles collection and other clicks on the UI
+      end if
+   end mouseup
 
 
 ----------------------------------------------

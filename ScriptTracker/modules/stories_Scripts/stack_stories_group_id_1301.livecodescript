@@ -10,6 +10,7 @@ Script "stack_stories_group_id_1301"
 local tapFlag
 
 on resizeControl
+   local tGroupContainer,tControlWidth,tShareOptions
    set the clipstorect of me to true
    
    # use the bkgnd rect as the coords system

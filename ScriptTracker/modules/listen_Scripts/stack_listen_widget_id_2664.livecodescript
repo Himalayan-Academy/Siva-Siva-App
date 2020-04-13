@@ -7,6 +7,6 @@ Script "stack_listen_widget_id_2664"
 */
 
 
-on mouseup 
-   pausePlayer
-end mouseup
+--on mouseup 
+--   pausePlayer
+--end mouseup

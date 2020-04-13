@@ -78,17 +78,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_listen_widget_id_2211](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2211.livecodescript)
 
-**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "listen"**
-* ID: widget id 2447 of bkgnd id 2446 of stack "listen"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2447](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2447.livecodescript)
-
-**bkgnd "footerNavigation" of stack "listen"**
-* ID: bkgnd id 2572 of stack "listen"
-
-* Background on card IDs: 1158, 1002, 2000, 2660, 2052
-* [stack_listen_bkgnd_id_2572](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2572.livecodescript)
-
 **widget "playAudio" of bkgnd "pause-play" of stack "listen"**
 * ID: widget id 2663 of bkgnd id 2654 of stack "listen"
 * Widget Kind: com.livecode.widget.svgpath
@@ -134,6 +123,21 @@
 **button "Clear" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2695 of bkgnd id 2692 of stack "listen"
 * [stack_listen_button_id_2695](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2695.livecodescript)
+
+**bkgnd "footerNavigation" of stack "listen"**
+* ID: bkgnd id 2572 of stack "listen"
+
+* Background on card IDs: 1158, 1002, 2000, 2660, 2052
+* [stack_listen_bkgnd_id_2572](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2572.livecodescript)
+
+**graphic "touchTrap" of bkgnd "loadingGroup" of stack "listen"**
+* ID: graphic id 2859 of bkgnd id 2732 of stack "listen"
+* [stack_listen_graphic_id_2859](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_2859.livecodescript)
+
+**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "listen"**
+* ID: widget id 2447 of bkgnd id 2446 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2447](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2447.livecodescript)
 
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"

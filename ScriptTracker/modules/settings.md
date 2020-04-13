@@ -1,30 +1,7 @@
 # settings
-**stack "settings"**
-* ID: stack "settings"
-* [stack_settings_](./../../ScriptTracker/modules/settings_Scripts/stack_settings_.livecodescript)
-
-**bkgnd "display-info" of stack "settings"**
-* ID: bkgnd id 1364 of stack "settings"
-
-* Shared group on card IDs: 1363
-* [stack_settings_bkgnd_id_1364](./../../ScriptTracker/modules/settings_Scripts/stack_settings_bkgnd_id_1364.livecodescript)
-
-**widget "close-info" of group "info-container" of bkgnd "display-info" of stack "settings"**
-* ID: widget id 1368 of group id 1365 of bkgnd id 1364 of stack "settings"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_settings_widget_id_1368](./../../ScriptTracker/modules/settings_Scripts/stack_settings_widget_id_1368.livecodescript)
-
-**button "go-home-portal" of bkgnd "footerNavigation" of stack "settings"**
-* ID: button id 1423 of bkgnd id 1160 of stack "settings"
-* [stack_settings_button_id_1423](./../../ScriptTracker/modules/settings_Scripts/stack_settings_button_id_1423.livecodescript)
-
 **card "settings-home" of stack "settings"**
 * ID: card id 1002 of stack "settings"
 * [stack_settings_card_id_1002](./../../ScriptTracker/modules/settings_Scripts/stack_settings_card_id_1002.livecodescript)
-
-**image "Feedback-SivaSivaLogo" of card "settings-home" of stack "settings"**
-* ID: image id 1192 of card id 1002 of stack "settings"
-* [stack_settings_image_id_1192](./../../ScriptTracker/modules/settings_Scripts/stack_settings_image_id_1192.livecodescript)
 
 **group "settings-options-1" of card "settings-home" of stack "settings"**
 * ID: group id 1215 of card id 1002 of stack "settings"
@@ -34,19 +11,6 @@
 * ID: widget id 1385 of card id 1002 of stack "settings"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_settings_widget_id_1385](./../../ScriptTracker/modules/settings_Scripts/stack_settings_widget_id_1385.livecodescript)
-
-**card "info" of stack "settings"**
-* ID: card id 1363 of stack "settings"
-* [stack_settings_card_id_1363](./../../ScriptTracker/modules/settings_Scripts/stack_settings_card_id_1363.livecodescript)
-
-**field "info-text" of card "info" of stack "settings"**
-* ID: field id 1370 of card id 1363 of stack "settings"
-* Behavior: stack "behavior_mobileScroller"
-* [stack_settings_field_id_1370](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1370.livecodescript)
-
-**group "resizeFont" of card "info" of stack "settings"**
-* ID: group id 1378 of card id 1363 of stack "settings"
-* [stack_settings_group_id_1378](./../../ScriptTracker/modules/settings_Scripts/stack_settings_group_id_1378.livecodescript)
 
 **widget "turnOffAudio" of card "info" of stack "settings"**
 * ID: widget id 1381 of card id 1363 of stack "settings"

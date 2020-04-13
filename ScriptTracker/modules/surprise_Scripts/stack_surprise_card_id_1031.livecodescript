@@ -6,9 +6,10 @@ Script "stack_surprise_card_id_1031"
 */
 
 
-local sTimestamp
+local sTimestamp,sAudioPlay
 
 on opencard
+   
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if  
@@ -26,10 +27,11 @@ on opencard
 end opencard
 
 on getRandomAudio
+   
    if isMobile() then
       mobileClearTouches
    end if
-   --disable grp "go-next"grp "go-next"grp "go-next"
+   
    local gotIt, tURL
    # Test UTF8 Diacriticals
    # fetchRandomMediaItem ("media_type","audio", "file_id","guruparampara-vandana_pmp")
@@ -38,33 +40,24 @@ on getRandomAudio
    # fetchRandomMediaItem ("media_type","audio", "file_id","gr_2000-10-09_culture-crisis")   
    --fetchRandomMediaItem ("media_type","audio", "item_id","2023")
    
-   showBusyIndicator true,"Loading Audio"
-   
    put fetchRandomMediaItem ("media_type","audio","approved_for_public","YES") into gotIt
    put getMediaURL () into tURL
    if tURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
-      --    showBusyIndicator false
       exit to top
    end if
+  
    mediaUrl_Set tURL
    
-   
-   if isMobile() then
-      mobileClearTouches
-   end if
-   startAudioPlayer tURL
+   wait for 200 milliseconds
 
+   startAudioPlayer tURL
+   
 end getRandomAudio
 
 
 on startAudioPlayer pURL, pTimestamp
-   if connectivity_PingServer() = "false" then
-      dialog_CustomMsg "Sorry, an Internet connection is required to view this content. You can view Verses offline instead."
-      go to card "surprise_verses"
-      exit to top
-   end if
    
    if isMobile() then
       createMobileAudioPlayer pURL, "audioPlayer"
@@ -73,20 +66,13 @@ on startAudioPlayer pURL, pTimestamp
       start player "audioPlayer" 
    end if
    
+   send "showAudioDetails" to me in 1 seconds
    
-   
-   
-   send "showAudioDetails" to me in 50 millisecondS
    showBusyIndicator false
-   wait  10 milliseconds with messages
+   
    ntInfo "showing audio toggler"
    togglePause true, true
    
-   unlock screen
-   set layer of grp "go-next" to  top
-   set the layer grp "pause-play" to top
-   log ("go next: layer: " & the layer of grp "go-next" & " vis: "  & the vis of group "go-next" of me  & "; Rect: "  & the rect of group "go-next" of me)
-   log ("pause-play: Layer: " &  the layer of grp "pause-play"  & "; vis: "  & the vis of grp "pause-play" & "; Rect: "  & the rect of  grp "pause-play" of me)
 end startAudioPlayer
 
 

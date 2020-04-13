@@ -16,7 +16,6 @@ on closestack
    local tDate, tBrandImage, tTotal
    
    --> being brand image handling
-   
    # store and increment the BrandImage
    # the card script of the home Portal handles
    # set the number and paths and

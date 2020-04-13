@@ -23,7 +23,10 @@ on mouseUp
                break
             case "listen-search"
                go  card "listen-browse" 
-               break       
+               break  
+            case "listen-file"
+               go  card "listen-collection"
+               break            
             default
                portal_GoStack ("Siva-Siva-Portal")
          end switch

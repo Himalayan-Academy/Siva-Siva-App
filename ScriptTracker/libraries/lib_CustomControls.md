@@ -1,4 +1,8 @@
 # lib_CustomControls
+**stack "lib_CustomControls"**
+* ID: stack "lib_CustomControls"
+* [stack_lib_CustomControls_](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_.livecodescript)
+
 **button "goToAudio" of bkgnd "sound-is-playing" of stack "lib_CustomControls"**
 * ID: button id 6415 of bkgnd id 6414 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_button_id_6415](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_button_id_6415.livecodescript)
@@ -34,6 +38,10 @@
 **card "Custom Controls Home" of stack "lib_CustomControls"**
 * ID: card id 1002 of stack "lib_CustomControls"
 * [stack_lib_CustomControls_card_id_1002](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_card_id_1002.livecodescript)
+
+**graphic "app-bkgnd" of card "Custom Controls Home" of stack "lib_CustomControls"**
+* ID: graphic id 6374 of card id 1002 of stack "lib_CustomControls"
+* [stack_lib_CustomControls_graphic_id_6374](./../ScriptTracker/libraries/lib_CustomControls_Scripts/stack_lib_CustomControls_graphic_id_6374.livecodescript)
 
 **image "home_44.png" of card "app images" of stack "lib_CustomControls"**
 * ID: image id 4000 of card id 1011 of stack "lib_CustomControls"
