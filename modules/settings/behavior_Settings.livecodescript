@@ -1,7 +1,5 @@
 ﻿script "behavior_Settings"
-
 on preopenstack
-   
    if isMobile() then  
       --set the fullscreenMode of this stack to "showAll"  
       --mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,414,736"
@@ -14,19 +12,10 @@ on preopenstack
    --runFishAnimation
 end preopenstack
 
+on preOpenCard
+   updateUISettings
+end preOpenCard
 
-----------------------------------------------
---> displayInfo
--- DESCRIPTION: 
--- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
--- PARAMETERS
--- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
--- pSubject... use as a case in the switch to determine what info is placed in the display-text field
--- can call some html file like from /assets/info/*.html 
--- or could come from a specific module folder to a specific module "how to" info 
--- CHANGES:
--- 2017-06-12, Brahmanatahswami: created
-------------------------------------------------
 global sConfigA
 local sShowTime,  tImagePath, tTextPath, someURL
 
@@ -45,7 +34,7 @@ on mouseUp
    if tTarget is "Close App" then
       doAnswer "Closing SivaSiva. Goodbye!","OK,Cancel","quitApp"
       exit mouseup
-end if
+   end if
    
    switch tCard
       case "settings-home"
@@ -92,14 +81,25 @@ end hideMe
 
 
 
-
+----------------------------------------------
+--> displayInfo
+-- DESCRIPTION: 
+-- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
+-- PARAMETERS
+-- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
+-- pSubject... use as a case in the switch to determine what info is placed in the display-text field
+-- can call some html file like from /assets/info/*.html 
+-- or could come from a specific module folder to a specific module "how to" info 
+-- CHANGES:
+-- 2017-06-12, Brahmanatahswami: created
+------------------------------------------------
 on displayInfo pVis, pSubject
    if pVis = "1" then   # We are showing the control
-   
+      
       # set up background image first, if no param 
       # then use landscapes as default
       
-    
+      
       
       # next insert the text we need, either stored on the app somewhere or from a web URL
       switch pSubject
@@ -122,10 +122,10 @@ on displayInfo pVis, pSubject
             put path_Assets()&"info/user-guide.html" into tTextPath
             break
       end switch
-      set the htmltext of  fld "info-text" of card "info" to url ("file:" &tTextPath)
+      set the htmltext of fld "info-text" of card "info" to url ("file:" &tTextPath)
       
    else 
-     put empty into fld "info-text"
+      put empty into fld "info-text"
       deleteMobileControl "info-text" 
    end if
    
@@ -134,8 +134,7 @@ end displayInfo
 
 on closeStack
    portal_SetLastStack "settings"
-   set the fullscreenmode of this stack to empty
-   
+   --set the fullscreenmode of this stack to empty
 end closeStack
 
 command HandleToastDialog
@@ -157,8 +156,10 @@ end resizeStack
 #  UI responsive
 
 on updateUISettings
-   local tControl,  tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
- 
+   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft
+   
+   if the uRect of this cd is CardRect() then exit updateUISettings
+   
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
    else
@@ -168,53 +169,53 @@ on updateUISettings
    # graphic do not have a formatted width/height
    # so we can't use setImageToFullCardLoc
    
-   put the long id of grc "settings-bkgnd"into tControl
+   put the long id of grc "settings-bkgnd" into tControl
    centerMe tControl
    
-   put the long id of widget"turnOffAudio" into tControl
+   put the long id of widget "turnOffAudio" into tControl
    topRightMe tControl,40,20
-   
-   
    
    switch (the short name of this card)
       
       case "settings-home"
-         if isMobile() then
-            mobileHideStatusBar
-         end if
-         
-         put the long id of grp"settings-options-1" of me into tControl
-         topLeftMe tControl,90,60
+         --         if isMobile() then
+         --            mobileHideStatusBar
+         --         end if
          
          put the long id of img "Logo" of me into tControl
-         topLeftMe tControl,0,0
+         topLeftMe tControl,19,16
+         
+         put the long id of grp "settings-options-1" of me into tControl
+         topRightMe tControl,15,60
+         put the left of tControl into tLeft
+         
+         put the long id of img "04A-Ti-Cordyline.png" of me into tControl
+         set the left of tControl to tLeft - 7
+         set the top of tControl to the bottom of btn "About" + 2
          
          put the long id of button "Close App" of me into tControl
-         bottomLeftMe tControl,0,100
+         bottomLeftMe tControl,-20,100
          
          put the long id of grp "footerNavigation" into tControl
-         bottomLeftMe tControl,0,0
+         bottomLeftMe tControl,-24,0
          break
          
       case "info"
          put the long id of grc "info-field-bkgnd" into tControl
          centerMe tControl
          
-         # Brian: needs help/refactor to safe margins:
-         
-         put (15,30,CardWidth()-15,CardHeight()-70) into tRect
-         put the long id of fld "info-text" of me into tControl
-         set the rect of tControl to tRect
-  
-         
          put the long id of grp "fontResizer" into tControl
          bottomRightMe tControl,0,0
          
+         put the long id of fld "info-text" of me into tControl
+         put (15, safeTopMargin()+30, CardWidth()-15, \
+               the top of grp "fontResizer") into tRect
+         set the rect of tControl to tRect
          break
          
    end switch
    
-   
+   set the uRect of this cd to CardRect()
 end updateUISettings
 
 
