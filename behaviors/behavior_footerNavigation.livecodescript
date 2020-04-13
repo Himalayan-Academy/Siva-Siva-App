@@ -38,13 +38,13 @@ on mouseup
          if tBrowserExists then
             terminateBrowser
          end if
-        if checkIsLoading() is true then exit mouseup
+         if checkIsLoading() is true then exit mouseup
          put the short name of this card into tCard
          if tCard is "surprise_verse" then
             go to card "surprise_verses"
          else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
             go to card "surprise_menu"
-         else if tCard is "main-calendar" and \
+         else if tCard is "main-calendar" and \  
                the vis of grp "city-picker-view" then
             unlock screen
             lock screen for visual effect
@@ -52,6 +52,8 @@ on mouseup
             show grp "main-calendar-view"
             show grp "headerGrp"
             unlock screen with visual effect "dissolve" very fast
+         else if (the vis of grp "storiesMenu") = false then
+            showStoryMenu
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if

@@ -79,7 +79,6 @@ on opencard
          put the keys of sStoriesMetaArray["stories"] into fld "storiesMenuFld"
          
          if sStoryTitle is "false" or sStoryTitle is empty then
-            display_SetStatusBarVis true
             showStoryMenu
          else
             display_SetStatusBarVis false
@@ -91,10 +90,6 @@ on opencard
    
 end opencard
 
-
-
-
-
 /*
 UX for user for the stack and cardi
 */
@@ -103,7 +98,9 @@ on mouseup
    
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
-   endInTwoScenes
+   
+   --endInTwoScenes # use for development
+   
    switch sTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
@@ -272,6 +269,7 @@ command showStoryText sWhatText
          hide fld "userGuide"
          break
       case sUserGuideFld
+         hide image "StoryImage"
          hide sHomeText
          show sUserGuideFld
          topCenterMe sUserGuideFld,50
@@ -283,6 +281,7 @@ end showStoryText
 
 command showStoryMenu
    #sCardBkgnd,sStoryBkgnd,sStoryImage
+   
    set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    # we show menu
    # no story is cached
@@ -290,6 +289,7 @@ command showStoryMenu
    hide sHomeText
    hide sUserGuideFld
    show grp "storiesMenu"
+   display_SetStatusBarVis true
 end showStoryMenu
 
 command showAttribution sAttribution
@@ -419,15 +419,33 @@ command addJournalEntry -- save a bookmark to db
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle 
    else 
-      put sStoryTitle into tTitle
+      put sStoryTitle into pData["storyTitle"]
+      put sLastScene into pData["storyScene"]
+      put sAttribution into pData["Attribution"]
+      put sTotalSceneCount into pData["SceneCount"]
    end if
    put "storiesHome" into pData["card"]
-   Journal_RecordEntry "stories",("Story: " & tTitle), pData -- send to journal
+   Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
 end addJournalEntry
 		
 on journalResume pData -- sent from journal stack
    put pData["Card"] into tCd
    go to card tCd
+   put loadStoriesMetadata() into sStoriesMetaArray
+   getcontent pData["storyTitle"]
+   
+   put getCache("imageList") into simageList
+   put getCache("Quotes") into sQuoteList
+   
+   put pData["storyTitle"] into sStoryTitle
+   put pData["storyScene"] into sLastScene
+   put pData["Attribution"] into sAttribution
+   put pData["SceneCount"] into sTotalSceneCount
+   setCache "storyScene",sLastScene
+   display_SetStatusBarVis false
+   showStoryText
+   goNextScene
+   
 end journalResume
 
 
