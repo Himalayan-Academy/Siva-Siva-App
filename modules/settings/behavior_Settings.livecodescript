@@ -1,8 +1,6 @@
 ﻿script "behavior_Settings"
 on preopenstack
    if isMobile() then  
-      --set the fullscreenMode of this stack to "showAll"  
-      --mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,414,736"
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileShowStatusBar
    end if
@@ -14,6 +12,9 @@ end preopenstack
 
 on preOpenCard
    updateUISettings
+   if there is a fld "info-text" then
+      send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
+   end if
 end preOpenCard
 
 global sConfigA
@@ -21,6 +22,7 @@ local sShowTime,  tImagePath, tTextPath, someURL
 
 on opencard
    audioIsRunning
+   set the acceleratedRendering of this stack to true
 end opencard
 
 
@@ -99,8 +101,6 @@ on displayInfo pVis, pSubject
       # set up background image first, if no param 
       # then use landscapes as default
       
-      
-      
       # next insert the text we need, either stored on the app somewhere or from a web URL
       switch pSubject
          case "App News"
@@ -134,7 +134,6 @@ end displayInfo
 
 on closeStack
    portal_SetLastStack "settings"
-   --set the fullscreenmode of this stack to empty
 end closeStack
 
 command HandleToastDialog

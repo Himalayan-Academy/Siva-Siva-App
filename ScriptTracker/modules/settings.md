@@ -12,10 +12,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_settings_widget_id_1385](./../../ScriptTracker/modules/settings_Scripts/stack_settings_widget_id_1385.livecodescript)
 
-**card "info" of stack "settings"**
-* ID: card id 1363 of stack "settings"
-* [stack_settings_card_id_1363](./../../ScriptTracker/modules/settings_Scripts/stack_settings_card_id_1363.livecodescript)
-
 **widget "turnOffAudio" of card "info" of stack "settings"**
 * ID: widget id 1381 of card id 1363 of stack "settings"
 * Widget Kind: com.livecode.widget.svgpath
