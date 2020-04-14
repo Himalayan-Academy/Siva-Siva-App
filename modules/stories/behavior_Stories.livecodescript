@@ -48,6 +48,9 @@ on preOpenCard
       copyLogControl
    end if
    
+   
+   setCardCoords "portrait"
+   
    /*
    deprecated:
    put getPref("preferences/modules/stories/storyTitle") into sStoryTitle
@@ -104,17 +107,22 @@ on mouseup
    switch sTarget
       case "storiesMenuFld"
          put value(clickLine() ) into sStoryTitle
+         if sStoryTitle is empty then exit mouseup
          getcontent sStoryTitle
          showAttribution sAttribution
          showStoryText "quotes"
          break
       case "tips"
-         put url ("file://"& path_Modules()& "stories/stories-user-guide.html") into tTips
-         set the htmltext of sUserGuideFld to tTips
+         put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
+         log ( line 2 of tTips)
+         set the htmltext of sUserGuideFld to tTips 
          showStoryText sUserGuideFld
+         log (the vis of sUserGuideFld)
+         dispatch "createscroller" to sUserGuideFld with "userGuide"
          break
       case "goNext"
-        if (the vis of sUserGuideFld) is true then
+         if (the vis of sUserGuideFld) is true then
+            deleteMobileControl "userGuide"
             showStoryMenu
          else
             
@@ -272,7 +280,9 @@ command showStoryText sWhatText
          hide image "StoryImage"
          hide sHomeText
          show sUserGuideFld
+         log (the vis of sUserGuideFld)
          topCenterMe sUserGuideFld,50
+        log the rect of sUserGuideFld
          break
    end switch
    
@@ -467,11 +477,17 @@ on updateUI
    end if
    
    put the long id of grp "storiesMenu" into tMenu
-   centerMe tMenu
+   topcenterMe tMenu,120
    
    
    put the long id of img "StoryBkgndImage" into tStoryBkgndImage
    CenterMe tStoryBkgndImage
+   
+   # card height minus ( btm  of goNext btn + plus it height
+   # 20 pixel btm margin + 40 pix top marging) = height of fld
+   
+   set the rect sUserGuideFld to (0,0,cardWidth()-20,CardHeight()-(70+52+40+20) ) 
+   topCenterMe sUserGuideFld,20
    
    put the long id of img "StoryImage" into tStoryImage
    CenterMe tStoryImage
