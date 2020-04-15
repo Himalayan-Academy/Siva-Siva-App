@@ -122,10 +122,9 @@ on mouseup
          break
       case "goNext"
          if (the vis of sUserGuideFld) is true then
-            deleteMobileControl "userGuide"
             showStoryMenu
          else
-            
+            dispatch "deleteMobileControl" to sHomeText with "homeStoryText"
             goNextScene
             
          end if
@@ -281,8 +280,7 @@ command showStoryText sWhatText
          hide sHomeText
          show sUserGuideFld
          log (the vis of sUserGuideFld)
-         topCenterMe sUserGuideFld,50
-        log the rect of sUserGuideFld
+         log the rect of sUserGuideFld
          break
    end switch
    
@@ -291,6 +289,8 @@ end showStoryText
 
 command showStoryMenu
    #sCardBkgnd,sStoryBkgnd,sStoryImage
+   dispatch "deleteMobileControl" to sUserGuideFld with "userGuide"
+   dispatch "deleteMobileControl" to sHomeText with "homeStoryText"
    
    set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    # we show menu
@@ -479,15 +479,8 @@ on updateUI
    put the long id of grp "storiesMenu" into tMenu
    topcenterMe tMenu,120
    
-   
    put the long id of img "StoryBkgndImage" into tStoryBkgndImage
    CenterMe tStoryBkgndImage
-   
-   # card height minus ( btm  of goNext btn + plus it height
-   # 20 pixel btm margin + 40 pix top marging) = height of fld
-   
-   set the rect sUserGuideFld to (0,0,cardWidth()-20,CardHeight()-(70+52+40+20) ) 
-   topCenterMe sUserGuideFld,20
    
    put the long id of img "StoryImage" into tStoryImage
    CenterMe tStoryImage
@@ -498,10 +491,11 @@ on updateUI
    put the long id of btn "goNext" into tGoNext
    bottomCenterMe tGoNext,65
    
-   put the long id of btn "tips"  into tGoTips
+   put the long id of btn "tips" into tGoTips
    bottomCenterMe tGoTips,70
+   
+   set the rect sUserGuideFld to (10, 50, cardWidth() - 10, the top of btn "tips" - 21) 
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
-   
 end updateUI

@@ -327,11 +327,11 @@ eventually I would add textSize and Lineheight etc.
 
 command optimizeField pControl,pTextSize,pTextAlign
    local tHeight
-   put the formattedheight of pControl  into tHeight
    if pTextsize is not empty then
       set the textSize of pControl to pTextSize
-      set the textalign  of pControl to pTextAlign
+      set the textalign of pControl to pTextAlign
    end if
+   put the formattedheight of pControl into tHeight
    
    if tHeight > 500 then
       set the height of pControl to 527
@@ -342,7 +342,7 @@ command optimizeField pControl,pTextSize,pTextAlign
       topCenterMe pControl, 150
    end if
    if the formattedheight of pControl > the height of pControl then
-      dispatch "CreateScroller"  to pControl with "pControl" 
+      dispatch "CreateScroller" to pControl with (the short name of pControl) 
    end if
 end optimizeField
 
