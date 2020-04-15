@@ -155,7 +155,7 @@ end resizeStack
 #  UI responsive
 
 on updateUISettings
-   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft
+   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft, tRight, tItems
    
    if the uRect of this cd is CardRect() then exit updateUISettings
    
@@ -177,10 +177,6 @@ on updateUISettings
    switch (the short name of this card)
       
       case "settings-home"
-         --         if isMobile() then
-         --            mobileHideStatusBar
-         --         end if
-         
          put the long id of img "Logo" of me into tControl
          topLeftMe tControl,19,16
          
@@ -210,6 +206,44 @@ on updateUISettings
          put (15, safeTopMargin()+30, CardWidth()-15, \
                the top of grp "fontResizer") into tRect
          set the rect of tControl to tRect
+         break
+         
+      case "disk_data_overview"
+         put the long id of btn "load-spinner" of me into tControl
+         topCenterMe tControl, 95
+         
+         put the long id of grp "diskDataOverview" of me into tControl
+         put CardWidth()-23 into tRight
+         put (23, safeTopMargin()+115, tRight, safeTopMargin()+492) into tRect
+         set the rect of tControl to tRect
+         put "audio,books,art" into tItems  # Manually update when we add more data types
+         repeat for each item N in tItems
+            set the right of fld (N&"-data") to tRight-46
+            set the right of btn (N&"-go-files") to tRight
+            put the rect of grc (N&"-base") into tRect
+            put tRight into item 3 of tRect
+            set the rect of grc (N&"-base") to tRect
+         end repeat
+         set the right of fld "total-data" to tRight-8
+         
+         put the long id of grp "displayFilesSizes" of me into tControl
+         put (2, safeTopMargin()+2, CardWidth()-2, \
+               CardHeight()-safeBottomMargin()) into tRect
+         set the rect of tControl to tRect
+         set the bottom of fld "currentTotal" to item 4 of tRect
+         set the bottom of fld "currentUnits" to item 4 of tRect
+         set the right of grc "DoneDeletions" to item 3 of tRect-2
+         
+         put the long id of fld "FilesOnDisk" into tControl
+         put the bottom of fld "deleteFile"+8 into item 2 of tRect
+         put the top of fld "currentTotal"-8 into item 4 of tRect
+         set the rect of tControl to tRect
+         if the width of tControl < 400 then
+            set the tabStops of tControl to (the width of tControl - 80, 395)
+         end if
+         
+         
+         set the loc of grp "answerDlgGrp" of me to CardLoc()
          break
          
    end switch
