@@ -58,7 +58,6 @@ command mmGetTopSums
    get mmGetSizesBySubFolders("books")
    get  mmGetSizesBySubFolders("art")
    insertTopResults sResultA # see display section below
-   show grp "goSettings"
 end mmGetTopSums
 
 command mmSetRootFolder pFolder
@@ -134,7 +133,7 @@ command mouseup  #UI Interactions are trapped here
    switch 
       # the dataOverviewGroup has it's own mousup handler
       # except for the go settings one below
-      case (the long owner of the target contains "goSettings")
+      case tTarget = "go-home-portal"
          go to card "settings-home"
          break
       case  tTarget = "FilesOnDisk"
@@ -213,7 +212,6 @@ command displayTargetFiles pDataType
    end repeat
    put tFileList into fld "FilesOnDisk"
    unlock screen
-   hide grp "GoSettings"
    hide grp "diskDataOverview" with dissolve very fast
    put sResultA[pDataType][categorySum] into fld "currentTotal"
    show grp "displayFilesSizes" with dissolve very fast

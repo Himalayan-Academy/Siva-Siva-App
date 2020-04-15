@@ -44,7 +44,7 @@ on mouseup
          break
    end switch
 
-   send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
+   --send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
    
    put "read/" & tMouseEvent into tAction
    tracking_RecordActivity "Settings", tAction

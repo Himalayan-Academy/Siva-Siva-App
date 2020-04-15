@@ -26,11 +26,6 @@
 * ID: group id 1262 of card id 1261 of stack "settings"
 * [stack_settings_group_id_1262](./../../ScriptTracker/modules/settings_Scripts/stack_settings_group_id_1262.livecodescript)
 
-**field "FilesOnDisk" of group "displayFilesSizes" of card "disk_data_overview" of stack "settings"**
-* ID: field id 1292 of group id 1295 of card id 1261 of stack "settings"
-* Behavior: stack "behavior_mobileScroller"
-* [stack_settings_field_id_1292](./../../ScriptTracker/modules/settings_Scripts/stack_settings_field_id_1292.livecodescript)
-
 **widget "turnOffAudio" of card "disk_data_overview" of stack "settings"**
 * ID: widget id 1384 of card id 1261 of stack "settings"
 * Widget Kind: com.livecode.widget.svgpath

@@ -1,10 +1,6 @@
 ﻿script "behavior_Settings"
-
 on preopenstack
-   
    if isMobile() then  
-      --set the fullscreenMode of this stack to "showAll"  
-      --mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,414,736"
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileShowStatusBar
    end if
@@ -14,24 +10,19 @@ on preopenstack
    --runFishAnimation
 end preopenstack
 
+on preOpenCard
+   updateUISettings
+   if there is a fld "info-text" then
+      send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
+   end if
+end preOpenCard
 
-----------------------------------------------
---> displayInfo
--- DESCRIPTION: 
--- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
--- PARAMETERS
--- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
--- pSubject... use as a case in the switch to determine what info is placed in the display-text field
--- can call some html file like from /assets/info/*.html 
--- or could come from a specific module folder to a specific module "how to" info 
--- CHANGES:
--- 2017-06-12, Brahmanatahswami: created
-------------------------------------------------
 global sConfigA
 local sShowTime,  tImagePath, tTextPath, someURL
 
 on opencard
    audioIsRunning
+   set the acceleratedRendering of this stack to true
 end opencard
 
 
@@ -45,7 +36,7 @@ on mouseUp
    if tTarget is "Close App" then
       doAnswer "Closing SivaSiva. Goodbye!","OK,Cancel","quitApp"
       exit mouseup
-end if
+   end if
    
    switch tCard
       case "settings-home"
@@ -92,14 +83,23 @@ end hideMe
 
 
 
-
+----------------------------------------------
+--> displayInfo
+-- DESCRIPTION: 
+-- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
+-- PARAMETERS
+-- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
+-- pSubject... use as a case in the switch to determine what info is placed in the display-text field
+-- can call some html file like from /assets/info/*.html 
+-- or could come from a specific module folder to a specific module "how to" info 
+-- CHANGES:
+-- 2017-06-12, Brahmanatahswami: created
+------------------------------------------------
 on displayInfo pVis, pSubject
    if pVis = "1" then   # We are showing the control
-   
+      
       # set up background image first, if no param 
       # then use landscapes as default
-      
-    
       
       # next insert the text we need, either stored on the app somewhere or from a web URL
       switch pSubject
@@ -122,10 +122,10 @@ on displayInfo pVis, pSubject
             put path_Assets()&"info/user-guide.html" into tTextPath
             break
       end switch
-      set the htmltext of  fld "info-text" of card "info" to url ("file:" &tTextPath)
+      set the htmltext of fld "info-text" of card "info" to url ("file:" &tTextPath)
       
    else 
-     put empty into fld "info-text"
+      put empty into fld "info-text"
       deleteMobileControl "info-text" 
    end if
    
@@ -134,8 +134,6 @@ end displayInfo
 
 on closeStack
    portal_SetLastStack "settings"
-   set the fullscreenmode of this stack to empty
-   
 end closeStack
 
 command HandleToastDialog
@@ -157,8 +155,10 @@ end resizeStack
 #  UI responsive
 
 on updateUISettings
-   local tControl,  tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
- 
+   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft, tRight, tItems
+   
+   if the uRect of this cd is CardRect() then exit updateUISettings
+   
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
    else
@@ -168,53 +168,87 @@ on updateUISettings
    # graphic do not have a formatted width/height
    # so we can't use setImageToFullCardLoc
    
-   put the long id of grc "settings-bkgnd"into tControl
+   put the long id of grc "settings-bkgnd" into tControl
    centerMe tControl
    
-   put the long id of widget"turnOffAudio" into tControl
+   put the long id of widget "turnOffAudio" into tControl
    topRightMe tControl,40,20
-   
-   
    
    switch (the short name of this card)
       
       case "settings-home"
-         if isMobile() then
-            mobileHideStatusBar
-         end if
-         
-         put the long id of grp"settings-options-1" of me into tControl
-         topLeftMe tControl,90,60
-         
          put the long id of img "Logo" of me into tControl
-         topLeftMe tControl,0,0
+         topLeftMe tControl,19,16
+         
+         put the long id of grp "settings-options-1" of me into tControl
+         topRightMe tControl,15,60
+         put the left of tControl into tLeft
+         
+         put the long id of img "04A-Ti-Cordyline.png" of me into tControl
+         set the left of tControl to tLeft - 7
+         set the top of tControl to the bottom of btn "About" + 2
          
          put the long id of button "Close App" of me into tControl
-         bottomLeftMe tControl,0,100
+         bottomLeftMe tControl,-20,100
          
          put the long id of grp "footerNavigation" into tControl
-         bottomLeftMe tControl,0,0
+         bottomLeftMe tControl,-24,0
          break
          
       case "info"
          put the long id of grc "info-field-bkgnd" into tControl
          centerMe tControl
          
-         # Brian: needs help/refactor to safe margins:
-         
-         put (15,30,CardWidth()-15,CardHeight()-70) into tRect
-         put the long id of fld "info-text" of me into tControl
-         set the rect of tControl to tRect
-  
-         
          put the long id of grp "fontResizer" into tControl
          bottomRightMe tControl,0,0
          
+         put the long id of fld "info-text" of me into tControl
+         put (15, safeTopMargin()+30, CardWidth()-15, \
+               the top of grp "fontResizer") into tRect
+         set the rect of tControl to tRect
+         break
+         
+      case "disk_data_overview"
+         put the long id of btn "load-spinner" of me into tControl
+         topCenterMe tControl, 95
+         
+         put the long id of grp "diskDataOverview" of me into tControl
+         put CardWidth()-23 into tRight
+         put (23, safeTopMargin()+115, tRight, safeTopMargin()+492) into tRect
+         set the rect of tControl to tRect
+         put "audio,books,art" into tItems  # Manually update when we add more data types
+         repeat for each item N in tItems
+            set the right of fld (N&"-data") to tRight-46
+            set the right of btn (N&"-go-files") to tRight
+            put the rect of grc (N&"-base") into tRect
+            put tRight into item 3 of tRect
+            set the rect of grc (N&"-base") to tRect
+         end repeat
+         set the right of fld "total-data" to tRight-8
+         
+         put the long id of grp "displayFilesSizes" of me into tControl
+         put (2, safeTopMargin()+2, CardWidth()-2, \
+               CardHeight()-safeBottomMargin()) into tRect
+         set the rect of tControl to tRect
+         set the bottom of fld "currentTotal" to item 4 of tRect
+         set the bottom of fld "currentUnits" to item 4 of tRect
+         set the right of grc "DoneDeletions" to item 3 of tRect-2
+         
+         put the long id of fld "FilesOnDisk" into tControl
+         put the bottom of fld "deleteFile"+8 into item 2 of tRect
+         put the top of fld "currentTotal"-8 into item 4 of tRect
+         set the rect of tControl to tRect
+         if the width of tControl < 400 then
+            set the tabStops of tControl to (the width of tControl - 80, 395)
+         end if
+         
+         
+         set the loc of grp "answerDlgGrp" of me to CardLoc()
          break
          
    end switch
    
-   
+   set the uRect of this cd to CardRect()
 end updateUISettings
 
 
