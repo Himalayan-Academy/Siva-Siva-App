@@ -67,6 +67,7 @@ command mmSetRootFolder pFolder
 end mmSetRootFolder
 
 function mmGetSizesBySubfolders pPathComplement
+   local tTopSum, dF
    put 0 into tTopSum
    
    put the defaultFolder into dF
@@ -89,6 +90,7 @@ function mmGetSizesBySubfolders pPathComplement
 end mmGetSizesBySubfolders
 
 command  mmComputeSpaceUsedByFolder tF
+   local tFilesList,tBytesCount,tMBytes,tDirList
    set the itemDel to "/"
    set the directory to tF
    -------------
@@ -128,6 +130,8 @@ end __UXDisplayAndDelete
 
 ###### 
 command mouseup  #UI Interactions are trapped here
+   local tTarget,tFile,tLineNo,tPath,tFileSize, tMB
+   local pMsg
    put the short name the target into tTarget
    --put the keys of sResultA
    switch 
@@ -154,8 +158,8 @@ command mouseup  #UI Interactions are trapped here
          mmGetTopSums
          break
       case  tTarget =  "deleteYes"
-         set the textcolor of sTargetLine to gray
-         set the textstyle of sTargetLine to strikeout
+         set the textcolor of sTargetLine to "gray"
+         set the textstyle of sTargetLine to "strikeout"
          put item 2 of sDetailedTarget into tFileSize
          put tFileSize/1024/1000 into tMB
          put fld "currentTotal" - round (tMB,2) into fld "CurrentTotal"
@@ -183,7 +187,7 @@ command setDeleteMode pOnOff
       set the backgroundColor of fld "deleteFile" to empty
    else # move to line and slide in
       set the opaque of  fld "deleteFile" to true
-      set the backgroundColor of fld "deleteFile" to red
+      set the backgroundColor of fld "deleteFile" to "red"
       show grc "deleteYes"
       show grc "deleteNo"
       put "Delete:" into fld "deleteFile"
@@ -195,6 +199,8 @@ private command insertTopresults sResultA
 end insertTopResults
   
 command displayTargetFiles pDataType
+   local tDetailedFiles,tFilter,tPath,tSize,tFile
+   local tFileList
    lock screen
    put empty into fld "FilesOnDisk" 
    put sResultA["files"] into tDetailedFiles
@@ -212,12 +218,13 @@ command displayTargetFiles pDataType
    end repeat
    put tFileList into fld "FilesOnDisk"
    unlock screen
-   hide grp "diskDataOverview" with dissolve very fast
-   put sResultA[pDataType][categorySum] into fld "currentTotal"
-   show grp "displayFilesSizes" with dissolve very fast
+   hide grp "diskDataOverview" with "dissolve" very fast
+   put sResultA[pDataType]["categorySum"] into fld "currentTotal"
+   show grp "displayFilesSizes" with "dissolve" very fast
 end displayTargetFiles
 
 on clearSums
+   local tFields
    # sometime we want to set the sum of each media to 0
    # for example, when to leave the card.
    put "audio,books,art,total" into tFields # add more later 
