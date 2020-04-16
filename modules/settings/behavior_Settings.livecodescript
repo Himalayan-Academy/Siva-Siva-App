@@ -227,8 +227,8 @@ on updateUISettings
          set the right of fld "total-data" to tRight-8
          
          put the long id of grp "displayFilesSizes" of me into tControl
-         put (2, safeTopMargin()+2, CardWidth()-2, \
-               CardHeight()-safeBottomMargin()-50) into tRect
+         put (2, safeTopMargin()+2, CardWidth()-2, top of grp "footerNavigation") into tRect
+     
          set the rect of tControl to tRect
          set the bottom of fld "currentTotal" to item 4 of tRect
          set the bottom of fld "currentUnits" to item 4 of tRect
