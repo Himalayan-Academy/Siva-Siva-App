@@ -291,7 +291,7 @@ command showStoryMenu
    #sCardBkgnd,sStoryBkgnd,sStoryImage
    dispatch "deleteMobileControl" to sUserGuideFld with "userGuide"
    dispatch "deleteMobileControl" to sHomeText with "homeStoryText"
-   
+   hide image "StoryImage"
    set the filename of sCardBkgnd to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    # we show menu
    # no story is cached
