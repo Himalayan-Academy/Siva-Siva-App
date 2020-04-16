@@ -296,6 +296,7 @@ command showStoryMenu
    # we show menu
    # no story is cached
    hide grp "homeStoryBkgnd"
+   hide image "StoryImage"
    hide sHomeText
    hide sUserGuideFld
    show grp "storiesMenu"
