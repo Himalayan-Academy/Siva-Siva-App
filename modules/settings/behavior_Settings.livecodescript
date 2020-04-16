@@ -155,7 +155,7 @@ end resizeStack
 #  UI responsive
 
 on updateUISettings
-   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft, tRight, tItems
+   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft, tRight, tItems, tWidth
    
    if the uRect of this cd is CardRect() then exit updateUISettings
    
@@ -238,10 +238,10 @@ on updateUISettings
          put the bottom of fld "deleteFile"+8 into item 2 of tRect
          put the top of fld "currentTotal"-8 into item 4 of tRect
          set the rect of tControl to tRect
-         if the width of tControl < 400 then
-            set the tabStops of tControl to (the width of tControl - 80, 395)
+         put the width of tControl into tWidth
+         if tWidth < 400 then
+            set the tabStops of tControl to (tWidth - 80, tWidth - 5)
          end if
-         
          
          set the loc of grp "answerDlgGrp" of me to CardLoc()
          break
