@@ -11,6 +11,8 @@ i# Assume full bar = 3 GB of content for that media type...
 # Uses binary values 1024 *1024*1024 bytes = 1 GB = 1073741824 bytes
 
 local tDataArrayA,tDataCap
+local tTotal,tDataSize,tBar,theBar,theBase,theRect
+local tBarRight,tBarWidth,tBarRect
 
 on mouseup
    set the itemdelimiter to "-"  
@@ -26,6 +28,7 @@ end mouseup
 
 command updateUsageOverview tDataStoreA
    --breakpoint
+
    put tDataStoreA into  tDataArrayA
    graphResets "zeroOut"
    put empty into tTotal
@@ -64,7 +67,12 @@ command updateUsageOverview tDataStoreA
    hide btn"load-spinner"
 end updateUsageOverview
 
+on closeControl
+   hide group "displayFilesSizes"
+end closeControl
+
 command graphResets pType
+   local tDisplayTypes
    put "audio,books,art" into tDisplayTypes  # Manually update when we add more data types  
    repeat for each item N in tDisplayTypes
       put long id of grc (N & "-bar" ) of grp "bar_group" into theBar
