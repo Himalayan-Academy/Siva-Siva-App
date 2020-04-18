@@ -8,12 +8,17 @@ Script "stack_surprise_card_id_1031"
 
 local sTimestamp,sAudioPlay
 
+
+on preOpenCard
+   hide fld "audioDetails"
+   pass preOpenCard
+end preOpenCard
+
+
 on opencard
-   
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if  
-   hide fld "audioDetails"
    togglePause false, true
    put empty into fld "audioDetails"  
    
@@ -26,8 +31,8 @@ on opencard
    pass openCard
 end opencard
 
+
 on getRandomAudio
-   
    if isMobile() then
       mobileClearTouches
    end if
@@ -53,12 +58,10 @@ on getRandomAudio
    wait for 200 milliseconds
 
    startAudioPlayer tURL
-   
 end getRandomAudio
 
 
 on startAudioPlayer pURL, pTimestamp
-   
    if isMobile() then
       createMobileAudioPlayer pURL, "audioPlayer"
    else
@@ -72,7 +75,6 @@ on startAudioPlayer pURL, pTimestamp
    
    ntInfo "showing audio toggler"
    togglePause true, true
-   
 end startAudioPlayer
 
 
@@ -81,6 +83,7 @@ on closeCard
    put empty into fld "audioDetails"
    togglePause true, true
 end closeCard
+
 
 command showAudioDetails
    local tRequiredHeight, tPlayerRect, tAvailableHeight
@@ -96,22 +99,17 @@ command showAudioDetails
    set the width of of fld "audioDetails" to CardWidth() - 90
    put the formattedHeight of fld "audioDetails" into tRequiredHeight
    
-   if isMobile() then
-      put getMobileAudioPlayerRect() into tPlayerRect
-   else
-      put the rect of player "audioPlayer" into tPlayerRect
-   end if
-   put item 2 of tPlayerRect - safeTopMargin() - 96 into tAvailableHeight
+   put getPlayerRect() into tPlayerRect
+   put (item 2 of tPlayerRect - 21) - (safeTopMargin() + 65) into tAvailableHeight
    
    if tRequiredHeight > tAvailableHeight then
       # We need to constrain size and set scrolling
-      # BR: I'm making an attempt here to see if we can accomodate Tablet
-      # by working with the card size instead of setting a fixed pixel rect.
       
       set the rect of fld "AudioDetails" to \
             (45, 65 + safeTopMargin(), CardWidth() - 45, item 2 of tPlayerRect - 21) 
       
-      dispatch "CreateScroller" to fld "audioDetails" with  "AudioDetails"
+      dispatch "CreateScroller" to fld "audioDetails" with "AudioDetails"
+      set the vscrollbar of fld "AudioDetails" to not isMobile()
       
    else  # it will fit
       set the height of fld "audioDetails" to tRequiredHeight
@@ -119,10 +117,8 @@ command showAudioDetails
       set the top of fld "audioDetails" to \
             (tAvailableHeight-tRequiredHeight)/2 + safeTopMargin() + 65
    end if
-   set the vscrollbar of fld "AudioDetails" to not isMobile()
    show fld "audioDetails" with visual effect "reveal right"
 end showAudioDetails
-
 
 
 command share_Items

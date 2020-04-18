@@ -4,12 +4,6 @@
 * Behavior: button id 1251 of stack "pathToSiva"
 * [stack_pathtosiva_](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_.livecodescript)
 
-**bkgnd "headerGrp" of stack "pathtosiva"**
-* ID: bkgnd id 1078 of stack "pathtosiva"
-
-* Background on card IDs: 1002, 1094, 1083, 1246, 1244
-* [stack_pathtosiva_bkgnd_id_1078](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_bkgnd_id_1078.livecodescript)
-
 **button "SVG Menu" of bkgnd "headerGrp" of stack "pathtosiva"**
 * ID: button id 51301 of bkgnd id 1078 of stack "pathtosiva"
 * [stack_pathtosiva_button_id_51301](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51301.livecodescript)
@@ -17,6 +11,11 @@
 **button "SVG Back" of bkgnd "headerGrp" of stack "pathtosiva"**
 * ID: button id 51302 of bkgnd id 1078 of stack "pathtosiva"
 * [stack_pathtosiva_button_id_51302](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51302.livecodescript)
+
+**widget "SVG Journal" of bkgnd "headerGrp" of stack "pathtosiva"**
+* ID: widget id 51309 of bkgnd id 1078 of stack "pathtosiva"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_pathtosiva_widget_id_51309](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51309.livecodescript)
 
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "pathtosiva"**
 * ID: widget id 51292 of bkgnd id 51291 of stack "pathtosiva"

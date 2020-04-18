@@ -61,7 +61,7 @@ function checkScrollDone
    put the formattedHeight of fld "gems-quote" into tTextHeight
    put the vScroll of fld "gems-quote" into tVscroll
    put tTextHeight - tVscroll into tBalanceToScroll
-   if tBalanceToScroll < 195 then
+   if tBalanceToScroll < the height of fld "gems-quote" then
       return   "true"
    else
       return  "false"
@@ -72,9 +72,12 @@ on resizeControl
    local tRect, tControl
    put the long id of grc "quoteBackground" of me into tControl
    topCenterMe tControl, 321
-   --set the rect of grc "quoteBackground" of me to the rect of me
-   set the right of grp "goNextQuote" of me to CardWidth() + 13
+   
    put (9, the top of tControl + 21, CardWidth() - 5, \
          the top of grp "footerNavigation" of this cd - 12) into tRect
    set the rect of fld "gems-quote" of me to tRect
+   
+   put the long id of grp "goNextQuote" of me into tControl
+   set the loc of tControl to the loc of fld "gems-quote" of me
+   set the right of tControl to CardWidth() + 13
 end resizeControl

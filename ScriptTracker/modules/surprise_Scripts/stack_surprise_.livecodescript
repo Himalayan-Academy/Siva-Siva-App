@@ -10,6 +10,7 @@ local sMediaURL,sQuoteData,sOnline
 local sCollection,sTimeStamp,sCard
 local sPlayerRect
 
+
 on preOpenStack
    --breakpoint
    if isMobile() then    
@@ -17,8 +18,8 @@ on preOpenStack
    end if
 end preOpenStack
 
+
 on preOpenCard
- 
    updateUI
 end preOpenCard
 
@@ -28,6 +29,7 @@ on opencard
    --copyLogControl
    put the short name of this card into sCard
 end opencard
+
 
 on closeStack
    portal_SetLastStack "Surprise"
@@ -132,7 +134,6 @@ command setUpSurprise
       default
          go to card tCard
    end switch
-   
    
 end setUpSurprise
 
@@ -309,8 +310,6 @@ on updateUI
    set the rect of tTouchTrap to cardRect()
    bottomCenterMe tLoadingNotice,65
    
-
-   
    put the long id of grp "header" into tHeader
    set the width of tHeader to CardWidth()
    topCenterMe tHeader, -12
@@ -318,60 +317,60 @@ on updateUI
    put the short name of this card into tCard
    switch tCard
       
-   case "surprise"
-      put the long id img "randomPhoto" into tBackground
-      put the loc of tFooter into tLoc
-      subtract 89 from item 2 of tLoc
-      set the loc of btn "Surprise" to tLoc
-      break
-   case "surprise_verses"
-      put the long id img "surprise-verses-bkgnd_opt-70.jpg" into tBackground
-      set the right of grp "verse-collections" to CardWidth() - 10
-      break
-   case "surprise_verse"
-      put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-      put the long id of grp "go-next" into tNext
-      break
-   case "surprise_art"
-      put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
-      put the long id of grp "go-next" into tNext
- 
-      break 
-   case "surprise_darshan"
-      put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-      put the long id of grp "go-next" into tNext
-
-      break
-   case "surprise_audio"
-      put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
-      put the long id of grp "loadingGroup" into tLoading
-      put the long id of grp "go-next" into tNext
-      put the long id of grp "pause-play" into tPausePlay
-      ntinfo "switch card before going to audio before center in load/player"
-      bottomCenterMe tLoading,120
-      bottomCenterMe tPausePlay,65
-      put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
-            into sPlayerRect
-      set the rect of player "audioPlayer" to sPlayerRect
-      
-      break
-   case "surprise_video"
-      break
-end switch
-
-if there is a tBackground then
-   setImageToFullCardLoc tBackground, "portrait"
-   set the loc of tBackground to CardLoc()
-end if
-
-if there is a tNext then
-   set the top of tNext to safeTopMargin() - 6
-   set the right of tNext to CardWidth() + 9
-end if
-
-if there is a grp "audioGlobalControl" then
-   set the top of grp "audioGlobalControl" to safeTopMargin() + 7
-end if
+      case "surprise"
+         put the long id img "randomPhoto" into tBackground
+         put the loc of tFooter into tLoc
+         subtract 89 from item 2 of tLoc
+         set the loc of btn "Surprise" to tLoc
+         break
+      case "surprise_verses"
+         put the long id img "surprise-verses-bkgnd_opt-70.jpg" into tBackground
+         set the right of grp "verse-collections" to CardWidth() - 10
+         break
+      case "surprise_verse"
+         put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
+         put the long id of grp "go-next" into tNext
+         break
+      case "surprise_art"
+         put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
+         put the long id of grp "go-next" into tNext
+         
+         break 
+      case "surprise_darshan"
+         put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
+         put the long id of grp "go-next" into tNext
+         
+         break
+      case "surprise_audio"
+         put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
+         put the long id of grp "loadingGroup" into tLoading
+         put the long id of grp "go-next" into tNext
+         put the long id of grp "pause-play" into tPausePlay
+         ntinfo "switch card before going to audio before center in load/player"
+         bottomCenterMe tLoading,120
+         bottomCenterMe tPausePlay,65
+         put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
+               into sPlayerRect
+         set the rect of player "audioPlayer" to sPlayerRect
+         
+         break
+      case "surprise_video"
+         break
+   end switch
+   
+   if there is a tBackground then
+      setImageToFullCardLoc tBackground, "portrait"
+      set the loc of tBackground to CardLoc()
+   end if
+   
+   if there is a tNext then
+      set the top of tNext to safeTopMargin() - 6
+      set the right of tNext to CardWidth() + 9
+   end if
+   
+   if there is a grp "audioGlobalControl" then
+      set the top of grp "audioGlobalControl" to safeTopMargin() + 7
+   end if
 end updateUI
 
 

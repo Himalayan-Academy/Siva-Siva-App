@@ -3,25 +3,6 @@
 * ID: stack "color-meditation"
 * [stack_color-meditation_](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_.livecodescript)
 
-**bkgnd "colorMedsToolbar" of stack "color-meditation"**
-* ID: bkgnd id 1035 of stack "color-meditation"
-
-* Background on card IDs: 1019, 1075, 1066, 1023
-* [stack_color-meditation_bkgnd_id_1035](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_bkgnd_id_1035.livecodescript)
-
-**graphic "Start" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
-* ID: graphic id 1058 of bkgnd id 1035 of stack "color-meditation"
-* [stack_color-meditation_graphic_id_1058](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_graphic_id_1058.livecodescript)
-
-**button "getInfo" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
-* ID: button id 1059 of bkgnd id 1035 of stack "color-meditation"
-* [stack_color-meditation_button_id_1059](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_button_id_1059.livecodescript)
-
-**widget "colorMedsPrefs" of group "colorSetting" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
-* ID: widget id 1032 of group id 1176 of bkgnd id 1035 of stack "color-meditation"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_color-meditation_widget_id_1032](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_widget_id_1032.livecodescript)
-
 **widget "closeInfo" of bkgnd "aboutDisplay" of stack "color-meditation"**
 * ID: widget id 1187 of bkgnd id 1089 of stack "color-meditation"
 * Widget Kind: com.livecode.widget.svgpath
@@ -59,6 +40,25 @@
 * ID: button id 1196 of bkgnd id 1009 of stack "color-meditation"
 * [stack_color-meditation_button_id_1196](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_button_id_1196.livecodescript)
 
+**bkgnd "colorMedsToolbar" of stack "color-meditation"**
+* ID: bkgnd id 1035 of stack "color-meditation"
+
+* Background on card IDs: 1019, 1075, 1066, 1023
+* [stack_color-meditation_bkgnd_id_1035](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_bkgnd_id_1035.livecodescript)
+
+**graphic "Start" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
+* ID: graphic id 1058 of bkgnd id 1035 of stack "color-meditation"
+* [stack_color-meditation_graphic_id_1058](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_graphic_id_1058.livecodescript)
+
+**button "getInfo" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
+* ID: button id 1059 of bkgnd id 1035 of stack "color-meditation"
+* [stack_color-meditation_button_id_1059](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_button_id_1059.livecodescript)
+
+**widget "colorMedsPrefs" of group "colorSetting" of bkgnd "colorMedsToolbar" of stack "color-meditation"**
+* ID: widget id 1032 of group id 1176 of bkgnd id 1035 of stack "color-meditation"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_color-meditation_widget_id_1032](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_widget_id_1032.livecodescript)
+
 **card "colorOpening" of stack "color-meditation"**
 * ID: card id 1019 of stack "color-meditation"
 * [stack_color-meditation_card_id_1019](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_card_id_1019.livecodescript)
@@ -83,6 +83,11 @@
 * ID: card id 1023 of stack "color-meditation"
 * [stack_color-meditation_card_id_1023](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_card_id_1023.livecodescript)
 
+**widget "saveToJournal" of card "colorPreferences" of stack "color-meditation"**
+* ID: widget id 1198 of card id 1023 of stack "color-meditation"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_color-meditation_widget_id_1198](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_widget_id_1198.livecodescript)
+
 **button "Save Prefs" of group "cardBody" of card "colorPreferences" of stack "color-meditation"**
 * ID: button id 1102 of group id 1197 of card id 1023 of stack "color-meditation"
 * [stack_color-meditation_button_id_1102](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_button_id_1102.livecodescript)
@@ -94,11 +99,6 @@
 **group "selectPreferences" of group "cardBody" of card "colorPreferences" of stack "color-meditation"**
 * ID: group id 1159 of group id 1197 of card id 1023 of stack "color-meditation"
 * [stack_color-meditation_group_id_1159](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_group_id_1159.livecodescript)
-
-**widget "saveToJournal" of group "cardBody" of card "colorPreferences" of stack "color-meditation"**
-* ID: widget id 1198 of group id 1197 of card id 1023 of stack "color-meditation"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_color-meditation_widget_id_1198](./../../ScriptTracker/modules/color-meditation_Scripts/stack_color-meditation_widget_id_1198.livecodescript)
 
 **group "prefsSelectorGrp" of card "colorPreferences" of stack "color-meditation"**
 * ID: group id 1162 of card id 1023 of stack "color-meditation"

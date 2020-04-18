@@ -10,5 +10,5 @@ Script "stack_color-meditation_bkgnd_id_1036"
 
 on mouseup
    showTools
-   revealBottomNavBar "false"
+   --revealBottomNavBar "false"
 end mouseup

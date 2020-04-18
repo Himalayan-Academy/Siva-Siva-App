@@ -31,11 +31,11 @@ local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
 local sSelectionsA,sLastTarget,sSelectNum
 
 on preopenstack
-   set the fullscreenmode of this stack to "showAll"
    if isMobile() then
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
       set the fullscreenmode of this stack to "showAll"
-      iphoneSetAudioCategory "playback" 
+      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+      iphoneSetAudioCategory "playback"
+      mobileHideStatusBar
    end if
 end preopenstack
 
@@ -57,11 +57,7 @@ on openstack
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA 
    
-   portal_SetLastStack "Listen"
-   if isMobile() then
-      mobileShowStatusBar
-   end if
-   
+   portal_SetLastStack "Listen"   
    # must have net connection, otherwise take to My Audio
 end openstack
 
@@ -594,7 +590,7 @@ command select_ShowDetails  pSelection, pRecord
    switch
       case (fld "audioList" is empty)
          Put "You have not downloaded any audio yet." into  fld "audioDetails" 
-        
+         
          break
          
          # or its from a downloaded file in My Audio
@@ -810,7 +806,7 @@ command addJournalEntry-- save a bookmark to db
    
    put getJournalData() into pDataA   
    put pDataA["title"] into tTitle
-
+   
    Journal_RecordEntry "listen",tTitle,pDataA 
    
 end addJournalEntry
@@ -1112,7 +1108,7 @@ command updateUI
       case "listen-browse"
       case "listen-my-audio"
          
-        bottomCenterMe tPausePlay,80
+         bottomCenterMe tPausePlay,80
          break
          
       case "listen-file"

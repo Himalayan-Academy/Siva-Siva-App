@@ -82,7 +82,6 @@ command addJournalEntry -- save a bookmark to db
       put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
    end if
    Journal_RecordEntry "pathtosiva",tTitle,pData -- send to journal
-   dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
 
 on journalResume pData,pEntryA -- sent from journal stack
@@ -250,7 +249,7 @@ private command updateCoverUI
    
    put the long id of img "01-cover_YS-Walking-Siva-_366w_opt.jpg" into tControl
    bottomCenterMe tControl
-   put the top of tControl - safeTopMargin() into tTopSpace
+   put max(the top of tControl - safeTopMargin(), 200) into tTopSpace
    put the loc of tControl into tLoc
    subtract 12 from item 1 of tLoc
    subtract 58 from item 2 of tLoc

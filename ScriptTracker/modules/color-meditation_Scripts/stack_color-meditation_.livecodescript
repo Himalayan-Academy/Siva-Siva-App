@@ -113,6 +113,9 @@ on updateUI
       
       put the long id of grp "titleControls" into tControl
       topCenterMe tControl, 214
+      if CardWidth() < the width of tControl then
+         set the textsize of fld "moduleTitle" to 50
+      end if
    end if
    
    if the short name of this card is "levelsIndex" then
@@ -126,7 +129,16 @@ on updateUI
             the top of tFooter - bottom of tHeader
       centerMe tControl, the height of tHeader, 116
       put the long id of grp "cardBody" into tControl
-      centerMe tControl, 100, 116
+      if the height of tControl > (the top of tFooter - the bottom of tHeader) then
+         set the top of fld "completionTimeLabel" to the bottom of btn "Cycles" + 24
+         set the top of fld "completionTime" to the bottom of fld "completionTimeLabel" + 12
+      end if
+      centerMe tControl, the height of tHeader, the height of tFooter
+      if the left of grp "selectPreferences" < 10 then
+         set the left of grp "selectPreferences" to 10
+      end if
+      put the long id of widget "saveToJournal" into tControl
+      topRightMe tControl, 0, 23
    end if
    
    set the uCardRect of this card to tCardRect
@@ -368,7 +380,6 @@ command addJournalEntry -- save a bookmark to db
    put "runColors" into pData["card"] 
    put ("Color Meditation") into tTitle
    Journal_RecordEntry "color-meditation",tTitle,pData -- send to journal
-   dialog_CustomMsg "Save to Journal"
 end addJournalEntry
 
 

@@ -1,4 +1,8 @@
 ﻿script "behavior_Settings"
+global sConfigA
+local sShowTime,  tImagePath, tTextPath, someURL
+
+
 on preopenstack
    if isMobile() then  
       mobileSetAllowedOrientations "portrait,portrait upside down"
@@ -10,6 +14,7 @@ on preopenstack
    --runFishAnimation
 end preopenstack
 
+
 on preOpenCard
    updateUISettings
    if there is a fld "info-text" then
@@ -17,14 +22,11 @@ on preOpenCard
    end if
 end preOpenCard
 
-global sConfigA
-local sShowTime,  tImagePath, tTextPath, someURL
 
 on opencard
    audioIsRunning
    set the acceleratedRendering of this stack to true
 end opencard
-
 
 
 on mouseUp
@@ -136,16 +138,14 @@ on closeStack
    portal_SetLastStack "settings"
 end closeStack
 
+
 command HandleToastDialog
    quit
 end HandleToastDialog
 
 
-on resizeStack x,y,ox,oy
+on resizeStack
    lock screen
-   -- When coming from a landscape stack, card rect is not updated correctly
-   -- and the resizeStack is called with a landscape rect.  If an answer is
-   -- inserted here, a second resizeStack gets sent with the correct rect.
    setCardCoords "portrait"
    updateUISettings
    unlock screen
@@ -155,7 +155,8 @@ end resizeStack
 #  UI responsive
 
 on updateUISettings
-   local tControl, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect, tLeft, tRight, tItems, tWidth
+   local tControl, tBottomMargin, tMenuBkgnd, tItems, tWidth, tOffset
+   local tTop, tBottom, tLeft, tRight, tRect
    
    if the uRect of this cd is CardRect() then exit updateUISettings
    
@@ -183,13 +184,27 @@ on updateUISettings
          put the long id of grp "settings-options-1" of me into tControl
          topRightMe tControl,15,60
          put the left of tControl into tLeft
+         put the bottom of tControl into tBottom
+         
+         put the long id of button "Close App" of me into tControl
+         bottomLeftMe tControl,-20,100
+         put the top of tControl into tTop
+         
+         if tBottom > tTop then
+            # handle small screens
+            put the top of btn "App News" - the bottom of btn "User Guide" - \
+                  trunc((tBottom - tTop)/5) into tOffset
+            put the bottom of btn "User Guide" + tOffset into tTop
+            put "App News,My Data,Feedback,About,Release Notes,Credits" into tItems
+            repeat for each item tControl in tItems
+               set the top of btn tControl to tTop
+               put the bottom of btn tControl + tOffset into tTop
+            end repeat
+         end if
          
          put the long id of img "04A-Ti-Cordyline.png" of me into tControl
          set the left of tControl to tLeft - 7
          set the top of tControl to the bottom of btn "About" + 2
-         
-         put the long id of button "Close App" of me into tControl
-         bottomLeftMe tControl,-20,100
          
          put the long id of grp "footerNavigation" into tControl
          bottomLeftMe tControl,-24,0
@@ -228,7 +243,7 @@ on updateUISettings
          
          put the long id of grp "displayFilesSizes" of me into tControl
          put (2, safeTopMargin()+2, CardWidth()-2, top of grp "footerNavigation") into tRect
-     
+         
          set the rect of tControl to tRect
          set the bottom of fld "currentTotal" to item 4 of tRect
          set the bottom of fld "currentUnits" to item 4 of tRect

@@ -33,6 +33,7 @@ on preopenstack
    end if
    resetUI
    hide grc "blankImage"
+   send "showBrowser" to me in 10 seconds
 end preopenstack
 
 on resizeStack
@@ -174,6 +175,13 @@ command hideLoader
    hide widget "loader"
 end hideLoader
 
+
+command showBrowser
+   lock screen
+   hide widget "loader"
+   show widget "Body"
+   unlock screen
+end showBrowser
 
 on journal_AddEntry
    

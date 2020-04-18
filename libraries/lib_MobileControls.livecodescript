@@ -83,7 +83,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    mobileControlSet pPlayerName, "rect", pRect
    --mobileControlSet pPlayerName, "showController", true # deprecate with AVkit iOS
    mobileControlSet pPlayerName, "filename", pURL 
-   log  pURL
+   log pURL
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
