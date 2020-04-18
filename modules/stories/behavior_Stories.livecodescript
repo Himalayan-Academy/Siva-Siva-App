@@ -486,16 +486,16 @@ on updateUI
    put the long id of img "StoryImage" into tStoryImage
    CenterMe tStoryImage
    
-   put the long id of grp "textDisplay" into tTextDisplay
-   topCenterMe tTextDisplay,50
-   
    put the long id of btn "goNext" into tGoNext
    bottomCenterMe tGoNext,65
    
    put the long id of btn "tips" into tGoTips
    bottomCenterMe tGoTips,70
    
-   set the rect sUserGuideFld to (10, 50, cardWidth() - 10, the top of btn "tips" - 21) 
+   set the rect sUserGuideFld to (10, 50, cardWidth() - 10, the top of btn "goNext" - 21)
+   
+   set the rect sHomeText to (32, 50, cardWidth() - 32, the top of btn "goNext" - 21)
+   set the uRect of sHomeText to the rect of sHomeText
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
