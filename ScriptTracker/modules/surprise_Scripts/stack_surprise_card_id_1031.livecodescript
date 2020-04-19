@@ -116,7 +116,9 @@ command showAudioDetails
       set the left of fld "audioDetails" to 45
       set the top of fld "audioDetails" to \
             (tAvailableHeight-tRequiredHeight)/2 + safeTopMargin() + 65
+      set the vscrollbar of fld "AudioDetails" to false
    end if
+   
    show fld "audioDetails" with visual effect "reveal right"
 end showAudioDetails
 
