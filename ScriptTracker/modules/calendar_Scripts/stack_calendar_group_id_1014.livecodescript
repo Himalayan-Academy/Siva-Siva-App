@@ -7,10 +7,17 @@ Script "stack_calendar_group_id_1014"
 */
 
 
-# TO DO we should be getting city list for the so that would can update it easily
+
 on showCityList pBool
    if pBool then -- show list
       set the acceleratedRendering of this stack to false -- prevent window push-up
+      
+      # for development only. For production the tCityList should not be empty
+      if the cCityList of fld "cityList" is empty then 
+         set cCityList of fld "cityList" to  getCityList()
+         save this stack
+      end if
+      
       put the cCityList of fld "cityList" into fld "cityList"
       put "" into fld "citySearch"
       send "resetDefaultText" to fld "citySearch"

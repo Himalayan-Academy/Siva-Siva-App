@@ -120,3 +120,15 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_calendar_widget_id_1270](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_widget_id_1270.livecodescript)
 
+**group "answerDlgGrp" of card "main-calendar" of stack "calendar"**
+* ID: group id 1281 of card id 1002 of stack "calendar"
+* [stack_calendar_group_id_1281](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_group_id_1281.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "main-calendar" of stack "calendar"**
+* ID: graphic id 1282 of group id 1281 of card id 1002 of stack "calendar"
+* [stack_calendar_graphic_id_1282](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_graphic_id_1282.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "main-calendar" of stack "calendar"**
+* ID: field id 1284 of group id 1283 of group id 1281 of card id 1002 of stack "calendar"
+* [stack_calendar_field_id_1284](./../../ScriptTracker/modules/calendar_Scripts/stack_calendar_field_id_1284.livecodescript)
+

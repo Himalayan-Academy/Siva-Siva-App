@@ -138,7 +138,7 @@ on updateUI
          set the left of grp "selectPreferences" to 10
       end if
       put the long id of widget "saveToJournal" into tControl
-      topRightMe tControl, 0, 23
+      topRightMe tControl, 0, 24
    end if
    
    set the uCardRect of this card to tCardRect
