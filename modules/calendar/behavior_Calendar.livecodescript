@@ -294,7 +294,8 @@ on calendarDownload -- download a calendar one year later than this year's
    end if
    parseUserICSfile sCityName,tYearRange -- does the download, loads the array
    hide tDownLoadNotice
-   dialog_CustomMsg "Download complete"
+   dialog_CustomMsg "Download complete. Restarting Calendar"
+   initCalendar
 end calendarDownload
 
 function calcStartDay pStartDay -- returns integer for first month entry
@@ -457,7 +458,7 @@ on insertDayInfo pStartDay -- show the calendar events for the month that includ
    set the numberFormat to "0.######"
    replace comma with empty in pStartDay
    put calcStartDay(pStartDay) into pStartDay -- returns integer for first of month
-   if pStartDay = false then -- not in current calendar array  --### CHECK IF DATE IS IN A DIFFERENT FILE YEAR
+   if pStartDay = false then -- not in current calendar array  --### CHECK IF DATE IS IN A DIFFERENT FILE YEARiiii
       put calendarExists(tRequestDate) into tDateRange
       if tDateRange <> false then
          parseUserICSfile sCityname,tDateRange -- load the script local
