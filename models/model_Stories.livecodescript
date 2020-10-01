@@ -36,6 +36,62 @@ end loadStoriesMetadata
 # TO DO: BR why am I just "random" These are just list of caches photos?
 # Legacy code. I use and SQL query model and probably removed the randon clause
 
+on makeStoryFromDisk
+   local sImageList, sQuoteList, sAttribution, sTotalSceneCount, slidesLimit
+   local imageList, Quotes, Attribution, SceneCount, storyIsCachedFlag, storyTitle
+   local sStoryImage
+   
+   put the long id of img "slideImage" into sStoryImage
+   
+   # just for development
+   put  loadStoriesMetadata() into sStoriesMetaArray
+   put "Vedas" into sStoryTitle
+   
+   # clean up the current content
+   lock screen
+   repeat with x = 2 to (the number of cards in this stack)
+      delete card x of this stack
+   end repeat
+   
+   unlock screen
+   
+   
+   put randomPhotos(sStoriesMetaArray["Stories"][sStoryTitle]["imageTags"]) into sImageList 
+   put FetchQuotesCollection(sStoriesMetaArray["Stories"][sStoryTitle]["quotesCollection"]) into sQuoteList
+   
+   if sStoriesMetaArray["Stories"][sStoryTitle][slidesLimit] = "quotes" then
+      put the number of lines of  sQuoteList into sTotalSceneCount
+   else
+      put the number of lines of  sImageList into sTotalSceneCount
+   end if
+   
+   # Make the stack cards 
+   
+   put "" into fld "mainText"
+   repeat with x = 2 to sTotalSceneCount
+      clone this card
+      set the cantDelete of this card to false 
+   end repeat
+   
+   # go card 1. Enter what you want in the title v
+   go to card 1
+   
+   put sStoriesMetaArray["Stories"][sStoryTitle]["attribution"] into sAttribution
+   put sStoryTitle & cr& "By" & cr & sAttribution into fld "mainText"
+   
+   
+   ---------------
+   # for development
+   repeat with x = 2 to sTotalSceneCount
+      go card x of this stack
+      delete card x 
+      set the filename of sStoryImage to line x of sImageList
+      put line x of sQuoteList into fld "mainText"
+      
+   end repeat
+   
+end makeStoryFromDisk
+
 
 command  getContent sStoryTitle # keys of the stories.json 
    
@@ -301,7 +357,7 @@ end returnAssetPath
 
 -----
 command foundStoryModel
-  answer "Yes, I am model_story and I am in the message Path!" with "OK"
+   answer "Yes, I am model_story and I am in the message Path!" with "OK"
 end foundStoryModel
 -----
 

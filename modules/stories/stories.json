@@ -1,27 +1,35 @@
 {
   "Stories": {
+   "My Trek to Siva": {
+   "where":"ftp",
+      "Attribution": "Aravind Gopal"    
+    }, 
     "Vedas": {
-      "slidesLimit": "images", 
+     "where":"local",
+     "slidesLimit": "images", 
       "textSource": "local-dbase-quotes", 
       "quotesCollection": "Vedas", 
       "Attribution": "Ancient Rishis", 
       "imageTags": "Deities"
     }, 
     "Tirukural": {
-      "slidesLimit": "images", 
+     "where":"local",
+     "slidesLimit": "images", 
       "textSource": "local-dbase-quotes", 
       "quotesCollection": "Tirukural", 
       "attribution": "Saint Tiruvalluvar", 
       "imageTags": "Saints"
     }, 
-    "Atti Chudi": {
-      "slidesLimit": "quotes", 
+    "Atti Chudi": { 
+     "where":"local",
+     "slidesLimit": "quotes", 
       "textSource": "local-dbase-quotes", 
       "quotesCollection": "Atti Chudi", 
       "attribution": "Saint Auvaiyar", 
       "imageTags": "Life"
     }, 
     "Songs of Tayumanavar": {
+      "where":"local",
       "slidesLimit": "images", 
       "textSource": "local-dbase-quotes", 
       "quotesCollection": "Tayumanavar", 
@@ -29,6 +37,7 @@
       "imageTags": "Soul"
     }, 
     "Words of Our Master": {
+      "where":"local",
       "slidesLimit": "images", 
       "textSource": "local-dbase-quotes", 
       "quotesCollection": "Words of Our Master", 
