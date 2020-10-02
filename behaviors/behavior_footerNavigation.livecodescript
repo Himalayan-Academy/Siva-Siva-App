@@ -52,10 +52,12 @@ on mouseup
             show grp "main-calendar-view"
             show grp "headerGrp"
             unlock screen with visual effect "dissolve" very fast
-         else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
-            showStoryMenu
-         else
-            portal_GoStack ("Siva-Siva-Portal")
+         else 
+            if tCard is "storyHome" and (the vis of grp "storyMenu") = false then
+               showStoryMenu
+            else
+               portal_GoStack ("Siva-Siva-Portal")
+            end if
          end if
          break
          

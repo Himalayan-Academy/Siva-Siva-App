@@ -1,9 +1,14 @@
 √ 1) Get the json adjusted
 
-2) refactor the code behavior_Stories
+√ 2) refactor the code behavior_Stories
 
 3) we can get up the speed for the FTP options, http options for dragging a documents folder.
 
 4) We forks/conditional on preparing for the FTP OR the on board option
 
 5) We create a branch of the refactor and getting going for Brian 
+
+
+dataLocalStack
+1) we pass the StoryTitle
+2) we have to give time to close 

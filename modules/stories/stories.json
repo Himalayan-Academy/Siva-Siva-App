@@ -1,7 +1,7 @@
 {
   "Stories": {
    "My Trek to Siva": {
-   "where":"ftp",
+      "where":"server",
       "Attribution": "Aravind Gopal"    
     }, 
     "Vedas": {
