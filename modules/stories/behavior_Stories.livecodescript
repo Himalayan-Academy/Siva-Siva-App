@@ -71,12 +71,14 @@ on mouseup
    
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
+   put loadStoriesMetadata() into sStoriesMetaArray
    
    switch sTarget
       case "storyMenu"
          put value(clickLine() ) into sStoryTitle
          if sStoryTitle is empty then exit mouseup
-         put  sStoriesMetaArray["Stories"][sStoryTitle]["where"]  into sWhere
+         
+         put  sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
          
          switch sWhere
             case "local" 
@@ -112,8 +114,23 @@ on dataLocalStack
 end dataLocalStack
 
 on dataServerStack
+   local tHttpsServerRoot,tLocalDocumentsStories,tFilePath,tServerPath
    
-end dataServerStack
+   put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
+   put specialFolderPath("Documents") & "/SivaSivaApp/media/stories/" into tLocalDocumentsStories
+   
+   put (tHttpsServerRoot & sStoryTitle & "/ "& sStoryTitle & ".livecode") into tServerPath
+   replace space with "%20" in tServerPath
+   
+   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".livecode" into tFilePath
+   create folder tLocalDocumentsStories & sStoryTitle
+   
+   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".livecode" into tFilePath
+   put URL (tServerPath) into URL ("binfile:" & tFilePath)
+   
+end dataServerStack 
+
+
 
 
 -------

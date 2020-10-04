@@ -283,7 +283,7 @@ command init_CreateLocalFolders
    # next we build the matching hierarchy for the web media folder
    # most important will be books and audio
    
-   put "audio,books,art,slideshows,video" into tTopMediaFolders
+   put "audio,books,art,slideshows,stories,video" into tTopMediaFolders
    
    repeat for each item x in tTopMediaFolders
       check_CreateFolder (tLocalFolderRoot & "media/" & x) 
