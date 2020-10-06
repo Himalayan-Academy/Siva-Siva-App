@@ -164,6 +164,15 @@ end dataServerStack
 
 #development
 command visualArticle sWhere
+   
+   if sWhere is "local" then
+      # gets your data
+      open path_Modules()& "stories/makeStoryLocal.livecode" 
+   Else 
+      # gets your data
+      open path_Documents()& "media/stories/" & sStoryTitle & "/" & sStoryTitle & ".livecode"
+   end if
+   
    if sWhere is "server" then
       
       // answer the questions:
@@ -174,9 +183,9 @@ command visualArticle sWhere
       --      if it is "No" then don't
       
       --         you do the visualArticl3
-      end  if
-      
-   end visualArticle
+   end  if
+   
+end visualArticle
    
    
    -------
