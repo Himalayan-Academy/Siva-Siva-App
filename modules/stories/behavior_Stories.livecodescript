@@ -83,11 +83,21 @@ on mouseup
          switch sWhere
             case "local" 
                dataLocalStack
+               
+               # development
+               open (path_Modules() & "stories/makeStoryLocal.livecode")
+               
                break
             case "server"
                dataServerStack
+               
+               # development
+               open (path_Documents() & "media/stories/"  & sStoryTitle & "/" & sStoryTitle & ".livecode")
                break
          end switch
+         
+         # development
+         visualArticle sWhere
          
          break
          
@@ -111,32 +121,68 @@ on dataLocalStack
    local pPassTitle
    put sStoryTitle into pPassTitle
    send "makeStoryLocal pPassTitle" to stack "makeStoryLocal" in 0 seconds
+   
+   
 end dataLocalStack
 
 on dataServerStack
-   local tHttpsServerRoot,tLocalDocumentsStories,tFilePath,tServerPath
+   local tHttpsServerRoot, tLocalDocumentsStories
+   local tFilePath, tServerPath, tFiles, tLocation
    
    put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
-   put specialFolderPath("Documents") & "/SivaSivaApp/media/stories/" into tLocalDocumentsStories
+   put path_Documents()& "media/stories/" into tLocalDocumentsStories
    
-   put (tHttpsServerRoot & sStoryTitle & "/ "& sStoryTitle & ".livecode") into tServerPath
+   put (tHttpsServerRoot & sStoryTitle & "/" & sStoryTitle & ".zip") into tServerPath
    replace space with "%20" in tServerPath
    
-   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".livecode" into tFilePath
    create folder tLocalDocumentsStories & sStoryTitle
    
-   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".livecode" into tFilePath
-   put URL (tServerPath) into URL ("binfile:" & tFilePath)
+   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".zip" into tFilePath
+   
+   put URL (tServerPath) into  URL ("binfile:" & tFilePath)
+   
+   // Open the archive
+   revZipOpenArchive tFilePath, "update"
+   
+   // Get the list of files in the archive
+   put revZipEnumerateItems(tFilePath) into tFiles
+   
+   // Get the path to the folder the files should be extracted to
+   set the itemDel to "/"
+   put tFilePath into tLocation
+   delete item -1 of tLocation
+   
+   // Extract each file
+   repeat for each line tItem in tFiles
+      revZipExtractItemToFile tFilePath, tItem, tLocation & "/" & tItem
+   end repeat
+   
+   // Close the archive
+   revZipCloseArchive tFilePath
    
 end dataServerStack 
 
-
-
-
--------
-local pData,  tCd,  
-
-command addJournalEntry -- save a bookmark to db
+#development
+command visualArticle sWhere
+   if sWhere is "server" then
+      
+      // answer the questions:
+      --      "There are XX metabytes of images. Shall we download them?
+      --      You have a chance to get rid of them. Or save to your phone.
+      --       You will go back and finish up the story."
+      --  No | Yes
+      --      if it is "No" then don't
+      
+      --         you do the visualArticl3
+      end  if
+      
+   end visualArticle
+   
+   
+   -------
+   local pData,  tCd,  
+   
+   command addJournalEntry -- save a bookmark to db
    local tTitle
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle 
@@ -219,6 +265,5 @@ end closecard
 on closestack  
    portal_SetLastStack "stories" 
 end closestack
-
 
 
