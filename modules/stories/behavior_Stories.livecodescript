@@ -52,7 +52,7 @@ on opencard
    put the keys of sStoriesMetaArray["Stories"] into fld "storyMenu"
    showStoryMenu
 end opencard
-      
+
 command showStoryMenu
    dispatch "deleteMobileControl" to sTips with "tips"
    dispatch "createScroller" to sStoryMenu with "storyMenu"
@@ -141,26 +141,45 @@ on dataServerStack
    
    put URL (tServerPath) into  URL ("binfile:" & tFilePath)
    
+   -- Open the archive for reading.
+   --revZipOpenArchive tFilePath, "read"
+   
    // Open the archive
    revZipOpenArchive tFilePath, "update"
    
    // Get the list of files in the archive
    put revZipEnumerateItems(tFilePath) into tFiles
    
+   replace ".DS_Store" with "" in tFiles
+   
    // Get the path to the folder the files should be extracted to
    set the itemDel to "/"
    put tFilePath into tLocation
    delete item -1 of tLocation
    
+   -- Open the archive for reading.
+   revZipOpenArchive (sStoryTitle & ".zip"), "read"
+   
    // Extract each file
    repeat for each line tItem in tFiles
-      revZipExtractItemToFile tFilePath, tItem, tLocation & "/" & tItem
+      
+      if (char -1 of tItem) = "/" then
+         replace "/" with "" in tItem
+         --put tLocation & "/" & tItem
+         create folder tLocation & "/" & tItem
+      end if
+      put tLocation & "/" & tItem
+      
+      revZipExtractItemToFile (sStoryTitle & ".zip"), tItem, tLocation & "/" & tItem
+      
    end repeat
+   
    
    // Close the archive
    revZipCloseArchive tFilePath
    
-end dataServerStack 
+end dataServerStack
+
 
 #development
 command visualArticle sWhere
@@ -274,5 +293,7 @@ end closecard
 on closestack  
    portal_SetLastStack "stories" 
 end closestack
+
+
 
 

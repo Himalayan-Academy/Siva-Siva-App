@@ -330,6 +330,17 @@ command init_CreateLocalFolders
    
 end init_CreateLocalFolders
 
+command init_DocumentFiles
+   if  there is a file (path_Documents()  & "modules/stories/stories.json") then
+      # do nothing
+      --      put "do nothing"
+   else
+      put url ("file:" & path_Modules() & "stories/stories.json") into \
+            url  ("file:" &  path_Documents()  & "modules/stories/stories.json")
+   end if
+   
+end init_DocumentFiles
+
 
 -->Project | Start
 

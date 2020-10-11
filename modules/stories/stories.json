@@ -1,8 +1,12 @@
 {
+"lastUpdate":{
+   "theTime":"Sat, 10 Oct 2020 17:38:06 -1000"
+   },
   "Stories": {
    "My Trek to Siva": {
       "where":"server",
-      "Attribution": "Aravind Gopal"    
+      "Attribution": "Aravind Gopal" , 
+     "imageDate" : "35mb"
     }, 
     "Vedas": {
      "where":"local",
