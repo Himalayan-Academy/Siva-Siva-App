@@ -19,7 +19,8 @@ local  sStoriesMetaArray, sStoryTitle
 
 function loadStoriesMetadata 
    local tStoryData
-   put url ("binfile:" & path_Modules()& "stories/stories.json") into tStoryData
+   --put url ("binfile:" & path_Modules()& "stories/stories.json") into tStoryData
+   put url ("binfile:" & path_Documents()& "modules/stories/stories.json") into tStoryData
    put JSONToArray(tStoryData) into sStoriesMetaArray 
    return sStoriesMetaArray
 end loadStoriesMetadata
@@ -91,6 +92,81 @@ on makeStoryFromDisk
    end repeat
    
 end makeStoryFromDisk
+
+
+on dataLocalStack sStoryTitle
+  local pPassTitle
+  put loadStoriesMetadata() into sStoriesMetaArray
+  put sStoryTitle into pPassTitle
+  send "makeStoryLocal pPassTitle" to stack "makeStoryLocal" in 0 seconds
+
+
+end dataLocalStack
+
+
+on dataServerStack sStoryTitle
+ put loadStoriesMetadata() into sStoriesMetaArray
+
+ local tHttpsServerRoot, tLocalDocumentsStories
+ local tFilePath, tServerPath, tFiles, tLocation
+ local tItems, tCompressionMethod,tItem
+
+ put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
+ put path_Documents()& "media/stories/" into tLocalDocumentsStories
+
+ put (tHttpsServerRoot & sStoryTitle & "/" & sStoryTitle & ".zip") into tServerPath
+ replace space with "%20" in tServerPath
+
+ create folder tLocalDocumentsStories & sStoryTitle
+
+ put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".zip" into tFilePath
+ put URL (tServerPath) into  URL ("binfile:" & tFilePath)
+
+ ------ # open the database
+
+ set the itemDel to "/"
+ put item 1 to -2 of tFilePath into tLocation
+ put "/" & char 1 to -5 of item -1 of tFilePath after tLocation
+ ensureFolder tLocation
+
+ revZipOpenArchive tFilePath, "read"
+ local tZipContents
+ --   put revZipEnumerateItems(tFilePath) into tZipContents
+ put revZipEnumerateItems(tFilePath) into tFiles
+
+ repeat for each line tItem in tFiles
+    set the itemDel to comma
+    put item 6 of revZipDescribeItem(tFilePath,tItem) into tCompressionMethod
+    set the itemDel to "/"    
+
+    if char -1 of tItem is "/" then
+       -- we ignore extraction of folders, as libzip doesnt handle folders
+    else if item -1 of tItem is ".DS_Store" then
+       // Check for ".DS_Store"
+       ensureFolder tLocation & "/" & item 1 to -2 of tItem
+    else if tCompressionMethod is "deflate" then
+       -- first make sure that the folder exists
+       ensureFolder tLocation & "/" & item 1 to -2 of tItem
+       revZipExtractItemToFile tFilePath, tItem, tLocation & "/" & tItem
+    else
+       -- ignore this item, possibly displaying a message to the user, that this file cannot be extracted
+       -- because its compression type is not supported by this program
+    end if
+ end repeat
+
+ revZipCloseArchive tFilePath
+
+end dataServerStack
+
+on ensureFolder pFolder
+ set the itemDel to "/"
+ repeat with x = 1 to the number of items in pFolder
+    if there is not a folder (item 1 to x of pFolder) then
+       create folder (item 1 to x of pFolder)
+    end if
+ end repeat
+end ensureFolder
+
 
 
 command  getContent sStoryTitle # keys of the stories.json 

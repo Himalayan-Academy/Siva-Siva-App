@@ -82,14 +82,16 @@ on mouseup
          
          switch sWhere
             case "local" 
-               dataLocalStack
+               dataLocalStack sStoryTitle
+                     # pass on to the model_Stories
                
                # development
                open (path_Modules() & "stories/makeStoryLocal.livecode")
                
                break
             case "server"
-               dataServerStack
+               dataServerStack sStoryTitle
+                     # pass on to the model_Stories
                
                # development
                open (path_Documents() & "media/stories/"  & sStoryTitle & "/" & sStoryTitle & ".livecode")
@@ -116,70 +118,6 @@ on mouseup
    end switch
    
 end mouseup
-
-on dataLocalStack
-   local pPassTitle
-   put sStoryTitle into pPassTitle
-   send "makeStoryLocal pPassTitle" to stack "makeStoryLocal" in 0 seconds
-   
-   
-end dataLocalStack
-
-on dataServerStack
-   local tHttpsServerRoot, tLocalDocumentsStories
-   local tFilePath, tServerPath, tFiles, tLocation
-   
-   put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
-   put path_Documents()& "media/stories/" into tLocalDocumentsStories
-   
-   put (tHttpsServerRoot & sStoryTitle & "/" & sStoryTitle & ".zip") into tServerPath
-   replace space with "%20" in tServerPath
-   
-   create folder tLocalDocumentsStories & sStoryTitle
-   
-   put tLocalDocumentsStories & sStoryTitle & "/" & sStoryTitle & ".zip" into tFilePath
-   
-   put URL (tServerPath) into  URL ("binfile:" & tFilePath)
-   
-   -- Open the archive for reading.
-   --revZipOpenArchive tFilePath, "read"
-   
-   // Open the archive
-   revZipOpenArchive tFilePath, "update"
-   
-   // Get the list of files in the archive
-   put revZipEnumerateItems(tFilePath) into tFiles
-   
-   replace ".DS_Store" with "" in tFiles
-   
-   // Get the path to the folder the files should be extracted to
-   set the itemDel to "/"
-   put tFilePath into tLocation
-   delete item -1 of tLocation
-   
-   -- Open the archive for reading.
-   revZipOpenArchive (sStoryTitle & ".zip"), "read"
-   
-   // Extract each file
-   repeat for each line tItem in tFiles
-      
-      if (char -1 of tItem) = "/" then
-         replace "/" with "" in tItem
-         --put tLocation & "/" & tItem
-         create folder tLocation & "/" & tItem
-      end if
-      put tLocation & "/" & tItem
-      
-      revZipExtractItemToFile (sStoryTitle & ".zip"), tItem, tLocation & "/" & tItem
-      
-   end repeat
-   
-   
-   // Close the archive
-   revZipCloseArchive tFilePath
-   
-end dataServerStack
-
 
 #development
 command visualArticle sWhere
