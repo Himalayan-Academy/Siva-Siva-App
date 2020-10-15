@@ -350,19 +350,18 @@ command init_DocumentFiles
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
    
    breakpoint
-   
-   put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
-   put JSONToArray(tServer) into tServerArray
-   put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
+   try
+      put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
+   catch errorStatement
+      put JSONToArray(tServer) into tServerArray
+      put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
+      
+   end try 
    
    if tRemoteSeconds > tLocalSeconds then
       put tServer  into url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
    
-   
-   repeat forever
-      send "init_DocumentFiles" to me in 60 seconds
-   end repeat
    
 end init_DocumentFiles
 
