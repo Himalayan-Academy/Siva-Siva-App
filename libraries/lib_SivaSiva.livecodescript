@@ -267,11 +267,7 @@ end path_Models
 command fetchNavigationMap
    local tPath, tJSON
    put path_HomeLocal() into tPath
-   --if the platform is "android" then
-      --put "models/model_SivaSiva/model_SivaAndroid.json" after tPath
-   --else
-      put "models/model_SivaSiva/model_SivaSiva.json" after tPath
- -- end if
+ put "models/model_SivaSiva/model_SivaSiva.json" after tPath
    put url ("file:" & tPath) into tJSON
    put JSONToArray(tJSON) into sSivaSivaNavigation
 end fetchNavigationMap

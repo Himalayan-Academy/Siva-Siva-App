@@ -192,6 +192,9 @@
       "rowData": {
         "1": {
           "rowName": "Word Puzzles"
+        },
+         "2": {
+          "rowName": "Image Puzzles"
         }
       }, 
       "portalName": "fun", 
@@ -364,6 +367,14 @@
       "imageText": "Word\nPuzzles", 
       "link": {
         "portal param": "stack \"wordpuzzles\"", 
+        "portal command": "portal_GoStack"
+      }, 
+      "shortImageFile": "thumb_word-puzzles.png"
+    },  
+"Image Puzzles": {
+      "imageText": "Image\nPuzzles", 
+      "link": {
+        "portal param": "stack \"imagepuzzles\"", 
         "portal command": "portal_GoStack"
       }, 
       "shortImageFile": "thumb_word-puzzles.png"
@@ -764,10 +775,6 @@
     },
     
  "__comment4__":"That go where. We including just for development", 
-"Image Puzzles": {
-      "imageText": "Image\nPuzzles", 
-      "shortImageFile": "thumb_image-puzzles.png"
-    },
  "Preparation for Meditation": {
       "imageText": "Preparation\nfor\nMeditation", 
       "shortImageFile": "thumb_preparation_shtrstk-372104245.png"
