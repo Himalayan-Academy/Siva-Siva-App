@@ -22,8 +22,9 @@ on opencard
    
    switch tShortName
       case "Title"  
+         wait 1 seconds
          visual effect "dissolve" very slow
-         send "go to card 2" to me in 500 milliseconds
+       go to card 2
          break
          
          
@@ -87,25 +88,37 @@ end mouseup
    local tLeftCoord,tTopCoord
    
 on makePuzzle
+   local tImage, tLocPuzzleFrame
+   
    clearImageTiles
-   lock screen
+   --lock screen
+   
+   put the long id of img "puzzle" into tImage
+   
+   set the topleft of img "puzzle" to 0,0
+   
+   resizeToWidth tImage,400
    
    put the rect of the last image into tImageData["rect"]
    put the imageData of the last image into tImageData["image"]
    set the name of the last image to "currentpuzzle"
-      
+   
    set the rect of grc "puzzleFrame" to  tImageData["rect"]
-   set the loc of grc "puzzleFrame" to the loc of this card
+   put the long id of grc "puzzleFrame" into tLocPuzzleFrame
+   topCenterMe tLocPuzzleFrame, 40
+   
    show grc "puzzleFrame"
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
-   put the left of image "currentPuzzle" into  tInitialLeft
-   put the top of image "currentPuzzle" into tInitialTop
+   --put the left of image "currentPuzzle" into  tInitialLeft
+   --put the top of image "currentPuzzle" into tInitialTop
+   put the left of grc "puzzleFrame" into  tInitialLeft
+   put the top of grc "puzzleFrame" into tInitialTop
    
    if gPuzzleLevel is empty then
-      put 4 into gPuzzleLevel
-      set the hilitedbutton of group "puzzleLevels" to btn "4"
+      put 9 into gPuzzleLevel
+      set the hilitedbutton of group "puzzleLevels" to btn "9"
    end if
    
    put 1 into tTileNumber
@@ -203,7 +216,7 @@ command toggleInfoPanel
 end toggleInfoPanel
 
 on clearImageTiles
-   hide grc "puzzleFrame"
+   show grc "puzzleFrame"
    
    try
       repeat with x = 1 to 200

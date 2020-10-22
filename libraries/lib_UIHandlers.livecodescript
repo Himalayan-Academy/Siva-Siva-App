@@ -380,11 +380,15 @@ on resizeToHeight pImage,pSize
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
+   
    if tOrigImgHeight is 0 then exit resizeToHeight
+   
    put (pSize)/tOrigImgHeight  into tRatio
    put (tOrigImgWidth * tRatio) into tNewWidth
-   put (tOrigImgHeight * tRatio) into tNewHeight
-   set the rect of pImage to 0,0,tNewWidth,tNewHeight  
+   put (tOrigImgHeight * tRatio) into  tNewHeight 
+   
+   set the rect of pImage to 0,0,tNewWidth,tNewHeight
+   
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 
@@ -392,11 +396,15 @@ on resizeToWidth pImage,pSize
    set the itemdel to "x"
    put item 1 of sCurrentGraphicRect into tOrigImgWidth
    put item 2 of sCurrentGraphicRect into tOrigImgHeight
+   
    if tOrigImgWidth is 0 then exit resizeToWidth
+   
    put pSize/tOrigImgWidth into tRatio 
-   put (tOrigImgWidth * tRatio) into tNewWidth
    put (tOrigImgHeight * tRatio) into tNewHeight
+   put (tOrigImgWidth * tRatio) into  tNewWidth
+   
    set the rect of  pImage to 0,0,tNewWidth,tNewHeight
+   
 end resizeToWidth
 
 #  when we want a background in to fill the screen
