@@ -1,0 +1,15 @@
+Specification: Image Puzzles
+
+1) Bring up a movie with a browser
+        -- Title it "Image Puzzles"
+2) A paused, briefly, a briefly dissolve 
+3) three bars come  up dissolve fast
+4) Got to 16 Panel tile
+5) Image of Ganesha
+6) three bar open
+        - "Make"
+        - Tile Panel choices 9,12,16,24,32,64
+        - category: leave options for category selected to Dieties
+        
+7) Dissolve picture
+        - "Make"
