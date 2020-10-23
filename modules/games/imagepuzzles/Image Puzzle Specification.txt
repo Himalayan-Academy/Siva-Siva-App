@@ -1,7 +1,7 @@
 Specification: Image Puzzles
 
-1) preferences
-        - bring in sound
-     - tiles word on
-     2) need a handler that leads to go categpory
-2) need a handler : on a mouse up lead to work to on on categories: 1) randan calls from that type  of calls, 
+randon calls from that type  of calls, 
+
+lib_SivaSivaMedia
+
+Gems world of

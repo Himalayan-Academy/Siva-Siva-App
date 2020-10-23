@@ -3,6 +3,7 @@ global gPuzzleLevel
 local sTargetOwner, sTarget
 local sIsHome,sImageForTiles
 local sTiles,sMsg, sMyHome
+local sJournalData, sRealm
 
 on preOpenStack
    if isMobile() then    
@@ -24,7 +25,7 @@ on opencard
       case "Title"  
          wait 3 seconds
          visual effect "dissolve" very slow
-       go to card 2
+         go to card 2
          break
          
          
@@ -45,6 +46,9 @@ on mouseup
          portal_GoStack ("Siva-Siva-Portal")
          break
          
+         
+         -- INFO PANEL BEHAVIOR 
+         
       case "Make a Puzzle"
          toggleInfoPanel
          
@@ -55,15 +59,21 @@ on mouseup
          toggleInfoPanel
          break
          
-         
-         -- INFO PANEL BEHAVIOR 
+         -- CATEGORY PANEL BEHAVIOR 
          
       case "categoryImages"
          toggleCategoryPanel
          break
          
-         
-         
+      case "Devas"
+         put "Realm of God" into sRealm
+         break
+      case "Your Soul"
+         put "Realm of Soul" into sRealm 
+         break
+      case "Life"
+         put "Realm of Life" into sRealm 
+         break
          
          -- UTILITiES
          
@@ -78,27 +88,26 @@ on mouseup
          set the uImage_puzzle1 of this stack to uImageGanesh1
          break
          
-         
-         
-         
    end switch
 end mouseup
 
-   -------------- 
-   local tImageWidth, tImageHeight, tImageData
-   local tInitialLeft, tInitialTop, tTileNumber, tCrossCount
-   local tTileWidth,tTileheight,tRightEdge,tBottomEdge
-   local tLeftCoord,tTopCoord
-   
+-------------- 
+local tImageWidth, tImageHeight, tImageData
+local tInitialLeft, tInitialTop, tTileNumber, tCrossCount
+local tTileWidth,tTileheight,tRightEdge,tBottomEdge
+local tLeftCoord,tTopCoord
+
 on makePuzzle
    local tImage, tLocPuzzleFrame
+   local tImgSQL, tImageFileIDclearImageTiles
    
-   clearImageTiles
    lock screen
-   show grc "puzzleFrame"
-   put the long id of img "puzzle" into tImage
    
-   set the topleft of img "puzzle" to 0,0
+   fetchImage sRealm
+   show grc "puzzleFrame"
+   
+   put the long id of img "currentpuzzle" into tImage
+   set the topleft of img "currentpuzzle" to 0,0
    
    resizeToWidth tImage,400
    
@@ -249,20 +258,20 @@ end clearImageTiles
 on checkCompletion 
    local  tTargetLocs,tImgLocs
    
-  put the uTileList of this card into sTiles 
-  repeat for each line x in sTiles 
-    put the uTileLocation of img x & cr after tTargetLocs 
-    put the loc of img x & cr after tImgLocs 
-  end repeat 
-  sort tTargetLocs numeric by item 2 of each 
-  sort tImgLocs numeric by item 2 of each 
-  sort tTargetLocs numeric by item 1 of each 
-  sort tImgLocs numeric by item 1 of each 
-  if tTargetLocs = tImgLocs then 
-       #stopTimer 
-      put "Congratulations! " & cr & "You did it!" into sMsg
-   fireCompletedAction sMsg
-  end if 
+   put the uTileList of this card into sTiles 
+   repeat for each line x in sTiles 
+      put the uTileLocation of img x & cr after tTargetLocs 
+      put the loc of img x & cr after tImgLocs 
+   end repeat 
+   sort tTargetLocs numeric by item 2 of each 
+   sort tImgLocs numeric by item 2 of each 
+   sort tTargetLocs numeric by item 1 of each 
+   sort tImgLocs numeric by item 1 of each 
+   if tTargetLocs = tImgLocs then 
+      #stopTimer 
+      put "Congratulations! " & cr & "You did it!" into sMsg
+      fireCompletedAction sMsg
+   end if 
 end checkCompletion 
 
 command fireCompletedAction pMsg
@@ -288,9 +297,9 @@ end checkHomeProximity
 
 function getLocation tCoords
    local theX, theY
-     put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
-      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
-      return (theX,theY)
+   put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
+   put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+   return (theX,theY)
 end getLocation
 
 
@@ -299,7 +308,20 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
-
-on errorDialog pExecutionError, pParseError
+command fetchImage sRealm
+   local tImgSQL, tImageFileID, tCurrentPuzzle, tControl
+   create img "currentPuzzle"
+   if sRealm is empty then
+      put "Realm of God" into sRealm
+   end if
    
-end errorDialog
+   put the uRandomImageSelect of this card into tImgSQL
+   replace ":1" with sRealm in tImgSQL
+   dbSetSQL tImgSQL
+   put dbGet ("file_id", JnanamDB()) into tImageFileID
+   put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
+   put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
+   
+   set the filename of img "currentpuzzle" to sivasiva_AssetFolder() & tCurrentPuzzle
+   
+end fetchImage
