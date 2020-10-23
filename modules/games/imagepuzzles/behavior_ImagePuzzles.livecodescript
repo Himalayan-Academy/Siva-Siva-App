@@ -22,7 +22,7 @@ on opencard
    
    switch tShortName
       case "Title"  
-         wait 1 seconds
+         wait 3 seconds
          visual effect "dissolve" very slow
        go to card 2
          break
@@ -58,6 +58,9 @@ on mouseup
          
          -- INFO PANEL BEHAVIOR 
          
+      case "categoryImages"
+         toggleCategoryPanel
+         break
          
          
          
@@ -91,8 +94,8 @@ on makePuzzle
    local tImage, tLocPuzzleFrame
    
    clearImageTiles
-   --lock screen
-   
+   lock screen
+   show grc "puzzleFrame"
    put the long id of img "puzzle" into tImage
    
    set the topleft of img "puzzle" to 0,0
@@ -209,14 +212,30 @@ end distributeTiles
 
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
-      move grp "makeTiles"  relative 0,-120 without waiting
+      move grp "makeTiles"  relative 0,-90 without waiting
+      hide btn "backArrow"
+      hide btn "categoryImages"
    else 
-      move grp "makeTiles"   relative  0,120 without waiting
+      move grp "makeTiles"   relative  0,90 without waiting
+      show btn "backArrow"
+      show btn "categoryImages"
    end if
 end toggleInfoPanel
 
+command toggleCategoryPanel
+   if the bottom of grp "categoryPanel"  >  800 then 
+      move grp "categoryPanel"  relative 0,-90 without waiting
+      hide btn "backArrow"
+      hide btn "infoPanel"
+   else 
+      move grp "categoryPanel"   relative  0,90 without waiting
+      show btn "backArrow"
+      show btn "infoPanel"
+   end if
+end toggleCategoryPanel
+
 on clearImageTiles
-   show grc "puzzleFrame"
+   hide grc "puzzleFrame"
    
    try
       repeat with x = 1 to 200
@@ -279,3 +298,8 @@ end getLocation
 on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
+
+
+on errorDialog pExecutionError, pParseError
+   
+end errorDialog
