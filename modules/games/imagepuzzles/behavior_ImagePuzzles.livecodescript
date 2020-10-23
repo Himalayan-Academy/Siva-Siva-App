@@ -51,8 +51,9 @@ on mouseup
          
       case "Make a Puzzle"
          toggleInfoPanel
+         fetchImage sRealm
          
-         makePuzzle
+         send "makePuzzle" to me in 500 milliseconds
          break
          
       case "infoPanel"
@@ -67,12 +68,15 @@ on mouseup
          
       case "Devas"
          put "Realm of God" into sRealm
+         toggleCategoryPanel
          break
       case "Your Soul"
          put "Realm of Soul" into sRealm 
+         toggleCategoryPanel
          break
       case "Life"
          put "Realm of Life" into sRealm 
+         toggleCategoryPanel
          break
          
          -- UTILITiES
@@ -102,12 +106,10 @@ on makePuzzle
    local tImgSQL, tImageFileIDclearImageTiles
    
    lock screen
-   
-   fetchImage sRealm
    show grc "puzzleFrame"
    
-   put the long id of img "currentpuzzle" into tImage
-   set the topleft of img "currentpuzzle" to 0,0
+   put the long id of img "puzzle" into tImage
+   set the topleft of img "puzzle" to 0,0
    
    resizeToWidth tImage,400
    
@@ -310,7 +312,7 @@ end closestack
 
 command fetchImage sRealm
    local tImgSQL, tImageFileID, tCurrentPuzzle, tControl
-   create img "currentPuzzle"
+   create img "Puzzle"
    if sRealm is empty then
       put "Realm of God" into sRealm
    end if
@@ -322,6 +324,12 @@ command fetchImage sRealm
    put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
    put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
    
-   set the filename of img "currentpuzzle" to sivasiva_AssetFolder() & tCurrentPuzzle
-   
+   --set the filename of img "puzzle" to sivasiva_AssetFolder() & tCurrentPuzzle
+   import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
+  
 end fetchImage
+
+
+on mouseLeave
+   
+end mouseLeave
