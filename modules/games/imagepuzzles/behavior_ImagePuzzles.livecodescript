@@ -1,7 +1,7 @@
 ﻿script "behavior_ImagePuzzles"
 global gPuzzleLevel
 local sTargetOwner, sTarget
-local sIsHome,sImageForTiles
+local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
 local sJournalData, sRealm
 
@@ -100,33 +100,34 @@ local tImageWidth, tImageHeight, tImageData
 local tInitialLeft, tInitialTop, tTileNumber, tCrossCount
 local tTileWidth,tTileheight,tRightEdge,tBottomEdge
 local tLeftCoord,tTopCoord
+local tImage, tImageFile
+local tNextTileName, tTileLocation,tTileList
 
 on makePuzzle
-   local tImage, tLocPuzzleFrame
-   local tImgSQL, tImageFileIDclearImageTiles
-   
    lock screen
-   show grc "puzzleFrame"
+   Show grc "puzzleFrame"
    
-   put the long id of img "puzzle" into tImage
-   set the topleft of img "puzzle" to 0,0
+   put the long id of last image into tImage
+   set the topleft of last image to 0,0
    
-   resizeToWidth tImage,400
+   put the long id of grc "puzzleFrame" into sLocPuzzleFrame
+   
+   resizeToWidth tImage, 400
    
    put the rect of the last image into tImageData["rect"]
    put the imageData of the last image into tImageData["image"]
    set the name of the last image to "currentpuzzle"
    
    set the rect of grc "puzzleFrame" to  tImageData["rect"]
-   put the long id of grc "puzzleFrame" into tLocPuzzleFrame
-   topCenterMe tLocPuzzleFrame, 40
+   
+   
+   topCenterMe sLocPuzzleFrame, 40
    
    show grc "puzzleFrame"
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
-   --put the left of image "currentPuzzle" into  tInitialLeft
-   --put the top of image "currentPuzzle" into tInitialTop
+   
    put the left of grc "puzzleFrame" into  tInitialLeft
    put the top of grc "puzzleFrame" into tInitialTop
    
@@ -146,7 +147,7 @@ on makePuzzle
    put tInitialLeft into tLeftCoord
    put tInitialTop into tTopCoord
    
-   local tNextTileName, tTileLocation,tTileList
+   
    # do one row at a time horizontally
    repeat tCrossCount Times
       # Each iteration we drop down one row (see below)
@@ -192,34 +193,50 @@ on makePuzzle
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
 
+
 on distributeTiles
    local tTilesShelf,tShelfWidth
-   local tShelfheight,tX,tY
+   local tShelfheigth,tX,tY
    
    put the uTileList of this card into sTiles
    repeat for each line x in sTiles
       # set up random locations that fall inside the Scattered Tile Zone area
-      # left position at least 100 pixels from the edge for long words 
-      # put the rect of grc "tilesShelf" into tTilesShelf
-      put the rect of this card into tTilesShelf
+      # left position by 120 pixels  
+      # height position by 180 pixel
+      
+      
+      put the rect of  sLocPuzzleFrame into tTilesShelf
       split tTilesShelf by "," 
       
-      # Use a hidden grc as the location for tiles
-      -- put (the width of grc "tilesShelf")-120 into tShelfWidth
-      --  put (the height of grc "tilesShelf")-120 into tShelfHeight
-      
-      # Use the whole card for spreading out tiles
-      
-      put (the width of this card) -100 into tShelfWidth
-      put (the height of this card) -100 into tShelfheight
+      put (the width of this card) -120 into tShelfWidth
+      put (the height of this card) -100 into tShelfheigth
       
       put random(tShelfWidth) + (tTilesShelf[1])+60 into tX
-      put random(tShelfHeight) + (tTilesShelf[2])+50 into tY
+      put random(tShelfHeigth) + (tTilesShelf[2])+25 into tY
       
       #set the loc of img x to tX,tY
       move img x to  tX,tY in 80 milliseconds
    end repeat
 end distributeTiles
+
+command fetchImage sRealm
+   local tImgSQL, tImageFileID, tCurrentPuzzle, tControl
+   
+   if sRealm is empty then
+      put "Realm of God" into sRealm
+   end if
+   
+   put the uRandomImageSelect of this card into tImgSQL
+   replace ":1" with sRealm in tImgSQL
+   dbSetSQL tImgSQL
+   put dbGet ("file_id", JnanamDB()) into tImageFileID
+   put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
+   put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
+   
+   set the paintCompression to "JPEG"
+   import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
+  
+end fetchImage
 
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
@@ -247,7 +264,9 @@ end toggleCategoryPanel
 
 on clearImageTiles
    hide grc "puzzleFrame"
-   
+   try 
+      delete image "Puzzle"
+   end try
    try
       repeat with x = 1 to 200
          delete image ("tile_" & x)
@@ -310,26 +329,5 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
-command fetchImage sRealm
-   local tImgSQL, tImageFileID, tCurrentPuzzle, tControl
-   create img "Puzzle"
-   if sRealm is empty then
-      put "Realm of God" into sRealm
-   end if
-   
-   put the uRandomImageSelect of this card into tImgSQL
-   replace ":1" with sRealm in tImgSQL
-   dbSetSQL tImgSQL
-   put dbGet ("file_id", JnanamDB()) into tImageFileID
-   put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
-   put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
-   
-   --set the filename of img "puzzle" to sivasiva_AssetFolder() & tCurrentPuzzle
-   import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
-  
-end fetchImage
 
 
-on mouseLeave
-   
-end mouseLeave
