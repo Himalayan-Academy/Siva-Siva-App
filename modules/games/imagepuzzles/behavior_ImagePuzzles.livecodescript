@@ -1,6 +1,7 @@
 ﻿script "behavior_ImagePuzzles"
 global gPuzzleLevel
 local sTargetOwner, sTarget
+local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
 local sJournalData, sRealm
@@ -22,8 +23,9 @@ on opencard
    put the short name of this card into tShortName
    
    switch tShortName
-      case "Title"  
-         wait 3 seconds
+      case "Title" 
+         setDefaultImage 
+         wait 2 seconds
          visual effect "dissolve" very slow
          go to card 2
          break
@@ -98,7 +100,7 @@ end mouseup
 -------------- 
 local tImageWidth, tImageHeight, tImageData
 local tInitialLeft, tInitialTop, tTileNumber, tCrossCount
-local tTileWidth,tTileheight,tRightEdge,tBottomEdge
+local tTileWidth,tTileheight,tTilePick, tRightEdge,tBottomEdge
 local tLeftCoord,tTopCoord
 local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
@@ -131,10 +133,17 @@ on makePuzzle
    put the left of grc "puzzleFrame" into  tInitialLeft
    put the top of grc "puzzleFrame" into tInitialTop
    
-   if gPuzzleLevel is empty then
-      put 9 into gPuzzleLevel
-      set the hilitedbutton of group "puzzleLevels" to btn "9"
-   end if
+   switch
+      case (gPuzzleLevel is empty)
+         put 9 into gPuzzleLevel
+         break
+      case (gPuzzleLevel is 9)
+         put 16 into gPuzzleLevel
+         break
+      case (gPuzzleLevel is 16)
+         put 9 into gPuzzleLevel
+         break
+   end switch
    
    put 1 into tTileNumber
    
@@ -146,7 +155,6 @@ on makePuzzle
    put (tTileHeight+tInitialTop) into tBottomEdge
    put tInitialLeft into tLeftCoord
    put tInitialTop into tTopCoord
-   
    
    # do one row at a time horizontally
    repeat tCrossCount Times
@@ -240,32 +248,25 @@ end fetchImage
 
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
-      move grp "makeTiles"  relative 0,-90 without waiting
+      clearImageTiles
+      move grp "makeTiles"  relative 0,-170 without waiting
       hide btn "backArrow"
-      hide btn "categoryImages"
    else 
-      move grp "makeTiles"   relative  0,90 without waiting
+      clearImageTiles
+      move grp "makeTiles"   relative  0,170 without waiting
       show btn "backArrow"
-      show btn "categoryImages"
    end if
 end toggleInfoPanel
-
-command toggleCategoryPanel
-   if the bottom of grp "categoryPanel"  >  800 then 
-      move grp "categoryPanel"  relative 0,-90 without waiting
-      hide btn "backArrow"
-      hide btn "infoPanel"
-   else 
-      move grp "categoryPanel"   relative  0,90 without waiting
-      show btn "backArrow"
-      show btn "infoPanel"
-   end if
-end toggleCategoryPanel
 
 on clearImageTiles
    hide grc "puzzleFrame"
    try 
       delete image "Puzzle"
+   end try
+   try
+   repeat with x = 1 to 4
+      delete image "currentpuzzle"
+   end repeat
    end try
    try
       repeat with x = 1 to 200
@@ -299,6 +300,11 @@ command fireCompletedAction pMsg
    answer pMsg with "OK"
 end fireCompletedAction
 
+function tilePick 
+   put (9 & cr & 16) into gPuzzleLevel -- tTilePick
+   sort lines of gPuzzleLevel by random(the number of lines of gPuzzleLevel) 
+   return gPuzzleLevel
+end tilePick
 
 function checkHomeProximity # Cause tile to snap to location if close
    local tLeftDistance, tTopDistance
@@ -323,11 +329,82 @@ function getLocation tCoords
    return (theX,theY)
 end getLocation
 
+command setDefaultImage pContext
+   --breakpoint
+   
+   #  see lib_SivaSiva | setUpBrandImage  
+   # where we set the cache with a branc image number 
+   
+   local pImage, tPaths, tTotalBrandImages
+   
+   put the long id of img "title" of card "Title" into sTitleImage
+   put _brandImages() into sBrandImages
+   
+   # will get this out when we close Sivasiva.app
+   # the user get a new brand image only opening the app.
+   
+   # variable is undefined at this point
+   --setCache "TotalBrandImages", tTotalBrandImages
+   put the number of lines of sBrandImages into tTotalBrandImages
+   put random(tTotalBrandImages) into sBrandImageNumber
+   put line sBrandImageNumber of sBrandImages into pImage
+   set the filename of img "title" to photoImagePath(pImage)
+   setImageToFullCardLoc sTitleImage,"portrait"
+   centerMe sTitleImage
+   # optimize disk operations *after* the display is finished updating
+   
+   --   --   put the number of lines of sBrandImages into tTotalBrandImages
+   --setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
+   
+end setDefaultImage 
+
+function PhotoImagePath pImage
+   local tPath
+   put path_Assets() & "img/photography/" & pImage & "/" \
+         & pImage & "_med.jpg" into tPath
+   return tPath
+end PhotoImagePath
+
+
+private function _brandImages 
+   local tBrandImages
+   put "app-img_who-is-siva_1200x800" & cr & \
+         "app-img_06-sadasiva_opt-80_552w-portrait" & cr & \
+         "app-img_01-sadyojata_opt-80_552w-portrait" & cr & \
+         "app-img_02-vamadeva_opt-80_552w-portrait" & cr & \
+         "app-img_03-aghora_opt-80_552w-portrait" & cr & \
+         "app-img_04-tatpurusha_opt-80_552w-portrait" & cr & \
+         "app-img_05-ishana_opt-80_552w-portrait" & cr & \
+         "app-img_hap-0140_552w-portrait" & cr & \
+         "app-img_sinha_9_552w-portrait" & cr & \
+         "app-img_siva_552w-portrait"& cr & \
+         "app-img_kadavul_nataraja_shrine_552w-portrait" & cr & \
+         "app-img_img_1444_736h-landscape_med" & cr & \
+         "app-img_ganagta02_l_552w-portrait" & cr & \
+         "app-img_dscn1092_552w-portrait" & cr & \
+         "app-img_book_siva_yogi_big_736h-square" & cr & \
+         "app-img_book_siva_face_736h-square" & cr & \
+         "app-img_agamasivadancing_736h-square" & cr & \
+         "app-img_70s_siva_poster_552w-portrait" & cr & \
+         "app-img_44_sharma_siva_552w-portrait" & cr & \
+         "app-img_34_linga_liberation_552w-portrait" & cr & \
+         "app-img_sinha_10_552w-portrait" & cr & \
+         "app-img_sinha_3_552w-portrait" & cr & \
+         "app-img_sinha_6_552w-portrait" & cr & \
+         "app-img_sinha_8_552w-portrait"  \
+         into tBrandImages
+   return tBrandImages
+end _brandImages
+
+function PhotoImagePath pImage
+   local tPath
+   put path_Assets() & "img/photography/" & pImage & "/" \
+         & pImage & "_med.jpg" into tPath
+   return tPath
+end PhotoImagePath
 
 ------------
 on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
-
-
 
