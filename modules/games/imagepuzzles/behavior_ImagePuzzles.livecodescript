@@ -1,6 +1,5 @@
 ﻿script "behavior_ImagePuzzles"
-global gPuzzleLevel
-local sTargetOwner, sTarget
+local sTargetOwner, sTarget,sPuzzleLevel
 local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
@@ -52,6 +51,7 @@ on mouseup
          -- INFO PANEL BEHAVIOR 
          
       case "Make a Puzzle"
+         hide img "orion_nebula"
          toggleInfoPanel
          fetchImage sRealm
          
@@ -133,21 +133,30 @@ on makePuzzle
    put the left of grc "puzzleFrame" into  tInitialLeft
    put the top of grc "puzzleFrame" into tInitialTop
    
-   switch
-      case (gPuzzleLevel is empty)
-         put 9 into gPuzzleLevel
-         break
-      case (gPuzzleLevel is 9)
-         put 16 into gPuzzleLevel
-         break
-      case (gPuzzleLevel is 16)
-         put 9 into gPuzzleLevel
-         break
-   end switch
+   put 9 into sPuzzleLevel
+   --   if 9 = sPuzzleLevel then
+   --      put 16 into  sPuzzleLevel
+   --   else
+   --      put 9 into sPuzzleLevel
+   --   else
+   --      put 9 into  sPuzzleLevel
+   --   end if
+   
+   --   switch
+   --      case (sPuzzleLevel is empty)
+   --         put 9 into sPuzzleLevel
+   --         break
+   --      case (sPuzzleLevel is 9)
+   --         put 16 into sPuzzleLevel
+   --         break
+   --      case (sPuzzleLevel is 16)
+   --         put 9 into sPuzzleLevel
+   --         break
+   --   end switch
    
    put 1 into tTileNumber
    
-   put sqrt(gPuzzleLevel) into tCrossCount
+   put sqrt(sPuzzleLevel) into tCrossCount
    
    put tImageWidth/tCrossCount into tTileWidth
    put tImageheight/tCrossCount into tTileHeight
@@ -223,7 +232,10 @@ on distributeTiles
       put random(tShelfHeigth) + (tTilesShelf[2])+25 into tY
       
       #set the loc of img x to tX,tY
-      move img x to  tX,tY in 80 milliseconds
+      
+      try
+         move img x to  tX,tY in 80 milliseconds
+      end try
    end repeat
 end distributeTiles
 
@@ -251,6 +263,7 @@ command toggleInfoPanel
       clearImageTiles
       move grp "makeTiles"  relative 0,-170 without waiting
       hide btn "backArrow"
+      show img "orion_nebula"
    else 
       clearImageTiles
       move grp "makeTiles"   relative  0,170 without waiting
@@ -260,26 +273,20 @@ end toggleInfoPanel
 
 on clearImageTiles
    hide grc "puzzleFrame"
-   try 
-      delete image "Puzzle"
-   end try
-   try
-   repeat with x = 1 to 4
-      delete image "currentpuzzle"
-   end repeat
-   end try
+  
    try
       repeat with x = 1 to 200
          delete image ("tile_" & x)
       end repeat
    end try
-   set the uTileList of this card to empty
+   --   --   set the uTileList of this card to empty
    
 end clearImageTiles
 
 on checkCompletion 
    local  tTargetLocs,tImgLocs
    
+   --   put sPuzzleLevel into 
    put the uTileList of this card into sTiles 
    repeat for each line x in sTiles 
       put the uTileLocation of img x & cr after tTargetLocs 
@@ -299,12 +306,6 @@ end checkCompletion
 command fireCompletedAction pMsg
    answer pMsg with "OK"
 end fireCompletedAction
-
-function tilePick 
-   put (9 & cr & 16) into gPuzzleLevel -- tTilePick
-   sort lines of gPuzzleLevel by random(the number of lines of gPuzzleLevel) 
-   return gPuzzleLevel
-end tilePick
 
 function checkHomeProximity # Cause tile to snap to location if close
    local tLeftDistance, tTopDistance
