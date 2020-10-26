@@ -349,7 +349,7 @@ command init_DocumentFiles
    put JSONToArray(tLocalJson) into tLocalArray
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
    
-   breakpoint
+   --breakpoint
    try
       put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
    catch errorStatement

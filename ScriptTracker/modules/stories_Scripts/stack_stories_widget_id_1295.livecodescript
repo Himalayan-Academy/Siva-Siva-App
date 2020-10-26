@@ -8,6 +8,5 @@ Script "stack_stories_widget_id_1295"
 
 
 on mouseup
-   --goNext
-   answer "hell0" with "OK"
+   goNextScene
 end mouseup

@@ -1,7 +1,7 @@
 Script "stack_stories_group_id_1301"
 
 /*
-# Name: group "share-ui" of card "storiesHome" of stack "stories"
+# Name: group "share-ui" of card "storyHome" of stack "stories"
 # ID: group id 1301 of card id 1002 of stack "stories"
 # Behavior: stack "behavior_SocialShare"
 */

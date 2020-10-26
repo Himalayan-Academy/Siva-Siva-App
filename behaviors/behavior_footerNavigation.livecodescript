@@ -52,6 +52,8 @@ on mouseup
             show grp "main-calendar-view"
             show grp "headerGrp"
             unlock screen with visual effect "dissolve" very fast
+         else if tCard is "showStories" then
+            go card "storyHome"
          else 
             if tCard is "storyHome" and (the vis of grp "storyMenu") = false then
                showStoryMenu

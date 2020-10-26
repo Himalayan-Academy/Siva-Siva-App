@@ -1,7 +1,7 @@
 Script "stack_stories_button_id_1316"
 
 /*
-# Name: button "delete local-cache" of group "Tools" of card "storiesHome" of stack "stories"
+# Name: button "delete local-cache" of group "Tools" of card "storyHome" of stack "stories"
 # ID: button id 1316 of group id 1298 of card id 1002 of stack "stories"
 */
 

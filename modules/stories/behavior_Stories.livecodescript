@@ -16,15 +16,17 @@ local sStoryMenu
 
 # story control variables, stored cache
 # must wipe them on end of story
-local  sImageList, sLastImage, sQuoteList, sLastQuote
+local  sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
 local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
+local sStoryDataStack
 
 # various screen display options
 local sTarget, sTargetOwner
-local sTips
+local sTips, sStoryImage
 
 on preopenstack
    put loadStoriesMetadata() into sStoriesMetaArray
+   go cd "storyHome"
 end preopenstack
 
 
@@ -36,31 +38,41 @@ Based on the card name
 */
 
 on preOpenCard
+   local tCard 
+   put the short name of this card into tCard
+   --
    if the logMessage <> empty then
       copyLogControl
    end if
    setCardCoords "portrait"
-   put the long id of fld "storyMenu" into sStoryMenu
-   put the long id of fld "tips" into sTips
+   if tCard is "storyHome" then
+      put the long id of fld "storyMenu" into sStoryMenu
+      put the long id of fld "tips" into sTips
+   else if tCard is "showStories" then
+      put the long id of image "storyBkgImage" into sStoryImage
+   end if
 end preopenCard
 
 on opencard
    local tCard 
    put the short name of this card into tCard
    
-   # load the menu in any case:
-   put the keys of sStoriesMetaArray["Stories"] into fld "storyMenu"
-   showStoryMenu
+   if tCard is "storyHome" then
+      # load the menu in any case:
+      put the keys of sStoriesMetaArray["Stories"] into fld "storyMenu"
+      showStoryMenu
+   else if tCard is "showStories" then
+      send "goNextScene" to me in 0 milliseconds
+   end if
 end opencard
 
 command showStoryMenu
    dispatch "deleteMobileControl" to sTips with "tips"
    dispatch "createScroller" to sStoryMenu with "storyMenu"
-   set the filename of img "menuImage" to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-   hide grp "tips"
-   show grp "storyMenu"
+   set the filename of img "menuImage" of cd "storyHome" to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   hide grp "tips" of cd "storyHome"
+   show grp "storyMenu" of cd "storyHome"
    display_SetStatusBarVis true
-   
 end showStoryMenu 
 
 /*
@@ -78,28 +90,34 @@ on mouseup
          put value(clickLine() ) into sStoryTitle
          if sStoryTitle is empty then exit mouseup
          
-         put  sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
+         put sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
          
          switch sWhere
-            case "local" 
+            case "local"
+               put (path_Modules() & "stories/makeStoryLocal.livecode") \
+                     into sStoryDataStack
                dataLocalStack sStoryTitle
-                     # pass on to the model_Stories
-               
-               # development
-               open (path_Modules() & "stories/makeStoryLocal.livecode")
-               
                break
             case "server"
-               dataServerStack sStoryTitle
-                     # pass on to the model_Stories
-               
-               # development
-               open (path_Documents() & "media/stories/"  & sStoryTitle & "/" & sStoryTitle & ".livecode")
+               put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
+                     sStoryTitle & ".livecode") into sStoryDataStack
+               if not exists(stack sStoryDataStack) then
+                  
+                  // answer the questions:
+                  --      "There are XX metabytes of images. Shall we download them?
+                  --      You have a chance to get rid of them. Or save to your phone.
+                  --       You will go back and finish up the story."
+                  --  No | Yes
+                  --      if it is "No" then don't
+                  --      (exit mouseUp)
+                  
+                  dataServerStack sStoryTitle
+               end if
                break
          end switch
          
          # development
-         visualArticle sWhere
+         visualArticle
          
          break
          
@@ -120,45 +138,64 @@ on mouseup
 end mouseup
 
 #development
-command visualArticle sWhere
-   
-   if sWhere is "local" then
-      # gets your data
-      open path_Modules()& "stories/makeStoryLocal.livecode" 
-   Else 
-      # gets your data
-      open path_Documents()& "media/stories/" & sStoryTitle & "/" & sStoryTitle & ".livecode"
-   end if
-   
-   if sWhere is "server" then
-      
-      // answer the questions:
-      --      "There are XX metabytes of images. Shall we download them?
-      --      You have a chance to get rid of them. Or save to your phone.
-      --       You will go back and finish up the story."
-      --  No | Yes
-      --      if it is "No" then don't
-      
-      --         you do the visualArticl3
-   end  if
-   
+command visualArticle
+   open stack sStoryDataStack
+   --
+   go card "showStories" of stack "stories"
 end visualArticle
-   
-   
-   -------
-   local pData,  tCd,  
-   
-   command addJournalEntry -- save a bookmark to db
+
+command goNextScene
+   local tImagePath
+   --
+   if sLastStory is empty or sLastStory is not sStoryTitle then
+      put 0 into sLastScene
+      put the number of cards in stack sStoryDataStack into sTotalSceneCount
+      put sStoryTitle into sLastStory
+   end if
+   if sTotalSceneCount is not a number then
+      put the number of cards in stack sStoryDataStack into sTotalSceneCount
+   end if
+   if sLastScene is not a number or sLastScene < 1 then
+      put 0 into sLastScene
+   else if sLastScene >= sTotalSceneCount then
+      -- end of show handling needs to go here
+      put 0 into sLastScene
+      exit goNextScene
+   end if
+   add 1 to sLastScene
+   set the htmltext of fld "storyText" of grp "storyBoard" to the HTMLText of \
+         field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+   put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tImagePath
+   if sWhere is "local" then
+      if tImagePath is empty then
+         put "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg" into tImagePath
+      end if
+      set the filename of sStoryImage to tImagePath
+      if sLastScene is 1 then
+         set the htmltext of fld "storyText" of grp "storyBoard" to the text of \
+               field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      end if
+   else
+      set the itemdel to "/"
+      set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
+   end if
+end goNextScene
+
+-------
+local pData,  tCd,  
+
+command addJournalEntry -- save a bookmark to db
    local tTitle
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
-      put "Main Menu" into tTitle 
+      put "Main Menu" into tTitle
+      put "storyHome" into pData["card"]
    else 
       put sStoryTitle into pData["storyTitle"]
       put sLastScene into pData["storyScene"]
       put sAttribution into pData["Attribution"]
       put sTotalSceneCount into pData["SceneCount"]
+      put "showStories" into pData["card"]
    end if
-   put "storiesHome" into pData["card"]
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
 end addJournalEntry
 		
@@ -179,7 +216,6 @@ on journalResume pData -- sent from journal stack
    display_SetStatusBarVis false
    showStoryText
    goNextScene
-   
 end journalResume
 
 
@@ -194,7 +230,11 @@ end resizeStack
 on updateUI
    local tFooter,tMenu,tTextDisplay,tStoryBkgndImage,tStoryImage,tGoNext,tControl
    local tGoTips
-   
+   local tCard
+   --
+   put the short name of this card into tCard
+   --
+   /*
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7
@@ -219,13 +259,25 @@ on updateUI
    
    set the rect sStoryMenu to (32, 50, cardWidth() - 32, the top of btn "back" - 21)
    set the uRect of sStoryMenu  to the rect of sStoryMenu 
+   */
    
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
 end updateUI
 
 on closeCard
-   showStoryMenu
+   local tCard 
+   put the short name of this card into tCard
+   
+   if tCard is "storyHome" then
+      set the filename of img "menuImage" of cd "storyHome" to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+      hide grp "tips" of cd "storyHome"
+      show grp "storyMenu" of cd "storyHome"
+   else if tCard is "showStories" then
+      put empty into fld "storyText"
+      set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
+      close stack sStoryDataStack
+   end if
 end closecard
 
 on closestack  
