@@ -27,6 +27,8 @@ on opencard
          wait 2 seconds
          visual effect "dissolve" very slow
          go to card 2
+         toggleInfoPanel
+         
          break
          
          
@@ -70,15 +72,15 @@ on mouseup
          
       case "Devas"
          put "Realm of God" into sRealm
-         toggleCategoryPanel
          break
       case "Your Soul"
          put "Realm of Soul" into sRealm 
-         toggleCategoryPanel
          break
       case "Life"
-         put "Realm of Life" into sRealm 
-         toggleCategoryPanel
+         put "Realm of Life" into sRealm
+         break
+      case "Nature"
+         put "Realm of Nature" into sRealm
          break
          
          -- UTILITiES
@@ -134,25 +136,6 @@ on makePuzzle
    put the top of grc "puzzleFrame" into tInitialTop
    
    put 9 into sPuzzleLevel
-   --   if 9 = sPuzzleLevel then
-   --      put 16 into  sPuzzleLevel
-   --   else
-   --      put 9 into sPuzzleLevel
-   --   else
-   --      put 9 into  sPuzzleLevel
-   --   end if
-   
-   --   switch
-   --      case (sPuzzleLevel is empty)
-   --         put 9 into sPuzzleLevel
-   --         break
-   --      case (sPuzzleLevel is 9)
-   --         put 16 into sPuzzleLevel
-   --         break
-   --      case (sPuzzleLevel is 16)
-   --         put 9 into sPuzzleLevel
-   --         break
-   --   end switch
    
    put 1 into tTileNumber
    
@@ -255,25 +238,23 @@ command fetchImage sRealm
    
    set the paintCompression to "JPEG"
    import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
-  
+   
 end fetchImage
 
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
       clearImageTiles
-      move grp "makeTiles"  relative 0,-170 without waiting
-      hide btn "backArrow"
+      move grp "makeTiles"  relative 0,-220 without waiting
       show img "orion_nebula"
    else 
       clearImageTiles
-      move grp "makeTiles"   relative  0,170 without waiting
-      show btn "backArrow"
+      move grp "makeTiles"   relative  0,220 without waiting
    end if
 end toggleInfoPanel
 
 on clearImageTiles
    hide grc "puzzleFrame"
-  
+   
    try
       repeat with x = 1 to 200
          delete image ("tile_" & x)
@@ -282,6 +263,25 @@ on clearImageTiles
    --   --   set the uTileList of this card to empty
    
 end clearImageTiles
+
+/*
+See behavior_TileScript for all the 
+image "tile_#" of "me".
+See grab me 
+
+*/
+
+function setTileGlow
+   local sTileGlow
+   put "255,255,255" into sTileGlow["color"]
+   put "normal" into sTileGlow["blendMode"]
+   put "255" into sTileGlow["opacity"]
+   put "box1pass" into sTileGlow["filter"]
+   put "40" into sTileGlow["size"] 
+   put "80" into sTileGlow["spread"] 
+   return  sTileGlow
+end setTileGlow
+
 
 on checkCompletion 
    local  tTargetLocs,tImgLocs
@@ -315,6 +315,7 @@ function checkHomeProximity # Cause tile to snap to location if close
    
    if (the abs of  (item 1 of the loc of me - item 1 of sMyHome)  < 20) AND \
          (the abs of  (item 2 of the loc of me - item 2 of sMyHome) <20) then
+      set the layer of me to bottom
       return "true" 
    else
       
@@ -329,6 +330,12 @@ function getLocation tCoords
    put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
    return (theX,theY)
 end getLocation
+
+
+/*
+Get brand image; see Siva 
+See open card
+*/
 
 command setDefaultImage pContext
    --breakpoint
