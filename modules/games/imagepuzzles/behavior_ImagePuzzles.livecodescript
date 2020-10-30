@@ -1,5 +1,5 @@
 ﻿script "behavior_ImagePuzzles"
-local sTargetOwner, sTarget,sPuzzleLevel
+local sTargetOwner, sTarget,sPuzzleLevel, sControl
 local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
@@ -72,15 +72,19 @@ on mouseup
          
       case "Devas"
          put "Realm of God" into sRealm
+         fieldShowCategory
          break
       case "Your Soul"
-         put "Realm of Soul" into sRealm 
+         put "Realm of Soul" into sRealm
+         fieldShowCategory
          break
       case "Life"
          put "Realm of Life" into sRealm
+         fieldShowCategory
          break
       case "Nature"
          put "Realm of Nature" into sRealm
+         fieldShowCategory
          break
          
          -- UTILITiES
@@ -108,26 +112,31 @@ local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
 
 on makePuzzle
-   lock screen
-   Show grc "puzzleFrame"
-   
-   put the long id of last image into tImage
-   set the topleft of last image to 0,0
+   --   lock screen
+   put empty into tImageData["image"] 
    
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
+   put the long id of last image into tImage
    
-   resizeToWidth tImage, 400
+   Show grc "puzzleFrame"
    
-   put the rect of the last image into tImageData["rect"]
-   put the imageData of the last image into tImageData["image"]
+   set the topleft of tImage to 0,0
    set the name of the last image to "currentpuzzle"
+   set the lockLocation of image "currentpuzzle" to false
    
-   set the rect of grc "puzzleFrame" to  tImageData["rect"]
+
+   resizeToWidth tImage, 400
+
+ put the imagedata of tImage into tImageData
+    put the imageData of image "currentpuzzle" into tImageData
    
+   
+   
+   -----------
+   set the rect of grc "puzzleFrame" to  the rect of img "currentpuzzle" 
    
    topCenterMe sLocPuzzleFrame, 40
    
-   show grc "puzzleFrame"
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
@@ -188,7 +197,7 @@ on makePuzzle
    
    set the uTileList of this card to tTileList
    delete img "CurrentPuzzle"
-   unlock screen
+   --   unlock screen
    distributeTiles
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
@@ -223,7 +232,7 @@ on distributeTiles
 end distributeTiles
 
 command fetchImage sRealm
-   local tImgSQL, tImageFileID, tCurrentPuzzle, tControl
+   local tImgSQL, tImageFileID, tCurrentPuzzle
    
    if sRealm is empty then
       put "Realm of God" into sRealm
@@ -238,19 +247,29 @@ command fetchImage sRealm
    
    set the paintCompression to "JPEG"
    import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
-   
+   put the long id of last image into sControl
+   setImageToFullCardLoc sControl
 end fetchImage
 
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
       clearImageTiles
-      move grp "makeTiles"  relative 0,-220 without waiting
+      move grp "makeTiles"  relative 0,-300  in 1 seconds
       show img "orion_nebula"
    else 
       clearImageTiles
-      move grp "makeTiles"   relative  0,220 without waiting
+      move grp "makeTiles"   relative  0,300  in 1 seconds
    end if
 end toggleInfoPanel
+
+on fieldShowCategory
+   put sRealm &":" &cr & "Pictures Will Appear." into fld "categoryLabel"
+   show fld "categoryLabel"
+   wait 1 second
+   
+   hide fld "categoryLabel"  with visual effect "dissolve" very slowly
+end fieldShowCategory
+
 
 on clearImageTiles
    hide grc "puzzleFrame"
