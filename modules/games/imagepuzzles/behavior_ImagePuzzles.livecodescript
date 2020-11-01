@@ -27,7 +27,6 @@ on opencard
          wait 2 seconds
          visual effect "dissolve" very slow
          go to card 2
-         toggleInfoPanel
          
          break
          
@@ -254,6 +253,7 @@ end fetchImage
 command toggleInfoPanel
    if the bottom of grp "makeTiles"  >  800 then 
       clearImageTiles
+      show img "orion_nebula"
       move grp "makeTiles"  relative 0,-300  in 1 seconds
       show img "orion_nebula"
    else 
