@@ -54,9 +54,11 @@ on mouseup
       case "Make a Puzzle"
          hide img "orion_nebula"
          toggleInfoPanel
-         fetchImage sRealm
          
-         send "makePuzzle" to me in 500 milliseconds
+       
+         fetchImage sRealm
+         makePuzzle
+         --send "" to me in 100 milliseconds
          break
          
       case "infoPanel"
@@ -111,7 +113,7 @@ local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
 
 on makePuzzle
-   --   lock screen
+lock screen
    put empty into tImageData["image"] 
    
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
@@ -121,21 +123,12 @@ on makePuzzle
    
    set the topleft of tImage to 0,0
    set the name of the last image to "currentpuzzle"
-   set the lockLocation of image "currentpuzzle" to false
    
-
    resizeToWidth tImage, 400
-
- put the imagedata of tImage into tImageData
-    put the imageData of image "currentpuzzle" into tImageData
    
-   
-   
-   -----------
    set the rect of grc "puzzleFrame" to  the rect of img "currentpuzzle" 
    
    topCenterMe sLocPuzzleFrame, 40
-   
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
@@ -162,6 +155,10 @@ on makePuzzle
       
       repeat tCrossCount times #1 row across
          copy img "CurrentPuzzle" to this card
+         
+         resizeToWidth it, 400
+         set the imagedata of it to the imagedata of image "currentpuzzle" 
+         
          put "tile_" & tTileNumber into tNextTileName
          set the name of the last Image to tNextTileName
          crop image tNextTileName  to tLeftCoord, tTopCoord, tRightEdge, tBottomEdge
@@ -193,10 +190,9 @@ on makePuzzle
       
    end repeat
    
-   
    set the uTileList of this card to tTileList
    delete img "CurrentPuzzle"
-   --   unlock screen
+    unlock screen
    distributeTiles
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
@@ -204,7 +200,7 @@ end makePuzzle
 
 on distributeTiles
    local tTilesShelf,tShelfWidth
-   local tShelfheigth,tX,tY
+   local tShelfheight,tX,tY
    
    put the uTileList of this card into sTiles
    repeat for each line x in sTiles
@@ -217,10 +213,10 @@ on distributeTiles
       split tTilesShelf by "," 
       
       put (the width of this card) -120 into tShelfWidth
-      put (the height of this card) -100 into tShelfheigth
+      put (the height of this card) -180 into tShelfheight
       
       put random(tShelfWidth) + (tTilesShelf[1])+60 into tX
-      put random(tShelfHeigth) + (tTilesShelf[2])+25 into tY
+      put random(tShelfHeight) + (tTilesShelf[2])+25 into tY
       
       #set the loc of img x to tX,tY
       
@@ -232,7 +228,7 @@ end distributeTiles
 
 command fetchImage sRealm
    local tImgSQL, tImageFileID, tCurrentPuzzle
-   
+   lock screen
    if sRealm is empty then
       put "Realm of God" into sRealm
    end if
@@ -243,11 +239,11 @@ command fetchImage sRealm
    put dbGet ("file_id", JnanamDB()) into tImageFileID
    put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
    put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
-   
    set the paintCompression to "JPEG"
    import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
    put the long id of last image into sControl
    setImageToFullCardLoc sControl
+   unlock screen
 end fetchImage
 
 command toggleInfoPanel
@@ -435,3 +431,7 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
+
+on mouseDoubleDown pButtonNumber
+   
+end mouseDoubleDown
