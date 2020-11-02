@@ -113,7 +113,7 @@ local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
 
 on makePuzzle
-lock screen
+   lock screen
    put empty into tImageData["image"] 
    
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
@@ -126,7 +126,7 @@ lock screen
    
    resizeToWidth tImage, 400
    
-   set the rect of grc "puzzleFrame" to  the rect of img "currentpuzzle" 
+   set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle" 
    
    topCenterMe sLocPuzzleFrame, 40
    
@@ -192,7 +192,7 @@ lock screen
    
    set the uTileList of this card to tTileList
    delete img "CurrentPuzzle"
-    unlock screen
+   unlock screen
    distributeTiles
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
@@ -259,11 +259,11 @@ command toggleInfoPanel
 end toggleInfoPanel
 
 on fieldShowCategory
-   put sRealm &":" &cr & "Pictures Will Appear." into fld "categoryLabel"
-   show fld "categoryLabel"
+   put sRealm &":" &cr & "Pictures Will Appear." into fld "info"
+   show fld "info"
    wait 1 second
    
-   hide fld "categoryLabel"  with visual effect "dissolve" very slowly
+   hide fld "info"  with visual effect "dissolve" very slowly
 end fieldShowCategory
 
 
@@ -301,7 +301,6 @@ end setTileGlow
 on checkCompletion 
    local  tTargetLocs,tImgLocs
    
-   --   put sPuzzleLevel into 
    put the uTileList of this card into sTiles 
    repeat for each line x in sTiles 
       put the uTileLocation of img x & cr after tTargetLocs 
@@ -313,30 +312,23 @@ on checkCompletion
    sort tImgLocs numeric by item 1 of each 
    if tTargetLocs = tImgLocs then 
       #stopTimer 
-      put "Congratulations! " & cr & "You did it!" into sMsg
+      put "Congratulations! You did it!" into sMsg
       fireCompletedAction sMsg
    end if 
 end checkCompletion 
 
-command fireCompletedAction pMsg
-   answer pMsg with "OK"
-end fireCompletedAction
-
-function checkHomeProximity # Cause tile to snap to location if close
-   local tLeftDistance, tTopDistance
-   put the uTileLocation of me into sMyHome
-   put the abs of  (item 1 of the loc of me - item 1 of sMyHome) into tLeftDistance
-   put the abs of  (item 2 of the loc of me - item 2 of sMyHome) into tTopDistance
+command fireCompletedAction sMsg
+   put the long id of fld "info" into sControl
+   bottomCenterMe sControl, 30
+   put sMsg into fld "info"
    
-   if (the abs of  (item 1 of the loc of me - item 1 of sMyHome)  < 20) AND \
-         (the abs of  (item 2 of the loc of me - item 2 of sMyHome) <20) then
-      set the layer of me to bottom
-      return "true" 
-   else
-      
-      return false  
-   end if
-end checkHomeProximity
+   show fld "info"
+   wait 2 second 
+   hide fld "info"  with visual effect "dissolve" very slowly
+   
+   set the top of fld "info" to 902
+   put empty into fld "info"
+end fireCompletedAction
 
 
 function getLocation tCoords
