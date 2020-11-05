@@ -111,6 +111,7 @@ local tTileWidth,tTileheight,tTilePick, tRightEdge,tBottomEdge
 local tLeftCoord,tTopCoord
 local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
+local  sCurrentPuzzle
 
 on makePuzzle
    lock screen
@@ -119,22 +120,22 @@ on makePuzzle
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
    put the long id of last image into tImage
    
+   
    Show grc "puzzleFrame"
    
    set the topleft of tImage to 0,0
    set the name of the last image to "currentpuzzle"
+   put the long id of image "CurrentPuzzle" into sCurrentPuzzle
    
    resizeToWidth tImage, 400
    
-   set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle" 
-   
+   set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle"
    topCenterMe sLocPuzzleFrame, 40
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
-   
-   put the left of grc "puzzleFrame" into  tInitialLeft
-   put the top of grc "puzzleFrame" into tInitialTop
+   put the left of image "currentPuzzle" into  tInitialLeft
+   put the top of image "currentPuzzle" into tInitialTop
    
    put 9 into sPuzzleLevel
    
@@ -149,7 +150,9 @@ on makePuzzle
    put tInitialLeft into tLeftCoord
    put tInitialTop into tTopCoord
    
-   # do one row at a time horizontally
+   # do one row at a time horizontall
+   
+   
    repeat tCrossCount Times
       # Each iteration we drop down one row (see below)
       
@@ -162,8 +165,16 @@ on makePuzzle
          put "tile_" & tTileNumber into tNextTileName
          set the name of the last Image to tNextTileName
          crop image tNextTileName  to tLeftCoord, tTopCoord, tRightEdge, tBottomEdge
+         
          put the loc of image tNextTileName into tTileLocation
+         
+         # where the tile are based the card
+         # but get to the location of the grp ]]
+         Add 7 to item 1 of tTileLocation
+         Add 40 to item 2 of tTileLocation
+         
          set the uTileLocation of image tNextTileName to tTileLocation
+         
          # put tTileLocation & cr after tLocations  #MONITOR
          put tNextTileName & cr after tTileList
          set the behavior of image tNextTileName to the long id of btn "tileScript"
@@ -192,6 +203,9 @@ on makePuzzle
    
    set the uTileList of this card to tTileList
    delete img "CurrentPuzzle"
+   
+   topCenterMe sLocPuzzleFrame, 40
+   
    unlock screen
    distributeTiles
    # put tLocations & cr & cr & tCoords #MONITOR
@@ -241,8 +255,9 @@ command fetchImage sRealm
    put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
    set the paintCompression to "JPEG"
    import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
-   put the long id of last image into sControl
-   setImageToFullCardLoc sControl
+   put the long id of last image into tImage
+   
+   setImageToFullCardLoc tImage
    unlock screen
 end fetchImage
 
@@ -423,7 +438,3 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
-
-on mouseDoubleDown pButtonNumber
-   
-end mouseDoubleDown
