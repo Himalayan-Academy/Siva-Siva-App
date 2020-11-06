@@ -111,7 +111,7 @@ local tTileWidth,tTileheight,tTilePick, tRightEdge,tBottomEdge
 local tLeftCoord,tTopCoord
 local tImage, tImageFile
 local tNextTileName, tTileLocation,tTileList
-local  sCurrentPuzzle
+local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
    lock screen
@@ -130,6 +130,7 @@ on makePuzzle
    resizeToWidth tImage, 400
    
    set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle"
+   
    topCenterMe sLocPuzzleFrame, 40
    
    put the width of img "currentpuzzle"  into tImageWidth
@@ -205,9 +206,9 @@ on makePuzzle
    delete img "CurrentPuzzle"
    
    topCenterMe sLocPuzzleFrame, 40
-   
    unlock screen
-   distributeTiles
+     distributeTiles
+   
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
 
@@ -238,6 +239,8 @@ on distributeTiles
          move img x to  tX,tY in 80 milliseconds
       end try
    end repeat
+   
+  
 end distributeTiles
 
 command fetchImage sRealm
@@ -253,11 +256,22 @@ command fetchImage sRealm
    put dbGet ("file_id", JnanamDB()) into tImageFileID
    put textDecode ( tImageFileID[1]["file_id"], "UTF8")  into tImageFileID     
    put "img/photography/"  & tImageFileID & "/" & tImageFileID & "_med.jpg" into tCurrentPuzzle
+   --put "img/photography/app-img_2-surya_namaskar_00043_552w-portrait/app-img_2-surya_namaskar_00043_552w-portrait_med.jpg"  into tCurrentPuzzle
+   
    set the paintCompression to "JPEG"
    import paint from file  (sivasiva_AssetFolder() & tCurrentPuzzle)
    put the long id of last image into tImage
    
+   
    setImageToFullCardLoc tImage
+   put getRectOfCurrentGrc()
+   set itemdel to "x"
+   if  item 1 getRectOfCurrentGrc() < item 2 getRectOfCurrentGrc() AND \
+         item 1 getRectOfCurrentGrc() < 400 then
+      delete last image 
+      fetchImage
+   end if
+   
    unlock screen
 end fetchImage
 
@@ -284,14 +298,16 @@ end fieldShowCategory
 
 on clearImageTiles
    hide grc "puzzleFrame"
-   
-   try
-      repeat with x = 1 to 200
-         delete image ("tile_" & x)
-      end repeat
+   try 
+      delete sCurrentPuzzle
    end try
-   --   --   set the uTileList of this card to empty
-   
+   try
+   repeat with x = 1 to 200
+      delete image ("tile_" & x)
+   end repeat
+end try
+--   --   set the uTileList of this card to empty
+
 end clearImageTiles
 
 /*
@@ -398,7 +414,7 @@ end PhotoImagePath
 
 private function _brandImages 
    local tBrandImages
-   put "app-img_who-is-siva_1200x800" & cr & \
+   put "app-img_who-is-siva_1200x800_med" & cr & \
          "app-img_06-sadasiva_opt-80_552w-portrait" & cr & \
          "app-img_01-sadyojata_opt-80_552w-portrait" & cr & \
          "app-img_02-vamadeva_opt-80_552w-portrait" & cr & \
@@ -438,3 +454,7 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
+
+on mouseDoubleDown pButtonNumber
+   
+end mouseDoubleDown

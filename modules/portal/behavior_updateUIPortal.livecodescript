@@ -257,7 +257,7 @@ end setSubNavBkgndImage
 
 private function _brandImages 
    local tBrandImages
-   put "app-img_who-is-siva_1200x800" & cr & \
+   put "app-img_who-is-siva_1200x800_med" & cr & \
          "app-img_06-sadasiva_opt-80_552w-portrait" & cr & \
          "app-img_01-sadyojata_opt-80_552w-portrait" & cr & \
          "app-img_02-vamadeva_opt-80_552w-portrait" & cr & \
