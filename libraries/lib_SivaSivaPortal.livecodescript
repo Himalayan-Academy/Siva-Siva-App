@@ -144,8 +144,7 @@ end getOrientionOfStacks
 
 command portal_DoRowLink rowName
    local linkArray, linkCommand, linkParam
-   --portal_SetLastLinkTitle rowName
-   --put portal_GetRowLinkArray (rowName) into linkArray
+  
    
    put getNavigationMap() into sNavMap
    put sNavMap["portalRowDictionary"][rowName]["link"] into linkArray

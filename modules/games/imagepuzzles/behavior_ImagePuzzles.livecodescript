@@ -27,7 +27,6 @@ on opencard
          wait 2 seconds
          visual effect "dissolve" very slow
          go to card 2
-         
          break
          
          
@@ -115,6 +114,8 @@ local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
    lock screen
+   set the uTileList of this card to empty
+   put empty into tTileList
    put empty into tImageData["image"] 
    
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
@@ -207,7 +208,7 @@ on makePuzzle
    
    topCenterMe sLocPuzzleFrame, 40
    unlock screen
-     distributeTiles
+   distributeTiles
    
    # put tLocations & cr & cr & tCoords #MONITOR
 end makePuzzle
@@ -222,11 +223,7 @@ on distributeTiles
       # set up random locations that fall inside the Scattered Tile Zone area
       # left position by 120 pixels  
       # height position by 180 pixel
-      
-      
-      put the rect of  sLocPuzzleFrame into tTilesShelf
-      split tTilesShelf by "," 
-      
+   
       put (the width of this card) -120 into tShelfWidth
       put (the height of this card) -180 into tShelfheight
       
@@ -240,7 +237,7 @@ on distributeTiles
       end try
    end repeat
    
-  
+   
 end distributeTiles
 
 command fetchImage sRealm
@@ -264,7 +261,7 @@ command fetchImage sRealm
    
    
    setImageToFullCardLoc tImage
-   put getRectOfCurrentGrc()
+   --put getRectOfCurrentGrc()
    set itemdel to "x"
    if  item 1 getRectOfCurrentGrc() < item 2 getRectOfCurrentGrc() AND \
          item 1 getRectOfCurrentGrc() < 400 then
@@ -290,7 +287,7 @@ end toggleInfoPanel
 on fieldShowCategory
    put sRealm &":" &cr & "Pictures Will Appear." into fld "info"
    show fld "info"
-   wait 1 second
+   wait 4 second
    
    hide fld "info"  with visual effect "dissolve" very slowly
 end fieldShowCategory
@@ -454,7 +451,3 @@ on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
-
-on mouseDoubleDown pButtonNumber
-   
-end mouseDoubleDown
