@@ -1,5 +1,5 @@
 ﻿script "behavior_ImagePuzzles"
-local sTargetOwner, sTarget,sPuzzleLevel, sControl
+local sTargetOwner, sTarget,sPuzzleLevel, sCard, sControl,sMakeTiles
 local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
@@ -14,26 +14,43 @@ on preOpenStack
 end preOpenStack
 
 on preopenCard
+   put the short name of this card into sCard
    setCardCoords "portrait"
+   updateUI
 end preopencard
 
 on opencard
    local tShortName
-   put the short name of this card into tShortName
    
-   switch tShortName
+   
+   switch sCard
       case "Title" 
          setDefaultImage 
-         wait 2 seconds
+         wait 1 seconds
          visual effect "dissolve" very slow
          go to card 2
+         show img "orion_nebula"
+         up_InfoPanel
          break
-         
          
    end switch
    
-   
 end opencard
+
+command up_InfoPanel
+   put the long ID of grp "makeTiles" into sMakeTiles
+   clearImageTiles
+   show img "orion_nebula"
+   set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
+   bottomCenterMe sMakeTiles, 130
+end up_InfoPanel
+
+command down_InfoPanel
+   put the long ID of grp "makeTiles" into sMakeTiles
+   clearImageTiles
+   hide image "orion_nebula"
+   bottomCenterMe sMakeTiles, -172
+end down_InfoPanel
 
 
 on mouseup
@@ -44,27 +61,19 @@ on mouseup
    
    switch sTarget
       case "backArrow"
+        
+         clearImageTiles
          portal_GoStack ("Siva-Siva-Portal")
          break
          
-         
-         -- INFO PANEL BEHAVIOR 
-         
+      case "infoPanel"
+         up_InfoPanel
+         break
       case "Make a Puzzle"
-         hide img "orion_nebula"
-         toggleInfoPanel
-         
-       
+         down_InfoPanel
          fetchImage sRealm
          makePuzzle
-         --send "" to me in 100 milliseconds
          break
-         
-      case "infoPanel"
-         toggleInfoPanel
-         break
-         
-         -- CATEGORY PANEL BEHAVIOR 
          
       case "categoryImages"
          toggleCategoryPanel
@@ -103,7 +112,7 @@ on mouseup
    end switch
 end mouseup
 
--------------- 
+------------- 
 local tImageWidth, tImageHeight, tImageData
 local tInitialLeft, tInitialTop, tTileNumber, tCrossCount
 local tTileWidth,tTileheight,tTilePick, tRightEdge,tBottomEdge
@@ -272,18 +281,6 @@ command fetchImage sRealm
    unlock screen
 end fetchImage
 
-command toggleInfoPanel
-   if the bottom of grp "makeTiles"  >  800 then 
-      clearImageTiles
-      show img "orion_nebula"
-      move grp "makeTiles"  relative 0,-300  in 1 seconds
-      show img "orion_nebula"
-   else 
-      clearImageTiles
-      move grp "makeTiles"   relative  0,300  in 1 seconds
-   end if
-end toggleInfoPanel
-
 on fieldShowCategory
    put sRealm &":" &cr & "Pictures Will Appear." into fld "info"
    show fld "info"
@@ -446,8 +443,39 @@ function PhotoImagePath pImage
    return tPath
 end PhotoImagePath
 
-------------
 on closestack
    portal_SetLastStack "imagepuzzles"
 end closestack
 
+---------------------------
+## UI Scripting
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+
+on updateUI
+   local tTitle
+   local tBackArrow, tControl
+   
+   switch sCard
+      
+      case "Title"
+         
+         put the long id of grp "title" into tTitle
+         bottomCenterMe tTitle, 100
+         break
+         
+      case "mainImagePuzzle"
+         put the long id of btn "backArrow" into tBackArrow
+         bottomLeftMe tBackArrow, 0,10
+         
+         break
+         
+   end switch
+   
+end updateUI
