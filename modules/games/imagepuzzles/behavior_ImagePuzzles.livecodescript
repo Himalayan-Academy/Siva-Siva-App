@@ -131,7 +131,7 @@ local tNextTileName, tTileLocation,tTileList
 local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
-  
+   
    set the uTileList of this card to empty
    put empty into tTileList
    put empty into tImageData["image"] 
@@ -145,7 +145,8 @@ on makePuzzle
    set the name of the last image to "currentpuzzle"
    put the long id of image "CurrentPuzzle" into sCurrentPuzzle
    
-   resizeToWidth tImage, 400
+   --   resizeToWidth tImage, 400
+   resizeToWidth tImage, 380
    
    set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle"
    
@@ -176,7 +177,9 @@ on makePuzzle
       repeat tCrossCount times #1 row across
          copy img "CurrentPuzzle" to this card
          
-         resizeToWidth it, 400
+         --         resizeToWidth it, 400
+         resizeToWidth it, 380
+         
          set the imagedata of it to the imagedata of image "currentpuzzle" 
          
          put "tile_" & tTileNumber into tNextTileName
@@ -187,7 +190,7 @@ on makePuzzle
          
          # where the tile are based the card
          # but get to the location of the grp ]]
-         Add 7 to item 1 of tTileLocation
+         -- Add 7 to item 1 of tTileLocation
          Add 40 to item 2 of tTileLocation
          
          set the uTileLocation of image tNextTileName to tTileLocation
