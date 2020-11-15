@@ -26,11 +26,13 @@ on opencard
    switch sCard
       case "Title" 
          setDefaultImage 
-         wait 1 seconds
+         wait 500 milliseconds
          visual effect "dissolve" very slow
          go to card 2
          show img "orion_nebula"
+         lock screen
          up_InfoPanel
+         unlock screen
          break
          
    end switch
@@ -130,8 +132,7 @@ on makePuzzle
    put the long id of grc "puzzleFrame" into sLocPuzzleFrame
    put the long id of last image into tImage
    
-   
-   Show grc "puzzleFrame"
+   hide grc "puzzleFrame"
    
    set the topleft of tImage to 0,0
    set the name of the last image to "currentpuzzle"
@@ -140,8 +141,6 @@ on makePuzzle
    resizeToWidth tImage, 400
    
    set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle"
-   
-   topCenterMe sLocPuzzleFrame, 40
    
    put the width of img "currentpuzzle"  into tImageWidth
    put the height of img "currentpuzzle"   into tImageHeight
@@ -217,6 +216,9 @@ on makePuzzle
    
    topCenterMe sLocPuzzleFrame, 40
    unlock screen
+   
+   show grc "puzzleFrame"
+   
    distributeTiles
    
    # put tLocations & cr & cr & tCoords #MONITOR
