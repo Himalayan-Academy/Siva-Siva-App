@@ -31,8 +31,10 @@ on opencard
          go to card 2
          show img "orion_nebula"
          lock screen
+         hide grp "makeTiles"
+         
          up_InfoPanel
-         unlock screen
+        
          break
          
    end switch
@@ -45,6 +47,8 @@ command up_InfoPanel
    show img "orion_nebula"
    set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
    bottomCenterMe sMakeTiles, 130
+   show grp "makeTiles"
+   unlock screen
 end up_InfoPanel
 
 command down_InfoPanel
@@ -69,9 +73,12 @@ on mouseup
          break
          
       case "infoPanel"
+         lock screen
          up_InfoPanel
+         unlock screen
          break
       case "Make a Puzzle"
+         lock screen
          down_InfoPanel
          fetchImage sRealm
          makePuzzle
@@ -124,7 +131,7 @@ local tNextTileName, tTileLocation,tTileList
 local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
-   lock screen
+  
    set the uTileList of this card to empty
    put empty into tTileList
    put empty into tImageData["image"] 
@@ -342,6 +349,8 @@ on checkCompletion
       put "Congratulations! You did it!" into sMsg
       fireCompletedAction sMsg
    end if 
+   set the layer of grp "makeTiles" to top
+   set the layer of  btn "backArrow" to top
 end checkCompletion 
 
 command fireCompletedAction sMsg
