@@ -1,5 +1,5 @@
 ﻿script "behavior_ImagePuzzles"
-local sTargetOwner, sTarget,sPuzzleLevel, sCard, sControl,sMakeTiles
+local sTargetOwner, sTarget,sPuzzleLevel, sCard, sControl
 local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
@@ -15,23 +15,29 @@ end preOpenStack
 
 on preopenCard
    put the short name of this card into sCard
+   
    setCardCoords "portrait"
    updateUI
-end preopencard
-
-on opencard
-   local tShortName
-   
-   
    switch sCard
       case "Title" 
-         setDefaultImage 
+         setDefaultImage
+         send "goToMainPuzzle" to me in 200 milliseconds
+         break
+      case "mainImagePuzzle" 
+         resizeStack
+         break
+   end switch
+end preopencard
+
+on goToMainPuzzle
+   local tShortName
+   
+   switch sCard
+      case "Title"
          wait 500 milliseconds
          visual effect "dissolve" very slow
          go to card 2
          show img "orion_nebula"
-         lock screen
-         hide grp "makeTiles"
          
          up_InfoPanel
          
@@ -39,23 +45,22 @@ on opencard
          
    end switch
    
-end opencard
+end goToMainPuzzle
 
 command up_InfoPanel
-   put the long ID of grp "makeTiles" into sMakeTiles
+   
    clearImageTiles
    show img "orion_nebula"
    set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
-   bottomCenterMe sMakeTiles, 130
    show grp "makeTiles"
-   unlock screen
+   hide btn "infoPanel"
 end up_InfoPanel
 
 command down_InfoPanel
-   put the long ID of grp "makeTiles" into sMakeTiles
+   show btn "infoPanel"
+   hide grp "makeTiles"
    clearImageTiles
    hide image "orion_nebula"
-   bottomCenterMe sMakeTiles, -172
 end down_InfoPanel
 
 
@@ -73,12 +78,10 @@ on mouseup
          break
          
       case "infoPanel"
-         lock screen
          up_InfoPanel
-         unlock screen
          break
       case "Make a Puzzle"
-         lock screen
+         show btn "infoPanel"
          down_InfoPanel
          fetchImage sRealm
          makePuzzle
@@ -131,7 +134,7 @@ local tNextTileName, tTileLocation,tTileList
 local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
-   
+   lock screen
    set the uTileList of this card to empty
    put empty into tTileList
    put empty into tImageData["image"] 
@@ -189,7 +192,7 @@ on makePuzzle
          
          # where the tile are based the card
          # but get to the location of the grp ]]
-         -- Add 7 to item 1 of tTileLocation
+          Add 10 to item 1 of tTileLocation
          Add 40+safeTopMargin() to item 2 of tTileLocation
          
          set the uTileLocation of image tNextTileName to tTileLocation
@@ -294,10 +297,9 @@ end fetchImage
 
 on fieldShowCategory
    put sRealm &":" &cr & "Pictures Will Appear." into fld "info"
-   show fld "info"
+   show fld "category"
    wait 4 second
-   
-   hide fld "info"  with visual effect "dissolve" very slowly
+   hide fld "category"  with visual effect "dissolve" very slowly
 end fieldShowCategory
 
 
@@ -311,7 +313,6 @@ on clearImageTiles
          delete image ("tile_" & x)
       end repeat
    end try
-   --   --   set the uTileList of this card to empty
    
 end clearImageTiles
 
@@ -356,16 +357,12 @@ on checkCompletion
 end checkCompletion 
 
 command fireCompletedAction sMsg
-   put the long id of fld "info" into sControl
-   bottomCenterMe sControl, 30
-   put sMsg into fld "info"
-   
-   show fld "info"
+   put sMsg into fld "status"
+   set the layer fld "status" to top
+   show fld "status"
    wait 2 second 
-   hide fld "info"  with visual effect "dissolve" very slowly
-   
-   set the top of fld "info" to 902
-   put empty into fld "info"
+   hide fld "status"  with visual effect "dissolve" very slowly
+   put empty into fld "status"
 end fireCompletedAction
 
 
@@ -386,28 +383,18 @@ command setDefaultImage pContext
    --breakpoint
    
    #  see lib_SivaSiva | setUpBrandImage  
-   # where we set the cache with a branc image number 
    
    local pImage, tPaths, tTotalBrandImages
    
    put the long id of img "title" of card "Title" into sTitleImage
    put _brandImages() into sBrandImages
    
-   # will get this out when we close Sivasiva.app
-   # the user get a new brand image only opening the app.
-   
-   # variable is undefined at this point
-   --setCache "TotalBrandImages", tTotalBrandImages
    put the number of lines of sBrandImages into tTotalBrandImages
    put random(tTotalBrandImages) into sBrandImageNumber
    put line sBrandImageNumber of sBrandImages into pImage
    set the filename of img "title" to photoImagePath(pImage)
    setImageToFullCardLoc sTitleImage,"portrait"
    centerMe sTitleImage
-   # optimize disk operations *after* the display is finished updating
-   
-   --   --   put the number of lines of sBrandImages into tTotalBrandImages
-   --setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
 end setDefaultImage 
 
@@ -472,8 +459,8 @@ end resizeStack
 
 
 on updateUI
-   local tTitle
-   local tBackArrow, tControl
+   local tTitle, tInfoPanel, tStatus, tCategory
+   local tBackArrow, tControl, tMakeTiles
    
    switch sCard
       
@@ -486,6 +473,18 @@ on updateUI
       case "mainImagePuzzle"
          put the long id of btn "backArrow" into tBackArrow
          bottomLeftMe tBackArrow, 0,10
+         
+         put the long ID of group "makeTiles" of me into tMakeTiles
+         bottomCenterMe tMakeTiles, 180
+         
+         put the long ID of btn "infoPanel"  into tInfoPanel
+         bottomCenterMe tInfoPanel, 10
+         
+         put the long id of fld "status" into tStatus
+         bottomCenterMe tStatus, 30
+         
+         put the long id of fld "category" into tCategory
+         bottomCenterMe tCategory, 30
          
          break
          
