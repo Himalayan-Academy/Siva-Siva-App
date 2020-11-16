@@ -296,10 +296,10 @@ command fetchImage sRealm
 end fetchImage
 
 on fieldShowCategory
-   put sRealm &":" &cr & "Pictures Will Appear." into fld "info"
+   put sRealm &":" &cr & "Pictures Will Appear." into fld "category"
    show fld "category"
    wait 4 second
-   hide fld "category"  with visual effect "dissolve" very slowly
+  hide fld "category"  with visual effect "dissolve" very slowly
 end fieldShowCategory
 
 
@@ -459,7 +459,7 @@ end resizeStack
 
 
 on updateUI
-   local tTitle, tInfoPanel, tStatus, tCategory
+   local tTitle, tInfoPanel, tStatus
    local tBackArrow, tControl, tMakeTiles
    
    switch sCard
@@ -483,11 +483,13 @@ on updateUI
          put the long id of fld "status" into tStatus
          bottomCenterMe tStatus, 30
          
-         put the long id of fld "category" into tCategory
-         bottomCenterMe tCategory, 30
-         
          break
          
    end switch
    
 end updateUI
+
+
+on libraryStack
+   
+end libraryStack
