@@ -34,7 +34,7 @@ on opencard
          hide grp "makeTiles"
          
          up_InfoPanel
-        
+         
          break
          
    end switch
@@ -67,7 +67,7 @@ on mouseup
    
    switch sTarget
       case "backArrow"
-        
+         
          clearImageTiles
          portal_GoStack ("Siva-Siva-Portal")
          break
@@ -145,8 +145,8 @@ on makePuzzle
    set the name of the last image to "currentpuzzle"
    put the long id of image "CurrentPuzzle" into sCurrentPuzzle
    
-   --   resizeToWidth tImage, 400
-   resizeToWidth tImage, 380
+   setRectOfCurrentGrc tImage
+   resizeToWidth tImage, CardWidth()-20
    
    set the rect of sLocPuzzleFrame to  the rect of img "currentpuzzle"
    
@@ -177,8 +177,7 @@ on makePuzzle
       repeat tCrossCount times #1 row across
          copy img "CurrentPuzzle" to this card
          
-         --         resizeToWidth it, 400
-         resizeToWidth it, 380
+         resizeToWidth it, CardWidth()-20
          
          set the imagedata of it to the imagedata of image "currentpuzzle" 
          
@@ -191,7 +190,7 @@ on makePuzzle
          # where the tile are based the card
          # but get to the location of the grp ]]
          -- Add 7 to item 1 of tTileLocation
-         Add 40 to item 2 of tTileLocation
+         Add 40+safeTopMargin() to item 2 of tTileLocation
          
          set the uTileLocation of image tNextTileName to tTileLocation
          
@@ -244,7 +243,7 @@ on distributeTiles
       # set up random locations that fall inside the Scattered Tile Zone area
       # left position by 120 pixels  
       # height position by 180 pixel
-   
+      
       put (the width of this card) -120 into tShelfWidth
       put (the height of this card) -180 into tShelfheight
       
@@ -308,12 +307,12 @@ on clearImageTiles
       delete sCurrentPuzzle
    end try
    try
-   repeat with x = 1 to 200
-      delete image ("tile_" & x)
-   end repeat
-end try
---   --   set the uTileList of this card to empty
-
+      repeat with x = 1 to 200
+         delete image ("tile_" & x)
+      end repeat
+   end try
+   --   --   set the uTileList of this card to empty
+   
 end clearImageTiles
 
 /*
