@@ -11,6 +11,32 @@
     "look": {
       "portalColor": "000,000,000", 
       "rowData": {
+        "14": {
+          "rowName": "Song, India's Musical Tradition"
+        }, 
+        "15": {
+          "rowName": "Song, Swami Vivekananda"
+        }, 
+        "16": {
+          "rowName": "Song, The British Raj"
+        }, 
+        "17": {
+          "rowName": "Song, India's Fight for Freedom"
+        }, 
+        "18": {
+          "rowName": "Song, India Awakes to Life and Freedom"
+        }, 
+        "19": {
+          "rowName": "Song, Six Key Hindu Concepts"
+        }, 
+        "20": {
+          "rowName": "Song, Indians Love Pilgrimage"
+        }, 
+        "21": {
+          "rowName": "Song, India's Popular Impact Today"
+        }, 
+        
+        
         "11": {
           "rowName": "Song, India's Golden Age"
         }, 
@@ -62,40 +88,49 @@
       "portalLabel": "Settings"
     }, 
     "read": {
-      "rowData": {
-        "11": {
-          "rowName": "User Guide"
-        }, 
-        "10": {
-          "rowName": "Educational Insights"
-        }, 
+      "rowData": {        
         "1": {
           "rowName": "Path to Siva"
-        }, 
-        "3": {
-          "rowName": "Pillars of Iraivan"
-        }, 
+        },      
         "2": {
           "rowName": "Hindu Lexicon"
-        }, 
-        "5": {
-          "rowName": "Living with Siva"
+        },
+        "3": {
+          "rowName": "Pillars of Iraivan"
         }, 
         "4": {
           "rowName": "Dancing with Siva"
         }, 
-        "7": {
-          "rowName": "Hinduism Today Magazine"
-        }, 
+        "5": {
+          "rowName": "Living with Siva"
+        },      
         "6": {
           "rowName": "Merging with Siva"
         }, 
-        "9": {
-          "rowName": "All Our On-Line Books"
-        }, 
+        "7": {
+          "rowName": "Loving Ganesha"
+        },
         "8": {
+          "rowName": "Lemurian Scrolls"
+        },
+         "9": {
+          "rowName": "How to Become a Hindu"
+        },          
+        "10": {
+          "rowName": "Educational Insights"
+        }, 
+        "11": {
+          "rowName": "User Guide"
+        }, 
+        "12": {
+          "rowName": "Hinduism Today Magazine"
+        }, 
+        "13": {
           "rowName": "The Master Course"
-        }
+        },   
+        "14": {
+        "rowName": "All Our On-Line Books"
+        }         
       }, 
       "portalName": "read", 
       "headerImage": "hero_read_gurudeva-signing-book.png", 
@@ -659,7 +694,7 @@
       }, 
       "shortImageFile": "thumb_history-movie.png"
     },      
- "Song, What Hindu's Believe": {
+"Song, What Hindu's Believe": {
       "imageText": "History\nMovie", 
       "link": {
         "portal param": "https://www.youtube.com/embed/PAzBZa-FBOo?rel=0&playsinline=1", 
@@ -675,7 +710,71 @@
       }, 
       "shortImageFile": "thumb_history-movie.png"
     }, 
-    
+"Song, India's Musical Tradition": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/ZARxQgY2oKQ?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, Swami Vivekananda ": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/nPjMq-hMXcI?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    },  
+"Song, The British Raj": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/zHfvO35NYiA?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, India's Fight for Freedom": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/yshPlbzdUks?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, India Awakes to Life and Freedom ": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/VVonzUGYphs?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, Six Key Hindu Concepts": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/aJPCGxlW830?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, Indians Love Pilgrimage": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/CV1iaooTLuE?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+"Song, India's Popular Impact Today": {
+      "imageText": "History\nMovie", 
+      "link": {
+        "portal param": "https://www.youtube.com/embed/LTxTg9kMg3I?rel=0&playsinline=1", 
+        "portal command": "portal_GoUrl"
+      }, 
+      "shortImageFile": "thumb_history-movie.png"
+    }, 
+ 
 "History, Pt 1, Ancient Times": {
       "imageText": "History\nMovie", 
       "link": {
@@ -749,6 +848,8 @@
       }, 
       "shortImageFile": "thumb_news.png"
     }, 
+
+"__comment35__":"Books", 
 "Dancing with Siva": {
       "imageText": "dws", 
       "link": {
@@ -773,7 +874,31 @@
       }, 
       "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
     },
-    
+"Loving Ganesha": {
+      "imageText": "lg", 
+      "link": {
+        "portal param": "https://www.himalayanacademy.com/media/books/loving-ganesha/web/", 
+        "portal command": "portal_GoURL"
+      }, 
+      "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+    },
+"Lemurian Scrolls": {
+      "imageText": "lm", 
+      "link": {
+        "portal param": "https://www.himalayanacademy.com/media/books/lemurian-scrolls/web/", 
+        "portal command": "portal_GoURL"
+      }, 
+      "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+    },
+"How to Become a Hindu": {
+      "imageText": "lws", 
+      "link": {
+        "portal param": "https://www.himalayanacademy.com/media/books/how-to-become-a-hindu/web/", 
+        "portal command": "portal_GoURL"
+      }, 
+      "shortImageFile": "thumb_path-to-siva_shtrstk-124120210.png"
+    },
+  
  "__comment4__":"That go where. We including just for development", 
  "Preparation for Meditation": {
       "imageText": "Preparation\nfor\nMeditation", 
