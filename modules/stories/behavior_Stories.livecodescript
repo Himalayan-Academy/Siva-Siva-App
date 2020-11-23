@@ -22,7 +22,7 @@ local sStoryDataStack
 
 # various screen display options
 local sTarget, sTargetOwner
-local sTips, sStoryImage
+local sTips, sStoryImage, sStoryText
 
 on preopenstack
    put loadStoriesMetadata() into sStoriesMetaArray
@@ -50,6 +50,7 @@ on preOpenCard
       put the long id of fld "tips" into sTips
    else if tCard is "showStories" then
       put the long id of image "storyBkgImage" into sStoryImage
+      put the long id of fld "storyText" into sStoryText
    end if
 end preopenCard
 
@@ -111,6 +112,7 @@ on mouseup
                   --      if it is "No" then don't
                   --      (exit mouseUp)
                   
+                  // show a "downloading..." message
                   dataServerStack sStoryTitle
                end if
                break
@@ -133,6 +135,22 @@ on mouseup
          dispatch "deleteMobileControl" to sTips with "tips"
          hide grp "tips"
          break
+         
+      case "storyBkgImage"
+         if not (the visible of sStoryText) then
+            cycleImageState sStoryImage
+         end if
+         break
+      case "goNext"
+         if the visible of sStoryText then
+            goNextScene
+         else
+            lock screen
+            show sStoryText
+            -- show "scrim"
+            unlock screen
+         end if
+         break
    end switch
    
 end mouseup
@@ -147,6 +165,7 @@ end visualArticle
 command goNextScene
    local tImagePath
    --
+   lock screen
    if sLastStory is empty or sLastStory is not sStoryTitle then
       put 0 into sLastScene
       put the number of cards in stack sStoryDataStack into sTotalSceneCount
@@ -157,28 +176,46 @@ command goNextScene
    end if
    if sLastScene is not a number or sLastScene < 1 then
       put 0 into sLastScene
+   else if sLastScene = sTotalSceneCount then
+      -- hide "next" button
    else if sLastScene >= sTotalSceneCount then
       -- end of show handling needs to go here
       put 0 into sLastScene
+      unlock screen
       exit goNextScene
    end if
+   --
    add 1 to sLastScene
-   set the htmltext of fld "storyText" of grp "storyBoard" to the HTMLText of \
-         field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+   if sLastScene is 1 then
+      show fld "storyText" of grp "storyBoard"
+      set the htmltext of fld "storyText" of grp "storyBoard" to the text of \
+            field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      -- show "scrim"
+      -- hide caption
+      -- hide "show caption" button
+      -- hide "previous" button
+   else
+      hide fld "storyText" of grp "storyBoard"
+      set the htmltext of fld "storyText" of grp "storyBoard" to the HTMLText of \
+            field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      -- hide "scrim"
+      -- set caption text
+      -- if caption text not empty, show caption
+      -- hide "show caption" button
+   end if
    put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tImagePath
    if sWhere is "local" then
       if tImagePath is empty then
          put "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg" into tImagePath
       end if
       set the filename of sStoryImage to tImagePath
-      if sLastScene is 1 then
-         set the htmltext of fld "storyText" of grp "storyBoard" to the text of \
-               field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
-      end if
    else
       set the itemdel to "/"
       set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
    end if
+   initializeCycleImage sStoryImage
+   --
+   unlock screen
 end goNextScene
 
 -------

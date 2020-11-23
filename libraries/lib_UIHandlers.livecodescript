@@ -443,7 +443,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    
    # set the location of image, 
    # it is empty, assume to card rect
-   if tLocation = empty then
+   if pLocation = empty then
       set the loc of pImage to sCardLoc
    else
       set the loc of pImage to tLocation
@@ -464,6 +464,66 @@ command switchViewImageState pImage
          put 1 into sViewImageState     
    end switch
 end switchViewImageState
+
+local sImageCycleStateA
+command initializeCycleImage pImage
+   local tRatioW, tRatioH
+   setRectOfCurrentGrc pImage
+   put the width of pImage / sCardWidth into tRatioW
+   put the height of pImage / sCardHeight into tRatioH
+   if tRatioW > tRatioH then
+      resizeToHeight pImage, sCardHeight
+      put "height" into sImageCycleStateA["fill"]
+   else
+      resizeToWidth pImage, sCardWidth
+      put "width" into sImageCycleStateA["fill"]
+   end if
+   put max(tRatioW, tRatioH) into sImageCycleStateA["maxRatio"]
+   put min(tRatioW, tRatioH) into sImageCycleStateA["minRatio"]
+   set the loc of pImage to sCardLoc
+   --   if sImageCycleStateA["minRatio"] is 1 then
+   --      put 2 into sImageCycleStateA["state"]
+   --   else
+   --      put 1 into sImageCycleStateA["state"]
+   --   end if
+   put 1 into sImageCycleStateA["state"]
+end initializeCycleImage
+
+command cycleImageState pImage
+   -- 3 way cycle of image state
+   -- * fill screen (expand/shrink as needed)
+   -- * show all (expand/shrink as needed, skip if same as fill)
+   -- * full size (no scale) / enables scroller
+   switch sImageCycleStateA["state"]
+      case 1
+         put 2 into sImageCycleStateA["state"]
+         if sImageCycleStateA["fill"] = "width" then
+            resizeToHeight pImage, sCardHeight
+         else
+            resizeToWidth pImage, sCardWidth
+         end if
+         break
+      case 2
+         put 3 into sImageCycleStateA["state"]
+         set the width of pImage to the formattedWidth of pImage
+         set the height of pImage to the formattedHeight of pImage
+         break
+      case 3
+         --         if sImageCycleStateA["minRatio"] is 1 then
+         --            put 2 into sImageCycleStateA["state"]
+         --         else
+         --            put 1 into sImageCycleStateA["state"]
+         --         end if
+         put 1 into sImageCycleStateA["state"]
+         if sImageCycleStateA["fill"] = "height" then
+            resizeToHeight pImage, sCardHeight
+         else
+            resizeToWidth pImage, sCardWidth
+         end if
+         break
+   end switch
+   set the loc of pImage to sCardLoc
+end cycleImageState
 
 --on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
 --   local tFWd, tFHt

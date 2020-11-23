@@ -122,7 +122,7 @@ on dataServerStack pStoryTitle
    
    set the itemDel to "/"
    put item 1 to -2 of tFilePath into tLocation
-   put "/" & char 1 to -5 of item -1 of tFilePath after tLocation
+   --put "/" & char 1 to -5 of item -1 of tFilePath after tLocation
    ensureFolder tLocation
    
    revZipOpenArchive tFilePath, "read"
