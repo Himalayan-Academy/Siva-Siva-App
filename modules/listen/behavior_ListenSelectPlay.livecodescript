@@ -234,7 +234,7 @@ end share_Items
 on closeCard
    clearAudioListColor
    hide group "pause-play"
-   put empty into fld "currentTitleLabel"
+   --   put empty into fld "currentTitleLabel"
    showPlayer "false","audioPlayer"
    deleteAllMobileControls 
    put empty into sLineNum

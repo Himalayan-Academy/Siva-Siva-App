@@ -853,36 +853,36 @@ on preopencard
    switch tMode
       case "listen-collection" 
          
-         put the location of fld "collections-label" into tLabelLoc
-         put the width of fld "collections-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         hide fld "browse-label"
-         put "Listen" into fld "title-label"
+         --         put the location of fld "collections-label" into tLabelLoc
+         --         put the width of fld "collections-label" into tLabelWidth
+         --         set the width of grc "modeIndicator" to tLabelWidth
+         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         --         hide fld "browse-label"
+              put "Listen" into fld "title-label"
          # have nav bar
          show button "share"
          show button "add-favorites" 
          break
       case "listen-my-audio"
-         setAudioListcolors
-         put the location of fld "my-audio-label" into tLabelLoc
-         put the width of fld "my-audio-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         hide fld "browse-label"
-         put "Downloaded Audio" into fld "title-label"
+         --         setAudioListcolors
+         --         put the location of fld "my-audio-label" into tLabelLoc
+         --         put the width of fld "my-audio-label" into tLabelWidth
+         --         set the width of grc "modeIndicator" to tLabelWidth
+         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         --         hide fld "browse-label"
+           put "Downloaded Audio" into fld "title-label"
          put empty into fld "audioList"
          # have nav bar
          show button "share"
          show button "add-favorites" 
          break
       case "listen-browse"
-         setAudioListcolors
-         put the location of fld "browse-label" into tLabelLoc
-         put the width of fld "browse-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         show fld "browse-label"
+         --         setAudioListcolors
+         --         put the location of fld "browse-label" into tLabelLoc
+         --         put the width of fld "browse-label" into tLabelWidth
+         --         set the width of grc "modeIndicator" to tLabelWidth
+         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
+         --         show fld "browse-label"
          put playlist_GetCurrent() into  tBrowseHeader
          replace cr with " " in tBrowseHeader
          put tBrowseHeader into fld "title-label"
@@ -891,9 +891,9 @@ on preopencard
          show button "add-favorites" 
          break
       case "listen-search"
-         put the location of fld "title-label" into tLabelLoc
-         put the width of fld "title-label" into tLabelWidth
-         set the width of grc "modeIndicator" to tLabelWidth
+         --         put the location of fld "title-label" into tLabelLoc
+         --         put the width of fld "title-label" into tLabelWidth
+         --         set the width of grc "modeIndicator" to tLabelWidth
          set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
          put "Search" into fld "title-label"
          set the textsize of fld "title-label" to 18
