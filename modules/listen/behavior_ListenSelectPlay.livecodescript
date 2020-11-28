@@ -28,6 +28,8 @@ on openCard
    
    switch sCardName
       case "listen-my-audio"
+         put  "Collections" into fld "collections-label"
+         
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          
@@ -40,8 +42,6 @@ on openCard
          break
       case "listen-file"
          clearSelection
-         put empty  into fld "currentTitleLabel"
-         put   empty into  fld "audio-details"
          break 
    end switch
    
@@ -76,19 +76,34 @@ on mouseup
    switch tTarget
       # card navigaton
       case "collections-label"
+         hide fld "collections-label"
+         hide fld "my-audio-label"
          go to card "listen-collection"
+         break
+      case "listen-browse"
+         show fld "collections-label"
+         show fld "my-audio-label"
          break
       case "my-audio-label"
          go to card "listen-my-audio"
+         show fld "collections-label"
+         show fld "my-audio-label"
+         break
+      case "listen-file"
+         go to card "listen-file"
+         if isMobile() then
+            deleteMobileControl "audioPlayer" # in case one is open already and playing
+         end if  
+         togglePause false, true
          break
       case "AudioList"
          local tTitle,localURL
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
-         hide widget "turnOffAudio"
-         stopPlayer # make sure previous player, if there is one, is deleted.
-         clearPlayer # in parent Listen_UI
+         --         hide widget "turnOffAudio"
+         --         stopPlayer # make sure previous player, if there is one, is deleted.
+         --         clearPlayer # in parent Listen_UI
          
          # clear the color of the last line before setting the  sLineNum
          if sLineNum <> empty then
@@ -111,23 +126,30 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
+         go to card "listen-file"
+         
          # if the use had downloaded audio it appears on my-audio card
-         # we can start the player; get the audio locally:\
+         # we can start the player; get the audio locally
          if sCardName = "listen-my-audio" then 
             --command startPlayer  pURL, pTitle,sCardName,sSelectNum
             startPlayer  "",tTitle,sCardName,sSelectNum
          else
             select_Play sSelectNum,,sCardName  # will use either the line number or item id
          end if
-         break  
          
+         local tURL
+         if  "audio/book" is not in tURL then # no display details
+            select_ShowDetails "downloaded"
+         end if 
+         
+          
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
          
       case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
          if not isMobile() then\
-            put  the currentTime of player "audioPlayer" into sTimeStamp
+               put  the currentTime of player "audioPlayer" into sTimeStamp
          else
             put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
          end if
@@ -217,6 +239,21 @@ command switchAudioUi sAudioUI
    end switch
 end switchAudioUi
 
+command playSingle pDataA
+   local tSearchA,x,tItem_id
+   local tURL,tSelectedItemA
+   
+   put empty into tSelectedItemA
+   
+   put pDataA["url"] into tURL
+   put pDataA["item_id"] into tItem_id
+   
+   startPlayer tURL,pDataA["title"]
+   showBusyIndicator false
+   if  "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+end playSingle
 
 command share_Items 
    local tURL,  sShareItemsA
@@ -232,9 +269,16 @@ command share_Items
 end share_Items
 
 on closeCard
+   switch sCardName
+      case "listen-file"
+         put "" into fld "audioDetails" 
+         put "" into fld "currentTitleLabel" 
+         put "" into fld "audioList" 
+         break 
+   end switch
+   
    clearAudioListColor
    hide group "pause-play"
-   --   put empty into fld "currentTitleLabel"
    showPlayer "false","audioPlayer"
    deleteAllMobileControls 
    put empty into sLineNum

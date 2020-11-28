@@ -68,23 +68,64 @@ function getCollectionsJson
    return sCollectionA
 end getCollectionsJson
 
-command setSelectNumber pNum
-   put pNum into sSelectNum
-end setSelectNumber
+on preopencard
+   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
+   # tweak the header for collections
+   
+   --deleteMobileControl "audioList"  
+   
+   -- set up the header 
+   put the short name of this card into tMode
+   switch tMode
+      case "listen-collection" 
+         
+         hide fld "collections-label"
+         hide fld "my-audio-label"
+         put "Listen" into fld "title-label"
+         # have nav bar
+         show button "share"
+         show button "add-favorites" 
+         break
+      case "listen-my-audio"
+         put "Downloaded Audio" into fld "title-label"
+         put empty into fld "audioList"
+         # have nav bar
+         show button "share"
+         show button "add-favorites" 
+         break
+      case "listen-browse"
+         setAudioListcolors
+         put playlist_GetCurrent() into  tBrowseHeader
+         replace cr with " " in tBrowseHeader
+         put tBrowseHeader into fld "title-label"
+         # have nav bar
+         show button "share"
+         show button "add-favorites" 
+         break
+      case "listen-search"
+         put "Search" into fld "title-label"
+         # have nav bar
+         hide button "share"
+         hide button "add-favorites" 
+         break
+   end switch   
+end preopencard     
+
+--------------------------
+on __GetACollection
+end __GetACollection
+
 
 command selectPlaylist pSelection
    local tPlayTarget,tColl,tPlay
    
    # use has  made choice from card 
    
-   
-   
    # get extract JSON from sCollectionA 
    # which is an array that contain all collections
    # it include the data we need to the title and path to img file.
    # but this pre-built for production
    # you can rebuild the UI from the SivaSivaDev Tool.livecode stacks
-   
    
    put the short name of pSelection into tPlayTarget
    
@@ -450,12 +491,12 @@ on  playlist_Instantiate sTargetPlayList
    # Now we switch cards, 
    
    go to card "listen-browse"
+   show fld "collections-label"
+   show fld "my-audio-label"
    
    hide fld "audioList"
    put tTitles into fld "audioList"  
    typesetAudioList
-   -- put the number of lines of tTitles into pLineCount
-   --  addSpaceBelowListLines (the long id of fld "audioList"), pLineCount, 10
    
    repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
@@ -476,6 +517,15 @@ on  playlist_Instantiate sTargetPlayList
    tracking_RecordActivity "Listen", "navigation/playlist", pData
 end playlist_Instantiate
 
+
+------------- 
+on __GoCardListenFile
+end __GoCardListenFile
+
+command setSelectNumber pNum
+   put pNum into sSelectNum
+end setSelectNumber
+
 on playlist_Reset
    put playlist_GetRecords() into  sCurrentPlayListA
 end playlist_Reset
@@ -493,6 +543,8 @@ end fetchSingleMetadata
 function checkPlayList
    return the keys of  sCurrentPlayListA
 end checkPlayList
+
+
 
 # we need to determine when that card is open that the user
 # cannot have made a selection. Since the local var persists
@@ -588,13 +640,13 @@ command select_ShowDetails  pSelection, pRecord
    deleteMobileControl "audioList"
    
    switch
-      case (fld "audioList" is empty)
-         Put "You have not downloaded any audio yet." into  fld "audioDetails" 
-         
-         break
-         
-         # or its from a downloaded file in My Audio
-         # this case must come for one after it.
+      --      case (fld "audioList" is empty)
+      --         Put "You have not downloaded any audio yet." into  fld "audioDetails" 
+      
+      --         break
+      
+      # or its from a downloaded file in My Audio
+      # this case must come for one after it.
       case (pSelection="downloaded")
          put  getMediaItemMetadata(pRecord) into  fld "audioDetails"   
          break   
@@ -656,13 +708,6 @@ function getItemURL pRecordNum
       metadata_SetRecord sSelectedItemA
       put getMediaURL (sSelectedItemA["item_id"]) into tURL
       
-      # but lib_SivaSivaMedia won't have string for the latest item
-      # fortunately there is easily solution for audio:
-      --      breakpoint
-      --      if char -1 of sSelectedURL = "/" then
-      --         put  sCurrentPlayListA["audioFiles"][pRecordNum]["file_id"] & ".mp3" after sSelectedURL
-      --      end if   
-      --      breakpoint
       if char -1 of tURL = "/" then
          put  sCurrentPlayListA["audioFiles"][pRecordNum]["filename"]  after tURL
          put tURL  into sSelectedURL
@@ -741,7 +786,6 @@ command downloadSelection sSelectNum, pTarget
       put "Pick a Title to Download It." into fld "currentTitleLabel"
    end if
 end downloadSelection
-
 
 command downloadAffirmed   
    local pTitle
@@ -840,107 +884,6 @@ end setAudioListColors
 command clearAudioListColor
    set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
 end clearAudioListColor
-
-
-on preopencard
-   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
-   # tweak the header for collections
-   
-   --deleteMobileControl "audioList"  
-   
-   -- set up the header 
-   put the short name of this card into tMode
-   switch tMode
-      case "listen-collection" 
-         
-         --         put the location of fld "collections-label" into tLabelLoc
-         --         put the width of fld "collections-label" into tLabelWidth
-         --         set the width of grc "modeIndicator" to tLabelWidth
-         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         --         hide fld "browse-label"
-              put "Listen" into fld "title-label"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
-      case "listen-my-audio"
-         --         setAudioListcolors
-         --         put the location of fld "my-audio-label" into tLabelLoc
-         --         put the width of fld "my-audio-label" into tLabelWidth
-         --         set the width of grc "modeIndicator" to tLabelWidth
-         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         --         hide fld "browse-label"
-           put "Downloaded Audio" into fld "title-label"
-         put empty into fld "audioList"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
-      case "listen-browse"
-         --         setAudioListcolors
-         --         put the location of fld "browse-label" into tLabelLoc
-         --         put the width of fld "browse-label" into tLabelWidth
-         --         set the width of grc "modeIndicator" to tLabelWidth
-         --         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         --         show fld "browse-label"
-         put playlist_GetCurrent() into  tBrowseHeader
-         replace cr with " " in tBrowseHeader
-         put tBrowseHeader into fld "title-label"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
-      case "listen-search"
-         --         put the location of fld "title-label" into tLabelLoc
-         --         put the width of fld "title-label" into tLabelWidth
-         --         set the width of grc "modeIndicator" to tLabelWidth
-         set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-         put "Search" into fld "title-label"
-         set the textsize of fld "title-label" to 18
-         # have nav bar
-         hide button "share"
-         hide button "add-favorites" 
-         break
-   end switch   
-end preopencard      put the location of fld "my-audio-label" into tLabelLoc
-put the width of fld "my-audio-label" into tLabelWidth
-set the width of grc "modeIndicator" to tLabelWidth
-set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-hide fld "browse-label"
-put "Downloaded Audio" into fld "title-label"
-put empty into fld "audioList"
-# have nav bar
-show button "share"
-show button "add-favorites" 
-break
-case "listen-browse"
-   setAudioListcolors
-   put the location of fld "browse-label" into tLabelLoc
-   put the width of fld "browse-label" into tLabelWidth
-   set the width of grc "modeIndicator" to tLabelWidth
-   set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-   show fld "browse-label"
-   put playlist_GetCurrent() into  tBrowseHeader
-   replace cr with " " in tBrowseHeader
-   put tBrowseHeader into fld "title-label"
-   # have nav bar
-   show button "share"
-   show button "add-favorites" 
-   break
-case "listen-search"
-   put the location of fld "title-label" into tLabelLoc
-   put the width of fld "title-label" into tLabelWidth
-   set the width of grc "modeIndicator" to tLabelWidth
-   set the location of  grc "modeIndicator" to (item 1 of tLabelLoc, item 2 of tLabelLoc+12) 
-   put "Search" into fld "title-label"
-   set the textsize of fld "title-label" to 18
-   # have nav bar
-   hide button "share"
-   hide button "add-favorites" 
-   break
-end switch   
-end preopencard
-
 
 command __UXHandlers
 end __UXHandlers
@@ -1057,7 +1000,7 @@ end playPausedAudio
 
 on clearPlayer
    showPlayer false, "audioPlayer"
-   put empty into fld "currentTitleLabel" 
+   --   put empty into fld "currentTitleLabel" 
 end clearPlayer
 
 command offLineGoMyAudio
@@ -1111,19 +1054,11 @@ command updateUI
          bottomCenterMe tPausePlay,80
          break
          
-      case "listen-file"
-         put the long id of img "app-bkgnd"  into sMainBkgnd
-         put the long id of img "headset"  into sCardBkgnd
-         
-         setImageToFullCardLoc sMainBkgnd,"portrait",0,0
-         setImageToFullCardLoc sCardBkgnd,"portrait",0,0
       case "listen-search"
          bottomCenterMe tPausePlay,80
          break
          
    end switch
-   
-   
    
 end updateUI
 
