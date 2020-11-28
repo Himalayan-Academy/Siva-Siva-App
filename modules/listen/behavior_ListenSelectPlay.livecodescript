@@ -142,7 +142,7 @@ on mouseup
             select_ShowDetails "downloaded"
          end if 
          
-          
+         
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
@@ -166,23 +166,23 @@ on mouseup
          playPausedAudio sTimeStamp
          break
          
-      case "chevron-up-down" # this is simple enough to do here
-         local tSelection,tRecord
-         put the vis of fld "audioDetails" into detailVis
-         set the flipped of pTarget to detailVis
-         if detailVis then
-            deleteMobileControl "audioDetails"
-            hide fld "audioDetails" with visual effect "wipe down" very fast
-            send  "CreateScroller audioList" to fld "audioList"
-         else
-            if sCardName = "listen-my-audio" then
-               put "downloaded" into tSelection
-               put sDownloadedAudioA[sSelectNum][metadata][1] into tRecord
-            end if 
-            select_ShowDetails tSelection,tRecord
-         end if
-         set the flipped of pTarget to not detailVis
-         break
+         --      case "chevron-up-down" # this is simple enough to do here
+         --         local tSelection,tRecord
+         --         put the vis of fld "audioDetails" into detailVis
+         --         set the flipped of pTarget to detailVis
+         --         if detailVis then
+         --            deleteMobileControl "audioDetails"
+         --            --            hide fld "audioDetails" with visual effect "wipe down" very fast
+         --            send  "CreateScroller audioList" to fld "audioList"
+         --         else
+         --            if sCardName = "listen-my-audio" then
+         --               put "downloaded" into tSelection
+         --               put sDownloadedAudioA[sSelectNum][metadata][1] into tRecord
+         --            end if 
+         --            select_ShowDetails tSelection,tRecord
+         --         end if
+         --         set the flipped of pTarget to not detailVis
+         --         break
       case "DownloadSelection" 
          if connectivity_PingServer() <> "true" then
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -273,15 +273,19 @@ on closeCard
       case "listen-file"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
-         put "" into fld "audioList" 
+         hide group "pause-play"
+         showPlayer "false","audioPlayer"
+         deleteAllMobileControls
          break 
+      case "listen-browse"
+      case "listen-my-audio"
+         clearAudioListColor
+         break
    end switch
-   
-   clearAudioListColor
-   hide group "pause-play"
-   showPlayer "false","audioPlayer"
-   deleteAllMobileControls 
-   put empty into sLineNum
 end closeCard
 
 
+
+on nameChanged pOldName, pNewName
+   
+end nameChanged
