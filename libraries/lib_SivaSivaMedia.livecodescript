@@ -196,13 +196,13 @@ function getMediaItemMetadata pRecords
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put sMediaMetaA["artists"] into tArtists
+   --   put sMediaMetaA["artists"] into tArtists
    if sMediaMetaA["artists"] <> empty then
       put "Artist: " & sMediaMetaA["artists"] into tArtists
    end if
    put sMediaMetaA["artists"] into tAuthor
    if sMediaMetaA["author"] <> empty then
-      put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
+      put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
    put sMediaMetaA["description"] into tDescription
    replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
@@ -224,7 +224,8 @@ function getMediaItemMetadata pRecords
    
    
    # data has commas so we have to use a lines as a delimiter
-   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   put (tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
    repeat for each line x in tFields
       if x <> empty then
@@ -348,7 +349,7 @@ end ___VIDEO
 ##########################################################
 
 # this just get a video URL as passed it directly to the view stack
-
+local pJournalLabel
 command getRandomVideo
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing

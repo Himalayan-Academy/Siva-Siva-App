@@ -28,8 +28,6 @@ on openCard
    
    switch sCardName
       case "listen-my-audio"
-         put  "Collections" into fld "collections-label"
-         
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          

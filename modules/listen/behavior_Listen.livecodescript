@@ -72,9 +72,6 @@ on preopencard
    local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
    # tweak the header for collections
    
-   --deleteMobileControl "audioList"  
-   
-   -- set up the header 
    put the short name of this card into tMode
    switch tMode
       case "listen-collection" 
@@ -87,7 +84,8 @@ on preopencard
          show button "add-favorites" 
          break
       case "listen-my-audio"
-         put "Downloaded Audio" into fld "title-label"
+         put "My Downloads" into fld "title-label"
+         put  "Collections" into fld "collections-label"
          put empty into fld "audioList"
          # have nav bar
          show button "share"
@@ -103,6 +101,9 @@ on preopencard
          show button "add-favorites" 
          break
       case "listen-search"
+      case "listen-search"
+         show fld "collections-label"
+         show fld "my-audio-label"
          put "Search" into fld "title-label"
          # have nav bar
          hide button "share"
@@ -662,9 +663,8 @@ command select_ShowDetails  pSelection, pRecord
          
          
    end switch
-   
-   set the textsize of line 1 of fld "audioDetails" to 22
-   set the textstyle of line 1 of fld "audioDetails" to "bold"
+   set the textstyle of line 1 of fld "audioDetails" to "italic"
+   set the textstyle of line 2 of fld "audioDetails" to "italic"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
    
    show fld "audioDetails" with visual "effect wipe" up very fast
@@ -691,7 +691,6 @@ end typeSetAudioList
 
 command getPlayListURLs pKeys
    repeat for each line x in pKeys
-      --  put getItemURL(x) into sSelectedURL
       put getItemURL(x) into sCurrentPlayListA["audioFiles"][x]["myURL"]
    end repeat   
 end getPlayListURLs
