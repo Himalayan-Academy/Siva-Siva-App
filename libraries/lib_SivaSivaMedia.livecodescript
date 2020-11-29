@@ -188,19 +188,23 @@ end getSongLyrics
 
 function getMediaItemMetadata pRecords
    local tLyrics
+   
+   put empty into tArtists
+   put empty into tAuthor
+   
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
+   
+   
    
    put empty into tViewData
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   --   put sMediaMetaA["artists"] into tArtists
    if sMediaMetaA["artists"] <> empty then
       put "Artist: " & sMediaMetaA["artists"] into tArtists
    end if
-   put sMediaMetaA["artists"] into tAuthor
    if sMediaMetaA["author"] <> empty then
       put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
@@ -397,6 +401,11 @@ function folderForAudio pMediaType
          break
       case pMediaType = "audio/song"
          put "songs/" after tServerPath
+         
+         if sMediaMetaA["author"] contains "Yogaswami" then
+         else
+            put empty into sMediaMetaA["author"] 
+         end if
          put sMediaMetaA["genre"] &"/" after tServerPath
          
          if (sMediaMetaA["genre"] = "bhajan") OR (sMediaMetaA["genre"] = "bhakti-gitam")  then
@@ -407,6 +416,7 @@ function folderForAudio pMediaType
          break
       case pMediaType="audio/inspiredtalk"
          put "inspired-talks/" after tServerPath
+         put empty into sMediaMetaA["artist"] 
          put sMediaMetaA["author"] into tAuthor
          put line 1 of tAuthor into tAuthor # handle extra EOL in some records
          put sMediaMetaA["date_created"] into tDateCreated

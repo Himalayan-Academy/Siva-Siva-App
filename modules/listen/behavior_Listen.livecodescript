@@ -997,8 +997,7 @@ on playPausedAudio sTimeStamp
 end playPausedAudio
 
 on clearPlayer
-   showPlayer false, "audioPlayer"
-   --   put empty into fld "currentTitleLabel" 
+   showPlayer false, "audioPlayer" 
 end clearPlayer
 
 command offLineGoMyAudio
