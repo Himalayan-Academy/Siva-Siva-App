@@ -121,7 +121,15 @@ on mouseup
          put round(sLineNum/2) into sSelectNum 
          
          go to card "listen-file"
+         
+         if sCardName = "listen-my-audio" then 
+            hide widget  "downloadSelection"
+         else
+            show widget  "downloadSelection"
+         end if
+         
          put sSelectNum into fld "theSelectNum"
+         
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          if sCardName = "listen-my-audio" then 
@@ -262,7 +270,3 @@ on closeCard
 end closeCard
 
 
-
-on nameChanged pOldName, pNewName
-   
-end nameChanged

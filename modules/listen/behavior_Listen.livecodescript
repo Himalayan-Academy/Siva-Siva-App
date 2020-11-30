@@ -957,9 +957,9 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    end if
    put  pTitle into fld "currentTitleLabel"
    
-   if there is a control "DownloadSelection" then
-      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
-   end if
+   --   if there is a control "DownloadSelection" then
+   --      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
+   --   end if
    togglePause true, true
 end startPlayer
 
