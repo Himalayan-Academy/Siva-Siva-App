@@ -99,10 +99,6 @@ on mouseup
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
-         --         hide widget "turnOffAudio"
-         --         stopPlayer # make sure previous player, if there is one, is deleted.
-         --         clearPlayer # in parent Listen_UI
-         
          # clear the color of the last line before setting the  sLineNum
          if sLineNum <> empty then
             setAudioListColors sLineNum,"0,0,0"
@@ -125,11 +121,10 @@ on mouseup
          put round(sLineNum/2) into sSelectNum 
          
          go to card "listen-file"
-         
+         put sSelectNum into fld "theSelectNum"
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          if sCardName = "listen-my-audio" then 
-            --command startPlayer  pURL, pTitle,sCardName,sSelectNum
             startPlayer  "",tTitle,sCardName,sSelectNum
          else
             select_Play sSelectNum,,sCardName  # will use either the line number or item id
@@ -164,24 +159,8 @@ on mouseup
          playPausedAudio sTimeStamp
          break
          
-         --      case "chevron-up-down" # this is simple enough to do here
-         --         local tSelection,tRecord
-         --         put the vis of fld "audioDetails" into detailVis
-         --         set the flipped of pTarget to detailVis
-         --         if detailVis then
-         --            deleteMobileControl "audioDetails"
-         --            --            hide fld "audioDetails" with visual effect "wipe down" very fast
-         --            send  "CreateScroller audioList" to fld "audioList"
-         --         else
-         --            if sCardName = "listen-my-audio" then
-         --               put "downloaded" into tSelection
-         --               put sDownloadedAudioA[sSelectNum][metadata][1] into tRecord
-         --            end if 
-         --            select_ShowDetails tSelection,tRecord
-         --         end if
-         --         set the flipped of pTarget to not detailVis
-         --         break
-      case "DownloadSelection" 
+      case "DownloadSelection"  
+         put fld "theSelectNum" into sSelectNum
          if connectivity_PingServer() <> "true" then
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
