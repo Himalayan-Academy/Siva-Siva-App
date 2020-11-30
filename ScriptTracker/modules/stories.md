@@ -1,11 +1,13 @@
 # stories
-**group "share-ui" of card "storyHome" of stack "stories"**
-* ID: group id 1301 of card id 1002 of stack "stories"
+**bkgnd "share-ui" of stack "stories"**
+* ID: bkgnd id 1301 of stack "stories"
 * Behavior: stack "behavior_SocialShare"
-* [stack_stories_group_id_1301](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1301.livecodescript)
 
-**widget "close-sharing" of group "share-ui" of card "storyHome" of stack "stories"**
-* ID: widget id 1303 of group id 1301 of card id 1002 of stack "stories"
+* Shared group on card IDs: 1002, 1291
+* [stack_stories_bkgnd_id_1301](./../../ScriptTracker/modules/stories_Scripts/stack_stories_bkgnd_id_1301.livecodescript)
+
+**widget "close-sharing" of bkgnd "share-ui" of stack "stories"**
+* ID: widget id 1303 of bkgnd id 1301 of stack "stories"
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_stories_widget_id_1303](./../../ScriptTracker/modules/stories_Scripts/stack_stories_widget_id_1303.livecodescript)
 

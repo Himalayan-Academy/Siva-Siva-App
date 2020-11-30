@@ -523,6 +523,7 @@ command cycleImageState pImage
          break
    end switch
    set the loc of pImage to sCardLoc
+   return sImageCycleStateA["state"]
 end cycleImageState
 
 --on toggleImgSize pImage, pFullSize, pTargetSize, pLocation

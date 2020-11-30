@@ -12,7 +12,7 @@ global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
 
 # geometry vars
-local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg
+local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText
 
 # story control variables, stored cache
 # must wipe them on end of story
@@ -51,6 +51,7 @@ on preOpenCard
       put the long id of image "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
       put the long id of grc "storyTextBkg" into sStoryTextBkg
+      put the long id of fld "captionText" into sCaptionText
       updateUI
    end if
 end preopenCard
@@ -140,6 +141,20 @@ on mouseup
       case "storyImage"
          if not (the visible of sStoryText) then
             cycleImageState sStoryImage
+            if the result is 1 then
+               if the text of sCaptionText is not empty then
+                  show sCaptionText
+               end if
+               show grp "footer"
+               show widget "goNext"
+            else
+               if the result is 3 then
+                  hide grp "footer"
+                  hide widget "goNext"
+               end if
+               hide sCaptionText
+               -- hide showCaptionButton
+            end if
          end if
          break
       case "goNext"
@@ -149,6 +164,7 @@ on mouseup
             lock screen
             show sStoryText
             show sStoryTextBkg
+            hide sCaptionText
             unlock screen
          end if
          break
@@ -192,7 +208,7 @@ command goNextScene
       set the htmltext of sStoryText to the text of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       show sStoryTextBkg
-      -- hide caption
+      hide sCaptionText
       -- hide "show caption" button
       -- hide "previous" button
    else
@@ -200,8 +216,17 @@ command goNextScene
       set the text of sStoryText to the text of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       hide sStoryTextBkg
-      -- set caption text
-      -- if caption text not empty, show caption
+      set the text of sCaptionText to the text of \
+            field "Caption" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      if the text of sCaptionText is not empty then
+         set the width of sCaptionText to .65 * CardWidth()
+         set the height of sCaptionText to the formattedHeight of sCaptionText
+         set the width of sCaptionText to the formattedWidth of sCaptionText
+         set the bottomRight of sCaptionText to the bottomRight of sStoryText
+         show sCaptionText
+      else
+         hide sCaptionText
+      end if
       -- hide "show caption" button
    end if
    put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tImagePath
@@ -278,14 +303,8 @@ on updateUI
    end if
    --
    if tCard is "storyMenu" then
-      --      put the long id of grp "storyMenu" into tMenu
-      --      topcenterMe tMenu,120
-      --
-      --      put the long id of img "menuBkgnd" into tMenuBkgnd
-      --      CenterMe tMenuBkgnd
-      --
-      --      put the long id of img "menuImage" into tMenuImage
-      --      CenterMe tMenuImage
+      put the long id of img "menuImage" into tMenuImage
+      CenterMe tMenuImage
       --
       put the long id of btn "back" into tGoBack
       bottomCenterMe tGoBack,65
@@ -295,8 +314,11 @@ on updateUI
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      set the rect sStoryMenu to (32, 50, cardWidth() - 32, the top of btn "back" - 21)
+      set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
       set the uRect of sStoryMenu to the rect of sStoryMenu
+      --
+      put the long id of img "menuBkgnd" into tMenuBkgnd
+      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
       --
       show grc "footerBackground" of grp "footer"
    end if
@@ -307,11 +329,15 @@ on updateUI
       --
       set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 21)
       --
+      set the rect of sCaptionText to the rect of sStoryText
+      --
       put the long id of grc "storyTextBkg" into tStoryTextBkg
       set the rect of tStoryTextBkg to CardRect()
       --
       hide grc "footerBackground" of grp "footer"
    end if
+   --
+   set the width of grp "share-ui" to cardWidth()
    --
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
@@ -327,11 +353,13 @@ on closeCard
       hide grp "tips" of cd "storyHome"
       show grp "storyMenu" of cd "storyHome"
    else if tCard is "showStories" then
-      put empty into fld "storyText"
+      set the text of sStoryText to empty
+      set the text of sCaptionText to empty
       set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
       close stack sStoryDataStack
       hide sStoryText
       hide sStoryTextBkg
+      show sCaptionText
       show grc "footerBackground" of grp "footer"
    end if
 end closecard
