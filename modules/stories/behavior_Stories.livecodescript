@@ -56,6 +56,7 @@ on preOpenCard
    end if
 end preopenCard
 
+
 on opencard
    local tCard 
    put the short name of this card into tCard
@@ -69,32 +70,35 @@ on opencard
    end if
 end opencard
 
+
 command showStoryMenu
    dispatch "deleteMobileControl" to sTips with "tips"
    dispatch "createScroller" to sStoryMenu with "storyMenu"
-   set the filename of img "menuImage" of cd "storyHome" to (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   set the filename of img "menuImage" of cd "storyHome" to \
+         (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    hide grp "tips" of cd "storyHome"
    show grp "storyMenu" of cd "storyHome"
    display_SetStatusBarVis true
 end showStoryMenu 
+
 
 /*
 UX for user for the stack and cardi
 */
 on mouseup
    local tTips
-   
+   --
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
    put loadStoriesMetadata() into sStoriesMetaArray
-   
+   --
    switch sTarget
       case "storyMenu"
          put value(clickLine() ) into sStoryTitle
          if sStoryTitle is empty then exit mouseup
-         
+         --
          put sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
-         
+         --
          switch sWhere
             case "local"
                put (path_Modules() & "stories/makeStoryLocal.livecode") \
@@ -119,12 +123,11 @@ on mouseup
                end if
                break
          end switch
-         
+         --
          # development
          visualArticle
-         
          break
-         
+         --
       case "tips"
          set the filename of img "tipsImage" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
          put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
@@ -132,45 +135,49 @@ on mouseup
          dispatch "createscroller" to sTips with "tips"
          show grp "tips"
          break
-         
+         --
       case "back"
          dispatch "deleteMobileControl" to sTips with "tips"
          hide grp "tips"
          break
-         
+         --
+      case "showStories"
       case "storyImage"
-         if not (the visible of sStoryText) then
-            cycleImageState sStoryImage
-            if the result is 1 then
-               if the text of sCaptionText is not empty then
-                  show sCaptionText
-               end if
-               show grp "footer"
-               show widget "goNext"
-            else
-               if the result is 3 then
-                  hide grp "footer"
-                  hide widget "goNext"
-               end if
-               hide sCaptionText
-               -- hide showCaptionButton
-            end if
-         end if
+         updateImageState
          break
+         --
       case "goNext"
          if the visible of sStoryText or the text of sStoryText is empty then
+            deleteMobileControl "storyText"
             goNextScene
          else
             lock screen
             show sStoryText
             show sStoryTextBkg
             hide sCaptionText
+            if the formattedHeight of sStoryText > the height of sStoryText then
+               dispatch "createScroller" to sStoryText with "storyText"
+            end if
             unlock screen
          end if
          break
    end switch
-   
 end mouseup
+
+
+on doScrollerTap
+   put the short name of the target into sTarget
+   --
+   switch sTarget
+      case "storyImage"
+         updateImageState
+         break
+      case "storyText"
+         --
+         break
+   end switch
+end doScrollerTap
+
 
 #development
 command visualArticle
@@ -178,6 +185,7 @@ command visualArticle
    --
    go card "showStories" of stack "stories"
 end visualArticle
+
 
 command goNextScene
    local tImagePath
@@ -244,6 +252,33 @@ command goNextScene
    unlock screen
 end goNextScene
 
+
+command updateImageState
+   local tState
+   if not (the visible of sStoryText) then
+      cycleImageState sStoryImage
+      put the result into tState
+      if tState is 1 then
+         if the text of sCaptionText is not empty then
+            show sCaptionText
+         end if
+         show grp "footer"
+         show widget "goNext"
+         deleteMobileControl "storyImageGroup"
+      else
+         if tState is 3 then
+            hide grp "footer"
+            hide widget "goNext"
+            set the topLeft of sStoryImage to 0,0
+            dispatch "createScroller" to grp "storyImageGroup" with "storyImageGroup"
+         end if
+         hide sCaptionText
+         -- hide showCaptionButton
+      end if
+   end if
+end updateImageState
+
+
 -------
 local pData,  tCd,  
 
@@ -261,6 +296,7 @@ command addJournalEntry -- save a bookmark to db
    end if
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
 end addJournalEntry
+
 		
 on journalResume pData -- sent from journal stack
    put pData["Card"] into tCd
@@ -331,6 +367,8 @@ on updateUI
       --
       set the rect of sCaptionText to the rect of sStoryText
       --
+      set the rect of grp "storyImageGroup" to CardRect()
+      --
       put the long id of grc "storyTextBkg" into tStoryTextBkg
       set the rect of tStoryTextBkg to CardRect()
       --
@@ -342,6 +380,7 @@ on updateUI
    put the long id of grp "footer" into tFooter
    send "updateUI" to tFooter
 end updateUI
+
 
 on closeCard
    local tCard 
@@ -363,6 +402,7 @@ on closeCard
       show grc "footerBackground" of grp "footer"
    end if
 end closecard
+
 
 on closestack  
    portal_SetLastStack "stories" 

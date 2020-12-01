@@ -1,13 +1,17 @@
 ﻿script "behavior_mobileScroller"
-local sMouseLoc
+local sMouseLoc, sStartLoc
 local sStacksHorizontal
+local sName
 
 ######### Mobile Controls ############
 
 command createScroller pName -- scrolling fields
    --set the acceleratedRendering of this stack to false
    local tRect
-   if not isMobile() then exit CreateScroller
+   if not isMobile() then
+      put pName into sName
+      exit CreateScroller
+   end if
    deleteMobileControl pName -- delete any existing
    --PUT CR & CR &" " AFTER CONTROL PNAME 
    put (the rect of control pName) into tRect
@@ -52,13 +56,19 @@ on scrollerDidScroll hScrolled, vScrolled
    if short name of this stack is among the items of sStacksHorizontal then
       set the hscroll of control tControlID to hScrolled
    end if
+   if the short name of this stack is "stories" then
+      set the hscroll of control tControlID to hScrolled
+   end if
 end scrollerDidScroll
 
 
 on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
    -- they are overlaid on the stack and will float over all cards
-   if not isMobile() then exit deleteMobileControl -- do nothing on desktop
+   if not isMobile() then
+      if pName is sName then put empty into sName
+      exit deleteMobileControl -- do nothing on desktop
+   end if
    repeat while pName is among the lines of mobileControls()
       mobileControlDelete pName
    end repeat
@@ -67,19 +77,38 @@ end deleteMobileControl
 
 
 on mouseDown
-   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead
-      put the mouseloc into sMouseLoc
+   put the mouseloc into sMouseLoc
+   put sMouseLoc into sStartLoc
+   if not isMobile() and sName is not empty then -- jg: mobile will use stack handlers to scroll instead
       setScroll
    end if
    pass mousedown
 end mouseDown
 
 
+on mouseUp
+   put "" into sMouseLoc
+   if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+      send "doScrollerTap" to the target
+   end if
+end mouseUp
+
+
+on mouseRelease
+   put "" into sMouseLoc
+   put "" into sStartLoc
+end mouseRelease
+
+
 on setScroll
    if the mouse is down then
       lock screen
-    
-        if abs (item 2 of sMouseLoc ) > 20 then
+      if abs (item 2 of sMouseLoc ) > 20 then
+         if item 1 of sMouseLoc > the mouseH then
+            set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
+         else
+            set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
+         end if
          if item 2 of sMouseLoc > the mouseV then
             set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
          else

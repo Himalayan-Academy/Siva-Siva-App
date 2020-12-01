@@ -509,11 +509,6 @@ command cycleImageState pImage
          set the height of pImage to the formattedHeight of pImage
          break
       case 3
-         --         if sImageCycleStateA["minRatio"] is 1 then
-         --            put 2 into sImageCycleStateA["state"]
-         --         else
-         --            put 1 into sImageCycleStateA["state"]
-         --         end if
          put 1 into sImageCycleStateA["state"]
          if sImageCycleStateA["fill"] = "height" then
             resizeToHeight pImage, sCardHeight
