@@ -19,8 +19,10 @@ local  sStoriesMetaArray, sStoryTitle
 
 function loadStoriesMetadata 
    local tStoryData
-   --put url ("binfile:" & path_Modules()& "stories/stories.json") into tStoryData
    put url ("binfile:" & path_Documents()& "modules/stories/stories.json") into tStoryData
+   if tStoryData is empty then
+      put url ("binfile:" & path_Modules()& "stories/stories.json") into tStoryData
+   end if
    put JSONToArray(tStoryData) into sStoriesMetaArray 
    return sStoriesMetaArray
 end loadStoriesMetadata

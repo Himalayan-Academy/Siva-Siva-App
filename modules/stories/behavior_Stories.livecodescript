@@ -52,8 +52,8 @@ on preOpenCard
       put the long id of fld "storyText" into sStoryText
       put the long id of grc "storyTextBkg" into sStoryTextBkg
       put the long id of fld "captionText" into sCaptionText
-      updateUI
    end if
+   updateUI
 end preopenCard
 
 
@@ -264,13 +264,13 @@ command updateImageState
          end if
          show grp "footer"
          show widget "goNext"
-         deleteMobileControl "storyImageGroup"
+         dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
       else
          if tState is 3 then
             hide grp "footer"
             hide widget "goNext"
             set the topLeft of sStoryImage to 0,0
-            dispatch "createScroller" to grp "storyImageGroup" with "storyImageGroup"
+            dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
          hide sCaptionText
          -- hide showCaptionButton
@@ -333,27 +333,32 @@ on updateUI
    --
    put the short name of this card into tCard
    --
+   put the long id of grp "footer" into tFooter
+   send "updateUI" to tFooter
+   --
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
       topCenterMe tControl, 7
    end if
    --
-   if tCard is "storyMenu" then
+   if tCard is "storyHome" then
       put the long id of img "menuImage" into tMenuImage
       CenterMe tMenuImage
       --
       put the long id of btn "back" into tGoBack
       bottomCenterMe tGoBack,65
+      set the bottom of tGoBack to the top of tFooter - 15
       --
       put the long id of btn "tips" into tGoTips
       bottomCenterMe tGoTips,70
+      set the bottom of tGoTips to the top of tFooter - 18
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
       set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
       set the uRect of sStoryMenu to the rect of sStoryMenu
       --
-      put the long id of img "menuBkgnd" into tMenuBkgnd
+      put the long id of grc "menuBkgnd" into tMenuBkgnd
       set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
       --
       show grc "footerBackground" of grp "footer"
@@ -376,14 +381,11 @@ on updateUI
    end if
    --
    set the width of grp "share-ui" to cardWidth()
-   --
-   put the long id of grp "footer" into tFooter
-   send "updateUI" to tFooter
 end updateUI
 
 
 on closeCard
-   local tCard 
+   local tCard
    put the short name of this card into tCard
    --
    if tCard is "storyHome" then
@@ -391,6 +393,7 @@ on closeCard
             (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
       hide grp "tips" of cd "storyHome"
       show grp "storyMenu" of cd "storyHome"
+      deleteMobileControl "storyMenu"
    else if tCard is "showStories" then
       set the text of sStoryText to empty
       set the text of sCaptionText to empty

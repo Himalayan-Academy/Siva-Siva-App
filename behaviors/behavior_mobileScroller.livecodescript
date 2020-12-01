@@ -1,13 +1,14 @@
 ﻿script "behavior_mobileScroller"
 local sMouseLoc, sStartLoc
 local sStacksHorizontal
-local sName
+local sName, sImageScroller
 
 ######### Mobile Controls ############
 
 command createScroller pName -- scrolling fields
    --set the acceleratedRendering of this stack to false
    local tRect
+   put false into sImageScroller
    if not isMobile() then
       put pName into sName
       exit CreateScroller
@@ -29,6 +30,10 @@ command createScroller pName -- scrolling fields
    mobileControlSet pName, "visible",  true
 end createScroller
 
+command createImageScroller pName
+   createScroller pName
+   put true into sImageScroller
+end createImageScroller
 
 on updateScroller pName
    local tRect
@@ -56,7 +61,7 @@ on scrollerDidScroll hScrolled, vScrolled
    if short name of this stack is among the items of sStacksHorizontal then
       set the hscroll of control tControlID to hScrolled
    end if
-   if the short name of this stack is "stories" then
+   if sImageScroller then
       set the hscroll of control tControlID to hScrolled
    end if
 end scrollerDidScroll
@@ -72,6 +77,8 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
    repeat while pName is among the lines of mobileControls()
       mobileControlDelete pName
    end repeat
+   put "" into sMouseLoc
+   put "" into sStartLoc
    --set the acceleratedRendering of this stack to false --- jg: don't turn this off
 end deleteMobileControl
 
@@ -88,8 +95,12 @@ end mouseDown
 
 on mouseUp
    put "" into sMouseLoc
-   if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
-      send "doScrollerTap" to the target
+   if sImageScroller then
+      if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+         send "doScrollerTap" to the target
+      end if
+   else
+      pass mouseUp
    end if
 end mouseUp
 
