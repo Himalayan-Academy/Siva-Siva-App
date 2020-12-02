@@ -22,34 +22,34 @@ local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 local sTimeStamp, sSelectionsA, sDownloadedAudioA,sCardName
 
 
-on openCard
-   local tCardName
-   put the short name of this card into sCardName
-   
-   switch sCardName
-      case "listen-my-audio"
-         getDownloadedAudio 
-         put the result into sDownloadedAudioA
-         
-         if (fld "audioList" is empty) then
-            dialog_CustomMsg "You have not downloaded any audio"
-         end if
-         break
-      case "listen-browse"
-         clearSelection
-         break
-      case "listen-file"
-         clearSelection
-         break 
-   end switch
-   
-   playlist_Reset 
-   audioIsRunning
-   if the logMessage <> empty then
-      copyLogControl
-   end if
-   
-end openCard
+--on openCard
+--   local tCardName
+--   put the short name of this card into sCardName
+
+--   switch sCardName
+--      case "listen-my-audio"
+--         getDownloadedAudio 
+--         put the result into sDownloadedAudioA
+
+--         if (fld "audioList" is empty) then
+--            dialog_CustomMsg "You have not downloaded any audio"
+--         end if
+--         break
+--      case "listen-browse"
+--         clearSelection
+--         break
+--      case "listen-file"
+--         clearSelection
+--         break 
+--   end switch
+
+--   playlist_Reset 
+--   audioIsRunning
+--   if the logMessage <> empty then
+--      copyLogControl
+--   end if
+
+--end openCard
 
 
 
@@ -74,18 +74,12 @@ on mouseup
    switch tTarget
       # card navigaton
       case "collections-label"
-         hide fld "collections-label"
-         hide fld "my-audio-label"
          go to card "listen-collection"
          break
       case "listen-browse"
-         show fld "collections-label"
-         show fld "my-audio-label"
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         show fld "collections-label"
-         show fld "my-audio-label"
          break
       case "listen-file"
          go to card "listen-file"
@@ -253,20 +247,20 @@ command share_Items
    return sShareItemsA
 end share_Items
 
-on closeCard
-   switch sCardName
-      case "listen-file"
-         put "" into fld "audioDetails" 
-         put "" into fld "currentTitleLabel" 
-         hide group "pause-play"
-         showPlayer "false","audioPlayer"
-         deleteAllMobileControls
-         break 
-      case "listen-browse"
-      case "listen-my-audio"
-         clearAudioListColor
-         break
-   end switch
-end closeCard
+--on closeCard
+--   switch sCardName
+--      case "listen-file"
+--         put "" into fld "audioDetails" 
+--         put "" into fld "currentTitleLabel" 
+--         hide group "pause-play"
+--         showPlayer "false","audioPlayer"
+--         deleteAllMobileControls
+--         break 
+--      case "listen-browse"
+--      case "listen-my-audio"
+--         clearAudioListColor
+--         break
+--   end switch
+--end closeCard
 
 

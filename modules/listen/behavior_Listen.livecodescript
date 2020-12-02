@@ -30,14 +30,14 @@ local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTim
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
 local sSelectionsA,sLastTarget,sSelectNum
 
-on preopenstack
-   if isMobile() then
-      set the fullscreenmode of this stack to "showAll"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-      iphoneSetAudioCategory "playback"
-      mobileHideStatusBar
+on preOpenStack
+   if isMobile() then    
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+      set the fullscreenmode of this stack to empty
+      iphoneSetAudioCategory "playback" 
    end if
-end preopenstack
+   setCardCoords "portrait"
+end preOpenStack
 
 on openstack 
    #V2 April 8, 2018
@@ -69,48 +69,184 @@ function getCollectionsJson
 end getCollectionsJson
 
 on preopencard
-   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
-   # tweak the header for collections
+   updateUI 
+   --   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
+   --   # tweak the header for collections
    
-   put the short name of this card into tMode
-   switch tMode
-      case "listen-collection" 
-         
+   --   put the short name of this card into tMode
+   --   switch tMode
+   --      case "listen-collection" 
+   
+   --         hide fld "collections-label"
+   --         hide fld "my-audio-label"
+   --         put "Listen" into fld "title-label"
+   --         # have nav bar
+   --         show button "share"
+   --         show button "add-favorites" 
+   --         break
+   
+   --      case "listen-browse"
+   --         setAudioListcolors
+   --         put playlist_GetCurrent() into  tBrowseHeader
+   --         replace cr with " " in tBrowseHeader
+   --         put tBrowseHeader into fld "title-label"
+   --         show fld "collections-label"
+   --         show fld "my-audio-label"
+   --         put  "My Download" into fld "my-audio-label"
+   --         # have nav bar
+   --         show button "share"
+   --         show button "add-favorites" 
+   --         break
+   
+   --      case "listen-my-audio"
+   --         put "My Downloads" into fld "title-label"
+   --         put  "Collections" into fld "collections-label"
+   --         put  empty into fld "my-audio-label"
+   --         put empty into fld "audioList"
+   --         # have nav bar
+   --         show button "share"
+   --         show button "add-favorites" 
+   --         break
+   
+   --      case "listen-file"
+   --         put "Listen" into fld "title-label"
+   --         put  "Collections" into fld "collections-label"
+   --         put  "My Downloads" into fld "my-audio-label"
+   --         put empty into fld "audioList"
+   --         # have nav bar
+   --         show button "share"
+   --         show button "add-favorites" 
+   --         break
+   
+   --      case "listen-search"
+   --         show fld "collections-label"
+   --         show fld "my-audio-label"
+   --         put "Search" into fld "title-label"
+   --         # have nav bar
+   --         hide button "share"
+   --         hide button "add-favorites" 
+   --         break
+   --   end switch   
+end preopencard     
+
+on openCard
+   local tCardName
+   local tLabelLoc, tLabelWidth, tBrowseHeader
+   
+   put the short name of this card into tCardName
+   
+   switch tCardName
+      case "listen-collection"
          hide fld "collections-label"
          hide fld "my-audio-label"
          put "Listen" into fld "title-label"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
-         break
+   
       case "listen-my-audio"
          put "My Downloads" into fld "title-label"
          put  "Collections" into fld "collections-label"
+         put  empty into fld "my-audio-label"
          put empty into fld "audioList"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
+         
+         getDownloadedAudio 
+         put the result into sDownloadedAudioA
+         if (fld "audioList" is empty) then
+            dialog_CustomMsg "You have not downloaded any audio"
+         end if
          break
       case "listen-browse"
+         clearSelection
          setAudioListcolors
          put playlist_GetCurrent() into  tBrowseHeader
          replace cr with " " in tBrowseHeader
          put tBrowseHeader into fld "title-label"
-         # have nav bar
-         show button "share"
-         show button "add-favorites" 
+         show fld "collections-label"
+         show fld "my-audio-label"
+         put  "My Download" into fld "my-audio-label"
          break
-      case "listen-search"
+      case "listen-file"
+         clearSelection
+         put "Listen" into fld "title-label"
+         put  "Collections" into fld "collections-label"
+         put  "My Downloads" into fld "my-audio-label"
+         break
       case "listen-search"
          show fld "collections-label"
          show fld "my-audio-label"
          put "Search" into fld "title-label"
-         # have nav bar
-         hide button "share"
-         hide button "add-favorites" 
+          
          break
-   end switch   
-end preopencard     
+   end switch
+   
+   playlist_Reset 
+   audioIsRunning
+   if the logMessage <> empty then
+      copyLogControl
+   end if
+   
+end openCard
+
+
+on closeCard
+   local tCardName
+   put the short name of this card into tCardName
+   
+   switch tCardName
+      case "listen-file"
+         put "" into fld "audioDetails" 
+         put "" into fld "currentTitleLabel" 
+         hide group "pause-play"
+         showPlayer "false","audioPlayer"
+         deleteAllMobileControls
+         break 
+      case "listen-browse"
+      case "listen-my-audio"
+         clearAudioListColor
+         break
+   end switch
+end closeCard
+
+--------------------
+
+command __Geometry
+end __Geometry
+
+on resizeStack x,y,ox,oy
+   lock screen
+   setCardCoords "portrait"
+   updateUI
+   unlock screen
+end resizeStack
+
+command updateUI
+   local sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
+   local tFooter,tPausePlay
+   local tHeader
+   
+   put the long id of grp "Header" into tHeader
+   put the long id of grp "footerNavigation" into tFooter
+   
+   set the height of tFooter to 50 + safeBottomMargin()
+   set the bottom of tFooter to CardHeight()
+   
+   topCenterMe tHeader, 10 
+   
+   switch (the short name of this card)
+      case "listen-collection"
+         break
+      case "listen-browse"
+      case "listen-my-audio"
+         
+         
+         break
+         
+      case "listen-search"
+         
+         break
+         
+   end switch
+   
+end updateUI
+
 
 --------------------------
 on __GetACollection
@@ -1021,41 +1157,4 @@ end offLineGoMyAudio
 on closeStack
    portal_SetLastStack "Listen"
 end closeStack
-
-command __Geometry
-end __Geometry
-
-on resizeStack x,y,ox,oy
-   lock screen
-   setCardCoords "portrait"
-   updateUI
-   unlock screen
-end resizeStack
-
-command updateUI
-   local sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
-   local tFooter,tPausePlay
-   
-   put the long id of group "pause-play" into tPausePlay
-   put the long id of grp "footerNavigation" into tFooter
-   
-   set the height of tFooter to 50 + safeBottomMargin()
-   set the bottom of tFooter to CardHeight()
-   
-   switch (the short name of this card)
-      case "listen-collection"
-         break
-      case "listen-browse"
-      case "listen-my-audio"
-         
-         bottomCenterMe tPausePlay,80
-         break
-         
-      case "listen-search"
-         bottomCenterMe tPausePlay,80
-         break
-         
-   end switch
-   
-end updateUI
 
