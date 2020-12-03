@@ -69,64 +69,7 @@ function getCollectionsJson
 end getCollectionsJson
 
 on preopencard
-   updateUI 
-   --   local tMode, tLabelLoc, tLabelWidth, tBrowseHeader
-   --   # tweak the header for collections
-   
-   --   put the short name of this card into tMode
-   --   switch tMode
-   --      case "listen-collection" 
-   
-   --         hide fld "collections-label"
-   --         hide fld "my-audio-label"
-   --         put "Listen" into fld "title-label"
-   --         # have nav bar
-   --         show button "share"
-   --         show button "add-favorites" 
-   --         break
-   
-   --      case "listen-browse"
-   --         setAudioListcolors
-   --         put playlist_GetCurrent() into  tBrowseHeader
-   --         replace cr with " " in tBrowseHeader
-   --         put tBrowseHeader into fld "title-label"
-   --         show fld "collections-label"
-   --         show fld "my-audio-label"
-   --         put  "My Download" into fld "my-audio-label"
-   --         # have nav bar
-   --         show button "share"
-   --         show button "add-favorites" 
-   --         break
-   
-   --      case "listen-my-audio"
-   --         put "My Downloads" into fld "title-label"
-   --         put  "Collections" into fld "collections-label"
-   --         put  empty into fld "my-audio-label"
-   --         put empty into fld "audioList"
-   --         # have nav bar
-   --         show button "share"
-   --         show button "add-favorites" 
-   --         break
-   
-   --      case "listen-file"
-   --         put "Listen" into fld "title-label"
-   --         put  "Collections" into fld "collections-label"
-   --         put  "My Downloads" into fld "my-audio-label"
-   --         put empty into fld "audioList"
-   --         # have nav bar
-   --         show button "share"
-   --         show button "add-favorites" 
-   --         break
-   
-   --      case "listen-search"
-   --         show fld "collections-label"
-   --         show fld "my-audio-label"
-   --         put "Search" into fld "title-label"
-   --         # have nav bar
-   --         hide button "share"
-   --         hide button "add-favorites" 
-   --         break
-   --   end switch   
+   updateUI  
 end preopencard     
 
 on openCard
@@ -221,14 +164,23 @@ command updateUI
    local sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
    local tFooter,tPausePlay
    local tHeader
+   local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    
-   put the long id of grp "Header" into tHeader
+   -- put the long id of grp "Header" into tHeader
    put the long id of grp "footerNavigation" into tFooter
+   
+    put the long id of fld "title-label" into tTitleLabel
+   put the long id of fld "collections-label" into tCollectionsLabel
+   put the long id of fld "my-audio-label" into tMyAudioLabel 
+   
+   topCenterMe tTitleLabel, 5
+   topLeftMe tCollectionsLabel, 10,30
+   topRightMe tMyAudioLabel, 10,30
    
    set the height of tFooter to 50 + safeBottomMargin()
    set the bottom of tFooter to CardHeight()
    
-   topCenterMe tHeader, 10 
+   -- topCenterMe tHeader, 10 
    
    switch (the short name of this card)
       case "listen-collection"
