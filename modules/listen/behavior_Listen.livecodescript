@@ -183,8 +183,8 @@ command updateUI
    
    switch (the short name of this card)
       case "listen-collection"
-         --put the long id of fld "title-label" into tTitleLabel
-         
+         put the long id of grp "all-collections" into tAllCollections
+         topLeftMe tAllCollections, 0,40
          break
       case "listen-browse"
       case "listen-my-audio"
