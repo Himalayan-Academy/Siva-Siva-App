@@ -166,6 +166,8 @@ command updateUI
    local tHeader
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetails
+   local tCurrentTitle, tDownloadSelection
+   
    
    put the long id of grp "footerNavigation" into tFooter
    
@@ -193,6 +195,18 @@ command updateUI
       case "listen-my-audio"
          put the long id of fld "audioList" into tAudioList
          topLeftMe tAudioList, 10,60
+         break
+      case "listen-file"
+         put the long id of fld "currentTitleLabel" into tCurrentTitle
+         topLeftMe tCurrentTitle, 20,60
+         
+         put the long id of grp "audioDetails" into tAudioDetails
+         topLeftMe tAudioDetails, 10,130
+         
+         put the long id of grp "downloadSelection" into tDownloadSelection
+         toprightMe tDownloadSelection, 0, 505
+         
+         
          break
          
       case "listen-search"
