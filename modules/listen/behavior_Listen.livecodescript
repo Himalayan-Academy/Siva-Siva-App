@@ -165,11 +165,11 @@ command updateUI
    local tFooter,tPausePlay
    local tHeader
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
+   local tCardRect, tAllCollections, tAudioList, tAudioDetails
    
-   -- put the long id of grp "Header" into tHeader
    put the long id of grp "footerNavigation" into tFooter
    
-    put the long id of fld "title-label" into tTitleLabel
+   put the long id of fld "title-label" into tTitleLabel
    put the long id of fld "collections-label" into tCollectionsLabel
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
@@ -177,13 +177,14 @@ command updateUI
    topLeftMe tCollectionsLabel, 10,30
    topRightMe tMyAudioLabel, 10,30
    
-   set the height of tFooter to 50 + safeBottomMargin()
-   set the bottom of tFooter to CardHeight()
+   set the height of tFooter to 50 
+   set the bottom of tFooter to CardHeight() - safeBottomMargin()
    
-   -- topCenterMe tHeader, 10 
    
    switch (the short name of this card)
       case "listen-collection"
+         --put the long id of fld "title-label" into tTitleLabel
+         
          break
       case "listen-browse"
       case "listen-my-audio"
