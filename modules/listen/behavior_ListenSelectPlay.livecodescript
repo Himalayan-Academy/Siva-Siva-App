@@ -200,7 +200,7 @@ command switchAudioUi sAudioUI
       case  "Inspired Talks" 
          hide grp "songProperties"
          show grp "author" 
-         set the top of grp "titleDescription" to 295
+          set the top of grp "titleDescription" to 295
          show grp "titleDescription"   
          show grp "searchControls"
          break
@@ -209,7 +209,7 @@ command switchAudioUi sAudioUI
       case  "songs" 
          
          hide grp "author"
-         set the top of  grp "titleDescription" to 157
+         --set the top of  grp "titleDescription" to 157
          show grp "titleDescription"
          show grp "songProperties"
          set the hilited of btn "Title" to true -- group "titleDescription" to empty
