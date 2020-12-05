@@ -189,9 +189,9 @@ command updateUI
    put the long id of fld "collections-label" into tCollectionsLabel
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
-   topCenterMe tTitleLabel, 5
-   topLeftMe tCollectionsLabel, 10,30
-   topRightMe tMyAudioLabel, 10,30
+   --topCenterMe tTitleLabel, 5
+   --topLeftMe tCollectionsLabel, 10,30
+   --topRightMe tMyAudioLabel, 10,30
    
    set the height of tFooter to 100
    set the top of tFooter to CardHeight() -50
@@ -204,7 +204,9 @@ command updateUI
          set the width of tAllCollections to (CardWidth() - 7 )
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0,0
-         
+         topCenterMe tTitleLabel, 5
+         topLeftMe tCollectionsLabel, 10,30
+         topRightMe tMyAudioLabel, 10,30
          break
          
       case "listen-browse"
@@ -215,6 +217,9 @@ command updateUI
          set the left of  tAudioList to 10
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0,0
+         topCenterMe tTitleLabel, 5
+         topLeftMe tCollectionsLabel, 10,30
+         topRightMe tMyAudioLabel, 10,30
          break
          
       case "listen-file"
@@ -227,9 +232,15 @@ command updateUI
          put the long id of grp "downloadSelection" into tDownloadSelection
          toprightMe tDownloadSelection, 0, 505
          
+         topCenterMe tTitleLabel, 5
+         topLeftMe tCollectionsLabel, 10,30
+         topRightMe tMyAudioLabel, 10,30
          break
          
       case "listen-search"
+         topCenterMe tTitleLabel, 5
+         topLeftMe tCollectionsLabel, 10,30
+         topRightMe tMyAudioLabel, 10,30
          break
          
    end switch
