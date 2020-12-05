@@ -175,9 +175,9 @@ on resizeStack x,y,ox,oy
 end resizeStack
 
 command updateUI
-   local sMainBkgnd,sCardBkgnd, tBottomMargin, sMenuBkgnd
-   local tFooter,tPausePlay
-   local tHeader
+   
+   local  tHeader, tFooter,tPausePlay
+   local tSearchFilter
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetails
    local tCurrentTitle, tDownloadSelection
@@ -196,24 +196,27 @@ command updateUI
    set the height of tFooter to 100
    set the top of tFooter to CardHeight() -50
    
-   
    switch (the short name of this card)
       
       case "listen-collection"
-         lock screen
          put the long id of grp "all-collections" into tAllCollections
          centerMe  tAllCollections,50,60
          set the width of tAllCollections to (CardWidth() - 7 )
-         unlock screen
+         put the long id of grp "search-filter" into tSearchFilter
+         topRightMe tSearchFilter, 0,0
+         
          break
+         
       case "listen-browse"
       case "listen-my-audio"
          put the long id of fld "audioList" into tAudioList
          centerMe tAudioList, 60,60
          set the width of tAudioList  to (CardWidth() - 17 )
          set the left of  tAudioList to 10
-         
+         put the long id of grp "search-filter" into tSearchFilter
+         topRightMe tSearchFilter, 0,0
          break
+         
       case "listen-file"
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          topLeftMe tCurrentTitle, 20,60
@@ -224,11 +227,9 @@ command updateUI
          put the long id of grp "downloadSelection" into tDownloadSelection
          toprightMe tDownloadSelection, 0, 505
          
-         
          break
          
       case "listen-search"
-         
          break
          
    end switch
