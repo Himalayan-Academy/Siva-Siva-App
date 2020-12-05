@@ -82,9 +82,28 @@ on openCard
       case "listen-collection"
          hide fld "collections-label"
          hide fld "my-audio-label"
+         show fld "title-label"
          put "Listen" into fld "title-label"
-   
+         break
+         
+         
+      case "listen-browse"
+         clearSelection
+         setAudioListcolors
+         put playlist_GetCurrent() into  tBrowseHeader
+         replace cr with " " in tBrowseHeader
+         put tBrowseHeader into fld "title-label"
+         show fld "title-label"
+         show fld "collections-label"
+         show fld "my-audio-label"
+         put  "My Download" into fld "my-audio-label"
+         break
+         
       case "listen-my-audio"
+         show fld "title-label"
+         show fld "collections-label"
+         show fld "my-audio-label"
+         
          put "My Downloads" into fld "title-label"
          put  "Collections" into fld "collections-label"
          put  empty into fld "my-audio-label"
@@ -96,18 +115,13 @@ on openCard
             dialog_CustomMsg "You have not downloaded any audio"
          end if
          break
-      case "listen-browse"
-         clearSelection
-         setAudioListcolors
-         put playlist_GetCurrent() into  tBrowseHeader
-         replace cr with " " in tBrowseHeader
-         put tBrowseHeader into fld "title-label"
-         show fld "collections-label"
-         show fld "my-audio-label"
-         put  "My Download" into fld "my-audio-label"
-         break
+         
       case "listen-file"
          clearSelection
+         show fld "title-label"
+         show fld "collections-label"
+         show fld "my-audio-label"
+         
          put "Listen" into fld "title-label"
          put  "Collections" into fld "collections-label"
          put  "My Downloads" into fld "my-audio-label"
@@ -116,7 +130,7 @@ on openCard
          show fld "collections-label"
          show fld "my-audio-label"
          put "Search" into fld "title-label"
-          
+         
          break
    end switch
    
@@ -179,7 +193,7 @@ command updateUI
    topLeftMe tCollectionsLabel, 10,30
    topRightMe tMyAudioLabel, 10,30
    
-   set the height of tFooter to 50 
+   
    set the bottom of tFooter to CardHeight() - safeBottomMargin()
    
    
