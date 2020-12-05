@@ -193,8 +193,8 @@ command updateUI
    topLeftMe tCollectionsLabel, 10,30
    topRightMe tMyAudioLabel, 10,30
    
-   
-   set the bottom of tFooter to CardHeight() - safeBottomMargin()
+   set the height of tFooter to 100
+   set the top of tFooter to CardHeight() -50
    
    
    switch (the short name of this card)
@@ -202,13 +202,17 @@ command updateUI
       case "listen-collection"
          lock screen
          put the long id of grp "all-collections" into tAllCollections
-         topLeftMe tAllCollections, 0,40
+         centerMe  tAllCollections,50,60
+         set the width of tAllCollections to (CardWidth() - 7 )
          unlock screen
          break
       case "listen-browse"
       case "listen-my-audio"
          put the long id of fld "audioList" into tAudioList
-         topLeftMe tAudioList, 10,60
+         centerMe tAudioList, 60,60
+         set the width of tAudioList  to (CardWidth() - 17 )
+         set the left of  tAudioList to 10
+         
          break
       case "listen-file"
          put the long id of fld "currentTitleLabel" into tCurrentTitle
