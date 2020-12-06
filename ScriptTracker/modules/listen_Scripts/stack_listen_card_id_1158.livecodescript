@@ -10,11 +10,11 @@ local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll
 local tHGroup, sLoadingIndicator
 ## touch commands to scroll the groups
 
-on preopencard
-   put the long id of control "loading" into sLoadingIndicator
-   setCardCoords
-   pass preopencard
-end preopencard
+--on preopencard
+--   put the long id of control "loading" into sLoadingIndicator
+--   setCardCoords
+--   pass preopencard
+--end preopencard
 
 
 on opencard
@@ -99,7 +99,7 @@ on mouseup
       exit top 
    end if
    
-      if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
+      if abs(the mouseH - item 1 of sStartLoc) <= 1 and abs(the mouseV - item 2 of sStartLoc) <= 1 then
          put the target into pSelection
          selectPlayList pSelection # handles collection and other clicks on the UI
       end if

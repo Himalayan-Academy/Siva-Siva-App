@@ -1,16 +1,17 @@
-Script "stack_listen_group_id_2550"
+Script "stack_listen_bkgnd_id_2899"
 
 /*
-# Name: group "share-ui" of card "listen-collection" of stack "listen"
-# ID: group id 2550 of card id 1158 of stack "listen"
+# Name: bkgnd "share-ui" of stack "listen"
+# ID: bkgnd id 2899 of stack "listen"
 # Behavior: stack "behavior_SocialShare"
+
+# Background on card IDs: 1158, 1002, 2000, 2660, 2052
 */
 
 
 local tapFlag
 
 on resizeControl
-   local tGroupContainer, tControlWidth, tShareOptions
    set the clipstorect of me to true
    
    # use the bkgnd rect as the coords system

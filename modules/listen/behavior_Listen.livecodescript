@@ -178,6 +178,7 @@ command updateUI
    
    
    put the long id of grp "footerNavigation" into tFooter
+   send "UpdateUI" to tFooter
    
    put the long id of fld "title-label" into tTitleLabel
    put the long id of fld "collections-label" into tCollectionsLabel
@@ -186,9 +187,6 @@ command updateUI
    topCenterMe tTitleLabel, 5
    topLeftMe tCollectionsLabel, 10,30
    topRightMe tMyAudioLabel, 10,30
-   
-   set the height of tFooter to 100
-   set the top of tFooter to CardHeight() -50 - safeBottomMargin()
    
    switch (the short name of this card)
       
