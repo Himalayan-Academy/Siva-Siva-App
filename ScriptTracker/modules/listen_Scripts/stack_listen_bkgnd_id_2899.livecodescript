@@ -5,7 +5,7 @@ Script "stack_listen_bkgnd_id_2899"
 # ID: bkgnd id 2899 of stack "listen"
 # Behavior: stack "behavior_SocialShare"
 
-# Background on card IDs: 1158, 1002, 2000, 2660, 2052
+# Shared group on card IDs: 1158, 1002, 2000, 2660, 2052
 */
 
 

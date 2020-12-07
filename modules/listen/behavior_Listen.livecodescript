@@ -170,12 +170,11 @@ end resizeStack
 
 command updateUI
    
-   local  tHeader, tFooter,tPausePlay
+   local tHeader, tFooter, tPausePlay
    local tSearchFilter
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetails
    local tCurrentTitle, tDownloadSelection
-   
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -185,28 +184,28 @@ command updateUI
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
    topCenterMe tTitleLabel, 5
-   topLeftMe tCollectionsLabel, 10,30
-   topRightMe tMyAudioLabel, 10,30
+   topLeftMe tCollectionsLabel, 10, 30
+   topRightMe tMyAudioLabel, 10, 30
    
    switch (the short name of this card)
       
       case "listen-collection"
          put the long id of grp "all-collections" into tAllCollections
-         centerMe  tAllCollections,50,60
-         set the width of tAllCollections to (CardWidth() - 7 )
+         set the rect of tAllCollections to (4, the bottom of tTitleLabel + 5, \
+               CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, 0,0
+         topRightMe tSearchFilter, 0, 0
          
          break
          
       case "listen-browse"
       case "listen-my-audio"
          put the long id of fld "audioList" into tAudioList
+         set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
+               CardWidth() - 7, the top of tFooter - 17)
          centerMe tAudioList, 60,60
-         set the width of tAudioList  to (CardWidth() - 17 )
-         set the left of  tAudioList to 10
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, 0,0
+         topRightMe tSearchFilter, 0, 0
          
          break
          
@@ -219,6 +218,10 @@ command updateUI
          
          put the long id of grp "downloadSelection" into tDownloadSelection
          toprightMe tDownloadSelection, 0, 505
+         
+         put the long id of grp "pause-play" into tPausePlay
+         bottomCenterMe tPausePlay
+         set the bottom of tPausePlay to the top of tFooter - 6
          
          break
          
