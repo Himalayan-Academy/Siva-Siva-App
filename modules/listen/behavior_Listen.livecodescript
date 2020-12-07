@@ -174,7 +174,7 @@ command updateUI
    local tSearchFilter
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetails
-   local tCurrentTitle, tDownloadSelection
+   local tFilterAudio, tCurrentTitle, tDownloadSelection
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -212,10 +212,12 @@ command updateUI
          
       case "listen-file"
          put the long id of fld "currentTitleLabel" into tCurrentTitle
+         set the width of tCurrentTitle to  (CardWidth() - 25 )
          topLeftMe tCurrentTitle, 20,60
          
          put the long id of grp "audioDetails" into tAudioDetails
-         topLeftMe tAudioDetails, 10,130
+         set the width of tCurrentTitle to  (CardWidth() - 35 )
+         topLeftMe tAudioDetails, 10 ,130
          
          put the long id of grp "downloadSelection" into tDownloadSelection
          toprightMe tDownloadSelection, 0, 505
@@ -227,7 +229,10 @@ command updateUI
          break
          
       case "listen-search"
+         put the long id of grp "filterAudio" into tFilterAudio
+         topLeftMe tFilterAudio, 30 ,80
          break
+         
          
    end switch
    
