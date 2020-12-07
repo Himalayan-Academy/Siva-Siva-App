@@ -42,8 +42,6 @@ end touchStart
 
 
 on touchMove pTouchID, pTouchX, pTouchY
-   local tDelta
-   
    if sStartY is empty then 
       put pTouchY into sStartY
    end if
@@ -56,17 +54,12 @@ on touchMove pTouchID, pTouchX, pTouchY
    
    if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
       set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
-      put empty into sStartX
    else
-      put abs(sStartX - pTouchX) into tDelta
-      if tDelta > 3 then
-      --if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
-         // Check for horizontal scroll
-         
+      // Check for horizontal scroll
+      
+      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
          put the long owner of the target into tHGroup  
          set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
-         
-         --if tDelta > 20 then put empty into sStartY
       end if
    end if
    
