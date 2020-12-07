@@ -191,6 +191,7 @@ command updateUI
       
       case "listen-collection"
          put the long id of grp "all-collections" into tAllCollections
+         set the top of tAllCollections to the bottom of tTitleLabel + 5
          set the rect of tAllCollections to (4, the bottom of tTitleLabel + 5, \
                CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
