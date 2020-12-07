@@ -101,7 +101,7 @@ on mouseup
             set the rect of tBrowser to tBrowserRect
          end if
          
-         deleteMobileControl  "audioPlayer"
+         deleteMobileControl "audioPlayer"
          show tControl with visual "dissolve" very fast
          break
          

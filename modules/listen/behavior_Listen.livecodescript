@@ -96,14 +96,13 @@ on openCard
          replace cr with " " in tBrowseHeader
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
-         put  "My Download" into fld "my-audio-label"
+         put "My Download" into fld "my-audio-label"
          break
          
       case "listen-my-audio"
-         
          put "My Downloads" into fld "title-label"
-         put  "Collections" into fld "collections-label"
-         put  empty into fld "my-audio-label"
+         put "Collections" into fld "collections-label"
+         put empty into fld "my-audio-label"
          put empty into fld "audioList"
          
          getDownloadedAudio 
@@ -117,12 +116,13 @@ on openCard
          clearSelection
          
          put "Listen" into fld "title-label"
-         put  "Collections" into fld "collections-label"
-         put  "My Downloads" into fld "my-audio-label"
+         put "Collections" into fld "collections-label"
+         put "My Downloads" into fld "my-audio-label"
          break
+         
       case "listen-search"
-         put  "Collections" into fld "collections-label"
-         put  "My Downloads" into fld "my-audio-label"
+         put "Collections" into fld "collections-label"
+         put "My Downloads" into fld "my-audio-label"
          put "Search" into fld "title-label"
          
          break
@@ -152,6 +152,7 @@ on closeCard
       case "listen-browse"
       case "listen-my-audio"
          clearAudioListColor
+         deleteMobileControl "audioList"
          break
    end switch
 end closeCard
@@ -175,6 +176,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetails
    local tFilterAudio, tCurrentTitle, tDownloadSelection
+   local tRect, tControl, tRight
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -196,6 +198,14 @@ command updateUI
                CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
+         
+         put CardWidth() - 4 into tRight
+         repeat with i = 1 to 7 
+            put the long id of grp ("playlist" & i) into tControl
+            put the rect of tControl into tRect
+            put tRight into item 3 of tRect
+            set the rect of tControl to tRect
+         end repeat
          
          break
          

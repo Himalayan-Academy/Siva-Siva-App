@@ -23,7 +23,7 @@ end opencard
 
 
 on touchStart pTouchID
-   if the short name target is "Loading"then
+   if the short name target is "Loading" then
       showBusyIndicator false
       if isMobile() then
          mobileClearTouches
@@ -42,6 +42,8 @@ end touchStart
 
 
 on touchMove pTouchID, pTouchX, pTouchY
+   local tDelta
+   
    if sStartY is empty then 
       put pTouchY into sStartY
    end if
@@ -52,16 +54,19 @@ on touchMove pTouchID, pTouchX, pTouchY
    
    // Check for vertical scroll
    
-   if pTouchY > (sStartY + 60) or pTouchY < (sStartY -60) then
-      set the vScroll of group "all-collections" to sStartYScroll + (sStartY-pTouchY)
+   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
+      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
+      put empty into sStartX
    else
-      
-      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
+      put abs(sStartX - pTouchX) into tDelta
+      if tDelta > 3 then
+      --if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
          // Check for horizontal scroll
          
          put the long owner of the target into tHGroup  
-         set the hScroll of tHGroup to sStartHScroll + (sStartX-pTouchX)
+         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
          
+         --if tDelta > 20 then put empty into sStartY
       end if
    end if
    
