@@ -23,10 +23,12 @@ local sStoryDataStack
 # various screen display options
 local sTarget, sTargetOwner
 
-on preopenstack
+on preOpenStack
    put loadStoriesMetadata() into sStoriesMetaArray
+   set the filename of img "menuImage" of cd "storyHome" to \
+         (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    go cd "storyHome"
-end preopenstack
+end preOpenStack
 
 
 /* Per Card Layout and UI
@@ -416,7 +418,7 @@ on closeCard
 end closecard
 
 
-on closestack  
+on closestack
    portal_SetLastStack "stories" 
 end closestack
 
