@@ -63,12 +63,12 @@ on makeStoryLocal pPassTitle
 end makeStoryLocal
 
 on htmlTitleAttribution
-   go to card 1
+   --go to card 1
    put sStoriesMetaArray["Stories"][sStoryTitle]["attribution"] into sAttribution 
    
    put   "<p><b><font size=32>"  & sStoryTitle  & "</font></b></p>" \
          & cr&  "<p><b><font size=25>By</font></p>" & cr & \
-         "<p><b><font size=25>" & sAttribution  & "</font></p></center>" into fld "mainText"
+         "<p><b><font size=25>" & sAttribution  & "</font></p></center>" into fld "mainText" of cd 1
 end htmlTitleAttribution
 
 

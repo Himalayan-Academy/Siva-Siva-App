@@ -276,6 +276,8 @@ command updateImageState
          if tState is 3 then
             hide grp "footer"
             hide widget "goNext"
+            set the hscroll of grp "storyImageGroup" to 0
+            set the vscroll of grp "storyImageGroup" to 0
             set the topLeft of sStoryImage to 0,0
             dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
@@ -350,7 +352,7 @@ on updateUI
    --
    if tCard is "storyHome" then
       put the long id of img "menuImage" into tMenuImage
-      CenterMe tMenuImage
+      setImageToFullCardLoc tMenuImage, "Portrait"
       --
       put the long id of btn "back" into tGoBack
       bottomCenterMe tGoBack,65
