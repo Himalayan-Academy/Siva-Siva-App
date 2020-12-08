@@ -221,8 +221,15 @@ command goNextScene
       -- hide "previous" button
    else
       hide sStoryText
-      set the text of sStoryText to the text of \
+      set the htmltext of sStoryText to the htmltext of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      if the text of sStoryText is not empty then
+         -- probably need to do this on the source stack instead of the client
+         set the textfont of line 1 to -1 of sStoryText to empty
+         set the textsize of line 1 to -1 of sStoryText to empty
+         set the foregroundColor of line 1 to -1 of sStoryText to empty
+         set the backgroundColor of line 1 to -1 of sStoryText to empty -- seems to have no effect
+      end if
       hide sStoryTextBkg
       set the text of sCaptionText to the text of \
             field "Caption" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
