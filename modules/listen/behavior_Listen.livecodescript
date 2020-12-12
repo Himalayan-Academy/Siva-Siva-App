@@ -907,9 +907,6 @@ command getDownloadedAudio
    
 end getDownloadedAudio
 
-
-
-
 command downloadSelection sSelectNum, pTarget
    setSelectNumber sSelectNum
    put the long id of pTarget into sLastTarget 
@@ -929,11 +926,12 @@ command downloadAffirmed
    else
       put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
-   put "listen" into sConfigA["last_stack"]
-   hide stack "listen"
-   go stack "view_Download"
+   -- put "listen" into sConfigA["last_stack"]
+   --   --   hide stack "listen"
+   --   --   go stack "view_Download"
    wait 100 milliseconds with messages
-   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
+   --   dispatch "downloadURL"  to stack "view_Download" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
+   dispatch "downloadURL"  with  pTitle,sRemoteURL,sSelectNum,sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 

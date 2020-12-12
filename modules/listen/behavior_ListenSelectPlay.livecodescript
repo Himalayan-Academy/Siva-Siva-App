@@ -167,8 +167,6 @@ on mouseup
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
          end if
-         portal_SetLastStack "Listen"
-         
          downloadSelection sSelectNum, pTarget
          break
       case "Loading"
@@ -243,21 +241,5 @@ command share_Items
    put "Audio available in the SivaSiva app." into sShareItemsA["text"] 
    return sShareItemsA
 end share_Items
-
---on closeCard
---   switch sCardName
---      case "listen-file"
---         put "" into fld "audioDetails" 
---         put "" into fld "currentTitleLabel" 
---         hide group "pause-play"
---         showPlayer "false","audioPlayer"
---         deleteAllMobileControls
---         break 
---      case "listen-browse"
---      case "listen-my-audio"
---         clearAudioListColor
---         break
---   end switch
---end closeCard
 
 

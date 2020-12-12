@@ -85,6 +85,12 @@ command showProgress pURL, pStatus
    -- use this info to set the span of the progress bar
    	
    -- wait until the download info is being received
+   
+   local tTotalBytes, tBytesReceived, tKBreceived, tTotalKB, tElapsedSeconds
+   local tKBperSecond,
+   
+   
+   
    if the number of items in pStatus = 3 then
       if the visible of scrollbar "Progressbar" = false then
          put the last item of pStatus into tTotalBytes
@@ -113,9 +119,9 @@ command showProgress pURL, pStatus
       else
          put round(tKBreceived / tElapsedSeconds, 1) into tKBperSecond
       end if
-
+      
       put "Received (KB): " & tab & tKBreceived &cr & "Of Total (KB: " & tab &  tTotalKB & cr &\
-       "At KB/sec: " & tab & tKBperSecond into fld "ProgressField"
+            "At KB/sec: " & tab & tKBperSecond into fld "ProgressField"
       
    end if
 end showProgress
@@ -125,14 +131,16 @@ command downloadComplete pURL, pStatus
    -- the pStatus variable will show the result
    
    -- since the download is complete, there is no need to leave the progress bar visible
+   local error, tModule, tLocalPath
+   
    hide scrollbar "ProgressBar"
    
    -- check if there was a problem with the download
    if pStatus = "error" or pStatus = "timeout" then
       put error  &cr& "The file could not be downloaded. Try later." into fld "ProgressTitle"
       wait 1 second with messages
-           put removeQuotes(sRequestedBy) into tModule     
-   tracking_RecordActivity tModule,"download/failed"
+      put removeQuotes(sRequestedBy) into tModule     
+      tracking_RecordActivity tModule,"download/failed"
       close this stack
    else
       put  path_FileFromURL(sURL) into tLocalPath # includes filename
@@ -146,22 +154,25 @@ command downloadComplete pURL, pStatus
       dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
       close this stack   
       put removeQuotes(sRequestedBy) into tModule     
-   tracking_RecordActivity tModule,"download/saved"
+      tracking_RecordActivity tModule,"download/saved"
    end if
 end downloadComplete
 
-on mouseup
-   put the short name of target() into tMouseEvent
-   switch tMouseEvent
-      case "cancel"
-         unload sURL
-         close this stack
-         break
-         
-   end switch
-end mouseup
+--on mouseup
+--   local tMouseEvent
+
+--   put the short name of target() into tMouseEvent
+--   switch tMouseEvent
+--      case "cancel"
+--         unload sURL
+--         --close this stack
+--         break
+
+--   end switch
+--end mouseup
 
 on closestack
+   local tLastStack
    put empty into fld "ProgressTitle"
    put empty into fld "progressField"
    hide scrollbar "progressbar"
