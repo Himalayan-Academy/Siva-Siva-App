@@ -172,6 +172,15 @@ command Journal_SetFavoriteFlag pEntryID, pValue
    return tResult
 end Journal_SetFavoriteFlag
 
+command Journal_DeleteEntry pEntryID
+   if pEntryID is not a number then
+      return "error, id not a number"
+   end if
+   dbWhere "journal_id", pEntryID
+   put dbDelete("journal", journalDB()) into tResult
+   return tResult
+end Journal_DeleteEntry
+
 function Journal_GetEntriesForModule pModule, pOffset
    local tEntriesA
    if pOffset is empty then
