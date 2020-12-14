@@ -11,7 +11,7 @@ Basic functional spec:
 1) Each module is responsible to check for the existence of a file 
 that is may need. See the lib_SivaSiva  functions:
 path_IsFileOnDisk
-  and 
+and 
 path_FileForUrl  # will creae a folder if needed for the request URL
 
 2) There is a downloads button on some card on some 
@@ -54,21 +54,21 @@ local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
    
    put pTitle into fld "progressTitle"
-  
+   
    # store some info in local so we can use these when we send msg
    # back to the calling stack.
    
-    put pURL into sURL 
-    put pRecordNumber into sRecordNumber
-    put pRequestedBy into sRequestedBy
+   put pURL into sURL 
+   put pRecordNumber into sRecordNumber
+   put pRequestedBy into sRequestedBy
    
    -- set up a message to show the status of the download as it progresses
-   libURLSetStatusCallback "showProgress", the long name of me
+   libURLSetStatusCallback "showProgress", the long name of grp "downloadControls"
    	
    -- make sure the progress bar is hidden, as this property is used to initialise it
-hide scrollbar "ProgressBar"
-put "Waiting for connection"  into fld "ProgressField"
-put the seconds into sDownloadStart
+   hide scrollbar "ProgressBar"
+   put "Waiting for connection"  into fld "ProgressField"
+   put the seconds into sDownloadStart
    	
    -- start the download process, telling Rev to call the "downloadComplete" handler when finished
    load URL pURL with message "downloadComplete"
@@ -141,7 +141,7 @@ command downloadComplete pURL, pStatus
       wait 1 second with messages
       put removeQuotes(sRequestedBy) into tModule     
       tracking_RecordActivity tModule,"download/failed"
-      close this stack
+      hidedDownloadControls
    else
       put  path_FileFromURL(sURL) into tLocalPath # includes filename
       put URL pURL into URL ("binfile:" & tLocalPath)
@@ -152,30 +152,29 @@ command downloadComplete pURL, pStatus
       
       delete word 1 to 4 of sRequestedBy
       dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
-      close this stack   
+      hidedDownloadControls
       put removeQuotes(sRequestedBy) into tModule     
       tracking_RecordActivity tModule,"download/saved"
    end if
 end downloadComplete
 
---on mouseup
---   local tMouseEvent
+on mouseup
+   local tMouseEvent
+   
+   put the short name of target() into tMouseEvent
+   switch tMouseEvent
+      case "cancel"
+         unload sURL
+         --close this stack
+         break
+   end switch
+   hidedDownloadControls
+end mouseup
 
---   put the short name of target() into tMouseEvent
---   switch tMouseEvent
---      case "cancel"
---         unload sURL
---         --close this stack
---         break
-
---   end switch
---end mouseup
-
-on closestack
+on hidedDownloadControls
    local tLastStack
    put empty into fld "ProgressTitle"
    put empty into fld "progressField"
    hide scrollbar "progressbar"
-   put  portal_GetLastStack()  into tLastStack
-   show stack tLastStack
-end closestack
+   hide grp "downloadControls"
+end hidedDownloadControls
