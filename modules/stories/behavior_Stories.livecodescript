@@ -12,7 +12,7 @@ global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
 
 # geometry vars
-local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText
+local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
 
 # story control variables, stored cache
 # must wipe them on end of story
@@ -50,22 +50,30 @@ on preOpenCard
       put the long id of fld "storyMenu" into sStoryMenu
       put the long id of fld "tips" into sTips
    else if tCard is "showStories" then
-      put the long id of image "storyImage" into sStoryImage
+      put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
       put the long id of grc "storyTextBkg" into sStoryTextBkg
       put the long id of fld "captionText" into sCaptionText
+      put the long id of img "white-feathered-rect" into sCaptionBkg
    end if
    updateUI
 end preopenCard
 
 
 on opencard
-   local tCard 
+   local tCard, tLineNum
    put the short name of this card into tCard
    
    if tCard is "storyHome" then
       # load the menu in any case:
       put the keys of sStoriesMetaArray["Stories"] into fld "storyMenu"
+      put 0 into tLineNum
+      repeat for each line tLine in fld "storyMenu"
+         add 1 to tLineNum
+         if sStoriesMetaArray["Stories"][tLine]["where"] = "server" then
+            set the foregroundColor of line tLineNum of fld "storyMenu" to yellow
+         end if
+      end repeat
       showStoryMenu
    else if tCard is "showStories" then
       send "goNextScene" to me in 0 milliseconds
@@ -111,17 +119,13 @@ on mouseup
                put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
                      sStoryTitle & ".livecode") into sStoryDataStack
                if not exists(stack sStoryDataStack) then
-                  
-                  // answer the questions:
-                  --      "There are XX metabytes of images. Shall we download them?
-                  --      You have a chance to get rid of them. Or save to your phone.
-                  --       You will go back and finish up the story."
-                  --  No | Yes
-                  --      if it is "No" then don't
-                  --      (exit mouseUp)
-                  
-                  // show a "downloading..." message
-                  dataServerStack sStoryTitle
+                  local tMsg
+                  put "This story contains" && sStoriesMetaArray["Stories"][sStoryTitle]["imageDate"] \
+                        && "of images.  Once the story is complete" && \
+                        "you will have an opportunity to delete the images." && \
+                        "Would you like to proceed?" into tMsg
+                  doAnswer tMsg, "Download,Cancel", "downloadAndShowStory"
+                  exit mouseUp
                end if
                break
          end switch
@@ -145,6 +149,8 @@ on mouseup
          --
       case "showStories"
       case "storyImage"
+      case "captionText"
+      case "white-feathered-rect"
          updateImageState
          break
          --
@@ -157,15 +163,22 @@ on mouseup
             show sStoryText
             show sStoryTextBkg
             hide sCaptionText
+            hide sCaptionBkg
             if the formattedHeight of sStoryText > the height of sStoryText then
                dispatch "createScroller" to sStoryText with "storyText"
             end if
+            set the blendlevel of sStoryImage to 15
             unlock screen
          end if
          break
    end switch
 end mouseup
 
+on downloadAndShowStory
+   // show a "downloading..." message
+   dataServerStack sStoryTitle
+   visualArticle
+end downloadAndShowStory
 
 on doScrollerTap
    put the short name of the target into sTarget
@@ -215,18 +228,19 @@ command goNextScene
    add 1 to sLastScene
    if sLastScene is 1 then
       show sStoryText
+      -- once the source stack is redone, will use htmltext on both sides of the set
       set the htmltext of sStoryText to the text of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       show sStoryTextBkg
       hide sCaptionText
-      -- hide "show caption" button
+      hide sCaptionBkg
       -- hide "previous" button
    else
       hide sStoryText
       set the htmltext of sStoryText to the htmltext of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      -- will not be necessary once the source stack is redone
       if the text of sStoryText is not empty then
-         -- probably need to do this on the source stack instead of the client
          set the textfont of line 1 to -1 of sStoryText to empty
          set the textsize of line 1 to -1 of sStoryText to empty
          set the foregroundColor of line 1 to -1 of sStoryText to empty
@@ -240,9 +254,15 @@ command goNextScene
          set the height of sCaptionText to the formattedHeight of sCaptionText
          set the width of sCaptionText to the formattedWidth of sCaptionText
          set the bottomRight of sCaptionText to the bottomRight of sStoryText
+         set the width of sCaptionBkg to the width of sCaptionText + 60
+         set the height of sCaptionBkg to the height of sCaptionText + 60
+         set the bottomRight of sCaptionBkg to \
+               (the right of sCaptionText + 25, the bottom of sCaptionText + 30)
          show sCaptionText
+         show sCaptionBkg
       else
          hide sCaptionText
+         hide sCaptionBkg
       end if
       -- hide "show caption" button
    end if
@@ -256,6 +276,7 @@ command goNextScene
       set the itemdel to "/"
       set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
    end if
+   set the blendlevel of sStoryImage to 0
    initializeCycleImage sStoryImage
    --
    unlock screen
@@ -270,6 +291,7 @@ command updateImageState
       if tState is 1 then
          if the text of sCaptionText is not empty then
             show sCaptionText
+            show sCaptionBkg
          end if
          show grp "footer"
          show widget "goNext"
@@ -284,7 +306,7 @@ command updateImageState
             dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
          hide sCaptionText
-         -- hide showCaptionButton
+         hide sCaptionBkg
       end if
    end if
 end updateImageState
@@ -412,7 +434,8 @@ on closeCard
       close stack sStoryDataStack
       hide sStoryText
       hide sStoryTextBkg
-      show sCaptionText
+      hide sCaptionText
+      hide sCaptionBkg
       show grc "footerBackground" of grp "footer"
    end if
 end closecard

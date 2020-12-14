@@ -154,6 +154,7 @@ on dataServerStack pStoryTitle
    
    revZipCloseArchive tFilePath
    
+   delete file tFilePath
 end dataServerStack
 
 on ensureFolder pFolder
