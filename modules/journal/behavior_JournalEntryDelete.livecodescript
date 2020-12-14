@@ -8,6 +8,7 @@ end mouseUp
 
 on deleteEntry pA
    
-   Journal_SetFavoriteFlag pA["journal_id"], tValue
+   Journal_DeleteEntry pA["journal_id"]
+   send "refreshUI" to card (the currentcard of stack "journal") of stack "journal" in 20 ticks
    
 end deleteEntry
