@@ -71,14 +71,20 @@ on mouseup
    put long id of the target into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
+   
+   show grp "downloadSelection" of card "listen-file"
+   
    switch tTarget
       # card navigaton
       case "collections-label"
          go to card "listen-collection"
          break
       case "listen-browse"
+         
+         go to card "listen-browse"
          break
       case "my-audio-label"
+         hide grp "downloadSelection" of card "listen-file"
          go to card "listen-my-audio"
          break
       case "listen-file"
@@ -94,6 +100,9 @@ on mouseup
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
          # clear the color of the last line before setting the  sLineNum
+         
+         # we needed to stop player
+         
          if sLineNum <> empty then
             setAudioListColors sLineNum,"0,0,0"
          end if
@@ -123,6 +132,10 @@ on mouseup
          end if
          
          put sSelectNum into fld "theSelectNum"
+         
+         # but we have stopPlayer  
+         # on by mobile
+         stopPlayer  
          
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally

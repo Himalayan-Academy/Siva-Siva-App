@@ -97,6 +97,7 @@ on openCard
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Download" into fld "my-audio-label"
+         show grp "downloadSelection" of card "listen-file"
          break
          
       case "listen-my-audio"
@@ -104,7 +105,7 @@ on openCard
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
          put empty into fld "audioList"
-         
+         hide grp "downloadSelection" of card "listen-file"
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          if (fld "audioList" is empty) then
@@ -599,8 +600,9 @@ on  playlist_Instantiate sTargetPlayList
       case "audiobook"
          put the keys of sCurrentPlayListA["audioFiles"]["toc"] into tKeys
          sort lines of tKeys ascending numeric
-         repeat for each line x in tKeys
+         repeat for each line x in tKeys 
             put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr & cr after tTitles
+            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] into sCurrentPlayListA["audioFiles"] [x]["Title"] 
          end repeat
          break
       default
@@ -634,6 +636,7 @@ on  playlist_Instantiate sTargetPlayList
    
    hide fld "audioList"
    put tTitles into fld "audioList"  
+   
    typesetAudioList
    
    repeat for each line x in sCached
@@ -902,6 +905,9 @@ command getDownloadedAudio
       
    end repeat
    
+   # getting the final cr out
+   delete char -1 of  tTitles
+   
    loadTitles tTitles
    return sDownloadedAudioA
    
@@ -1020,15 +1026,16 @@ end __UXHandlers
 
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
    local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   
    put pTitle into tLineValue
    
    
    
    if pTitle is empty then
-      put sSelectNum*2 into tLineNum
-      if (tLineNum mod 2) = 0 then
-         subtract 1 from tLineNum
-      end if
+     put sSelectNum*2 into tLineNum
+         if (tLineNum mod 2) = 0 then
+            subtract 1 from tLineNum
+         end if
       put line tLineNum of fld "audioList" into tLineValue
    end if
    
