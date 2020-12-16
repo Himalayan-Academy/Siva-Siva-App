@@ -54,7 +54,7 @@ on preOpenCard
       put the long id of fld "storyText" into sStoryText
       put the long id of grc "storyTextBkg" into sStoryTextBkg
       put the long id of fld "captionText" into sCaptionText
-      put the long id of img "white-feathered-rect" into sCaptionBkg
+      put the long id of img "white-tran.png" into sCaptionBkg
    end if
    updateUI
 end preopenCard
