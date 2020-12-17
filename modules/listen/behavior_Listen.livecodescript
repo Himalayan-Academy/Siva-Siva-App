@@ -30,6 +30,7 @@ local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTim
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
 local sSelectionsA,sLastTarget,sSelectNum
 
+
 on preOpenStack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
@@ -172,10 +173,10 @@ end resizeStack
 
 command updateUI
    
-   local tHeader, tFooter, tPausePlay
-   local tSearchFilter
+   local tHeader, tFooter, tAudioGlobalControl
+   local tSearchFilter, tPausePlay
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
-   local tCardRect, tAllCollections, tAudioList, tAudioDetails
+   local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection
    local tRect, tControl, tRight
    
@@ -187,8 +188,8 @@ command updateUI
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
    topCenterMe tTitleLabel, 5
-   topLeftMe tCollectionsLabel, 10, 30
-   topRightMe tMyAudioLabel, 10, 30
+   topLeftMe tCollectionsLabel, 10, 40
+   topRightMe tMyAudioLabel, 10, 40
    
    switch (the short name of this card)
       
@@ -200,6 +201,7 @@ command updateUI
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
          
+         
          put CardWidth() - 4 into tRight
          repeat with i = 1 to 7 
             put the long id of grp ("playlist" & i) into tControl
@@ -208,35 +210,47 @@ command updateUI
             set the rect of tControl to tRect
          end repeat
          
+         put the long id of grp "audioGlobalControl" into tAudioGlobalControl
+         topLeftMe tAudioGlobalControl, 10,0
+         
          break
          
       case "listen-browse"
       case "listen-my-audio"
+         
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60,60
+         centerMe tAudioList, 60,70
+         
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
+         
+         put the long id of grp "audioGlobalControl" into tAudioGlobalControl
+         topLeftMe tAudioGlobalControl, 10,0
          
          break
          
       case "listen-file"
-         put the long id of fld "currentTitleLabel" into tCurrentTitle
-         set the width of tCurrentTitle to  (CardWidth() - 25 )
-         topLeftMe tCurrentTitle, 20,60
          
-         put the long id of grp "audioDetails" into tAudioDetails
+         put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
-         topLeftMe tAudioDetails, 10 ,130
+         topLeftMe tCurrentTitle, 20,80
+         
+         put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
+         set the width of tAudioDetailsGrc to  (CardWidth() - 20 )
+         topLeftMe tAudioDetailsGrc, 10 ,150
+         
+         put the long id of fld "audioDetails" into tAudioDetailsFld
+         set the width of tAudioDetailsFld to  (CardWidth() -30 )
+         topLeftMe tAudioDetailsFld, 15,160
          
          put the long id of grp "downloadSelection" into tDownloadSelection
-         toprightMe tDownloadSelection, 0, 505
+         toprightMe tDownloadSelection, 0, 515
          
          put the long id of grp "pause-play" into tPausePlay
-         bottomCenterMe tPausePlay
-         set the bottom of tPausePlay to the top of tFooter - 6
-         
+         bottomCenterMe tPausePlay, 80
+        
          break
          
       case "listen-search"

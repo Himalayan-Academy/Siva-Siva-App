@@ -62,6 +62,11 @@ end setFindString
 ------------------------------------------------------------------------
 
 command searchPlayList  # Search Audio
+   local tAllCollection, pWhichClass, pFilterListQueryA
+   local tDeity, tGenre, tTextTarget, pBrowseHeader, tAuthor
+   
+   
+   
    setFindString
    # we must get the original collection data
    # determine whether to it is an Inspired Talk or if it in a Songs or chant
@@ -95,7 +100,7 @@ command searchPlayList  # Search Audio
             put empty into fld "searchString"
             exit to top
          end if
-  
+         
          put sStringToFind into pFilterListQueryA[tTextTarget]    
          put sStringToFind &&tDeity && tGenre into pBrowseHeader
          

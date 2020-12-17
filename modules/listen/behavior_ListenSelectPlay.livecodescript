@@ -22,43 +22,12 @@ local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 local sTimeStamp, sSelectionsA, sDownloadedAudioA,sCardName
 
 
---on openCard
---   local tCardName
---   put the short name of this card into sCardName
-
---   switch sCardName
---      case "listen-my-audio"
---         getDownloadedAudio 
---         put the result into sDownloadedAudioA
-
---         if (fld "audioList" is empty) then
---            dialog_CustomMsg "You have not downloaded any audio"
---         end if
---         break
---      case "listen-browse"
---         clearSelection
---         break
---      case "listen-file"
---         clearSelection
---         break 
---   end switch
-
---   playlist_Reset 
---   audioIsRunning
---   if the logMessage <> empty then
---      copyLogControl
---   end if
-
---end openCard
-
-
-
 -----------------------------------------------------------------------
 # UI Interactions | card, group, list, detail display change ups
 -----------------------------------------------------------------------
 
 on mouseup
-   local pTarget, tTarget, detailVis
+   local pTarget, tTarget, tHideDownload, detailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
@@ -72,7 +41,6 @@ on mouseup
    put the short name of the Target  into tTarget   
    --breakpoint
    
-   show grp "downloadSelection" of card "listen-file"
    
    switch tTarget
       # card navigaton
@@ -80,12 +48,11 @@ on mouseup
          go to card "listen-collection"
          break
       case "listen-browse"
-         
          go to card "listen-browse"
          break
       case "my-audio-label"
-         hide grp "downloadSelection" of card "listen-file"
          go to card "listen-my-audio"
+         hide grp "downloadSelection" of card "listen-file"
          break
       case "listen-file"
          go to card "listen-file"
@@ -96,6 +63,7 @@ on mouseup
          break
       case "AudioList"
          local tTitle,localURL
+         
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
@@ -125,11 +93,9 @@ on mouseup
          
          go to card "listen-file"
          
-         if sCardName = "listen-my-audio" then 
-            hide widget  "downloadSelection"
-         else
-            show widget  "downloadSelection"
-         end if
+         --         if tHideDownload = "on" then
+         --            hide grp "downloadSelection" 
+         --         end if
          
          put sSelectNum into fld "theSelectNum"
          
@@ -139,11 +105,8 @@ on mouseup
          
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
-         if sCardName = "listen-my-audio" then 
-            startPlayer  "",tTitle,sCardName,sSelectNum
-         else
-            select_Play sSelectNum,,sCardName  # will use either the line number or item id
-         end if
+         
+         select_Play sSelectNum,,sCardName  # will use either the line number or item id
          
          local tURL
          if  "audio/book" is not in tURL then # no display details

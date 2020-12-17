@@ -178,3 +178,8 @@ on hidedDownloadControls
    hide scrollbar "progressbar"
    hide grp "downloadControls"
 end hidedDownloadControls
+
+
+on mouseEnter
+   
+end mouseEnter
