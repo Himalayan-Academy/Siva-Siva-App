@@ -54,6 +54,10 @@ on mouseup
          go to card "listen-my-audio"
          hide grp "downloadSelection" of card "listen-file"
          break
+      case "deleteOn"
+         go to card "listen-delete-files"
+         hide grp "downloadSelection" of card "listen-file"
+         break
       case "listen-file"
          go to card "listen-file"
          if isMobile() then
