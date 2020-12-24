@@ -114,6 +114,11 @@ on openCard
          end if
          break
          
+      case "listen-delete-file"
+         put "Delete File" into fld "title-label"
+         put empty into fld "collections-label"
+         put "My Downloads" into fld "my-audio-label"
+         break
       case "listen-file"
          clearSelection
          
