@@ -55,7 +55,7 @@ on mouseup
          hide grp "downloadSelection" of card "listen-file"
          break
       case "deleteOn"
-         go to card "listen-delete-files"
+         go to card "listen-delete-file"
          hide grp "downloadSelection" of card "listen-file"
          break
       case "listen-file"
