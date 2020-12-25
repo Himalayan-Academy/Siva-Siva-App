@@ -50,14 +50,21 @@ command mmGetTopSums
    if isMobile() then
       mobileShowStatusBar
    end if 
-   show btn "load-spinner"
-   show grp "diskDataOverview"
-   dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
-   put empty into sResultA
-   get mmGetSizesBySubFolders("audio")
-   get mmGetSizesBySubFolders("books")
-   get  mmGetSizesBySubFolders("art")
-   insertTopResults sResultA # see display section below
+   
+   # we are already is a stack "setting"
+   if there is a btn "load-spinner" then
+      show btn "load-spinner"
+      show grp "diskDataOverview"
+      dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
+      put empty into sResultA
+      get mmGetSizesBySubFolders("audio")
+      get mmGetSizesBySubFolders("books")
+      get  mmGetSizesBySubFolders("art")
+      insertTopResults sResultA # see display section below
+   else
+      # if not, we are in stack "listen"
+      get mmGetSizesBySubFolders("audio")
+   end if
 end mmGetTopSums
 
 command mmSetRootFolder pFolder
@@ -70,7 +77,6 @@ function mmGetSizesBySubfolders pPathComplement
    local tTopSum, dF
    put 0 into tTopSum
    
-   put the defaultFolder into dF
    put sMediaFolder & pPathComplement into sTopFolder
    set the directory to sTopFolder
    put folders(sTopFolder) into sTopFolderList
@@ -218,7 +224,12 @@ command displayTargetFiles pDataType
    end repeat
    put tFileList into fld "FilesOnDisk"
    unlock screen
-   hide grp "diskDataOverview" with "dissolve" very fast
+   
+   #will be  in the setting stack
+   if there is a grp  "diskDataOverview" then
+      hide grp "diskDataOverview" with "dissolve" very fast
+   end  if
+   
    put sResultA[pDataType]["categorySum"] into fld "currentTotal"
    show grp "displayFilesSizes" with "dissolve" very fast
 end displayTargetFiles
