@@ -150,7 +150,9 @@ command mouseup  #UI Interactions are trapped here
          put value(the clickline) into tFile
          put the clickline into sTargetLine
          put word 2 of sTargetLine into tLineNo
-         put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
+         -- put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
+         put line tLineNo of the uFilesOnDisk of this card into sDetailedTarget
+         
          put item 1 sDetailedTarget into tPath
          setTargetFile tPath
          set the itemdel to tab

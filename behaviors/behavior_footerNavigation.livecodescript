@@ -54,7 +54,7 @@ on mouseup
             unlock screen with visual effect "dissolve" very fast
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
             showStoryMenu
-         else if tCard is among the items of "listen-browse,listen-my-audio,listen-file" then
+         else if tCard is among the items of "listen-browse,listen-my-audio,listen-file,listen-delete-file" then
             go card "listen-collection"
          else if tCard is "listen-search" then
             go card "listen-browse"
