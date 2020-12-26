@@ -166,8 +166,9 @@ command mouseup  #UI Interactions are trapped here
          mmGetTopSums
          break
       case  tTarget =  "deleteYes"
-         set the textcolor of sTargetLine to "gray"
+         set the textcolor of sTargetLine to "black"
          set the textstyle of sTargetLine to "strikeout"
+         put empty into fld "currentFilePick"
          put item 2 of sDetailedTarget into tFileSize
          put tFileSize/1024/1000 into tMB
          put fld "currentTotal" - round (tMB,2) into fld "CurrentTotal"

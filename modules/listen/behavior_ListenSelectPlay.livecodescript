@@ -56,9 +56,9 @@ on mouseup
          break
       case "deleteOn"
          go to card "listen-delete-file"
+         put empty into fld "currentFilePick"
          dispatch  "getSums" to grp "displayFilesSizes"
          dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
-         hide grp "downloadSelection" of card "listen-file"
          break
       case "listen-file"
          go to card "listen-file"

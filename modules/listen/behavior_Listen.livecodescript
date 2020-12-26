@@ -97,7 +97,7 @@ on openCard
          replace cr with " " in tBrowseHeader
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
-         put "My Download" into fld "my-audio-label"
+         put "My Downloads" into fld "my-audio-label"
          show grp "downloadSelection" of card "listen-file"
          break
          
@@ -117,7 +117,7 @@ on openCard
       case "listen-delete-file"
          put "Delete File" into fld "title-label"
          put empty into fld "collections-label"
-         put "My Downloads" into fld "my-audio-label"
+         put empty into fld "my-audio-label"
          break
       case "listen-file"
          clearSelection
