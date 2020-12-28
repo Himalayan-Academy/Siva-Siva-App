@@ -55,6 +55,10 @@ on preOpenCard
       put the long id of grc "storyTextBkg" into sStoryTextBkg
       put the long id of fld "captionText" into sCaptionText
       put the long id of img "white-tran.png" into sCaptionBkg
+      hide sStoryText
+      hide sStoryTextBkg
+      hide sCaptionText
+      hide sCaptionBkg
    end if
    updateUI
 end preopenCard
@@ -71,12 +75,12 @@ on opencard
       repeat for each line tLine in fld "storyMenu"
          add 1 to tLineNum
          if sStoriesMetaArray["Stories"][tLine]["where"] = "server" then
-            set the foregroundColor of line tLineNum of fld "storyMenu" to yellow
+            set the foregroundColor of line tLineNum of fld "storyMenu" to "yellow"
          end if
       end repeat
       showStoryMenu
    else if tCard is "showStories" then
-      send "goNextScene" to me in 0 milliseconds
+      --send "goNextScene" to me in 0 milliseconds
    end if
 end opencard
 
@@ -107,30 +111,8 @@ on mouseup
          put value(clickLine() ) into sStoryTitle
          if sStoryTitle is empty then exit mouseup
          --
-         put sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
+         setupOrDownloadStory
          --
-         switch sWhere
-            case "local"
-               put (path_Modules() & "stories/makeStoryLocal.livecode") \
-                     into sStoryDataStack
-               dataLocalStack sStoryTitle
-               break
-            case "server"
-               put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
-                     sStoryTitle & ".livecode") into sStoryDataStack
-               if not exists(stack sStoryDataStack) then
-                  local tMsg
-                  put "This story contains" && sStoriesMetaArray["Stories"][sStoryTitle]["imageDate"] \
-                        && "of images.  Once the story is complete" && \
-                        "you will have an opportunity to delete the images." && \
-                        "Would you like to proceed?" into tMsg
-                  doAnswer tMsg, "Download,Cancel", "downloadAndShowStory"
-                  exit mouseUp
-               end if
-               break
-         end switch
-         --
-         # development
          visualArticle
          break
          --
@@ -174,6 +156,33 @@ on mouseup
    end switch
 end mouseup
 
+on setupOrDownloadStory
+   put sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
+   --
+   switch sWhere
+      case "local"
+         put (path_Modules() & "stories/makeStoryLocal.livecode") \
+               into sStoryDataStack
+         if sLastStory is empty or sLastStory is not sStoryTitle then
+            dataLocalStack sStoryTitle
+         end if
+         break
+      case "server"
+         put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
+               sStoryTitle & ".livecode") into sStoryDataStack
+         if not exists(stack sStoryDataStack) then
+            local tMsg
+            put "This story contains" && sStoriesMetaArray["Stories"][sStoryTitle]["imageDate"] \
+                  && "of images.  Once the story is complete" && \
+                  "you will have an opportunity to delete the images." && \
+                  "Would you like to proceed?" into tMsg
+            doAnswer tMsg, "Download,Cancel", "downloadAndShowStory"
+            exit to top
+         end if
+         break
+   end switch
+end setupOrDownloadStory
+
 on downloadAndShowStory
    // show a "downloading..." message
    dataServerStack sStoryTitle
@@ -199,6 +208,8 @@ command visualArticle
    open stack sStoryDataStack
    --
    go card "showStories" of stack "stories"
+   goNextScene
+   --send "goNextScene" to me in 0 milliseconds
 end visualArticle
 
 
@@ -239,12 +250,13 @@ command goNextScene
       hide sStoryText
       set the htmltext of sStoryText to the htmltext of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
-      -- will not be necessary once the source stack is redone
       if the text of sStoryText is not empty then
+         -- will not be necessary once the source stack is redone
          set the textfont of line 1 to -1 of sStoryText to empty
          set the textsize of line 1 to -1 of sStoryText to empty
          set the foregroundColor of line 1 to -1 of sStoryText to empty
-         set the backgroundColor of line 1 to -1 of sStoryText to empty -- seems to have no effect
+         --
+         optimizeTextHeight sStoryText
       end if
       hide sStoryTextBkg
       set the text of sCaptionText to the text of \
@@ -264,7 +276,6 @@ command goNextScene
          hide sCaptionText
          hide sCaptionBkg
       end if
-      -- hide "show caption" button
    end if
    put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tImagePath
    if sWhere is "local" then
@@ -281,6 +292,34 @@ command goNextScene
    --
    unlock screen
 end goNextScene
+
+# requires uTextSize custom property to hold the initial text size
+command optimizeTextHeight pControl
+   local tTextHeight, tMaxHeight, tMinHeight
+   local tTextSize
+   --
+   put the uTextSize of pControl into tTextSize
+   if tTextSize is not a number then
+      put 18 into tTextSize
+   end if
+   set the textSize of pControl to tTextSize
+   put the formattedHeight of pControl into tTextHeight
+   put the height of pControl into tMaxHeight
+   put 0.75 * tMaxHeight into tMinHeight
+   if tTextHeight < tMinHeight then
+      repeat with i=1 to 6
+         add 4 to tTextSize
+         set the textsize of pControl to tTextSize
+         put the formattedHeight of pControl into tTextHeight
+         if tTextHeight > tMinHeight then
+            if tTextHeight > tMaxHeight then
+               set the textsize of pControl to tTextSize - 2
+            end if
+            exit repeat
+         end if
+      end repeat
+   end if
+end optimizeTextHeight
 
 
 command updateImageState
@@ -332,22 +371,30 @@ end addJournalEntry
 
 		
 on journalResume pData -- sent from journal stack
+   put cr&"journalResume"&cr after msg
    put pData["Card"] into tCd
    go to card tCd
-   put loadStoriesMetadata() into sStoriesMetaArray
-   getcontent pData["storyTitle"]
+   --   put loadStoriesMetadata() into sStoriesMetaArray
+   --   getcontent pData["storyTitle"]
    
-   put getCache("imageList") into simageList
-   put getCache("Quotes") into sQuoteList
+   --   put getCache("imageList") into simageList
+   --   put getCache("Quotes") into sQuoteList
    
    put pData["storyTitle"] into sStoryTitle
-   put pData["storyScene"] into sLastScene
+   put pData["storyScene"] - 1 into sLastScene
    put pData["Attribution"] into sAttribution
    put pData["SceneCount"] into sTotalSceneCount
    setCache "storyScene",sLastScene
    display_SetStatusBarVis false
-   showStoryText
-   goNextScene
+   --   showStoryText
+   if tCd is "showStories" then
+      put sStoryTitle&comma&sLastScene after msg
+      setupOrDownloadStory
+      put sStoryTitle into sLastStory
+      put comma&sLastScene after msg
+      visualArticle
+      put comma&sLastScene after msg
+   end if
 end journalResume
 
 
@@ -402,6 +449,7 @@ on updateUI
       bottomCenterMe tGoNext,65
       --
       set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 21)
+      set the uRect of sStoryText to the rect of sStoryText
       --
       set the rect of sCaptionText to the rect of sStoryText
       --

@@ -98,7 +98,7 @@ end makeStoryFromDisk
 
 on dataLocalStack pPassTitle
    put loadStoriesMetadata() into sStoriesMetaArray
-   send "makeStoryLocal pPassTitle" to stack "makeStoryLocal" in 0 seconds
+   send "makeStoryLocal pPassTitle" to stack "makeStoryLocal" --in 0 seconds
 end dataLocalStack
 
 
