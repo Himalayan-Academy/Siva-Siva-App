@@ -161,6 +161,10 @@ on closeCard
          clearAudioListColor
          deleteMobileControl "audioList"
          break
+      case "listen-delete-file"
+         put empty into  fld "FilesOnDisk"
+         deleteMobileControl "FilesOnDosk"
+         break
    end switch
 end closeCard
 
@@ -221,8 +225,6 @@ command updateUI
          break
          
       case "listen-browse"
-      case "listen-my-audio"
-         
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
@@ -234,6 +236,21 @@ command updateUI
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
+         break
+      case "listen-my-audio"
+         
+         
+         local tDeleteOn
+         put the long id of grp "displayDelete" into tDeleteOn
+         BottomRightMe tDeleteOn, 0,50
+         
+         break
+         
+      case "listen-delete-file"
+         local tDisplayFilesSizes
+         put the long id of grp "displayFilesSizes" into tDisplayFilesSizes
+         set the width of tDisplayFilesSizes to  CardWidth()
+         topLeftMe tDisplayFilesSizes, -3,30
          break
          
       case "listen-file"
@@ -255,7 +272,7 @@ command updateUI
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 80
-        
+         
          break
          
       case "listen-search"

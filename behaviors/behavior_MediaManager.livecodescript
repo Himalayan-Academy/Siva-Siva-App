@@ -210,6 +210,8 @@ end insertTopResults
 command displayTargetFiles pDataType
    local tDetailedFiles,tFilter,tPath,tSize,tFile
    local tFileList
+   setDeleteMode "off"
+   put empty into tFileList
    lock screen
    put empty into fld "FilesOnDisk" 
    put sResultA["files"] into tDetailedFiles
@@ -235,7 +237,24 @@ command displayTargetFiles pDataType
    
    put sResultA[pDataType]["categorySum"] into fld "currentTotal"
    show grp "displayFilesSizes" with "dissolve" very fast
+   put empty into sResultA["files"] 
 end displayTargetFiles
+
+# deletion routines
+
+command setTargetfile pTargetFile
+   put pTargetFile into sTargetFile
+end setTargetfile
+
+function getTargetFile
+   return sTargetFile
+end getTargetFile
+
+command deleteFileOnDisk 
+   delete file ( getTargetFile() )
+end deleteFileOnDisk
+
+##### All functions relating to delete files appear  above
 
 on clearSums
    local tFields
@@ -254,19 +273,5 @@ on clearSums
    put empty  into fld "FilesOnDisk" 
    put empty into fld "currentTotal"
 end clearSums
-
-# deletion routines
-
-command setTargetfile pTargetFile
-   put pTargetFile into sTargetFile
-end setTargetfile
-
-function getTargetFile
-   return sTargetFile
-end getTargetFile
-
-command deleteFileOnDisk 
-   delete file ( getTargetFile() )
-end deleteFileOnDisk
 
 

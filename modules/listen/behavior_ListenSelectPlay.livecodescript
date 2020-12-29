@@ -55,6 +55,9 @@ on mouseup
          hide grp "downloadSelection" of card "listen-file"
          break
       case "deleteOn"
+         show fld "Display" visual effect "dissolve" very slow
+         wait 250 milliseconds
+         hide fld "Display" visual effect "dissolve" very slow
          go to card "listen-delete-file"
          put empty into fld "currentFilePick"
          dispatch  "getSums" to grp "displayFilesSizes"
