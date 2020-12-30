@@ -143,7 +143,8 @@ on mouseup
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
-         
+          break
+          
       case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
          if not isMobile() then\
                put  the currentTime of player "audioPlayer" into sTimeStamp
