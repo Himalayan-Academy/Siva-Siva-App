@@ -64,7 +64,15 @@ on mouseup
          dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
          break
       case "listen-file"
+         local tTrue
          go to card "listen-file"
+         
+         show grp "audioDetails"
+         
+         if  (the number of characters in field "audioDetails" < 20) then
+            hide grp "audioDetails"
+         end if
+         
          if isMobile() then
             deleteMobileControl "audioPlayer" # in case one is open already and playing
          end if  
@@ -107,7 +115,7 @@ on mouseup
          --         end if
          
          put sSelectNum into fld "theSelectNum"
-         
+         lock screen
          # but we have stopPlayer  
          # on by mobile
          stopPlayer  
@@ -122,7 +130,16 @@ on mouseup
             select_ShowDetails "downloaded"
          end if 
          
-         
+         show grp "audioDetails"
+         if  (the number of characters in field "audioDetails" < 20) then
+            hide grp "audioDetails"
+            show grp "noInformation"
+         end if 
+         if  (the number of characters in field "audioDetails" > 20) then
+            show grp "audioDetails"
+            hide grp "noInformation"
+         end if
+          unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player

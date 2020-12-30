@@ -186,7 +186,7 @@ command updateUI
    local tSearchFilter, tPausePlay
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
-   local tFilterAudio, tCurrentTitle, tDownloadSelection
+   local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight
    
    put the long id of grp "footerNavigation" into tFooter
@@ -266,6 +266,9 @@ command updateUI
          put the long id of fld "audioDetails" into tAudioDetailsFld
          set the width of tAudioDetailsFld to  (CardWidth() -30 )
          topLeftMe tAudioDetailsFld, 15,160
+         
+         put the long id of grp "noInformation" into tnoInformation
+         centerMe tNoInformation, -100
          
          put the long id of grp "downloadSelection" into tDownloadSelection
          toprightMe tDownloadSelection, 0, 515
