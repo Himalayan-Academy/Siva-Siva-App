@@ -98,7 +98,6 @@ on openCard
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
-         show grp "downloadSelection" of card "listen-file"
          break
          
       case "listen-my-audio"
@@ -106,7 +105,6 @@ on openCard
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
          put empty into fld "audioList"
-         hide grp "downloadSelection" of card "listen-file"
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          if (fld "audioList" is empty) then
