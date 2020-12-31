@@ -22,45 +22,12 @@ local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 local sTimeStamp, sSelectionsA, sDownloadedAudioA,sCardName
 
 
-on openCard
-   local tCardName
-   put the short name of this card into sCardName
-   
-   switch sCardName
-      case "listen-my-audio"
-         getDownloadedAudio 
-         put the result into sDownloadedAudioA
-         
-         if (fld "audioList" is empty) then
-            dialog_CustomMsg "You have not downloaded any audio"
-         end if
-         break
-      case "listen-browse"
-         clearSelection
-         break
-      case "listen-file"
-         clearSelection
-         put empty  into fld "currentTitleLabel"
-         put   empty into  fld "audio-details"
-         break 
-   end switch
-   
-   playlist_Reset 
-   audioIsRunning
-   if the logMessage <> empty then
-      copyLogControl
-   end if
-   
-end openCard
-
-
-
 -----------------------------------------------------------------------
 # UI Interactions | card, group, list, detail display change ups
 -----------------------------------------------------------------------
 
 on mouseup
-   local pTarget, tTarget, detailVis
+   local pTarget, tTarget, tHideDownload, detailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
@@ -73,24 +40,54 @@ on mouseup
    put long id of the target into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
+   
+   
    switch tTarget
       # card navigaton
       case "collections-label"
          go to card "listen-collection"
          break
+      case "listen-browse"
+         go to card "listen-browse"
+         break
       case "my-audio-label"
          go to card "listen-my-audio"
+         hide grp "downloadSelection" of card "listen-file"
+         break
+      case "deleteOn"
+         show fld "Display" visual effect "dissolve" very slow
+         wait 250 milliseconds
+         hide fld "Display" visual effect "dissolve" very slow
+         go to card "listen-delete-file"
+         put empty into fld "currentFilePick"
+         dispatch  "getSums" to grp "displayFilesSizes"
+         dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
+         break
+      case "listen-file"
+         local tTrue
+         go to card "listen-file"
+         
+         show grp "audioDetails"
+         
+         if  (the number of characters in field "audioDetails" < 20) then
+            hide grp "audioDetails"
+         end if
+         
+         if isMobile() then
+            deleteMobileControl "audioPlayer" # in case one is open already and playing
+         end if  
+         togglePause false, true
          break
       case "AudioList"
          local tTitle,localURL
+         
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
-         hide widget "turnOffAudio"
-         stopPlayer # make sure previous player, if there is one, is deleted.
-         clearPlayer # in parent Listen_UI
-         
          # clear the color of the last line before setting the  sLineNum
+         
+         # we needed to stop player
+         
          if sLineNum <> empty then
             setAudioListColors sLineNum,"0,0,0"
          end if
@@ -111,23 +108,46 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         # if the use had downloaded audio it appears on my-audio card
-         # we can start the player; get the audio locally:\
-         if sCardName = "listen-my-audio" then 
-            --command startPlayer  pURL, pTitle,sCardName,sSelectNum
-            startPlayer  "",tTitle,sCardName,sSelectNum
-         else
-            select_Play sSelectNum,,sCardName  # will use either the line number or item id
-         end if
-         break  
+         go to card "listen-file"
          
+         --         if tHideDownload = "on" then
+         --            hide grp "downloadSelection" 
+         --         end if
+         
+         put sSelectNum into fld "theSelectNum"
+         lock screen
+         # but we have stopPlayer  
+         # on by mobile
+         stopPlayer  
+         
+         # if the use had downloaded audio it appears on my-audio card
+         # we can start the player; get the audio locally
+         
+         select_Play sSelectNum,,sCardName  # will use either the line number or item id
+         
+         local tURL
+         if  "audio/book" is not in tURL then # no display details
+            select_ShowDetails "downloaded"
+         end if 
+         
+         show grp "audioDetails"
+         if  (the number of characters in field "audioDetails" < 20) then
+            hide grp "audioDetails"
+            show grp "noInformation"
+         end if 
+         if  (the number of characters in field "audioDetails" > 20) then
+            show grp "audioDetails"
+            hide grp "noInformation"
+         end if
+          unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
-         
+          break
+          
       case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
          if not isMobile() then\
-            put  the currentTime of player "audioPlayer" into sTimeStamp
+               put  the currentTime of player "audioPlayer" into sTimeStamp
          else
             put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
          end if
@@ -144,30 +164,12 @@ on mouseup
          playPausedAudio sTimeStamp
          break
          
-      case "chevron-up-down" # this is simple enough to do here
-         local tSelection,tRecord
-         put the vis of fld "audioDetails" into detailVis
-         set the flipped of pTarget to detailVis
-         if detailVis then
-            deleteMobileControl "audioDetails"
-            hide fld "audioDetails" with visual effect "wipe down" very fast
-            send  "CreateScroller audioList" to fld "audioList"
-         else
-            if sCardName = "listen-my-audio" then
-               put "downloaded" into tSelection
-               put sDownloadedAudioA[sSelectNum][metadata][1] into tRecord
-            end if 
-            select_ShowDetails tSelection,tRecord
-         end if
-         set the flipped of pTarget to not detailVis
-         break
-      case "DownloadSelection" 
+      case "DownloadSelection"  
+         put fld "theSelectNum" into sSelectNum
          if connectivity_PingServer() <> "true" then
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
          end if
-         portal_SetLastStack "Listen"
-         
          downloadSelection sSelectNum, pTarget
          break
       case "Loading"
@@ -199,16 +201,13 @@ command switchAudioUi sAudioUI
       case  "Inspired Talks" 
          hide grp "songProperties"
          show grp "author" 
-         set the top of grp "titleDescription" to 295
          show grp "titleDescription"   
          show grp "searchControls"
          break
          
          # song UI   
       case  "songs" 
-         
          hide grp "author"
-         set the top of  grp "titleDescription" to 157
          show grp "titleDescription"
          show grp "songProperties"
          set the hilited of btn "Title" to true -- group "titleDescription" to empty
@@ -217,6 +216,21 @@ command switchAudioUi sAudioUI
    end switch
 end switchAudioUi
 
+command playSingle pDataA
+   local tSearchA,x,tItem_id
+   local tURL,tSelectedItemA
+   
+   put empty into tSelectedItemA
+   
+   put pDataA["url"] into tURL
+   put pDataA["item_id"] into tItem_id
+   
+   startPlayer tURL,pDataA["title"]
+   showBusyIndicator false
+   if  "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+end playSingle
 
 command share_Items 
    local tURL,  sShareItemsA
@@ -230,14 +244,5 @@ command share_Items
    put "Audio available in the SivaSiva app." into sShareItemsA["text"] 
    return sShareItemsA
 end share_Items
-
-on closeCard
-   clearAudioListColor
-   hide group "pause-play"
-   put empty into fld "currentTitleLabel"
-   showPlayer "false","audioPlayer"
-   deleteAllMobileControls 
-   put empty into sLineNum
-end closeCard
 
 

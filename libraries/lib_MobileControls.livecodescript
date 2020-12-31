@@ -78,10 +78,9 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
       end if
    end if
    put pRect into sPlayerRect
-   mobileControlSet pPlayerName, "visible", false 
-   mobileControlSet pPlayerName, "showcontroller", false
+   mobileControlSet pPlayerName, "visible", true 
+   mobileControlSet pPlayerName, "showcontroller", true
    mobileControlSet pPlayerName, "rect", pRect
-   --mobileControlSet pPlayerName, "showController", true # deprecate with AVkit iOS
    mobileControlSet pPlayerName, "filename", pURL 
    log pURL
    if pURL begins with "https" then
