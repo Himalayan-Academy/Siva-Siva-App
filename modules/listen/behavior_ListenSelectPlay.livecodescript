@@ -55,7 +55,6 @@ on mouseup
       case "my-audio-label"
          go to card "listen-my-audio"
          put "listen-my-audio" into sCardName
-         --hide grp "downloadSelection" of card "listen-file"
          break
       case "deleteOn"
          show fld "Display" visual effect "dissolve" very slow
@@ -111,9 +110,14 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
+         # we have get sCardName to determine who to show download 
+         put sCardName into tHideDownload
+         
          go to card "listen-file"
          
-         --         put sCardName
+         if tHideDownload = "listen-my-audio" then
+            hide grp "DownloadSelection"
+         end if
          --         exit to top
          --         if tHideDownload = "on" then
          --            hide grp "downloadSelection" 
