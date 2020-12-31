@@ -13,6 +13,7 @@ local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameter
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
+local sAllowLandscape
 
 # story control variables, stored cache
 # must wipe them on end of story
@@ -24,6 +25,8 @@ local sStoryDataStack
 local sTarget, sTargetOwner
 
 on preOpenStack
+   put false into sAllowLandscape
+   setupOrientations sAllowLandscape
    put loadStoriesMetadata() into sStoriesMetaArray
    set the filename of img "menuImage" of cd "storyHome" to \
          (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
@@ -136,6 +139,26 @@ on mouseup
          updateImageState
          break
          --
+      case "goPrev"
+         if the visible of sStoryText then
+            lock screen
+            deleteMobileControl "storyText"
+            hide sStoryText
+            hide sStoryTextBkg
+            if the text of sCaptionText is not empty then
+               show sCaptionText
+               show sCaptionBkg
+            end if
+            set the blendlevel of sStoryImage to 0
+            if sLastScene = 1 then
+               hide widget "goPrev"
+            end if
+            unlock screen
+         else
+            subtract 2 from sLastScene
+            goNextScene
+         end if
+         break
       case "goNext"
          if the visible of sStoryText or the text of sStoryText is empty then
             deleteMobileControl "storyText"
@@ -150,6 +173,9 @@ on mouseup
                dispatch "createScroller" to sStoryText with "storyText"
             end if
             set the blendlevel of sStoryImage to 15
+            if sLastScene = sTotalSceneCount then
+               hide widget "goNext"
+            end if
             unlock screen
          end if
          break
@@ -166,6 +192,7 @@ on setupOrDownloadStory
          if sLastStory is empty or sLastStory is not sStoryTitle then
             dataLocalStack sStoryTitle
          end if
+         put false into sAllowLandscape
          break
       case "server"
          put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
@@ -179,6 +206,7 @@ on setupOrDownloadStory
             doAnswer tMsg, "Download,Cancel", "downloadAndShowStory"
             exit to top
          end if
+         put true into sAllowLandscape
          break
    end switch
 end setupOrDownloadStory
@@ -186,6 +214,7 @@ end setupOrDownloadStory
 on downloadAndShowStory
    // show a "downloading..." message
    dataServerStack sStoryTitle
+   put true into sAllowLandscape
    visualArticle
 end downloadAndShowStory
 
@@ -209,7 +238,7 @@ command visualArticle
    --
    go card "showStories" of stack "stories"
    goNextScene
-   --send "goNextScene" to me in 0 milliseconds
+   setupOrientations sAllowLandscape
 end visualArticle
 
 
@@ -227,8 +256,6 @@ command goNextScene
    end if
    if sLastScene is not a number or sLastScene < 1 then
       put 0 into sLastScene
-   else if sLastScene = sTotalSceneCount then
-      -- hide "next" button
    else if sLastScene >= sTotalSceneCount then
       -- end of show handling needs to go here
       put 0 into sLastScene
@@ -245,9 +272,11 @@ command goNextScene
       show sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
-      -- hide "previous" button
+      hide widget "goPrev"
    else
       hide sStoryText
+      show widget "goPrev"
+      show widget "goNext"
       set the htmltext of sStoryText to the htmltext of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       if the text of sStoryText is not empty then
@@ -257,6 +286,10 @@ command goNextScene
          set the foregroundColor of line 1 to -1 of sStoryText to empty
          --
          optimizeTextHeight sStoryText
+      else
+         if sLastScene = sTotalSceneCount then
+            hide widget "goNext"
+         end if
       end if
       hide sStoryTextBkg
       set the text of sCaptionText to the text of \
@@ -333,11 +366,13 @@ command updateImageState
             show sCaptionBkg
          end if
          show grp "footer"
+         show widget "goPrev"
          show widget "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
       else
          if tState is 3 then
             hide grp "footer"
+            hide widget "goPrev"
             hide widget "goNext"
             set the hscroll of grp "storyImageGroup" to 0
             set the vscroll of grp "storyImageGroup" to 0
@@ -350,6 +385,19 @@ command updateImageState
    end if
 end updateImageState
 
+
+command setupOrientations pAllowLandscape
+   local tOrientations
+   --
+   put (pAllowLandscape is true) into sAllowLandscape
+   put "portrait,portrait upside down" into tOrientations
+   if sAllowLandscape then
+      put ",landscape left,landscape right" after tOrientations
+   end if
+   if isMobile() then
+      mobileSetAllowedOrientations tOrientations
+   end if
+end setupOrientations
 
 -------
 local pData,  tCd,  
@@ -409,12 +457,17 @@ end resizeStack
 on updateUI
    local tCard, tFooter, tControl
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
-   local tStoryTextBkg, tGoNext
+   local tStoryTextBkg, tGoNext, tGoPrev
    --
    put the short name of this card into tCard
    --
    put the long id of grp "footer" into tFooter
-   send "updateUI" to tFooter
+   if currentlyLandscape() then
+      hide tFooter
+   else
+      show tFooter
+      send "updateUI" to tFooter
+   end if
    --
    if there is a control "Title" then
       put the long id of fld "Title" into tControl
@@ -445,10 +498,19 @@ on updateUI
    end if
    --
    if tCard is "showStories" then
+      put the long id of widget "goPrev" into tGoPrev
       put the long id of widget "goNext" into tGoNext
-      bottomCenterMe tGoNext,65
+      if currentlyLandscape() then
+         bottomLeftMe tGoPrev
+         bottomRightMe tGoNext
+      else
+         bottomCenterMe tGoPrev,60
+         set the right of tGoPrev to item 1 of the loc of tGoPrev
+         bottomCenterMe tGoNext,60
+         set the left of tGoNext to item 1 of the loc of tGoNext
+      end if
       --
-      set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 21)
+      set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 26)
       set the uRect of sStoryText to the rect of sStoryText
       --
       set the rect of sCaptionText to the rect of sStoryText
@@ -485,6 +547,8 @@ on closeCard
       hide sCaptionText
       hide sCaptionBkg
       show grc "footerBackground" of grp "footer"
+      put false into sAllowLandscape
+      setupOrientations sAllowLandscape
    end if
 end closecard
 
