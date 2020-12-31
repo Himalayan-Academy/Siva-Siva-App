@@ -17,9 +17,9 @@
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-global sConfigA
+global sConfigA,sCardName
 local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
-local sTimeStamp, sSelectionsA, sDownloadedAudioA,sCardName
+local sTimeStamp, sSelectionsA, sDownloadedAudioA
 
 
 -----------------------------------------------------------------------
@@ -46,13 +46,16 @@ on mouseup
       # card navigaton
       case "collections-label"
          go to card "listen-collection"
+         put "listen-collection" into sCardName
          break
       case "listen-browse"
          go to card "listen-browse"
+         put "listen-browse" into sCardName
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         hide grp "downloadSelection" of card "listen-file"
+         put "listen-my-audio" into sCardName
+         --hide grp "downloadSelection" of card "listen-file"
          break
       case "deleteOn"
          show fld "Display" visual effect "dissolve" very slow
@@ -110,6 +113,8 @@ on mouseup
          
          go to card "listen-file"
          
+         --         put sCardName
+         --         exit to top
          --         if tHideDownload = "on" then
          --            hide grp "downloadSelection" 
          --         end if
@@ -139,12 +144,12 @@ on mouseup
             show grp "audioDetails"
             hide grp "noInformation"
          end if
-          unlock screen
+         unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
-          break
-          
+         break
+         
       case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
          if not isMobile() then\
                put  the currentTime of player "audioPlayer" into sTimeStamp

@@ -23,7 +23,7 @@
 #
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
 -----
-global sConfigA
+global sConfigA, sCardName
 local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloadedAudioA
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
@@ -87,6 +87,7 @@ on openCard
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "Listen" into fld "title-label"
+         
          break
          
          
@@ -668,6 +669,7 @@ on  playlist_Instantiate sTargetPlayList
    # Now we switch cards, 
    
    go to card "listen-browse"
+   put "listen-browse" into sCardName
    show fld "collections-label"
    show fld "my-audio-label"
    
