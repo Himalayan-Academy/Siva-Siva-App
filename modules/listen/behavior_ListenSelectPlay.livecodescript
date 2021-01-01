@@ -117,8 +117,6 @@ on mouseup
          put sSelectNum into fld "theSelectNum"
          
          
-         
-         
          lock screen
          # but we have stopPlayer  
          # on by mobile
@@ -127,7 +125,11 @@ on mouseup
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          
-         select_Play sSelectNum,,sCardName  # will use either the line number or item id
+         if sCardName = "listen-my-audio" then
+            direct_Play  sSelectNum,sCardName
+         else
+            select_Play sSelectNum  # will use either the line number or item id
+         end if
          
          local tURL
          if  "audio/book" is not in tURL then # no display details

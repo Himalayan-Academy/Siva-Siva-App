@@ -733,6 +733,17 @@ on clearSelection
    put empty into sSelectedItemA
 end clearSelection
 
+# this is for downloads. It gets the audio from 
+
+on direct_Play sSelectNum,sCardName
+   local pTitle,
+   put sDownloadedAudioA[sSelectNum]["localURL"] into sRemoteURL
+   put sDownloadedAudioA[sSelectNum]["metadata"]["1"]["title"]  into pTitle
+   put pTitle into fld "currentTitleLabel" 
+   startPlayer sRemoteURL,pTitle,sCardName,sSelectNum
+   # skip the card name Parameter in this context.
+   showBusyIndicator false
+end direct_Play
 -----------------------------------------------
 --# Select, Play, Listen, Stop UI interactions
 -----------------------------------------------
@@ -1075,7 +1086,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
          if (tLineNum mod 2) = 0 then
             subtract 1 from tLineNum
          end if
-      put line tLineNum of fld "audioList" into tLineValue
+      put line tLineNum of fld "theSelectNum" into tLineValue
    end if
    
    
