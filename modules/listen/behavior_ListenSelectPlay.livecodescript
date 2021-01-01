@@ -19,7 +19,7 @@
 ---------------------------------------------------------------------
 global sConfigA,sCardName
 local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
-local sTimeStamp, sSelectionsA, sDownloadedAudioA
+local sTimeStamp, sSelectionsA
 
 
 -----------------------------------------------------------------------
@@ -114,16 +114,11 @@ on mouseup
          put sCardName into tHideDownload
          
          go to card "listen-file"
-         
-         if tHideDownload = "listen-my-audio" then
-            hide grp "DownloadSelection"
-         end if
-         --         exit to top
-         --         if tHideDownload = "on" then
-         --            hide grp "downloadSelection" 
-         --         end if
-         
          put sSelectNum into fld "theSelectNum"
+         
+         
+         
+         
          lock screen
          # but we have stopPlayer  
          # on by mobile
@@ -148,6 +143,16 @@ on mouseup
             show grp "audioDetails"
             hide grp "noInformation"
          end if
+         
+         if tHideDownload = "listen-my-audio" then
+            hide grp "DownloadSelection"
+         else
+            show grp "DownloadSelection"
+         end if
+         --         exit to top
+         --         if tHideDownload = "on" then
+         --            hide grp "downloadSelection" 
+         --         end if
          unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()

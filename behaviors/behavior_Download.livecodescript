@@ -63,7 +63,7 @@ on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
    put pRequestedBy into sRequestedBy
    
    -- set up a message to show the status of the download as it progresses
-   libURLSetStatusCallback "showProgress", the long name of grp "downloadControls"
+   libURLSetStatusCallback "showDownloadProgress", the long name of grp "downloadControls"
    	
    -- make sure the progress bar is hidden, as this property is used to initialise it
    hide scrollbar "ProgressBar"
@@ -75,7 +75,7 @@ on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
 end downLoadURL
 
 
-command showProgress pURL, pStatus
+command showDownloadProgress pURL, pStatus
    -- this is the status callback message which gets called regularly during the download
    -- pStatus will show some initialisation messages, then
    -- loading,bytesReceived,bytesTotal
@@ -124,7 +124,7 @@ command showProgress pURL, pStatus
             "At KB/sec: " & tab & tKBperSecond into fld "ProgressField"
       
    end if
-end showProgress
+end showDownloadProgress
 
 command downloadComplete pURL, pStatus
    -- this is the handler called when the download is finished
@@ -179,7 +179,3 @@ on hidedDownloadControls
    hide grp "downloadControls"
 end hidedDownloadControls
 
-
-on mouseEnter
-   
-end mouseEnter
