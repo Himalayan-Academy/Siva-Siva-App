@@ -9,7 +9,8 @@ version: 0.2
 /*
 This stack has been moved from a frontscript to a library.
 
-The suggestion is to split this into general and more specific libraires - for instance lib_MobileScroller and lib_MobileAudio etc ?
+The suggestion is to split this into general and more specific libraires - f
+or instance lib_MobileScroller and lib_MobileAudio etc ?
 */
 
 ######### Mobile Player Controls ############
@@ -77,6 +78,9 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
          put (item 4 of pRect) - tHeight - 50 into item 2 of pRect
       end if
    end if
+   
+   ----------------
+   
    put pRect into sPlayerRect
    mobileControlSet pPlayerName, "visible", true 
    mobileControlSet pPlayerName, "showcontroller", true
@@ -166,9 +170,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       get runningAudioIndicatorVis("true")
    end if
    
-   
 end setMobileAudioPlayer
-
 
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
