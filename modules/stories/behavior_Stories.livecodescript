@@ -194,7 +194,7 @@ on setupOrDownloadStory
       case "server"
          put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
                sStoryTitle & ".livecode") into sStoryDataStack
-         if not exists(stack sStoryDataStack) then
+         if there is no file sStoryDataStack then
             local tMsg
             put "This story contains" && sStoriesMetaArray["Stories"][sStoryTitle]["imageDate"] \
                   && "of images.  Once the story is complete" && \
@@ -216,8 +216,31 @@ on downloadAndShowStory
 end downloadAndShowStory
 
 on deleteFinishedStory
-   // delete the files
+   local tStoryPath
+   --
+   put path_Documents() & "media/stories/" & sStoryTitle into tStoryPath
+   deleteFolder tStoryPath
+   put empty into sLastStory
+   go cd "storyHome"
 end deleteFinishedStory
+
+command deleteFolder pFolder
+   local tFileList, tFolderList
+   --
+   put files(pFolder) into tFileList
+   filter tFileList without "."
+   filter tFileList without ".."
+   repeat for each line tFile in tFileList
+      delete file pFolder & "/" & tFile
+   end repeat
+   --
+   put folders(pFolder) into tFolderList
+   filter tFolderList without ".."
+   repeat for each line tFolder in tFolderList
+      deleteFolder pFolder & "/" & tFolder
+   end repeat
+   delete folder pFolder
+end deleteFolder
 
 on doScrollerTap
    put the short name of the target into sTarget
@@ -244,7 +267,7 @@ end visualArticle
 
 
 command goNextScene
-   local tImagePath
+   local tImagePath, tMsg
    --
    lock screen
    if sLastStory is empty or sLastStory is not sStoryTitle then
@@ -260,10 +283,12 @@ command goNextScene
    else if sLastScene >= sTotalSceneCount then
       put 0 into sLastScene
       unlock screen
-      local tMsg
-      put "This is the end of this story.  Would you like to delete the files?" into tMsg
-      doAnswer tMsg, "Delete,Cancel", "deleteFinishedStory"
-      go cd "storyHome"
+      if sWhere is "server" then
+         put "This is the end of this story.  Would you like to delete the files?" into tMsg
+         doAnswer tMsg, "Delete,Cancel", "deleteFinishedStory"
+      else
+         go cd "storyHome"
+      end if
       exit goNextScene
    end if
    --
@@ -452,6 +477,9 @@ end journalResume
 
 
 on resizeStack
+   -- for development, use screen rotation to quickly get to the end of the story
+   add 50 to sLastScene
+   --
    lock screen
    setCardCoords
    updateUI
