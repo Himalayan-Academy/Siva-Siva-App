@@ -521,6 +521,18 @@ command cycleImageState pImage
    return sImageCycleStateA["state"]
 end cycleImageState
 
+command resetCycleImage pImage
+   -- used to reset the metrics due to a device rotation
+   local tState
+   put sImageCycleStateA["state"] into tState
+   initializeCycleImage pImage
+   if tState > 1 then
+      put tState - 1 into sImageCycleStateA["state"]
+      cycleImageState pImage
+   end if
+   return tState
+end resetCycleImage
+
 --on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
 --   local tFWd, tFHt
 --   # we may not always this rect of the images from  the metadata

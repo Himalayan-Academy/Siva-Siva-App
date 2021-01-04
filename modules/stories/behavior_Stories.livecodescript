@@ -173,9 +173,6 @@ on mouseup
                dispatch "createScroller" to sStoryText with "storyText"
             end if
             set the blendlevel of sStoryImage to 15
-            if sLastScene = sTotalSceneCount then
-               hide widget "goNext"
-            end if
             unlock screen
          end if
          break
@@ -218,6 +215,10 @@ on downloadAndShowStory
    visualArticle
 end downloadAndShowStory
 
+on deleteFinishedStory
+   // delete the files
+end deleteFinishedStory
+
 on doScrollerTap
    put the short name of the target into sTarget
    --
@@ -257,9 +258,12 @@ command goNextScene
    if sLastScene is not a number or sLastScene < 1 then
       put 0 into sLastScene
    else if sLastScene >= sTotalSceneCount then
-      -- end of show handling needs to go here
       put 0 into sLastScene
       unlock screen
+      local tMsg
+      put "This is the end of this story.  Would you like to delete the files?" into tMsg
+      doAnswer tMsg, "Delete,Cancel", "deleteFinishedStory"
+      go cd "storyHome"
       exit goNextScene
    end if
    --
@@ -286,23 +290,12 @@ command goNextScene
          set the foregroundColor of line 1 to -1 of sStoryText to empty
          --
          optimizeTextHeight sStoryText
-      else
-         if sLastScene = sTotalSceneCount then
-            hide widget "goNext"
-         end if
       end if
       hide sStoryTextBkg
       set the text of sCaptionText to the text of \
             field "Caption" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       if the text of sCaptionText is not empty then
-         set the width of sCaptionText to .65 * CardWidth()
-         set the height of sCaptionText to the formattedHeight of sCaptionText
-         set the width of sCaptionText to the formattedWidth of sCaptionText
-         set the bottomRight of sCaptionText to the bottomRight of sStoryText
-         set the width of sCaptionBkg to the width of sCaptionText + 60
-         set the height of sCaptionBkg to the height of sCaptionText + 60
-         set the bottomRight of sCaptionBkg to \
-               (the right of sCaptionText + 25, the bottom of sCaptionText + 30)
+         setupCaptionField
          show sCaptionText
          show sCaptionBkg
       else
@@ -353,6 +346,18 @@ command optimizeTextHeight pControl
       end repeat
    end if
 end optimizeTextHeight
+
+
+command setupCaptionField
+   set the width of sCaptionText to .65 * CardWidth()
+   set the height of sCaptionText to the formattedHeight of sCaptionText
+   set the width of sCaptionText to the formattedWidth of sCaptionText
+   set the bottomRight of sCaptionText to the bottomRight of sStoryText
+   set the width of sCaptionBkg to the width of sCaptionText + 60
+   set the height of sCaptionBkg to the height of sCaptionText + 60
+   set the bottomRight of sCaptionBkg to \
+         (the right of sCaptionText + 25, the bottom of sCaptionText + 30)
+end setupCaptionField
 
 
 command updateImageState
@@ -512,8 +517,21 @@ on updateUI
       --
       set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 26)
       set the uRect of sStoryText to the rect of sStoryText
+      if the text of sStoryText is not empty then
+         optimizeTextHeight sStoryText
+         if sStoryText is visible then
+            if the formattedHeight of sStoryText > the height of sStoryText then
+               dispatch "createScroller" to sStoryText with "storyText"
+            else
+               deleteMobileControl "storyText"
+            end if
+         end if
+      end if
       --
       set the rect of sCaptionText to the rect of sStoryText
+      if the text of sCaptionText is not empty then
+         setupCaptionField
+      end if
       --
       set the rect of grp "storyImageGroup" to CardRect()
       --
@@ -521,6 +539,7 @@ on updateUI
       set the rect of tStoryTextBkg to CardRect()
       --
       hide grc "footerBackground" of grp "footer"
+      resetCycleImage sStoryImage
    end if
    --
    set the width of grp "share-ui" to cardWidth()
