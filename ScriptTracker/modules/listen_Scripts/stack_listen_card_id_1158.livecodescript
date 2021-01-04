@@ -10,11 +10,11 @@ local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll
 local tHGroup, sLoadingIndicator
 ## touch commands to scroll the groups
 
-on preopencard
-   put the long id of control "loading" into sLoadingIndicator
-   setCardCoords
-   pass preopencard
-end preopencard
+--on preopencard
+--   put the long id of control "loading" into sLoadingIndicator
+--   setCardCoords
+--   pass preopencard
+--end preopencard
 
 
 on opencard
@@ -23,7 +23,7 @@ end opencard
 
 
 on touchStart pTouchID
-   if the short name target is "Loading"then
+   if the short name target is "Loading" then
       showBusyIndicator false
       if isMobile() then
          mobileClearTouches
@@ -52,16 +52,14 @@ on touchMove pTouchID, pTouchX, pTouchY
    
    // Check for vertical scroll
    
-   if pTouchY > (sStartY + 60) or pTouchY < (sStartY -60) then
-      set the vScroll of group "all-collections" to sStartYScroll + (sStartY-pTouchY)
+   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
+      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
    else
+      // Check for horizontal scroll
       
       if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
-         // Check for horizontal scroll
-         
          put the long owner of the target into tHGroup  
-         set the hScroll of tHGroup to sStartHScroll + (sStartX-pTouchX)
-         
+         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
       end if
    end if
    
@@ -99,7 +97,7 @@ on mouseup
       exit top 
    end if
    
-      if abs(the mouseH - item 1 of sStartLoc) <= 5 and abs(the mouseV - item 2 of sStartLoc) <= 5 then
+      if abs(the mouseH - item 1 of sStartLoc) <= 1 and abs(the mouseV - item 2 of sStartLoc) <= 1 then
          put the target into pSelection
          selectPlayList pSelection # handles collection and other clicks on the UI
       end if

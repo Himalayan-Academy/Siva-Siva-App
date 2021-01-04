@@ -50,14 +50,21 @@ command mmGetTopSums
    if isMobile() then
       mobileShowStatusBar
    end if 
-   show btn "load-spinner"
-   show grp "diskDataOverview"
-   dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
-   put empty into sResultA
-   get mmGetSizesBySubFolders("audio")
-   get mmGetSizesBySubFolders("books")
-   get  mmGetSizesBySubFolders("art")
-   insertTopResults sResultA # see display section below
+   
+   # we are already is a stack "setting"
+   if there is a btn "load-spinner" then
+      show btn "load-spinner"
+      show grp "diskDataOverview"
+      dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
+      put empty into sResultA
+      get mmGetSizesBySubFolders("audio")
+      get mmGetSizesBySubFolders("books")
+      get  mmGetSizesBySubFolders("art")
+      insertTopResults sResultA # see display section below
+   else
+      # if not, we are in stack "listen"
+      get mmGetSizesBySubFolders("audio")
+   end if
 end mmGetTopSums
 
 command mmSetRootFolder pFolder
@@ -70,7 +77,6 @@ function mmGetSizesBySubfolders pPathComplement
    local tTopSum, dF
    put 0 into tTopSum
    
-   put the defaultFolder into dF
    put sMediaFolder & pPathComplement into sTopFolder
    set the directory to sTopFolder
    put folders(sTopFolder) into sTopFolderList
@@ -144,7 +150,9 @@ command mouseup  #UI Interactions are trapped here
          put value(the clickline) into tFile
          put the clickline into sTargetLine
          put word 2 of sTargetLine into tLineNo
-         put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
+         -- put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
+         put line tLineNo of the uFilesOnDisk of this card into sDetailedTarget
+         
          put item 1 sDetailedTarget into tPath
          setTargetFile tPath
          set the itemdel to tab
@@ -158,8 +166,9 @@ command mouseup  #UI Interactions are trapped here
          mmGetTopSums
          break
       case  tTarget =  "deleteYes"
-         set the textcolor of sTargetLine to "gray"
+         set the textcolor of sTargetLine to "black"
          set the textstyle of sTargetLine to "strikeout"
+         put empty into fld "currentFilePick"
          put item 2 of sDetailedTarget into tFileSize
          put tFileSize/1024/1000 into tMB
          put fld "currentTotal" - round (tMB,2) into fld "CurrentTotal"
@@ -201,6 +210,8 @@ end insertTopResults
 command displayTargetFiles pDataType
    local tDetailedFiles,tFilter,tPath,tSize,tFile
    local tFileList
+   setDeleteMode "off"
+   put empty into tFileList
    lock screen
    put empty into fld "FilesOnDisk" 
    put sResultA["files"] into tDetailedFiles
@@ -218,10 +229,32 @@ command displayTargetFiles pDataType
    end repeat
    put tFileList into fld "FilesOnDisk"
    unlock screen
-   hide grp "diskDataOverview" with "dissolve" very fast
+   
+   #will be  in the setting stack
+   if there is a grp  "diskDataOverview" then
+      hide grp "diskDataOverview" with "dissolve" very fast
+   end  if
+   
    put sResultA[pDataType]["categorySum"] into fld "currentTotal"
    show grp "displayFilesSizes" with "dissolve" very fast
+   put empty into sResultA["files"] 
 end displayTargetFiles
+
+# deletion routines
+
+command setTargetfile pTargetFile
+   put pTargetFile into sTargetFile
+end setTargetfile
+
+function getTargetFile
+   return sTargetFile
+end getTargetFile
+
+command deleteFileOnDisk 
+   delete file ( getTargetFile() )
+end deleteFileOnDisk
+
+##### All functions relating to delete files appear  above
 
 on clearSums
    local tFields
@@ -240,19 +273,5 @@ on clearSums
    put empty  into fld "FilesOnDisk" 
    put empty into fld "currentTotal"
 end clearSums
-
-# deletion routines
-
-command setTargetfile pTargetFile
-   put pTargetFile into sTargetFile
-end setTargetfile
-
-function getTargetFile
-   return sTargetFile
-end getTargetFile
-
-command deleteFileOnDisk 
-   delete file ( getTargetFile() )
-end deleteFileOnDisk
 
 

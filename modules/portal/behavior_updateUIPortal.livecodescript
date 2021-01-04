@@ -133,12 +133,8 @@ on fetchSubMenu pTarget
       put tMap["portalData"][pTarget]["rowdata"][tSecondLevel]["rowName"] into tRowName
       put tRowname & cr after tOutput
    end repeat
-   -- use to get rect of device from user
-   --   if pTarget is "fun" then
-   --      put cr & the screenrect & cr after tOutput
-   --      put CardRect() & cr after tOutput
-   --   end if
-   --
+   # getting the final cr out
+   delete char -1 of  tOutput
    put tOutput into fld "subNavfld"
    dispatch "createscroller" to fld "subNavFld" with "subNavFld"
 end fetchSubMenu
@@ -257,7 +253,7 @@ end setSubNavBkgndImage
 
 private function _brandImages 
    local tBrandImages
-   put "app-img_who-is-siva_1200x800" & cr & \
+   put "app-img_who-is-siva_1200x800_med" & cr & \
          "app-img_06-sadasiva_opt-80_552w-portrait" & cr & \
          "app-img_01-sadyojata_opt-80_552w-portrait" & cr & \
          "app-img_02-vamadeva_opt-80_552w-portrait" & cr & \

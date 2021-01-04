@@ -54,19 +54,23 @@ on mouseup
             unlock screen with visual effect "dissolve" very fast
          else if tCard is "showStories" then
             go card "storyHome"
-         else 
-            if tCard is "storyHome" and (the vis of grp "storyMenu") = false then
-               showStoryMenu
-            else
-               portal_GoStack ("Siva-Siva-Portal")
-            end if
+         else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
+            showStoryMenu
+         else if tCard is among the items of "listen-browse,listen-my-audio,listen-file" then
+            go card "listen-collection"
+         else if tCard is "listen-delete-file" then
+            go card "listen-my-audio"
+         else if tCard is "listen-search" then
+            go card "listen-browse"
+         else
+            portal_GoStack ("Siva-Siva-Portal")
          end if
          break
          
       case "journal"
          unlock screen
          
-         moveMe  target, 0,-100, 200
+         moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
          AddJournalEntry
          
@@ -101,7 +105,7 @@ on mouseup
             set the rect of tBrowser to tBrowserRect
          end if
          
-         deleteMobileControl  "audioPlayer"
+         deleteMobileControl "audioPlayer"
          show tControl with visual "dissolve" very fast
          break
          

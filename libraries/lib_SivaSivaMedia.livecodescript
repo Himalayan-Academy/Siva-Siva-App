@@ -188,21 +188,25 @@ end getSongLyrics
 
 function getMediaItemMetadata pRecords
    local tLyrics
+   
+   put empty into tArtists
+   put empty into tAuthor
+   
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
+   
+   
    
    put empty into tViewData
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put sMediaMetaA["artists"] into tArtists
    if sMediaMetaA["artists"] <> empty then
       put "Artist: " & sMediaMetaA["artists"] into tArtists
    end if
-   put sMediaMetaA["artists"] into tAuthor
    if sMediaMetaA["author"] <> empty then
-      put "Author: " & cr &  sMediaMetaA["author"] into tAuthor
+      put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
    put sMediaMetaA["description"] into tDescription
    replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
@@ -224,7 +228,8 @@ function getMediaItemMetadata pRecords
    
    
    # data has commas so we have to use a lines as a delimiter
-   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   put (tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
    repeat for each line x in tFields
       if x <> empty then
@@ -348,7 +353,7 @@ end ___VIDEO
 ##########################################################
 
 # this just get a video URL as passed it directly to the view stack
-
+local pJournalLabel
 command getRandomVideo
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
@@ -396,6 +401,11 @@ function folderForAudio pMediaType
          break
       case pMediaType = "audio/song"
          put "songs/" after tServerPath
+         
+         if sMediaMetaA["author"] contains "Yogaswami" then
+         else
+            put empty into sMediaMetaA["author"] 
+         end if
          put sMediaMetaA["genre"] &"/" after tServerPath
          
          if (sMediaMetaA["genre"] = "bhajan") OR (sMediaMetaA["genre"] = "bhakti-gitam")  then
@@ -406,6 +416,7 @@ function folderForAudio pMediaType
          break
       case pMediaType="audio/inspiredtalk"
          put "inspired-talks/" after tServerPath
+         put empty into sMediaMetaA["artist"] 
          put sMediaMetaA["author"] into tAuthor
          put line 1 of tAuthor into tAuthor # handle extra EOL in some records
          put sMediaMetaA["date_created"] into tDateCreated

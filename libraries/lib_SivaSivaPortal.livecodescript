@@ -66,7 +66,6 @@ local sLastModulesList, sOrientation, sDestinationCardOrStack, sDisplayLabel
 -- 2017-04/05 Brahmanathaswami, added more robust  code for going back.
 --------------------------------------------------------------
 
-
 command portal_GoStack cardOrStackObject
    
    tsNetLibUrlReuseConnection false
@@ -107,10 +106,7 @@ command portal_GoStack cardOrStackObject
    unlock screen
    
    go cardOrStackObject
-   if isMobile() = true then
-      mobileClearTouches
-   end if
-   
+ 
    if oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
@@ -148,8 +144,7 @@ end getOrientionOfStacks
 
 command portal_DoRowLink rowName
    local linkArray, linkCommand, linkParam
-   --portal_SetLastLinkTitle rowName
-   --put portal_GetRowLinkArray (rowName) into linkArray
+  
    
    put getNavigationMap() into sNavMap
    put sNavMap["portalRowDictionary"][rowName]["link"] into linkArray
