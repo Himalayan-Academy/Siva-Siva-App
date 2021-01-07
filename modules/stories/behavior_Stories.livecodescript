@@ -68,7 +68,7 @@ end preopenCard
 
 
 on opencard
-   local tCard, tLineNum
+   local tCard, tLineNum, tStoryPath
    put the short name of this card into tCard
    
    if tCard is "storyHome" then
@@ -78,7 +78,11 @@ on opencard
       repeat for each line tLine in fld "storyMenu"
          add 1 to tLineNum
          if sStoriesMetaArray["Stories"][tLine]["where"] = "server" then
-            set the foregroundColor of line tLineNum of fld "storyMenu" to "yellow"
+            put (path_Documents() & "media/stories/"  & tLine & "/" & \
+                  tLine & ".livecode") into tStoryPath
+            if there is no file tStoryPath then
+               set the foregroundColor of line tLineNum of fld "storyMenu" to "yellow"
+            end if
          end if
       end repeat
       showStoryMenu
@@ -271,7 +275,14 @@ command goNextScene
    --
    lock screen
    if sLastStory is empty or sLastStory is not sStoryTitle then
-      put 0 into sLastScene
+      if sWhere is "local" then
+         put 0 into sLastScene
+      else
+         put getpref("stories/" & sStoryTitle) into sLastScene
+         if sLastScene is a number then
+            subtract 1 from sLastScene
+         end if
+      end if
       put the number of cards in stack sStoryDataStack into sTotalSceneCount
       put sStoryTitle into sLastStory
    end if
@@ -284,6 +295,7 @@ command goNextScene
       put 0 into sLastScene
       unlock screen
       if sWhere is "server" then
+         setpref "stories/" & sStoryTitle, sLastScene
          put "This is the end of this story.  Would you like to delete the files?" into tMsg
          doAnswer tMsg, "Delete,Cancel", "deleteFinishedStory"
       else
@@ -293,6 +305,9 @@ command goNextScene
    end if
    --
    add 1 to sLastScene
+   if sWhere is "server" then
+      setpref "stories/" & sStoryTitle, sLastScene
+   end if
    if sLastScene is 1 then
       show sStoryText
       -- once the source stack is redone, will use htmltext on both sides of the set
