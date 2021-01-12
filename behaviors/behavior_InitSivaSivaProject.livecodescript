@@ -352,9 +352,9 @@ command init_DocumentFiles
    --breakpoint
    try
       put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
-   catch errorStatement
       put JSONToArray(tServer) into tServerArray
       put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
+   catch errorStatement
       
    end try 
    

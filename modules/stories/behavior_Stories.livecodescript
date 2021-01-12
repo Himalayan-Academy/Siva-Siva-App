@@ -13,7 +13,7 @@ local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameter
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
-local sAllowLandscape
+local sAllowLandscape, sStoryMenuTree, sStoryMetaArray
 
 # story control variables, stored cache
 # must wipe them on end of story
@@ -51,6 +51,7 @@ on preOpenCard
    setCardCoords "portrait"
    if tCard is "storyHome" then
       put the long id of fld "storyMenu" into sStoryMenu
+      put the long id of widget "storyNavTree" into sStoryMenuTree
       put the long id of fld "tips" into sTips
    else if tCard is "showStories" then
       put the long id of img "storyImage" into sStoryImage
@@ -68,7 +69,7 @@ end preopenCard
 
 
 on opencard
-   local tCard, tLineNum, tStoryPath
+   local tCard, tLineNum, tStoryPath, tStoryTree
    put the short name of this card into tCard
    
    if tCard is "storyHome" then
@@ -85,6 +86,16 @@ on opencard
             end if
          end if
       end repeat
+      --
+      # path delimiter is not currently saved with the widget
+      set the pathDelimiter of sStoryMenuTree to "|"
+      repeat for each key tKey1 in sStoriesMetaArray["Stories"]
+         repeat for each key tKey2 in sStoriesMetaArray["Stories"][tKey1]
+            put true into tStoryTree[tKey1][tKey2]
+         end repeat
+      end repeat
+      set the arraydata of sStoryMenuTree to tStoryTree
+      --
       showStoryMenu
    else if tCard is "showStories" then
       --send "goNextScene" to me in 0 milliseconds
@@ -183,8 +194,47 @@ on mouseup
    end switch
 end mouseup
 
+# Tree Widget handler
+on hiliteChanged
+   local tHilitedElement
+   --
+   put the hilitedElement of sStoryMenuTree into tHilitedElement
+   --
+   # need to check at the top of the handler since we manually clear the
+   # highlight after it is processed
+   if tHilitedElement is empty then exit hiliteChanged
+   --
+   lock screen
+   set the itemdelimiter to "|"
+   if the number of items in tHilitedElement = 1 and \
+         the hilitedElementIsFolded of sStoryMenuTree then 
+      set the foldstate of sStoryMenuTree to empty -- collapse all
+   end if
+   --
+   set the hilitedElementIsFolded of sStoryMenuTree to not the hilitedElementIsFolded of sStoryMenuTree -- doesn't effect a leaf
+   unlock screen
+   --
+   if the number of items in tHilitedElement = 2 then
+      put item 2 of tHilitedElement into sStoryTitle
+      put sStoriesMetaArray["Stories"][item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
+      --
+      setupOrDownloadStory
+      --
+      visualArticle
+   end if
+   --
+   # Clear the highlight after it is processed
+   set the hilitedElement of sStoryMenuTree to empty
+end hiliteChanged
+
+on formattedHeightChanged -- tree changed dimensions
+   if the target is sStoryMenuTree then
+      dispatch "updateScroller" to sStoryMenuTree with "storyMenu"
+   end if
+end formattedHeightChanged
+
 on setupOrDownloadStory
-   put sStoriesMetaArray["Stories"][sStoryTitle]["where"] into sWhere
+   put sStoryMetaArray["where"] into sWhere
    --
    switch sWhere
       case "local"
@@ -193,14 +243,14 @@ on setupOrDownloadStory
          if sLastStory is empty or sLastStory is not sStoryTitle then
             dataLocalStack sStoryTitle
          end if
-         put false into sAllowLandscape
+         put true into sAllowLandscape
          break
       case "server"
          put (path_Documents() & "media/stories/"  & sStoryTitle & "/" & \
                sStoryTitle & ".livecode") into sStoryDataStack
          if there is no file sStoryDataStack then
             local tMsg
-            put "This story contains" && sStoriesMetaArray["Stories"][sStoryTitle]["imageDate"] \
+            put "This story contains" && sStoryMetaArray["imageDate"] \
                   && "of images.  Once the story is complete" && \
                   "you will have an opportunity to delete the images." && \
                   "Would you like to proceed?" into tMsg
@@ -481,12 +531,15 @@ on journalResume pData -- sent from journal stack
    display_SetStatusBarVis false
    --   showStoryText
    if tCd is "showStories" then
-      put sStoryTitle&comma&sLastScene after msg
+      repeat for each element tElement in sStoriesMetaArray["Stories"]
+         if tElement[sStoryTitle] is not empty then
+            put tElement[sStoryTitle] into sStoryMetaArray
+            exit repeat
+         end if
+      end repeat
       setupOrDownloadStory
       put sStoryTitle into sLastStory
-      put comma&sLastScene after msg
       visualArticle
-      put comma&sLastScene after msg
    end if
 end journalResume
 
@@ -541,6 +594,8 @@ on updateUI
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
       set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
+      --
+      set the rect of sStoryMenuTree to the rect of tMenuBkgnd
       --
       show grc "footerBackground" of grp "footer"
    end if
