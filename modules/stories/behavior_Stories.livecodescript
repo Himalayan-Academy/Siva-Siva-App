@@ -50,7 +50,7 @@ on preOpenCard
    end if
    setCardCoords "portrait"
    if tCard is "storyHome" then
-      put the long id of fld "storyMenu" into sStoryMenu
+      put the long id of widget "storyNavTree" into sStoryMenu
       put the long id of widget "storyNavTree" into sStoryMenuTree
       put the long id of fld "tips" into sTips
    else if tCard is "showStories" then
@@ -69,32 +69,42 @@ end preopenCard
 
 
 on opencard
-   local tCard, tLineNum, tStoryPath, tStoryTree
+   local tCard, tStoryTree, tGroup, tTitle, tCount, tKeys, tFoldState, tStoryPath
    put the short name of this card into tCard
    
    if tCard is "storyHome" then
-      # load the menu in any case:
-      put the keys of sStoriesMetaArray["Stories"] into fld "storyMenu"
-      put 0 into tLineNum
-      repeat for each line tLine in fld "storyMenu"
-         add 1 to tLineNum
-         if sStoriesMetaArray["Stories"][tLine]["where"] = "server" then
-            put (path_Documents() & "media/stories/"  & tLine & "/" & \
-                  tLine & ".livecode") into tStoryPath
-            if there is no file tStoryPath then
-               set the foregroundColor of line tLineNum of fld "storyMenu" to "yellow"
-            end if
-         end if
-      end repeat
-      --
+      # load the menu
       # path delimiter is not currently saved with the widget
       set the pathDelimiter of sStoryMenuTree to "|"
       repeat for each key tKey1 in sStoriesMetaArray["Stories"]
+         put tKey1 into tGroup
+         switch char 1 to 2 of tKey1
+            case "Sc"
+               put "1 " before tGroup
+               put false into tFoldState[tGroup]["folded"]
+               break
+            case "St"
+               put "2 " before tGroup
+               break
+            case "Ar"
+               put "3 " before tGroup
+               break
+            default
+               put "4 " before tGroup
+         end switch
          repeat for each key tKey2 in sStoriesMetaArray["Stories"][tKey1]
-            put true into tStoryTree[tKey1][tKey2]
-         end repeat
-      end repeat
+            put empty into tStoryTree[tGroup]["--" & tKey2]
+            if sStoriesMetaArray["Stories"][tKey1][tKey2]["where"] = "server" then
+               put (path_Documents() & "media/stories/"  & tKey2 & "/" & \
+                     tKey2 & ".livecode") into tStoryPath
+               if there is no file tStoryPath then
+                  put sStoriesMetaArray["Stories"][tKey1][tKey2]["imageSize"] into tStoryTree[tGroup]["--" & tKey2]
+               end if
+            end if
+         end repeat -- tKey2
+      end repeat -- tKey1
       set the arraydata of sStoryMenuTree to tStoryTree
+      set the foldstate of sStoryMenuTree to tFoldState
       --
       showStoryMenu
    else if tCard is "showStories" then
@@ -105,7 +115,7 @@ end opencard
 
 command showStoryMenu
    dispatch "deleteMobileControl" to sTips with "tips"
-   dispatch "createScroller" to sStoryMenu with "storyMenu"
+   dispatch "createScroller" to sStoryMenuTree with "storyMenu"
    set the filename of img "menuImage" of cd "storyHome" to \
          (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    hide grp "tips" of cd "storyHome"
@@ -166,7 +176,7 @@ on mouseup
             end if
             set the blendlevel of sStoryImage to 0
             if sLastScene = 1 then
-               hide widget "goPrev"
+               hide btn "goPrev"
             end if
             unlock screen
          else
@@ -211,12 +221,13 @@ on hiliteChanged
       set the foldstate of sStoryMenuTree to empty -- collapse all
    end if
    --
-   set the hilitedElementIsFolded of sStoryMenuTree to not the hilitedElementIsFolded of sStoryMenuTree -- doesn't effect a leaf
+   set the hilitedElementIsFolded of sStoryMenuTree to \
+         not the hilitedElementIsFolded of sStoryMenuTree -- doesn't effect a leaf
    unlock screen
    --
    if the number of items in tHilitedElement = 2 then
-      put item 2 of tHilitedElement into sStoryTitle
-      put sStoriesMetaArray["Stories"][item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
+      put char 3 to -1 of item 2 of tHilitedElement into sStoryTitle
+      put sStoriesMetaArray["Stories"][char 3 to -1 of item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
       --
       setupOrDownloadStory
       --
@@ -250,7 +261,7 @@ on setupOrDownloadStory
                sStoryTitle & ".livecode") into sStoryDataStack
          if there is no file sStoryDataStack then
             local tMsg
-            put "This story contains" && sStoryMetaArray["imageDate"] \
+            put "This story contains" && sStoryMetaArray["imageSize"] \
                   && "of images.  Once the story is complete" && \
                   "you will have an opportunity to delete the images." && \
                   "Would you like to proceed?" into tMsg
@@ -366,11 +377,11 @@ command goNextScene
       show sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
-      hide widget "goPrev"
+      hide btn "goPrev"
    else
       hide sStoryText
-      show widget "goPrev"
-      show widget "goNext"
+      show btn "goPrev"
+      show btn "goNext"
       set the htmltext of sStoryText to the htmltext of \
             field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
       if the text of sStoryText is not empty then
@@ -461,14 +472,14 @@ command updateImageState
             show sCaptionBkg
          end if
          show grp "footer"
-         show widget "goPrev"
-         show widget "goNext"
+         show btn "goPrev"
+         show btn "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
       else
          if tState is 3 then
             hide grp "footer"
-            hide widget "goPrev"
-            hide widget "goNext"
+            hide btn "goPrev"
+            hide btn "goNext"
             set the hscroll of grp "storyImageGroup" to 0
             set the vscroll of grp "storyImageGroup" to 0
             set the topLeft of sStoryImage to 0,0
@@ -601,19 +612,17 @@ on updateUI
    end if
    --
    if tCard is "showStories" then
-      put the long id of widget "goPrev" into tGoPrev
-      put the long id of widget "goNext" into tGoNext
+      put the long id of btn "goPrev" into tGoPrev
+      put the long id of btn "goNext" into tGoNext
       if currentlyLandscape() then
          bottomLeftMe tGoPrev
          bottomRightMe tGoNext
       else
-         bottomCenterMe tGoPrev,60
-         set the right of tGoPrev to item 1 of the loc of tGoPrev
-         bottomCenterMe tGoNext,60
-         set the left of tGoNext to item 1 of the loc of tGoNext
+         topLeftMe tGoPrev
+         topRightMe tGoNext
       end if
       --
-      set the rect of sStoryText to (10, 50, cardWidth() - 10, the top of tGoNext - 26)
+      set the rect of sStoryText to (10, the bottom of tGoNext + 12, cardWidth() - 10, the top of tFooter - 12)
       set the uRect of sStoryText to the rect of sStoryText
       if the text of sStoryText is not empty then
          optimizeTextHeight sStoryText
