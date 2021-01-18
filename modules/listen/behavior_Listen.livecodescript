@@ -111,6 +111,7 @@ on openCard
          if (fld "audioList" is empty) then
             dialog_CustomMsg "You have not downloaded any audio"
          end if
+         
          break
          
       case "listen-delete-file"
@@ -124,6 +125,15 @@ on openCard
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         
+         if isMobile() then
+            hide widget "playAudio"
+            hide widget  "pauseAudio"
+         else
+            show widget "playAudio"
+            show widget  "pauseAudio"
+         end if
+         
          break
          
       case "listen-search"
@@ -186,7 +196,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight
+   local tRect, tControl, tRight,tAudioRect
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -253,6 +263,9 @@ command updateUI
          break
          
       case "listen-file"
+         
+        put the long id of graphic "audioRect" into tAudioRect
+         bottomCenterMe tAudioRect, 100
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
@@ -1075,24 +1088,21 @@ command __UXHandlers
 end __UXHandlers
 
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
-   local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   local tRect, pAudioRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   
+   put the rect of graphic "audioRect" into pAudioRect
    
    put pTitle into tLineValue
    
-   
-   
    if pTitle is empty then
-     put sSelectNum*2 into tLineNum
-         if (tLineNum mod 2) = 0 then
-            subtract 1 from tLineNum
-         end if
+      put sSelectNum*2 into tLineNum
+      if (tLineNum mod 2) = 0 then
+         subtract 1 from tLineNum
+      end if
       put line tLineNum of fld "theSelectNum" into tLineValue
    end if
    
-   
    put tLineValue into pDataA["title"]
-   
-   
    
    if sCardName = "listen-my-audio" then
       put sSelectNum into sSelectNum
@@ -1115,15 +1125,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    setJournalData pDataA
    
    if isMobile() then
-      if the platform is "android" then
-         # the player is pretty ugly and covers up 120 vertical px
-         # we need to try to get it to fit nicely at the bottom:
-         put 70,625,350,659 into tRect    #90,630,340,675
-      else
-         put empty into tRect
-      end if
-      --breakpoint
-      createMobileAudioPlayer pURL, "audioPlayer",tRect
+      createMobileAudioPlayer pURL, "audioPlayer",pAudioRect
    else
       set the filename of player "audioPlayer" to pURL
    end if
@@ -1211,3 +1213,7 @@ on closeStack
    portal_SetLastStack "Listen"
 end closeStack
 
+
+on pushNotificationReceived pMessage
+   
+end pushNotificationReceived

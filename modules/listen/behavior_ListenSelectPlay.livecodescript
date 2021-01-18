@@ -151,10 +151,7 @@ on mouseup
          else
             show grp "DownloadSelection"
          end if
-         --         exit to top
-         --         if tHideDownload = "on" then
-         --            hide grp "downloadSelection" 
-         --         end if
+         
          unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()

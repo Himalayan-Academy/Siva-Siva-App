@@ -49,42 +49,26 @@ local sPlayerId, sPlayerRect,sDuration
 -- set a busy indicator an remote file
 -- BR 2020-03-06 -deprecating the mobilebusy because user has no control
 
-command createMobileAudioPlayer pURL, pPlayerName, pRect
+command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    log "createMobilePlayer"
-   local tHeight,tPlayloc 
+   local tHeight,tPlayloc,
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
    end if
    mobileControlCreate "player", pPlayerName
    put the result into sPlayerId
    
-   if pRect is empty then
-      put the rect of player pPlayerName into pRect 
+   if pAudioRect is empty then
+      put the rect of player pPlayerName into pAudioRect
    end if
-   ntInfo "The Play Rect: " & pRect
-   ------------
-   # set the play control without a controller present 
+ 
+   put pAudioRect into sPlayerRect
    
-   -- adjust location for mobile:--### FIND OUT IF THIS IS NEEDED ON iOS
-   if the platform is "android" then
-      if the short name of this card is "surprise_audio" then
-         subtract 70 from item 2 of pRect
-      else
-         -- android player controls appear above the player; adjust
-         -- with controller it's about 4x rect of cd player so align the bottom edges:
-         # this is hard wired to the bottom of the card for now.
-         put item 4 of pRect - item 2 of pRect into tHeight
-         put CardHeight() - safeBottomMargin() - 70 into item 4 of pRect
-         put (item 4 of pRect) - tHeight - 50 into item 2 of pRect
-      end if
-   end if
-   
-   ----------------
-   
-   put pRect into sPlayerRect
    mobileControlSet pPlayerName, "visible", true 
    mobileControlSet pPlayerName, "showcontroller", true
-   mobileControlSet pPlayerName, "rect", pRect
+   mobileControlSet pPlayerName, "rect", sPlayerRect
+   mobileControlSet pPlayerName, "backgroundColor", "100,100,100"
+   
    mobileControlSet pPlayerName, "filename", pURL 
    log pURL
    if pURL begins with "https" then
@@ -93,9 +77,9 @@ command createMobileAudioPlayer pURL, pPlayerName, pRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
-
+   
    togglePause true,true
-
+   
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -226,19 +210,4 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
       mobileControlDelete l
    end repeat
 end deleteAllMobileControls
-
---command showBusyIndicator pBool, pMsg --jg: for both desktop and mobile
---   if isMobile() then
---      if pBool = true then
---         mobileBusyIndicatorStart "square", pMsg -- add loading indicator until duration is available
---      else
---         mobileBusyIndicatorStop
---      end if
---   else
---      if there is a btn "loading" then
---         set the vis of btn "loading" to pBool
---      end if
---   end if
---end showBusyIndicator
-
 
