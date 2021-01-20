@@ -5,7 +5,7 @@ Script "stack_stories_bkgnd_id_1301"
 # ID: bkgnd id 1301 of stack "stories"
 # Behavior: stack "behavior_SocialShare"
 
-# Shared group on card IDs: 1002, 1291
+# Shared group on card IDs: 1002, 1319, 1291
 */
 
 

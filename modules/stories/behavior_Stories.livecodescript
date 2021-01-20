@@ -53,6 +53,7 @@ on preOpenCard
       put the long id of widget "storyNavTree" into sStoryMenu
       put the long id of widget "storyNavTree" into sStoryMenuTree
       put the long id of fld "tips" into sTips
+      hide group "loadingGroup"
    else if tCard is "showStories" then
       put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
@@ -155,6 +156,16 @@ on mouseup
       case "back"
          dispatch "deleteMobileControl" to sTips with "tips"
          hide grp "tips"
+         break
+         --
+      case "deleteOn"
+         show fld "Display" visual effect "dissolve" very slow
+         wait 250 milliseconds
+         hide fld "Display" visual effect "dissolve" very slow
+         go to card "storyDeleteFile"
+         put empty into fld "currentFilePick"
+         dispatch "getSums" to grp "displayFilesSizes"
+         dispatch "displayTargetFiles" to grp "displayFilesSizes" with "stories"
          break
          --
       case "showStories"
@@ -274,8 +285,9 @@ on setupOrDownloadStory
 end setupOrDownloadStory
 
 on downloadAndShowStory
-   // show a "downloading..." message
+   show group "loadingGroup"
    dataServerStack sStoryTitle
+   hide group "loadingGroup"
    put true into sAllowLandscape
    visualArticle
 end downloadAndShowStory
@@ -600,6 +612,10 @@ on updateUI
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
+      put the long id of grp "displayDelete" into tControl
+      bottomRightMe tControl, 0, 50
+      set the bottom of tControl to the top of tFooter - 18
+      --
       set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
       set the uRect of sStoryMenu to the rect of sStoryMenu
       --
@@ -609,6 +625,21 @@ on updateUI
       set the rect of sStoryMenuTree to the rect of tMenuBkgnd
       --
       show grc "footerBackground" of grp "footer"
+      --
+      put the long id of grc "touchTrap" into tControl
+      set the rect of tControl to CardRect()
+      --
+      put the long id of grc "Loading" into tControl
+      set the loc of tControl to CardLoc()
+   end if
+   --
+   if tCard is "storyDeleteFile" then
+      put the long id of img "deleteCardImage" into tControl
+      setImageToFullCardLoc tControl, "Portrait"
+      --
+      put the long id of grc "fileListBkgnd" into tControl
+      set the rect tControl to (0, the top of grp "displayFilesSizes", cardWidth(), the top of tFooter - 18)
+      
    end if
    --
    if tCard is "showStories" then

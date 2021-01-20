@@ -1,8 +1,8 @@
-Script "stack_stories_group_id_1357"
+Script "stack_stories_group_id_1393"
 
 /*
 # Name: group "answerDlgGrp" of card "storyHome" of stack "stories"
-# ID: group id 1357 of card id 1002 of stack "stories"
+# ID: group id 1393 of card id 1002 of stack "stories"
 */
 
 
