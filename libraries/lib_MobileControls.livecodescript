@@ -61,7 +61,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    if pAudioRect is empty then
       put the rect of player pPlayerName into pAudioRect
    end if
- 
+   
    put pAudioRect into sPlayerRect
    
    mobileControlSet pPlayerName, "visible", true 
@@ -69,6 +69,11 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    mobileControlSet pPlayerName, "rect", sPlayerRect
    mobileControlSet pPlayerName, "backgroundColor", "100,100,100"
    
+   ------------------
+   
+   --mobileControlSet pPlayerName, "fullscreen", false
+   
+   ----------------------
    mobileControlSet pPlayerName, "filename", pURL 
    log pURL
    if pURL begins with "https" then
