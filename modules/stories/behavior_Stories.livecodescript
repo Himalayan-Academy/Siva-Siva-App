@@ -186,6 +186,7 @@ on mouseup
                show sCaptionBkg
             end if
             set the blendlevel of sStoryImage to 0
+            setImageState sStoryImage, 2
             if sLastScene = 1 then
                hide btn "goPrev"
             end if
@@ -209,6 +210,7 @@ on mouseup
                dispatch "createScroller" to sStoryText with "storyText"
             end if
             set the blendlevel of sStoryImage to 15
+            setImageState sStoryImage, 1
             unlock screen
          end if
          break
@@ -234,6 +236,10 @@ on hiliteChanged
    --
    set the hilitedElementIsFolded of sStoryMenuTree to \
          not the hilitedElementIsFolded of sStoryMenuTree -- doesn't effect a leaf
+   --
+   # Clear the highlight after it is processed
+   set the hilitedElement of sStoryMenuTree to empty
+   --
    unlock screen
    --
    if the number of items in tHilitedElement = 2 then
@@ -244,9 +250,6 @@ on hiliteChanged
       --
       visualArticle
    end if
-   --
-   # Clear the highlight after it is processed
-   set the hilitedElement of sStoryMenuTree to empty
 end hiliteChanged
 
 on formattedHeightChanged -- tree changed dimensions
@@ -289,7 +292,9 @@ on downloadAndShowStory
    dataServerStack sStoryTitle
    hide group "loadingGroup"
    put true into sAllowLandscape
-   visualArticle
+   if there is a file sStoryDataStack then
+      visualArticle
+   end if
 end downloadAndShowStory
 
 on deleteFinishedStory
@@ -384,8 +389,15 @@ command goNextScene
    if sLastScene is 1 then
       show sStoryText
       -- once the source stack is redone, will use htmltext on both sides of the set
-      set the htmltext of sStoryText to the text of \
-            field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      if the text of field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack \
+            contains "<p>" then
+         set the htmltext of sStoryText to the text of \
+               field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+      else
+         set the htmltext of sStoryText to the htmltext of \
+               field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
+         set the foregroundColor of line 1 to -1 of sStoryText to empty
+      end if
       show sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
@@ -426,8 +438,13 @@ command goNextScene
       set the itemdel to "/"
       set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
    end if
-   set the blendlevel of sStoryImage to 0
-   initializeCycleImage sStoryImage
+   if sLastScene is 1 then
+      set the blendlevel of sStoryImage to 15
+      initializeCycleImage sStoryImage, 1
+   else
+      set the blendlevel of sStoryImage to 0
+      initializeCycleImage sStoryImage
+   end if
    --
    unlock screen
 end goNextScene
@@ -478,7 +495,7 @@ command updateImageState
    if not (the visible of sStoryText) then
       cycleImageState sStoryImage
       put the result into tState
-      if tState is 1 then
+      if tState is 2 then
          if the text of sCaptionText is not empty then
             show sCaptionText
             show sCaptionBkg
@@ -698,6 +715,7 @@ on closeCard
       set the text of sStoryText to empty
       set the text of sCaptionText to empty
       set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
+      set the destroyStack of stack sStoryDataStack to true
       close stack sStoryDataStack
       hide sStoryText
       hide sStoryTextBkg

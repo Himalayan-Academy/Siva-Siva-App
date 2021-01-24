@@ -13,7 +13,7 @@ on preOpencard
 end preOpencard
 
 on makeStoryLocal pPassTitle
-    
+   
    put pPassTitle into sStoryTitle
    
    # just for development
@@ -26,8 +26,8 @@ on makeStoryLocal pPassTitle
    end repeat
    
    # based on "model_Stories"
-   put randomPhotos(sStoriesMetaArray["Stories"][sStoryTitle]["imageTags"]) into sImageList 
-   put FetchQuotesCollection(sStoriesMetaArray["Stories"][sStoryTitle]["quotesCollection"]) into sQuoteList
+   put randomPhotos(sStoriesMetaArray["Stories"]["Scriptural - Random"][sStoryTitle]["imageTags"]) into sImageList 
+   put FetchQuotesCollection(sStoriesMetaArray["Stories"]["Scriptural - Random"][sStoryTitle]["quotesCollection"]) into sQuoteList
    
    
    # based of "stories.json"
@@ -48,7 +48,7 @@ on makeStoryLocal pPassTitle
       clone this card
       set the cantDelete of this card to false
    end repeat
- 
+   
    
    
    set the itemDelimiter to "|"
@@ -56,7 +56,7 @@ on makeStoryLocal pPassTitle
       set the filename of img "slideImage" of card x to line x of sImageList
       set the text of fld "mainText" of card x to item x of of sQuoteList
    end repeat
-  
+   
    htmlTitleAttribution
    unlock Screen
    
