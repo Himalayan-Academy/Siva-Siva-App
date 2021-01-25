@@ -264,8 +264,8 @@ command updateUI
          
       case "listen-file"
          
-        put the long id of graphic "audioRect" into tAudioRect
-         bottomCenterMe tAudioRect, 100
+         put the long id of graphic "audioRect" into tAudioRect
+         bottomCenterMe tAudioRect, 60
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
@@ -283,8 +283,8 @@ command updateUI
          centerMe tNoInformation, -100
          
          put the long id of grp "downloadSelection" into tDownloadSelection
-         toprightMe tDownloadSelection, 0, 515
-         
+         topRightMe tDownloadSelection, 0, 155
+        
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 80
          
@@ -1214,6 +1214,3 @@ on closeStack
 end closeStack
 
 
-on pushNotificationReceived pMessage
-   
-end pushNotificationReceived
