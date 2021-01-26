@@ -125,15 +125,7 @@ on openCard
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
-         
-         if isMobile() then
-            hide widget "playAudio"
-            hide widget  "pauseAudio"
-         else
-            show widget "playAudio"
-            show widget  "pauseAudio"
-         end if
-         
+      
          break
          
       case "listen-search"
@@ -265,7 +257,7 @@ command updateUI
       case "listen-file"
          
          put the long id of graphic "audioRect" into tAudioRect
-         bottomCenterMe tAudioRect, 60
+         bottomCenterMe tAudioRect, 95
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
@@ -286,7 +278,7 @@ command updateUI
          topRightMe tDownloadSelection, 0, 155
         
          put the long id of grp "pause-play" into tPausePlay
-         bottomCenterMe tPausePlay, 80
+         bottomCenterMe tPausePlay, 60
          
          break
          

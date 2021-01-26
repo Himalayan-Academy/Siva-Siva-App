@@ -64,16 +64,18 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    put pAudioRect into sPlayerRect
    
-   mobileControlSet pPlayerName, "visible", true 
-   mobileControlSet pPlayerName, "showcontroller", true
+   mobileControlSet pPlayerName, "visible", false
    mobileControlSet pPlayerName, "rect", sPlayerRect
-   mobileControlSet pPlayerName, "backgroundColor", "100,100,100"
    
-   ------------------
+   --------------------------------
+   -- mobileControlSet pPlayerName, "backgroundColor", "100,100,100"
+   -- mobileControlSet pPlayerName, "showcontroller", true
    
-   --mobileControlSet pPlayerName, "fullscreen", false
    
-   ----------------------
+   
+   --------------------------------
+   
+   
    mobileControlSet pPlayerName, "filename", pURL 
    log pURL
    if pURL begins with "https" then
