@@ -790,7 +790,7 @@ command togglePause pVisible, pState
    #         false: shows that the triangle button, saying that the audio is pause
    #                  and that you can click to resume
    ntInfo "about to hide/show pause-play"
-   if not isMobile() then 
+   -- if not isMobile() then 
       if exists (group "pause-play") then
          set the vis grp "pause-play" to pVisible
          
@@ -801,7 +801,7 @@ command togglePause pVisible, pState
          # which means player is pause, giving user the re-start playback
          
       end if
-   end if
+ -- end if
 end togglePause
 
 

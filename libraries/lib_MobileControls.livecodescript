@@ -77,10 +77,13 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    
    mobileControlSet pPlayerName, "filename", pURL 
+   
    log pURL
+   
    if pURL begins with "https" then
       showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
    end if
+   
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
@@ -169,7 +172,7 @@ on playerFinished -- sent on mobile when audio is done
    put empty into sPlayerRect
    get runningAudioIndicatorVis("false")
    ------
-   togglePause false, true
+   -- togglePause false, true
    
 end playerFinished
 
