@@ -125,7 +125,10 @@ on openCard
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
-      
+         
+         // lib_MobileControls
+         setZeroDurationProgress
+         
          break
          
       case "listen-search"
@@ -153,8 +156,6 @@ on closeCard
       case "listen-file"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
-         hide group "pause-play"
-         showPlayer "false","audioPlayer"
          deleteAllMobileControls
          break 
       case "listen-browse"
@@ -257,7 +258,7 @@ command updateUI
       case "listen-file"
          
          put the long id of graphic "audioRect" into tAudioRect
-         bottomCenterMe tAudioRect, 95
+         topLeftMe tAudioRect, 20,-1111
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
@@ -1134,6 +1135,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       end if
       --set the currenttime player "audioPlayer" to sTimeStamp
       start player "audioPlayer"
+      send "updateTimer" to me in 100 milliseconds
       get runningAudioIndicatorVis("true")
       --   else
       --      setMobileAudioPlayer "audioPlayer", "play"
@@ -1143,44 +1145,52 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    --   if there is a control "DownloadSelection" then
    --      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
    --   end if
-   togglePause true, true
+   show widget "pauseAudio"
+   hide widget "playAudio"
 end startPlayer
 
 on stopPlayer
-   if not isMobile() then
-      stop player "audioPlayer"
-      set the filename of player "audioPlayer"  to empty
-   else 
-      setMobileAudioPlayer "audioPlayer", false
-      deleteMobileControl "audioPlayer"
-   end if
+  if not isMobile() then
+     stop player "audioPlayer"
+     set the filename of player "audioPlayer"  to empty
+  else 
+     setMobileAudioPlayer "audioPlayer", false
+     deleteMobileControl "audioPlayer"
+  end if
+  show widget "pauseAudio"
+  hide widget "playAudio"
+
 end stopPlayer
 
 
 on pausePlayer sTimeStamp
-   if not isMobile() then
-      set the paused of  player "audioPlayer" to "true"
-   else  
-      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
-   end if
-   togglePause true, false
+  if not isMobile() then
+     set the paused of  player "audioPlayer" to "true"
+  else  
+     setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
+  end if
+  hide widget "pauseAudio"
+  show widget "playAudio"
 end pausePlayer
 
 on playPausedAudio sTimeStamp
-   if not isMobile() then
-      set the currenttime  of player "audioPlayer" to sTimeStamp
-      start player "audioPlayer"
-   else
-      if sTimeStamp is empty then 
-         put 0 into sTimeStamp
-      end if
-      setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
-   end if
-   togglePause true, true
+  if not isMobile() then
+     set the currenttime  of player "audioPlayer" to sTimeStamp
+     start player "audioPlayer"
+     updateTimer
+  else
+     if sTimeStamp is empty then 
+        put 0 into sTimeStamp
+     end if
+     setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+     updateTimer
+  end if
+  show widget "pauseAudio"
+  hide widget "playAudio"
 end playPausedAudio
 
 on clearPlayer
-   showPlayer false, "audioPlayer" 
+  showPlayer false, "audioPlayer" 
 end clearPlayer
 
 command offLineGoMyAudio

@@ -66,16 +66,6 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    mobileControlSet pPlayerName, "visible", false
    mobileControlSet pPlayerName, "rect", sPlayerRect
-   
-   --------------------------------
-   -- mobileControlSet pPlayerName, "backgroundColor", "100,100,100"
-   -- mobileControlSet pPlayerName, "showcontroller", true
-   
-   
-   
-   --------------------------------
-   
-   
    mobileControlSet pPlayerName, "filename", pURL 
    
    log pURL
@@ -87,9 +77,6 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
-   
-   togglePause true,true
-   
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -107,8 +94,10 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       mobileControlDo sPlayerId, "play"
+      send "updateTimer" to me in 100 milliseconds
    end if
-   togglePause true,false
+   show widget "pauseAudio"
+   hide widget "playAudio"
 end playerPropertyAvailable
 
 function setDuration 
@@ -149,8 +138,8 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       
       get runningAudioIndicatorVis("true")
       # icon switch to "play"
-      togglePause true, false
-      
+      show widget "pauseAudio"
+      hide widget "playAudio"
       
    end if
    
@@ -161,10 +150,25 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       end if
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
       mobileControlDo pPlayerName, "play"
+      
+      
+      // Reset duration marker
+      set the width of graphic "durationProgress" to 1
+      set the left of graphic "durationProgress" to 25
+      set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+      send "updateTimer" to me in 100 milliseconds
+      
       get runningAudioIndicatorVis("true")
    end if
    
 end setMobileAudioPlayer
+
+on audioSeekBack
+   // Seek to the start of the track
+   --put the hilitedLine of field "files" into tCurrentIndex
+   --put line tCurrentIndex of field "files" into tSoundFile
+   -- audioLoadFile tSoundFile
+end audioSeekBack
 
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
@@ -178,19 +182,143 @@ end playerFinished
 
 -------------------------------
 
-command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
-   -- if audio is playing, player is shown on audio card, hidden elsewhere;
-   -- pBool = boolean
-   if isMobile() then
-      hide player pPlayerName -- the LC one; never show it
-      mobileControlSet pPlayerName, "showController", pBool
-      mobileControlSet pPlayerName, "visible", pBool
-   else
-      set the vis of player pPlayerName to pBool
-   end if
-end showPlayer
+--command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
+--   -- if audio is playing, player is shown on audio card, hidden elsewhere;
+--   -- pBool = boolean
+--   if isMobile() then
+--      --hide player pPlayerName -- the LC one; never show it
+--      mobileControlSet pPlayerName, "showController", pBool
+--      mobileControlSet pPlayerName, "visible", pBool
+--   else
+--      set the vis of player pPlayerName to pBool
+--   end if
+--end showPlayer
 
 ######### Mobile Utilities ############
+# we shall call of these handlers as we click on mouseup
+# 
+
+
+
+
+
+command setZeroDurationProgress
+   // mobile durationProgress
+   set the width of graphic "durationProgress" to 1
+   set the left of graphic "durationProgress" to 25
+   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+   put "0.00" into field "currentTime"
+   put "0.00" into field "endTime"
+   
+end setZeroDurationProgress
+   
+command updateTimer --pState
+   local tCurrentTime, tDuration,  tWidth
+   
+   // Update the time indicator
+   --if (pState is"play") is true then
+      
+      lock screen
+      if isMobile() then
+         put mobileControlGet("audioPlayer","currentTime") into tCurrentTime
+         put mobileControlGet("audioPlayer","playableDuration") into tDuration
+      else
+         put the currentTime of player "audioPlayer" into tCurrentTime
+         put the duration of player "audioPlayer" into tDuration
+      end if
+      if tCurrentTime > 0 and tDuration > 0 then
+         // Update time fields
+         put round(tCurrentTime/1000,2) into fld "currentTime"
+         put round(tDuration/1000,2) into fld "endTime"
+         
+         // Update the time indicator
+         put round((tCurrentTime/tDuration) * 350) into tWidth
+         set the width of graphic "durationProgress" to tWidth
+         set the left of graphic "durationProgress" to 25
+         set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+      end if
+      
+      unlock screen
+      send "updateTimer" to me in 100 milliseconds
+   --end if
+end updateTimer
+
+
+--command audioLoadFile pSoundFile
+--   // Load sound file
+--   mobileControlSet "audioPlayer","filename",(specialFolderPath("resources") & "/audio/" & pSoundFile)
+
+--   // Reset duration marker
+--   set the width of graphic "durationProgress" to 1
+--   set the left of graphic "durationProgress" to 25
+--   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+
+--   // Start player
+--   set the iconPresetName of widget "PlayPause" to "pause"
+--   put true into sPlaying
+--   mobileControlDo "audioPlayer","play"  
+--   send "updateTimer" to me in 20 milliseconds
+--end audioLoadFile 
+
+
+--command audioPlayPause
+--   local tIcon
+
+--   put the iconPresetName of widget "PlayPause" into tIcon
+
+--   if tIcon is "play" then
+--      // Update the icon
+--      set the iconPresetName of widget "PlayPause" to "pause"
+
+--      // Start the player
+--      put true into sPlaying
+--      mobileControlDo "audioPlayer","play"   
+--      updateTimer   
+--   else if tIcon is "pause" then
+--      // Update the icon
+--      set the iconPresetName of widget "PlayPause" to "play"
+
+--      // Pause the player
+--      put false into sPlaying
+--      mobileControlDo "audioPlayer","pause"
+--   end if
+--end audioPlayPause
+
+--on audioSeekForward
+--   // Go to next track
+--   put the hilitedLine of field "files" into tCurrentIndex
+--   if tCurrentIndex = the number of lines in field "files" then
+--      // Last track
+--      // do nothing
+--   else
+--      // Select and load next file
+--      add 1 to tCurrentIndex
+--      set the hilitedLine of field "files" to tCurrentIndex
+--      put line tCurrentIndex of field "files" into tSoundFile
+
+--      audioLoadFile tSoundFile
+--   end if
+--end audioSeekForward
+
+--on playerFinished
+--   put false into sPlaying
+
+--   // Play next track
+--   put the hilitedLine of field "files" into tCurrentIndex
+--   if tCurrentIndex = the number of lines in field "files" then
+--      // Last track
+--      // do nothing
+--   else
+--      // Select and load next file
+--      add 1 to tCurrentIndex
+--      set the hilitedLine of field "files" to tCurrentIndex
+--      put line tCurrentIndex of field "files" into tSoundFile
+
+--      audioLoadFile tSoundFile
+--   end if
+--end playerFinished
+
+
 
 on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
@@ -202,7 +330,6 @@ on deleteMobileControl pName -- jg: deletes an existing mobile control
    
    put "" into sDuration
 end deleteMobileControl
-
 
 on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
    local tList
@@ -221,3 +348,36 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    end repeat
 end deleteAllMobileControls
 
+
+// Are set
+
+--on preOpenCard
+--   local tAudioFolder, tFileList
+
+--   // Load sound files
+--   put specialFolderPath("resources") & "/audio" into tAudioFolder
+--   put files(tAudioFolder) into tFileList
+--   put tFileList into field "files"
+
+--   // Load first file
+--   set the hilitedLine of field "files" to 1
+--   put line 1 of tFileList into tSoundFile
+
+--   // Reset duration marker
+--   set the width of graphic "durationProgress" to 1
+--   set the left of graphic "durationProgress" to 25
+--   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+--   put "0.00" into field "currentTime"
+--   put "0.00" into field "endTime"
+
+--   if the environment is "mobile" then
+--      // Create player
+--      mobileControlCreate "player","audioPlayer"
+--      mobileControlSet "audioPlayer","visible",false
+--      mobileControlSet "audioPlayer","rect",the rect of graphic "playerArea"
+
+--      // Load sound file
+--      mobileControlSet "audioPlayer","filename",(specialFolderPath("resources") & "/audio/" & tSoundFile)
+--      set the iconPresetName of widget "PlayPause" to "play"
+--   end if
+--end preOpenCard

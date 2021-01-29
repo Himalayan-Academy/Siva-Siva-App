@@ -20,6 +20,7 @@
 global sConfigA,sCardName
 local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
 local sTimeStamp, sSelectionsA
+local sDownloadedAudioA
 
 
 -----------------------------------------------------------------------
@@ -78,8 +79,14 @@ on mouseup
          if isMobile() then
             deleteMobileControl "audioPlayer" # in case one is open already and playing
          end if  
-         togglePause false, true
-         break
+         
+         --togglePause true, true
+         
+         show  widget "pauseAudio" 
+         # which means he is listen because it is already running
+         hide widget "playAudio" 
+         # which means he is NOT playing. He is on PAUSE
+         
       case "AudioList"
          local tTitle,localURL
          
@@ -158,6 +165,8 @@ on mouseup
          # it have pass sTimeStamp before you touch the player
          break
          
+         // we go to lib_MobileControls
+         
       case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
          if not isMobile() then\
                put  the currentTime of player "audioPlayer" into sTimeStamp
@@ -166,6 +175,7 @@ on mouseup
          end if
          
          pausePlayer sTimeStamp
+         updateTimer
          break
          
       case "playAudio" # audio it stopped; Icon is a right facing triangle
@@ -175,6 +185,7 @@ on mouseup
             set  the currentTime of player "audioPlayer" to sTimeStamp
          end if
          playPausedAudio sTimeStamp
+         updateTimer
          break
          
       case "DownloadSelection"  
