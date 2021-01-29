@@ -164,8 +164,8 @@ on mouseup
          hide fld "Display" visual effect "dissolve" very slow
          go to card "storyDeleteFile"
          put empty into fld "currentFilePick"
-         dispatch "getSums" to grp "displayFilesSizes"
-         dispatch "displayTargetFiles" to grp "displayFilesSizes" with "stories"
+         dispatch "getSums" to grp "displayFilesSizes" with "stories"
+         dispatch "displayTargetFolders" to grp "displayFilesSizes" with "stories"
          break
          --
       case "showStories"
@@ -596,7 +596,7 @@ end resizeStack
 
 
 on updateUI
-   local tCard, tFooter, tControl
+   local tCard, tFooter, tControl, tRect
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
    local tStoryTextBkg, tGoNext, tGoPrev
    --
@@ -656,7 +656,11 @@ on updateUI
       --
       put the long id of grc "fileListBkgnd" into tControl
       set the rect tControl to (0, the top of grp "displayFilesSizes", cardWidth(), the top of tFooter - 18)
-      
+      --
+      put the long id of fld "currentFilePick" into tControl
+      put the rect of tControl into tRect
+      put CardWidth() into item 3 of tRect
+      set the rect of tControl to tRect
    end if
    --
    if tCard is "showStories" then
