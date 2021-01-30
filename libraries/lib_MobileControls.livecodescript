@@ -205,7 +205,7 @@ end playerFinished
 command setZeroDurationProgress
    // mobile durationProgress
    set the width of graphic "durationProgress" to 1
-   set the left of graphic "durationProgress" to 25
+   set the left of graphic "durationProgress" to 31
    set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
    put "0.00" into field "currentTime"
    put "0.00" into field "endTime"

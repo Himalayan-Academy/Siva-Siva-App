@@ -28,7 +28,7 @@ local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloaded
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
-local sSelectionsA,sLastTarget,sSelectNum
+local sSelectionsA,sLastTarget,sSelectNum, pDataA
 
 
 on preOpenStack
@@ -1023,25 +1023,23 @@ command markCachedItems pKeys
    end repeat
 end markCachedItems
 
-command addJournalEntry-- save a bookmark to db
-   local pDataA, tTitle, tURL, tNoSavingCards,tMsg, tCard
+command addJournalEntry sTimeStamp-- save a bookmark to database
+   local  tTitle, tURL, tNoSavingCards,tMsg, tCard
+   
    put the short name of this card into tCard
-   put "listen-collection,listen-file,listen-search " into tNoSavingCards
+   
+   put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
    if the short name of this card is among the items of tNoSavingCards then
-      put "Nothing to Save to Journal Here" into tMsg
+      put "Nothing to save to Journal. Go an audio file." into tMsg
       exit addJournalEntry
    end if
    
-   
-   if sSelectedItemA is empty then
-      put "You Must Select a Title" into tMsg
-      dialog_CustomMsg tMsg
-      exit addJournalEntry
-   end if
    
    put getJournalData() into pDataA   
+   
    put pDataA["title"] into tTitle
+   
    
    Journal_RecordEntry "listen",tTitle,pDataA 
    
@@ -1081,7 +1079,7 @@ command __UXHandlers
 end __UXHandlers
 
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
-   local tRect, pAudioRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   local tRect, pAudioRect, localURL,  pItemID,tLineNum, tLineValue
    
    put the rect of graphic "audioRect" into pAudioRect
    
@@ -1115,6 +1113,9 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    put "listen-file" into pDataA["card"]  
    put pURL into pDataA["url"]
    put pItemID into pDataA["item_id"]
+   
+   # we used a getter/setter in lib_SivaSiva
+   # because the timing is different than addJournalEntry          
    setJournalData pDataA
    
    if isMobile() then
@@ -1164,13 +1165,16 @@ end stopPlayer
 
 
 on pausePlayer sTimeStamp
-  if not isMobile() then
-     set the paused of  player "audioPlayer" to "true"
-  else  
-     setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
-  end if
-  hide widget "pauseAudio"
-  show widget "playAudio"
+   if not isMobile() then
+      set the paused of  player "audioPlayer" to "true"
+   else  
+      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
+   end if
+   # we have to record the timestamp of a journal
+   put sTimeStamp into pDataA["timeStamp"]
+   setJournalData pDataA
+   hide widget "pauseAudio"
+   show widget "playAudio"
 end pausePlayer
 
 on playPausedAudio sTimeStamp
