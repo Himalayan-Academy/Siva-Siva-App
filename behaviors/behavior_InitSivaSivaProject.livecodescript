@@ -157,7 +157,10 @@ end init_LoadStackFilesFromConfiguration
 command init_Fonts
    start using font file (path_Assets() & "fonts/NotoSans-Regular.ttf")
    start using font file (path_Assets() & "fonts/NotoSans-Medium.ttf")
-   start using font file (path_Assets() & "fonts/NotoSans-bold.ttf")
+   start using font file (path_Assets() & "fonts/NotoSans-Bold.ttf")
+   start using font file (path_Assets() & "fonts/NotoSans-BoldItalic.ttf")
+   start using font file (path_Assets() & "fonts/NotoSans-Black.ttf")
+   start using font file (path_Assets() & "fonts/NotoSans-BlackItalic.ttf")
 end init_Fonts
 
 
