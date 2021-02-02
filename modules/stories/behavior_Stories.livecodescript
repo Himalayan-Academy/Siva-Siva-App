@@ -25,10 +25,11 @@ local sStoryDataStack
 local sTarget, sTargetOwner
 
 on preOpenStack
-   put false into sAllowLandscape
-   setupOrientations sAllowLandscape
+   landscapeOrientation "off"
    put loadStoriesMetadata() into sStoriesMetaArray
    set the filename of img "menuImage" of cd "storyHome" to \
+         (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+   set the filename of img "deleteCardImage" of cd "storyDeleteFile" to \
          (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    go cd "storyHome"
 end preOpenStack
@@ -116,10 +117,10 @@ end opencard
 
 command showStoryMenu
    dispatch "deleteMobileControl" to sTips with "tips"
-   dispatch "createScroller" to sStoryMenuTree with "storyMenu"
+   dispatch "createScroller" to sStoryMenuTree with "storyNavTree"
    set the filename of img "menuImage" of cd "storyHome" to \
          (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-   hide grp "tips" of cd "storyHome"
+   hide grp "tipsGroup" of cd "storyHome"
    show grp "storyMenu" of cd "storyHome"
    display_SetStatusBarVis true
 end showStoryMenu 
@@ -145,17 +146,17 @@ on mouseup
          visualArticle
          break
          --
-      case "tips"
+      case "showTips"
          set the filename of img "tipsImage" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
          put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
          set the htmltext of fld "tips" to tTips 
          dispatch "createscroller" to sTips with "tips"
-         show grp "tips"
+         show grp "tipsGroup"
          break
          --
       case "back"
          dispatch "deleteMobileControl" to sTips with "tips"
-         hide grp "tips"
+         hide grp "tipsGroup"
          break
          --
       case "deleteOn"
@@ -254,7 +255,7 @@ end hiliteChanged
 
 on formattedHeightChanged -- tree changed dimensions
    if the target is sStoryMenuTree then
-      dispatch "updateScroller" to sStoryMenuTree with "storyMenu"
+      dispatch "updateScroller" to sStoryMenuTree with "storyNavTree"
    end if
 end formattedHeightChanged
 
@@ -344,7 +345,11 @@ command visualArticle
    --
    go card "showStories" of stack "stories"
    goNextScene
-   setupOrientations sAllowLandscape
+   if sStoryMetaArray["orientation"] is "landscape" then
+      landscapeOrientation "forced"
+   else
+      landscapeOrientation "allowed"
+   end if
 end visualArticle
 
 
@@ -521,6 +526,33 @@ command updateImageState
 end updateImageState
 
 
+command landscapeOrientation pLandscapeMode
+   # "off"     disables landscape
+   # "allowed" enables rotation to landscape
+   # "forced"  initially locks to landscape, unlocks in 5 seconds
+   local tOrientations
+   --
+   if pLandscapeMode is "off" then
+      put false into sAllowLandscape
+   end if
+   put "portrait,portrait upside down," into tOrientations
+   if sAllowLandscape then
+      switch pLandscapeMode
+         case "forced"
+            put empty into tOrientations
+            send "landscapeOrientation allowed" to me in 5 seconds
+            -- fall through
+         case "allowed"
+            put "landscape left,landscape right," after tOrientations
+            break
+      end switch
+   end if
+   delete the last char of tOrientations
+   if isMobile() then
+      mobileSetAllowedOrientations tOrientations
+   end if
+end landscapeOrientation
+
 command setupOrientations pAllowLandscape
    local tOrientations
    --
@@ -586,7 +618,7 @@ end journalResume
 
 on resizeStack
    -- for development, use screen rotation to quickly get to the end of the story
-   add 50 to sLastScene
+   --add 50 to sLastScene
    --
    lock screen
    setCardCoords
@@ -623,7 +655,7 @@ on updateUI
       bottomCenterMe tGoBack,65
       set the bottom of tGoBack to the top of tFooter - 15
       --
-      put the long id of btn "tips" into tGoTips
+      put the long id of btn "showTips" into tGoTips
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
@@ -669,12 +701,13 @@ on updateUI
       if currentlyLandscape() then
          bottomLeftMe tGoPrev
          bottomRightMe tGoNext
+         set the rect of sStoryText to (the right of tGoPrev + 10, 10, the left of tGoNext - 10, CardHeight() - 10)
       else
          topLeftMe tGoPrev
          topRightMe tGoNext
+         set the rect of sStoryText to (10, the bottom of tGoNext + 12, cardWidth() - 10, the top of tFooter - 12)
       end if
       --
-      set the rect of sStoryText to (10, the bottom of tGoNext + 12, cardWidth() - 10, the top of tFooter - 12)
       set the uRect of sStoryText to the rect of sStoryText
       if the text of sStoryText is not empty then
          optimizeTextHeight sStoryText
@@ -712,9 +745,9 @@ on closeCard
    if tCard is "storyHome" then
       set the filename of img "menuImage" of cd "storyHome" to \
             (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-      hide grp "tips" of cd "storyHome"
+      hide grp "tipsGroup" of cd "storyHome"
       show grp "storyMenu" of cd "storyHome"
-      deleteMobileControl "storyMenu"
+      deleteMobileControl "storyNavTree"
    else if tCard is "showStories" then
       set the text of sStoryText to empty
       set the text of sCaptionText to empty
@@ -726,8 +759,7 @@ on closeCard
       hide sCaptionText
       hide sCaptionBkg
       show grc "footerBackground" of grp "footer"
-      put false into sAllowLandscape
-      setupOrientations sAllowLandscape
+      landscapeOrientation "off"
    end if
 end closecard
 

@@ -348,6 +348,9 @@ command init_DocumentFiles
    put url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
    put JSONToArray(tLocalJson) into tLocalArray
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
+   if tLocalSeconds is not a number then
+      put 0 into tLocalSeconds
+   end if
    
    --breakpoint
    try

@@ -1,52 +1,77 @@
 {
-"lastUpdate":{
-   "theTime":"1500000000"
-   },
-  "Stories": {
-   "My Trek to Siva": {
-      "where":"server",
-      "Attribution": "Aravind Gopal" , 
-     "imageDate" : "35mb"
-    }, 
-    "Vedas": {
-     "where":"local",
-     "slidesLimit": "images", 
-      "textSource": "local-dbase-quotes", 
-      "quotesCollection": "Vedas", 
-      "Attribution": "Ancient Rishis", 
-      "imageTags": "Deities"
-    }, 
-    "Tirukural": {
-     "where":"local",
-     "slidesLimit": "images", 
-      "textSource": "local-dbase-quotes", 
-      "quotesCollection": "Tirukural", 
-      "attribution": "Saint Tiruvalluvar", 
-      "imageTags": "Saints"
-    }, 
-    "Atti Chudi": { 
-     "where":"local",
-     "slidesLimit": "quotes", 
-      "textSource": "local-dbase-quotes", 
-      "quotesCollection": "Atti Chudi", 
-      "attribution": "Saint Auvaiyar", 
-      "imageTags": "Life"
-    }, 
-    "Songs of Tayumanavar": {
-      "where":"local",
-      "slidesLimit": "images", 
-      "textSource": "local-dbase-quotes", 
-      "quotesCollection": "Tayumanavar", 
-      "attribution": "Saint Tayumanavar", 
-      "imageTags": "Soul"
-    }, 
-    "Words of Our Master": {
-      "where":"local",
-      "slidesLimit": "images", 
-      "textSource": "local-dbase-quotes", 
-      "quotesCollection": "Words of Our Master", 
-      "attribution": "Siva Yogaswami", 
-      "imageTags": "Deities"
-    }
-  }
+	"lastUpdate": {
+		"theTime": "1610559000"
+	},
+	"Stories": {
+		"Scriptural - Random": {
+			"Vedas": {
+				"where": "local",
+				"slidesLimit": "images",
+				"textSource": "local-dbase-quotes",
+				"quotesCollection": "Vedas",
+				"Attribution": "Ancient Rishis",
+				"imageTags": "Deities",
+				"orientation": "portrait"
+			},
+			"Tirukural": {
+				"where": "local",
+				"slidesLimit": "images",
+				"textSource": "local-dbase-quotes",
+				"quotesCollection": "Tirukural",
+				"attribution": "Saint Tiruvalluvar",
+				"imageTags": "Saints",
+				"orientation": "portrait"
+			},
+			"Atti Chudi": {
+				"where": "local",
+				"slidesLimit": "quotes",
+				"textSource": "local-dbase-quotes",
+				"quotesCollection": "Atti Chudi",
+				"attribution": "Saint Auvaiyar",
+				"imageTags": "Life",
+				"orientation": "portrait"
+			},
+			"Songs of Tayumanavar": {
+				"where": "local",
+				"slidesLimit": "images",
+				"textSource": "local-dbase-quotes",
+				"quotesCollection": "Tayumanavar",
+				"attribution": "Saint Tayumanavar",
+				"imageTags": "Soul",
+				"orientation": "portrait"
+			},
+			"Words of Our Master": {
+				"where": "local",
+				"slidesLimit": "images",
+				"textSource": "local-dbase-quotes",
+				"quotesCollection": "Words of Our Master",
+				"attribution": "Siva Yogaswami",
+				"imageTags": "Deities",
+				"orientation": "portrait"
+			}
+		},
+		"Stories": {
+			"My Trek to Siva": {
+				"where": "server",
+				"Attribution": "Aravind Gopal",
+				"imageSize": "35MB",
+				"orientation": "landscape"
+			}
+		},
+		"Arts": {
+	        	"Gurudeva Visions - Iraivan": {
+				"where": "server",
+				"slidesLimit": "images",
+				"imageSize": "3.6MB",
+				"orientation": "landscape"
+				
+			},
+			"Saivite Hindu Religion Book One": {
+				"where": "server",
+				"slidesLimit": "images",
+				"imageSize": "10MB",
+				"orientation": "portrait"
+			}
+		}
+	}
 }
