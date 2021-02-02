@@ -185,11 +185,12 @@ end resizeStack
 command updateUI
    
    local tHeader, tFooter, tAudioGlobalControl
-   local tSearchFilter, tPausePlay
+   local tSearchFilter, tPausePlay, tAudioPlayer
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight,tAudioRect
+   
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -199,8 +200,8 @@ command updateUI
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
    topCenterMe tTitleLabel, 5
-   topLeftMe tCollectionsLabel, 10, 40
-   topRightMe tMyAudioLabel, 10, 40
+   topLeftMe tCollectionsLabel, 10, 30
+   topRightMe tMyAudioLabel, 10, 30
    
    switch (the short name of this card)
       
@@ -257,6 +258,9 @@ command updateUI
          
       case "listen-file"
          
+         put the long id of player "audioPlayer" into tAudioPlayer
+         topLeftMe tAudioPlayer, 20,-1111
+         
          put the long id of graphic "audioRect" into tAudioRect
          topLeftMe tAudioRect, 20,-1111
          
@@ -277,7 +281,7 @@ command updateUI
          
          put the long id of grp "downloadSelection" into tDownloadSelection
          topRightMe tDownloadSelection, 0, 155
-        
+         
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
          
@@ -988,7 +992,7 @@ command downloadAffirmed
    else
       put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
-  show grp "downloadControls"
+   show grp "downloadControls"
    wait 100 milliseconds with messages
    dispatch "downloadURL"  to group "downloadControls" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
@@ -1023,7 +1027,7 @@ command markCachedItems pKeys
    end repeat
 end markCachedItems
 
-command addJournalEntry sTimeStamp-- save a bookmark to database
+command addJournalEntry -- save a bookmark to database
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard
    
    put the short name of this card into tCard
@@ -1037,9 +1041,9 @@ command addJournalEntry sTimeStamp-- save a bookmark to database
    
    
    put getJournalData() into pDataA   
-   
+   --put sTimeStamp into pDataA["timeStamp"] 
    put pDataA["title"] into tTitle
-   
+   put ", " & pDataA["timeStamp"] after tTitle
    
    Journal_RecordEntry "listen",tTitle,pDataA 
    
@@ -1078,6 +1082,8 @@ end clearAudioListColor
 command __UXHandlers
 end __UXHandlers
 
+local sPlaying
+
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
    local tRect, pAudioRect, localURL,  pItemID,tLineNum, tLineValue
    
@@ -1094,6 +1100,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    end if
    
    put tLineValue into pDataA["title"]
+   
    
    if sCardName = "listen-my-audio" then
       put sSelectNum into sSelectNum
@@ -1125,72 +1132,75 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    end if
    
    
-   # 2019-100-23 BR we are not showing controller  because of iOS 13.0.3
+   # 2019-10-23 BR we are not showing controller  because of iOS 13.0.3
    # instead we are using the icons of grp "pause-pay"
-   
-   --showPlayer "true", "audioPlayer"
    
    if not isMobile() then
       if sTimeStamp is empty then
          put 0 into sTimeStamp
       end if
-      --set the currenttime player "audioPlayer" to sTimeStamp
+      
       start player "audioPlayer"
-      send "updateTimer" to me in 100 milliseconds
+      set the currenttime player "audioPlayer" to sTimeStamp
+      put true into sPlaying
       get runningAudioIndicatorVis("true")
-      --   else
-      --      setMobileAudioPlayer "audioPlayer", "play"
    end if
-   put  pTitle into fld "currentTitleLabel"
    
-   --   if there is a control "DownloadSelection" then
-   --      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
-   --   end if
+   put  pTitle into fld "currentTitleLabel"
+   send "updateTimer sPlaying" -- in 100 milliseconds
    show widget "pauseAudio"
    hide widget "playAudio"
 end startPlayer
 
 on stopPlayer
-  if not isMobile() then
-     stop player "audioPlayer"
-     set the filename of player "audioPlayer"  to empty
-  else 
-     setMobileAudioPlayer "audioPlayer", false
-     deleteMobileControl "audioPlayer"
-  end if
-  show widget "pauseAudio"
-  hide widget "playAudio"
-
+   if not isMobile() then
+      stop player "audioPlayer"
+      set the filename of player "audioPlayer"  to empty
+      put false into sPlaying
+     
+   else 
+      setMobileAudioPlayer "audioPlayer", false
+      deleteMobileControl "audioPlayer"
+   end if
+   show widget "pauseAudio"
+   hide widget "playAudio"
+   updateTimer sPlaying
+   
 end stopPlayer
 
 
 on pausePlayer sTimeStamp
    if not isMobile() then
       set the paused of  player "audioPlayer" to "true"
+      put false into sPlaying
    else  
       setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
    end if
+   
    # we have to record the timestamp of a journal
    put sTimeStamp into pDataA["timeStamp"]
    setJournalData pDataA
+   
    hide widget "pauseAudio"
    show widget "playAudio"
 end pausePlayer
 
 on playPausedAudio sTimeStamp
-  if not isMobile() then
-     set the currenttime  of player "audioPlayer" to sTimeStamp
-     start player "audioPlayer"
-     updateTimer
-  else
-     if sTimeStamp is empty then 
-        put 0 into sTimeStamp
-     end if
-     setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
-     updateTimer
-  end if
-  show widget "pauseAudio"
-  hide widget "playAudio"
+   
+   put sTimeStamp into pDataA["timeStamp"]
+   setJournalData pDataA
+   
+   if not isMobile() then
+      set the currenttime  of player "audioPlayer" to sTimeStamp
+      start player "audioPlayer"
+      put true into sPlaying
+   else 
+      setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+      send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
+   end if
+   --   put sTimeStamp into pDataA["timeStamp"]
+   show widget "pauseAudio"
+   hide widget "playAudio"
 end playPausedAudio
 
 on clearPlayer

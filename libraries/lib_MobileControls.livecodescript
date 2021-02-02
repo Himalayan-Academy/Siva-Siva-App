@@ -49,6 +49,8 @@ local sPlayerId, sPlayerRect,sDuration
 -- set a busy indicator an remote file
 -- BR 2020-03-06 -deprecating the mobilebusy because user has no control
 
+local sPlaying
+
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    log "createMobilePlayer"
    local tHeight,tPlayloc,
@@ -93,11 +95,13 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    if theProperty is "duration" then
       log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
+      
+      put true into sPlaying
       mobileControlDo sPlayerId, "play"
-      send "updateTimer" to me in 100 milliseconds
+      send "updateTimer" to me in 20 milliseconds
    end if
-   show widget "pauseAudio"
-   hide widget "playAudio"
+   show widget "pauseAudio" of stack "listen"
+   hide widget "playAudio" of stack "listen"
 end playerPropertyAvailable
 
 function setDuration 
@@ -121,11 +125,17 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
+      put false into sPlaying
       put empty into sPlayerRect
       if mobileIdleTimerLocked() is true then 
          mobileUnlockIdleTimer
       end if
       get runningAudioIndicatorVis("false")
+      
+      put false into sPlaying
+      updateTimer sPlaying
+      hide widget "pauseAudio" of stack "listen"
+      show widget "playAudio" of stack "listen"
       # above is needed to ensure we hide the icon that shows audio is playing stop button/icon
       # we set a local in the backscript lib_UIHandlers that we query when going 
       # to any context where this icon should appear
@@ -135,11 +145,16 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       # user hit pause
       put mobileControlGet ("currentTime")  into pTimeStamp
       mobileControlDo pPlayerName, "pause"
-      
+      put false into sPlaying
       get runningAudioIndicatorVis("true")
+      
+      put false into sPlaying
+      updateTimer sPlaying
+      
+      
       # icon switch to "play"
-      show widget "pauseAudio"
-      hide widget "playAudio"
+      show widget "pauseAudio" of stack "listen"
+           hide widget "playAudio" of stack "listen"
       
    end if
    
@@ -151,13 +166,16 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
       mobileControlDo pPlayerName, "play"
       
-      
+      put true into sPlaying
       // Reset duration marker
       set the width of graphic "durationProgress" to 1
       set the left of graphic "durationProgress" to 25
       set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-      send "updateTimer" to me in 100 milliseconds
       
+      put true into sPlaying
+      send "updateTimer sPlaying" to me in 20 milliseconds
+      show widget "pauseAudio" of stack "listen"
+      hide widget "playAudio" of stack "listen"
       get runningAudioIndicatorVis("true")
    end if
    
@@ -173,10 +191,14 @@ end audioSeekBack
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
    mobileControlDelete sPlayerId
+   put false into sPlaying
    put empty into sPlayerRect
+   
+   put false into sPlaying
+   show widget "pauseAudio" of stack "listen"
+   hide widget "playAudio" of stack "listen"
+   
    get runningAudioIndicatorVis("false")
-   ------
-   -- togglePause false, true
    
 end playerFinished
 
@@ -212,35 +234,35 @@ command setZeroDurationProgress
    
 end setZeroDurationProgress
    
-command updateTimer --pState
+command updateTimer sPlaying --pState
    local tCurrentTime, tDuration,  tWidth
    
    // Update the time indicator
-   --if (pState is"play") is true then
+   if sPlaying is true then
       
-      lock screen
+       lock screen
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into tCurrentTime
          put mobileControlGet("audioPlayer","playableDuration") into tDuration
       else
-         put the currentTime of player "audioPlayer" into tCurrentTime
-         put the duration of player "audioPlayer" into tDuration
+         put the currentTime of player "audioPlayer" of stack "listen" into tCurrentTime
+         put the duration of player "audioPlayer" of stack "listen" into tDuration
       end if
       if tCurrentTime > 0 and tDuration > 0 then
          // Update time fields
-         put round(tCurrentTime/1000,2) into fld "currentTime"
-         put round(tDuration/1000,2) into fld "endTime"
+         put round(tCurrentTime/1000,2) into fld "currentTime" of stack "listen"
+         put round(tDuration/1000,2) into fld "endTime" of stack "listen"
          
          // Update the time indicator
          put round((tCurrentTime/tDuration) * 350) into tWidth
-         set the width of graphic "durationProgress" to tWidth
-         set the left of graphic "durationProgress" to 25
-         set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+         set the width of graphic "durationProgress" of stack "listen" to tWidth
+         set the left of graphic "durationProgress" of stack "listen" to 25
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
       end if
       
       unlock screen
-      send "updateTimer" to me in 100 milliseconds
-   --end if
+      send "updateTimer" to me in 20 milliseconds
+   end if
 end updateTimer
 
 
@@ -381,3 +403,5 @@ end deleteAllMobileControls
 --      set the iconPresetName of widget "PlayPause" to "play"
 --   end if
 --end preOpenCard
+
+

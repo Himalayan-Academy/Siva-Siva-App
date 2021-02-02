@@ -80,8 +80,6 @@ on mouseup
             deleteMobileControl "audioPlayer" # in case one is open already and playing
          end if  
          
-         --togglePause true, true
-         
          show  widget "pauseAudio" 
          # which means he is listen because it is already running
          hide widget "playAudio" 
@@ -175,7 +173,6 @@ on mouseup
          end if
          
          pausePlayer sTimeStamp
-         updateTimer
          break
          
       case "playAudio" # audio it stopped; Icon is a right facing triangle
@@ -185,7 +182,6 @@ on mouseup
             set  the currentTime of player "audioPlayer" to sTimeStamp
          end if
          playPausedAudio sTimeStamp
-         updateTimer
          break
          
       case "DownloadSelection"  
