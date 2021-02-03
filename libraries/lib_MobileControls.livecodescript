@@ -234,7 +234,7 @@ command setZeroDurationProgress
    
 end setZeroDurationProgress
    
-command updateTimer sPlaying --pState
+command updateTimer
    local tCurrentTime, tDuration,  tWidth
    
    // Update the time indicator
