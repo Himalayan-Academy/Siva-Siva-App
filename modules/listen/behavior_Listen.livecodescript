@@ -84,6 +84,10 @@ on openCard
    
    switch tCardName
       case "listen-collection"
+         # we have turn as updateTime 
+         # because it going to fld in card listen-file
+         getPlaying false
+         
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "Listen" into fld "title-label"
@@ -92,6 +96,8 @@ on openCard
          
          
       case "listen-browse"
+         getPlaying false
+         
          clearSelection
          setAudioListcolors
          put playlist_GetCurrent() into  tBrowseHeader
@@ -102,6 +108,8 @@ on openCard
          break
          
       case "listen-my-audio"
+         getPlaying false
+         
          put "My Downloads" into fld "title-label"
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
@@ -115,6 +123,8 @@ on openCard
          break
          
       case "listen-delete-file"
+         getPlaying false
+         
          put "Delete File" into fld "title-label"
          put empty into fld "collections-label"
          put empty into fld "my-audio-label"
@@ -132,6 +142,8 @@ on openCard
          break
          
       case "listen-search"
+         getPlaying false
+         
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
          put "Search" into fld "title-label"

@@ -850,26 +850,26 @@ end isAudioPlay
 on _TIME
 end _TIME
 
-local tMilliseconds, tHours, tMinutes, tSeconds
+--local tMilliseconds, tHours, tMinutes, tSeconds
 
-function convertTime pMilliseconds
-   put pMilliseconds into tMilliseconds
+--function convertTime pMilliseconds
+--   put pMilliseconds into tMilliseconds
 
-   // Hours
-   put tMilliseconds div 3600000 into tHours
-   subtract (tHours * 3600000) from tMilliseconds
+--   // Hours
+--   put tMilliseconds div 3600000 into tHours
+--   subtract (tHours * 3600000) from tMilliseconds
 
-   // Minutes
-   put tMilliseconds div 60000 into tMinutes
-   subtract (tMinutes * 60000) from tMilliseconds
+--   // Minutes
+--   put tMilliseconds div 60000 into tMinutes
+--   subtract (tMinutes * 60000) from tMilliseconds
 
-   // Seconds
-   put tMilliseconds div 1000 into tSeconds
-   subtract (tSeconds * 1000) from tMilliseconds
+--   // Seconds
+--   put tMilliseconds div 1000 into tSeconds
+--   subtract (tSeconds * 1000) from tMilliseconds
 
-   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds) & ":" & format("%02s",tMilliseconds)
+--   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+--end convertTime
 
-end convertTime
 
 
 

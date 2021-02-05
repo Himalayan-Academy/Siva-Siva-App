@@ -51,6 +51,8 @@ local sPlayerId, sPlayerRect,sDuration
 
 local sPlaying
 
+
+
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    log "createMobilePlayer"
    local tHeight,tPlayloc,
@@ -241,8 +243,13 @@ end setZeroDurationProgress
 command updateTimer
    local tCurrentTime, tDuration,  tWidth
    
+   
    // Update the time indicator
    if sPlaying is true then
+      
+      if there is no  fld "currentTime" of stack "listen" then
+         exit updateTimer 
+      end if
       
       lock screen
       if isMobile() then
@@ -256,9 +263,7 @@ command updateTimer
          
          // Update the time indicator
          put round((tCurrentTime/tDuration) * 350) into tWidth
-         set the width of graphic "durationProgress" of stack "listen" to tWidth
-         set the left of graphic "durationProgress" of stack "listen" to 25
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
+         
          
          // Update time fields
          --         put round(tCurrentTime/1000,2) into fld "currentTime" of stack "listen"
@@ -266,18 +271,14 @@ command updateTimer
          put convertTime(tCurrentTime) into tCurrentTime
          put convertTime(tDuration) into tDuration
          
-         set the itemDelimiter to ":"
-         put empty into last item of tCurrentTime
-         put empty into last item of tCurrentTime
-         put empty into last item of tDuration
-         put empty into last item of tDuration
-         put empty into last char of tCurrentTime
-         put empty into last char of tDuration
-         put empty into last char of tCurrentTime
-         put empty into last char of tDuration
          
          put tCurrentTime into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
+         
+         // Update the time indicator
+         set the width of graphic "durationProgress" of stack "listen" to tWidth
+         set the left of graphic "durationProgress" of stack "listen" to 31
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
          
          
       end if
@@ -285,7 +286,28 @@ command updateTimer
       unlock screen
       send "updateTimer" to me in 20 milliseconds
    end if
-end updateTimer
+end updateTimer  
+
+local tMilliseconds, tHours, tMinutes, tSeconds
+
+function convertTime pMilliseconds
+   put pMilliseconds into tMilliseconds
+   
+   // Hours
+   put tMilliseconds div 3600000 into tHours
+   subtract (tHours * 3600000) from tMilliseconds
+   
+   // Minutes
+   put tMilliseconds div 60000 into tMinutes
+   subtract (tMinutes * 60000) from tMilliseconds
+   
+   // Seconds
+   put tMilliseconds div 1000 into tSeconds
+   subtract (tSeconds * 1000) from tMilliseconds
+   
+   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+end convertTime
+
 
 
 --command audioLoadFile pSoundFile

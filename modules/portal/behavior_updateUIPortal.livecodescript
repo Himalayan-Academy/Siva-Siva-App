@@ -341,17 +341,20 @@ constant kMargin = 12
 command updateUIPortal
    
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
-   local tLoadingNotice, tTouchTrap
+   local tLoadingNotice, tTouchTrap, tBrandLogo
    #  UI responsive
    
    put the long id of img "homeMainImage" of card "Home" into sMainImage
    put the long id of img "subNavBkgImage" of card "Home" into tMenuBkgnd
+   put the long id of button "brandLogo" of card "Home" into tBrandLogo
    
    setImageToFullCardLoc sMainImage,"portrait",0,0
    centerMe sMainImage,0,0
    setImageToFullCardLoc tMenuBkgnd,"portrait",0,0
    centerMe tMenuBkgnd,0,0
-   show btn "brandLogo"
+   
+   topCenterMe tBrandLogo,150 
+   
    --show sMainImage with visual effect "dissolve"
    
    if safeBottomMargin() > 0 then
