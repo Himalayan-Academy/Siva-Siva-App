@@ -339,9 +339,12 @@ on doScrollerTap
 end doScrollerTap
 
 
-#development
 command visualArticle
-   open stack sStoryDataStack
+   if isMobile() then
+      open invisible stack sStoryDataStack
+   else
+      open stack sStoryDataStack
+   end if
    --
    go card "showStories" of stack "stories"
    goNextScene
@@ -454,6 +457,7 @@ command goNextScene
    unlock screen
 end goNextScene
 
+
 # requires uTextSize custom property to hold the initial text size
 command optimizeTextHeight pControl
    local tTextHeight, tMaxHeight, tMinHeight
@@ -553,21 +557,9 @@ command landscapeOrientation pLandscapeMode
    end if
 end landscapeOrientation
 
-command setupOrientations pAllowLandscape
-   local tOrientations
-   --
-   put (pAllowLandscape is true) into sAllowLandscape
-   put "portrait,portrait upside down" into tOrientations
-   if sAllowLandscape then
-      put ",landscape left,landscape right" after tOrientations
-   end if
-   if isMobile() then
-      mobileSetAllowedOrientations tOrientations
-   end if
-end setupOrientations
 
 -------
-local pData,  tCd,  
+local pData, tCd
 
 command addJournalEntry -- save a bookmark to db
    local tTitle
@@ -586,22 +578,14 @@ end addJournalEntry
 
 		
 on journalResume pData -- sent from journal stack
-   put cr&"journalResume"&cr after msg
+   --put cr&"journalResume"&cr after msg
    put pData["Card"] into tCd
-   go to card tCd
-   --   put loadStoriesMetadata() into sStoriesMetaArray
-   --   getcontent pData["storyTitle"]
-   
-   --   put getCache("imageList") into simageList
-   --   put getCache("Quotes") into sQuoteList
-   
    put pData["storyTitle"] into sStoryTitle
    put pData["storyScene"] - 1 into sLastScene
    put pData["Attribution"] into sAttribution
    put pData["SceneCount"] into sTotalSceneCount
    setCache "storyScene",sLastScene
    display_SetStatusBarVis false
-   --   showStoryText
    if tCd is "showStories" then
       repeat for each element tElement in sStoriesMetaArray["Stories"]
          if tElement[sStoryTitle] is not empty then
@@ -612,6 +596,8 @@ on journalResume pData -- sent from journal stack
       setupOrDownloadStory
       put sStoryTitle into sLastStory
       visualArticle
+   else
+      go to card tCd
    end if
 end journalResume
 
@@ -689,9 +675,22 @@ on updateUI
       put the long id of grc "fileListBkgnd" into tControl
       set the rect tControl to (0, the top of grp "displayFilesSizes", cardWidth(), the top of tFooter - 18)
       --
+      put the long id of grc "DoneDeletions" into tControl
+      set the right of tControl to CardWidth() - 1
+      --
       put the long id of fld "currentFilePick" into tControl
       put the rect of tControl into tRect
       put CardWidth() into item 3 of tRect
+      set the rect of tControl to tRect
+      --
+      put the long id of fld "currentTotal" into tControl
+      set the bottom of tControl to the bottom of grc "fileListBkgnd" - 3
+      put the long id of fld "currentUnits" into tControl
+      set the bottom of tControl to the bottom of grc "fileListBkgnd" - 3
+      --
+      put the long id of fld "FilesOnDisk" into tControl
+      put the rect of tControl into tRect
+      put the top of fld "currentTotal" - 8 into item 4 of tRect
       set the rect of tControl to tRect
    end if
    --
@@ -751,7 +750,8 @@ on closeCard
    else if tCard is "showStories" then
       set the text of sStoryText to empty
       set the text of sCaptionText to empty
-      set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
+      set the filename of sStoryImage to empty
+      --set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
       set the destroyStack of stack sStoryDataStack to true
       close stack sStoryDataStack
       hide sStoryText
