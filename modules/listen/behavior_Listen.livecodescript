@@ -1142,7 +1142,9 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       
       start player "audioPlayer"
       set the currenttime player "audioPlayer" to sTimeStamp
-      put true into sPlaying
+    
+      getPlaying true
+      
       get runningAudioIndicatorVis("true")
    end if
    

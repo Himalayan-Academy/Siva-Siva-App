@@ -104,6 +104,10 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    hide widget "playAudio" of stack "listen"
 end playerPropertyAvailable
 
+on getPlaying pBool
+   put pBool into sPlaying
+end getPlaying
+
 function setDuration 
    return sDuration
 end setDuration
@@ -133,7 +137,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       get runningAudioIndicatorVis("false")
       
       put false into sPlaying
-      updateTimer sPlaying
+      updateTimer 
       hide widget "pauseAudio" of stack "listen"
       show widget "playAudio" of stack "listen"
       # above is needed to ensure we hide the icon that shows audio is playing stop button/icon
@@ -149,7 +153,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       get runningAudioIndicatorVis("true")
       
       put false into sPlaying
-      updateTimer sPlaying
+      updateTimer
       
       
       # icon switch to "play"
@@ -240,7 +244,7 @@ command updateTimer
    // Update the time indicator
    if sPlaying is true then
       
-       lock screen
+      lock screen
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into tCurrentTime
          put mobileControlGet("audioPlayer","playableDuration") into tDuration
@@ -249,15 +253,33 @@ command updateTimer
          put the duration of player "audioPlayer" of stack "listen" into tDuration
       end if
       if tCurrentTime > 0 and tDuration > 0 then
-         // Update time fields
-         put round(tCurrentTime/1000,2) into fld "currentTime" of stack "listen"
-         put round(tDuration/1000,2) into fld "endTime" of stack "listen"
          
          // Update the time indicator
          put round((tCurrentTime/tDuration) * 350) into tWidth
          set the width of graphic "durationProgress" of stack "listen" to tWidth
          set the left of graphic "durationProgress" of stack "listen" to 25
          set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
+         
+         // Update time fields
+         --         put round(tCurrentTime/1000,2) into fld "currentTime" of stack "listen"
+         --         put round(tDuration/1000,2) into fld "endTime" of stack "listen"
+         put convertTime(tCurrentTime) into tCurrentTime
+         put convertTime(tDuration) into tDuration
+         
+         set the itemDelimiter to ":"
+         put empty into last item of tCurrentTime
+         put empty into last item of tCurrentTime
+         put empty into last item of tDuration
+         put empty into last item of tDuration
+         put empty into last char of tCurrentTime
+         put empty into last char of tDuration
+         put empty into last char of tCurrentTime
+         put empty into last char of tDuration
+         
+         put tCurrentTime into fld "currentTime" of stack "listen"
+         put tDuration into fld "endTime" of stack "listen"
+         
+         
       end if
       
       unlock screen
