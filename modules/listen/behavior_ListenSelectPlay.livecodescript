@@ -165,23 +165,26 @@ on mouseup
          
          // we go to lib_MobileControls
          
-      case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
-         if not isMobile() then\
-               put  the currentTime of player "audioPlayer" into sTimeStamp
+      case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
+         local tPlayPause
+         
+         get the iconPresetName of widget "PlayPause"
+         put it into tPlayPause
+         
+         if tPlayPause is "pause" then
+            if not isMobile() then
+                  put  the currentTime of player "audioPlayer" into sTimeStamp
+            else
+               put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+            end if
+            pausePlayer sTimeStamp
          else
-            put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+            if not isMobile() then
+               put  the currentTime of player "audioPlayer" into sTimeStamp
+            end if
+            playPausedAudio sTimeStamp
          end if
          
-         pausePlayer sTimeStamp
-         break
-         
-      case "playAudio" # audio it stopped; Icon is a right facing triangle
-         --breakpoint
-         --  ntInfo sTimeStamp
-         if not isMobile() then
-            set  the currentTime of player "audioPlayer" to sTimeStamp
-         end if
-         playPausedAudio sTimeStamp
          break
          
       case "DownloadSelection"  

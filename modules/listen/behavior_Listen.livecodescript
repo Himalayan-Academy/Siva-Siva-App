@@ -1154,7 +1154,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       
       start player "audioPlayer"
       set the currenttime player "audioPlayer" to sTimeStamp
-    
+      
       getPlaying true
       
       get runningAudioIndicatorVis("true")
@@ -1162,8 +1162,8 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    
    put  pTitle into fld "currentTitleLabel"
    send "updateTimer sPlaying" -- in 100 milliseconds
-   show widget "pauseAudio"
-   hide widget "playAudio"
+   set the iconPresetName of widget "PlayPause" to "pause"
+ 
 end startPlayer
 
 on stopPlayer
@@ -1171,13 +1171,14 @@ on stopPlayer
       stop player "audioPlayer"
       set the filename of player "audioPlayer"  to empty
       put false into sPlaying
-     
+      
    else 
       setMobileAudioPlayer "audioPlayer", false
       deleteMobileControl "audioPlayer"
    end if
-   show widget "pauseAudio"
-   hide widget "playAudio"
+   
+   set the iconPresetName of widget "PlayPause" to "pause"
+ 
    updateTimer sPlaying
    
 end stopPlayer
@@ -1194,9 +1195,8 @@ on pausePlayer sTimeStamp
    # we have to record the timestamp of a journal
    put sTimeStamp into pDataA["timeStamp"]
    setJournalData pDataA
+   set the iconPresetName of widget "PlayPause" to "play"
    
-   hide widget "pauseAudio"
-   show widget "playAudio"
 end pausePlayer
 
 on playPausedAudio sTimeStamp
@@ -1212,9 +1212,7 @@ on playPausedAudio sTimeStamp
       setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
       send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
    end if
-   --   put sTimeStamp into pDataA["timeStamp"]
-   show widget "pauseAudio"
-   hide widget "playAudio"
+   set the iconPresetName of widget "PlayPause" to "pause"
 end playPausedAudio
 
 on clearPlayer
