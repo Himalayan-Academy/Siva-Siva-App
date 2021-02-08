@@ -102,8 +102,9 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       mobileControlDo sPlayerId, "play"
       send "updateTimer" to me in 20 milliseconds
    end if
-   show widget "pauseAudio" of stack "listen"
-   hide widget "playAudio" of stack "listen"
+   
+   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   
 end playerPropertyAvailable
 
 on getPlaying pBool
@@ -140,11 +141,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       
       put false into sPlaying
       updateTimer 
-      hide widget "pauseAudio" of stack "listen"
-      show widget "playAudio" of stack "listen"
-      # above is needed to ensure we hide the icon that shows audio is playing stop button/icon
-      # we set a local in the backscript lib_UIHandlers that we query when going 
-      # to any context where this icon should appear
+      
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+      
    end if
    
    if pState = "pause" then
@@ -157,10 +156,8 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       put false into sPlaying
       updateTimer
       
-      
       # icon switch to "play"
-      show widget "pauseAudio" of stack "listen"
-           hide widget "playAudio" of stack "listen"
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
       
    end if
    
@@ -180,8 +177,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       
       put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds
-      show widget "pauseAudio" of stack "listen"
-      hide widget "playAudio" of stack "listen"
+      
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+      
       get runningAudioIndicatorVis("true")
    end if
    
@@ -201,8 +199,8 @@ on playerFinished -- sent on mobile when audio is done
    put empty into sPlayerRect
    
    put false into sPlaying
-   show widget "pauseAudio" of stack "listen"
-   hide widget "playAudio" of stack "listen"
+   
+   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
    
    get runningAudioIndicatorVis("false")
    
@@ -266,8 +264,6 @@ command updateTimer
          
          
          // Update time fields
-         --         put round(tCurrentTime/1000,2) into fld "currentTime" of stack "listen"
-         --         put round(tDuration/1000,2) into fld "endTime" of stack "listen"
          put convertTime(tCurrentTime) into tCurrentTime
          put convertTime(tDuration) into tDuration
          
@@ -277,9 +273,12 @@ command updateTimer
          
          // Update the time indicator
          set the width of graphic "durationProgress" of stack "listen" to tWidth
-         set the left of graphic "durationProgress" of stack "listen" to 31
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
          
+         --         set the left of graphic "durationProgress" of stack "listen" to 20
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
+         
+          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+         --set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
          
       end if
       
