@@ -238,9 +238,9 @@ command setZeroDurationProgress
    
 end setZeroDurationProgress
    
-command updateTimer
-   local tCurrentTime, tDuration,  tWidth
+local tCurrentTime, tDuration,  tWidth
    
+command updateTimer
    
    // Update the time indicator
    if sPlaying is true then
@@ -267,6 +267,7 @@ command updateTimer
          put convertTime(tCurrentTime) into tCurrentTime
          put convertTime(tDuration) into tDuration
          
+         put getCurrentTime() into tCurrentTime
          
          put tCurrentTime into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
@@ -277,7 +278,7 @@ command updateTimer
          --         set the left of graphic "durationProgress" of stack "listen" to 20
          set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
          
-          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+         set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
          --set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
          
       end if
@@ -286,6 +287,10 @@ command updateTimer
       send "updateTimer" to me in 20 milliseconds
    end if
 end updateTimer  
+
+function getCurrentTime 
+   return tCurrentTime
+end getCurrentTime
 
 local tMilliseconds, tHours, tMinutes, tSeconds
 

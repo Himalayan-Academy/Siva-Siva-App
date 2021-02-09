@@ -1040,7 +1040,7 @@ command markCachedItems pKeys
 end markCachedItems
 
 command addJournalEntry -- save a bookmark to database
-   local  tTitle, tURL, tNoSavingCards,tMsg, tCard
+   local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    
    put the short name of this card into tCard
    
@@ -1051,9 +1051,12 @@ command addJournalEntry -- save a bookmark to database
       exit addJournalEntry
    end if
    
-   
    put getJournalData() into pDataA   
-   --put sTimeStamp into pDataA["timeStamp"] 
+   
+   put getCurrentTime() into tCurrentTime
+   
+   put tCurrentTime into pDataA["currentTime"]
+   
    put pDataA["title"] into tTitle
    put ", " & pDataA["timeStamp"] after tTitle
    
