@@ -89,16 +89,20 @@ private command _setPhoneModel
    if not isMobile() then
       put "desktop" into sPhoneModel
    else if the platform is "iPhone" then
-      if tH is 812 or tH is 896 then
+      if tH is in "812,844,896,926" then
          --iPhone with a notch, portrait
          put "iPhoneX" into sPhoneModel
-      else if tW is 812 or tW is 896 then
+      else if tW is in "812,844,896,926" then
          --iPhone with a notch, landscape
          put "iPhoneX" into sPhoneModel
       else if (tW is 1024 and tH is 1366) or \
             (tH is 1024 and tW is 1366) then
          --iPad Pro 12.9
          put "iPadPro12.9" into sPhoneModel
+      else if (tW is 834 and tH is 1194) or \
+            (tH is 834 and tW is 1194) then
+         --iPad Pro 11
+         put "iPadPro11" into sPhoneModel
       else
          put "iPhone" into sPhoneModel
       end if
@@ -117,6 +121,7 @@ private command _setPhoneModel
          put 23 into sLandscapeMargins["bottom"]
          put 44 into sLandscapeMargins["side"]
          break
+      case "iPadPro11"
       case "iPadPro12.9"
          put 0 into sPortraitMargins["top"]
          put 34 into sPortraitMargins["bottom"]

@@ -51,11 +51,13 @@ on preOpenCard
    end if
    setCardCoords "portrait"
    if tCard is "storyHome" then
+      display_SetStatusBarVis true
       put the long id of widget "storyNavTree" into sStoryMenu
       put the long id of widget "storyNavTree" into sStoryMenuTree
       put the long id of fld "tips" into sTips
       hide group "loadingGroup"
    else if tCard is "showStories" then
+      display_SetStatusBarVis false
       put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
       put the long id of grc "storyTextBkg" into sStoryTextBkg
@@ -122,7 +124,6 @@ command showStoryMenu
          (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
    hide grp "tipsGroup" of cd "storyHome"
    show grp "storyMenu" of cd "storyHome"
-   display_SetStatusBarVis true
 end showStoryMenu 
 
 
@@ -488,10 +489,13 @@ end optimizeTextHeight
 
 
 command setupCaptionField
+   local tCorner
    set the width of sCaptionText to .65 * CardWidth()
    set the height of sCaptionText to the formattedHeight of sCaptionText
    set the width of sCaptionText to the formattedWidth of sCaptionText
-   set the bottomRight of sCaptionText to the bottomRight of sStoryText
+   put the bottomRight of sStoryText into tCorner
+   subtract 16 from item 2 of tCorner
+   set the bottomRight of sCaptionText to tCorner
    set the width of sCaptionBkg to the width of sCaptionText + 60
    set the height of sCaptionBkg to the height of sCaptionText + 60
    set the bottomRight of sCaptionBkg to \
@@ -698,12 +702,12 @@ on updateUI
       put the long id of btn "goPrev" into tGoPrev
       put the long id of btn "goNext" into tGoNext
       if currentlyLandscape() then
-         bottomLeftMe tGoPrev
-         bottomRightMe tGoNext
+         bottomLeftMe tGoPrev, 0, 8
+         bottomRightMe tGoNext, 0, 8
          set the rect of sStoryText to (the right of tGoPrev + 10, 10, the left of tGoNext - 10, CardHeight() - 10)
       else
-         topLeftMe tGoPrev
-         topRightMe tGoNext
+         topLeftMe tGoPrev, 0, 8
+         topRightMe tGoNext, 0, 8
          set the rect of sStoryText to (10, the bottom of tGoNext + 12, cardWidth() - 10, the top of tFooter - 12)
       end if
       --
