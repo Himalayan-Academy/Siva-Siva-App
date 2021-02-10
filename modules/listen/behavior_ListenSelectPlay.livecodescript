@@ -248,11 +248,14 @@ command playSingle pDataA
    put pDataA["url"] into tURL
    put pDataA["item_id"] into tItem_id
    
+   unlock screen
+   
    startPlayer tURL,pDataA["title"]
    showBusyIndicator false
    if  "audio/book" is not in tURL then # no display details
       select_ShowDetails "downloaded"
    end if 
+   
 end playSingle
 
 command share_Items 

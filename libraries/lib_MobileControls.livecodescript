@@ -238,9 +238,9 @@ command setZeroDurationProgress
    
 end setZeroDurationProgress
    
-local tCurrentTime, tDuration,  tWidth
+   local tCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
    
-command updateTimer
+   command updateTimer
    
    // Update the time indicator
    if sPlaying is true then
@@ -262,14 +262,15 @@ command updateTimer
          // Update the time indicator
          put round((tCurrentTime/tDuration) * 350) into tWidth
          
+         put tCurrentTime into sTimeStamp
          
          // Update time fields
-         put convertTime(tCurrentTime) into tCurrentTime
+         put convertTime(tCurrentTime) into tHoursMinutes
          put convertTime(tDuration) into tDuration
          
-         put getCurrentTime() into tCurrentTime
+         put getCurrentTime() into tHoursMinutes
          
-         put tCurrentTime into fld "currentTime" of stack "listen"
+         put tHoursMinutes into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
          
          // Update the time indicator
@@ -289,8 +290,12 @@ command updateTimer
 end updateTimer  
 
 function getCurrentTime 
-   return tCurrentTime
+   return tHoursMinutes
 end getCurrentTime
+
+function getTimestamp
+   return sTimestamp
+end getTimestamp
 
 local tMilliseconds, tHours, tMinutes, tSeconds
 
