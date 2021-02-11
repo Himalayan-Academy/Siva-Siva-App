@@ -358,7 +358,7 @@ end visualArticle
 
 
 command goNextScene
-   local tImagePath, tMsg
+   local tImagePath, tMsg, tLoc
    --
    lock screen
    if sLastStory is empty or sLastStory is not sStoryTitle then
@@ -407,11 +407,15 @@ command goNextScene
                field "mainText" of grp "bkgndControl" of cd sLastScene of stack sStoryDataStack
          set the foregroundColor of line 1 to -1 of sStoryText to empty
       end if
+      put the loc of sStoryText into tLoc
+      set the height of sStoryText to the formattedHeight of sStoryText
+      set the loc of sStoryText to tLoc
       show sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
       hide btn "goPrev"
    else
+      set the rect of sStoryText to the uRect of sStoryText
       hide sStoryText
       show btn "goPrev"
       show btn "goNext"
@@ -489,17 +493,35 @@ end optimizeTextHeight
 
 
 command setupCaptionField
-   local tCorner
+   local tCorner, tTextHeight
    set the width of sCaptionText to .65 * CardWidth()
-   set the height of sCaptionText to the formattedHeight of sCaptionText
+   put the formattedHeight of sCaptionText into tTextHeight
+   set the height of sCaptionText to tTextHeight
    set the width of sCaptionText to the formattedWidth of sCaptionText
    put the bottomRight of sStoryText into tCorner
+   subtract 12 from item 1 of tCorner
    subtract 16 from item 2 of tCorner
    set the bottomRight of sCaptionText to tCorner
-   set the width of sCaptionBkg to the width of sCaptionText + 60
-   set the height of sCaptionBkg to the height of sCaptionText + 60
-   set the bottomRight of sCaptionBkg to \
-         (the right of sCaptionText + 25, the bottom of sCaptionText + 30)
+   --
+   set the width of sCaptionBkg to the width of sCaptionText + 68
+   if tTextHeight > 150 then
+      -- 6 or more lines of text
+      set the height of sCaptionBkg to tTextHeight + 52
+   else if tTextHeight > 102 then
+      -- 4 or more lines of text
+      set the height of sCaptionBkg to tTextHeight + 42
+   else if tTextHeight > 78 then
+      -- 3 or more lines of text
+      set the height of sCaptionBkg to tTextHeight + 36
+   else if tTextHeight > 54 then
+      -- 2 or more lines of text
+      set the height of sCaptionBkg to tTextHeight + 28
+   else
+      set the height of sCaptionBkg to tTextHeight + 16
+   end if
+   set the loc of sCaptionBkg to the loc of sCaptionText
+   --   set the bottomRight of sCaptionBkg to \
+   --         (the right of sCaptionText + 25 + 4, the bottom of sCaptionText + 30)
 end setupCaptionField
 
 

@@ -31,7 +31,7 @@ on makeStoryLocal pPassTitle
    
    
    # based of "stories.json"
-   if sStoriesMetaArray["Stories"][sStoryTitle][slidesLimit] = "quotes" then
+   if sStoriesMetaArray["Stories"]["Scriptural - Random"][sStoryTitle][slidesLimit] = "quotes" then
       put the number of lines of  sQuoteList into sTotalSceneCount
    else
       put the number of lines of  sImageList into sTotalSceneCount
@@ -64,7 +64,7 @@ end makeStoryLocal
 
 on htmlTitleAttribution
    --go to card 1
-   put sStoriesMetaArray["Stories"][sStoryTitle]["attribution"] into sAttribution 
+   put sStoriesMetaArray["Stories"]["Scriptural - Random"][sStoryTitle]["attribution"] into sAttribution 
    
    put   "<p><b><font size=32>"  & sStoryTitle  & "</font></b></p>" \
          & cr&  "<p><b><font size=25>By</font></p>" & cr & \
