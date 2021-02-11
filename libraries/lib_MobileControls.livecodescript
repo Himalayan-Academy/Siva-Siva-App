@@ -107,6 +107,7 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
    
 end playerPropertyAvailable
 
+# Desktop player gets thru
 on getPlaying pBool
    put pBool into sPlaying
 end getPlaying
@@ -170,12 +171,6 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlDo pPlayerName, "play"
       
       put true into sPlaying
-      // Reset duration marker
-      set the width of graphic "durationProgress" to 1
-      set the left of graphic "durationProgress" to 25
-      set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-      
-      put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds
       
       set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
@@ -224,23 +219,9 @@ end playerFinished
 # we shall call of these handlers as we click on mouseup
 # 
 
-
-
-
-
-command setZeroDurationProgress
-   // mobile durationProgress
-   set the width of graphic "durationProgress" to 1
-   set the left of graphic "durationProgress" to 31
-   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-   put "0.00" into field "currentTime"
-   put "0.00" into field "endTime"
-   
-end setZeroDurationProgress
-   
    local tCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
    
-   command updateTimer
+command updateTimer
    
    // Update the time indicator
    if sPlaying is true then
@@ -257,6 +238,7 @@ end setZeroDurationProgress
          put the currentTime of player "audioPlayer" of stack "listen" into tCurrentTime
          put the duration of player "audioPlayer" of stack "listen" into tDuration
       end if
+      
       if tCurrentTime > 0 and tDuration > 0 then
          
          // Update the time indicator
@@ -278,10 +260,14 @@ end setZeroDurationProgress
          
          --         set the left of graphic "durationProgress" of stack "listen" to 20
          set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
-         
          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         --set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen" - 7)
          
+         // redundeck 
+         --         put true into sPlaying
+         --         // Reset duration marker
+         --         set the width of graphic "durationProgress" to 1
+         --         set the left of graphic "durationProgress" to 25
+         --         set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
       end if
       
       unlock screen
@@ -393,9 +379,8 @@ end convertTime
 --   end if
 --end playerFinished
 
-
-
-on deleteMobileControl pName -- jg: deletes an existing mobile control
+   
+   on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
    -- they are overlaid on the stack and will float over all cards
    if not isMobile() then exit deleteMobileControl
@@ -423,38 +408,16 @@ on deleteAllMobileControls -- jg: delete all mobile controls of any type in all 
    end repeat
 end deleteAllMobileControls
 
+on __Utilities
+end __Utilities
 
-// Are set
-
---on preOpenCard
---   local tAudioFolder, tFileList
-
---   // Load sound files
---   put specialFolderPath("resources") & "/audio" into tAudioFolder
---   put files(tAudioFolder) into tFileList
---   put tFileList into field "files"
-
---   // Load first file
---   set the hilitedLine of field "files" to 1
---   put line 1 of tFileList into tSoundFile
-
---   // Reset duration marker
---   set the width of graphic "durationProgress" to 1
---   set the left of graphic "durationProgress" to 25
---   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
---   put "0.00" into field "currentTime"
---   put "0.00" into field "endTime"
-
---   if the environment is "mobile" then
---      // Create player
---      mobileControlCreate "player","audioPlayer"
---      mobileControlSet "audioPlayer","visible",false
---      mobileControlSet "audioPlayer","rect",the rect of graphic "playerArea"
-
---      // Load sound file
---      mobileControlSet "audioPlayer","filename",(specialFolderPath("resources") & "/audio/" & tSoundFile)
---      set the iconPresetName of widget "PlayPause" to "play"
---   end if
---end preOpenCard
+command setZeroDurationProgress
+   // mobile durationProgress
+   set the width of graphic "durationProgress" to 1
+   set the left of graphic "durationProgress" to 31
+   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+   put "0.00" into field "currentTime"
+   put "0.00" into field "endTime"
+end setZeroDurationProgress
 
 
