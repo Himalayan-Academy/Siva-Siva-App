@@ -107,7 +107,7 @@ on dataServerStack pStoryTitle
    
    local tHttpsServerRoot, tLocalDocumentsStories
    local tFilePath, tServerPath, tFiles, tLocation
-   local tItems, tCompressionMethod,tItem
+   local tItems, tCompressionMethod,tItem,tZipItem
    
    put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
    put path_Documents()& "media/stories/" into tLocalDocumentsStories
@@ -132,20 +132,26 @@ on dataServerStack pStoryTitle
    --   put revZipEnumerateItems(tFilePath) into tZipContents
    put revZipEnumerateItems(tFilePath) into tFiles
    
-   repeat for each line tItem in tFiles
+   repeat for each line tZipItem in tFiles
       set the itemDel to comma
       put item 6 of revZipDescribeItem(tFilePath,tItem) into tCompressionMethod
-      set the itemDel to "/"    
+      set the itemDel to "/"
+      if item 1 of tZipItem is pStoryTitle then
+         -- some zip files include an extra folder level
+         put item 2 to -1 of tZipItem into tItem
+      else
+         put tZipItem into tItem
+      end if
       
-      if char -1 of tItem is "/" then
+      if char -1 of tZipItem is "/" then
          -- we ignore extraction of folders, as libzip doesnt handle folders
-      else if item -1 of tItem is ".DS_Store" then
+      else if item -1 of tZipItem is ".DS_Store" then
          // Check for ".DS_Store"
          ensureFolder tLocation & "/" & item 1 to -2 of tItem
       else if tCompressionMethod is "deflate" then
          -- first make sure that the folder exists
          ensureFolder tLocation & "/" & item 1 to -2 of tItem
-         revZipExtractItemToFile tFilePath, tItem, tLocation & "/" & tItem
+         revZipExtractItemToFile tFilePath, tZipItem, tLocation & "/" & tItem
       else
          -- ignore this item, possibly displaying a message to the user, that this file cannot be extracted
          -- because its compression type is not supported by this program

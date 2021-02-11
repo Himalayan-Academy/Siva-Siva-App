@@ -170,6 +170,14 @@ on mouseup
          dispatch "displayTargetFolders" to grp "displayFilesSizes" with "stories"
          break
          --
+      case "Loading"
+         showBusyIndicator false
+         if isMobile() then
+            mobileClearTouches
+         end if
+         exit top
+         break
+         --
       case "showStories"
       case "storyImage"
       case "captionText"
@@ -290,9 +298,9 @@ on setupOrDownloadStory
 end setupOrDownloadStory
 
 on downloadAndShowStory
-   show group "loadingGroup"
+   showBusyIndicator true, "Loading Stories"
    dataServerStack sStoryTitle
-   hide group "loadingGroup"
+   showBusyIndicator false
    put true into sAllowLandscape
    if there is a file sStoryDataStack then
       visualArticle
