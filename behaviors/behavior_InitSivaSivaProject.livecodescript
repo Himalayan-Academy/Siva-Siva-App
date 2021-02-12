@@ -171,6 +171,7 @@ on init_StoreControlsIds
 end init_StoreControlsIds
 
 command openPortalStack
+   send "init_DocumentFiles" to me in 5 seconds
    open stack "Siva-Siva-Portal"
    if the environment is not "development" then
       hide stack "Siva-Siva-App"
@@ -283,7 +284,7 @@ command init_CreateLocalFolders
    # next we build the matching hierarchy for the web media folder
    # most important will be books and audio
    
-   put "audio,books,art,slideshows,video" into tTopMediaFolders
+   put "audio,books,art,slideshows,stories,video" into tTopMediaFolders
    
    repeat for each item x in tTopMediaFolders
       check_CreateFolder (tLocalFolderRoot & "media/" & x) 
@@ -329,6 +330,45 @@ command init_CreateLocalFolders
    end repeat
    
 end init_CreateLocalFolders
+
+command init_DocumentFiles
+   local tLocalJson, tLocalArray, tLocalSeconds, tServerSeconds
+   local tServer, tRemoteSeconds,tServerArray, tRemoteServer
+   # Here is the installing app 
+   if  there is a file (path_Documents()  & "modules/stories/stories.json") then
+      # do nothing
+      --      put "do nothing"
+   else
+      put url ("binfile:" & path_Modules() & "stories/stories.json") into \
+            url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+   end if
+   
+   # Here is getting the time difference > between the json on the server
+   
+   put url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
+   put JSONToArray(tLocalJson) into tLocalArray
+   put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
+   if tLocalSeconds is not a number then
+      put 0 into tLocalSeconds
+   end if
+   
+   --breakpoint
+   try
+      put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
+      put JSONToArray(tServer) into tServerArray
+      put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
+   catch errorStatement
+      
+   end try 
+   
+   if tRemoteSeconds > tLocalSeconds then
+      put tServer  into url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+   end if
+   
+   
+end init_DocumentFiles
+
+
 
 
 -->Project | Start

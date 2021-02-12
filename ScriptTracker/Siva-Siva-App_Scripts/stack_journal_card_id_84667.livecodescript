@@ -1,8 +1,8 @@
-Script "stack_journal_"
+Script "stack_journal_card_id_84667"
 
 /*
-# Name: stack "journal" of stack "Siva-Siva-App"
-# ID: stack "journal" of stack "Siva-Siva-App"
+# Name: card "edit entries" of stack "journal" of stack "Siva-Siva-App"
+# ID: card id 84667 of stack "journal" of stack "Siva-Siva-App"
 */
 
 
@@ -10,25 +10,6 @@ local sConfigA
 local sStateA
 local sLastStack
 
-
-on preopenstack
-   if isMobile() then    
-      set the fullscreenmode of this stack to "showAll" -- better for wider screens
-      mobileSetAllowedOrientations "portrait,portrait upside down"
-      mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-   end if
-end preopenstack
-
-function getConfigForLayout pScreenIdentifier, pKey
-   return sConfigA["style"][pScreenIdentifier][pKey]
-end getConfigForLayout
- 
-on journalresume pDataA
-   if the keys of pDataA is not empty then
-      put jsonexport(pDataA) into pDataA
-   end if
-   -- answer "launched from journal" && pDataA
-end journalresume
 
 on refreshUI
    lock screen
@@ -38,6 +19,7 @@ on refreshUI
    layoutCard
    fetchEntries
    layoutEntries
+   set the vscroll of group "entries" to the vscroll of group "entries" of card "entries"
    unlock screen
 end refreshUI
 
@@ -221,34 +203,18 @@ on createNewJournalEntry pEntryA, pNum
    set the foreColor of grc tName to 150,150,150
    set the top of grc tName to (the bottom of fld ("date" && pNum) + 5)
    
-   -- module icon
-   put "icon" && pNum into tName
-   if tName is "icon" then put "icon 0" into tName
-   create widget tName as "com.livecode.widget.svgpath" in group "entries"
-   
-   set the cEntry of widget tName to pEntryA
-   set the behavior of widget tName to (the long id of stack "behavior_JournalEntry")
-   
-   set the iconPath of widget tName of me to getIconForModule(pEntryA)
-   set the foreColor of widget tName of me to getConfigForLayout("listView", "activityIconColor")
-   set the width of widget tName to 44
-   set the left of widget tName to 45
-   set the top of widget tName to the top of grc ("rect" && pNum) + 10
-   
-   -- favorite icon
+   -- delete icon
    put "favorite" && pNum into tName
    if tName is "icon" then put "favorite 0" into tName
    create widget tName as "com.livecode.widget.svgpath" in group "entries"
    
    set the cEntry of widget tName to pEntryA
-   set the behavior of widget tName to (the long id of stack "behavior_JournalEntryFavoriteToggle")
+   set the behavior of widget tName to (the long id of stack "behavior_JournalEntryDelete")
    
-   set the iconPath of widget tName of me to the iconPath of widget "is favorite" of card "templates"
-   if pEntryA["is_favorite"] is 0 then
-      set the foreColor of widget tName of me to getConfigForLayout("listView", "favoriteDisabledIconColor")
-   else
-      set the foreColor of widget tName of me to getConfigForLayout("listView", "favoriteEnabledIconColor")
-   end if   set the width of widget tName to 44
+   set the iconPath of widget tName of me to the iconPath of widget "remove" of card "templates"
+   set the foreColor of widget tName to red
+   
+   set the width of widget tName to 44
    set the left of widget tName to 4
    set the top of widget tName to the top of grc ("rect" && pNum) + 10
 end createNewJournalEntry
@@ -288,12 +254,12 @@ function getIconForModule pEntryA
    end switch
 end getIconForModule
 
-command goHome
-   lock screen
-   portal_GoStack  "Siva-Siva-Portal"
-   unlock screen
-end goHome
+on preopencard
+   refreshUI
+end preopencard
 
-on closestack
-   portal_SetLastStack "Journal"
-end closestack
+on opencard
+   audioIsRunning
+end opencard
+
+

@@ -52,6 +52,8 @@ on mouseup
             show grp "main-calendar-view"
             show grp "headerGrp"
             unlock screen with visual effect "dissolve" very fast
+         else if tCard is "showStories" or tCard is "storyDeleteFile" then
+            go card "storyHome"
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
             showStoryMenu
          else if tCard is among the items of "listen-browse,listen-my-audio,listen-file" then

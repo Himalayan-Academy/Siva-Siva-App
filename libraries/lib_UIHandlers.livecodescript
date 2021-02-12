@@ -89,16 +89,20 @@ private command _setPhoneModel
    if not isMobile() then
       put "desktop" into sPhoneModel
    else if the platform is "iPhone" then
-      if tH is 812 or tH is 896 then
+      if tH is in "812,844,896,926" then
          --iPhone with a notch, portrait
          put "iPhoneX" into sPhoneModel
-      else if tW is 812 or tW is 896 then
+      else if tW is in "812,844,896,926" then
          --iPhone with a notch, landscape
          put "iPhoneX" into sPhoneModel
       else if (tW is 1024 and tH is 1366) or \
             (tH is 1024 and tW is 1366) then
          --iPad Pro 12.9
          put "iPadPro12.9" into sPhoneModel
+      else if (tW is 834 and tH is 1194) or \
+            (tH is 834 and tW is 1194) then
+         --iPad Pro 11
+         put "iPadPro11" into sPhoneModel
       else
          put "iPhone" into sPhoneModel
       end if
@@ -117,6 +121,7 @@ private command _setPhoneModel
          put 23 into sLandscapeMargins["bottom"]
          put 44 into sLandscapeMargins["side"]
          break
+      case "iPadPro11"
       case "iPadPro12.9"
          put 0 into sPortraitMargins["top"]
          put 34 into sPortraitMargins["bottom"]
@@ -451,7 +456,7 @@ on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
    
    # set the location of image, 
    # it is empty, assume to card rect
-   if tLocation = empty then
+   if pLocation = empty then
       set the loc of pImage to sCardLoc
    else
       set the loc of pImage to tLocation
@@ -472,6 +477,72 @@ command switchViewImageState pImage
          put 1 into sViewImageState     
    end switch
 end switchViewImageState
+
+local sImageCycleStateA
+command initializeCycleImage pImage, pState
+   local tRatioW, tRatioH
+   setRectOfCurrentGrc pImage
+   put the width of pImage / sCardWidth into tRatioW
+   put the height of pImage / sCardHeight into tRatioH
+   if tRatioW > tRatioH then
+      put "height" into sImageCycleStateA["fill"]
+   else
+      put "width" into sImageCycleStateA["fill"]
+   end if
+   put max(tRatioW, tRatioH) into sImageCycleStateA["maxRatio"]
+   put min(tRatioW, tRatioH) into sImageCycleStateA["minRatio"]
+   if pState is not a number then
+      put 2 into pState
+   end if
+   setImageState pImage, pState
+end initializeCycleImage
+
+command setImageState pImage, pState
+   if pState is not a number then
+      put 1 into pState
+   end if
+   switch pState
+      case 1
+         if sImageCycleStateA["fill"] = "height" then
+            resizeToHeight pImage, sCardHeight
+         else
+            resizeToWidth pImage, sCardWidth
+         end if
+         break
+      case 2
+         if sImageCycleStateA["fill"] = "width" then
+            resizeToHeight pImage, sCardHeight
+         else
+            resizeToWidth pImage, sCardWidth
+         end if
+         break
+      case 3
+         set the width of pImage to the formattedWidth of pImage
+         set the height of pImage to the formattedHeight of pImage
+         break
+   end switch
+   set the loc of pImage to sCardLoc
+   put pState into sImageCycleStateA["state"]
+end setImageState
+
+command cycleImageState pImage
+   -- 3 way cycle of image state
+   -- * fill screen (expand/shrink as needed)
+   -- * show all (expand/shrink as needed, skip if same as fill)
+   -- * full size (no scale) / enables scroller
+   if sImageCycleStateA["state"] is 2 then
+      setImageState pImage, 3
+   else
+      setImageState pImage, 2
+   end if
+   return sImageCycleStateA["state"]
+end cycleImageState
+
+command resetCycleImage pImage
+   -- used to reset the metrics due to a device rotation
+   initializeCycleImage pImage, sImageCycleStateA["state"]
+   return sImageCycleStateA["state"]
+end resetCycleImage
 
 --on toggleImgSize pImage, pFullSize, pTargetSize, pLocation
 --   local tFWd, tFHt

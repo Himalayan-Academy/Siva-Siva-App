@@ -12,7 +12,22 @@ This model contains all the handlers we require to access any files and folders.
 
 
 --> Working on
--
+local shortFolder, standardFolder,stackPaths,  projectFolder
+local someFolder, shortFiles, shortFile, stackFilePath, stackFilePaths
+local oFolder, oStack, homeStackName
+local  longFiles, oDefault, rootFolder, shortFolders
+local projectStackPath, projectHomeFolder 
+local  imageFolder, longImageFiles, shortImageFiles
+local pTargetFolder, moduleNames, modelsFolder, modelShortFiles, pModuleName
+local  sivasivaModuleRootFolder, assetFolder, pShortAssetFolder
+local rowImageFile, moduleArray, headerImageFile, userSettingsFile, userSettingsFolder
+local portalImageFile, portalImageFolder, photosFolder, sharedAssetFolder
+local sivasivaAssetFolder, asset_GetFolder, pShortAssetFolderx
+local subFolderPath, tModuleToLoad, moduleName, moduleFolder
+local moduleRootFolder, photoFolderNames, assetsFolders, tAppAssetsFolder
+local tAppPkgModules
+
+
 function project_ListFolderStacks shortFolder
    put sivasiva_ConstructFolder (shortFolder) into standardFolder
    put sivasiva_ListStackPaths (standardFolder) into stackPaths
@@ -64,6 +79,8 @@ function mobile_ListShortFiles someFolder
 end mobile_ListShortFiles
 
 function mobile_ListLongFiles someFolder, homeStackName
+   
+   
    put mobile_ListShortFiles (someFolder, homeStackName) into shortFiles
    repeat for each line shortFile in shortFiles
       if char 1 of shortFiles is "." then next repeat
@@ -129,6 +146,7 @@ end project_HomeFolder
 --> WordPuzzle | Files
 -
 function wordpuzzle_ListLongImageFiles
+  
    put wordpuzzle_ImageFolder() into imageFolder
    put mobile_ListLongFiles (imageFolder, "Siva-Siva-App") into longImageFiles
    return longImageFiles

@@ -33,9 +33,9 @@ on closeCard
    clearSums
 end closeCard
 
-on GetSums
+on GetSums pPathComplement
    mmSetRootFolder (path_Documents() & "media/")
-   mmGetTopSums
+   mmGetTopSums pPathComplement
 end GetSums
 
    
@@ -46,21 +46,23 @@ end GetSums
    # we can use this later to present files with their sizes and allow the user to delete 
    # without digging again. 
    
-command mmGetTopSums
+command mmGetTopSums pPathComplement
    if isMobile() then
       mobileShowStatusBar
-   end if 
+   end if
+   put empty into sResultA
    
    # we are already is a stack "setting"
    if there is a btn "load-spinner" then
       show btn "load-spinner"
       show grp "diskDataOverview"
       dispatch "graphResets"  to group "diskDataOverview" with "zeroOut"
-      put empty into sResultA
       get mmGetSizesBySubFolders("audio")
       get mmGetSizesBySubFolders("books")
       get  mmGetSizesBySubFolders("art")
       insertTopResults sResultA # see display section below
+   else if pPathComplement is "stories" then
+      get mmGetSizesBySubFolders("stories")
    else
       # if not, we are in stack "listen"
       get mmGetSizesBySubFolders("audio")
@@ -149,21 +151,30 @@ command mouseup  #UI Interactions are trapped here
       case  tTarget = "FilesOnDisk"
          put value(the clickline) into tFile
          put the clickline into sTargetLine
-         put word 2 of sTargetLine into tLineNo
-         -- put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
-         put line tLineNo of the uFilesOnDisk of this card into sDetailedTarget
-         
-         put item 1 sDetailedTarget into tPath
-         setTargetFile tPath
+         if the short name of this stack is "stories" then
+            set the itemdel to tab
+            setTargetFile item 1 of tFile
+         else
+            put word 2 of sTargetLine into tLineNo
+            -- put line tLineNo of the uFilesOnDisk of me into sDetailedTarget
+            put line tLineNo of the uFilesOnDisk of this card into sDetailedTarget
+            
+            put item 1 sDetailedTarget into tPath
+            setTargetFile tPath
+         end if
          set the itemdel to tab
          put item 1 of tFile into fld "currentFilePick"
          setDeleteMode "on"
          break
       case  tTarget =  "DoneDeletions"  # leave the file list and return to sums
          setDeleteMode "off"
-         hide grp "displayFilesSizes" 
-         mmSetRootFolder (path_Documents() & "media/")
-         mmGetTopSums
+         hide grp "displayFilesSizes"
+         if the short name of this stack is "stories" then
+            go card "storyHome"
+         else
+            mmSetRootFolder (path_Documents() & "media/")
+            mmGetTopSums
+         end if
          break
       case  tTarget =  "deleteYes"
          set the textcolor of sTargetLine to "black"
@@ -240,6 +251,27 @@ command displayTargetFiles pDataType
    put empty into sResultA["files"] 
 end displayTargetFiles
 
+command displayTargetFolders pDataType
+   local tDetailedFiles,tFilter,tPath,tSize,tFile
+   local tFileList
+   setDeleteMode "off"
+   put empty into tFileList
+   lock screen
+   put empty into fld "FilesOnDisk" 
+
+   repeat for each key tFolder in sResultA[pDataType]
+      if tFolder = "categorySum" then next repeat
+      put tFolder & tab & sResultA[pDataType][tFolder] & cr after tFileList 
+   end repeat
+   
+   put tFileList into fld "FilesOnDisk"
+   unlock screen
+   
+   put sResultA[pDataType]["categorySum"] into fld "currentTotal"
+   show grp "displayFilesSizes" with "dissolve" very fast
+   put empty into sResultA["files"] 
+end displayTargetFolders
+
 # deletion routines
 
 command setTargetfile pTargetFile
@@ -250,8 +282,12 @@ function getTargetFile
    return sTargetFile
 end getTargetFile
 
-command deleteFileOnDisk 
-   delete file ( getTargetFile() )
+command deleteFileOnDisk
+   if the short name of this stack is "stories" then
+      deleteFolder path_Documents() & "media/stories/" & getTargetFile()
+   else
+      delete file ( getTargetFile() )
+   end if
 end deleteFileOnDisk
 
 ##### All functions relating to delete files appear  above
