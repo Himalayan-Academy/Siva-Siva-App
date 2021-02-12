@@ -180,11 +180,22 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    
 end setMobileAudioPlayer
 
+on audioSeekForward
+   // cause play to pause
+   setMobileAudioPlayer "audioPlayer", "pause"
+   
+   // auto timer he  allows the  user to forward 
+   
+   // then allow play
+   
+end audioSeekForward
+
 on audioSeekBack
-   // Seek to the start of the track
-   --put the hilitedLine of field "files" into tCurrentIndex
-   --put line tCurrentIndex of field "files" into tSoundFile
-   -- audioLoadFile tSoundFile
+   // cause play to pause
+   
+   // auto timer he  allows the  user to back
+   
+   // then allow play
 end audioSeekBack
 
 on playerFinished -- sent on mobile when audio is done
@@ -203,24 +214,24 @@ end playerFinished
 
 -------------------------------
 
---command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
---   -- if audio is playing, player is shown on audio card, hidden elsewhere;
---   -- pBool = boolean
---   if isMobile() then
---      --hide player pPlayerName -- the LC one; never show it
---      mobileControlSet pPlayerName, "showController", pBool
---      mobileControlSet pPlayerName, "visible", pBool
---   else
---      set the vis of player pPlayerName to pBool
---   end if
---end showPlayer
+command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
+   -- if audio is playing, player is shown on audio card, hidden elsewhere;
+   -- pBool = boolean
+   if isMobile() then
+      --hide player pPlayerName -- the LC one; never show it
+      mobileControlSet pPlayerName, "showController", pBool
+      mobileControlSet pPlayerName, "visible", pBool
+   else
+      set the vis of player pPlayerName to pBool
+   end if
+end showPlayer
 
 ######### Mobile Utilities ############
 # we shall call of these handlers as we click on mouseup
 # 
 
-   local tCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
-   
+local tCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
+
 command updateTimer
    
    // Update the time indicator
@@ -305,6 +316,51 @@ end convertTime
 
 
 
+
+   on deleteMobileControl pName -- jg: deletes an existing mobile control
+   -- native controls should be deleted if possible when no longer needed, as
+   -- they are overlaid on the stack and will float over all cards
+   if not isMobile() then exit deleteMobileControl
+   repeat while pName is among the lines of mobileControls()
+      mobileControlDelete pName
+   end repeat
+   
+   put "" into sDuration
+end deleteMobileControl
+
+on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
+   local tList
+   if not isMobile() then exit deleteAllMobileControls
+   put mobileControls() into tList
+   if not (tList contains "audioPlayer") then # play we terminated
+      get runningAudioIndicatorVis("false")
+   end if
+   repeat for each line l in tList
+      # we are keeping the player running as per user requests.
+      # you need to use an explicit stop/remove in the UI/UX context
+      if l contains "audioPlayer" then
+         next repeat
+      end if  
+      mobileControlDelete l
+   end repeat
+end deleteAllMobileControls
+
+on __Utilities
+end __Utilities
+
+command setZeroDurationProgress
+   // mobile durationProgress
+   set the width of graphic "durationProgress" to 1
+   set the left of graphic "durationProgress" to 31
+   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
+   put "0.00" into field "currentTime"
+   put "0.00" into field "endTime"
+end setZeroDurationProgress
+
+
+----------------------------------------
+// SivaPlayer.livecode
+
 --command audioLoadFile pSoundFile
 --   // Load sound file
 --   mobileControlSet "audioPlayer","filename",(specialFolderPath("resources") & "/audio/" & pSoundFile)
@@ -345,22 +401,6 @@ end convertTime
 --   end if
 --end audioPlayPause
 
---on audioSeekForward
---   // Go to next track
---   put the hilitedLine of field "files" into tCurrentIndex
---   if tCurrentIndex = the number of lines in field "files" then
---      // Last track
---      // do nothing
---   else
---      // Select and load next file
---      add 1 to tCurrentIndex
---      set the hilitedLine of field "files" to tCurrentIndex
---      put line tCurrentIndex of field "files" into tSoundFile
-
---      audioLoadFile tSoundFile
---   end if
---end audioSeekForward
-
 --on playerFinished
 --   put false into sPlaying
 
@@ -378,46 +418,5 @@ end convertTime
 --      audioLoadFile tSoundFile
 --   end if
 --end playerFinished
-
-   
-   on deleteMobileControl pName -- jg: deletes an existing mobile control
-   -- native controls should be deleted if possible when no longer needed, as
-   -- they are overlaid on the stack and will float over all cards
-   if not isMobile() then exit deleteMobileControl
-   repeat while pName is among the lines of mobileControls()
-      mobileControlDelete pName
-   end repeat
-   
-   put "" into sDuration
-end deleteMobileControl
-
-on deleteAllMobileControls -- jg: delete all mobile controls of any type in all stacks
-   local tList
-   if not isMobile() then exit deleteAllMobileControls
-   put mobileControls() into tList
-   if not (tList contains "audioPlayer") then # play we terminated
-      get runningAudioIndicatorVis("false")
-   end if
-   repeat for each line l in tList
-      # we are keeping the player running as per user requests.
-      # you need to use an explicit stop/remove in the UI/UX context
-      if l contains "audioPlayer" then
-         next repeat
-      end if  
-      mobileControlDelete l
-   end repeat
-end deleteAllMobileControls
-
-on __Utilities
-end __Utilities
-
-command setZeroDurationProgress
-   // mobile durationProgress
-   set the width of graphic "durationProgress" to 1
-   set the left of graphic "durationProgress" to 31
-   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-   put "0.00" into field "currentTime"
-   put "0.00" into field "endTime"
-end setZeroDurationProgress
 
 
