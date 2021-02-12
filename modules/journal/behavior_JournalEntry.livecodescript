@@ -1,4 +1,6 @@
 ﻿script "behavior_JournalEntry"
+local tA
+
 on mouseUp
    put the cEntry of the target into tA
    launchActivity tA

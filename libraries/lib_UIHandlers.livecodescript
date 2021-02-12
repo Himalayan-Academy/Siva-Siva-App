@@ -861,16 +861,18 @@ command togglePause pVisible, pState
    #         false: shows that the triangle button, saying that the audio is pause
    #                  and that you can click to resume
    ntInfo "about to hide/show pause-play"
-   if exists (group "pause-play") then
-      set the vis grp "pause-play" to pVisible
-      
-      set the vis of widget "pauseAudio" to pState
-      # which means player is playing, giving user the  option to pause
-      
-      set the vis of widget "playAudio" to not pState
-      # which means player is pause, giving user the re-start playback
-      
-   end if
+   -- if not isMobile() then 
+      if exists (group "pause-play") then
+         set the vis grp "pause-play" to pVisible
+         
+         set the vis of widget "pauseAudio" to pState
+         # which means player is playing, giving user the  option to pause
+         
+         set the vis of widget "playAudio" to not pState
+         # which means player is pause, giving user the re-start playback
+         
+      end if
+ -- end if
 end togglePause
 
 
@@ -914,6 +916,33 @@ function isAudioPlay pName
    end repeat
    
 end isAudioPlay
+
+------------------------
+on _TIME
+end _TIME
+
+--local tMilliseconds, tHours, tMinutes, tSeconds
+
+--function convertTime pMilliseconds
+--   put pMilliseconds into tMilliseconds
+
+--   // Hours
+--   put tMilliseconds div 3600000 into tHours
+--   subtract (tHours * 3600000) from tMilliseconds
+
+--   // Minutes
+--   put tMilliseconds div 60000 into tMinutes
+--   subtract (tMinutes * 60000) from tMilliseconds
+
+--   // Seconds
+--   put tMilliseconds div 1000 into tSeconds
+--   subtract (tSeconds * 1000) from tMilliseconds
+
+--   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+--end convertTime
+
+
+
 
 --------------------
 # from the Gem module: an method for toggling image 
