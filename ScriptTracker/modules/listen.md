@@ -38,23 +38,15 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_listen_widget_id_2211](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2211.livecodescript)
 
-**widget "playAudio" of bkgnd "pause-play" of stack "listen"**
-* ID: widget id 2663 of bkgnd id 2654 of stack "listen"
+**widget "SeekForward" of bkgnd "pause-play" of stack "listen"**
+* ID: widget id 2986 of bkgnd id 2654 of stack "listen"
 * Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2663](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2663.livecodescript)
+* [stack_listen_widget_id_2986](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2986.livecodescript)
 
-**widget "pauseAudio" of bkgnd "pause-play" of stack "listen"**
-* ID: widget id 2664 of bkgnd id 2654 of stack "listen"
+**widget "SeekBack" of bkgnd "pause-play" of stack "listen"**
+* ID: widget id 2985 of bkgnd id 2654 of stack "listen"
 * Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2664](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2664.livecodescript)
-
-**button "Hide" of bkgnd "viewLogging" of stack "listen"**
-* ID: button id 2689 of bkgnd id 2687 of stack "listen"
-* [stack_listen_button_id_2689](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2689.livecodescript)
-
-**button "Clear" of bkgnd "viewLogging" of stack "listen"**
-* ID: button id 2690 of bkgnd id 2687 of stack "listen"
-* [stack_listen_button_id_2690](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2690.livecodescript)
+* [stack_listen_widget_id_2985](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2985.livecodescript)
 
 **button "Hide" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2694 of bkgnd id 2692 of stack "listen"
@@ -106,6 +98,14 @@
 **button "Clear" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2708 of bkgnd id 2705 of stack "listen"
 * [stack_listen_button_id_2708](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2708.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2689 of bkgnd id 2687 of stack "listen"
+* [stack_listen_button_id_2689](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2689.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2690 of bkgnd id 2687 of stack "listen"
+* [stack_listen_button_id_2690](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2690.livecodescript)
 
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
