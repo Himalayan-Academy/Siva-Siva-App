@@ -865,14 +865,26 @@ command togglePause pVisible, pState
       if exists (group "pause-play") then
          set the vis grp "pause-play" to pVisible
          
-         set the vis of widget "pauseAudio" to pState
-         # which means player is playing, giving user the  option to pause
-         
-         set the vis of widget "playAudio" to not pState
-         # which means player is pause, giving user the re-start playback
-         
+         if there is a widget "PlayPause" then
+
+            # special handling for listen stack
+            if pState then
+               set the iconPresetName of widget "PlayPause" to "pause"
+            else
+               set the iconPresetName of widget "PlayPause" to "play"
+            end if
+
+         else
+            
+            set the vis of widget "pauseAudio" to pState
+            # which means player is playing, giving user the  option to pause
+            
+            set the vis of widget "playAudio" to not pState
+            # which means player is pause, giving user the re-start playback
+            
+         end if
       end if
- -- end if
+   -- end if
 end togglePause
 
 
