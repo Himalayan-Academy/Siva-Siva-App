@@ -106,6 +106,9 @@ end layoutEntries
 
 on createNewJournalEntry pEntryA, pNum
    local tPadding, tTop, tName, tLabel, pData, tDate, tHumanReadableElapsedTime
+   local tTimeStamp
+   
+   put JSONtoArray(pEntryA["data"]) into pData
    
    if pNum is not a number then put 0 into pNum
    put 20 into tPadding
@@ -122,6 +125,7 @@ on createNewJournalEntry pEntryA, pNum
    set the top of grc tName to the top of grc "list boundaries" + tTop
    
    -- entry label field
+   -- this is a fld "title 0"
    put "title" && pNum into tName
    if tName is "rect" then put "title 0" into tName
    create field tName in group "entries"
@@ -129,6 +133,11 @@ on createNewJournalEntry pEntryA, pNum
    set the cEntry of field tName to pEntryA
    set the behavior of field tName to (the long id of stack "behavior_JournalEntry")
    put textDecode(pEntryA["label"],"UTF-8") into tLabel
+   --breakpoint
+   if pData["currentTime"] is true then
+      put ", " & pData["currentTime"] after tLabel
+   end if
+   
    if len(tLabel)  >35 then
       put truncateText(tLabel,35,true) into tLabel
    end if
@@ -163,8 +172,6 @@ on createNewJournalEntry pEntryA, pNum
    else
       put "Siva Siva App" into tLabel
    end if
-   
-   put JSONtoArray(pEntryA["data"]) into pData
    
    if pData["weburl"] contains "youtube" then
       put "Videos" into tLabel

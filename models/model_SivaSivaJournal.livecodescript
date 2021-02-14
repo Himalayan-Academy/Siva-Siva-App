@@ -173,6 +173,7 @@ command Journal_SetFavoriteFlag pEntryID, pValue
 end Journal_SetFavoriteFlag
 
 command Journal_DeleteEntry pEntryID
+   local tResult
    if pEntryID is not a number then
       return "error, id not a number"
    end if

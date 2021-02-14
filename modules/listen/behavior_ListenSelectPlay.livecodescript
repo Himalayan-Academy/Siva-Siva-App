@@ -19,7 +19,8 @@
 ---------------------------------------------------------------------
 global sConfigA,sCardName
 local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
-local sTimeStamp, sSelectionsA, sDownloadedAudioA
+local sTimeStamp, sSelectionsA
+local sDownloadedAudioA
 
 
 -----------------------------------------------------------------------
@@ -55,7 +56,6 @@ on mouseup
       case "my-audio-label"
          go to card "listen-my-audio"
          put "listen-my-audio" into sCardName
-         --hide grp "downloadSelection" of card "listen-file"
          break
       case "deleteOn"
          show fld "Display" visual effect "dissolve" very slow
@@ -79,8 +79,12 @@ on mouseup
          if isMobile() then
             deleteMobileControl "audioPlayer" # in case one is open already and playing
          end if  
-         togglePause false, true
-         break
+         
+         show  widget "pauseAudio" 
+         # which means he is listen because it is already running
+         hide widget "playAudio" 
+         # which means he is NOT playing. He is on PAUSE
+         
       case "AudioList"
          local tTitle,localURL
          
@@ -111,15 +115,13 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
+         # we have get sCardName to determine who to show download 
+         put sCardName into tHideDownload
+         
          go to card "listen-file"
-         
-         --         put sCardName
-         --         exit to top
-         --         if tHideDownload = "on" then
-         --            hide grp "downloadSelection" 
-         --         end if
-         
          put sSelectNum into fld "theSelectNum"
+         
+         
          lock screen
          # but we have stopPlayer  
          # on by mobile
@@ -128,7 +130,11 @@ on mouseup
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          
-         select_Play sSelectNum,,sCardName  # will use either the line number or item id
+         if sCardName = "listen-my-audio" then
+            direct_Play  sSelectNum,sCardName
+         else
+            select_Play sSelectNum  # will use either the line number or item id
+         end if
          
          local tURL
          if  "audio/book" is not in tURL then # no display details
@@ -144,29 +150,41 @@ on mouseup
             show grp "audioDetails"
             hide grp "noInformation"
          end if
+         
+         if tHideDownload = "listen-my-audio" then
+            hide grp "DownloadSelection"
+         else
+            show grp "DownloadSelection"
+         end if
+         
          unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
          break
          
-      case "pauseAudio" #  audio is playing; the icon to 2 vertical bars;
-         if not isMobile() then\
-               put  the currentTime of player "audioPlayer" into sTimeStamp
+         // we go to lib_MobileControls
+         
+      case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
+         local tPlayPause
+         
+         get the iconPresetName of widget "PlayPause"
+         put it into tPlayPause
+         
+         if tPlayPause is "pause" then
+            if not isMobile() then
+                  put  the currentTime of player "audioPlayer" into sTimeStamp
+            else
+               put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+            end if
+            pausePlayer sTimeStamp
          else
-            put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+            if not isMobile() then
+               put  the currentTime of player "audioPlayer" into sTimeStamp
+            end if
+            playPausedAudio sTimeStamp
          end if
          
-         pausePlayer sTimeStamp
-         break
-         
-      case "playAudio" # audio it stopped; Icon is a right facing triangle
-         --breakpoint
-         --  ntInfo sTimeStamp
-         if not isMobile() then
-            set  the currentTime of player "audioPlayer" to sTimeStamp
-         end if
-         playPausedAudio sTimeStamp
          break
          
       case "DownloadSelection"  
@@ -230,11 +248,14 @@ command playSingle pDataA
    put pDataA["url"] into tURL
    put pDataA["item_id"] into tItem_id
    
+   unlock screen
+   
    startPlayer tURL,pDataA["title"]
    showBusyIndicator false
    if  "audio/book" is not in tURL then # no display details
       select_ShowDetails "downloaded"
    end if 
+   
 end playSingle
 
 command share_Items 

@@ -501,17 +501,27 @@ end optimizeTextHeight
 
 
 command setupCaptionField
-   local tCorner, tTextHeight
+   local tCorner, tTextHeight, tTextWidth
    set the width of sCaptionText to .65 * CardWidth()
    put the formattedHeight of sCaptionText into tTextHeight
+   put the formattedWidth of sCaptionText into tTextWidth
+   --
    set the height of sCaptionText to tTextHeight
-   set the width of sCaptionText to the formattedWidth of sCaptionText
+   set the width of sCaptionText to tTextWidth
    put the bottomRight of sStoryText into tCorner
    subtract 12 from item 1 of tCorner
    subtract 16 from item 2 of tCorner
    set the bottomRight of sCaptionText to tCorner
    --
-   set the width of sCaptionBkg to the width of sCaptionText + 68
+   if tTextWidth > 500 then
+      set the width of sCaptionBkg to tTextWidth + 128
+   else if tTextWidth > 400 then
+      set the width of sCaptionBkg to tTextWidth + 108
+   else if tTextWidth > 320 then
+      set the width of sCaptionBkg to tTextWidth + 88
+   else
+      set the width of sCaptionBkg to tTextWidth + 68
+   end if
    if tTextHeight > 150 then
       -- 6 or more lines of text
       set the height of sCaptionBkg to tTextHeight + 52
@@ -528,8 +538,6 @@ command setupCaptionField
       set the height of sCaptionBkg to tTextHeight + 16
    end if
    set the loc of sCaptionBkg to the loc of sCaptionText
-   --   set the bottomRight of sCaptionBkg to \
-   --         (the right of sCaptionText + 25 + 4, the bottom of sCaptionText + 30)
 end setupCaptionField
 
 

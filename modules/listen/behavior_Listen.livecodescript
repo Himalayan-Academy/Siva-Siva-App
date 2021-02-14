@@ -28,7 +28,7 @@ local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloaded
 local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
-local sSelectionsA,sLastTarget,sSelectNum
+local sSelectionsA,sLastTarget,sSelectNum, pDataA
 
 
 on preOpenStack
@@ -84,6 +84,10 @@ on openCard
    
    switch tCardName
       case "listen-collection"
+         # we have turn as updateTime 
+         # because it going to fld in card listen-file
+         getPlaying false
+         
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "Listen" into fld "title-label"
@@ -92,6 +96,8 @@ on openCard
          
          
       case "listen-browse"
+         getPlaying false
+         
          clearSelection
          setAudioListcolors
          put playlist_GetCurrent() into  tBrowseHeader
@@ -102,6 +108,8 @@ on openCard
          break
          
       case "listen-my-audio"
+         getPlaying false
+         
          put "My Downloads" into fld "title-label"
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
@@ -111,9 +119,12 @@ on openCard
          if (fld "audioList" is empty) then
             dialog_CustomMsg "You have not downloaded any audio"
          end if
+         
          break
          
       case "listen-delete-file"
+         getPlaying false
+         
          put "Delete File" into fld "title-label"
          put empty into fld "collections-label"
          put empty into fld "my-audio-label"
@@ -124,9 +135,15 @@ on openCard
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         
+         // lib_MobileControls
+         setZeroDurationProgress
+         
          break
          
       case "listen-search"
+         getPlaying false
+         
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
          put "Search" into fld "title-label"
@@ -151,8 +168,6 @@ on closeCard
       case "listen-file"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
-         hide group "pause-play"
-         showPlayer "false","audioPlayer"
          deleteAllMobileControls
          break 
       case "listen-browse"
@@ -182,11 +197,12 @@ end resizeStack
 command updateUI
    
    local tHeader, tFooter, tAudioGlobalControl
-   local tSearchFilter, tPausePlay
+   local tSearchFilter, tPausePlay, tAudioPlayer
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight
+   local tRect, tControl, tRight,tAudioRect
+   
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -196,8 +212,8 @@ command updateUI
    put the long id of fld "my-audio-label" into tMyAudioLabel 
    
    topCenterMe tTitleLabel, 5
-   topLeftMe tCollectionsLabel, 10, 40
-   topRightMe tMyAudioLabel, 10, 40
+   topLeftMe tCollectionsLabel, 10, 30
+   topRightMe tMyAudioLabel, 10, 30
    
    switch (the short name of this card)
       
@@ -254,6 +270,12 @@ command updateUI
          
       case "listen-file"
          
+         put the long id of player "audioPlayer" into tAudioPlayer
+         topLeftMe tAudioPlayer, 20,-1111
+         
+         put the long id of graphic "audioRect" into tAudioRect
+         topLeftMe tAudioRect, 20,-1111
+         
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to  (CardWidth() - 35 )
          topLeftMe tCurrentTitle, 20,80
@@ -270,10 +292,10 @@ command updateUI
          centerMe tNoInformation, -100
          
          put the long id of grp "downloadSelection" into tDownloadSelection
-         toprightMe tDownloadSelection, 0, 515
+         topRightMe tDownloadSelection, 0, 155
          
          put the long id of grp "pause-play" into tPausePlay
-         bottomCenterMe tPausePlay, 80
+         bottomCenterMe tPausePlay, 60
          
          break
          
@@ -733,6 +755,17 @@ on clearSelection
    put empty into sSelectedItemA
 end clearSelection
 
+# this is for downloads. It gets the audio from 
+
+on direct_Play sSelectNum,sCardName
+   local pTitle,
+   put sDownloadedAudioA[sSelectNum]["localURL"] into sRemoteURL
+   put sDownloadedAudioA[sSelectNum]["metadata"]["1"]["title"]  into pTitle
+   put pTitle into fld "currentTitleLabel" 
+   startPlayer sRemoteURL,pTitle,sCardName,sSelectNum
+   # skip the card name Parameter in this context.
+   showBusyIndicator false
+end direct_Play
 -----------------------------------------------
 --# Select, Play, Listen, Stop UI interactions
 -----------------------------------------------
@@ -971,7 +1004,7 @@ command downloadAffirmed
    else
       put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into pTitle
    end if
-  show grp "downloadControls"
+   show grp "downloadControls"
    wait 100 milliseconds with messages
    dispatch "downloadURL"  to group "downloadControls" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
@@ -1006,25 +1039,29 @@ command markCachedItems pKeys
    end repeat
 end markCachedItems
 
-command addJournalEntry-- save a bookmark to db
-   local pDataA, tTitle, tURL, tNoSavingCards,tMsg, tCard
+command addJournalEntry -- save a bookmark to database
+   local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
+   
    put the short name of this card into tCard
-   put "listen-collection,listen-file,listen-search " into tNoSavingCards
+   
+   put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
    if the short name of this card is among the items of tNoSavingCards then
-      put "Nothing to Save to Journal Here" into tMsg
-      exit addJournalEntry
-   end if
-   
-   
-   if sSelectedItemA is empty then
-      put "You Must Select a Title" into tMsg
-      dialog_CustomMsg tMsg
+      put "Nothing to save to Journal. Go an audio file." into tMsg
       exit addJournalEntry
    end if
    
    put getJournalData() into pDataA   
+   
+   put getCurrentTime() into tHoursMinutes
+   put tHoursMinutes into pDataA["currentTime"]
+   
+   --   put getTimestamp() into tCurrentTime
+   --   put tCurrentTime  into pDataA["timeStamp"]
+   put getCurrentTime() into pDataA["timeStamp"]
+   
    put pDataA["title"] into tTitle
+   put ", " & pDataA["currentTime"] after tTitle
    
    Journal_RecordEntry "listen",tTitle,pDataA 
    
@@ -1032,10 +1069,13 @@ end addJournalEntry
 
 
 on journalResume  pDataA, pEntryA
-   lock screen
    local tCard
    
+   lock screen
+   
+   
    put pDataA["card"] into tCard
+  
    go to card tCard
    
    if tCard= "listen-file"  then
@@ -1044,7 +1084,7 @@ on journalResume  pDataA, pEntryA
       # we can integrate is this listen behavior .
       dispatch "playSingle" to card "listen-file" with pDataA
    end if
-   unlock screen
+  
 end journalResume
 
 
@@ -1063,24 +1103,24 @@ end clearAudioListColor
 command __UXHandlers
 end __UXHandlers
 
+local sPlaying
+
 command startPlayer  pURL,pTitle,sCardName,sSelectNum
-   local tRect, localURL,  pItemID,pDataA,tLineNum, tLineValue
+   local tRect, pAudioRect, localURL,  pItemID,tLineNum, tLineValue
+   
+   put the rect of graphic "audioRect" into pAudioRect
    
    put pTitle into tLineValue
    
-   
-   
    if pTitle is empty then
-     put sSelectNum*2 into tLineNum
-         if (tLineNum mod 2) = 0 then
-            subtract 1 from tLineNum
-         end if
-      put line tLineNum of fld "audioList" into tLineValue
+      put sSelectNum*2 into tLineNum
+      if (tLineNum mod 2) = 0 then
+         subtract 1 from tLineNum
+      end if
+      put line tLineNum of fld "theSelectNum" into tLineValue
    end if
    
-   
    put tLineValue into pDataA["title"]
-   
    
    
    if sCardName = "listen-my-audio" then
@@ -1101,81 +1141,91 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
    put "listen-file" into pDataA["card"]  
    put pURL into pDataA["url"]
    put pItemID into pDataA["item_id"]
+   
+   # we used a getter/setter in lib_SivaSiva
+   # because the timing is different than addJournalEntry          
    setJournalData pDataA
    
    if isMobile() then
-      if the platform is "android" then
-         # the player is pretty ugly and covers up 120 vertical px
-         # we need to try to get it to fit nicely at the bottom:
-         put 70,625,350,659 into tRect    #90,630,340,675
-      else
-         put empty into tRect
-      end if
-      --breakpoint
-      createMobileAudioPlayer pURL, "audioPlayer",tRect
+      createMobileAudioPlayer pURL, "audioPlayer",pAudioRect
    else
       set the filename of player "audioPlayer" to pURL
    end if
    
    
-   # 2019-100-23 BR we are not showing controller  because of iOS 13.0.3
+   # 2019-10-23 BR we are not showing controller  because of iOS 13.0.3
    # instead we are using the icons of grp "pause-pay"
-   
-   --showPlayer "true", "audioPlayer"
    
    if not isMobile() then
       if sTimeStamp is empty then
          put 0 into sTimeStamp
       end if
-      --set the currenttime player "audioPlayer" to sTimeStamp
+      
       start player "audioPlayer"
+      set the currenttime player "audioPlayer" to sTimeStamp
+      
+      getPlaying true
+      
       get runningAudioIndicatorVis("true")
-      --   else
-      --      setMobileAudioPlayer "audioPlayer", "play"
    end if
-   put  pTitle into fld "currentTitleLabel"
    
-   --   if there is a control "DownloadSelection" then
-   --      set the vis of widget "DownloadSelection" to not sSelectedItemA["cached"]
-   --   end if
-   togglePause true, true
+   put  pTitle into fld "currentTitleLabel"
+   send "updateTimer sPlaying" -- in 100 milliseconds
+   set the iconPresetName of widget "PlayPause" to "pause"
+ 
 end startPlayer
 
 on stopPlayer
    if not isMobile() then
       stop player "audioPlayer"
       set the filename of player "audioPlayer"  to empty
+      put false into sPlaying
+      
    else 
       setMobileAudioPlayer "audioPlayer", false
       deleteMobileControl "audioPlayer"
    end if
+   
+   set the iconPresetName of widget "PlayPause" to "pause"
+ 
+   updateTimer sPlaying
+   
 end stopPlayer
 
 
 on pausePlayer sTimeStamp
    if not isMobile() then
       set the paused of  player "audioPlayer" to "true"
+      put false into sPlaying
    else  
       setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
    end if
-   togglePause true, false
+   
+   # we have to record the timestamp of a journal
+   put sTimeStamp into pDataA["timeStamp"]
+   setJournalData pDataA
+   set the iconPresetName of widget "PlayPause" to "play"
+   
 end pausePlayer
 
 on playPausedAudio sTimeStamp
+   
+   put sTimeStamp into pDataA["timeStamp"]
+   setJournalData pDataA
+   
    if not isMobile() then
       set the currenttime  of player "audioPlayer" to sTimeStamp
       start player "audioPlayer"
-   else
-      if sTimeStamp is empty then 
-         put 0 into sTimeStamp
-      end if
+      put true into sPlaying
+   else 
       setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+      send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
    end if
-   togglePause true, true
+   set the iconPresetName of widget "PlayPause" to "pause"
 end playPausedAudio
 
 on clearPlayer
-   showPlayer false, "audioPlayer" 
+  showPlayer false, "audioPlayer" 
 end clearPlayer
 
 command offLineGoMyAudio
@@ -1199,4 +1249,5 @@ end offLineGoMyAudio
 on closeStack
    portal_SetLastStack "Listen"
 end closeStack
+
 
