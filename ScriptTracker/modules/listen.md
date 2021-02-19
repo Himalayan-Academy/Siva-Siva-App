@@ -38,16 +38,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_listen_widget_id_2211](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2211.livecodescript)
 
-**widget "SeekForward" of bkgnd "pause-play" of stack "listen"**
-* ID: widget id 2986 of bkgnd id 2654 of stack "listen"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2986](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2986.livecodescript)
-
-**widget "SeekBack" of bkgnd "pause-play" of stack "listen"**
-* ID: widget id 2985 of bkgnd id 2654 of stack "listen"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2985](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2985.livecodescript)
-
 **button "Hide" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2694 of bkgnd id 2692 of stack "listen"
 * [stack_listen_button_id_2694](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2694.livecodescript)
