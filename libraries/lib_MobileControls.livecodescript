@@ -50,8 +50,8 @@ local sPlayerId, sPlayerRect,sDuration
 -- BR 2020-03-06 -deprecating the mobilebusy because user has no control
 
 local sPlaying
-
-
+local sCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
+local pDataA
 
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    log "createMobilePlayer"
@@ -180,23 +180,120 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    
 end setMobileAudioPlayer
 
-on audioSeekForward
-   // cause play to pause
-   setMobileAudioPlayer "audioPlayer", "pause"
-   
-   // auto timer he  allows the  user to forward 
-   
-   // then allow play
-   
-end audioSeekForward
+--on audioSeekForward
+--   // cause play to pause
 
-on audioSeekBack
-   // cause play to pause
+--   --   if isMobile() then
+--   --      setMobileAudioPlayer "audioPlayer", "pause"
+--   --   else
+--   --      set the paused of  player "audioPlayer" of stack "listen" to "true"
+--   --   end if
+
+--   put true into sPlaying
+--   set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+
+--   // auto timer he  allows the  user to forward 
+
+--   put true into sSeek
+--   updateTimer 
+
+--   // then allow play
+
+--end audioSeekForward
+
+--on audioSeekBack
+--   // cause play to pause
+
+--   // auto timer he  allows the  user to back
+
+--   // then allow play
+--end audioSeekBack
+
+Local sFastforward
+
+
+command updateTimer
    
-   // auto timer he  allows the  user to back
+   // Update the time indicator
+   if sPlaying is true then
+      
+      if there is no  fld "currentTime" of stack "listen" then
+         exit updateTimer 
+      end if
+      
+      lock screen
+      
+      
+      if isMobile() then
+         put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
+         put mobileControlGet("audioPlayer","playableDuration") into tDuration
+      else
+         put the currentTime of player "audioPlayer" of stack "listen" into sCurrentTime
+         put the duration of player "audioPlayer" of stack "listen" into tDuration
+      end if
+      
+      
+      if sCurrentTime > 0 and tDuration > 0 then
+         
+         // Update the time indicator
+         put round((sCurrentTime/tDuration) * 350) into tWidth
+         
+         
+         put getCurrentTime() into sCurrentTime
+         
+         // Update time fields
+         put convertTime(sCurrentTime) into tHoursMinutes
+         put convertTime(tDuration) into tDuration
+         
+         put getHoursMinsTime() into tHoursMinutes
+         
+         put tHoursMinutes into fld "currentTime" of stack "listen"
+         put tDuration into fld "endTime" of stack "listen"
+         
+         // Update the time indicator
+         set the width of graphic "durationProgress" of stack "listen" to tWidth
+         
+         --         set the left of graphic "durationProgress" of stack "listen" to 20
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
+         set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+         
+      end if
+      
+      unlock screen
+      
+      send "updateTimer" to me in 20 milliseconds
+   end if
+end updateTimer  
+
+function getCurrentTime 
+   return sCurrentTime
+end getCurrentTime
+
+function getHoursMinsTime
+   return tHoursMinutes
+end getHoursMinsTime
+
+
+local tMilliseconds, tHours, tMinutes, tSeconds
+
+function convertTime pMilliseconds
+   put pMilliseconds into tMilliseconds
    
-   // then allow play
-end audioSeekBack
+   // Hours
+   put tMilliseconds div 3600000 into tHours
+   subtract (tHours * 3600000) from tMilliseconds
+   
+   // Minutes
+   put tMilliseconds div 60000 into tMinutes
+   subtract (tMinutes * 60000) from tMilliseconds
+   
+   // Seconds
+   put tMilliseconds div 1000 into tSeconds
+   subtract (tSeconds * 1000) from tMilliseconds
+   
+   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+end convertTime
+
 
 on playerFinished -- sent on mobile when audio is done
    if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
@@ -226,98 +323,9 @@ command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile an
    end if
 end showPlayer
 
-######### Mobile Utilities ############
-# we shall call of these handlers as we click on mouseup
-# 
-
-local tCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
-
-command updateTimer
-   
-   // Update the time indicator
-   if sPlaying is true then
-      
-      if there is no  fld "currentTime" of stack "listen" then
-         exit updateTimer 
-      end if
-      
-      lock screen
-      if isMobile() then
-         put mobileControlGet("audioPlayer","currentTime") into tCurrentTime
-         put mobileControlGet("audioPlayer","playableDuration") into tDuration
-      else
-         put the currentTime of player "audioPlayer" of stack "listen" into tCurrentTime
-         put the duration of player "audioPlayer" of stack "listen" into tDuration
-      end if
-      
-      if tCurrentTime > 0 and tDuration > 0 then
-         
-         // Update the time indicator
-         put round((tCurrentTime/tDuration) * 350) into tWidth
-         
-         put tCurrentTime into sTimeStamp
-         
-         // Update time fields
-         put convertTime(tCurrentTime) into tHoursMinutes
-         put convertTime(tDuration) into tDuration
-         
-         put getCurrentTime() into tHoursMinutes
-         
-         put tHoursMinutes into fld "currentTime" of stack "listen"
-         put tDuration into fld "endTime" of stack "listen"
-         
-         // Update the time indicator
-         set the width of graphic "durationProgress" of stack "listen" to tWidth
-         
-         --         set the left of graphic "durationProgress" of stack "listen" to 20
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
-         set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         
-         // redundeck 
-         --         put true into sPlaying
-         --         // Reset duration marker
-         --         set the width of graphic "durationProgress" to 1
-         --         set the left of graphic "durationProgress" to 25
-         --         set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-      end if
-      
-      unlock screen
-      send "updateTimer" to me in 20 milliseconds
-   end if
-end updateTimer  
-
-function getCurrentTime 
-   return tHoursMinutes
-end getCurrentTime
-
-function getTimestamp
-   return sTimestamp
-end getTimestamp
-
-local tMilliseconds, tHours, tMinutes, tSeconds
-
-function convertTime pMilliseconds
-   put pMilliseconds into tMilliseconds
-   
-   // Hours
-   put tMilliseconds div 3600000 into tHours
-   subtract (tHours * 3600000) from tMilliseconds
-   
-   // Minutes
-   put tMilliseconds div 60000 into tMinutes
-   subtract (tMinutes * 60000) from tMilliseconds
-   
-   // Seconds
-   put tMilliseconds div 1000 into tSeconds
-   subtract (tSeconds * 1000) from tMilliseconds
-   
-   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
-end convertTime
 
 
-
-
-   on deleteMobileControl pName -- jg: deletes an existing mobile control
+on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
    -- they are overlaid on the stack and will float over all cards
    if not isMobile() then exit deleteMobileControl
@@ -357,66 +365,33 @@ command setZeroDurationProgress
    put "0.00" into field "endTime"
 end setZeroDurationProgress
 
-
-----------------------------------------
-// SivaPlayer.livecode
-
---command audioLoadFile pSoundFile
---   // Load sound file
---   mobileControlSet "audioPlayer","filename",(specialFolderPath("resources") & "/audio/" & pSoundFile)
-
---   // Reset duration marker
---   set the width of graphic "durationProgress" to 1
---   set the left of graphic "durationProgress" to 25
---   set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-
---   // Start player
---   set the iconPresetName of widget "PlayPause" to "pause"
---   put true into sPlaying
---   mobileControlDo "audioPlayer","play"  
---   send "updateTimer" to me in 20 milliseconds
---end audioLoadFile 
-
-
---command audioPlayPause
---   local tIcon
-
---   put the iconPresetName of widget "PlayPause" into tIcon
-
---   if tIcon is "play" then
---      // Update the icon
---      set the iconPresetName of widget "PlayPause" to "pause"
-
---      // Start the player
---      put true into sPlaying
---      mobileControlDo "audioPlayer","play"   
---      updateTimer   
---   else if tIcon is "pause" then
---      // Update the icon
---      set the iconPresetName of widget "PlayPause" to "play"
-
---      // Pause the player
+--on pausePlayer sTimeStamp
+--   if not isMobile() then
+--      set the paused of  player "audioPlayer" to "true"
 --      put false into sPlaying
---      mobileControlDo "audioPlayer","pause"
+--   else  
+--      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
 --   end if
---end audioPlayPause
 
---on playerFinished
---   put false into sPlaying
+--   # we have to record the timestamp of a journal
+--   put sTimeStamp into pDataA["timeStamp"]
+--   setJournalData pDataA
+--   set the iconPresetName of widget "PlayPause" to "play"
 
---   // Play next track
---   put the hilitedLine of field "files" into tCurrentIndex
---   if tCurrentIndex = the number of lines in field "files" then
---      // Last track
---      // do nothing
---   else
---      // Select and load next file
---      add 1 to tCurrentIndex
---      set the hilitedLine of field "files" to tCurrentIndex
---      put line tCurrentIndex of field "files" into tSoundFile
+--end pausePlayer
 
---      audioLoadFile tSoundFile
+--on playPausedAudio sTimeStamp
+
+--   put sTimeStamp into pDataA["timeStamp"]
+--   setJournalData pDataA
+
+--   if not isMobile() then
+--      set the currenttime  of player "audioPlayer" to sTimeStamp
+--      start player "audioPlayer"
+--      put true into sPlaying
+--   else 
+--      setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
+--      send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
 --   end if
---end playerFinished
-
-
+--   set the iconPresetName of widget "PlayPause" to "pause"
+--end playPausedAudio

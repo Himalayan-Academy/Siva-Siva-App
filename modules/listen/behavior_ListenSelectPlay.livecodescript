@@ -173,7 +173,7 @@ on mouseup
          
          if tPlayPause is "pause" then
             if not isMobile() then
-                  put  the currentTime of player "audioPlayer" into sTimeStamp
+               put  the currentTime of player "audioPlayer" into sTimeStamp
             else
                put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
             end if
@@ -185,6 +185,14 @@ on mouseup
             playPausedAudio sTimeStamp
          end if
          
+         break
+         
+      case "SeekForward"
+         audioSeekForward
+         break
+         
+      case "SeekBack"
+         audioSeekBack
          break
          
       case "DownloadSelection"  
@@ -201,9 +209,7 @@ on mouseup
          break
    end switch
    
-   
 end mouseup
-
 
 command switchAudioUi sAudioUI
    local pUI
@@ -239,24 +245,26 @@ command switchAudioUi sAudioUI
    end switch
 end switchAudioUi
 
-command playSingle pDataA
-   local tSearchA,x,tItem_id
-   local tURL,tSelectedItemA
-   
-   put empty into tSelectedItemA
-   
-   put pDataA["url"] into tURL
-   put pDataA["item_id"] into tItem_id
-   
-   unlock screen
-   
-   startPlayer tURL,pDataA["title"]
-   showBusyIndicator false
-   if  "audio/book" is not in tURL then # no display details
-      select_ShowDetails "downloaded"
-   end if 
-   
-end playSingle
+--command playSingle pDataA
+--   local tSearchA,x,tItem_id
+--   local tURL,tSelectedItemA
+--   local sCurrentTime
+
+--   put empty into tSelectedItemA
+
+--   put pDataA["url"] into tURL
+--   put pDataA["item_id"] into tItem_id
+
+--   unlock screen
+
+--   startPlayer tURL,pDataA["title"]
+--   put pDataA["timeStamp"]  into sCurrentTime
+--   showBusyIndicator false
+--   if  "audio/book" is not in tURL then # no display details
+--      select_ShowDetails "downloaded"
+--   end if 
+
+--end playSingle
 
 command share_Items 
    local tURL,  sShareItemsA

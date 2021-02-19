@@ -29,9 +29,9 @@ local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnL
 local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
 local sSelectionsA,sLastTarget,sSelectNum, pDataA
+local sFastforward
 
-
-on preOpenStack
+.
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
@@ -130,6 +130,7 @@ on openCard
          put empty into fld "my-audio-label"
          break
       case "listen-file"
+       
          clearSelection
          
          put "Listen" into fld "title-label"
@@ -166,6 +167,8 @@ on closeCard
    
    switch tCardName
       case "listen-file"
+         hide grp "downloadSelection"
+         hide grp "DownloadControls"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
          deleteAllMobileControls
@@ -1053,15 +1056,14 @@ command addJournalEntry -- save a bookmark to database
    
    put getJournalData() into pDataA   
    
-   put getCurrentTime() into tHoursMinutes
-   put tHoursMinutes into pDataA["currentTime"]
+   put getCurrentTime() into sTimeStamp
+   put getHoursMinsTime() into tHoursMinutes
+   put sTimeStamp into pDataA["timeStamp"]
+   put tHoursMinutes into pDataA["hoursMinutes"]
    
-   --   put getTimestamp() into tCurrentTime
-   --   put tCurrentTime  into pDataA["timeStamp"]
-   put getCurrentTime() into pDataA["timeStamp"]
    
    put pDataA["title"] into tTitle
-   put ", " & pDataA["currentTime"] after tTitle
+   put ", " & pDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen",tTitle,pDataA 
    
@@ -1075,20 +1077,44 @@ on journalResume  pDataA, pEntryA
    
    
    put pDataA["card"] into tCard
-  
+   
    go to card tCard
    
    if tCard= "listen-file"  then
       # using has want to listen you one unique audio file
       # we have set to the card up....  in the the future
       # we can integrate is this listen behavior .
-      dispatch "playSingle" to card "listen-file" with pDataA
+      
+    playSingle pDataA
+      
    end if
-  
+   
 end journalResume
 
 
-------------- 
+command playSingle pDataA
+   local tSearchA,x,tItem_id
+   local tURL,tSelectedItemA
+   
+   
+   put empty into tSelectedItemA
+   
+   put pDataA["url"] into tURL
+   put pDataA["item_id"] into tItem_id
+   put pDataA["timeStamp"]  into sTimeStamp
+   
+   unlock screen
+   
+   startPlayer tURL,pDataA["title"]
+   
+   showBusyIndicator false
+   if  "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+   
+end playSingle
+
+ 
 on __ListenUtilities
 end __ListenUtilities
 
@@ -1131,6 +1157,7 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
       put pItemID into pDataA["item_id"]
       put pTitle  into pDataA["title"]
+      put 0 into sTimeStamp
       fetchSingleMetadata pItemID
    else
       # assume we have data 
@@ -1152,27 +1179,26 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       set the filename of player "audioPlayer" to pURL
    end if
    
-   
-   # 2019-10-23 BR we are not showing controller  because of iOS 13.0.3
-   # instead we are using the icons of grp "pause-pay"
-   
+   if sTimeStamp is empty then
+      put 0 into sTimeStamp
+   end if
+   --
    if not isMobile() then
-      if sTimeStamp is empty then
-         put 0 into sTimeStamp
-      end if
-      
       start player "audioPlayer"
       set the currenttime player "audioPlayer" to sTimeStamp
-      
+      --
       getPlaying true
-      
+      --
       get runningAudioIndicatorVis("true")
+   else
+      getPlaying true
+      setMobileAudioPlayer "audioPlayer", "currentTime", sTimeStamp
    end if
    
    put  pTitle into fld "currentTitleLabel"
-   send "updateTimer sPlaying" -- in 100 milliseconds
+   send "updateTimer" -- in 100 milliseconds
    set the iconPresetName of widget "PlayPause" to "pause"
- 
+   
 end startPlayer
 
 on stopPlayer
