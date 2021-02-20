@@ -285,7 +285,7 @@ command updateUI
          
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
          set the width of tAudioDetailsGrc to  (CardWidth() - 20 )
-         topLeftMe tAudioDetailsGrc, 10 ,150
+         topLeftMe tAudioDetailsGrc, 10,150
          
          put the long id of fld "audioDetails" into tAudioDetailsFld
          set the width of tAudioDetailsFld to  (CardWidth() -30 )
@@ -294,8 +294,8 @@ command updateUI
          put the long id of grp "noInformation" into tnoInformation
          centerMe tNoInformation, -100
          
-         put the long id of grp "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 0, 155
+         put the long id of widget "downloadSelection" into tDownloadSelection
+         topRightMe tDownloadSelection, 10, 156
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
