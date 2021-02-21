@@ -133,6 +133,11 @@ command downloadComplete pURL, pStatus
    -- since the download is complete, there is no need to leave the progress bar visible
    local error, tModule, tLocalPath
    
+   
+   # this turns it off. Must be explicit called for working with mobile
+   libURLSetStatusCallback -- no parameters: turns off the message
+   
+   
    hide scrollbar "ProgressBar"
    
    -- check if there was a problem with the download
