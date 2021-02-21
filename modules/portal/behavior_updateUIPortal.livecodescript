@@ -57,7 +57,7 @@ on mouseup
    switch tTarget
       local tMsg
       case "Topics"
-         portal_GoUrl  "https://dev.himalayanacademy.com/topics"
+         portal_GoUrl  "https://www.himalayanacademy.com/topics"
          exit mouseup
          break
       case "loading"
