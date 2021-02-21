@@ -402,7 +402,8 @@ command updateUIPortal
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             updateNavMandalaUI
          else
-            topCenterMe tControl,75
+            --topCenterMe tControl,75
+            topCenterMe tControl,60
          end if
          
          put (0,tTop,CardWidth(),tBottom) into tRect
@@ -495,6 +496,7 @@ private command updateNavMandalaUI
    setBottomAndLoc the long id of button "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX
    set the bottom of widget "Journal" to (the bottom of tGroup)-15
    set the bottom of button "Settings" to (the bottom of tGroup)-15
+   
 end updateNavMandalaUI
 
 private command setTopAndLoc pControl, pTop, pXLoc
