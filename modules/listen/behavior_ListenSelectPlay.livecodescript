@@ -39,6 +39,7 @@ on mouseup
    # to separate handlers.
    
    put long id of the target into pTarget
+   --put long id of grp "displayDelete" into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
    
@@ -58,9 +59,7 @@ on mouseup
          put "listen-my-audio" into sCardName
          break
       case "deleteOn"
-         show fld "Display" visual effect "dissolve" very slow
-         wait 250 milliseconds
-         hide fld "Display" visual effect "dissolve" very slow
+      case "Display"
          go to card "listen-delete-file"
          put empty into fld "currentFilePick"
          dispatch  "getSums" to grp "displayFilesSizes"
