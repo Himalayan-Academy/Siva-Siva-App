@@ -400,10 +400,10 @@ command updateUIPortal
          if CardHeight() < 736 then
             set the textSize of tControl to 12
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
+            set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
          else
-            --topCenterMe tControl,75
-            topCenterMe tControl,60
+            topCenterMe tControl,75
          end if
          
          put (0,tTop,CardWidth(),tBottom) into tRect
@@ -444,10 +444,11 @@ private command updateNavMandalaUI
    put the loc of tGroup into tLoc
    put item 1 of tLoc into tMidX
    
-   setBottomAndLoc the long id of widget "Topics", the bottom of tGroup, tMidX
+   setBottomAndLoc the long id of fld "Topics", the bottom of tGroup, tMidX
+   setBottomAndLoc the long id of widget "Topics", the top of fld "Topics" - 3, tMidX
    
-   setTopAndLoc the long id of fld "gems", the top of tGroup, tMidX
-   setTopAndLoc the long id of grc "gems", the bottom of fld "gems", tMidX
+   setTopAndLoc the long id of grc "gems", the top of tGroup, tMidX
+   set the loc of fld "gems" to the loc of grc "gems"
    
    setTopAndLoc the long id of fld "read", (the bottom of grc "gems")+kMargin, tMidX
    setTopAndLoc the long id of grc "read", the bottom of fld "read", tMidX
@@ -492,11 +493,10 @@ private command updateNavMandalaUI
    set the loc of widget "look" to the loc of grc "look"
    setTopAndLoc the long id of fld "look", the bottom of grc "look", tMidX+tDeltaX
    
-   setBottomAndLoc the long id of widget "Journal", (the bottom of tGroup)-15, tMidX-tDeltaX
-   setBottomAndLoc the long id of button "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX
-   set the bottom of widget "Journal" to (the bottom of tGroup)-15
-   set the bottom of button "Settings" to (the bottom of tGroup)-15
-   
+   setBottomAndLoc the long id of fld "Journal", (the bottom of tGroup)-15, tMidX-tDeltaX
+   setBottomAndLoc the long id of widget "Journal", (the top of fld "Journal")-3, tMidX-tDeltaX
+   setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX
+   setBottomAndLoc the long id of button "Settings", (the top of fld "Settings")-3, tMidX+tDeltaX
 end updateNavMandalaUI
 
 private command setTopAndLoc pControl, pTop, pXLoc
