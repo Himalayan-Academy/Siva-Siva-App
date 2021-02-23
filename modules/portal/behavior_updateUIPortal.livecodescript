@@ -493,9 +493,9 @@ private command updateNavMandalaUI
    set the loc of widget "look" to the loc of grc "look"
    setTopAndLoc the long id of fld "look", the bottom of grc "look", tMidX+tDeltaX
    
-   setBottomAndLoc the long id of fld "Journal", (the bottom of tGroup)-15, tMidX-tDeltaX
+   setBottomAndLoc the long id of fld "Journal", (the bottom of tGroup)-15, tMidX-tDeltaX-3
    setBottomAndLoc the long id of widget "Journal", (the top of fld "Journal")-3, tMidX-tDeltaX
-   setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX
+   setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX+1
    setBottomAndLoc the long id of button "Settings", (the top of fld "Settings")-3, tMidX+tDeltaX
 end updateNavMandalaUI
 
