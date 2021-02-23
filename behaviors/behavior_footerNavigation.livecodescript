@@ -56,9 +56,9 @@ on mouseup
             go card "storyHome"
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
             showStoryMenu
-         else if tCard is among the items of "listen-browse,listen-my-audio,listen-file" then
+         else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
-         else if tCard is "listen-delete-file" then
+         else if tCard is among the items of "listen-delete-file,listen-file" then
             go card "listen-my-audio"
          else if tCard is "listen-search" then
             go card "listen-browse"
@@ -70,9 +70,12 @@ on mouseup
       case "journal"
          unlock screen
          
+         AddJournalEntry
+         // will exit to top, no journal entry made
+         
          moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
-         AddJournalEntry
+         
          
          break
          

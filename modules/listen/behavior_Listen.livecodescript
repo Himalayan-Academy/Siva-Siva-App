@@ -204,7 +204,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight,tAudioRect
+   local tRect, tControl, tRight,tAudioRect,tHelpAudio
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -240,6 +240,8 @@ command updateUI
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
+         put the long id of btn "helpAudio" into tHelpAudio
+         bottomRightMe tHelpAudio,0,50
          break
          
       case "listen-browse"
@@ -1056,6 +1058,13 @@ command addJournalEntry -- save a bookmark to database
    
    put getJournalData() into pDataA   
    
+   ---------
+   if pDataA["url"] contains "http" then
+      dialog_CustomMsg "Download to Save to Journal."
+      exit to top
+   end if
+   ----------
+   
    put getCurrentTime() into sTimeStamp
    put getHoursMinsTime() into tHoursMinutes
    put sTimeStamp into pDataA["timeStamp"]
@@ -1103,6 +1112,7 @@ command playSingle pDataA
    put pDataA["item_id"] into tItem_id
    put pDataA["timeStamp"]  into sTimeStamp
    
+   hide grp "downloadSelection"
    unlock screen
    
    startPlayer tURL,pDataA["title"]
@@ -1131,7 +1141,7 @@ end __UXHandlers
 
 local sPlaying
 
-command startPlayer  pURL,pTitle,sCardName,sSelectNum
+command startPlayer  pURL,pTitle,sCardName,sSelectNum,sTimeStamp
    local tRect, pAudioRect, localURL,  pItemID,tLineNum, tLineValue
    
    put the rect of graphic "audioRect" into pAudioRect
@@ -1155,19 +1165,22 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum
       # to get them in to journal....
       put sDownloadedAudioA[sSelectNum]["localURL"] into pURL
       put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
+      
+      
       put pItemID into pDataA["item_id"]
       put pTitle  into pDataA["title"]
-      put 0 into sTimeStamp
+      
+      # I have journal requirement. both the item_id, and Title 
+      # are part of the data, in inside the JSON
+      
+      
+      
       fetchSingleMetadata pItemID
    else
       # assume we have data 
       showBusyIndicator true, "Loading"
       put sSelectedItemA["item_id"] into pItemID
    end if
-   
-   put "listen-file" into pDataA["card"]  
-   put pURL into pDataA["url"]
-   put pItemID into pDataA["item_id"]
    
    # we used a getter/setter in lib_SivaSiva
    # because the timing is different than addJournalEntry          
