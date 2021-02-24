@@ -69,6 +69,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    put pAudioRect into sPlayerRect
    
    mobileControlSet pPlayerName, "visible", false
+   mobileControlSet pPlayerName, "showcontroller", false
    mobileControlSet pPlayerName, "rect", sPlayerRect
    mobileControlSet pPlayerName, "filename", pURL 
    
@@ -103,7 +104,11 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       send "updateTimer" to me in 20 milliseconds
    end if
    
-   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   if there is a widget "PlayPause" then
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   else
+      togglePause true,false
+   end if
    
 end playerPropertyAvailable
 
@@ -143,7 +148,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       put false into sPlaying
       updateTimer 
       
-      set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+      if there is a widget "PlayPause" then
+         set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+      end if
       
    end if
    
@@ -158,8 +165,12 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       updateTimer
       
       # icon switch to "play"
-      set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
-      
+      if there is a widget "PlayPause" then
+         set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+      else
+         togglePause true,false
+      end if
+
    end if
    
    if pState = "play" then # could be start from scratch after pausing
@@ -173,8 +184,10 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds
       
-      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
-      
+      if there is a widget "PlayPause" then
+         set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+      end if
+
       get runningAudioIndicatorVis("true")
    end if
    
@@ -217,7 +230,7 @@ command updateTimer
    // Update the time indicator
    if sPlaying is true then
       
-      if there is no  fld "currentTime" of stack "listen" then
+      if there is no fld "currentTime" of stack "listen" then
          exit updateTimer 
       end if
       
@@ -303,7 +316,11 @@ on playerFinished -- sent on mobile when audio is done
    
    put false into sPlaying
    
-   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   if there is a widget "PlayPause" then
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   else
+      togglePause false,true
+   end if
    
    get runningAudioIndicatorVis("false")
    
