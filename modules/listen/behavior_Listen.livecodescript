@@ -22,16 +22,17 @@
 #  which is the name/title of all the collections
 #
 # CHANGES: 2017-06-22 CREATED Brahmanathaswami
+# EVEN MORE CHANGES: 2021-03-01 AAG
 -----
-global sConfigA, sCardName
-local sCollectionA,sCollectionChoice,  sSelectedItemA, sSelectedURL, sDownloadedAudioA
-local sCurrentPlayListA,sTargetPlayList,sListType,sPlaylistQueryA,sShareURL,sOnLIne
-local sNowPlayingTitle, sNowPlayingArtist,sNowPlayingDetails,sStartTimer,sEndTimer
+global gConfigA, gCardName
+local sCollectionA, sCollectionChoice, sSelectedItemA, sSelectedURL, sDownloadedAudioA
+local sCurrentPlayListA, sTargetPlayList, sListType, sPlaylistQueryA, sShareURL, sOnLIne
+local sNowPlayingTitle, sNowPlayingArtist, sNowPlayingDetails, sStartTimer, sEndTimer
 local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
-local sSelectionsA,sLastTarget,sSelectNum, pDataA
+local sSelectionsA, sLastTarget, sSelectNum, sDataA 
 local sFastforward
 
-.
+on preOpenStack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
@@ -60,7 +61,6 @@ on openstack
    put JSONToArray(tContainer) into sCollectionA 
    
    portal_SetLastStack "Listen"   
-   
    
    # must have net connection, otherwise take to My Audio
 end openstack
@@ -91,9 +91,7 @@ on openCard
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "Listen" into fld "title-label"
-         
          break
-         
          
       case "listen-browse"
          getPlaying false
@@ -119,7 +117,6 @@ on openCard
          if (fld "audioList" is empty) then
             dialog_CustomMsg "You have not downloaded any audio"
          end if
-         
          break
          
       case "listen-delete-file"
@@ -185,12 +182,7 @@ on closeCard
    end switch
 end closeCard
 
---------------------
-
-command __Geometry
-end __Geometry
-
-on resizeStack x,y,ox,oy
+on resizeStack
    lock screen
    setCardCoords "portrait"
    updateUI
@@ -204,7 +196,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight,tAudioRect,tHelpAudio
+   local tRect, tControl, tRight, tAudioRect, tHelpAudio
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -313,12 +305,6 @@ command updateUI
    end switch
    
 end updateUI
-
-
---------------------------
-on __GetACollection
-end __GetACollection
-
 
 command selectPlaylist pSelection
    local tPlayTarget,tColl,tPlay
@@ -443,9 +429,9 @@ end playlist_GetRecords
 
 -----------------------------------------------------------------------
 
-on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
+on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
    local tPlaylistClass, tRecordTypeCount, tDbaseColumns
-   local  queryData, pJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
+   local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
    
    --showBusyIndicator true,"Loading Collection"
@@ -461,8 +447,8 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    
    if pFilterListQueryA = empty then 
       
-      put sCollectionA[tColl]["playlists"][tPlay]["playListClass"] into tPlaylistClass 
-      put sCollectionA[tColl]["playlists"][tPlay]["playListTitle"]  into  sCurrentPlayListA["playListTitle"]
+      put sCollectionA[pColl]["playlists"][pPlay]["playListClass"] into tPlaylistClass 
+      put sCollectionA[pColl]["playlists"][pPlay]["playListTitle"]  into  sCurrentPlayListA["playListTitle"]
       
       
       put tPlaylistClass into sPlayListQueryA["PlaylistClass"]
@@ -477,21 +463,21 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
       
       put "recordType,recordCount" into tRecordTypeCount
       
-      # remember: tColl and tPlay are drawn from the mouseups
+      # remember: pColl and tPlay are drawn from the mouseups
       # see the nomenclature for what the mouseup calls for
       # in the IDE project browser
       
       repeat for each item RT in tRecordTypeCount
-         if (sCollectionA[tColl]["playlists"][tPlay][RT] is not empty) then 
-            put  sCollectionA[tColl]["playlists"][tPlay][RT] into sPlayListQueryA[RT]
+         if (sCollectionA[pColl]["playlists"][pPlay][RT] is not empty) then 
+            put  sCollectionA[pColl]["playlists"][pPlay][RT] into sPlayListQueryA[RT]
          end if 
       end repeat
       # you must declare all columns you are searching in the data base.
       put "media_type,file_id,approved_for_public,author,genre,deity,tags" into tDbaseColumns
       
       repeat for each item DC in tDbaseColumns
-         if ( sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] is not empty) then 
-            put sCollectionA[tColl]["playlists"][tPlay]["data_query"][DC] into sPlayListQueryA[DC]
+         if ( sCollectionA[pColl]["playlists"][pPlay]["data_query"][DC] is not empty) then 
+            put sCollectionA[pColl]["playlists"][pPlay]["data_query"][DC] into sPlayListQueryA[DC]
          end if
       end repeat
       put sCurrentPlayListA["playListTitle"] into sBrowseHeader
@@ -513,7 +499,7 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
    switch tPlaylistClass
       case "latest" 
          # we do a JSON Call  to the server
-         # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the pJSON
+         # use the a function in lib_SivaSivaMedia to model this array sPlaylistQueryA into the tJSON
          # we need because we can then use for different play lists on demand..          
          # the sPlayListQueryA  has the values needed for the API... 
          # API requires taht we construct data: 
@@ -532,18 +518,18 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          
          # Set up the WHERE clause
-         put sPlayListQueryA["media_type"] into queryData["data"]["media_type"]
-         put sPlayListQueryA["author"] into queryData["data"]["author"] 
-         put sPlayListQueryA["recordType"] into queryData["recordType"]
-         put sPlayListQueryA["recordCount"] into queryData["recordcount"]
+         put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
+         put sPlayListQueryA["author"] into tQueryData["data"]["author"] 
+         put sPlayListQueryA["recordType"] into tQueryData["recordType"]
+         put sPlayListQueryA["recordCount"] into tQueryData["recordcount"]
          
-         put arrayToJson(queryData) into pJSON # from server
+         put arrayToJson(tQueryData) into tJSON # from server
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
          
          ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
+         POST tJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          
          # we need to check of back character in the dbase which breaks JSONtoARRAY
          # typically there CR in columns that shouldn't be there.
@@ -596,12 +582,12 @@ on playList_FetchData tColl,tPlay,pFilterListQueryA,pBrowseHeader
          # this does not include a data base query other than the file id
          # which get the URL and pull to TOC.json for the audio book.
          
-         put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into pJSON 
+         put "{'data': {'media_type': 'audio/book','file_id':'" & tFileID&"'}}" into tJSON 
          set the httpheaders to "content-type: application/json"
-         replace "'" with quote in pJSON
+         replace "'" with quote in tJSON
          
          ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
-         POST pJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
+         POST tJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
@@ -651,8 +637,8 @@ end playList_FetchData
 -----------------------------------------------------------------------
 
 
-on  playlist_Instantiate sTargetPlayList    
-   Local tKeys, tTitles, pData
+on  playlist_Instantiate
+   Local tKeys, tTitles, tData
    
    # we have data from local or the server: 
    # turn off loader...
@@ -696,7 +682,7 @@ on  playlist_Instantiate sTargetPlayList
    # Now we switch cards, 
    
    go to card "listen-browse"
-   put "listen-browse" into sCardName
+   put "listen-browse" into gCardName
    show fld "collections-label"
    show fld "my-audio-label"
    
@@ -720,14 +706,9 @@ on  playlist_Instantiate sTargetPlayList
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
-   put  sTargetPlayList into pData["audio_playlist"]
-   tracking_RecordActivity "Listen", "navigation/playlist", pData
+   put  sTargetPlayList into tData["audio_playlist"]
+   tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
-
-
-------------- 
-on __GoCardListenFile
-end __GoCardListenFile
 
 command setSelectNumber pNum
    put pNum into sSelectNum
@@ -743,7 +724,7 @@ command fetchSingleMetadata pItemID
    put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
    put tTargetRecordA[1] into sSelectedItemA
    metadata_SetRecord sSelectedItemA
-   get getSongLyrics(pItemID)    
+   get getSongLyrics(sSelectedItemA["item_id"])    
    put getMediaMeta() into it
 end fetchSingleMetadata
 
@@ -762,15 +743,16 @@ end clearSelection
 
 # this is for downloads. It gets the audio from 
 
-on direct_Play sSelectNum,sCardName
-   local pTitle,
-   put sDownloadedAudioA[sSelectNum]["localURL"] into sRemoteURL
-   put sDownloadedAudioA[sSelectNum]["metadata"]["1"]["title"]  into pTitle
+on direct_Play pSelectNum, pCardName
+   local pTitle
+   put sDownloadedAudioA[pSelectNum]["localURL"] into sRemoteURL
+   put sDownloadedAudioA[pSelectNum]["metadata"]["1"]["title"]  into pTitle
    put pTitle into fld "currentTitleLabel" 
-   startPlayer sRemoteURL,pTitle,sCardName,sSelectNum
+   startPlayer sRemoteURL,pTitle,pCardName,pSelectNum
    # skip the card name Parameter in this context.
    showBusyIndicator false
 end direct_Play
+
 -----------------------------------------------
 --# Select, Play, Listen, Stop UI interactions
 -----------------------------------------------
@@ -791,11 +773,11 @@ end direct_Play
 --# CHANGES: 2017-06-22, BR: CREATED 
 -----------------------------------------------
 
-on select_Play  sSelectNum, pitemID
+on select_Play pitemID
    # if item id is empty then defaults to the click line number
    
-   local tSearchA, tTargetRecordA, tLocalStatus, pMsg, answerURLunavailable, pTrackdata
-   local pTitle,audioFiles
+   local tSearchA, tTargetRecordA, tLocalStatus, tMsg, tAnswerURLunavailable, tTrackDataA
+   local tTitle, tAudioFiles
    # if we are coming from a click on the card list then the pItemID will be empty
    # but we may be dropping in from the journal or another type of list that
    # simple passes the item_id for the record.. and there is no pSelectedLIne
@@ -813,7 +795,7 @@ on select_Play  sSelectNum, pitemID
       log examineArray(sSelectedItemA)
    else
       put pitemID into tSearchA["item_id"]
-      put  fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
+      put fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
       put tTargetRecordA[1] into sSelectedItemA
       log examineArray(sSelectedItemA)
       
@@ -827,8 +809,8 @@ on select_Play  sSelectNum, pitemID
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
       showBusyIndicator false
-      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into pMsg
-      doAnswer pMsg,"OK", answerURLunavailable
+      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into tMsg
+      doAnswer tMsg,"OK", tAnswerURLunavailable
       exit to top
    end if
    
@@ -847,8 +829,8 @@ on select_Play  sSelectNum, pitemID
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
    showBusyIndicator false
-   put "audiotitle="& sSelectedItemA["title"]   into pTrackdata["contentTarget"]
-   tracking_RecordActivity "Surprise", "navigation/playaudio", pTrackdata
+   put "audiotitle="& sSelectedItemA["title"]   into tTrackDataA["contentTarget"]
+   tracking_RecordActivity "Surprise", "navigation/playaudio", tTrackDataA
 end select_Play
 
 
@@ -937,22 +919,31 @@ function getItemURL pRecordNum
 end getItemURL
 
 command getDownloadedAudio
-   local tList, tSearchA, tURL,pFolder,tTitle,tTitles
+   local tList, tSearchA, tURL, tFolder, tTitle, tTitles, tDataA
    
    put empty into sDownloadedAudioA
    # do directory walk of the media/audio folder
    
-   put (path_Documents() & "media/audio") into pFolder
-   put listFilesWithPaths(pFolder, "true")  into tList
+   put (path_Documents() & "media/audio") into tFolder
+   put listFilesWithPaths(tFolder, "true")  into tList
    repeat with x = 1 to (the number of lines of  tList)
       put line x of tList into tURL
       put tURL into sDownloadedAudioA[x]["localURL"]
       set the itemdel to "/"
       put item -2 of tURL into sDownloadedAudioA[x]["file_id"]
-      repeat for each  line tKey in the keys of sDownloadedAudioA
-         put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
-         put  fetchMediaItems(tSearchA) into  sDownloadedAudioA[tKey][metadata]
-      end repeat
+      
+   end repeat
+   
+   repeat for each  line tKey in the keys of sDownloadedAudioA
+      put sDownloadedAudioA[tKey]["file_id"]   into tSearchA["file_id"]
+      ## This fetchMediaItems funciton loads data from local copy of
+      ## JNANAM SQLite file which might be outdated.
+      put  fetchMediaItems(tSearchA) into  tDataA
+      if tDataA[1]["file_id"] is empty then 
+         throw "jnanam.sqlite is not up to date"
+         exit getDownloadedAudio
+      end if
+      put tDataA into sDownloadedAudioA[tKey]["metadata"]
    end repeat
    
    # first look in the dates base
@@ -966,7 +957,7 @@ command getDownloadedAudio
          put cr & cr after tTitles
          next repeat
       end if
-      put sDownloadedAudioA[x][metadata][1]["title"] into tTitle
+      put sDownloadedAudioA[x]["metadata"][1]["title"] into tTitle
       
       if tTitle is empty then
          put sDownloadedAudioA[x]["file_id"] into tTitle
@@ -975,8 +966,8 @@ command getDownloadedAudio
          put tTitle after tTitles
       end if
       put cr after tTitles
-      if sDownloadedAudioA[x][metadata][1]["media_type"] ="audio/song" then
-         put sDownloadedAudioA[x][metadata][1]["artists"] after tTitles
+      if sDownloadedAudioA[x]["metadata"][1]["media_type"] ="audio/song" then
+         put sDownloadedAudioA[x]["metadata"][1]["artists"] after tTitles
       end if
       put cr after tTitles
       
@@ -990,7 +981,7 @@ command getDownloadedAudio
    
 end getDownloadedAudio
 
-command downloadSelection sSelectNum, pTarget
+command downloadSelection pTarget
    setSelectNumber sSelectNum
    put the long id of pTarget into sLastTarget 
    # NOTE: we need this because the down stack will need to come back where
@@ -1003,15 +994,15 @@ command downloadSelection sSelectNum, pTarget
 end downloadSelection
 
 command downloadAffirmed   
-   local pTitle
+   local tTitle
    if  sCurrentPlayListA["playListClass"] ="audiobook" then
-      put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into pTitle
+      put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into tTitle
    else
-      put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into pTitle
+      put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into tTitle
    end if
    show grp "downloadControls"
    wait 100 milliseconds with messages
-   dispatch "downloadURL"  to group "downloadControls" with  pTitle,sRemoteURL,sSelectNum,sLastTarget
+   dispatch "downloadURL"  to group "downloadControls" with  tTitle, sRemoteURL, sSelectNum, sLastTarget
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 
@@ -1021,17 +1012,17 @@ command loadtitles pTitles
    put pTitles into fld "audioList"
    typeSetAudioList
    show fld "audioList"
-   put the number of lines of pTitles into pLineCount
+   put the number of lines of pTitles into pLineCount -- AAG: This has no effect?!
 end loadtitles
 
 command markCachedItems pKeys
-   local pURL, tLocalStatus, tIsCached
+   local tURL, tLocalStatus, tIsCached
    repeat for each line x in pKeys
       # this as good a place as any to check for the existence of files  
       # and get the URL for every one in the play list... so we only do this once.
-      put getItemURL(x) into pURL
+      put getItemURL(x) into tURL
       # Check and create folders here
-      put path_isFileOnDisk(pURL) into tLocalStatus
+      put path_isFileOnDisk(tURL) into tLocalStatus
       put item 1 of tLocalStatus into tIsCached
       put tIsCached into sCurrentPlayListA["audioFiles"][x]["cached"]
       if tIsCached then  # need to colored cached files on theUI
@@ -1039,11 +1030,12 @@ command markCachedItems pKeys
          put x & cr after sCached
          put item 2 of tLocalStatus into  sCurrentPlayListA["audioFiles"][x]["myURL"]
       else
-         put pURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
+         put tURL into sCurrentPlayListA["audioFiles"][x]["myURL"]
       end if
    end repeat
 end markCachedItems
 
+-- AAG: Needs a ton of work
 command addJournalEntry -- save a bookmark to database
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    
@@ -1055,47 +1047,78 @@ command addJournalEntry -- save a bookmark to database
       put "Nothing to save to Journal. Go an audio file." into tMsg
       exit addJournalEntry
    end if
-   
-   put getJournalData() into pDataA   
-   
+      
    ---------
-   if pDataA["url"] contains "http" then
+   if sDataA["url"] contains "http" then
       dialog_CustomMsg "Download to Save to Journal."
       exit to top
    end if
    ----------
    
+   put tCard into sDataA["card"]
+   put sSelectedItemA["item_id"] into sDataA["item_id"]
+   
    put getCurrentTime() into sTimeStamp
    put getHoursMinsTime() into tHoursMinutes
-   put sTimeStamp into pDataA["timeStamp"]
-   put tHoursMinutes into pDataA["hoursMinutes"]
+   put sTimeStamp into sDataA["timeStamp"]
+   put tHoursMinutes into sDataA["hoursMinutes"]
+   put sSelectNum into sDataA["selectNum"] // AAG: FIXME: This is not ideal
+   put sRemoteURL into sDataA["url"]
+   put sDataA["title"] into tTitle
+   put ", " & sDataA["hoursMinutes"] after tTitle
    
-   
-   put pDataA["title"] into tTitle
-   put ", " & pDataA["hoursMinutes"] after tTitle
-   
-   Journal_RecordEntry "listen",tTitle,pDataA 
+   Journal_RecordEntry "listen", tTitle, sDataA 
    
 end addJournalEntry
 
-
-on journalResume  pDataA, pEntryA
+-- AAG: Needs a ton of work
+on journalResume pDataA, pEntryA
    local tCard
    
    lock screen
-   
    
    put pDataA["card"] into tCard
    
    go to card tCard
    
    if tCard= "listen-file"  then
-      # using has want to listen you one unique audio file
-      # we have set to the card up....  in the the future
-      # we can integrate is this listen behavior .
+      local tRect, tAudioRect, tItemID, tLineNum, tLineValue
       
-    playSingle pDataA
+      put the rect of graphic "audioRect" into tAudioRect
       
+      put pDataA into sDataA
+      
+      fetchSingleMetadata sDataA["item_id"]
+      put  getMediaItemMetadata() into  fld "audioDetails"   
+      
+      
+      if isMobile() then
+         createMobileAudioPlayer sDataA["url"], "audioPlayer",tAudioRect
+      else
+         set the filename of player "audioPlayer" to sDataA["url"]
+      end if
+      
+      if sDataA["timestamp"] is empty then
+         put 0 into sTimeStamp
+      else
+         put sDataA["timestamp"] into sTimeStamp
+      end if
+      --
+      if not isMobile() then
+         start player "audioPlayer"
+         set the currenttime player "audioPlayer" to sTimeStamp
+         --
+         getPlaying true
+         --
+         get runningAudioIndicatorVis("true")
+      else
+         getPlaying true
+         setMobileAudioPlayer "audioPlayer", "currentTime", sTimeStamp
+      end if
+      
+      put  sDataA["title"] into fld "currentTitleLabel"
+      send "updateTimer" -- in 100 milliseconds
+      set the iconPresetName of widget "PlayPause" to "pause"
    end if
    
 end journalResume
@@ -1115,79 +1138,68 @@ command playSingle pDataA
    hide grp "downloadSelection"
    unlock screen
    
-   startPlayer tURL,pDataA["title"]
+   startPlayer tURL, pDataA["title"], pDataA["card"], pDataA["selectNum"]
    
    showBusyIndicator false
    if  "audio/book" is not in tURL then # no display details
       select_ShowDetails "downloaded"
    end if 
-   
 end playSingle
 
  
-on __ListenUtilities
-end __ListenUtilities
-
-command setAudioListColors tLineNum,pColor
-   set the backgroundcolor of line tLineNum of fld "audioList" to pColor
+command setAudioListColors pLineNum, pColor
+   set the backgroundcolor of line pLineNum of fld "audioList" to pColor
 end setAudioListColors
 
 command clearAudioListColor
    set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
 end clearAudioListColor
 
-command __UXHandlers
-end __UXHandlers
-
 local sPlaying
 
-command startPlayer  pURL,pTitle,sCardName,sSelectNum,sTimeStamp
-   local tRect, pAudioRect, localURL,  pItemID,tLineNum, tLineValue
+command startPlayer pURL, pTitle, pCardName, pSelectNum
+   local tRect, tAudioRect, tItemID, tLineNum, tLineValue
    
-   put the rect of graphic "audioRect" into pAudioRect
+   put the rect of graphic "audioRect" into tAudioRect
    
    put pTitle into tLineValue
    
    if pTitle is empty then
-      put sSelectNum*2 into tLineNum
+      put pSelectNum*2 into tLineNum
       if (tLineNum mod 2) = 0 then
          subtract 1 from tLineNum
       end if
       put line tLineNum of fld "theSelectNum" into tLineValue
    end if
    
-   put tLineValue into pDataA["title"]
+   put tLineValue into sDataA["title"]
    
    
-   if sCardName = "listen-my-audio" then
-      put sSelectNum into sSelectNum
+   if gCardName = "listen-my-audio" then
       # we have to deal with downloaded files, and the local path/url
       # to get them in to journal....
-      put sDownloadedAudioA[sSelectNum]["localURL"] into pURL
-      put sDownloadedAudioA[sSelectNum][metadata][1]["item_id"] into pItemID
+      #
+      # Metadata is missing.
+      put sDownloadedAudioA[pSelectNum]["localURL"] into pURL
+      put sDownloadedAudioA[pSelectNum]["metadata"][1]["item_id"] into tItemID
       
       
-      put pItemID into pDataA["item_id"]
-      put pTitle  into pDataA["title"]
+      put tItemID into sDataA["item_id"]
+      put pTitle  into sDataA["title"]
       
       # I have journal requirement. both the item_id, and Title 
       # are part of the data, in inside the JSON
+      put pSelectNum into sSelectNum // AAG: A lot of code depends on sSelectNum, this will affect journaling
       
-      
-      
-      fetchSingleMetadata pItemID
+      fetchSingleMetadata tItemID
    else
       # assume we have data 
       showBusyIndicator true, "Loading"
-      put sSelectedItemA["item_id"] into pItemID
+      put sSelectedItemA["item_id"] into tItemID
    end if
    
-   # we used a getter/setter in lib_SivaSiva
-   # because the timing is different than addJournalEntry          
-   setJournalData pDataA
-   
    if isMobile() then
-      createMobileAudioPlayer pURL, "audioPlayer",pAudioRect
+      createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
    else
       set the filename of player "audioPlayer" to pURL
    end if
@@ -1211,7 +1223,6 @@ command startPlayer  pURL,pTitle,sCardName,sSelectNum,sTimeStamp
    put  pTitle into fld "currentTitleLabel"
    send "updateTimer" -- in 100 milliseconds
    set the iconPresetName of widget "PlayPause" to "pause"
-   
 end startPlayer
 
 on stopPlayer
@@ -1219,7 +1230,6 @@ on stopPlayer
       stop player "audioPlayer"
       set the filename of player "audioPlayer"  to empty
       put false into sPlaying
-      
    else 
       setMobileAudioPlayer "audioPlayer", false
       deleteMobileControl "audioPlayer"
@@ -1228,29 +1238,23 @@ on stopPlayer
    set the iconPresetName of widget "PlayPause" to "pause"
  
    updateTimer sPlaying
-   
 end stopPlayer
 
 
-on pausePlayer sTimeStamp
+on pausePlayer
    if not isMobile() then
       set the paused of  player "audioPlayer" to "true"
       put false into sPlaying
    else  
-      setMobileAudioPlayer "audioPlayer", "pause",sTimeStamp
+      setMobileAudioPlayer "audioPlayer", "pause", sTimeStamp
    end if
    
-   # we have to record the timestamp of a journal
-   put sTimeStamp into pDataA["timeStamp"]
-   setJournalData pDataA
+   put sTimeStamp into sDataA["timeStamp"]
    set the iconPresetName of widget "PlayPause" to "play"
-   
 end pausePlayer
 
-on playPausedAudio sTimeStamp
-   
-   put sTimeStamp into pDataA["timeStamp"]
-   setJournalData pDataA
+on playPausedAudio
+   put sTimeStamp into sDataA["timeStamp"]
    
    if not isMobile() then
       set the currenttime  of player "audioPlayer" to sTimeStamp
@@ -1260,6 +1264,7 @@ on playPausedAudio sTimeStamp
       setMobileAudioPlayer "audioPlayer", "play", sTimeStamp
       send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
    end if
+   
    set the iconPresetName of widget "PlayPause" to "pause"
 end playPausedAudio
 
@@ -1268,20 +1273,17 @@ on clearPlayer
 end clearPlayer
 
 command offLineGoMyAudio
-   
-   local pFolder, tList
+   local tFolder, tList
    if not connectivity_PingServer() then
-      put (path_Documents() & "media/audio") into pFolder
-      put listFilesWithPaths(pFolder, "true")  into tList
+      put (path_Documents() & "media/audio") into tFolder
+      put listFilesWithPaths(tFolder, "true")  into tList
       if tList is empty then
          dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
          go to card "listen-collection"
-         exit to top
       else
          dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
          go to card "listen-my-audio" 
       end if
-      exit to top
    end if
 end offLineGoMyAudio
 

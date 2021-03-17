@@ -11,14 +11,15 @@
 # theoretically the playlist/array is already instantiated
 #
 # CHANGES: 2017-06-22 created, Brahmanathaswami
+# EVEN MORE CHANGES: 2021-03-01 AAG. check https://github.com/Himalayan-Academy/Siva-Siva-App/issues/274
 #
 ---------------------------------------------------------------------
 # Devtools: control click on the image to show devtools group  and hide it
 # add more if you like.. there is a field  "localResult" you can use instead
 # of the msg box... helpful at times...
 ---------------------------------------------------------------------
-global sConfigA,sCardName
-local sSelectedItemA,sSelectedURL,sRemoteURL,sSelectNum,sLastTarget,sLineNum
+global gConfigA, gCardName
+local sSelectedItemA, sSelectedURL, sRemoteURL, sSelectNum, sLastTarget, sLineNum
 local sTimeStamp, sSelectionsA
 local sDownloadedAudioA
 
@@ -28,7 +29,7 @@ local sDownloadedAudioA
 -----------------------------------------------------------------------
 
 on mouseup
-   local pTarget, tTarget, tHideDownload, detailVis, 
+   local tTargetLongID, tTarget, tHideDownload, tDetailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
    #  in any objects of the UI.
@@ -38,7 +39,7 @@ on mouseup
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
    
-   put long id of the target into pTarget
+   put long id of the target into tTargetLongID
    --put long id of grp "displayDelete" into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
@@ -48,15 +49,15 @@ on mouseup
       # card navigaton
       case "collections-label"
          go to card "listen-collection"
-         put "listen-collection" into sCardName
+         put "listen-collection" into gCardName
          break
       case "listen-browse"
          go to card "listen-browse"
-         put "listen-browse" into sCardName
+         put "listen-browse" into gCardName
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         put "listen-my-audio" into sCardName
+         put "listen-my-audio" into gCardName
          break
       case "deleteOn"
       case "Display"
@@ -66,7 +67,7 @@ on mouseup
          dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
          break
       case "listen-file"
-         local tTrue
+         -- local tTrue -- AAG: not used
          go to card "listen-file"
          
          show grp "audioDetails"
@@ -99,8 +100,7 @@ on mouseup
          end if
          
          # now we register the user interaction: clicks on a line.
-         
-         put word 2 of clickline() into sLineNum
+         put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
          
          # every 2 line is one entry; we just one to color the Title
          # though the use might click on the artist...
@@ -115,7 +115,7 @@ on mouseup
          put round(sLineNum/2) into sSelectNum 
          
          # we have get sCardName to determine who to show download 
-         put sCardName into tHideDownload
+         put gCardName into tHideDownload
          
          go to card "listen-file"
          put sSelectNum into fld "theSelectNum"
@@ -129,13 +129,13 @@ on mouseup
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          
-         if sCardName = "listen-my-audio" then
-            direct_Play  sSelectNum,sCardName
+         if gCardName = "listen-my-audio" then
+            direct_Play  sSelectNum, gCardName
          else
             select_Play sSelectNum  # will use either the line number or item id
          end if
          
-         local tURL
+         local tURL -- AAG: this makes no sense, tURL is never set!?
          if  "audio/book" is not in tURL then # no display details
             select_ShowDetails "downloaded"
          end if 
@@ -202,7 +202,7 @@ on mouseup
             exit mouseup
          end if
          dialog_CustomMsg "Go to `My Downloads` and take a timestamp for later in the Journal."
-         downloadSelection sSelectNum, pTarget
+         downloadSelection sSelectNum, tTargetLongID
          break
       case "Loading"
          showBusyIndicator false
@@ -212,15 +212,15 @@ on mouseup
    
 end mouseup
 
-command switchAudioUi sAudioUI
-   local pUI
-   if sAudioUI is empty then
-      put "hideUI" into sAudioUI
+command switchAudioUi pAudioUI
+   local tUI
+   if pAudioUI is empty then
+      put "hideUI" into pAudioUI
    end if
    # talks UI
    put empty into fld "searchString"
-   put sAudioUI into pUI
-   switch pUI
+   put pAudioUI into tUI
+   switch tUI
       case "hideUI"
          hide grp "titleDescription"
          hide grp "author"
@@ -268,16 +268,16 @@ end switchAudioUi
 --end playSingle
 
 command share_Items 
-   local tURL,  sShareItemsA
+   local tURL,  tShareItemsA
    if sRemoteURL is empty then
       put "https://www.himalayanacademy.com/view/sivasiva" into  tURL
    else
       put sRemoteURL into tURL
    end if
-   put tURL into  sShareItemsA["url"]  
-   put "Listen to This!" into sShareItemsA["subject"]
-   put "Audio available in the SivaSiva app." into sShareItemsA["text"] 
-   return sShareItemsA
+   put tURL into  tShareItemsA["url"]  
+   put "Listen to This!" into tShareItemsA["subject"]
+   put "Audio available in the SivaSiva app." into tShareItemsA["text"] 
+   return tShareItemsA
 end share_Items
 
 
