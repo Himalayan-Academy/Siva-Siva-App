@@ -653,17 +653,19 @@ on  playlist_Instantiate
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys 
             put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] & cr & cr after tTitles
-            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] into sCurrentPlayListA["audioFiles"] [x]["Title"] 
+            put sCurrentPlayListA["audioFiles"]["toc"][x]["label"] into sCurrentPlayListA["audioFiles"][x]["Title"] 
+            put sCurrentPlayListA["audioFiles"]["toc"][x]["file"] into sCurrentPlayListA["audioFiles"][x]["file"] 
+            
          end repeat
          break
       default
          put the keys of sCurrentPlayListA["audioFiles"] into tKeys
          sort lines of tKeys ascending numeric
          repeat for each line x in tKeys
-            put sCurrentPlayListA["audioFiles"] [x]["Title"] after tTitles
+            put sCurrentPlayListA["audioFiles"][x]["Title"] after tTitles
             
-            if sCurrentPlayListA["audioFiles"] [x]["media_type"] ="audio/song" then
-               put cr &sCurrentPlayListA["audioFiles"] [x]["artists"] after tTitles
+            if sCurrentPlayListA["audioFiles"][x]["media_type"] ="audio/song" then
+               put cr &sCurrentPlayListA["audioFiles"][x]["artists"] after tTitles
             else
                put cr after tTitles
             end if
@@ -773,7 +775,7 @@ end direct_Play
 --# CHANGES: 2017-06-22, BR: CREATED 
 -----------------------------------------------
 
-on select_Play pitemID
+on select_Play pItemID, pSelectionNum
    # if item id is empty then defaults to the click line number
    
    local tSearchA, tTargetRecordA, tLocalStatus, tMsg, tAnswerURLunavailable, tTrackDataA
@@ -784,15 +786,16 @@ on select_Play pitemID
    
    showBusyIndicator true,"Loading Audio"
    
-   if pItemID is empty then # search from the click line
-      put getItemURL(sSelectNum) into sRemoteURL
+   if pItemID is false then # search from the click line
+      put getItemURL(pSelectionNum) into sRemoteURL
       Put "Connecting..." into fld "currentTitleLabel"
       --   playlist_Reset # needed during dev because we often lose the sSelectedItemA value
-      put sCurrentPlayListA["audioFiles"][sSelectNum  ] into sSelectedItemA   
+      put sCurrentPlayListA["audioFiles"][pSelectionNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
-      put sCurrentPlayListA["audioFiles"][sSelectNum]["myURL"]["filename"] into sSelectedURL
+      put sCurrentPlayListA["audioFiles"][pSelectionNum]["myURL"]["filename"] into sSelectedURL
       log sSelectedURL
       log examineArray(sSelectedItemA)
+      put pSelectionNum into sSelectNum
    else
       put pitemID into tSearchA["item_id"]
       put fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
@@ -801,12 +804,14 @@ on select_Play pitemID
       
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
+      put sSelectedURL into sRemoteURL // AAG: who knows how this works...
       log sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
    
    
    if checkURLAvailable(sRemoteURL) is "false" then 
+      answer pitemID
       clearPlayer
       showBusyIndicator false
       put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into tMsg
@@ -1159,6 +1164,11 @@ local sPlaying
 
 command startPlayer pURL, pTitle, pCardName, pSelectNum
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
+   
+   answer pURL
+   answer ptitle
+   answer pCardName
+   answer pSelectNum
    
    put the rect of graphic "audioRect" into tAudioRect
    

@@ -226,6 +226,10 @@ Local sFastforward
 
 
 command updateTimer
+   // AAG: This function should not be running if we switch to development mode.
+   if the tool is not "browse tool" then 
+      exit updateTimer
+   end if
    
    // Update the time indicator
    if sPlaying is true then

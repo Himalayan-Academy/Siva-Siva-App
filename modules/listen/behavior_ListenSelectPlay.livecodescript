@@ -132,7 +132,7 @@ on mouseup
          if gCardName = "listen-my-audio" then
             direct_Play  sSelectNum, gCardName
          else
-            select_Play sSelectNum  # will use either the line number or item id
+            select_Play false, sSelectNum  # will use either the line number or item id
          end if
          
          local tURL -- AAG: this makes no sense, tURL is never set!?
