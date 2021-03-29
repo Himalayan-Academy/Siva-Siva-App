@@ -811,7 +811,6 @@ on select_Play pItemID, pSelectionNum
    
    
    if checkURLAvailable(sRemoteURL) is "false" then 
-      answer pitemID
       clearPlayer
       showBusyIndicator false
       put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into tMsg
@@ -986,8 +985,8 @@ command getDownloadedAudio
    
 end getDownloadedAudio
 
-command downloadSelection pTarget
-   setSelectNumber sSelectNum
+command downloadSelection pSelectNum, pTarget
+   setSelectNumber pSelectNum
    put the long id of pTarget into sLastTarget 
    # NOTE: we need this because the down stack will need to come back where
    # it and we pass this to pRequestBy
@@ -1164,11 +1163,6 @@ local sPlaying
 
 command startPlayer pURL, pTitle, pCardName, pSelectNum
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-   
-   answer pURL
-   answer ptitle
-   answer pCardName
-   answer pSelectNum
    
    put the rect of graphic "audioRect" into tAudioRect
    
