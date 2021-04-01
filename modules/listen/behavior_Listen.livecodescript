@@ -1052,7 +1052,7 @@ command addJournalEntry -- save a bookmark to database
       put "Nothing to save to Journal. Go an audio file." into tMsg
       exit addJournalEntry
    end if
-      
+   
    ---------
    if sDataA["url"] contains "http" then
       dialog_CustomMsg "Download to Save to Journal."
@@ -1063,11 +1063,16 @@ command addJournalEntry -- save a bookmark to database
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
    
-   put getCurrentTime() into sTimeStamp
    put getHoursMinsTime() into tHoursMinutes
-   put sTimeStamp into sDataA["timeStamp"]
+   
+   if the environment is "mobile" then
+      put mobileControlGet("audioPlayer","currentTime")  into sDataA["timeStamp"]
+   else
+      put the currenttime of player "audioPlayer" into sDataA["timeStamp"]
+   end if
+   
    put tHoursMinutes into sDataA["hoursMinutes"]
-   put sSelectNum into sDataA["selectNum"] // AAG: FIXME: This is not ideal
+   put sSelectNum into sDataA["selectNum"] 
    put sRemoteURL into sDataA["url"]
    put sDataA["title"] into tTitle
    put ", " & sDataA["hoursMinutes"] after tTitle
@@ -1103,22 +1108,23 @@ on journalResume pDataA, pEntryA
          set the filename of player "audioPlayer" to sDataA["url"]
       end if
       
-      if sDataA["timestamp"] is empty then
-         put 0 into sTimeStamp
-      else
-         put sDataA["timestamp"] into sTimeStamp
-      end if
+      --      if sDataA["timestamp"] is empty then
+      --         put 0 into sTimeStamp
+      --      else
+      --         put sDataA["timestamp"] into sTimeStamp
+      --      end if
       --
       if not isMobile() then
+         
+         set the currenttime player "audioPlayer" to sDataA["timestamp"]
          start player "audioPlayer"
-         set the currenttime player "audioPlayer" to sTimeStamp
          --
          getPlaying true
          --
          get runningAudioIndicatorVis("true")
       else
          getPlaying true
-         setMobileAudioPlayer "audioPlayer", "currentTime", sTimeStamp
+         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       end if
       
       put  sDataA["title"] into fld "currentTitleLabel"
@@ -1247,6 +1253,7 @@ end stopPlayer
 
 
 on pausePlayer
+   put the currenttime of player "audioPlayer"
    put getCurrentTime() into sTimeStamp
    
    if not isMobile() then
