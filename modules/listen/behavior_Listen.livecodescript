@@ -830,6 +830,7 @@ on select_Play pItemID, pSelectionNum
       exit to top
    end if
    
+   put 0 into sTimeStamp
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
    showBusyIndicator false
@@ -1246,6 +1247,8 @@ end stopPlayer
 
 
 on pausePlayer
+   put getCurrentTime() into sTimeStamp
+   
    if not isMobile() then
       set the paused of  player "audioPlayer" to "true"
       put false into sPlaying
@@ -1261,7 +1264,6 @@ on playPausedAudio
    put sTimeStamp into sDataA["timeStamp"]
    
    if not isMobile() then
-      set the currenttime  of player "audioPlayer" to sTimeStamp
       start player "audioPlayer"
       put true into sPlaying
    else 

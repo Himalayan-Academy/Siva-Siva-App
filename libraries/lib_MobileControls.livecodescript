@@ -302,7 +302,6 @@ function convertTime pMilliseconds
    put ((pMilliseconds div 1000) mod 60) into tSeconds
    put ((pMilliseconds div (1000*60)) mod 60) into tMinutes
    put ((pMilliseconds div (1000*60*60)) mod 24) into tHours
-   put tHours && tMinutes && tSeconds
    
    get format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
    return it
@@ -310,7 +309,10 @@ end convertTime
 
 
 on playerFinished -- sent on mobile when audio is done
-   if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
+   if mobileIdleTimerLocked() is true then 
+      mobileUnlockIdleTimer
+   end if
+   
    mobileControlDelete sPlayerId
    put false into sPlaying
    put empty into sPlayerRect
