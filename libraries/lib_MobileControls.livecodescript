@@ -231,9 +231,9 @@ command updateTimer
       exit updateTimer
    end if
    
-   if "updateTimer" is in the pendingMessages then
-      exit updateTimer
-   end if
+   --   if "updateTimer" is in the pendingMessages then
+   --      exit updateTimer
+   --   end if
    
    // Update the time indicator
    if sPlaying is true then
@@ -247,28 +247,21 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         put mobileControlGet("audioPlayer","playableDuration") into sDuration
+         put mobileControlGet("audioPlayer","duration") into sDuration
       else
          put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
          put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
       end if
       
       
-      if sCurrentTime > 0 and sDuration > 0 then
-         // AAG: This math is wrong.
-         
+      if sCurrentTime > 0 and sDuration > 0 then         
          // Update the time indicator
          put round((sCurrentTime/sDuration) * 350) into tWidth
-         
-         
-         --         put getCurrentTime() into sCurrentTime
-         
+                  
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
          put convertTime(sDuration) into tDuration
-         
-         -- put getHoursMinsTime() into tHoursMinutes
-         
+                  
          put tHoursMinutes into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
          
@@ -278,7 +271,6 @@ command updateTimer
          --         set the left of graphic "durationProgress" of stack "listen" to 20
          set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         
       end if
       
       unlock screen
