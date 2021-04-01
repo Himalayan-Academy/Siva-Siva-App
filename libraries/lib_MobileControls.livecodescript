@@ -22,7 +22,7 @@ or instance lib_MobileScroller and lib_MobileAudio etc ?
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId, sPlayerRect,sDuration
+local sPlayerId, sPlayerRect, sDuration
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -227,7 +227,11 @@ Local sFastforward
 
 command updateTimer
    // AAG: This function should not be running if we switch to development mode.
-   if the tool is not "browse tool" then 
+   if the tool is not "browse tool" and the environment is "development" then 
+      exit updateTimer
+   end if
+   
+   if "updateTimer" is in the pendingMessages then
       exit updateTimer
    end if
    
@@ -243,26 +247,27 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         put mobileControlGet("audioPlayer","playableDuration") into tDuration
+         put mobileControlGet("audioPlayer","playableDuration") into sDuration
       else
-         put the currentTime of player "audioPlayer" of stack "listen" into sCurrentTime
-         put the duration of player "audioPlayer" of stack "listen" into tDuration
+         put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
+         put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
       end if
       
       
-      if sCurrentTime > 0 and tDuration > 0 then
+      if sCurrentTime > 0 and sDuration > 0 then
+         // AAG: This math is wrong.
          
          // Update the time indicator
-         put round((sCurrentTime/tDuration) * 350) into tWidth
+         put round((sCurrentTime/sDuration) * 350) into tWidth
          
          
-         put getCurrentTime() into sCurrentTime
+         --         put getCurrentTime() into sCurrentTime
          
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
-         put convertTime(tDuration) into tDuration
+         put convertTime(sDuration) into tDuration
          
-         put getHoursMinsTime() into tHoursMinutes
+         -- put getHoursMinsTime() into tHoursMinutes
          
          put tHoursMinutes into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
@@ -278,7 +283,7 @@ command updateTimer
       
       unlock screen
       
-      send "updateTimer" to me in 20 milliseconds
+      send "updateTimer" to me in 100 millisecs
    end if
 end updateTimer  
 
@@ -294,21 +299,13 @@ end getHoursMinsTime
 local tMilliseconds, tHours, tMinutes, tSeconds
 
 function convertTime pMilliseconds
-   put pMilliseconds into tMilliseconds
+   put ((pMilliseconds div 1000) mod 60) into tSeconds
+   put ((pMilliseconds div (1000*60)) mod 60) into tMinutes
+   put ((pMilliseconds div (1000*60*60)) mod 24) into tHours
+   put tHours && tMinutes && tSeconds
    
-   // Hours
-   put tMilliseconds div 3600000 into tHours
-   subtract (tHours * 3600000) from tMilliseconds
-   
-   // Minutes
-   put tMilliseconds div 60000 into tMinutes
-   subtract (tMinutes * 60000) from tMilliseconds
-   
-   // Seconds
-   put tMilliseconds div 1000 into tSeconds
-   subtract (tSeconds * 1000) from tMilliseconds
-   
-   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+   get format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+   return it
 end convertTime
 
 
