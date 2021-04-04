@@ -556,7 +556,7 @@ command updateImageState
          show btn "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
       else
-         if tState is 3 then
+         if tState >= 3 then
             hide grp "footer"
             hide btn "goPrev"
             hide btn "goNext"

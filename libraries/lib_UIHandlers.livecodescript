@@ -393,7 +393,6 @@ on resizeToHeight pImage,pSize
    put (tOrigImgHeight * tRatio) into  tNewHeight 
    
    set the rect of pImage to 0,0,tNewWidth,tNewHeight
-   
 end resizeToHeight
 
 on resizeToWidth pImage,pSize 
@@ -409,8 +408,21 @@ on resizeToWidth pImage,pSize
    put (tOrigImgWidth * tRatio) into  tNewWidth
    
    set the rect of  pImage to 0,0,tNewWidth,tNewHeight
-   
 end resizeToWidth
+
+on resizeToRatio pImage, pRatio
+   local tOrigImgWidth, tOrigImgHeight, tNewWidth, tNewHeight
+   set the itemdel to "x"
+   put item 1 of sCurrentGraphicRect into tOrigImgWidth
+   put item 2 of sCurrentGraphicRect into tOrigImgHeight
+   
+   if tOrigImgWidth is 0 then exit resizeToRatio
+   
+   put (tOrigImgHeight * pRatio) into tNewHeight
+   put (tOrigImgWidth * pRatio) into  tNewWidth
+   
+   set the rect of  pImage to 0,0,tNewWidth,tNewHeight
+end resizeToRatio
 
 #  when we want a background in to fill the screen
 # but leave room for footer we can this
@@ -479,6 +491,7 @@ command switchViewImageState pImage
 end switchViewImageState
 
 local sImageCycleStateA
+constant kSteps = 4
 command initializeCycleImage pImage, pState
    local tRatioW, tRatioH
    setRectOfCurrentGrc pImage
@@ -492,14 +505,36 @@ command initializeCycleImage pImage, pState
    put max(tRatioW, tRatioH) into sImageCycleStateA["maxRatio"]
    put min(tRatioW, tRatioH) into sImageCycleStateA["minRatio"]
    if pState is not a number then
-      put 2 into pState
+      switch pState
+         case "noBorder"
+            put 1 into pState
+            break
+         case "showAll"
+            put 2 into pState
+            break
+         default
+            put 2 into pState
+      end switch
    end if
+   put (1 - (1/sImageCycleStateA["maxRatio"])) / kSteps into sImageCycleStateA["ratioStepSize"]
+   repeat with i = 1 to (kSteps - 1)
+      put (1 - (sImageCycleStateA["ratioStepSize"] * i)) into sImageCycleStateA[3 + i]
+   end repeat
    setImageState pImage, pState
 end initializeCycleImage
 
 command setImageState pImage, pState
    if pState is not a number then
-      put 1 into pState
+      switch pState
+         case "noBorder"
+            put 1 into pState
+            break
+         case "showAll"
+            put 2 into pState
+            break
+         default
+            put 1 into pState
+      end switch
    end if
    switch pState
       case 1
@@ -520,6 +555,8 @@ command setImageState pImage, pState
          set the width of pImage to the formattedWidth of pImage
          set the height of pImage to the formattedHeight of pImage
          break
+      default
+         resizeToRatio pImage, sImageCycleStateA[pState]
    end switch
    set the loc of pImage to sCardLoc
    put pState into sImageCycleStateA["state"]
@@ -531,9 +568,9 @@ command cycleImageState pImage
    -- * show all (expand/shrink as needed, skip if same as fill)
    -- * full size (no scale) / enables scroller
    if sImageCycleStateA["state"] is 2 then
-      setImageState pImage, 3
+      setImageState pImage, kSteps + 2
    else
-      setImageState pImage, 2
+      setImageState pImage, sImageCycleStateA["state"] - 1
    end if
    return sImageCycleStateA["state"]
 end cycleImageState
