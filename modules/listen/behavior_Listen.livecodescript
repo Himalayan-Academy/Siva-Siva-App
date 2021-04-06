@@ -1253,7 +1253,6 @@ end stopPlayer
 
 
 on pausePlayer
-   put the currenttime of player "audioPlayer"
    put getCurrentTime() into sTimeStamp
    
    if not isMobile() then
