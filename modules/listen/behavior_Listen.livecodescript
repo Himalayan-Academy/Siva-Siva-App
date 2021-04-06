@@ -992,7 +992,7 @@ command downloadSelection pSelectNum, pTarget
    # NOTE: we need this because the down stack will need to come back where
    # it and we pass this to pRequestBy
    if sSelectNum <> empty then  # we have a selection
-      doAnswer "Download this audio file?", "Download,Cancel","downloadAffirmed"
+      doAnswer "Download this audio file?" &cr& "Journal entry requires a download.", "Download,Cancel","downloadAffirmed"
    else
       put "Pick a Title to Download It." into fld "currentTitleLabel"
    end if
