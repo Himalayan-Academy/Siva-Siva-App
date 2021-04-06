@@ -201,7 +201,6 @@ on mouseup
             dialog_CustomMsg "Offline or Low Bandwidth"
             exit mouseup
          end if
-         dialog_CustomMsg "Go to `My Downloads` and take a timestamp for later in the Journal."
          downloadSelection sSelectNum, tTargetLongID
          break
       case "Loading"
