@@ -181,6 +181,7 @@ on hidedDownloadControls
    put empty into fld "ProgressTitle"
    put empty into fld "progressField"
    hide scrollbar "progressbar"
+   hide grp "downloadSelection"
    hide grp "downloadControls"
 end hidedDownloadControls
 
