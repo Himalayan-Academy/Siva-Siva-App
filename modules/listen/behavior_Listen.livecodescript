@@ -529,7 +529,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          set the httpheaders to "content-type: application/json"
          
          ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
-         POST tJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
+         POST tJSON to URL "https://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"
          
          # we need to check of back character in the dbase which breaks JSONtoARRAY
          # typically there CR in columns that shouldn't be there.
@@ -587,7 +587,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          replace "'" with quote in tJSON
          
          ## TO DO:  NEEDED: TIME OUT REQUIREMENT!
-         POST tJSON to URL "http://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
+         POST tJSON to URL "https://dev.himalayanacademy.com/api3/getItemRecordsAndFormats/json"         
          if the result is not empty then 
             put "Check your network Connections" into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
