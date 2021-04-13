@@ -249,6 +249,11 @@ command updateTimer
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
          put mobileControlGet("audioPlayer","duration") into sDuration
       else
+         if the timeScale of player "audioPlayer" of stack "listen" is 0 then
+            -- audio player thinks it is not playing any track...
+            send "updateTimer" to me in 100 millisecs
+            exit updateTimer
+         end if
          put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
          put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
       end if
@@ -257,11 +262,11 @@ command updateTimer
       if sCurrentTime > 0 and sDuration > 0 then         
          // Update the time indicator
          put round((sCurrentTime/sDuration) * 350) into tWidth
-                  
+         
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
          put convertTime(sDuration) into tDuration
-                  
+         
          put tHoursMinutes into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
          
