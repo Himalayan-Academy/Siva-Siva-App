@@ -1073,7 +1073,7 @@ command addJournalEntry -- save a bookmark to database
    
    put tHoursMinutes into sDataA["hoursMinutes"]
    put sSelectNum into sDataA["selectNum"] 
-   put sRemoteURL into sDataA["url"]
+   --   put sRemoteURL into sDataA["url"]
    put sDataA["title"] into tTitle
    put ", " & sDataA["hoursMinutes"] after tTitle
    
@@ -1214,6 +1214,7 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
    else
       set the filename of player "audioPlayer" to pURL
    end if
+   put pURL into sDataA["url"]
    
    if sTimeStamp is empty then
       put 0 into sTimeStamp
