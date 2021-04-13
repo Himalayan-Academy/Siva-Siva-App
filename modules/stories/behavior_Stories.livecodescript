@@ -560,9 +560,9 @@ command updateImageState
             hide grp "footer"
             hide btn "goPrev"
             hide btn "goNext"
-            set the hscroll of grp "storyImageGroup" to 0
-            set the vscroll of grp "storyImageGroup" to 0
-            set the topLeft of sStoryImage to 0,0
+            --            set the hscroll of grp "storyImageGroup" to 0
+            --            set the vscroll of grp "storyImageGroup" to 0
+            --            set the topLeft of sStoryImage to 0,0
             dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
          hide sCaptionText

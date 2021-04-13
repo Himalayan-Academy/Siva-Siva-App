@@ -6,7 +6,6 @@ local sName, sImageScroller
 ######### Mobile Controls ############
 
 command createScroller pName -- scrolling fields
-   --set the acceleratedRendering of this stack to false
    local tRect
    put false into sImageScroller
    if not isMobile() then
@@ -14,7 +13,6 @@ command createScroller pName -- scrolling fields
       exit CreateScroller
    end if
    deleteMobileControl pName -- delete any existing
-   --PUT CR & CR &" " AFTER CONTROL PNAME 
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
@@ -31,11 +29,29 @@ command createScroller pName -- scrolling fields
 end createScroller
 
 command createImageScroller pName
-   createScroller pName
+   local tRect
    put true into sImageScroller
+   if not isMobile() then
+      put pName into sName
+      exit createImageScroller
+   end if
+   deleteMobileControl pName -- delete any existing
+   put (the rect of control pName) into tRect
+   mobileControlCreate "scroller", pName
+   mobileControlSet pName, "rect", tRect
+   put (the formattedrect of control pName) into tRect
+   --   put ("0,0," & (the formattedwidth of control pName) & "," & \
+   --         the formattedheight of control pName) into tRect
+   mobileControlSet pName, "contentRect", tRect
+   mobileControlSet pName, "hScroll", the hScroll of control pName
+   mobileControlSet pName, "vScroll", the vScroll of control pName
+   mobileControlSet pName, "hIndicator", false
+   mobileControlSet pName, "vIndicator", false
+   mobileControlSet pName, "visible",  true
 end createImageScroller
 
 on updateScroller pName
+   -- NOTE: this is not intended for image scrollers
    local tRect
    if not isMobile() then exit updateScroller
    if pName is among the lines of mobileControls() then -- update
@@ -53,15 +69,15 @@ end updateScroller
 on scrollerDidScroll hScrolled, vScrolled
    local tControlID
    put mobileControlTarget() into tControlID
-   if vScrolled < 20 then
+   if sImageScroller then
+      set the vscroll of control tControlID to vScrolled
+      set the hscroll of control tControlID to hScrolled
+   else if vScrolled < 20 then
       set the vscroll of control tControlID to vScrolled * 2
    else
       set the vscroll of control tControlID to vScrolled + 20
    end if
    if short name of this stack is among the items of sStacksHorizontal then
-      set the hscroll of control tControlID to hScrolled
-   end if
-   if sImageScroller then
       set the hscroll of control tControlID to hScrolled
    end if
 end scrollerDidScroll
