@@ -371,8 +371,8 @@ end getRectOfCurrentGrc
 command setRectOfCurrentGrc pimage
    local tFWd, tFHt
    
-   put the formattedWidth of  pImage into tFWd
-   put the formattedHeight of  pImage into tFHt
+   put the formattedWidth of pImage into tFWd
+   put the formattedHeight of pImage into tFHt
    put (tFWd & "x" & tFHt) into sCurrentGraphicRect
 end setRectOfCurrentGrc
 
@@ -495,8 +495,12 @@ constant kSteps = 4
 command initializeCycleImage pImage, pState
    local tRatioW, tRatioH
    setRectOfCurrentGrc pImage
-   put the width of pImage / sCardWidth into tRatioW
-   put the height of pImage / sCardHeight into tRatioH
+   put the formattedwidth of pImage / sCardWidth into tRatioW
+   put the formattedheight of pImage / sCardHeight into tRatioH
+   if tRatioW = 0 or tRatioH = 0 then
+      put 1 into tRatioW
+      put 1 into tRatioH
+   end if
    if tRatioW > tRatioH then
       put "height" into sImageCycleStateA["fill"]
    else
@@ -543,6 +547,7 @@ command setImageState pImage, pState
          else
             resizeToWidth pImage, sCardWidth
          end if
+         set the loc of pImage to sCardLoc
          break
       case 2
          if sImageCycleStateA["fill"] = "width" then
@@ -550,6 +555,7 @@ command setImageState pImage, pState
          else
             resizeToWidth pImage, sCardWidth
          end if
+         set the loc of pImage to sCardLoc
          break
       case 3
          set the width of pImage to the formattedWidth of pImage
@@ -558,7 +564,6 @@ command setImageState pImage, pState
       default
          resizeToRatio pImage, sImageCycleStateA[pState]
    end switch
-   set the loc of pImage to sCardLoc
    put pState into sImageCycleStateA["state"]
 end setImageState
 

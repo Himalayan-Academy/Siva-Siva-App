@@ -542,7 +542,8 @@ end setupCaptionField
 
 
 command updateImageState
-   local tState
+   local tState, tLoc
+   lock screen
    if not (the visible of sStoryText) then
       cycleImageState sStoryImage
       put the result into tState
@@ -560,15 +561,29 @@ command updateImageState
             hide grp "footer"
             hide btn "goPrev"
             hide btn "goNext"
-            --            set the hscroll of grp "storyImageGroup" to 0
-            --            set the vscroll of grp "storyImageGroup" to 0
-            --            set the topLeft of sStoryImage to 0,0
+            set the hscroll of grp "storyImageGroup" to 0
+            set the vscroll of grp "storyImageGroup" to 0
+            if the width of sStoryImage < CardWidth() then
+               put the loc of sStoryImage into tLoc
+               put item 1 of CardLoc() into item 1 of tLoc
+               set the loc of sStoryImage to tLoc
+            else
+               set the left of sStoryImage to 0
+            end if
+            if the height of sStoryImage < CardHeight() then
+               put the loc of sStoryImage into tLoc
+               put item 2 of CardLoc() into item 2 of tLoc
+               set the loc of sStoryImage to tLoc
+            else
+               set the top of sStoryImage to 0
+            end if
             dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
          hide sCaptionText
          hide sCaptionBkg
       end if
    end if
+   unlock screen
 end updateImageState
 
 

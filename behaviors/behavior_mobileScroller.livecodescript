@@ -39,12 +39,11 @@ command createImageScroller pName
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
-   put (the formattedrect of control pName) into tRect
-   --   put ("0,0," & (the formattedwidth of control pName) & "," & \
-   --         the formattedheight of control pName) into tRect
+   put ("0,0," & (the formattedwidth of control pName) & "," & \
+         the formattedheight of control pName) into tRect
    mobileControlSet pName, "contentRect", tRect
-   mobileControlSet pName, "hScroll", the hScroll of control pName
-   mobileControlSet pName, "vScroll", the vScroll of control pName
+   mobileControlSet pName, "hScroll", 0 -- the hScroll of control pName
+   mobileControlSet pName, "vScroll", 0 -- the vScroll of control pName
    mobileControlSet pName, "hIndicator", false
    mobileControlSet pName, "vIndicator", false
    mobileControlSet pName, "visible",  true
@@ -72,6 +71,7 @@ on scrollerDidScroll hScrolled, vScrolled
    if sImageScroller then
       set the vscroll of control tControlID to vScrolled
       set the hscroll of control tControlID to hScrolled
+      exit scrollerDidScroll
    else if vScrolled < 20 then
       set the vscroll of control tControlID to vScrolled * 2
    else
