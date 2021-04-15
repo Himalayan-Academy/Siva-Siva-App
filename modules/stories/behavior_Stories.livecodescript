@@ -541,11 +541,16 @@ command setupCaptionField
 end setupCaptionField
 
 
-command updateImageState
+command updateImageState pResizeOnly
+   -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
    local tState, tLoc
    lock screen
    if not (the visible of sStoryText) then
-      cycleImageState sStoryImage
+      if pResizeOnly is true then
+         resetCycleImage sStoryImage
+      else
+         cycleImageState sStoryImage
+      end if
       put the result into tState
       if tState is 2 then
          if the text of sCaptionText is not empty then
@@ -569,6 +574,7 @@ command updateImageState
                set the loc of sStoryImage to tLoc
             else
                set the left of sStoryImage to 0
+               set the hScroll of grp "storyImageGroup" to (the width of sStoryImage - CardWidth()) div 2
             end if
             if the height of sStoryImage < CardHeight() then
                put the loc of sStoryImage into tLoc
@@ -576,6 +582,7 @@ command updateImageState
                set the loc of sStoryImage to tLoc
             else
                set the top of sStoryImage to 0
+               set the vScroll of grp "storyImageGroup" to (the height of sStoryImage - CardHeight()) div 2
             end if
             dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
          end if
@@ -787,7 +794,7 @@ on updateUI
       set the rect of tStoryTextBkg to CardRect()
       --
       hide grc "footerBackground" of grp "footer"
-      resetCycleImage sStoryImage
+      updateImageState true
    end if
    --
    set the width of grp "share-ui" to cardWidth()
