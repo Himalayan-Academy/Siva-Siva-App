@@ -39,8 +39,9 @@ on mouseup
    # encapsulate discreet actions that take more than a few lines
    # to separate handlers.
    
+   put the short name of this card into gCardname
+   
    put long id of the target into tTargetLongID
-   --put long id of grp "displayDelete" into pTarget
    put the short name of the Target  into tTarget   
    --breakpoint
    
@@ -114,11 +115,13 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         # we have get sCardName to determine who to show download 
-         put gCardName into tHideDownload
          
          go to card "listen-file"
          put sSelectNum into fld "theSelectNum"
+         
+         
+         # we have get sCardName to determine who to show download 
+         put gCardName into tHideDownload
          
          
          lock screen
@@ -245,27 +248,6 @@ command switchAudioUi pAudioUI
    end switch
 end switchAudioUi
 
---command playSingle pDataA
---   local tSearchA,x,tItem_id
---   local tURL,tSelectedItemA
---   local sCurrentTime
-
---   put empty into tSelectedItemA
-
---   put pDataA["url"] into tURL
---   put pDataA["item_id"] into tItem_id
-
---   unlock screen
-
---   startPlayer tURL,pDataA["title"]
---   put pDataA["timeStamp"]  into sCurrentTime
---   showBusyIndicator false
---   if  "audio/book" is not in tURL then # no display details
---      select_ShowDetails "downloaded"
---   end if 
-
---end playSingle
-
 command share_Items 
    local tURL,  tShareItemsA
    if sRemoteURL is empty then
@@ -280,3 +262,7 @@ command share_Items
 end share_Items
 
 
+
+on mobileStandaloneSaved pTargetType, pAppBundle
+   
+end mobileStandaloneSaved

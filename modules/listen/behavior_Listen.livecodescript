@@ -90,7 +90,7 @@ on openCard
          
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
-         put "Listen" into fld "title-label"
+         put "My Downloads" into fld "title-label"
          break
          
       case "listen-browse"
@@ -250,9 +250,19 @@ command updateUI
          
          break
       case "listen-my-audio"
-         
-         
          local tDeleteOn
+         
+         put the long id of fld "audioList" into tAudioList
+         set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
+               CardWidth() - 7, the top of tFooter - 17)
+         centerMe tAudioList, 60,70
+         
+         put the long id of grp "search-filter" into tSearchFilter
+         topRightMe tSearchFilter, 0, 0
+         
+         put the long id of grp "audioGlobalControl" into tAudioGlobalControl
+         topLeftMe tAudioGlobalControl, 10,0
+         
          put the long id of grp "displayDelete" into tDeleteOn
          BottomRightMe tDeleteOn, 0,50
          
@@ -1053,12 +1063,14 @@ command addJournalEntry -- save a bookmark to database
       exit addJournalEntry
    end if
    
-   ---------
-   if sDataA["url"] contains "http" then
-      dialog_CustomMsg "Download to Save to Journal."
-      exit to top
+   if (the visible of grp "downloadSelection" = false) then
+      # Do not do anything. Save the Journal entry 
+   else
+      if sDataA["url"] contains "http" then
+         dialog_CustomMsg "Download to Save to Journal."
+         exit addJournalEntry
+      end if
    end if
-   ----------
    
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
@@ -1134,6 +1146,14 @@ on journalResume pDataA, pEntryA
    
 end journalResume
 
+on hideDownloadControls
+   local tLastStack
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+   hide grp "downloadSelection"
+   hide grp "downloadControls"
+end hideDownloadControls
 
 command playSingle pDataA
    local tSearchA,x,tItem_id

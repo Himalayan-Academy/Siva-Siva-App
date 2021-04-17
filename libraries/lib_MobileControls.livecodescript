@@ -247,8 +247,9 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         put mobileControlGet("audioPlayer","duration") into sDuration
-      else
+         --put mobileControlGet("audioPlayer","duration") into sDuration
+         put mobileControlGet("audioPlayer","playableDuration") into sDuration
+         else
          if the timeScale of player "audioPlayer" of stack "listen" is 0 then
             -- audio player thinks it is not playing any track...
             send "updateTimer" to me in 100 millisecs
