@@ -1051,7 +1051,8 @@ command markCachedItems pKeys
 end markCachedItems
 
 -- AAG: Needs a ton of work
-command addJournalEntry -- save a bookmark to database
+command addJournalEntry -- save a bookmark to databast
+   
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    
    put the short name of this card into tCard
@@ -1115,7 +1116,12 @@ on journalResume pDataA, pEntryA
       
       
       if isMobile() then
-         createMobileAudioPlayer sDataA["url"], "audioPlayer",tAudioRect
+         local tURL, tAudioPlayer
+         put sDataA["url"] into tURL
+         put "audioPlayer" into tAudioPlayer
+         
+         send "createMobileAudioPlayer  tURL, tAudioPlayer, tAudioRect" to stack "lib_MobileControls" in 1 seconds
+         --createMobileAudioPlayer  sDataA["url"], "audioPlayer",tAudioRect
       else
          set the filename of player "audioPlayer" to sDataA["url"]
       end if
@@ -1133,14 +1139,21 @@ on journalResume pDataA, pEntryA
          --
          getPlaying true
          --
+         
          get runningAudioIndicatorVis("true")
       else
-         getPlaying true
-         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+         --getPlaying true
+         --setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+         local tPlay, tTimestamp
+         put "play" into tPlay
+         put sDataA["timestamp"] into tTimestamp
+         send "getPlaying true" to stack "lib_MobileControls" in 1200 milliseconds
+         send "setMobileAudioPlayer tAudioPlayer, tPlay, tTimestamp" to stack "lib_MobileControls" in 1500 milliseconds
+         
       end if
       
       put  sDataA["title"] into fld "currentTitleLabel"
-      send "updateTimer" -- in 100 milliseconds
+      send "updateTimer" 
       set the iconPresetName of widget "PlayPause" to "pause"
    end if
    
