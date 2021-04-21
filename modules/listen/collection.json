@@ -100,8 +100,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
-          "genre": "gitam",
-          "deity": "",
+          "genre": "bhakti-gitam",
           "approved_for_public": "YES"
         }
       },
@@ -138,7 +137,7 @@
         "data_query": {
           "media_type": "audio/inspiredtalk",
           "author": "Satguru Bodhinatha Veylanswami",
-          "file_id": "path-to-siva",
+          "file_id": "%path-to-siva%",
           "approved_for_public": "YES"
         }
       },
@@ -149,8 +148,8 @@
         "data_query": {
           "media_type": "audio/inspiredtalk",
           "author": "Satguru Sivaya Subramuniyaswami",
-          "file_id": "master-course",
-          "date_created": "1970"
+          "file_id": "%master-course%",
+          "date_created": "%1970%"
         }
       },
       {
@@ -170,7 +169,7 @@
         "data_query": {
           "media_type": "audio/inspiredtalk",
           "author": "Satguru Sivaya Subramuniyaswami",
-          "file_id": "mws",
+          "file_id": "%mws%",
           "approved_for_public": "YES"
         }
       }
@@ -185,7 +184,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "file_id": "ganesha-puja",
+          "file_id": "%ganesha-puja%",
           "approved_for_public": "YES"
         }
       },
@@ -215,7 +214,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "file_id": "ashtottara",
+          "file_id": "%ashtottara%",
           "approved_for_public": "YES"
         }
       },
