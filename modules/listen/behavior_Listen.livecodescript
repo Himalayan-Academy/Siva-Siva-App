@@ -1106,55 +1106,43 @@ on journalResume pDataA, pEntryA
    
    if tCard= "listen-file"  then
       local tRect, tAudioRect, tItemID, tLineNum, tLineValue
+      local tURL, tAudioPlayer
+      
+      put pDataA into sDataA
+      put path_FileFromURL(sDataA["url"]) into tURL
       
       put the rect of graphic "audioRect" into tAudioRect
       
-      put pDataA into sDataA
-      
-      fetchSingleMetadata sDataA["item_id"]
-      put  getMediaItemMetadata() into  fld "audioDetails"   
-      
-      
       if isMobile() then
-         local tURL, tAudioPlayer
-         put sDataA["url"] into tURL
          put "audioPlayer" into tAudioPlayer
-         
-         send "createMobileAudioPlayer  tURL, tAudioPlayer, tAudioRect" to stack "lib_MobileControls" in 1 seconds
-         --createMobileAudioPlayer  sDataA["url"], "audioPlayer",tAudioRect
+         createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
       else
          set the filename of player "audioPlayer" to sDataA["url"]
       end if
       
-      --      if sDataA["timestamp"] is empty then
-      --         put 0 into sTimeStamp
-      --      else
-      --         put sDataA["timestamp"] into sTimeStamp
-      --      end if
-      --
       if not isMobile() then
-         
          set the currenttime player "audioPlayer" to sDataA["timestamp"]
          start player "audioPlayer"
          --
          getPlaying true
          --
-         
-         get runningAudioIndicatorVis("true")
       else
-         --getPlaying true
-         --setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-         local tPlay, tTimestamp
-         put "play" into tPlay
-         put sDataA["timestamp"] into tTimestamp
-         send "getPlaying true" to stack "lib_MobileControls" in 1200 milliseconds
-         send "setMobileAudioPlayer tAudioPlayer, tPlay, tTimestamp" to stack "lib_MobileControls" in 1500 milliseconds
-         
+         wait 100 milliseconds
+         getPlaying true
+         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       end if
       
-      put  sDataA["title"] into fld "currentTitleLabel"
       send "updateTimer" 
+      
+      # UI
+      put  sDataA["title"] into fld "currentTitleLabel"
+      get runningAudioIndicatorVis("true")
+      showBusyIndicator false
       set the iconPresetName of widget "PlayPause" to "pause"
+      
+      fetchSingleMetadata sDataA["item_id"]
+      put  getMediaItemMetadata() into  fld "audioDetails"   
+      
    end if
    
 end journalResume
