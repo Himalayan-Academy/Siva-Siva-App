@@ -89,6 +89,13 @@ on mouseup
       case "AudioList"
          local tTitle,localURL
          
+         # need to off  the Mobile Player
+         
+         if isMobile() then
+            deleteAllMobileControls
+            wait 100 milliseconds
+         end if
+         
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
@@ -124,7 +131,8 @@ on mouseup
          put gCardName into tHideDownload
          
          
-         lock screen
+         --         lock screen
+         
          # but we have stopPlayer  
          # on by mobile
          stopPlayer  
@@ -159,7 +167,7 @@ on mouseup
             show grp "DownloadSelection"
          end if
          
-         unlock screen
+         --         unlock screen
          # this if for showing lyric, artist or transcript
          # add appears iinterrupt()
          # it have pass sTimeStamp before you touch the player
@@ -261,8 +269,3 @@ command share_Items
    return tShareItemsA
 end share_Items
 
-
-
-on mobileStandaloneSaved pTargetType, pAppBundle
-   
-end mobileStandaloneSaved
