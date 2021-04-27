@@ -43,7 +43,13 @@ function fetchMediaItems tSearchA
    put  JnanamDB() into tConnectionID
    repeat for each key x in tSearchA
       if tSearchA[x]is not empty then
-         dbLike x,tSearchA[x]
+         if tSearchA[x] is a number then
+            dbWhere x, tSearchA[x]
+         else if x is "tags" then
+            dbLike x,tSearchA[x]
+         else
+            dbLike x,tSearchA[x], "exact" -- AAG: Source code was using DBLike to find item_ids which are integers. This doesn't work.
+         end if
       end if
    end repeat
    put dbGet("item", tConnectionID) into selectedItemsA

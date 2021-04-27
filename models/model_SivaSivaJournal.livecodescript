@@ -151,7 +151,7 @@ command Journal_RecordEntry pModule, pLabel, pData, pTags, pImage
    put journal_convertDate(the date && the time) into tDataA["date"]
    
    put dbInsert("journal", tDataA, JournalDB()) into tResult
-   ntInfo "saving journal entry for" && pModule
+   --ntInfo "saving journal entry for" && pModule
    return tResult
 end Journal_RecordEntry
 
@@ -264,7 +264,7 @@ command Journal_LaunchEntry pEntryID,pModule,pData
    put tEntryA["module"] into pData["returnTo"]
    tracking_RecordActivity "Journal","resume/activity", pData
    
-   ntInfo "resuming journal activity for" && tEntryA["module"]
+   --ntInfo "resuming journal activity for" && tEntryA["module"]
    portal_GoStack tEntryA["module"]
    dispatch "journalresume" to stack tEntryA["module"] with tDataA, tEntryA
    if it is among the items of "unhandled,passed" then

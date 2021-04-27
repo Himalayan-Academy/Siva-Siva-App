@@ -157,7 +157,7 @@ command downloadComplete pURL, pStatus
       
       delete word 1 to 4 of sRequestedBy
       dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
-      hidedDownloadControls
+      hideDownloadControls
       put removeQuotes(sRequestedBy) into tModule     
       tracking_RecordActivity tModule,"download/saved"
    end if
@@ -173,14 +173,7 @@ on mouseup
          --close this stack
          break
    end switch
-   hidedDownloadControls
+   hideDownloadControls
 end mouseup
 
-on hidedDownloadControls
-   local tLastStack
-   put empty into fld "ProgressTitle"
-   put empty into fld "progressField"
-   hide scrollbar "progressbar"
-   hide grp "downloadControls"
-end hidedDownloadControls
 

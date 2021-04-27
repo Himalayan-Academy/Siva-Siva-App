@@ -22,7 +22,7 @@ or instance lib_MobileScroller and lib_MobileAudio etc ?
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId, sPlayerRect,sDuration
+local sPlayerId, sPlayerRect, sDuration
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -226,6 +226,14 @@ Local sFastforward
 
 
 command updateTimer
+   // AAG: This function should not be running if we switch to development mode.
+   if the tool is not "browse tool" and the environment is "development" then 
+      exit updateTimer
+   end if
+   
+   --   if "updateTimer" is in the pendingMessages then
+   --      exit updateTimer
+   --   end if
    
    // Update the time indicator
    if sPlaying is true then
@@ -239,26 +247,26 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         put mobileControlGet("audioPlayer","playableDuration") into tDuration
-      else
-         put the currentTime of player "audioPlayer" of stack "listen" into sCurrentTime
-         put the duration of player "audioPlayer" of stack "listen" into tDuration
+         --put mobileControlGet("audioPlayer","duration") into sDuration
+         put mobileControlGet("audioPlayer","playableDuration") into sDuration
+         else
+         if the timeScale of player "audioPlayer" of stack "listen" is 0 then
+            -- audio player thinks it is not playing any track...
+            send "updateTimer" to me in 100 millisecs
+            exit updateTimer
+         end if
+         put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
+         put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
       end if
       
       
-      if sCurrentTime > 0 and tDuration > 0 then
-         
+      if sCurrentTime > 0 and sDuration > 0 then         
          // Update the time indicator
-         put round((sCurrentTime/tDuration) * 350) into tWidth
-         
-         
-         put getCurrentTime() into sCurrentTime
+         put round((sCurrentTime/sDuration) * 350) into tWidth
          
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
-         put convertTime(tDuration) into tDuration
-         
-         put getHoursMinsTime() into tHoursMinutes
+         put convertTime(sDuration) into tDuration
          
          put tHoursMinutes into fld "currentTime" of stack "listen"
          put tDuration into fld "endTime" of stack "listen"
@@ -269,12 +277,11 @@ command updateTimer
          --         set the left of graphic "durationProgress" of stack "listen" to 20
          set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         
       end if
       
       unlock screen
       
-      send "updateTimer" to me in 20 milliseconds
+      send "updateTimer" to me in 100 millisecs
    end if
 end updateTimer  
 
@@ -290,26 +297,20 @@ end getHoursMinsTime
 local tMilliseconds, tHours, tMinutes, tSeconds
 
 function convertTime pMilliseconds
-   put pMilliseconds into tMilliseconds
+   put ((pMilliseconds div 1000) mod 60) into tSeconds
+   put ((pMilliseconds div (1000*60)) mod 60) into tMinutes
+   put ((pMilliseconds div (1000*60*60)) mod 24) into tHours
    
-   // Hours
-   put tMilliseconds div 3600000 into tHours
-   subtract (tHours * 3600000) from tMilliseconds
-   
-   // Minutes
-   put tMilliseconds div 60000 into tMinutes
-   subtract (tMinutes * 60000) from tMilliseconds
-   
-   // Seconds
-   put tMilliseconds div 1000 into tSeconds
-   subtract (tSeconds * 1000) from tMilliseconds
-   
-   return format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+   get format("%02s",tHours) & ":" & format("%02s",tMinutes) & ":" & format("%02s",tSeconds)
+   return it
 end convertTime
 
 
 on playerFinished -- sent on mobile when audio is done
-   if mobileIdleTimerLocked() is true then mobileUnlockIdleTimer
+   if mobileIdleTimerLocked() is true then 
+      mobileUnlockIdleTimer
+   end if
+   
    mobileControlDelete sPlayerId
    put false into sPlaying
    put empty into sPlayerRect
