@@ -545,7 +545,7 @@ command updateImageState pResizeOnly
    -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
    local tState, tLoc
    lock screen
-   if not (the visible of sStoryText) then
+   if (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
          resetCycleImage sStoryImage
       else
