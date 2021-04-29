@@ -774,7 +774,7 @@ on updateUI
       set the uRect of sStoryText to the rect of sStoryText
       if the text of sStoryText is not empty then
          optimizeTextHeight sStoryText
-         if sStoryText is visible then
+         if the visible of sStoryText then
             if the formattedHeight of sStoryText > the height of sStoryText then
                dispatch "createScroller" to sStoryText with "storyText"
             else
