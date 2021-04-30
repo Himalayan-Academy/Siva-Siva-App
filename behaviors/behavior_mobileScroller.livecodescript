@@ -19,7 +19,7 @@ command createScroller pName -- scrolling fields
    put ("0,0," & (the formattedwidth of control pName) & "," & \
          the formattedheight of control pName + 60) into tRect
    mobileControlSet pName, "contentRect", tRect
-   wait 0 milliseconds -- Panos workaround, bug #18924
+   wait 10 milliseconds -- Panos workaround, bug #18924
    mobileControlSet pName, "hScroll", 0
    mobileControlSet pName, "vScroll", 0
    mobileControlSet pName, "hIndicator", false
@@ -43,11 +43,11 @@ command createImageScroller pName
    put ("0,0," & (the formattedwidth of control pName) & "," & \
          the formattedheight of control pName) into tRect
    mobileControlSet pName, "contentRect", tRect
-   mobileControlSet pName, "hIndicator", false
-   mobileControlSet pName, "vIndicator", false
    wait 10 milliseconds -- Panos workaround, bug #18924
    mobileControlSet pName, "hScroll", the hScroll of control pName
    mobileControlSet pName, "vScroll", the vScroll of control pName
+   mobileControlSet pName, "hIndicator", false
+   mobileControlSet pName, "vIndicator", false
    mobileControlSet pName, "visible",  true
 end createImageScroller
 

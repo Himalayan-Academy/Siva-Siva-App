@@ -24,6 +24,7 @@ local sStoryDataStack
 # various screen display options
 local sTarget, sTargetOwner
 
+
 on preOpenStack
    landscapeOrientation "off"
    put loadStoriesMetadata() into sStoriesMetaArray
@@ -196,7 +197,7 @@ on mouseup
                show sCaptionBkg
             end if
             set the blendlevel of sStoryImage to 0
-            setImageState sStoryImage, 2
+            setImageState sStoryImage, "showAll"
             if sLastScene = 1 then
                hide btn "goPrev"
             end if
@@ -220,12 +221,13 @@ on mouseup
                dispatch "createScroller" to sStoryText with "storyText"
             end if
             set the blendlevel of sStoryImage to 15
-            setImageState sStoryImage, 1
+            setImageState sStoryImage, "noBorder"
             unlock screen
          end if
          break
    end switch
 end mouseup
+
 
 # Tree Widget handler
 on hiliteChanged
@@ -262,11 +264,13 @@ on hiliteChanged
    end if
 end hiliteChanged
 
+
 on formattedHeightChanged -- tree changed dimensions
    if the target is sStoryMenuTree then
       dispatch "updateScroller" to sStoryMenuTree with "storyNavTree"
    end if
 end formattedHeightChanged
+
 
 on setupOrDownloadStory
    put sStoryMetaArray["where"] into sWhere
@@ -297,6 +301,7 @@ on setupOrDownloadStory
    end switch
 end setupOrDownloadStory
 
+
 on downloadAndShowStory
    showBusyIndicator true, "Loading Stories"
    dataServerStack sStoryTitle
@@ -307,6 +312,7 @@ on downloadAndShowStory
    end if
 end downloadAndShowStory
 
+
 on deleteFinishedStory
    local tStoryPath
    --
@@ -315,6 +321,7 @@ on deleteFinishedStory
    put empty into sLastStory
    go cd "storyHome"
 end deleteFinishedStory
+
 
 command deleteFolder pFolder
    local tFileList, tFolderList
@@ -333,6 +340,7 @@ command deleteFolder pFolder
    end repeat
    delete folder pFolder
 end deleteFolder
+
 
 on doScrollerTap
    put the short name of the target into sTarget
@@ -461,7 +469,7 @@ command goNextScene
    end if
    if sLastScene is 1 then
       set the blendlevel of sStoryImage to 15
-      initializeCycleImage sStoryImage, 1
+      initializeCycleImage sStoryImage, "noBorder"
    else
       set the blendlevel of sStoryImage to 0
       initializeCycleImage sStoryImage
@@ -544,7 +552,7 @@ end setupCaptionField
 command updateImageState pResizeOnly
    -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
    local tState, tLoc
-   lock screen
+   lock screen for visual effect
    if (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
          resetCycleImage sStoryImage
@@ -590,7 +598,7 @@ command updateImageState pResizeOnly
          hide sCaptionBkg
       end if
    end if
-   unlock screen
+   unlock screen with visual effect "dissolve"
 end updateImageState
 
 
@@ -642,7 +650,6 @@ end addJournalEntry
 
 		
 on journalResume pData -- sent from journal stack
-   --put cr&"journalResume"&cr after msg
    put pData["Card"] into tCd
    put pData["storyTitle"] into sStoryTitle
    put pData["storyScene"] - 1 into sLastScene
