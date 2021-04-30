@@ -569,8 +569,17 @@ command updateImageState pResizeOnly
          show btn "goPrev"
          show btn "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
+         landscapeOrientation "allowed"
       else
          if tState >= 3 then
+            if the platform is "iPhone" then
+               -- bug in iOS where full screen scroller hangs app when device rotated
+               if currentlyLandscape() then
+                  lockLandscape
+               else
+                  lockPortrait
+               end if
+            end if
             hide grp "footer"
             hide btn "goPrev"
             hide btn "goNext"
@@ -608,6 +617,9 @@ command landscapeOrientation pLandscapeMode
    # "forced"  initially locks to landscape, unlocks in 5 seconds
    local tOrientations
    --
+   if "landscapeOrientation" is in the pendingMessages then
+      exit landscapeOrientation
+   end if
    if pLandscapeMode is "off" then
       put false into sAllowLandscape
    end if
@@ -628,6 +640,16 @@ command landscapeOrientation pLandscapeMode
       mobileSetAllowedOrientations tOrientations
    end if
 end landscapeOrientation
+
+
+command lockLandscape
+   mobileSetAllowedOrientations "landscape left,landscape right"
+end lockLandscape
+
+
+command lockPortrait
+   mobileSetAllowedOrientations "portrait,portrait upside down"
+end lockPortrait
 
 
 -------
