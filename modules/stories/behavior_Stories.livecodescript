@@ -24,6 +24,7 @@ local sStoryDataStack
 # various screen display options
 local sTarget, sTargetOwner
 
+
 on preOpenStack
    landscapeOrientation "off"
    put loadStoriesMetadata() into sStoriesMetaArray
@@ -196,7 +197,7 @@ on mouseup
                show sCaptionBkg
             end if
             set the blendlevel of sStoryImage to 0
-            setImageState sStoryImage, 2
+            setImageState sStoryImage, "showAll"
             if sLastScene = 1 then
                hide btn "goPrev"
             end if
@@ -220,12 +221,13 @@ on mouseup
                dispatch "createScroller" to sStoryText with "storyText"
             end if
             set the blendlevel of sStoryImage to 15
-            setImageState sStoryImage, 1
+            setImageState sStoryImage, "noBorder"
             unlock screen
          end if
          break
    end switch
 end mouseup
+
 
 # Tree Widget handler
 on hiliteChanged
@@ -262,11 +264,13 @@ on hiliteChanged
    end if
 end hiliteChanged
 
+
 on formattedHeightChanged -- tree changed dimensions
    if the target is sStoryMenuTree then
       dispatch "updateScroller" to sStoryMenuTree with "storyNavTree"
    end if
 end formattedHeightChanged
+
 
 on setupOrDownloadStory
    put sStoryMetaArray["where"] into sWhere
@@ -297,6 +301,7 @@ on setupOrDownloadStory
    end switch
 end setupOrDownloadStory
 
+
 on downloadAndShowStory
    showBusyIndicator true, "Loading Stories"
    dataServerStack sStoryTitle
@@ -307,6 +312,7 @@ on downloadAndShowStory
    end if
 end downloadAndShowStory
 
+
 on deleteFinishedStory
    local tStoryPath
    --
@@ -315,6 +321,7 @@ on deleteFinishedStory
    put empty into sLastStory
    go cd "storyHome"
 end deleteFinishedStory
+
 
 command deleteFolder pFolder
    local tFileList, tFolderList
@@ -333,6 +340,7 @@ command deleteFolder pFolder
    end repeat
    delete folder pFolder
 end deleteFolder
+
 
 on doScrollerTap
    put the short name of the target into sTarget
@@ -461,7 +469,7 @@ command goNextScene
    end if
    if sLastScene is 1 then
       set the blendlevel of sStoryImage to 15
-      initializeCycleImage sStoryImage, 1
+      initializeCycleImage sStoryImage, "noBorder"
    else
       set the blendlevel of sStoryImage to 0
       initializeCycleImage sStoryImage
@@ -544,7 +552,7 @@ end setupCaptionField
 command updateImageState pResizeOnly
    -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
    local tState, tLoc
-   lock screen
+   lock screen for visual effect
    if (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
          resetCycleImage sStoryImage
@@ -561,8 +569,17 @@ command updateImageState pResizeOnly
          show btn "goPrev"
          show btn "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
+         landscapeOrientation "allowed"
       else
          if tState >= 3 then
+            if the platform is "iPhone" then
+               -- bug in iOS where full screen scroller hangs app when device rotated
+               if currentlyLandscape() then
+                  lockLandscape
+               else
+                  lockPortrait
+               end if
+            end if
             hide grp "footer"
             hide btn "goPrev"
             hide btn "goNext"
@@ -590,7 +607,7 @@ command updateImageState pResizeOnly
          hide sCaptionBkg
       end if
    end if
-   unlock screen
+   unlock screen with visual effect "dissolve"
 end updateImageState
 
 
@@ -600,6 +617,9 @@ command landscapeOrientation pLandscapeMode
    # "forced"  initially locks to landscape, unlocks in 5 seconds
    local tOrientations
    --
+   if "landscapeOrientation" is in the pendingMessages then
+      exit landscapeOrientation
+   end if
    if pLandscapeMode is "off" then
       put false into sAllowLandscape
    end if
@@ -622,6 +642,16 @@ command landscapeOrientation pLandscapeMode
 end landscapeOrientation
 
 
+command lockLandscape
+   mobileSetAllowedOrientations "landscape left,landscape right"
+end lockLandscape
+
+
+command lockPortrait
+   mobileSetAllowedOrientations "portrait,portrait upside down"
+end lockPortrait
+
+
 -------
 local pData, tCd
 
@@ -642,7 +672,6 @@ end addJournalEntry
 
 		
 on journalResume pData -- sent from journal stack
-   --put cr&"journalResume"&cr after msg
    put pData["Card"] into tCd
    put pData["storyTitle"] into sStoryTitle
    put pData["storyScene"] - 1 into sLastScene
@@ -774,7 +803,7 @@ on updateUI
       set the uRect of sStoryText to the rect of sStoryText
       if the text of sStoryText is not empty then
          optimizeTextHeight sStoryText
-         if sStoryText is visible then
+         if the visible of sStoryText then
             if the formattedHeight of sStoryText > the height of sStoryText then
                dispatch "createScroller" to sStoryText with "storyText"
             else
