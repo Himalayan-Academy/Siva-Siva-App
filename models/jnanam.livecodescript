@@ -217,5 +217,17 @@ command jnanam_SaveNewItem pItemA
       delete variable pItemA[v]
    end repeat
    
-   return dbInsert("item", pItemA, jnanamDB())
+   if pItemA["sruti_tonic"] is "null" then
+      put "" into pItemA["sruti_tonic"]
+   end if
+   
+   put dbInsert("item", pItemA, jnanamDB()) into tResult
+   if tResult is not a number then
+      put "error inserting on database:" && tResult
+      repeat for each key k in pItemA
+         put tab &k&tab& pItemA[k] &cr
+      end repeat
+      return "jnanamerr," & tResult 
+   end if
+   return tResult
 end jnanam_SaveNewItem

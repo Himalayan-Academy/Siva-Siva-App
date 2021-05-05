@@ -619,7 +619,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
       put tA["file_id"] && the result & cr after tBuf
    end repeat
-   -- put tBuf -- useful for debugging.
+   --put tBuf -- useful for debugging. On android: adb logcat -s "LiveCode"
    
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
    # we have the data for our records in the array now.
