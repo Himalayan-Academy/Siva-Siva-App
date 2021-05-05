@@ -201,3 +201,21 @@ function jnanam_GetItem pFileID
    put dbGet("item",jnanamDB()) into tA 
    return tA[1]
 end jnanam_GetItem
+
+command jnanam_SaveNewItem pItemA
+   if pItemA["file_id"] is empty then 
+      return "jnanamerr, can't save item with no file_id"
+   end if
+   
+   put jnanam_GetItem(pItemA["file_id"]) into tA
+   if tA["file_id"] is not empty then
+      return "jnanamerr, record already exists for file_id:" && tA["file_id"]
+   end if
+   
+   -- clean up for safety
+   repeat for each item v in "filename,formats,myURL"
+      delete variable pItemA[v]
+   end repeat
+   
+   return dbInsert("item", pItemA, jnanamDB())
+end jnanam_SaveNewItem

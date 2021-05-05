@@ -615,6 +615,12 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+   repeat for each key k in sCurrentPlayListA["audioFiles"]
+      jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
+      put tA["file_id"] && the result & cr after tBuf
+   end repeat
+   -- put tBuf -- useful for debugging.
+   
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
    # we have the data for our records in the array now.
    # need know two things from the beginning
@@ -955,7 +961,7 @@ command getDownloadedAudio
       ## JNANAM SQLite file which might be outdated.
       put  fetchMediaItems(tSearchA) into  tDataA
       if tDataA[1]["file_id"] is empty then 
-         throw "jnanam.sqlite is not up to date"
+         put "jnanam.sqlite is not up to date"
          exit getDownloadedAudio
       end if
       put tDataA into sDownloadedAudioA[tKey]["metadata"]
@@ -1015,6 +1021,8 @@ command downloadAffirmed
    else
       put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into tTitle
    end if
+   put sCurrentPlayListA["audioFiles"][sSelectNum] into tNewRecordA
+   jnanam_SaveNewItem tNewRecordA
    show grp "downloadControls"
    wait 100 milliseconds with messages
    dispatch "downloadURL"  to group "downloadControls" with  tTitle, sRemoteURL, sSelectNum, sLastTarget
