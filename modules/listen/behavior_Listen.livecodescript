@@ -615,6 +615,12 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+   repeat for each key k in sCurrentPlayListA["audioFiles"]
+      jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
+      put tA["file_id"] && the result & cr after tBuf
+   end repeat
+   --put tBuf -- useful for debugging. On android: adb logcat -s "LiveCode"
+   
    -- put (the ticks - sStartTimer)  early tests: as long as 3 minutes to get data from the server...
    # we have the data for our records in the array now.
    # need know two things from the beginning
@@ -955,7 +961,7 @@ command getDownloadedAudio
       ## JNANAM SQLite file which might be outdated.
       put  fetchMediaItems(tSearchA) into  tDataA
       if tDataA[1]["file_id"] is empty then 
-         throw "jnanam.sqlite is not up to date"
+         put "jnanam.sqlite is not up to date"
          exit getDownloadedAudio
       end if
       put tDataA into sDownloadedAudioA[tKey]["metadata"]
@@ -1015,6 +1021,8 @@ command downloadAffirmed
    else
       put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into tTitle
    end if
+   put sCurrentPlayListA["audioFiles"][sSelectNum] into tNewRecordA
+   jnanam_SaveNewItem tNewRecordA
    show grp "downloadControls"
    wait 100 milliseconds with messages
    dispatch "downloadURL"  to group "downloadControls" with  tTitle, sRemoteURL, sSelectNum, sLastTarget
@@ -1054,6 +1062,7 @@ end markCachedItems
 command addJournalEntry -- save a bookmark to databast
    
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
+   local tFiveSeconds
    
    put the short name of this card into tCard
    
@@ -1076,18 +1085,32 @@ command addJournalEntry -- save a bookmark to databast
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
    
+   -----------------------
+   --   # We need to get a user five seconds from 
+   
+   put sDataA["timeStamp"] into sTimeStamp
+   put sTimestamp into tFiveSeconds
+   put (tFiveSeconds-5000) into tFiveSeconds
+   
+   if tFiveSeconds > 0 then
+      put tFiveseconds into sTimestamp
+   end if
+   
+   
    put getHoursMinsTime() into tHoursMinutes
    
    if the environment is "mobile" then
-      put mobileControlGet("audioPlayer","currentTime")  into sDataA["timeStamp"]
+      put mobileControlGet("audioPlayer","currentTime")  into sTimeStamp
    else
-      put the currenttime of player "audioPlayer" into sDataA["timeStamp"]
+      put the currenttime of player "audioPlayer" into sTimeStamp
    end if
    
    put tHoursMinutes into sDataA["hoursMinutes"]
    put sSelectNum into sDataA["selectNum"] 
    --   put sRemoteURL into sDataA["url"]
    put sDataA["title"] into tTitle
+   put sTimeStamp into sDataA["timeStamp"]
+   
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
@@ -1099,6 +1122,11 @@ on journalResume pDataA, pEntryA
    local tCard
    
    lock screen
+   
+   if isMobile() then
+      deleteAllMobileControls
+      wait 100 milliseconds
+   end if
    
    put pDataA["card"] into tCard
    
@@ -1116,6 +1144,7 @@ on journalResume pDataA, pEntryA
       if isMobile() then
          put "audioPlayer" into tAudioPlayer
          createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
+         wait 300 milliseconds
       else
          set the filename of player "audioPlayer" to sDataA["url"]
       end if
@@ -1127,14 +1156,9 @@ on journalResume pDataA, pEntryA
          getPlaying true
          --
       else
-         --getPlaying true
-         --setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-         local tPlay, tTimestamp
-         put "play" into tPlay
-         put sDataA["timestamp"] into tTimestamp
-         send "getPlaying true" to stack "lib_MobileControls" in 100 milliseconds
-         send "setMobileAudioPlayer tAudioPlayer, tPlay, tTimestamp" to stack "lib_MobileControls" in 200milliseconds
-         
+         wait 300 milliseconds
+         getPlaying true
+         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       end if
       
       send "updateTimer" 
@@ -1237,6 +1261,7 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
    
    if isMobile() then
       createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
+      wait 300 milliseconds
    else
       set the filename of player "audioPlayer" to pURL
    end if
