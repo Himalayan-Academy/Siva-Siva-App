@@ -1,5 +1,5 @@
 [
-    {
+  {
     "collection-title": "Recent  Additions | Classical/Popular",
     "playLists": [
       {
@@ -9,8 +9,8 @@
         "recordType": "latest",
         "recordCount": "50",
         "data_query": {
-			"media_type": "audio",
-			"approved_for_public": "YES"
+          "media_type": "audio",
+          "approved_for_public": "YES"
         }
       },
       {
@@ -20,29 +20,29 @@
         "recordType": "latest",
         "recordCount": "30",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Bodhinatha Veylanswami",
-			"approved_for_public": "YES"
+          "media_type": "audio/inspiredtalk",
+          "author": "Satguru Bodhinatha Veylanswami",
+          "approved_for_public": "YES"
         }
       },
-       {
+      {
         "playListTitle": "Classical\nArtists",
         "playListImg": "professional_rajam-singer_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "audio/song",
-			"tags": "Professional",
-			"approved_for_public": "YES"
+          "media_type": "audio/song",
+          "tags": "Professional",
+          "approved_for_public": "YES"
         }
       },
-       {
+      {
         "playListTitle": "Popular Tunes",
         "playListImg": "popular-tunes-lady-headset_shutterstock_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "audio/song",
-			"tags": "pop",
-			"approved_for_public": "YES"
+          "media_type": "audio/song",
+          "tags": "pop",
+          "approved_for_public": "YES"
         }
       }
     ]
@@ -66,11 +66,10 @@
         "playListImg": "bhajan_muruga_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-         	"media_type": "audio/song",
-			"genre": "bhajan",
-			"deity": "Muruga",
-			"approved_for_public": "YES"
-
+          "media_type": "audio/song",
+          "genre": "bhajan",
+          "deity": "Muruga",
+          "approved_for_public": "YES"
         }
       },
       {
@@ -101,8 +100,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/song",
-          "genre": "gitam",
-          "deity": "",
+          "genre": "bhakti-gitam",
           "approved_for_public": "YES"
         }
       },
@@ -127,31 +125,31 @@
         "playListImg": "bodhinatha_all-talks_DSC_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Bodhinatha Veylanswami",
-			"approved_for_public": "YES"		
-		}
+          "media_type": "audio/inspiredtalk",
+          "author": "Satguru Bodhinatha Veylanswami",
+          "approved_for_public": "YES"
+        }
       },
       {
         "playListTitle": "Bodhinatha\nPath to Siva",
         "playListImg": "bodhinatha_path-to-siva_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Bodhinatha Veylanswami",
-			"file_id": "path-to-siva",
-			"approved_for_public": "YES"
-			}	
-        },
-        {
+          "media_type": "audio/inspiredtalk",
+          "author": "Satguru Bodhinatha Veylanswami",
+          "file_id": "%path-to-siva%",
+          "approved_for_public": "YES"
+        }
+      },
+      {
         "playListTitle": "1970\nAudio Course",
         "playListImg": "gurudeva-all-master-047-019_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-          "media_type": "inspiredtalk",
+          "media_type": "audio/inspiredtalk",
           "author": "Satguru Sivaya Subramuniyaswami",
-          "file_id": "master-course",
-          "date_created": "1970"
+          "file_id": "%master-course%",
+          "date_created": "%1970%"
         }
       },
       {
@@ -159,9 +157,9 @@
         "playListImg": "gurudeva_taka_QA_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Sivaya Subramuniyaswami",
-			"approved_for_public": "YES"
+          "media_type": "audio/inspiredtalk",
+          "author": "Satguru Sivaya Subramuniyaswami",
+          "approved_for_public": "YES"
         }
       },
       {
@@ -169,10 +167,10 @@
         "playListImg": "gurudeva_MWS_readings_330.jpg",
         "playlistClass": "cached",
         "data_query": {
-			"media_type": "inspiredtalk",
-			"author": "Satguru Sivaya Subramuniyaswami",
-			"file_id": "mws",
-			"approved_for_public": "YES"
+          "media_type": "audio/inspiredtalk",
+          "author": "Satguru Sivaya Subramuniyaswami",
+          "file_id": "%mws%",
+          "approved_for_public": "YES"
         }
       }
     ]
@@ -186,7 +184,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "file_id": "ganesha-puja",
+          "file_id": "%ganesha-puja%",
           "approved_for_public": "YES"
         }
       },
@@ -216,7 +214,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "file_id": "ashtottara",
+          "file_id": "%ashtottara%",
           "approved_for_public": "YES"
         }
       },
@@ -242,7 +240,7 @@
           "file_id": "the-guru-chronicles-audiobook"
         }
       },
-       {
+      {
         "playListTitle": "Dancing with Siva",
         "playListImg": "audio-book-DWS_330.jpg",
         "playlistClass": "audiobook",
@@ -250,7 +248,7 @@
           "file_id": "dancing-with-siva-audiobook"
         }
       },
-       {
+      {
         "playListTitle": "Path To Siva",
         "playListImg": "audio-book-P2S_330.jpg",
         "playlistClass": "audiobook",
@@ -326,7 +324,7 @@
     ]
   },
   {
-    "collection-title": "Tirumurai", 
+    "collection-title": "Tirumurai",
     "playLists": [
       {
         "playListTitle": "Tirumurai",
@@ -340,4 +338,4 @@
       }
     ]
   }
-  ]
+]
