@@ -615,6 +615,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+   local tA, tBuf
    repeat for each key k in sCurrentPlayListA["audioFiles"]
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
       put tA["file_id"] && the result & cr after tBuf
@@ -1015,7 +1016,7 @@ command downloadSelection pSelectNum, pTarget
 end downloadSelection
 
 command downloadAffirmed   
-   local tTitle
+   local tTitle, tNewRecordA
    if  sCurrentPlayListA["playListClass"] ="audiobook" then
       put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into tTitle
    else
