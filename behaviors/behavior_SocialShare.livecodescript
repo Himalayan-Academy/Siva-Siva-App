@@ -102,7 +102,7 @@ command twitter_TweetItems sShareItemsA
    local encodedText, someUrl
    put twitter_EncodeIntent (sShareItemsA["text"]) into encodedText
    put "http://www.twitter.com/intent/tweet?text=" & encodedText into someUrl
-  put "&url=" & urlencode (sShareItemsA["url"]) after someUrl
+   put "&url=" & urlencode (sShareItemsA["url"]) after someUrl
    launch url someUrl
 end twitter_TweetItems
 
@@ -221,7 +221,7 @@ command facebook_ShareAudio
    end switch
 end facebook_ShareAudio
 
-   
+
 --> Android
 -
 command android_ShareTweet pQuote
@@ -410,10 +410,10 @@ function email_ConstructAudioText
 end email_ConstructAudioText
 
 -- function construct_EmailAppLink
-   put CR & CR & "__________________________________" & CR & CR into tBody
-   put "Get the Gurudeva App" & CR &CR & \
-         "iOS:" && cIosHimalayanAppUrl & CR &CR & "Android: link here:  https://play.google.com/store/apps/details?id=air.com.yudu.ReaderAIR6213949" after tBody
-   return tBody
+put CR & CR & "__________________________________" & CR & CR into tBody
+put "Get the Gurudeva App" & CR &CR & \
+      "iOS:" && cIosHimalayanAppUrl & CR &CR & "Android: link here:  https://play.google.com/store/apps/details?id=air.com.yudu.ReaderAIR6213949" after tBody
+return tBody
 end construct_EmailAppLink
 
 function audio_ConstructUrl
@@ -609,6 +609,9 @@ function fb_Button
    return fbButton
 end fb_Button
 
+command enableQuoteButtons
+   local pButtons
+   
    set the display_FacebookButton of me to fb_IsAuthenticated()
    
    put  "Favorites,Share,Search,Categories"  into pButtons --jg: option btn always visible

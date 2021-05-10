@@ -58,8 +58,17 @@ on mouseup
             showStoryMenu
          else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
-         else if tCard is among the items of "listen-delete-file,listen-file" then
-            go card "listen-my-audio"
+         else if tCard is   "listen-file" then
+            if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+               go to card "listen-browse"
+               put "listen-browse" into tCard
+            else
+               go card "listen-my-audio"
+               put "listen-my-audio" into tCard
+            end if
+         else if tCard is  "listen-delete-file" then
+            go to card "listen-browse"
+            put "listen-browse" into tCard
          else if tCard is "listen-search" then
             go card "listen-browse"
          else
@@ -108,7 +117,7 @@ on mouseup
             set the rect of tBrowser to tBrowserRect
          end if
          
-         deleteMobileControl "audioPlayer"
+         --deleteMobileControl "audioPlayer"
          show tControl with visual "dissolve" very fast
          break
          

@@ -58,7 +58,13 @@ on mouseup
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         put "listen-my-audio" into gCardName
+         if fld "AudioList" is empty then
+            wait 1 second
+            go card "listen-browse"
+            put "listen-browse" into gCardName 
+         else
+            put "listen-my-audio" into gCardName 
+         end if
          break
       case "deleteOn"
       case "Display"
