@@ -97,6 +97,14 @@
 * ID: button id 2690 of bkgnd id 2687 of stack "listen"
 * [stack_listen_button_id_2690](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2690.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2991 of bkgnd id 2989 of stack "listen"
+* [stack_listen_button_id_2991](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2991.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "listen"**
+* ID: button id 2992 of bkgnd id 2989 of stack "listen"
+* [stack_listen_button_id_2992](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2992.livecodescript)
+
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
 * [stack_listen_card_id_1158](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_1158.livecodescript)

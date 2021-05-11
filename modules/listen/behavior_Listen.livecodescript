@@ -196,7 +196,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight, tAudioRect, tHelpAudio
+   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -209,6 +209,11 @@ command updateUI
    topCenterMe tTitleLabel, 5
    topLeftMe tCollectionsLabel, 10, 30
    topRightMe tMyAudioLabel, 10, 30
+   
+   if there is a grp "loadingGroup" then
+      put the long id of grc "Loading" into tControl
+      centerMe tControl, 60, 70
+   end if
    
    switch (the short name of this card)
       
@@ -240,7 +245,7 @@ command updateUI
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60,70
+         centerMe tAudioList, 60, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
@@ -255,16 +260,16 @@ command updateUI
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60,70
+         centerMe tAudioList, 60, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
-         topLeftMe tAudioGlobalControl, 10,0
+         topLeftMe tAudioGlobalControl, 10, 0
          
          put the long id of grp "displayDelete" into tDeleteOn
-         BottomRightMe tDeleteOn, 0,50
+         BottomRightMe tDeleteOn, 0, 50
          
          break
          
@@ -272,28 +277,28 @@ command updateUI
          local tDisplayFilesSizes
          put the long id of grp "displayFilesSizes" into tDisplayFilesSizes
          set the width of tDisplayFilesSizes to  CardWidth()
-         topLeftMe tDisplayFilesSizes, -3,30
+         topLeftMe tDisplayFilesSizes, -3, 30
          break
          
       case "listen-file"
          
          put the long id of player "audioPlayer" into tAudioPlayer
-         topLeftMe tAudioPlayer, 20,-1111
+         topLeftMe tAudioPlayer, 20, -1111
          
          put the long id of graphic "audioRect" into tAudioRect
-         topLeftMe tAudioRect, 20,-1111
+         topLeftMe tAudioRect, 20, -1111
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
-         set the width of tCurrentTitle to  (CardWidth() - 35 )
-         topLeftMe tCurrentTitle, 20,80
+         set the width of tCurrentTitle to (CardWidth() - 35)
+         topLeftMe tCurrentTitle, 20, 80
          
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
-         set the width of tAudioDetailsGrc to  (CardWidth() - 20 )
-         topLeftMe tAudioDetailsGrc, 10,150
+         set the width of tAudioDetailsGrc to (CardWidth() - 20)
+         topLeftMe tAudioDetailsGrc, 10, 150
          
          put the long id of fld "audioDetails" into tAudioDetailsFld
-         set the width of tAudioDetailsFld to  (CardWidth() -30 )
-         topLeftMe tAudioDetailsFld, 15,160
+         set the width of tAudioDetailsFld to (CardWidth() - 30)
+         topLeftMe tAudioDetailsFld, 15, 160
          
          put the long id of grp "noInformation" into tnoInformation
          centerMe tNoInformation, -100
@@ -303,14 +308,31 @@ command updateUI
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
+         if CardWidth() < 414 then
+            set the left of fld "currentTime" to 26
+            set the right of fld "endTime" to CardWidth() - 25
+            set the width of grc "durationBG" to CardWidth() - 70
+            set the left of grc "durationProgress" to 35
+            set the left of grc "durationMarker" to 30
+         end if
+         
+         if the bottom of grp "audioDetails" > the top of grp "pause-play" then
+            put the bottom of grp "audioDetails" - the top of grp "pause-play" into tOffset
+            add 14 to tOffset
+            put the rect of tAudioDetailsGrc into tRect
+            subtract tOffset from item 4 of tRect
+            set the rect of tAudioDetailsGrc to tRect
+            put the rect of tAudioDetailsFld into tRect
+            subtract tOffset from item 4 of tRect
+            set the rect of tAudioDetailsFld to tRect
+         end if
          
          break
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         topLeftMe tFilterAudio, 30 ,80
+         topLeftMe tFilterAudio, 30, 80
          break
-         
          
    end switch
    
@@ -615,6 +637,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+   local tA, tBuf
    repeat for each key k in sCurrentPlayListA["audioFiles"]
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
       put tA["file_id"] && the result & cr after tBuf
@@ -1015,7 +1038,7 @@ command downloadSelection pSelectNum, pTarget
 end downloadSelection
 
 command downloadAffirmed   
-   local tTitle
+   local tTitle, tNewRecordA
    if  sCurrentPlayListA["playListClass"] ="audiobook" then
       put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into tTitle
    else
