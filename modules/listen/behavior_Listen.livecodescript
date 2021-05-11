@@ -196,7 +196,7 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset
+   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -303,8 +303,8 @@ command updateUI
          put the long id of grp "noInformation" into tnoInformation
          centerMe tNoInformation, -100
          
-         put the long id of button "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 10, 146
+         put the long id of grc "Loading" into tLoading
+         set the loc of tLoading to CardLoc()
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
