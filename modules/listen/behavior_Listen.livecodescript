@@ -197,7 +197,7 @@ command updateUI
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
-   
+   local tFldInformation
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -300,11 +300,23 @@ command updateUI
          set the width of tAudioDetailsFld to (CardWidth() - 30)
          topLeftMe tAudioDetailsFld, 15, 160
          
-         put the long id of grp "noInformation" into tnoInformation
-         centerMe tNoInformation, -100
+         put the long id of image "noInformation" into tNoInformation
+         topCenterMe tNoInformation,150
+         
+         put the long id of fld "noInformation" into tFldInformation
+         CenterMe tFldInformation, 300
          
          put the long id of grc "Loading" into tLoading
          set the loc of tLoading to CardLoc()
+         
+         put the long id of button "downloadSelection" into tDownloadSelection
+         
+         if the visible of grp "noInformation" then
+            topRightMe tDownloadSelection, 50, 150
+         else
+            topRightMe tDownloadSelection, 10, 150
+         end if
+         
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
@@ -872,7 +884,11 @@ on select_Play pItemID, pSelectionNum
    put 0 into sTimeStamp
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
+   wait 200 milliseconds
+   
    showBusyIndicator false
+   
+   
    put "audiotitle="& sSelectedItemA["title"]   into tTrackDataA["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", tTrackDataA
 end select_Play
@@ -1144,16 +1160,19 @@ end addJournalEntry
 on journalResume pDataA, pEntryA
    local tCard
    
-   lock screen
    
    if isMobile() then
       deleteAllMobileControls
-      wait 100 milliseconds
+      
    end if
    
    put pDataA["card"] into tCard
    
    go to card tCard
+   
+   wait 1000 milliseconds
+   
+   hideDownloadControls
    
    if tCard= "listen-file"  then
       local tRect, tAudioRect, tItemID, tLineNum, tLineValue
@@ -1167,7 +1186,6 @@ on journalResume pDataA, pEntryA
       if isMobile() then
          put "audioPlayer" into tAudioPlayer
          createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-         wait 300 milliseconds
       else
          set the filename of player "audioPlayer" to sDataA["url"]
       end if
@@ -1179,11 +1197,12 @@ on journalResume pDataA, pEntryA
          getPlaying true
          --
       else
-         wait 300 milliseconds
+         
          getPlaying true
          setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       end if
       
+      wait 1 second
       send "updateTimer" 
       
       # UI
