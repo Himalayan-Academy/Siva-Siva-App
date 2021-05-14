@@ -1103,7 +1103,8 @@ command addJournalEntry -- save a bookmark to databast
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
    
-   put the short name of this card into tCard
+   -- put the short name of this card into tCard
+   # see below
    
    put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
@@ -1120,6 +1121,13 @@ command addJournalEntry -- save a bookmark to databast
          exit addJournalEntry
       end if
    end if
+   
+   # we are going to card 1 of stack. Card "listen-collection"
+   # then we move from to  card "listen-file"
+   # in journalResume
+   
+   
+   put the short name of card "listen-file" into tCard
    
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
@@ -1158,20 +1166,27 @@ end addJournalEntry
 
 -- AAG: Needs a ton of work
 on journalResume pDataA, pEntryA
-   local tCard
    
+   breakpoint
+   
+   local tCard
    
    if isMobile() then
       deleteAllMobileControls
-      
    end if
    
+   wait 300 milliseconds
+   
+   # now we give time to set "audioPlayer" on mobile
+   
+   lock screen 
+   
+   # now card "listen-file"
+   
+   --go to card "listen-file"
+   
    put pDataA["card"] into tCard
-   
    go to card tCard
-   
-   wait 1000 milliseconds
-   
    hideDownloadControls
    
    if tCard= "listen-file"  then
@@ -1198,11 +1213,11 @@ on journalResume pDataA, pEntryA
          --
       else
          
-         getPlaying true
          setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+         
+         getPlaying true
       end if
       
-      wait 1 second
       send "updateTimer" 
       
       # UI
@@ -1213,6 +1228,7 @@ on journalResume pDataA, pEntryA
       
       fetchSingleMetadata sDataA["item_id"]
       put  getMediaItemMetadata() into  fld "audioDetails"   
+      unlock screen
       
    end if
    
