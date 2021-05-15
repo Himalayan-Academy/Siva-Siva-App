@@ -29,7 +29,6 @@ on mouseup
    local tBrowserExists, tBrowser, tBrowserRect
    local tCdHeight, tSharingHeight
    
-   lock screen
    put short name of the target into tTarget
    put (there is a widget "body") into tBrowserExists
    
@@ -61,10 +60,8 @@ on mouseup
          else if tCard is   "listen-file" then
             if fld "FilesOnDisk" of card "listen-delete-file" is empty then
                go to card "listen-browse"
-               put "listen-browse" into tCard
             else
                go card "listen-my-audio"
-               put "listen-my-audio" into tCard
             end if
          else if tCard is  "listen-delete-file" then
             go to card "listen-browse"
@@ -131,7 +128,7 @@ on mouseup
          unlock screen
          pass mouseUp
    end switch
-   unlock screen
+  
 end mouseup
 
 command unHiliteBtn pTarget

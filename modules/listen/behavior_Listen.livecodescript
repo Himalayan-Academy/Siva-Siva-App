@@ -196,8 +196,8 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset
-   
+   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
+   local tFldInformation
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -300,11 +300,23 @@ command updateUI
          set the width of tAudioDetailsFld to (CardWidth() - 30)
          topLeftMe tAudioDetailsFld, 15, 160
          
-         put the long id of grp "noInformation" into tnoInformation
-         centerMe tNoInformation, -100
+         put the long id of image "noInformation" into tNoInformation
+         topCenterMe tNoInformation,150
          
-         put the long id of widget "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 10, 156
+         put the long id of fld "noInformation" into tFldInformation
+         CenterMe tFldInformation, 300
+         
+         put the long id of grc "Loading" into tLoading
+         set the loc of tLoading to CardLoc()
+         
+         put the long id of button "downloadSelection" into tDownloadSelection
+         
+         if the visible of grp "noInformation" then
+            topRightMe tDownloadSelection, 50, 150
+         else
+            topRightMe tDownloadSelection, 10, 150
+         end if
+         
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
@@ -872,7 +884,11 @@ on select_Play pItemID, pSelectionNum
    put 0 into sTimeStamp
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
+   wait 200 milliseconds
+   
    showBusyIndicator false
+   
+   
    put "audiotitle="& sSelectedItemA["title"]   into tTrackDataA["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", tTrackDataA
 end select_Play
@@ -1087,7 +1103,8 @@ command addJournalEntry -- save a bookmark to databast
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
    
-   put the short name of this card into tCard
+   -- put the short name of this card into tCard
+   # see below
    
    put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
@@ -1104,6 +1121,13 @@ command addJournalEntry -- save a bookmark to databast
          exit addJournalEntry
       end if
    end if
+   
+   # we are going to card 1 of stack. Card "listen-collection"
+   # then we move from to  card "listen-file"
+   # in journalResume
+   
+   
+   put the short name of card "listen-file" into tCard
    
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
@@ -1144,16 +1168,22 @@ end addJournalEntry
 on journalResume pDataA, pEntryA
    local tCard
    
-   lock screen
-   
    if isMobile() then
       deleteAllMobileControls
-      wait 100 milliseconds
    end if
    
-   put pDataA["card"] into tCard
    
+   # now we give time to set "audioPlayer" on mobile
+   
+   lock screen 
+   
+   # now card "listen-file"
+   
+   put pDataA["card"] into tCard
    go to card tCard
+   wait 200 milliseconds
+   
+   hideDownloadControls
    
    if tCard= "listen-file"  then
       local tRect, tAudioRect, tItemID, tLineNum, tLineValue
@@ -1163,6 +1193,7 @@ on journalResume pDataA, pEntryA
       put path_FileFromURL(sDataA["url"]) into tURL
       
       put the rect of graphic "audioRect" into tAudioRect
+      
       
       if isMobile() then
          put "audioPlayer" into tAudioPlayer
@@ -1179,22 +1210,23 @@ on journalResume pDataA, pEntryA
          getPlaying true
          --
       else
-         wait 300 milliseconds
-         getPlaying true
+         --breakpoint 
          setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+         
+         getPlaying true
       end if
+      
+      fetchSingleMetadata sDataA["item_id"]
+      put  getMediaItemMetadata() into  fld "audioDetails"   
       
       send "updateTimer" 
       
       # UI
       put  sDataA["title"] into fld "currentTitleLabel"
       get runningAudioIndicatorVis("true")
-      showBusyIndicator false
+      
       set the iconPresetName of widget "PlayPause" to "pause"
-      
-      fetchSingleMetadata sDataA["item_id"]
-      put  getMediaItemMetadata() into  fld "audioDetails"   
-      
+      unlock screen
    end if
    
 end journalResume

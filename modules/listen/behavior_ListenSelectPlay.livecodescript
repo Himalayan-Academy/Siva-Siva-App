@@ -110,7 +110,8 @@ on mouseup
          # we needed to stop player
          
          if sLineNum <> empty then
-            setAudioListColors sLineNum,"0,0,0"
+            --setAudioListColors sLineNum,"0,0,0"
+            setAudioListColors sLineNum, empty
          end if
          
          # now we register the user interaction: clicks on a line.
@@ -157,15 +158,16 @@ on mouseup
             select_ShowDetails "downloaded"
          end if 
          
-         show grp "audioDetails"
-         if  (the number of characters in field "audioDetails" < 20) then
-            hide grp "audioDetails"
-            show grp "noInformation"
-         end if 
          if  (the number of characters in field "audioDetails" > 20) then
             show grp "audioDetails"
             hide grp "noInformation"
          end if
+         
+         if  (the number of characters in field "audioDetails" < 20) then
+            hide grp "audioDetails"
+            show grp "noInformation"
+         end if 
+         
          
          if tHideDownload = "listen-my-audio" then
             hide grp "DownloadSelection"
