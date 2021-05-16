@@ -1127,7 +1127,7 @@ command addJournalEntry -- save a bookmark to databast
    # in journalResume
    
    
-   put the short name of card "listen-file" into tCard
+   put the short name of card "listen-collection" into tCard
    
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
@@ -1166,6 +1166,7 @@ end addJournalEntry
 
 -- AAG: Needs a ton of work
 on journalResume pDataA, pEntryA
+   --breakpoint
    local tCard
    
    if isMobile() then
@@ -1175,7 +1176,7 @@ on journalResume pDataA, pEntryA
    
    # now we give time to set "audioPlayer" on mobile
    
-   lock screen 
+   --lock screen 
    
    # now card "listen-file"
    
@@ -1183,9 +1184,11 @@ on journalResume pDataA, pEntryA
    go to card tCard
    wait 200 milliseconds
    
+   go to card "listen-file"
+   
    hideDownloadControls
    
-   if tCard= "listen-file"  then
+  
       local tRect, tAudioRect, tItemID, tLineNum, tLineValue
       local tURL, tAudioPlayer
       
@@ -1194,6 +1197,12 @@ on journalResume pDataA, pEntryA
       
       put the rect of graphic "audioRect" into tAudioRect
       
+      --breakpoint 
+      
+      fetchSingleMetadata sDataA["item_id"]
+      put  getMediaItemMetadata() into  fld "audioDetails"   
+      # UI
+      put  sDataA["title"] into fld "currentTitleLabel"
       
       if isMobile() then
          put "audioPlayer" into tAudioPlayer
@@ -1211,24 +1220,18 @@ on journalResume pDataA, pEntryA
          --
       else
          --breakpoint 
-         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
          
          getPlaying true
+         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       end if
       
-      fetchSingleMetadata sDataA["item_id"]
-      put  getMediaItemMetadata() into  fld "audioDetails"   
+      --unlock screen
       
-      send "updateTimer" 
+      send "updateTimer"  to me in 20 milliseconds
       
-      # UI
-      put  sDataA["title"] into fld "currentTitleLabel"
       get runningAudioIndicatorVis("true")
-      
       set the iconPresetName of widget "PlayPause" to "pause"
-      unlock screen
-   end if
-   
+      
 end journalResume
 
 on hideDownloadControls

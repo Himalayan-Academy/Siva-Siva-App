@@ -60,7 +60,7 @@ on mouseup
             go card "listen-collection"
          else if tCard is   "listen-file" then
             unlock screen
-               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+            if fld "FilesOnDisk" of card "listen-delete-file" is empty then
                go to card "listen-browse"
             else
                go card "listen-my-audio"
@@ -84,7 +84,7 @@ on mouseup
          moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
          
-         
+         dialog_CustomMsg "Saved to Journal"
          break
          
       case "save"
@@ -130,7 +130,7 @@ on mouseup
          unlock screen
          pass mouseUp
    end switch
-  unlock screen
+   unlock screen
 end mouseup
 
 command unHiliteBtn pTarget
