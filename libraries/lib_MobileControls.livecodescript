@@ -95,9 +95,15 @@ end getMobileAudioPlayerRect
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    Log "duration available"
+   
    if theProperty is "duration" then
       log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
+      
+      put mobileControlGet("audioPlayer","playableDuration") into sDuration
+      put sDuration  * 1000 into sDuration
+      put convertTime(sDuration) into tDuration
+     put tDuration into fld "endTime" of stack "listen"
       
       put true into sPlaying
       mobileControlDo sPlayerId, "play"
@@ -126,7 +132,6 @@ end setDuration
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    showBusyIndicator false -- in case it's still showing
-   
    log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
@@ -170,7 +175,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       else
          togglePause true,false
       end if
-
+      
    end if
    
    if pState = "play" then # could be start from scratch after pausing
@@ -187,7 +192,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
       end if
-
+      
       get runningAudioIndicatorVis("true")
    end if
    
