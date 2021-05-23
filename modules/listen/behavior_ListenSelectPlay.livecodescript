@@ -205,6 +205,10 @@ on mouseup
          
          break
          
+      case "noForwardBackup"
+         dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
+         break
+         
       case "SeekForward"
          audioSeekForward
          break

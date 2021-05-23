@@ -324,8 +324,10 @@ command updateUI
             set the left of fld "currentTime" to 26
             set the right of fld "endTime" to CardWidth() - 25
             set the width of grc "durationBG" to CardWidth() - 70
+            set the left of grc "noForwardBackup" to CardWidth() - 70
             set the left of grc "durationProgress" to 35
             set the left of grc "durationMarker" to 30
+            
          end if
          
          if the bottom of grp "audioDetails" > the top of grp "pause-play" then
@@ -1166,7 +1168,7 @@ end addJournalEntry
 
 -- AAG: Needs a ton of work
 on journalResume pDataA, pEntryA
-   --breakpoint
+   
    local tCard
    
    if isMobile() then
@@ -1182,56 +1184,56 @@ on journalResume pDataA, pEntryA
    
    put pDataA["card"] into tCard
    go to card tCard
-   wait 200 milliseconds
+   --wait 200 milliseconds
    
    go to card "listen-file"
    
    hideDownloadControls
    
-  
-      local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-      local tURL, tAudioPlayer
-      
-      put pDataA into sDataA
-      put path_FileFromURL(sDataA["url"]) into tURL
-      
-      put the rect of graphic "audioRect" into tAudioRect
-      
+   
+   local tRect, tAudioRect, tItemID, tLineNum, tLineValue
+   local tURL, tAudioPlayer
+   
+   put pDataA into sDataA
+   put path_FileFromURL(sDataA["url"]) into tURL
+   
+   put the rect of graphic "audioRect" into tAudioRect
+   
+   fetchSingleMetadata sDataA["item_id"]
+   put  getMediaItemMetadata() into  fld "audioDetails"   
+   # UI
+   put  sDataA["title"] into fld "currentTitleLabel"
+   
+   if isMobile() then
+      put "audioPlayer" into tAudioPlayer
+      createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
+      wait 100 milliseconds
+   else
+      set the filename of player "audioPlayer" to sDataA["url"]
+   end if
+   
+   --breakpoint
+   
+   if not isMobile() then
+      set the currenttime player "audioPlayer" to sDataA["timestamp"]
+      start player "audioPlayer"
+      --
+      getPlaying true
+      --
+   else
       --breakpoint 
       
-      fetchSingleMetadata sDataA["item_id"]
-      put  getMediaItemMetadata() into  fld "audioDetails"   
-      # UI
-      put  sDataA["title"] into fld "currentTitleLabel"
-      
-      if isMobile() then
-         put "audioPlayer" into tAudioPlayer
-         createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-         wait 300 milliseconds
-      else
-         set the filename of player "audioPlayer" to sDataA["url"]
-      end if
-      
-      if not isMobile() then
-         set the currenttime player "audioPlayer" to sDataA["timestamp"]
-         start player "audioPlayer"
-         --
-         getPlaying true
-         --
-      else
-         --breakpoint 
-         
-         getPlaying true
-         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-      end if
-      
-      --unlock screen
-      
-      send "updateTimer"  to me in 20 milliseconds
-      
-      get runningAudioIndicatorVis("true")
-      set the iconPresetName of widget "PlayPause" to "pause"
-      
+      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+      getPlaying true
+   end if
+   
+   --unlock screen
+   
+   send "updateTimer"  to me in 20 milliseconds
+   
+   get runningAudioIndicatorVis("true")
+   set the iconPresetName of widget "PlayPause" to "pause"
+   
 end journalResume
 
 on hideDownloadControls

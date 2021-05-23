@@ -108,7 +108,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    show group "bottomToast"   
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 800 milliseconds
    set the layer of grp "BottomToast" to top 
-   wait 2 second
+   wait 1500 milliseconds
    if isMobile() then
       mobileClearTouches
    end if
