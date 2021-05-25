@@ -1178,7 +1178,7 @@ on journalResume pDataA, pEntryA
    
    # now we give time to set "audioPlayer" on mobile
    
-   --lock screen 
+   lock screen 
    
    # now card "listen-file"
    
@@ -1199,8 +1199,7 @@ on journalResume pDataA, pEntryA
    
    put the rect of graphic "audioRect" into tAudioRect
    
-   fetchSingleMetadata sDataA["item_id"]
-   put  getMediaItemMetadata() into  fld "audioDetails"   
+   
    # UI
    put  sDataA["title"] into fld "currentTitleLabel"
    
@@ -1233,6 +1232,9 @@ on journalResume pDataA, pEntryA
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
+   
+   fetchSingleMetadata sDataA["item_id"]
+   put  getMediaItemMetadata() into  fld "audioDetails"
    
 end journalResume
 
