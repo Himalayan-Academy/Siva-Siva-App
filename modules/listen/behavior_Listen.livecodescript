@@ -289,8 +289,8 @@ command updateUI
          topLeftMe tAudioRect, 20, -1111
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
-         set the width of tCurrentTitle to (CardWidth() - 35)
-         topLeftMe tCurrentTitle, 20, 80
+         set the width of tCurrentTitle to (CardWidth() - 100)
+         topLeftMe tCurrentTitle, 10, 80
          
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
          set the width of tAudioDetailsGrc to (CardWidth() - 20)
@@ -310,12 +310,13 @@ command updateUI
          set the loc of tLoading to CardLoc()
          
          put the long id of button "downloadSelection" into tDownloadSelection
+         topRightMe tDownloadSelection, 10, 90
          
-         if the visible of grp "noInformation" then
-            topRightMe tDownloadSelection, 50, 150
-         else
-            topRightMe tDownloadSelection, 10, 150
-         end if
+         --         if the visible of grp "noInformation" then
+         --            topRightMe tDownloadSelection, 10, 90
+         --         else
+         --            topRightMe tDownloadSelection, 10, 150
+         --         end if
          
          
          put the long id of grp "pause-play" into tPausePlay
