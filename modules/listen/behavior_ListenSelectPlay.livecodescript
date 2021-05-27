@@ -131,6 +131,7 @@ on mouseup
          
          
          go to card "listen-file"
+         
          put sSelectNum into fld "theSelectNum"
          
          

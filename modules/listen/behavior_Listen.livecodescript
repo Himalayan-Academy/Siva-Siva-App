@@ -197,7 +197,7 @@ command updateUI
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
-   local tFldInformation
+   local tFldInformation, tGroupAudioDetails
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -290,11 +290,16 @@ command updateUI
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
          set the width of tCurrentTitle to (CardWidth() - 100)
-         topLeftMe tCurrentTitle, 10, 80
+         topLeftMe tCurrentTitle, 10, 75
+         
          
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
          set the width of tAudioDetailsGrc to (CardWidth() - 20)
          topLeftMe tAudioDetailsGrc, 10, 150
+         
+         put the long id of grp "audioDetails" into tGroupAudioDetails
+         set the width of tGroupAudioDetails to (CardWidth() - 30)
+         topLeftMe tGroupAudioDetails, 15, 160
          
          put the long id of fld "audioDetails" into tAudioDetailsFld
          set the width of tAudioDetailsFld to (CardWidth() - 30)
@@ -310,14 +315,9 @@ command updateUI
          set the loc of tLoading to CardLoc()
          
          put the long id of button "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 10, 90
-         
-         --         if the visible of grp "noInformation" then
-         --            topRightMe tDownloadSelection, 10, 90
-         --         else
-         --            topRightMe tDownloadSelection, 10, 150
-         --         end if
-         
+         topRightMe tDownloadSelection, 10, 82
+         set the width of tDownloadSelection to 72
+         set the height of tDownloadSelection to 66
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
@@ -331,16 +331,28 @@ command updateUI
             
          end if
          
-         if the bottom of grp "audioDetails" > the top of grp "pause-play" then
-            put the bottom of grp "audioDetails" - the top of grp "pause-play" into tOffset
+         
+         if the bottom of grc "audioDetailsBkg" > the top of grp "pause-play" then
+            put the bottom of grc "audioDetailsBkg"  - the top of grp "pause-play" into tOffset
             add 14 to tOffset
             put the rect of tAudioDetailsGrc into tRect
             subtract tOffset from item 4 of tRect
             set the rect of tAudioDetailsGrc to tRect
-            put the rect of tAudioDetailsFld into tRect
-            subtract tOffset from item 4 of tRect
-            set the rect of tAudioDetailsFld to tRect
+            --            put the rect of tAudioDetailsFld into tRect
+            --            subtract tOffset from item 4 of tRect
+            --            set the rect of tAudioDetailsFld to tRect
          end if
+         
+         --         if the bottom of grp "audioDetails" > the top of grp "pause-play" then
+         --            put the bottom of grp "audioDetails" - the top of grp "pause-play" into tOffset
+         --            add 14 to tOffset
+         --            put the rect of tAudioDetailsGrc into tRect
+         --            subtract tOffset from item 4 of tRect
+         --            set the rect of tAudioDetailsGrc to tRect
+         --            put the rect of tAudioDetailsFld into tRect
+         --            subtract tOffset from item 4 of tRect
+         --            set the rect of tAudioDetailsFld to tRect
+         --         end if
          
          break
          
@@ -762,6 +774,7 @@ on  playlist_Instantiate
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
+   
    put  sTargetPlayList into tData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
@@ -930,7 +943,9 @@ command select_ShowDetails  pSelection, pRecord
    set the textstyle of line 3 of fld "audioDetails" to "italic"
    
    show fld "audioDetails" with visual "effect wipe" up very fast
-   send "CreateScroller audioDetails" to fld "audioDetails"
+   
+   send "CreateScroller audioDetails" to grp "audioDetails"
+   
 end select_ShowDetails
 
 command typeSetAudioList
