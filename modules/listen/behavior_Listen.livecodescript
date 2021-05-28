@@ -315,9 +315,7 @@ command updateUI
          set the loc of tLoading to CardLoc()
          
          put the long id of button "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 10, 82
-         set the width of tDownloadSelection to 72
-         set the height of tDownloadSelection to 66
+         topRightMe tDownloadSelection, 5, 100
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
@@ -338,21 +336,7 @@ command updateUI
             put the rect of tAudioDetailsGrc into tRect
             subtract tOffset from item 4 of tRect
             set the rect of tAudioDetailsGrc to tRect
-            --            put the rect of tAudioDetailsFld into tRect
-            --            subtract tOffset from item 4 of tRect
-            --            set the rect of tAudioDetailsFld to tRect
          end if
-         
-         --         if the bottom of grp "audioDetails" > the top of grp "pause-play" then
-         --            put the bottom of grp "audioDetails" - the top of grp "pause-play" into tOffset
-         --            add 14 to tOffset
-         --            put the rect of tAudioDetailsGrc into tRect
-         --            subtract tOffset from item 4 of tRect
-         --            set the rect of tAudioDetailsGrc to tRect
-         --            put the rect of tAudioDetailsFld into tRect
-         --            subtract tOffset from item 4 of tRect
-         --            set the rect of tAudioDetailsFld to tRect
-         --         end if
          
          break
          
