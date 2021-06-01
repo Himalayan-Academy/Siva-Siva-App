@@ -51,13 +51,21 @@ local sPlayerId, sPlayerRect, sDuration
 
 local sPlaying
 local sCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
-local pDataA
+local pDataA, tPausePlayAndroid
 
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
+   
+   --breakpoint
+   
    log "createMobilePlayer"
    local tHeight,tPlayloc,
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
+      
+      if the platform is "android" then
+         androidStopAudioPlayingInBackground
+      end if
+      
    end if
    mobileControlCreate "player", pPlayerName
    put the result into sPlayerId
@@ -75,9 +83,9 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    log pURL
    
-   if pURL begins with "https" then
-      showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
-   end if
+   --   if pURL begins with "https" then
+   --      showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
+   --   end if
    
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
@@ -103,11 +111,18 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       put mobileControlGet("audioPlayer","playableDuration") into sDuration
       put sDuration  * 1000 into sDuration
       put convertTime(sDuration) into tDuration
-     put tDuration into fld "endTime" of stack "listen"
+      
+      if there is a card "listen"   of stack "listen" then
+         put tDuration into fld "endTime" of stack "listen"
+      end if
       
       put true into sPlaying
       mobileControlDo sPlayerId, "play"
-      send "updateTimer" to me in 20 milliseconds
+      
+      if there is a card "listen"   of stack "listen" then
+         send "updateTimer" to me in 20 milliseconds
+      end if
+      
    end if
    
    if there is a widget "PlayPause" then
@@ -131,7 +146,7 @@ end setDuration
 # here we get the player do play, pause or stop
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
-   showBusyIndicator false -- in case it's still showing
+   --showBusyIndicator false -- in case it's still showing
    log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
@@ -139,6 +154,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    mobileControlDo pPlayerName, pState
    
    if pState = "stop" then
+      if the platform is "android" then
+         androidStopAudioPlayingInBackground
+      end if
       
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
@@ -160,6 +178,10 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    end if
    
    if pState = "pause" then
+      
+      if the platform is "android" then
+         put androidPauseAudioPlayingInBackground() into  tPausePlayAndroid
+      end if
       # user hit pause
       put mobileControlGet ("currentTime")  into pTimeStamp
       mobileControlDo pPlayerName, "pause"
@@ -185,6 +207,10 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       end if
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
       mobileControlDo pPlayerName, "play"
+      
+      if the platform is "android" then
+         put androidResumeAudioPlayingInBackground() into tPausePlayAndroid
+      end if
       
       put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds

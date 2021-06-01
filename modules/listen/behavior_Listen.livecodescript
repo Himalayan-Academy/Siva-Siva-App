@@ -165,7 +165,7 @@ on closeCard
    switch tCardName
       case "listen-file"
          hide grp "downloadSelection"
-         hide grp "DownloadControls"
+         --hide grp "DownloadControls"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
          deleteAllMobileControls
@@ -245,7 +245,7 @@ command updateUI
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60, 70
+         centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
@@ -315,7 +315,7 @@ command updateUI
          set the loc of tLoading to CardLoc()
          
          put the long id of button "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 5, 100
+         topRightMe tDownloadSelection, 5,  90
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
@@ -1244,7 +1244,7 @@ on hideDownloadControls
    put empty into fld "progressField"
    hide scrollbar "progressbar"
    hide grp "downloadSelection"
-   hide grp "downloadControls"
+   --hide grp "downloadControls"
 end hideDownloadControls
 
 command playSingle pDataA
