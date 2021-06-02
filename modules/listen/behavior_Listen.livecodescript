@@ -778,7 +778,7 @@ command fetchSingleMetadata pItemID
    put tTargetRecordA[1] into sSelectedItemA
    metadata_SetRecord sSelectedItemA
    get getSongLyrics(sSelectedItemA["item_id"])    
-   put getMediaMeta() into it
+   --put getMediaMeta() into it
 end fetchSingleMetadata
 
 function checkPlayList
@@ -1206,7 +1206,7 @@ on journalResume pDataA, pEntryA
    if isMobile() then
       put "audioPlayer" into tAudioPlayer
       createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-      wait 100 milliseconds
+      wait 300 milliseconds
    else
       set the filename of player "audioPlayer" to sDataA["url"]
    end if
