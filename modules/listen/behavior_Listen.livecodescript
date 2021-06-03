@@ -326,7 +326,6 @@ command updateUI
             set the left of grc "noForwardBackup" to CardWidth() - 70
             set the left of grc "durationProgress" to 35
             set the left of grc "durationMarker" to 30
-            
          end if
          
          

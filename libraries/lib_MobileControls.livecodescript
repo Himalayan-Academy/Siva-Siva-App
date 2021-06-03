@@ -280,7 +280,7 @@ command updateTimer
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
          --put mobileControlGet("audioPlayer","duration") into sDuration
          put mobileControlGet("audioPlayer","playableDuration") into sDuration
-         else
+      else
          if the timeScale of player "audioPlayer" of stack "listen" is 0 then
             -- audio player thinks it is not playing any track...
             send "updateTimer" to me in 100 millisecs
@@ -293,7 +293,7 @@ command updateTimer
       
       if sCurrentTime > 0 and sDuration > 0 then         
          // Update the time indicator
-         put round((sCurrentTime/sDuration) * 350) into tWidth
+         put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
          
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
@@ -306,8 +306,8 @@ command updateTimer
          set the width of graphic "durationProgress" of stack "listen" to tWidth
          
          --         set the left of graphic "durationProgress" of stack "listen" to 20
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
       end if
       
       unlock screen
@@ -408,7 +408,7 @@ end __Utilities
 command setZeroDurationProgress
    // mobile durationProgress
    set the width of graphic "durationProgress" to 1
-   set the left of graphic "durationProgress" to 31
+   set the left of graphic "durationProgress" to the left of graphic "durationBG"
    set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
    put "0.00" into field "currentTime"
    put "0.00" into field "endTime"
