@@ -260,7 +260,7 @@ command updateUI
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60, 70
+         centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
