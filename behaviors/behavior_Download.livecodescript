@@ -171,7 +171,7 @@ on mouseup
    switch tMouseEvent
       case "cancel"
          unload sURL
-         --close this stack
+        hide grp "DownloadControls"
          break
    end switch
    hideDownloadControls
