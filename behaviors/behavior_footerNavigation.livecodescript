@@ -27,7 +27,7 @@ end preOpenControl
 on mouseup
    local tTarget, tShareControl, tControl, tCard
    local tBrowserExists, tBrowser, tBrowserRect
-   local tCdHeight, tSharingHeight
+   local tCdHeight, tSharingHeight, tLastStack
    
    lock screen
    put short name of the target into tTarget
@@ -60,10 +60,15 @@ on mouseup
             go card "listen-collection"
          else if tCard is   "listen-file" then
             unlock screen
-            if fld "FilesOnDisk" of card "listen-delete-file" is empty then
-               go to card "listen-browse"
-            else
-               go card "listen-my-audio"
+            put portal_GetLastStack() into tLastStack
+            if tLastStack = "Journal" then
+               go to card "listen-collection"
+            else 
+               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+                  go to card "listen-browse"
+               else
+                  go card "listen-my-audio"
+               end if
             end if
          else if tCard is  "listen-delete-file" then
             go to card "listen-browse"
