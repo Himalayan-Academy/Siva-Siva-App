@@ -201,6 +201,10 @@ on mouseup
             if sLastScene = 1 then
                hide btn "goPrev"
             end if
+            if there is no file (the filename of sStoryImage) then
+               subtract 2 from sLastScene
+               goNextScene
+            end if
             unlock screen
          else
             subtract 2 from sLastScene
@@ -212,25 +216,30 @@ on mouseup
             deleteMobileControl "storyText"
             goNextScene
          else
-            lock screen
-            show grp "footer"
-            show sStoryText
-            show sStoryTextBkg
-            hide sCaptionText
-            hide sCaptionBkg
-            if the formattedHeight of sStoryText > the height of sStoryText then
-               dispatch "createScroller" to sStoryText with "storyText"
-            else
-               dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
-               landscapeOrientation "allowed"
-            end if
-            set the blendlevel of sStoryImage to 15
-            setImageState sStoryImage, "noBorder"
-            unlock screen
+            showStoryText
          end if
          break
    end switch
 end mouseup
+
+
+on showStoryText
+   lock screen
+   show grp "footer"
+   show sStoryText
+   show sStoryTextBkg
+   hide sCaptionText
+   hide sCaptionBkg
+   if the formattedHeight of sStoryText > the height of sStoryText then
+      dispatch "createScroller" to sStoryText with "storyText"
+   else
+      dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
+      landscapeOrientation "allowed"
+   end if
+   set the blendlevel of sStoryImage to 15
+   setImageState sStoryImage, "noBorder"
+   unlock screen
+end showStoryText
 
 
 # Tree Widget handler
@@ -378,7 +387,7 @@ end visualArticle
 
 
 command goNextScene
-   local tImagePath, tMsg, tLoc
+   local tImagePath, tMsg, tLoc, tShowPhoto
    --
    lock screen
    if sLastStory is empty or sLastStory is not sStoryTitle then
@@ -471,12 +480,17 @@ command goNextScene
       set the itemdel to "/"
       set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
    end if
+   put there is a file (the filename of sStoryImage) into tShowPhoto
    if sLastScene is 1 then
       set the blendlevel of sStoryImage to 15
       initializeCycleImage sStoryImage, "noBorder"
    else
-      set the blendlevel of sStoryImage to 0
-      initializeCycleImage sStoryImage
+      if tShowPhoto then
+         set the blendlevel of sStoryImage to 0
+         initializeCycleImage sStoryImage
+      else
+         showStoryText
+      end if
    end if
    --
    unlock screen
