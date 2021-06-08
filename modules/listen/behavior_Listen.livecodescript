@@ -1181,7 +1181,7 @@ on journalResume pDataA, pEntryA
    
    put pDataA["card"] into tCard
    go to card tCard
-   --wait 200 milliseconds
+   
    
    go to card "listen-file"
    
@@ -1210,6 +1210,9 @@ on journalResume pDataA, pEntryA
    
    --breakpoint
    
+   fetchSingleMetadata sDataA["item_id"]
+   put  getMediaItemMetadata() into  fld "audioDetails" 
+   
    if not isMobile() then
       set the currenttime player "audioPlayer" to sDataA["timestamp"]
       start player "audioPlayer"
@@ -1218,20 +1221,17 @@ on journalResume pDataA, pEntryA
       --
    else
       --breakpoint 
-      
-      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       getPlaying true
+      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+      
    end if
    
    --unlock screen
    
-   send "updateTimer"  to me in 20 milliseconds
+   send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
-   
-   fetchSingleMetadata sDataA["item_id"]
-   put  getMediaItemMetadata() into  fld "audioDetails"
    
 end journalResume
 
