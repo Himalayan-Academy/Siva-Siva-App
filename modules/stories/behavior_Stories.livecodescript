@@ -213,12 +213,16 @@ on mouseup
             goNextScene
          else
             lock screen
+            show grp "footer"
             show sStoryText
             show sStoryTextBkg
             hide sCaptionText
             hide sCaptionBkg
             if the formattedHeight of sStoryText > the height of sStoryText then
                dispatch "createScroller" to sStoryText with "storyText"
+            else
+               dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
+               landscapeOrientation "allowed"
             end if
             set the blendlevel of sStoryImage to 15
             setImageState sStoryImage, "noBorder"
@@ -581,8 +585,8 @@ command updateImageState pResizeOnly
                end if
             end if
             hide grp "footer"
-            hide btn "goPrev"
-            hide btn "goNext"
+            -- hide btn "goPrev"
+            -- hide btn "goNext"
             set the hscroll of grp "storyImageGroup" to 0
             set the vscroll of grp "storyImageGroup" to 0
             if the width of sStoryImage < CardWidth() then
