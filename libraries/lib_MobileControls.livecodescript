@@ -105,33 +105,33 @@ end getMobileAudioPlayerRect
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    Log "duration available"
    
-   if theProperty is "duration" then
-      log "Should be setting closing the loading indicator"
-      showBusyIndicator false -- Remove the "Loading..." indicator and start playing
-      
-      put mobileControlGet("audioPlayer","playableDuration") into sDuration
-      put sDuration  * 1000 into sDuration
-      put convertTime(sDuration) into tDuration
-      
-      --if there is a card "listen"   of stack "listen" then
-         put tDuration into fld "endTime" of stack "listen"
-      --end if
-      
-      put true into sPlaying
-      mobileControlDo sPlayerId, "play"
-      
-      --if there is a card "listen"   of stack "listen" then
-         send "updateTimer" to me in 20 milliseconds
-      --end if
-      
+if theProperty is "duration" then
+   log "Should be setting closing the loading indicator"
+   showBusyIndicator false -- Remove the "Loading..." indicator and start playing
+   
+   put mobileControlGet("audioPlayer","playableDuration") into sDuration
+   put sDuration  * 1000 into sDuration
+   put convertTime(sDuration) into tDuration
+   
+   if there is a card "listen-file"   of stack "listen" then
+      put tDuration into fld "endTime" of stack "listen"
    end if
    
-   if there is a widget "PlayPause" then
-      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
-   else
-      togglePause true,false
+   put true into sPlaying
+   mobileControlDo sPlayerId, "play"
+   
+   if there is a card "listen-file"   of stack "listen" then
+      send "updateTimer" to me in 20 milliseconds
    end if
    
+end if
+
+if there is a widget "PlayPause" then
+   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+else
+   togglePause true,false
+end if
+
 end playerPropertyAvailable
 
 # Desktop player gets thru

@@ -775,7 +775,6 @@ command fetchSingleMetadata pItemID
    put tTargetRecordA[1] into sSelectedItemA
    metadata_SetRecord sSelectedItemA
    get getSongLyrics(sSelectedItemA["item_id"])    
-   --put getMediaMeta() into it
 end fetchSingleMetadata
 
 function checkPlayList
@@ -1165,15 +1164,10 @@ end addJournalEntry
 
 -- AAG: Needs a ton of work
 on journalResume pDataA, pEntryA
+   local tRect, tAudioRect, tItemID, tLineNum, tLineValue
+   local tURL, tAudioPlayer, pTitle, tMetaData
    
    local tCard
-   
-   if isMobile() then
-      deleteAllMobileControls
-   end if
-   
-   
-   # now we give time to set "audioPlayer" on mobile
    
    lock screen 
    
@@ -1181,57 +1175,24 @@ on journalResume pDataA, pEntryA
    
    put pDataA["card"] into tCard
    go to card tCard
-   
-   
    go to card "listen-file"
    
-   hideDownloadControls
-   
-   
-   local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-   local tURL, tAudioPlayer
+   put  sDataA["title"] into fld "currentTitleLabel"
    
    put pDataA into sDataA
    put path_FileFromURL(sDataA["url"]) into tURL
+   put tURL into sRemoteURL
    
-   put the rect of graphic "audioRect" into tAudioRect
+   put sDataA["title"] into pTitle
    
-   
-   # UI
-   put  sDataA["title"] into fld "currentTitleLabel"
-   
-   if isMobile() then
-      put "audioPlayer" into tAudioPlayer
-      createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-      wait 300 milliseconds
-   else
-      set the filename of player "audioPlayer" to sDataA["url"]
-   end if
-   
-   --breakpoint
-   
-   fetchSingleMetadata sDataA["item_id"]
+   fetchSingleMetadata sDataA["item_id"] 
    put  getMediaItemMetadata() into  fld "audioDetails" 
    
-   if not isMobile() then
-      set the currenttime player "audioPlayer" to sDataA["timestamp"]
-      start player "audioPlayer"
-      --
-      getPlaying true
-      --
-   else
-      --breakpoint 
-      getPlaying true
-      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-      
-   end if
    
-   --unlock screen
+   startPlayer sRemoteURL,pTitle --,pCardName,pSelectNum
+   # skip the card name Parameter in this context.
+   showBusyIndicator false
    
-   send "updateTimer" to stack "lib_MobileControls" in 20 milliseconds
-   
-   get runningAudioIndicatorVis("true")
-   set the iconPresetName of widget "PlayPause" to "pause"
    
 end journalResume
 
