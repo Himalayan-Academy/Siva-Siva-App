@@ -27,7 +27,7 @@ end preOpenControl
 on mouseup
    local tTarget, tShareControl, tControl, tCard
    local tBrowserExists, tBrowser, tBrowserRect
-   local tCdHeight, tSharingHeight, tLastStack
+   local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
    
    lock screen
    put short name of the target into tTarget
@@ -83,13 +83,24 @@ on mouseup
       case "journal"
          unlock screen
          
-         AddJournalEntry
-         // will exit to top, no journal entry made
+         if tCard is among items of \
+               "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-search" then
+            # nothing
+         else
+            --            put ( (tCard is "listen-file") AND (the visible of grp "downloadSelection" is true)  )into tDownloadIsVisible 
+            --            if tDownloadIsVisible  is false then
+            --               # nothing
+            --            else
+            AddJournalEntry
+            // will exit to top, no journal entry made
+            
+            moveMe target, 0,-100, 200
+            moveMe target, 0,100, 70
+            
+            dialog_CustomMsg "Saved to Journal"
+            --         end if
+         end if
          
-         moveMe target, 0,-100, 200
-         moveMe target, 0,100, 70
-         
-         dialog_CustomMsg "Saved to Journal"
          break
          
       case "save"
