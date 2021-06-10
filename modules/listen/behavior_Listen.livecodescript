@@ -1165,38 +1165,77 @@ command addJournalEntry -- save a bookmark to databast
 end addJournalEntry
 
 -- AAG: Needs a ton of work
-on journalResume pDataA, pEntryA
+on journalResume pDataA, pEntry
+   
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-   local tURL, tAudioPlayer, pTitle, tMetaData
+   local tURL, tAudioPlayer
+   
+   --breakpoint
    
    local tCard
    
+   if isMobile() then
+      deleteAllMobileControls
+   end if
+   
+   # now we give time to set "audioPlayer" on mobile
    lock screen 
    
    # now card "listen-file"
    
    put pDataA["card"] into tCard
    go to card tCard
+   
    go to card "listen-file"
    
-   put  sDataA["title"] into fld "currentTitleLabel"
+   hideDownloadControls
    
    put pDataA into sDataA
    put path_FileFromURL(sDataA["url"]) into tURL
-   put tURL into sRemoteURL
    
-   put sDataA["title"] into pTitle
+   # UI
+   put  sDataA["title"] into fld "currentTitleLabel"
    
-   fetchSingleMetadata sDataA["item_id"] 
-   put  getMediaItemMetadata() into  fld "audioDetails" 
+   fetchSingleMetadata sDataA["item_id"]
+   put  getMediaItemMetadata() into  fld "audioDetails"
    
+   # Create player
+   put the rect of graphic "audioRect" into tAudioRect
    
-   startPlayer sRemoteURL,pTitle --,pCardName,pSelectNum
-   # skip the card name Parameter in this context.
-   showBusyIndicator false
+   if isMobile() then
+      put "audioPlayer" into tAudioPlayer
+      createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
+      wait 300 milliseconds
+   else
+      set the filename of player "audioPlayer" to sDataA["url"]
+   end if
+   
+   if not isMobile() then
+      set the currenttime player "audioPlayer" to sDataA["timestamp"]
+      start player "audioPlayer"
+      --
+      getPlaying true
+      --
+   else
+      --breakpoint 
+      
+      getPlaying true
+      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+      
+   end if
+   
+   --unlock screen
+   
+   send "updateTimer"  to me in 20 milliseconds
+   
+   get runningAudioIndicatorVis("true")
+   set the iconPresetName of widget "PlayPause" to "pause"
+   
    
    
 end journalResume
+
+
 
 on hideDownloadControls
    local tLastStack
