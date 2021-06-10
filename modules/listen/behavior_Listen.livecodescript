@@ -1108,7 +1108,8 @@ command addJournalEntry -- save a bookmark to databast
    
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to save to Journal. Go an audio file." into tMsg
-      exit addJournalEntry
+      exit to top
+      --exit addJournalEntry
    end if
    
    if (the visible of grp "downloadSelection" = false) then
@@ -1116,7 +1117,8 @@ command addJournalEntry -- save a bookmark to databast
    else
       if sDataA["url"] contains "http" then
          dialog_CustomMsg "Download to Save to Journal."
-         exit addJournalEntry
+         exit to top
+         --exit addJournalEntry
       end if
    end if
    
