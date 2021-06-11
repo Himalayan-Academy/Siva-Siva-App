@@ -1179,12 +1179,14 @@ on journalResume pDataA, pEntry
    end if
    
    # now we give time to set "audioPlayer" on mobile
-   lock screen 
+  
    
    # now card "listen-file"
    
    put pDataA["card"] into tCard
    go to card tCard
+   
+   lock screen
    
    go to card "listen-file"
    
@@ -1198,6 +1200,8 @@ on journalResume pDataA, pEntry
    
    fetchSingleMetadata sDataA["item_id"]
    put  getMediaItemMetadata() into  fld "audioDetails"
+   
+   informationGrp
    
    # Create player
    put the rect of graphic "audioRect" into tAudioRect
@@ -1245,6 +1249,17 @@ on hideDownloadControls
    hide grp "downloadSelection"
    --hide grp "downloadControls"
 end hideDownloadControls
+
+command informationGrp
+   if  (the number of characters in field "audioDetails" < 20) then
+      hide grc "audioDetailsBkg"
+      hide grp  "audioDetails"
+      show grp "noInformation"
+   else if  (the number of characters in field "audioDetails" > 20) then
+      show grp "audioDetails"
+      hide grp "noInformation"
+   end if
+end informationGrp
 
 command playSingle pDataA
    local tSearchA,x,tItem_id

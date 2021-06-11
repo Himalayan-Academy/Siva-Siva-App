@@ -148,27 +148,21 @@ on mouseup
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          
+         lock screen
+         
          if gCardName = "listen-my-audio" then
             direct_Play  sSelectNum, gCardName
          else
             select_Play false, sSelectNum  # will use either the line number or item id
          end if
          
-         local tURL -- AAG: this makes no sense, tURL is never set!?
+         local tURL 
+         
          if  "audio/book" is not in tURL then # no display details
             select_ShowDetails "downloaded"
          end if 
          
-         if  (the number of characters in field "audioDetails" > 20) then
-            show grp "audioDetails"
-            hide grp "noInformation"
-         end if
-         
-         if  (the number of characters in field "audioDetails" < 20) then
-            hide grp "audioDetails"
-            show grp "noInformation"
-         end if 
-         
+         informationGrp
          
          if tHideDownload = "listen-my-audio" then
             hide grp "DownloadSelection"
