@@ -73,6 +73,10 @@ on mouseup
          dispatch  "getSums" to grp "displayFilesSizes"
          dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
          break
+      case "helpButton"
+      case "helpDismiss"
+         helpAudio
+         break
       case "listen-file"
          -- local tTrue -- AAG: not used
          go to card "listen-file"

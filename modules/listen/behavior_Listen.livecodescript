@@ -1177,7 +1177,7 @@ on journalResume pDataA, pEntry
    end if
    
    # now we give time to set "audioPlayer" on mobile
-  
+   
    
    # now card "listen-file"
    
@@ -1200,8 +1200,6 @@ on journalResume pDataA, pEntry
    put  getMediaItemMetadata() into  fld "audioDetails"
    
    informationGrp
-   
-   createScroller "audioDetails"
    
    # Create player
    put the rect of graphic "audioRect" into tAudioRect
@@ -1235,6 +1233,7 @@ on journalResume pDataA, pEntry
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
    
+   send "createScroller audioDetails" to grp "audioDetails"
    
    
 end journalResume
@@ -1438,13 +1437,13 @@ command helpAudio
    switch tTarget
       case "helpButton"
          show grc "helpBkg"
-         show btn "dismiss"
+         show btn "helpDismiss"
          show grp "helpField"
          break
          
-      case "Dismiss"
+      case "helpDismiss"
          hide grp "helpField"
-         hide btn "dismiss"
+         hide btn "helpDismiss"
          hide grc "helpBkg"
          break
    end switch
