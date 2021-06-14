@@ -128,6 +128,27 @@ on mouseRelease
    put "" into sStartLoc
 end mouseRelease
 
+on mouseMove x,y -- desktop scrolling
+   if isMobile() or sMouseLoc = "" then pass mouseMove
+   setScroll
+end mouseMove
+
+--on mouseMove x,y -- desktop scrolling
+--   local tHDist,  tVDist
+--   if isMobile() or sMouseLoc = "" then pass mouseMove
+--   put abs(x - item 1 of sMouseLoc) into tHDist
+--   put abs(y - item 2 of sMouseLoc) into tVDist
+--   --  lock screen
+--   if item 2 of sMouseLoc > y then -- pushing up
+--      if not (the name of me contains "field") then set the hscroll of me to the hscroll of me + tHDist -- bgImg okay
+--      set the vscroll of me to the vscroll of me + tVDist
+--   else if item 2 of sMouseLoc < y then -- pushing down
+--      if not (the name of me contains "field") then set the hscroll of me to the hscroll of me - tHDist
+--      set the vscroll of me to the vscroll of me - tVDist
+--   end if
+--   put x,y into sMouseLoc
+--   --  unlock screen
+--end mouseMove
 
 on setScroll
    if the mouse is down then

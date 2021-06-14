@@ -235,8 +235,6 @@ command updateUI
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
-         put the long id of btn "helpAudio" into tHelpAudio
-         bottomRightMe tHelpAudio,0,50
          break
          
       case "listen-browse"
@@ -1203,6 +1201,8 @@ on journalResume pDataA, pEntry
    
    informationGrp
    
+   createScroller "audioDetails"
+   
    # Create player
    put the rect of graphic "audioRect" into tAudioRect
    
@@ -1240,26 +1240,6 @@ on journalResume pDataA, pEntry
 end journalResume
 
 
-
-on hideDownloadControls
-   local tLastStack
-   put empty into fld "ProgressTitle"
-   put empty into fld "progressField"
-   hide scrollbar "progressbar"
-   hide grp "downloadSelection"
-   --hide grp "downloadControls"
-end hideDownloadControls
-
-command informationGrp
-   if  (the number of characters in field "audioDetails" < 20) then
-      hide grc "audioDetailsBkg"
-      hide grp  "audioDetails"
-      show grp "noInformation"
-   else if  (the number of characters in field "audioDetails" > 20) then
-      show grp "audioDetails"
-      hide grp "noInformation"
-   end if
-end informationGrp
 
 command playSingle pDataA
    local tSearchA,x,tItem_id
@@ -1426,6 +1406,50 @@ command offLineGoMyAudio
       end if
    end if
 end offLineGoMyAudio
+
+---------------------
+on __UX
+end __UX
+
+on hideDownloadControls
+   local tLastStack
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+   hide grp "downloadSelection"
+   --hide grp "downloadControls"
+end hideDownloadControls
+
+command informationGrp
+   if  (the number of characters in field "audioDetails" < 20) then
+      hide grc "audioDetailsBkg"
+      hide grp  "audioDetails"
+      show grp "noInformation"
+   else if  (the number of characters in field "audioDetails" > 20) then
+      show grp "audioDetails"
+      hide grp "noInformation"
+   end if
+end informationGrp
+
+command helpAudio
+   local tTarget
+   
+   put the short name of the target into tTarget
+   switch tTarget
+      case "helpButton"
+         show grc "helpBkg"
+         show btn "dismiss"
+         show grp "helpField"
+         break
+         
+      case "Dismiss"
+         hide grp "helpField"
+         hide btn "dismiss"
+         hide grc "helpBkg"
+         break
+   end switch
+   
+end helpAudio
 
 on closeStack
    portal_SetLastStack "Listen"
