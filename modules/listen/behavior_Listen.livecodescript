@@ -1177,8 +1177,6 @@ on journalResume pDataA, pEntry
    end if
    
    # now we give time to set "audioPlayer" on mobile
-   
-   
    # now card "listen-file"
    
    put pDataA["card"] into tCard
@@ -1228,7 +1226,6 @@ on journalResume pDataA, pEntry
    
    --unlock screen
    
-   send "updateTimer"  to me in 20 milliseconds
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
@@ -1431,11 +1428,15 @@ command informationGrp
 end informationGrp
 
 command helpAudio
-   local tTarget
+   local tTarget, tAudioGuide
    
    put the short name of the target into tTarget
    switch tTarget
       case "helpButton"
+         
+         put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
+         set the htmltext of fld "helpField" to tAudioGuide
+         
          show grc "helpBkg"
          show btn "helpDismiss"
          show grp "helpField"
