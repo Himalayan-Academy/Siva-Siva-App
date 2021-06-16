@@ -1156,9 +1156,10 @@ on journalResume pDataA, pEntryA
          getPlaying true
          --
       else
-         wait 300 milliseconds
-         getPlaying true
+         wait 300 milliseconds with messages
          setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
+         wait 20 milliseconds with messages
+         getPlaying true
       end if
       
       send "updateTimer" 
