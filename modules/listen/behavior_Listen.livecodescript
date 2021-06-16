@@ -643,6 +643,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+
    local tA, tBuf
    repeat for each key k in sCurrentPlayListA["audioFiles"]
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
