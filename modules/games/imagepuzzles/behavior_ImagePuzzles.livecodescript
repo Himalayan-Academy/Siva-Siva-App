@@ -53,11 +53,9 @@ command up_InfoPanel
    show img "orion_nebula"
    set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
    show grp "makeTiles"
-   hide btn "infoPanel"
 end up_InfoPanel
 
 command down_InfoPanel
-   show btn "infoPanel"
    hide grp "makeTiles"
    clearImageTiles
    hide image "orion_nebula"
@@ -72,16 +70,15 @@ on mouseup
    
    switch sTarget
       case "backArrow"
-         
-         clearImageTiles
-         portal_GoStack ("Siva-Siva-Portal")
+         if (the visible of graphic "puzzleFrame")  then
+            up_InfoPanel
+         else 
+            clearImageTiles
+            portal_GoStack ("Siva-Siva-Portal")
+         end if
          break
          
-      case "infoPanel"
-         up_InfoPanel
-         break
       case "Make a Puzzle"
-         show btn "infoPanel"
          down_InfoPanel
          fetchImage sRealm
          makePuzzle
@@ -476,9 +473,6 @@ on updateUI
          
          put the long ID of group "makeTiles" of me into tMakeTiles
          bottomCenterMe tMakeTiles, 180
-         
-         put the long ID of btn "infoPanel"  into tInfoPanel
-         bottomCenterMe tInfoPanel, 10
          
          put the long id of fld "status" into tStatus
          bottomCenterMe tStatus, 30

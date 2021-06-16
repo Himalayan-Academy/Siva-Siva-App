@@ -19,6 +19,7 @@ local tHGroup, sLoadingIndicator
 
 on opencard
    audioIsRunning
+   pass opencard
 end opencard
 
 
@@ -89,19 +90,25 @@ end mouseDown
 
 on mouseup
    local pSelection
-   if the short name target is "Loading"then
-      showBusyIndicator false
-      if isMobile() then
-         mobileClearTouches
+   
+   if the short name target is "title-label" then
+      go to card "listen-my-audio"
+      
+   else
+      if the short name target is "Loading"then
+         showBusyIndicator false
+         if isMobile() then
+            mobileClearTouches
+         end if
+         exit top 
       end if
-      exit top 
    end if
    
-      if abs(the mouseH - item 1 of sStartLoc) <= 1 and abs(the mouseV - item 2 of sStartLoc) <= 1 then
-         put the target into pSelection
-         selectPlayList pSelection # handles collection and other clicks on the UI
-      end if
-   end mouseup
+   if abs(the mouseH - item 1 of sStartLoc) <= 1 and abs(the mouseV - item 2 of sStartLoc) <= 1 then
+      put the target into pSelection
+      selectPlayList pSelection # handles collection and other clicks on the UI
+   end if
+end mouseup
 
 
 ----------------------------------------------

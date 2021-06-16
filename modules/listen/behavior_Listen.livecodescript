@@ -60,8 +60,6 @@ on openstack
    put url ("binfile:" & path_Modules()& "listen/collection.json") into tContainer
    put JSONToArray(tContainer) into sCollectionA 
    
-   portal_SetLastStack "Listen"   
-   
    # must have net connection, otherwise take to My Audio
 end openstack
 
@@ -165,7 +163,7 @@ on closeCard
    switch tCardName
       case "listen-file"
          hide grp "downloadSelection"
-         hide grp "DownloadControls"
+         --hide grp "DownloadControls"
          put "" into fld "audioDetails" 
          put "" into fld "currentTitleLabel" 
          deleteAllMobileControls
@@ -196,8 +194,8 @@ command updateUI
    local tTitleLabel, tCollectionsLabel, tMyAudioLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
-   local tRect, tControl, tRight, tAudioRect, tHelpAudio
-   
+   local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
+   local tFldInformation, tGroupAudioDetails
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -209,6 +207,11 @@ command updateUI
    topCenterMe tTitleLabel, 5
    topLeftMe tCollectionsLabel, 10, 30
    topRightMe tMyAudioLabel, 10, 30
+   
+   if there is a grp "loadingGroup" then
+      put the long id of grc "Loading" into tControl
+      centerMe tControl, 60, 70
+   end if
    
    switch (the short name of this card)
       
@@ -232,15 +235,13 @@ command updateUI
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
-         put the long id of btn "helpAudio" into tHelpAudio
-         bottomRightMe tHelpAudio,0,50
          break
          
       case "listen-browse"
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60,70
+         centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
@@ -255,16 +256,16 @@ command updateUI
          put the long id of fld "audioList" into tAudioList
          set the rect of tAudioList to (10, the bottom of tCollectionsLabel + 18, \
                CardWidth() - 7, the top of tFooter - 17)
-         centerMe tAudioList, 60,70
+         centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
-         topLeftMe tAudioGlobalControl, 10,0
+         topLeftMe tAudioGlobalControl, 10, 0
          
          put the long id of grp "displayDelete" into tDeleteOn
-         BottomRightMe tDeleteOn, 0,50
+         BottomRightMe tDeleteOn, 0, 50
          
          break
          
@@ -272,45 +273,72 @@ command updateUI
          local tDisplayFilesSizes
          put the long id of grp "displayFilesSizes" into tDisplayFilesSizes
          set the width of tDisplayFilesSizes to  CardWidth()
-         topLeftMe tDisplayFilesSizes, -3,30
+         topLeftMe tDisplayFilesSizes, -3, 30
          break
          
       case "listen-file"
          
          put the long id of player "audioPlayer" into tAudioPlayer
-         topLeftMe tAudioPlayer, 20,-1111
+         topLeftMe tAudioPlayer, 20, -1111
          
          put the long id of graphic "audioRect" into tAudioRect
-         topLeftMe tAudioRect, 20,-1111
+         topLeftMe tAudioRect, 20, -1111
          
          put the long id of fld "currentTitleLabel" into tCurrentTitle
-         set the width of tCurrentTitle to  (CardWidth() - 35 )
-         topLeftMe tCurrentTitle, 20,80
+         set the width of tCurrentTitle to (CardWidth() - 100)
+         topLeftMe tCurrentTitle, 10, 75
+         
          
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
-         set the width of tAudioDetailsGrc to  (CardWidth() - 20 )
-         topLeftMe tAudioDetailsGrc, 10,150
+         set the width of tAudioDetailsGrc to (CardWidth() - 20)
+         topLeftMe tAudioDetailsGrc, 10, 150
+         
+         put the long id of grp "audioDetails" into tGroupAudioDetails
+         set the width of tGroupAudioDetails to (CardWidth() - 30)
+         topLeftMe tGroupAudioDetails, 15, 160
          
          put the long id of fld "audioDetails" into tAudioDetailsFld
-         set the width of tAudioDetailsFld to  (CardWidth() -30 )
-         topLeftMe tAudioDetailsFld, 15,160
+         set the width of tAudioDetailsFld to (CardWidth() - 30)
+         topLeftMe tAudioDetailsFld, 15, 160
          
-         put the long id of grp "noInformation" into tnoInformation
-         centerMe tNoInformation, -100
+         put the long id of image "noInformation" into tNoInformation
+         topCenterMe tNoInformation,150
          
-         put the long id of widget "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 10, 156
+         put the long id of fld "noInformation" into tFldInformation
+         CenterMe tFldInformation, 300
+         
+         put the long id of grc "Loading" into tLoading
+         set the loc of tLoading to CardLoc()
+         
+         put the long id of button "downloadSelection" into tDownloadSelection
+         topRightMe tDownloadSelection, 5,  90
          
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay, 60
+         if CardWidth() < 414 then
+            set the left of fld "currentTime" to 26
+            set the right of fld "endTime" to CardWidth() - 25
+            set the width of grc "durationBG" to CardWidth() - 70
+            set the left of grc "noForwardBackup" to CardWidth() - 70
+            set the left of grc "durationProgress" to 35
+            set the left of grc "durationMarker" to 30
+         end if
+         
+         
+         if the bottom of grc "audioDetailsBkg" > the top of grp "pause-play" then
+            put the bottom of grc "audioDetailsBkg"  - the top of grp "pause-play" into tOffset
+            add 14 to tOffset
+            put the rect of tAudioDetailsGrc into tRect
+            subtract tOffset from item 4 of tRect
+            set the rect of tAudioDetailsGrc to tRect
+         end if
          
          break
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         topLeftMe tFilterAudio, 30 ,80
+         topLeftMe tFilterAudio, 30, 80
          break
-         
          
    end switch
    
@@ -615,6 +643,8 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
+
+   local tA, tBuf
    repeat for each key k in sCurrentPlayListA["audioFiles"]
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
       put tA["file_id"] && the result & cr after tBuf
@@ -724,6 +754,7 @@ on  playlist_Instantiate
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
    end if
+   
    put  sTargetPlayList into tData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
@@ -743,7 +774,6 @@ command fetchSingleMetadata pItemID
    put tTargetRecordA[1] into sSelectedItemA
    metadata_SetRecord sSelectedItemA
    get getSongLyrics(sSelectedItemA["item_id"])    
-   put getMediaMeta() into it
 end fetchSingleMetadata
 
 function checkPlayList
@@ -849,7 +879,11 @@ on select_Play pItemID, pSelectionNum
    put 0 into sTimeStamp
    startPlayer sRemoteURL, sSelectedItemA["title"],,sSelectNum
    # skip the card name Parameter in this context.
+   wait 200 milliseconds
+   
    showBusyIndicator false
+   
+   
    put "audiotitle="& sSelectedItemA["title"]   into tTrackDataA["contentTarget"]
    tracking_RecordActivity "Surprise", "navigation/playaudio", tTrackDataA
 end select_Play
@@ -888,7 +922,9 @@ command select_ShowDetails  pSelection, pRecord
    set the textstyle of line 3 of fld "audioDetails" to "italic"
    
    show fld "audioDetails" with visual "effect wipe" up very fast
-   send "CreateScroller audioDetails" to fld "audioDetails"
+   
+   send "CreateScroller audioDetails" to grp "audioDetails"
+   
 end select_ShowDetails
 
 command typeSetAudioList
@@ -1015,7 +1051,7 @@ command downloadSelection pSelectNum, pTarget
 end downloadSelection
 
 command downloadAffirmed   
-   local tTitle
+   local tTitle, tNewRecordA
    if  sCurrentPlayListA["playListClass"] ="audiobook" then
       put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into tTitle
    else
@@ -1064,13 +1100,15 @@ command addJournalEntry -- save a bookmark to databast
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
    
-   put the short name of this card into tCard
+   -- put the short name of this card into tCard
+   # see below
    
    put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to save to Journal. Go an audio file." into tMsg
-      exit addJournalEntry
+      exit to top
+      --exit addJournalEntry
    end if
    
    if (the visible of grp "downloadSelection" = false) then
@@ -1078,9 +1116,17 @@ command addJournalEntry -- save a bookmark to databast
    else
       if sDataA["url"] contains "http" then
          dialog_CustomMsg "Download to Save to Journal."
-         exit addJournalEntry
+         exit to top
+         --exit addJournalEntry
       end if
    end if
+   
+   # we are going to card 1 of stack. Card "listen-collection"
+   # then we move from to  card "listen-file"
+   # in journalResume
+   
+   
+   put the short name of card "listen-collection" into tCard
    
    put tCard into sDataA["card"]
    put sSelectedItemA["item_id"] into sDataA["item_id"]
@@ -1118,73 +1164,79 @@ command addJournalEntry -- save a bookmark to databast
 end addJournalEntry
 
 -- AAG: Needs a ton of work
-on journalResume pDataA, pEntryA
-   local tCard
+on journalResume pDataA, pEntry
    
-   lock screen
+   local tRect, tAudioRect, tItemID, tLineNum, tLineValue
+   local tURL, tAudioPlayer
+   
+   --breakpoint
+   
+   local tCard
    
    if isMobile() then
       deleteAllMobileControls
-      wait 100 milliseconds
    end if
+   
+   # now we give time to set "audioPlayer" on mobile
+   # now card "listen-file"
    
    put pDataA["card"] into tCard
-   
    go to card tCard
    
-   if tCard= "listen-file"  then
-      local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-      local tURL, tAudioPlayer
+   lock screen
+   
+   go to card "listen-file"
+   
+   hideDownloadControls
+   
+   put pDataA into sDataA
+   put path_FileFromURL(sDataA["url"]) into tURL
+   
+   # UI
+   put  sDataA["title"] into fld "currentTitleLabel"
+   
+   fetchSingleMetadata sDataA["item_id"]
+   put  getMediaItemMetadata() into  fld "audioDetails"
+   
+   informationGrp
+   
+   # Create player
+   put the rect of graphic "audioRect" into tAudioRect
+   
+   if isMobile() then
+      put "audioPlayer" into tAudioPlayer
+      createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
+      wait 300 milliseconds
+   else
+      set the filename of player "audioPlayer" to sDataA["url"]
+   end if
+   
+   if not isMobile() then
+      set the currenttime player "audioPlayer" to sDataA["timestamp"]
+      start player "audioPlayer"
+      --
+      getPlaying true
+      --
+   else
+      --breakpoint 
       
-      put pDataA into sDataA
-      put path_FileFromURL(sDataA["url"]) into tURL
-      
-      put the rect of graphic "audioRect" into tAudioRect
-      
-      if isMobile() then
-         put "audioPlayer" into tAudioPlayer
-         createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-         wait 300 milliseconds
-      else
-         set the filename of player "audioPlayer" to sDataA["url"]
-      end if
-      
-      if not isMobile() then
-         set the currenttime player "audioPlayer" to sDataA["timestamp"]
-         start player "audioPlayer"
-         --
-         getPlaying true
-         --
-      else
-         wait 300 milliseconds with messages
-         setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-         wait 20 milliseconds with messages
-         getPlaying true
-      end if
-      
-      send "updateTimer" 
-      
-      # UI
-      put  sDataA["title"] into fld "currentTitleLabel"
-      get runningAudioIndicatorVis("true")
-      showBusyIndicator false
-      set the iconPresetName of widget "PlayPause" to "pause"
-      
-      fetchSingleMetadata sDataA["item_id"]
-      put  getMediaItemMetadata() into  fld "audioDetails"   
+      getPlaying true
+      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
       
    end if
+   
+   --unlock screen
+   
+   
+   get runningAudioIndicatorVis("true")
+   set the iconPresetName of widget "PlayPause" to "pause"
+   
+   send "createScroller audioDetails" to grp "audioDetails"
+   
    
 end journalResume
 
-on hideDownloadControls
-   local tLastStack
-   put empty into fld "ProgressTitle"
-   put empty into fld "progressField"
-   hide scrollbar "progressbar"
-   hide grp "downloadSelection"
-   hide grp "downloadControls"
-end hideDownloadControls
+
 
 command playSingle pDataA
    local tSearchA,x,tItem_id
@@ -1351,6 +1403,54 @@ command offLineGoMyAudio
       end if
    end if
 end offLineGoMyAudio
+
+---------------------
+on __UX
+end __UX
+
+on hideDownloadControls
+   local tLastStack
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+   hide grp "downloadSelection"
+   --hide grp "downloadControls"
+end hideDownloadControls
+
+command informationGrp
+   if  (the number of characters in field "audioDetails" < 20) then
+      hide grc "audioDetailsBkg"
+      hide grp  "audioDetails"
+      show grp "noInformation"
+   else if  (the number of characters in field "audioDetails" > 20) then
+      show grp "audioDetails"
+      hide grp "noInformation"
+   end if
+end informationGrp
+
+command helpAudio
+   local tTarget, tAudioGuide
+   
+   put the short name of the target into tTarget
+   switch tTarget
+      case "helpButton"
+         
+         put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
+         set the htmltext of fld "helpField" to tAudioGuide
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show grp "helpField"
+         break
+         
+      case "helpDismiss"
+         hide grp "helpField"
+         hide btn "helpDismiss"
+         hide grc "helpBkg"
+         break
+   end switch
+   
+end helpAudio
 
 on closeStack
    portal_SetLastStack "Listen"

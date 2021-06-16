@@ -202,20 +202,18 @@ function getMediaItemMetadata pRecords
       put pRecords into sMediaMetaA
    end if
    
-   
-   
    put empty into tViewData
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   if sMediaMetaA["artists"] <> empty then
-      put "Artist: " & sMediaMetaA["artists"] into tArtists
+   if (sMediaMetaA["artists"] <> empty) OR (sMediaMetaA["artists"] is "null") then
+      put "Artist: " & cr & sMediaMetaA["artists"] into tArtists
    end if
    if sMediaMetaA["author"] <> empty then
-      put "Author: " & sMediaMetaA["author"] into tAuthor
+      put "Author: " &cr & sMediaMetaA["author"] into tAuthor
    end if
    put sMediaMetaA["description"] into tDescription
-   replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
+   --replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
    put sMediaMetaA["date_created"] into tDateCreated
    put  sMediaMetaA["audio_file_transcript"] into tTranscript
    # do not  display a non-date string as zeros
@@ -235,7 +233,16 @@ function getMediaItemMetadata pRecords
    
    # data has commas so we have to use a lines as a delimiter
    --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
-   put (tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   
+   if tArtists <> empty then
+      put tArtists & cr after tViewData
+   end if
+   
+   if tAuthor <> empty then
+      put tAuthor & cr & cr after tViewData
+   end if
+   
+   put (tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
    repeat for each line x in tFields
       if x <> empty then

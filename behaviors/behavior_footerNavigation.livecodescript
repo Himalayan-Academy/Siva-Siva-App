@@ -27,7 +27,7 @@ end preOpenControl
 on mouseup
    local tTarget, tShareControl, tControl, tCard
    local tBrowserExists, tBrowser, tBrowserRect
-   local tCdHeight, tSharingHeight
+   local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
    
    lock screen
    put short name of the target into tTarget
@@ -58,8 +58,21 @@ on mouseup
             showStoryMenu
          else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
-         else if tCard is among the items of "listen-delete-file,listen-file" then
-            go card "listen-my-audio"
+         else if tCard is   "listen-file" then
+            unlock screen
+            put portal_GetLastStack() into tLastStack
+            if tLastStack = "Journal" then
+               go to card "listen-collection"
+            else 
+               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+                  go to card "listen-browse"
+               else
+                  go card "listen-my-audio"
+               end if
+            end if
+         else if tCard is  "listen-delete-file" then
+            go to card "listen-browse"
+            put "listen-browse" into tCard
          else if tCard is "listen-search" then
             go card "listen-browse"
          else
@@ -70,12 +83,23 @@ on mouseup
       case "journal"
          unlock screen
          
-         AddJournalEntry
-         // will exit to top, no journal entry made
-         
-         moveMe target, 0,-100, 200
-         moveMe target, 0,100, 70
-         
+         if tCard is among items of \
+               "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-search" then
+            # nothing
+         else
+            --            put ( (tCard is "listen-file") AND (the visible of grp "downloadSelection" is true)  )into tDownloadIsVisible 
+            --            if tDownloadIsVisible  is false then
+            --               # nothing
+            --            else
+            AddJournalEntry
+            // will exit to top, no journal entry made
+            
+            moveMe target, 0,-100, 200
+            moveMe target, 0,100, 70
+            
+            dialog_CustomMsg "Saved to Journal"
+            --         end if
+         end if
          
          break
          
@@ -108,7 +132,7 @@ on mouseup
             set the rect of tBrowser to tBrowserRect
          end if
          
-         deleteMobileControl "audioPlayer"
+         --deleteMobileControl "audioPlayer"
          show tControl with visual "dissolve" very fast
          break
          

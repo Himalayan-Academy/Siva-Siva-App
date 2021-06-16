@@ -58,7 +58,13 @@ on mouseup
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         put "listen-my-audio" into gCardName
+         if fld "AudioList" is empty then
+            wait 1 second
+            go card "listen-browse"
+            put "listen-browse" into gCardName 
+         else
+            put "listen-my-audio" into gCardName 
+         end if
          break
       case "deleteOn"
       case "Display"
@@ -66,6 +72,10 @@ on mouseup
          put empty into fld "currentFilePick"
          dispatch  "getSums" to grp "displayFilesSizes"
          dispatch  "displayTargetFiles" to grp "displayFilesSizes" with "audio"
+         break
+      case "helpButton"
+      case "helpDismiss"
+         helpAudio
          break
       case "listen-file"
          -- local tTrue -- AAG: not used
@@ -104,7 +114,8 @@ on mouseup
          # we needed to stop player
          
          if sLineNum <> empty then
-            setAudioListColors sLineNum,"0,0,0"
+            --setAudioListColors sLineNum,"0,0,0"
+            setAudioListColors sLineNum, empty
          end if
          
          # now we register the user interaction: clicks on a line.
@@ -124,6 +135,7 @@ on mouseup
          
          
          go to card "listen-file"
+         
          put sSelectNum into fld "theSelectNum"
          
          
@@ -140,26 +152,21 @@ on mouseup
          # if the use had downloaded audio it appears on my-audio card
          # we can start the player; get the audio locally
          
+         lock screen
+         
          if gCardName = "listen-my-audio" then
             direct_Play  sSelectNum, gCardName
          else
             select_Play false, sSelectNum  # will use either the line number or item id
          end if
          
-         local tURL -- AAG: this makes no sense, tURL is never set!?
+         local tURL 
+         
          if  "audio/book" is not in tURL then # no display details
             select_ShowDetails "downloaded"
          end if 
          
-         show grp "audioDetails"
-         if  (the number of characters in field "audioDetails" < 20) then
-            hide grp "audioDetails"
-            show grp "noInformation"
-         end if 
-         if  (the number of characters in field "audioDetails" > 20) then
-            show grp "audioDetails"
-            hide grp "noInformation"
-         end if
+         informationGrp
          
          if tHideDownload = "listen-my-audio" then
             hide grp "DownloadSelection"
@@ -195,6 +202,10 @@ on mouseup
             playPausedAudio sTimeStamp
          end if
          
+         break
+         
+      case "noForwardBackup"
+         dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
          break
          
       case "SeekForward"

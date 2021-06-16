@@ -51,14 +51,19 @@ local sPlayerId, sPlayerRect, sDuration
 
 local sPlaying
 local sCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
-local pDataA
+local pDataA, tPausePlayAndroid
 
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
+   
+   --breakpoint
+   
    log "createMobilePlayer"
    local tHeight,tPlayloc,
+   
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
    end if
+   
    mobileControlCreate "player", pPlayerName
    put the result into sPlayerId
    
@@ -73,11 +78,15 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    mobileControlSet pPlayerName, "rect", sPlayerRect
    mobileControlSet pPlayerName, "filename", pURL 
    
+   --   if the platform is "android" then
+   --      androidStartAudioPlayingInBackground pURL
+   --   end if
+   
    log pURL
    
-   if pURL begins with "https" then
-      showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
-   end if
+   --   if pURL begins with "https" then
+   --      showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
+   --   end if
    
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
@@ -95,21 +104,34 @@ end getMobileAudioPlayerRect
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    Log "duration available"
-   if theProperty is "duration" then
-      log "Should be setting closing the loading indicator"
-      showBusyIndicator false -- Remove the "Loading..." indicator and start playing
-      
-      put true into sPlaying
-      mobileControlDo sPlayerId, "play"
+   
+if theProperty is "duration" then
+   log "Should be setting closing the loading indicator"
+   showBusyIndicator false -- Remove the "Loading..." indicator and start playing
+   
+   put mobileControlGet("audioPlayer","playableDuration") into sDuration
+   put sDuration  * 1000 into sDuration
+   put convertTime(sDuration) into tDuration
+   
+   if there is a card "listen-file"   of stack "listen" then
+      put tDuration into fld "endTime" of stack "listen"
+   end if
+   
+   put true into sPlaying
+   mobileControlDo sPlayerId, "play"
+   
+   if there is a card "listen-file"   of stack "listen" then
       send "updateTimer" to me in 20 milliseconds
    end if
    
-   if there is a widget "PlayPause" then
-      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
-   else
-      togglePause true,false
-   end if
-   
+end if
+
+if there is a widget "PlayPause" then
+   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+else
+   togglePause true,false
+end if
+
 end playerPropertyAvailable
 
 # Desktop player gets thru
@@ -125,8 +147,7 @@ end setDuration
 # here we get the player do play, pause or stop
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
-   showBusyIndicator false -- in case it's still showing
-   
+   --showBusyIndicator false -- in case it's still showing
    log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
@@ -134,6 +155,10 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    mobileControlDo pPlayerName, pState
    
    if pState = "stop" then
+      
+      if the platform is "android" then
+         androidStopAudioPlayingInBackground
+      end if
       
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
@@ -155,6 +180,11 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    end if
    
    if pState = "pause" then
+      
+      if the platform is "android" then
+         androidPauseAudioPlayingInBackground
+      end if
+      
       # user hit pause
       put mobileControlGet ("currentTime")  into pTimeStamp
       mobileControlDo pPlayerName, "pause"
@@ -167,10 +197,15 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       # icon switch to "play"
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
+         
+         if the platform is "android" then
+            androidResumeAudioPlayingInBackground 
+         end if
+         
       else
          togglePause true,false
       end if
-
+      
    end if
    
    if pState = "play" then # could be start from scratch after pausing
@@ -181,13 +216,17 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
       mobileControlDo pPlayerName, "play"
       
+      if the platform is "android" then
+         androidResumeAudioPlayingInBackground
+      end if
+      
       put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds
       
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
       end if
-
+      
       get runningAudioIndicatorVis("true")
    end if
    
@@ -252,6 +291,7 @@ command updateTimer
          if sDuration is 0 then
             put mobileControlGet("audioPlayer","duration") into sDuration
          end if
+
       else
          if the timeScale of player "audioPlayer" of stack "listen" is 0 then
             -- audio player thinks it is not playing any track...
@@ -265,7 +305,7 @@ command updateTimer
       
       if sCurrentTime > 0 and sDuration > 0 then         
          // Update the time indicator
-         put round((sCurrentTime/sDuration) * 350) into tWidth
+         put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
          
          // Update time fields
          put convertTime(sCurrentTime) into tHoursMinutes
@@ -278,8 +318,8 @@ command updateTimer
          set the width of graphic "durationProgress" of stack "listen" to tWidth
          
          --         set the left of graphic "durationProgress" of stack "listen" to 20
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
          set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
       end if
       
       unlock screen
@@ -380,7 +420,7 @@ end __Utilities
 command setZeroDurationProgress
    // mobile durationProgress
    set the width of graphic "durationProgress" to 1
-   set the left of graphic "durationProgress" to 31
+   set the left of graphic "durationProgress" to the left of graphic "durationBG"
    set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
    put "0.00" into field "currentTime"
    put "0.00" into field "endTime"

@@ -161,6 +161,7 @@ command downloadComplete pURL, pStatus
       put removeQuotes(sRequestedBy) into tModule     
       tracking_RecordActivity tModule,"download/saved"
    end if
+   hide grp "DownloadControls"
 end downloadComplete
 
 on mouseup
@@ -170,7 +171,7 @@ on mouseup
    switch tMouseEvent
       case "cancel"
          unload sURL
-         --close this stack
+        hide grp "DownloadControls"
          break
    end switch
    hideDownloadControls

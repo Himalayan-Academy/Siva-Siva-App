@@ -283,12 +283,33 @@ function getTargetFile
 end getTargetFile
 
 command deleteFileOnDisk
+   
+   deleteJournalEntry
+   
    if the short name of this stack is "stories" then
       deleteFolder path_Documents() & "media/stories/" & getTargetFile()
    else
-      delete file ( getTargetFile() )
+      delete file sTargetFile
    end if
+   
 end deleteFileOnDisk
+
+command deleteJournalEntry 
+   local tFile, tEntryID, tDataA, tData
+   
+   put Journal_GetEntries() into tDataA
+   set itemdelimiter to "/"
+   put the last item of sTargetFile into tFile
+   
+   repeat for each key journel_id in tDataA
+      put tDataA[journel_id]["data"] into tData
+      if  tData contains tFile then 
+         put tDataA[journel_id]["journal_id"]into tEntryID
+         Journal_DeleteEntry tEntryID
+      end if 
+   end repeat
+   
+end deleteJournalEntry
 
 ##### All functions relating to delete files appear  above
 
