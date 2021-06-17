@@ -1,5 +1,4 @@
 ﻿script "behavior_Listen"
-
 -----------------------------------------------------
 #  behavior_Listen
 #
@@ -32,6 +31,7 @@ local sCached, sBrowseHeader, sTimeStamp, sRemoteURL
 local sSelectionsA, sLastTarget, sSelectNum, sDataA 
 local sFastforward
 
+
 on preOpenStack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
@@ -41,6 +41,7 @@ on preOpenStack
    setCardCoords "portrait"
    updateUI
 end preOpenStack
+
 
 on openstack 
    #V2 April 8, 2018
@@ -70,9 +71,11 @@ function getCollectionsJson
    return sCollectionA
 end getCollectionsJson
 
+
 on preopencard
    updateUI  
 end preopencard     
+
 
 on openCard
    local tCardName
@@ -174,11 +177,12 @@ on closeCard
          deleteMobileControl "audioList"
          break
       case "listen-delete-file"
-         put empty into  fld "FilesOnDisk"
-         deleteMobileControl "FilesOnDosk"
+         put empty into fld "FilesOnDisk"
+         deleteMobileControl "FilesOnDisk"
          break
    end switch
 end closeCard
+
 
 on resizeStack
    lock screen
@@ -186,6 +190,7 @@ on resizeStack
    updateUI
    unlock screen
 end resizeStack
+
 
 command updateUI
    
@@ -223,7 +228,6 @@ command updateUI
          put the long id of grp "search-filter" into tSearchFilter
          topRightMe tSearchFilter, 0, 0
          
-         
          put CardWidth() - 4 into tRight
          repeat with i = 1 to 7 
             put the long id of grp ("playlist" & i) into tControl
@@ -248,6 +252,9 @@ command updateUI
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
+         
+         put the long id of btn "helpButton" into tControl
+         bottomRightMe tControl, 0, the height of tFooter
          
          break
       case "listen-my-audio"
@@ -288,7 +295,6 @@ command updateUI
          set the width of tCurrentTitle to (CardWidth() - 100)
          topLeftMe tCurrentTitle, 10, 75
          
-         
          put the long id of grc "audioDetailsBkg" into tAudioDetailsGrc
          set the width of tAudioDetailsGrc to (CardWidth() - 20)
          topLeftMe tAudioDetailsGrc, 10, 150
@@ -324,13 +330,16 @@ command updateUI
             set the left of grc "durationMarker" to 30
          end if
          
-         
-         if the bottom of grc "audioDetailsBkg" > the top of grp "pause-play" then
-            put the bottom of grc "audioDetailsBkg"  - the top of grp "pause-play" into tOffset
+         if the bottom of tAudioDetailsGrc > the top of tPausePlay then
+            put the bottom of tAudioDetailsGrc  - the top of tPausePlay into tOffset
             add 14 to tOffset
             put the rect of tAudioDetailsGrc into tRect
             subtract tOffset from item 4 of tRect
             set the rect of tAudioDetailsGrc to tRect
+            put the rect of tGroupAudioDetails into tRect
+            subtract tOffset from item 4 of tRect
+            set the rect of tGroupAudioDetails to tRect
+            set the rect of tAudioDetailsFld to tRect
          end if
          
          break
@@ -343,6 +352,7 @@ command updateUI
    end switch
    
 end updateUI
+
 
 command selectPlaylist pSelection
    local tPlayTarget,tColl,tPlay
@@ -382,6 +392,7 @@ command selectPlaylist pSelection
    playList_FetchData tColl,tPlay
 end selectPlaylist
 
+
 -----------------------------------------------------
 # playlist_SetGetCurrent
 # DESCRIPTION:  the primary known variable is a string 
@@ -400,13 +411,16 @@ on playlist_GetClass
    return sCurrentPlayListA["playlistClass"]
 end playlist_GetClass
 
+
 on playlist_SetCurrent pList  
    put pList into sTargetPlayList
 end playlist_SetCurrent
 
+
 function playlist_GetCurrent
    return sCurrentPlayListA["playListTitle"]
 end playlist_GetCurrent
+
 
 # we may need to fetch files later
 # so another function returns the key listen list to build everything
@@ -422,6 +436,7 @@ function playlist_GetRecords
       return sCurrentPlaylistA
    end if
 end playlist_GetRecords
+
 
 -----------------------------------------------------------------------
 # playList_FetchData
@@ -759,13 +774,16 @@ on  playlist_Instantiate
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
 
+
 command setSelectNumber pNum
    put pNum into sSelectNum
 end setSelectNumber
 
+
 on playlist_Reset
    put playlist_GetRecords() into  sCurrentPlayListA
 end playlist_Reset
+
 
 command fetchSingleMetadata pItemID
    local tSearchA,tTargetRecordA
@@ -775,6 +793,7 @@ command fetchSingleMetadata pItemID
    metadata_SetRecord sSelectedItemA
    get getSongLyrics(sSelectedItemA["item_id"])    
 end fetchSingleMetadata
+
 
 function checkPlayList
    return the keys of  sCurrentPlayListA
@@ -789,6 +808,7 @@ on clearSelection
    put empty into sSelectedItemA
 end clearSelection
 
+
 # this is for downloads. It gets the audio from 
 
 on direct_Play pSelectNum, pCardName
@@ -800,6 +820,7 @@ on direct_Play pSelectNum, pCardName
    # skip the card name Parameter in this context.
    showBusyIndicator false
 end direct_Play
+
 
 -----------------------------------------------
 --# Select, Play, Listen, Stop UI interactions
@@ -903,7 +924,7 @@ command select_ShowDetails  pSelection, pRecord
       # or its from a downloaded file in My Audio
       # this case must come for one after it.
       case (pSelection="downloaded")
-         put  getMediaItemMetadata(pRecord) into  fld "audioDetails"   
+         put  getMediaItemMetadata(pRecord) into fld "audioDetails"   
          break   
          
       case (sCurrentPlayListA["playlistClass"] = "latest")  OR (sCurrentPlayListA["playlistClass"] ="cached")
@@ -915,17 +936,21 @@ command select_ShowDetails  pSelection, pRecord
          put "Transcripts for audio books are available here." &cr & cr &  "Read the original book." into fld "audioDetails"
          break        
          
-         
    end switch
+   
    set the textstyle of line 1 of fld "audioDetails" to "italic"
    set the textstyle of line 2 of fld "audioDetails" to "italic"
    set the textstyle of line 3 of fld "audioDetails" to "italic"
+   set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
+   set the vScroll of grp "audioDetails" to 0
+   set the topLeft of fld "audioDetails" to the topLeft of grp "audioDetails"
    
    show fld "audioDetails" with visual "effect wipe" up very fast
    
    send "CreateScroller audioDetails" to grp "audioDetails"
    
 end select_ShowDetails
+
 
 command typeSetAudioList
    local tX
@@ -945,11 +970,13 @@ command typeSetAudioList
    
 end typeSetAudioList
 
+
 command getPlayListURLs pKeys
    repeat for each line x in pKeys
       put getItemURL(x) into sCurrentPlayListA["audioFiles"][x]["myURL"]
    end repeat   
 end getPlayListURLs
+
 
 function getItemURL pRecordNum
    local tURL
@@ -974,6 +1001,7 @@ function getItemURL pRecordNum
    end if
    return tURL
 end getItemURL
+
 
 command getDownloadedAudio
    local tList, tSearchA, tURL, tFolder, tTitle, tTitles, tDataA
@@ -1038,6 +1066,7 @@ command getDownloadedAudio
    
 end getDownloadedAudio
 
+
 command downloadSelection pSelectNum, pTarget
    setSelectNumber pSelectNum
    put the long id of pTarget into sLastTarget 
@@ -1049,6 +1078,7 @@ command downloadSelection pSelectNum, pTarget
       put "Pick a Title to Download It." into fld "currentTitleLabel"
    end if
 end downloadSelection
+
 
 command downloadAffirmed   
    local tTitle, tNewRecordA
@@ -1065,6 +1095,7 @@ command downloadAffirmed
    # sLastTarget becomes params pRequest by to the download stack
 end downloadAffirmed
 
+
 command loadtitles pTitles   
    local pLineCount
    hide fld "audioList"
@@ -1073,6 +1104,7 @@ command loadtitles pTitles
    show fld "audioList"
    put the number of lines of pTitles into pLineCount -- AAG: This has no effect?!
 end loadtitles
+
 
 command markCachedItems pKeys
    local tURL, tLocalStatus, tIsCached
@@ -1093,6 +1125,7 @@ command markCachedItems pKeys
       end if
    end repeat
 end markCachedItems
+
 
 -- AAG: Needs a ton of work
 command addJournalEntry -- save a bookmark to databast
@@ -1162,6 +1195,7 @@ command addJournalEntry -- save a bookmark to databast
    Journal_RecordEntry "listen", tTitle, sDataA 
    
 end addJournalEntry
+
 
 -- AAG: Needs a ton of work
 on journalResume pDataA, pEntry
@@ -1265,9 +1299,11 @@ command setAudioListColors pLineNum, pColor
    set the backgroundcolor of line pLineNum of fld "audioList" to pColor
 end setAudioListColors
 
+
 command clearAudioListColor
    set the backgroundcolor of line 1 to -1 of fld "audioList" to empty
 end clearAudioListColor
+
 
 local sPlaying
 
@@ -1341,6 +1377,7 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
    set the iconPresetName of widget "PlayPause" to "pause"
 end startPlayer
 
+
 on stopPlayer
    if not isMobile() then
       stop player "audioPlayer"
@@ -1371,6 +1408,7 @@ on pausePlayer
    set the iconPresetName of widget "PlayPause" to "play"
 end pausePlayer
 
+
 on playPausedAudio
    put sTimeStamp into sDataA["timeStamp"]
    
@@ -1385,9 +1423,11 @@ on playPausedAudio
    set the iconPresetName of widget "PlayPause" to "pause"
 end playPausedAudio
 
+
 on clearPlayer
   showPlayer false, "audioPlayer" 
 end clearPlayer
+
 
 command offLineGoMyAudio
    local tFolder, tList
@@ -1404,9 +1444,11 @@ command offLineGoMyAudio
    end if
 end offLineGoMyAudio
 
+
 ---------------------
 on __UX
 end __UX
+
 
 on hideDownloadControls
    local tLastStack
@@ -1416,6 +1458,7 @@ on hideDownloadControls
    hide grp "downloadSelection"
    --hide grp "downloadControls"
 end hideDownloadControls
+
 
 command informationGrp
    if  (the number of characters in field "audioDetails" < 20) then
@@ -1427,6 +1470,7 @@ command informationGrp
       hide grp "noInformation"
    end if
 end informationGrp
+
 
 command helpAudio
    local tTarget, tAudioGuide
@@ -1451,6 +1495,7 @@ command helpAudio
    end switch
    
 end helpAudio
+
 
 on closeStack
    portal_SetLastStack "Listen"
