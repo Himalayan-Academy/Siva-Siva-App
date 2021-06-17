@@ -1231,6 +1231,7 @@ on journalResume pDataA, pEntry
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
    
+   
    send "createScroller audioDetails" to grp "audioDetails"
    
    
