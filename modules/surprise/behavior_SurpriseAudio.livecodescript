@@ -9,7 +9,7 @@ end preOpenCard
 
 
 on opencard
-   
+   --breakpoint
    if isMobile() then
       deleteMobileControl "audioPlayer" # in case one is open already and playing
    end if  

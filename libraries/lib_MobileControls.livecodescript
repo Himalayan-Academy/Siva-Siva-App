@@ -84,9 +84,6 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    log pURL
    
-   --   if pURL begins with "https" then
-   --      showBusyIndicator true, "Loading audio..." -- add loading indicator until duration is available
-   --   end if
    
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
@@ -105,33 +102,39 @@ end getMobileAudioPlayerRect
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
    Log "duration available"
    
-if theProperty is "duration" then
-   log "Should be setting closing the loading indicator"
-   showBusyIndicator false -- Remove the "Loading..." indicator and start playing
    
-   put mobileControlGet("audioPlayer","playableDuration") into sDuration
-   put sDuration  * 1000 into sDuration
-   put convertTime(sDuration) into tDuration
-   
-   if there is a card "listen-file"   of stack "listen" then
-      put tDuration into fld "endTime" of stack "listen"
+   if theProperty is "duration" then
+      log "Should be setting closing the loading indicator"
+      showBusyIndicator false -- Remove the "Loading..." indicator and start playing
+      
+      put mobileControlGet("audioPlayer","Duration") into sDuration
+      if sDuration = 0 then
+         put mobileControlGet("audioPlayer","playableDuration") into sDuration
+      end if
+      
+      put sDuration  * 1000 into sDuration
+      put convertTime(sDuration) into tDuration
+      
+      --      if there is a card "listen-file"   of stack "listen" then
+      --         put tDuration into fld "endTime" of stack "listen"
+      --      end if
+      
+      
+      put true into sPlaying
+      mobileControlDo sPlayerId, "play"
+      
+      if there is a card "listen-file"   of stack "listen" then
+         send "updateTimer" to me in 20 milliseconds
+      end if
+      
    end if
    
-   put true into sPlaying
-   mobileControlDo sPlayerId, "play"
-   
-   if there is a card "listen-file"   of stack "listen" then
-      send "updateTimer" to me in 20 milliseconds
+   if there is a widget "PlayPause" then
+      set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
+   else
+      togglePause true,false
    end if
    
-end if
-
-if there is a widget "PlayPause" then
-   set the iconPresetName of widget "PlayPause" of stack "listen" to "pause"
-else
-   togglePause true,false
-end if
-
 end playerPropertyAvailable
 
 # Desktop player gets thru
