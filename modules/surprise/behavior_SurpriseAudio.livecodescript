@@ -64,13 +64,14 @@ on startAudioPlayer pURL, pTimestamp
    --breakpoint
    if isMobile() then
       createMobileAudioPlayer pURL, "audioPlayer"
-      --wait 200 milliseconds
+      getPlaying true
    else
       set the filename of player "audioPlayer" to pURL
       start player "audioPlayer" 
+      getPlaying true
    end if
    
-   --send "showAudioDetails" to me in 500 milliseconds
+   
    showAudioDetails
    
    ntInfo "showing audio toggler"

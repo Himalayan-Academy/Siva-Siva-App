@@ -1,5 +1,5 @@
 ﻿script "lib_MobileControls"
---> MetaData
+ --> MetaData
 -
 license: GPLv3
 name: lib_MobileControls
@@ -114,11 +114,6 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       
       put sDuration  * 1000 into sDuration
       put convertTime(sDuration) into tDuration
-      
-      --      if there is a card "listen-file"   of stack "listen" then
-      --         put tDuration into fld "endTime" of stack "listen"
-      --      end if
-      
       
       put true into sPlaying
       mobileControlDo sPlayerId, "play"
@@ -289,10 +284,11 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         --put mobileControlGet("audioPlayer","duration") into sDuration
-         put mobileControlGet("audioPlayer","playableDuration") into sDuration
-         if sDuration is 0 then
-            put mobileControlGet("audioPlayer","duration") into sDuration
+         
+         put mobileControlGet("audioPlayer","duration") into sDuration
+       --put mobileControlGet("audioPlayer","playableDuration") into sDuration
+         if sDuration is 0 then  
+            put mobileControlGet("audioPlayer","playableDuration") into sDuration
          end if
 
       else
