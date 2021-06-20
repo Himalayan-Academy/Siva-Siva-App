@@ -272,7 +272,6 @@ command toggleReadContext pState
             # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
             # and not actually go back to gem in this case
             show button "cancel"
-            send "AddJournalEntry pBookPage" to stack "behavior_GemsQuotes" in 1000 milliseconds
             put fld "title" into pData["currentRealm"]
             tracking_RecordActivity "Gems", "read/quoteContext", pData
          else

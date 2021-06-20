@@ -398,7 +398,9 @@ command updateUIPortal
          
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
-            set the textSize of tControl to 12
+            set the textSize of tControl to 14
+            set the textSize of fld "fun" to 14
+            set the textSize of fld "look" to 14
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
