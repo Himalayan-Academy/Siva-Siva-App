@@ -12,7 +12,9 @@ array that keeps the track tile locations.
 -
 on preopencard
    hide grp "puzzleControls"
+   wait 333 milliseconds
 end preopencard
+
 on openCard
    
    if sCurLevel is empty then
