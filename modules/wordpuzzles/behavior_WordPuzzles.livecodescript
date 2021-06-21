@@ -10,6 +10,9 @@ array that keeps the track tile locations.
 */
 --> Events
 -
+on preopencard
+   hide grp "puzzleControls"
+end preopencard
 on openCard
    
    if sCurLevel is empty then
@@ -20,9 +23,11 @@ on openCard
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
-
+   
    loadNewBgImg
+   wait 300 milliseconds
    showTitle true
+   wait 300 milliseconds
    send "showTitle false" to me in 90 ticks
    setTileGlow "small"
    put 0 into sCluesGiven
@@ -232,10 +237,11 @@ command showTitle pBool
    if pBool then -- show title
       hide grp "puzzleControls" with visual effect "dissolve" very fast
       hide grp "puzzleinProgress" with visual effect "dissolve" very fast
+      visual effect "dissolve" slow
       show fld "titleFld"
    else -- hide title
-      hide fld "titleFld" with visual effect "dissolve" very fast
-      show grp "puzzleControls" with visual effect "dissolve" very fast
+      hide fld "titleFld" with visual effect "dissolve"  fast
+      show grp "puzzleControls" with visual effect "dissolve" fast
    end if
 end showTitle
 
@@ -739,8 +745,9 @@ end resetUI
 
 on closeCard
    hide graphic "startHere"
+   hide btn "New Puzzle"
    storeCurrentLevel sCurLevel
-   showTitle true
+   --showTitle true
    ntInfo "closing word puzzle card"
 end closeCard
 
