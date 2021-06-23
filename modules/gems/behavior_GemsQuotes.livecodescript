@@ -56,7 +56,7 @@ on openCard
    
    # determine if you can show online context icon
    --   put connectivity_PingServer() into sOnline
-   put true into sOnline
+   -- put true into sOnline
    
    
    setCardTitle 
@@ -85,12 +85,12 @@ on setCardTitle
       put sJournalData["realm"] into tRealm
    end if
    put tRealm into fld "title"     
-   set the acceleratedRendering of this stack to true
+   -- set the acceleratedRendering of this stack to true
 end setCardTitle
 
 on closecard
-   set the acceleratedRendering of this stack to false
-   resetUI
+   --set the acceleratedRendering of this stack to false
+   --resetUI
 end closecard
 
 command fetchQuote
@@ -153,23 +153,33 @@ command fetchQuote
    
    put textDecode ( aSelectedQuotes[1]["source_url"], "UTF8") into tSource
    
+   
+   --------------------
+   # We are going to set context to "sleeping
+   --   see button "loadContext"
+   --on mouseUp
+   --   deleteMobileControl "gems-quote"
+   --   toggleReadContext ("true")
+   --end mouseUp
+   
+   
    # We need to use https, but if we change all the URL in the dbase on the server
    # then we need a little test/fork
    
-   if (char 1 to 5 of tSource) <> "https" then
-      replace "http" with "https" in tSource
-   end if
+   --   if (char 1 to 5 of tSource) <> "https" then
+   --      replace "http" with "https" in tSource
+   --   end if
    
-   if sOnLine ="true" then
-      if tSource <> empty then
-         # some bogus data in this field so confirm 
-         if char 1 to 5 of tSource ="https" then
-            set the uSourceURL of button "loadContext" to tSource
-            put tSource into sCurrentSourceURL  # for sharing 
-            show button "loadContext"
-         end if
-      end if
-   end if
+   --   if sOnLine ="true" then
+   --      if tSource <> empty then
+   --         # some bogus data in this field so confirm 
+   --         if char 1 to 5 of tSource ="https" then
+   --            set the uSourceURL of button "loadContext" to tSource
+   --            put tSource into sCurrentSourceURL  # for sharing 
+   --            show button "loadContext"
+   --         end if
+   --      end if
+   --   end if
    
 end fetchQuote
 
@@ -247,45 +257,45 @@ on checkRealm
    put sCurrentRealm
 end checkRealm
 
-command toggleReadContext pState
-   local tURL, pData
-   switch pState
-      case "true"
-         if connectivity_PingServer() is "true" then
-            put the uSourceURL of the target into tURL
-            set the url of widget "readContext" to tURL
-            browser_SetLastURL tURL
-            hide the target
-            hide button "goNextRealm" # svg
-            
-            --            ## GEOMETRY
-            
-            --            ## we will later refactor this to an UpDateUI OI(or something) responsive Geometry  handler
-            --            # for not it is based on fixed rect as per:
-            --            # mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
-            
-            --            set rect of  widget "readContext" to (10,the bottom of btn "cancel"+ 6,404,680)
-            
-            --            ## 
-            
-            show    widget "readContext" # a browser
-            # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
-            # and not actually go back to gem in this case
-            show button "cancel"
-            put fld "title" into pData["currentRealm"]
-            tracking_RecordActivity "Gems", "read/quoteContext", pData
-         else
-            dialog_CustomMsg "Offline or Low Bandwidth"
-         end if
-         break
-      case "false"
-         
-         set the url of widget "readContext" to empty
-         hide widget "readContext"
-         hide button "cancel"
-         show button "goNextRealm"
-   end switch
-end toggleReadContext
+--command toggleReadContext pState
+--   local tURL, pData
+--   switch pState
+--      case "true"
+--         if connectivity_PingServer() is "true" then
+--            put the uSourceURL of the target into tURL
+--            set the url of widget "readContext" to tURL
+--            browser_SetLastURL tURL
+--            hide the target
+--            hide button "goNextRealm" # svg
+
+--            --            ## GEOMETRY
+
+--            --            ## we will later refactor this to an UpDateUI OI(or something) responsive Geometry  handler
+--            --            # for not it is based on fixed rect as per:
+--            --            # mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
+
+--            --            set rect of  widget "readContext" to (10,the bottom of btn "cancel"+ 6,404,680)
+
+--            --            ## 
+
+--            show    widget "readContext" # a browser
+--            # log for journal, we are using a widget in Gems, but we woudl resume in the browser stack
+--            # and not actually go back to gem in this case
+--            show button "cancel"
+--            put fld "title" into pData["currentRealm"]
+--            tracking_RecordActivity "Gems", "read/quoteContext", pData
+--         else
+--            dialog_CustomMsg "Offline or Low Bandwidth"
+--         end if
+--         break
+--      case "false"
+
+--         set the url of widget "readContext" to empty
+--         hide widget "readContext"
+--         hide button "cancel"
+--         show button "goNextRealm"
+--   end switch
+--end toggleReadContext
 
 on addJournalEntry pContext
    local tRealm, pDataA, pData, tTitle
@@ -299,10 +309,10 @@ on addJournalEntry pContext
          put getLastQuoteID() into pDataA["lastQuote"]
          Journal_RecordEntry "gems", sTruncFirstLine, pDataA
          break
-      case "pBookPage"        
-         put browser_GetLastURL() into pData["weburl"]
-         put  browser_GetLastPageTitle() into tTitle
-         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+         --      case "pBookPage"        
+         --         put browser_GetLastURL() into pData["weburl"]
+         --         put  browser_GetLastPageTitle() into tTitle
+         --         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end switch
    dialog_CustomMsg "Saved to Journal"
 end addJournalEntry
@@ -333,9 +343,8 @@ command share_Items
    return tShareItemsA
 end share_Items
 
-command resetUI
-   set the uSourceURL of button "loadContext" to empty
-   put empty into sCurrentSourceURL
-   toggleReadContext "false"
-end resetUI
-
+--command resetUI
+--   set the uSourceURL of button "loadContext" to empty
+--   put empty into sCurrentSourceURL
+--   toggleReadContext "false"
+--end resetUI

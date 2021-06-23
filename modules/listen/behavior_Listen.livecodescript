@@ -1255,21 +1255,17 @@ on journalResume pDataA, pEntry
       --breakpoint 
       
       getPlaying true
-      setMobileAudioPlayer "audioPlayer", "play", sDataA["timestamp"]
-      
+     
    end if
-   
-   --unlock screen
-   
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
    
    send "createScroller audioDetails" to grp "audioDetails"
    
+   send "updateTimer" to the stack "lib_MobileControls" in 20 milliseconds
    
 end journalResume
-
 
 
 command playSingle pDataA

@@ -117,20 +117,11 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       put sDuration  * 1000 into sDuration
       put convertTime(sDuration) into tDuration
       
-      try
-         if there is a card "listen-file"   of stack "listen" then
-            put tDuration into fld "endTime" 
-         end if
-      end try
-      
       put true into sPlaying
       mobileControlDo sPlayerId, "play"
       
-      try
-         if there is a card "listen-file"   of stack "listen" then
-            send "updateTimer" to me in 20 milliseconds
-         end if
-      end try
+      send "updateTimer" to me in 20 milliseconds
+   
    end if
    
    if there is a widget "PlayPause" then
@@ -293,11 +284,10 @@ command updateTimer
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         
-         put mobileControlGet("audioPlayer","duration") into sDuration
-       --put mobileControlGet("audioPlayer","playableDuration") into sDuration
-         if sDuration is 0 then  
             put mobileControlGet("audioPlayer","playableDuration") into sDuration
+     
+        if sDuration is 0 then  
+            put mobileControlGet("audioPlayer","Duration") into sDuration
          end if
 
       else
