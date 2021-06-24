@@ -46,7 +46,7 @@ command _USER_INTERACTION
 end _USER_INTERACTION
 
 on mouseup
-   local tTarget,tTargetOwner
+   local tTarget,tTargetOwner,tUserGuide
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    
@@ -56,63 +56,77 @@ on mouseup
    
    switch tTarget
       local tMsg
-      case "Topics"
-         portal_GoUrl  "https://www.himalayanacademy.com/topics"
+   case "Topics"
+      portal_GoUrl  "https://www.himalayanacademy.com/topics"
+      exit mouseup
+      break
+   case "loading"
+      showbusyIndicator false
+      exit Mouseup
+      break
+   case "HelpButton"
+      put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
+      set the htmltext of fld "helpField" to tUserGuide
+      
+      show grc "helpBkg"
+      show btn "helpDismiss"
+      show grp "helpField"
+      break
+      
+   case "helpDismiss"
+      hide grp "helpField"
+      hide btn "helpDismiss"
+      hide grc "helpBkg"
+      break
+end switch
+
+switch tTargetOwner
+   case "bkgndControls"
+      switch tTarget
+         case "hideNavMandala"
+            setDefaultImage
+            hideMandala
+            break
+         case "showNavMandala"
+            if the vis of  grp "subNav" is true then hide grp "subNav"
+            showMandala
+            break
+      end switch
+      break
+   case "globalNavTree"
+      hide grp "subNav"
+      break
+   case "navMandala"
+      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
+         # These are top links, some go  directly to another module stack
+         portal_GoStack tTarget
          exit mouseup
-         break
-      case "loading"
-         showbusyIndicator false
-         exit Mouseup
-         break
-   end switch
-   
-   switch tTargetOwner
-      case "bkgndControls"
-         switch tTarget
-            case "hideNavMandala"
-               setDefaultImage
-               hideMandala
-               break
-            case "showNavMandala"
-               if the vis of  grp "subNav" is true then hide grp "subNav"
-               showMandala
-               break
-         end switch
-         break
-      case "globalNavTree"
-         hide grp "subNav"
-         break
-      case "navMandala"
-         if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
-            # These are top links, some go  directly to another module stack
-            portal_GoStack tTarget
-            exit mouseup
-         end if
+      end if
+      
+      lock screen
+      hideMandala
+      setSubNavBkgndImage tTarget
+      show  img "subNavBkgImage"
+      unlock screen
+      fetchSubMenu tTarget
+      wait 400 milliseconds
+      
+      show grp "SubNav" with visual effect "dissolve fast"
+      break
+   case "subNav"
+      if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
+         put the value of clickline() into tTarget
          
-         lock screen
-         hideMandala
-         setSubNavBkgndImage tTarget
-         show  img "subNavBkgImage"
-         unlock screen
-         fetchSubMenu tTarget
-         wait 400 milliseconds
+         # pass the target to journal data. It may be overwritten later
+         # but in some cases that will be the only title we can use 
+         # for a journal entry
          
-         show grp "SubNav" with visual effect "dissolve fast"
-         break
-      case "subNav"
-         if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
-            put the value of clickline() into tTarget
-            
-            # pass the target to journal data. It may be overwritten later
-            # but in some cases that will be the only title we can use 
-            # for a journal entry
-            
-            setJournalData tTarget
-            portal_DoRowLink tTarget
-            
-         end if
-         break
-   end switch
+         setJournalData tTarget
+         portal_DoRowLink tTarget
+         
+      end if
+      break
+end switch
 end mouseup
 
 
