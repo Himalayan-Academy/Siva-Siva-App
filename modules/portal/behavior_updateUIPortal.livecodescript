@@ -28,7 +28,8 @@ on preOpenCard
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          setDefaultImage
-         break
+         
+         
    end switch
    updateUIPortal
    
@@ -36,6 +37,17 @@ on preOpenCard
 end preOpenCard
 
 on opencard
+   --------
+   if isMobile() then
+      deleteMobileControl "helpField"
+      # recreate:
+      if the formattedheight of fld "helpField" > the height of fld "helpField" then
+         send "CreateScroller helpField" to fld "helpField"
+      end if
+   end if
+   
+   break
+   
    audioIsRunning    
 end opencard
 
@@ -356,6 +368,7 @@ command updateUIPortal
    
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    local tLoadingNotice, tTouchTrap, tBrandLogo
+   local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
    #  UI responsive
    
    put the long id of img "homeMainImage" of card "Home" into sMainImage
@@ -432,6 +445,24 @@ command updateUIPortal
          put the long id of fld "subNavFld" into tControl
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
+         
+         put the long id of btn "helpButton" into tHelpButton
+         bottomRightMe tHelpButton, 0, 90
+         
+         put the long id of grc "helpBkg" into tHelpBkg
+         set the width of tHelpBkg to (CardWidth() + 20)
+         topLeftMe tHelpBkg, -10, 60
+         
+         put the long id of grp "helpField" into tHelpFieldGrp
+         set the width of tHelpFieldGrp to (CardWidth() - 30)
+         topLeftMe tHelpFieldGrp, 15, 105
+         
+         put the long id of fld "helpField" into tHelpField
+         set the width of tHelpField to (CardWidth() - 30)
+         topLeftMe tHelpField, 15, 105
+         
+         put the long id of button "helpDismiss" into tHelpDismiss
+         topRightMe tHelpDismiss, 0, 55
          break
          
    end switch

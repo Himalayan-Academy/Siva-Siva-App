@@ -201,6 +201,7 @@ command updateUI
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
    local tFldInformation, tGroupAudioDetails
+   Local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -253,8 +254,23 @@ command updateUI
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
-         put the long id of btn "helpButton" into tControl
-         bottomRightMe tControl, 0, the height of tFooter
+         put the long id of btn "helpButton" into tHelpButton
+         bottomRightMe tHelpButton, 0, the height of tFooter
+         
+         put the long id of grc "helpBkg" into tHelpBkg
+         set the width of tHelpBkg to (CardWidth() + 20)
+         topLeftMe tHelpBkg, -10, 75
+         
+         put the long id of grp "helpField" into tHelpFieldGrp
+         set the width of tHelpFieldGrp to (CardWidth() - 30)
+         topLeftMe tHelpFieldGrp, 15, 135
+         
+         put the long id of fld "helpField" into tHelpField
+         set the width of tHelpField to (CardWidth() - 30)
+         topLeftMe tHelpField, 15, 135
+         
+         put the long id of button "helpDismiss" into tHelpDismiss
+         topRightMe tHelpDismiss, 0, 75
          
          break
       case "listen-my-audio"
@@ -274,6 +290,25 @@ command updateUI
          put the long id of grp "displayDelete" into tDeleteOn
          BottomRightMe tDeleteOn, 0, 50
          
+         -------- Help
+         put the long id of btn "helpButton" into tHelpButton
+         bottomLeftMe tHelpButton, 0, the height of tFooter
+         
+         put the long id of grc "helpBkg" into tHelpBkg
+         set the width of tHelpBkg to (CardWidth() + 20)
+         topLeftMe tHelpBkg, -10, 75
+         
+         put the long id of grp "helpField" into tHelpFieldGrp
+         set the width of tHelpFieldGrp to (CardWidth() - 30)
+         topLeftMe tHelpFieldGrp, 15, 135
+         
+         put the long id of fld "helpField" into tHelpField
+         set the width of tHelpField to (CardWidth() - 30)
+         topLeftMe tHelpField, 15, 135
+         
+         put the long id of button "helpDismiss" into tHelpDismiss
+         topRightMe tHelpDismiss, 0, 75
+         
          break
          
       case "listen-delete-file"
@@ -284,6 +319,9 @@ command updateUI
          break
          
       case "listen-file"
+         
+         --         put the long id of btn "helpButton" into tHelpButton
+         --         bottomRightMe tHelpButton, 0, (the bottom of tAudioDetailsGrc + 10)
          
          put the long id of player "audioPlayer" into tAudioPlayer
          topLeftMe tAudioPlayer, 20, -1111
@@ -1470,6 +1508,9 @@ end informationGrp
 
 command helpAudio
    local tTarget, tAudioGuide
+   set the height of fld "helpField" to the formattedHeight of fld "helpField"
+   set the vScroll of grp "helpField" to 0
+   set the topLeft of fld "helpField" to the topLeft of grp "helpField"
    
    put the short name of the target into tTarget
    switch tTarget
@@ -1477,6 +1518,15 @@ command helpAudio
          
          put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
          set the htmltext of fld "helpField" to tAudioGuide
+         --------
+         if isMobile() then
+            deleteMobileControl "helpField"
+            # recreate:
+            if the formattedheight of fld "helpField" > the height of fld "helpField" then
+               send "CreateScroller helpField" to grp "helpField"
+            end if
+         end if
+         
          
          show grc "helpBkg"
          show btn "helpDismiss"
