@@ -37,17 +37,6 @@ on preOpenCard
 end preOpenCard
 
 on opencard
-   --------
-   if isMobile() then
-      deleteMobileControl "helpField"
-      # recreate:
-      if the formattedheight of fld "helpField" > the height of fld "helpField" then
-         send "CreateScroller helpField" to fld "helpField"
-      end if
-   end if
-   
-   break
-   
    audioIsRunning    
 end opencard
 
@@ -80,9 +69,18 @@ on mouseup
       put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
       set the htmltext of fld "helpField" to tUserGuide
       
+      
       show grc "helpBkg"
       show btn "helpDismiss"
       show grp "helpField"
+      lock screen
+      deleteMobileControl "helpField"
+      # recreate:
+      set the height of fld "helpField" to the formattedHeight of fld "helpField"
+      set the top of fld "helpField" to the top of grp "helpField"
+      send "CreateScroller helpField" to fld "helpField"
+      
+      unlock screen
       break
       
    case "helpDismiss"
@@ -447,7 +445,7 @@ command updateUIPortal
          set the rect of tControl to tRect
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, 90
+         bottomRightMe tHelpButton, 0, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)

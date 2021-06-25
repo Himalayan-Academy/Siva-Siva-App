@@ -320,8 +320,6 @@ command updateUI
          
       case "listen-file"
          
-         --         put the long id of btn "helpButton" into tHelpButton
-         --         bottomRightMe tHelpButton, 0, (the bottom of tAudioDetailsGrc + 10)
          
          put the long id of player "audioPlayer" into tAudioPlayer
          topLeftMe tAudioPlayer, 20, -1111
@@ -1509,8 +1507,8 @@ end informationGrp
 command helpAudio
    local tTarget, tAudioGuide
    set the height of fld "helpField" to the formattedHeight of fld "helpField"
-   set the vScroll of grp "helpField" to 0
-   set the topLeft of fld "helpField" to the topLeft of grp "helpField"
+   --set the vScroll of grp "helpField" to 0
+   set the top of fld "helpField" to the top of grp "helpField"
    
    put the short name of the target into tTarget
    switch tTarget
@@ -1518,14 +1516,20 @@ command helpAudio
          
          put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
          set the htmltext of fld "helpField" to tAudioGuide
-         --------
-         if isMobile() then
-            deleteMobileControl "helpField"
-            # recreate:
-            if the formattedheight of fld "helpField" > the height of fld "helpField" then
-               send "CreateScroller helpField" to grp "helpField"
-            end if
-         end if
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show grp "helpField"
+         
+         lock screen
+         deleteMobileControl "helpField"
+         # recreate:
+         set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         set the top of fld "helpField" to the top of grp "helpField"
+         send "CreateScroller helpField" to fld "helpField"
+         unlock screen
+         
+         break
          
          
          show grc "helpBkg"
