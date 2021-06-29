@@ -509,6 +509,41 @@ end mobileRectGet
 ON ___UTILITIES
 end ___UTILITIES
 
+--command parseTheHTML pHtmlText, pTargetString
+--   # use for scraping out anything from the htmltext of a browser widget
+--   # must call *after* URL loads
+--   switch pTargetString
+--      case "Title"
+--         put (offset ("<Title>", pHTMLText) +7) into tStartTitle
+--         put (offset ("</Title>", pHTMLText) -1) into tEndTitle
+--         put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
+--         replace cr with "" in tRawTitle
+--         replace tab with "" in tRawTitle
+--         # we are inconsistent in the title delimiter passed in our CMS
+--         # sometime the leading "realm" is separated by a colon, other time a dash
+--         replace ": " with "-" in tRawTitle # normalize all those...
+--         set the itemdel to "-" # set up for two part titles
+--         if tRawTitle contains "YouTube" then # leave it alone
+--            put "YouTube" into sLastWebPageTitle  # upgrade this later... 
+--         else # from our web site
+--            if browser_GetLastURL() contains "/book/" then
+--               # pass just the first words
+--               put word 1 to 5 of tRawTitle into tRawTitle
+--            else
+--               # not a book page...
+--               if the number of items of tRawTitle = 2 then
+--                  put item 2 of tRawTitle into tRawtitle
+--               end if
+--               If char 1 of tRawTitle = " " then 
+--                  delete char 1 of tRawTitle
+--               end if   
+--            end if
+
+--         end if
+--         put tRawTitle into sLastWebPageTitle
+--         break
+--   end switch
+--end parseTheHTML
 
 function removeQuotes pString
    # Needed when passing some raw string to json for some functions like analytics

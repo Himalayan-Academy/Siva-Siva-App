@@ -206,9 +206,9 @@ on journal_AddEntry
       # the challenge is to get a proper label, especially from the books.
       put getJournalData() into tTitle
       
-      if tTitle is not among the items of tHardToParsePages then
-         put parseTheHTML(sHTMLtext,"bookmark") into tTitle
-      end if
+      --      if tTitle is not among the items of tHardToParsePages then
+      --         put parseTheHTML(sHTMLtext,"bookmark") into tTitle
+      --      end if
       
       --put titleFromURL(browser_GetLastURL())  into tTitle
       --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
