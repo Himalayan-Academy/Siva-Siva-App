@@ -334,22 +334,22 @@ on updateUI
          break
       case "surprise_verse"
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of grp "go-next" into tNext
+         put the long id of btn "go-next" into tNext
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of grp "go-next" into tNext
+         put the long id of btn "go-next" into tNext
          
          break 
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-         put the long id of grp "go-next" into tNext
+         put the long id of btn "go-next"into tNext
          
          break
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
          
-         put the long id of grp "go-next" into tNext
+         put the long id of btn "go-next" into tNext
          
          --ntinfo "switch card before going to audio before center in load/player"
          
@@ -379,7 +379,7 @@ on updateUI
    end if
    
    if there is a tNext then
-      set the top of tNext to safeTopMargin() - 6
+      set the top of tNext to safeTopMargin()
       set the right of tNext to CardWidth() + 9
    end if
    

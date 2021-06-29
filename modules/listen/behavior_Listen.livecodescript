@@ -1298,7 +1298,7 @@ on journalResume pDataA, pEntry
    set the iconPresetName of widget "PlayPause" to "pause"
    
    send "createScroller audioDetails" to grp "audioDetails"
-   
+   breakpoint
    send "updateTimer" to the stack "lib_MobileControls" in 20 milliseconds
    
 end journalResume

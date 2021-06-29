@@ -4,6 +4,7 @@ local sTimestamp,sAudioPlay
 
 on preOpenCard
    hide fld "audioDetails"
+   updateUI
    pass preOpenCard
 end preOpenCard
 
