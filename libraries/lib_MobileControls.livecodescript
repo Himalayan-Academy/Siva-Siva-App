@@ -107,10 +107,10 @@ on playerPropertyAvailable theProperty -- msg sent when enough has content is lo
       log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       
-      put mobileControlGet("audioPlayer","Duration") into sDuration
+      put mobileControlGet("audioPlayer","playableDuration") into sDuration
       
       if sDuration = 0 then
-         put mobileControlGet("audioPlayer","playableDuration") into sDuration
+         put mobileControlGet("audioPlayer","Duration") into sDuration
       end if
       
       
