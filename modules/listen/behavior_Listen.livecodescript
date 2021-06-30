@@ -1551,4 +1551,17 @@ on closeStack
    portal_SetLastStack "Listen"
 end closeStack
 
+on errorDialog pExecutionError, pParseError
+   -- gather data
+   put line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors into tErrorMessage
+   put item 1 of pExecutionError into tErrorCode
+   put item 2 of pExecutionError into tLineNumber
+   put item 3 of pExecutionError into tColumnNumber
+   put item 4 of pExecutionError into tHint
+   put the merge of format("Error([[tErrorCode]]): [[tErrorMessage]]\n\nLine: [[tLineNumber]] Column: [[tColumnNumber]]\n\nHint: [[tHint]]\n") into tDescriptiveMessage
+   
+   log tDescriptiveMessage
+end errorDialog
+
+
 
