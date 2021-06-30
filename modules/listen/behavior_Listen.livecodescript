@@ -639,6 +639,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
+         showBusyIndicator true,"Loading Collection"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
          put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]
@@ -694,7 +695,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          break      
    end switch
    
-
+   
    local tA, tBuf
    repeat for each key k in sCurrentPlayListA["audioFiles"]
       jnanam_SaveNewItem sCurrentPlayListA["audioFiles"][k]
