@@ -1544,6 +1544,9 @@ on closeStack
 end closeStack
 
 on errorDialog pExecutionError, pParseError
+   local tErrorMessage, tErrorCode, tLineNumber, tColumnNumber
+   local tHint, tDescriptiveMessage
+   
    -- gather data
    put line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors into tErrorMessage
    put item 1 of pExecutionError into tErrorCode
