@@ -1550,9 +1550,12 @@ on errorDialog pExecutionError, pParseError
    put item 2 of pExecutionError into tLineNumber
    put item 3 of pExecutionError into tColumnNumber
    put item 4 of pExecutionError into tHint
-   put the merge of format("Error([[tErrorCode]]): [[tErrorMessage]]\n\nLine: [[tLineNumber]] Column: [[tColumnNumber]]\n\nHint: [[tHint]]\n") into tDescriptiveMessage
+   put the merge of format("Listen Module Error([[tErrorCode]]): [[tErrorMessage]]\n\nLine: [[tLineNumber]] Column: [[tColumnNumber]]\n\nHint: [[tHint]]\n") into tDescriptiveMessage
    
+   -- for now, just log it. We need to figure out what kind of errors we're getting
+   -- before we create routines for recovering from them.
    log tDescriptiveMessage
+   put tDescriptiveMessage
 end errorDialog
 
 
