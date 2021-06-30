@@ -1232,15 +1232,10 @@ command addJournalEntry -- save a bookmark to databast
    
 end addJournalEntry
 
-
--- AAG: Needs a ton of work
 on journalResume pDataA, pEntry
    
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-   local tURL, tAudioPlayer
-   
-   --breakpoint
-   
+   local tURL, tAudioPlayer   
    local tCard
    
    if isMobile() then
@@ -1277,6 +1272,7 @@ on journalResume pDataA, pEntry
       put "audioPlayer" into tAudioPlayer
       createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
       wait 300 milliseconds
+      mobileControlSet "audioPlayer", "currentTime", sDataA["timestamp"]
    else
       set the filename of player "audioPlayer" to sDataA["url"]
    end if
@@ -1287,18 +1283,14 @@ on journalResume pDataA, pEntry
       --
       getPlaying true
       --
-   else
-      --breakpoint 
-      
+   else      
       getPlaying true
-     
    end if
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
    
    send "createScroller audioDetails" to grp "audioDetails"
-   breakpoint
    send "updateTimer" to the stack "lib_MobileControls" in 20 milliseconds
    
 end journalResume
@@ -1550,5 +1542,21 @@ end helpAudio
 on closeStack
    portal_SetLastStack "Listen"
 end closeStack
+
+on errorDialog pExecutionError, pParseError
+   -- gather data
+   put line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors into tErrorMessage
+   put item 1 of pExecutionError into tErrorCode
+   put item 2 of pExecutionError into tLineNumber
+   put item 3 of pExecutionError into tColumnNumber
+   put item 4 of pExecutionError into tHint
+   put the merge of format("Listen Module Error([[tErrorCode]]): [[tErrorMessage]]\n\nLine: [[tLineNumber]] Column: [[tColumnNumber]]\n\nHint: [[tHint]]\n") into tDescriptiveMessage
+   
+   -- for now, just log it. We need to figure out what kind of errors we're getting
+   -- before we create routines for recovering from them.
+   log tDescriptiveMessage
+   put tDescriptiveMessage
+end errorDialog
+
 
 
