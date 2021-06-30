@@ -1232,15 +1232,10 @@ command addJournalEntry -- save a bookmark to databast
    
 end addJournalEntry
 
-
--- AAG: Needs a ton of work
 on journalResume pDataA, pEntry
    
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
-   local tURL, tAudioPlayer
-   
-   --breakpoint
-   
+   local tURL, tAudioPlayer   
    local tCard
    
    if isMobile() then
@@ -1277,6 +1272,7 @@ on journalResume pDataA, pEntry
       put "audioPlayer" into tAudioPlayer
       createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
       wait 300 milliseconds
+      mobileControlSet "audioPlayer", "currentTime", sDataA["timestamp"]
    else
       set the filename of player "audioPlayer" to sDataA["url"]
    end if
@@ -1287,18 +1283,14 @@ on journalResume pDataA, pEntry
       --
       getPlaying true
       --
-   else
-      --breakpoint 
-      
+   else      
       getPlaying true
-     
    end if
    
    get runningAudioIndicatorVis("true")
    set the iconPresetName of widget "PlayPause" to "pause"
    
    send "createScroller audioDetails" to grp "audioDetails"
-   breakpoint
    send "updateTimer" to the stack "lib_MobileControls" in 20 milliseconds
    
 end journalResume
