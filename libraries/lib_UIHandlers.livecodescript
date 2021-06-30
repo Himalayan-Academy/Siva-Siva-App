@@ -806,7 +806,7 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
-            dispatch "loadingInProgress" to me 
+          -- dispatch "loadingInProgress" to me 
          else
             set the vis of sLoadingGroup to pBool
             put empty into sLoadProgress
