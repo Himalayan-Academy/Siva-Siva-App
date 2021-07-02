@@ -1264,6 +1264,10 @@ on journalResume pDataA, pEntry
    fetchSingleMetadata sDataA["item_id"]
    put  getMediaItemMetadata() into  fld "audioDetails"
    set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
+   set the vScroll of grp "audioDetails" to 0
+   set the topLeft of fld "audioDetails" to the topLeft of grp "audioDetails"
+   
+   
    
    informationGrp
    
