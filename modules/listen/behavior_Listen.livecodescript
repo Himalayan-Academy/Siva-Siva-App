@@ -1263,6 +1263,7 @@ on journalResume pDataA, pEntry
    
    fetchSingleMetadata sDataA["item_id"]
    put  getMediaItemMetadata() into  fld "audioDetails"
+   set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
    
    informationGrp
    
