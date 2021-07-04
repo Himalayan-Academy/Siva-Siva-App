@@ -1277,7 +1277,7 @@ on journalResume pDataA, pEntry
    if isMobile() then
       put "audioPlayer" into tAudioPlayer
       createMobileAudioPlayer tURL, "audioPlayer",tAudioRect
-      wait 300 milliseconds
+      wait 500 milliseconds
       mobileControlSet "audioPlayer", "currentTime", sDataA["timestamp"]
    else
       set the filename of player "audioPlayer" to sDataA["url"]
