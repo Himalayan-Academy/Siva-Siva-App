@@ -8,7 +8,49 @@ version: 0.1
 
 
 --> Portal | Bookmark
--
+
+local portalView, portalList, stackName, shortFile,  sivasivaData
+
+
+command parseTheHTML pHtmlText, pTargetString
+   local tStartTitle, tEndTitle, tRawTitle, sLastWebPageTitle
+   
+   
+   # use for scraping out anything from the htmltext of a browser widget
+   # must call *after* URL loads
+   switch pTargetString
+      case "Title"
+         put (offset ("<Title>", pHTMLText) +7) into tStartTitle
+         put (offset ("</Title>", pHTMLText) -1) into tEndTitle
+         put  (char tStartTitle to tEndTitle of pHTMLText) into tRawTitle
+         replace cr with "" in tRawTitle
+         replace tab with "" in tRawTitle
+         # we are inconsistent in the title delimiter passed in our CMS
+         # sometime the leading "realm" is separated by a colon, other time a dash
+         replace ": " with "-" in tRawTitle # normalize all those...
+         set the itemdel to "-" # set up for two part titles
+         if tRawTitle contains "YouTube" then # leave it alone
+            put "YouTube" into sLastWebPageTitle  # upgrade this later... 
+         else # from our web site
+            if browser_GetLastURL() contains "/book/" then
+               # pass just the first words
+               put word 1 to 5 of tRawTitle into tRawTitle
+            else
+               # not a book page...
+               if the number of items of tRawTitle = 2 then
+                  put item 2 of tRawTitle into tRawtitle
+               end if
+               If char 1 of tRawTitle = " " then 
+                  delete char 1 of tRawTitle
+               end if   
+            end if
+            
+         end if
+         put tRawTitle into sLastWebPageTitle
+         break
+   end switch
+end parseTheHTML
+
 command portal_DisplayBookmarks
    -- just a test for now
    put portal_GetHomeView() into portalView
@@ -16,41 +58,9 @@ command portal_DisplayBookmarks
    set the portal_RowNames of portalView to portalList
 end portal_DisplayBookmarks
 
-command portal_PushBookmark
-   
-end portal_PushBookmark
-
-command portal_PopBookmark
-   
-end portal_PopBookmark
-
-command portal_DeleteBookmark
-   
-end portal_DeleteBookmark
-
-
---> Portal | Bookmark | Model
--
-/*
-This model is cached in a LocalArray of this stack, 
-but stored for future reference in anapplication specific json file in the documents folder of the mobile app.
-*/
-
-function portal_GetBookmarkArray
-   
-end portal_GetBookmarkArray
-
-function portal_SetBookmarkArray
-   
-end portal_SetBookmarkArray
-
 command sivasiva_FetchBookmarkArray
    put "model_SivaSivaBookmarks" into stackName
    put stackName & ".json" into shortFile-- could use ".array"
    put the model_Array [shortFile] of stack "model_SivaSiva" into sivasivaData
    return sivasivaData
 end sivasiva_FetchBookmarkArray
-
-command sivasiva_StoreBookmarkArray
-   
-end sivasiva_StoreBookmarkArray
