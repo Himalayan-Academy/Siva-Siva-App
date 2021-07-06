@@ -6,7 +6,7 @@ local sMediaURL,sBrowserURL
 #local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
 local sHackDownloadCompleteFlag
 
-local sLandscapeOnly, sOrientation, sBrowserRect,sHtmlText
+local sLandscapeOnly, sOrientation, sBrowserRect,sHtmlText, sMoveToScrollY
 
 # this stack intend to make the UI responsive
 # by getting rect of the screen and using those coordinator
@@ -167,6 +167,10 @@ on browserDocumentLoadComplete pURL
    put short name of the target into tBrowser
    put url pURL into sHtmlText
    --ntInfo ( (the lockscreen) & "; show the target: " & tBrowser &"; " &  pURL)
+   if  sMoveToScrollY is a number then
+      do "window.scrollBy(0,"& sMoveToScrollY & ")" in widget "Body"
+      put false into sMoveToScrollY
+   end if
    
 end browserDocumentLoadComplete
 
@@ -184,8 +188,14 @@ command showBrowser
 end showBrowser
 
 on journal_AddEntry
+   do "liveCode.journal_AddEntryCallback(window.scrollY)" in widget "body"
+end journal_AddEntry
+
+on journal_AddEntryCallback pScroll
    
-   local pData, tTitle, tOutput,tHardToParsePages
+   local tDataA, tTitle, tOutput, tHardToParsePages, tURL
+   
+   put the URL of widget "body" into tURL
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
@@ -193,45 +203,40 @@ on journal_AddEntry
    
    put "Pillars of Iraivan" into tHardToParsePages
    
-   if sBrowserURL contains "YouTube" then
+   if tURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
       # which are appears on this sub nav list.
       # for now, this implemention of Video is contrain to that list
       # leave it for now
       put portal_GetLabel() into tTitle
    else
-      # we have some web page, probably in portrait mode
-      # it could be HAP page form the /html folder, or a revOIgniter built media page, 
-      # or a internal page of some books that Andre build from exploded ePub/Zip
-      # the challenge is to get a proper label, especially from the books.
-      put getJournalData() into tTitle
-      
-      --      if tTitle is not among the items of tHardToParsePages then
-      --         put parseTheHTML(sHTMLtext,"bookmark") into tTitle
-      --      end if
-      
-      --put titleFromURL(browser_GetLastURL())  into tTitle
-      --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
-      --put titleFromURL(browser_GetLastURL())  into tTitle
-      
+      if not matchText(the htmltext of widget "body", "<title>(.*?)</title>", tTitle ) then
+         put "Unknown title" into tTitle
+      end if
    end if
    
-   put browser_GetLastURL() into pData["url"] 
+   put tURL into tDataA["url"] 
+   put pScroll into tDataA["scroll"]
    
    if sLandscapeOnly then
-      
-      Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
+      Journal_RecordEntry "view_BrowserLandscape",tTitle,tDataA  
    else
-      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,tDataA   
    end if
    --dialog_CustomMsg "Saved to Journal"
-end journal_AddEntry
+end journal_AddEntryCallback
+
 
 
 on journalResume  pDataA, pEntryA
    local tBrowser
    put the long id of widget "Body" of cd "SivaSivaBrowser"  into tBrowser 
    set the URL of tBrowser  to pDataA["url"]
+   if pDataA["scroll"] is a number then
+      put pDataA["scroll"] into sMoveToScrollY
+   else
+      put false into sMoveToScrollY
+   end if
    hideLoader
    show tBrowser
 end journalResume
