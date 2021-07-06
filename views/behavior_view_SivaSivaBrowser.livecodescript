@@ -165,7 +165,7 @@ on browserDocumentLoadComplete pURL
    put pURL into sBrowserURL
    browser_SetLastURL pURL
    put short name of the target into tBrowser
-   put url pURL into sHtmlText
+   put the htmlText of widget "body" into sHtmlText
    --ntInfo ( (the lockscreen) & "; show the target: " & tBrowser &"; " &  pURL)
    if  sMoveToScrollY is a number then
       do "window.scrollBy(0,"& sMoveToScrollY & ")" in widget "Body"
