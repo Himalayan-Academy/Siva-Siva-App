@@ -1,5 +1,6 @@
 ﻿script "behavoir_DailyLesson"
-local sLastActivityA
+local sConfigA, sOnLine, sCurrentRealm, sViewState
+local sLastActivityA, sLesson, sLineStyle
 
 on preopenstack
    if isMobile() then    
@@ -7,85 +8,6 @@ on preopenstack
    end if
 end preopenstack
 
-on opencard
-   audioIsRunning  
-end opencard
-
-on mouseup
-   
-   local tTarget, tResizeText
-   
-   put the short name of the Target  into tTarget 
-   switch tTarget
-      
-      case "fontResize"
-         
-         if the vis of fld "daily-lesson-text" is true then
-            put the long id fld "daily-lesson-text" into tResizeText
-            if the textSize of  tResizeText  = 36 then
-               set the textSize of tResizeText to 20
-            else
-               set the textsize of tResizeText  to (the textsize of tResizeText  + 4)
-            end if
-         end if
-         
-         break
-         
-   end switch
-end mouseup
-
-
-on setLastactivity  pLessonNum, pCdName  
-   put pCdName into sLastActivityA["CdName"]
-   put pLessonNum into sLastActivityA["LessonNum"]
-end setLastactivity
-
-command resetUI
-   put empty into fld "title"
-   put empty into fld "daily-lesson-text"
-end resetUI
-
-on closeStack
-   --addJournalEntry
-   portal_SetLastStack "daily-lesson" 
-end closeStack
-
-# more than needed but we may expand activities in this module later
-# so keeping Jacque's nice construct for now.
-
-command addJournalEntry -- save a bookmark to db
-   local tCdName, tData, tTitle
-   put sLastActivityA["CdName"] into tCdName
-   put tCdName into tData["card"] -- store the last user cd   
-   if tCdName = "daily-lesson" then -- store the lesson number
-      --put sLastActivityA["LessonNum"] into tLessonNum
-      --put tLessonNum into tData["lessonNum"]
-      --put "Master Course Dialy Lesson - " & tLessonNum into tTitle -- "lesson x"
-      put "Master Course Daily Lesson"  into tTitle
-   end if
-   Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
-end addJournalEntry
-
-
-on journalResume pData,pEntryA -- sent from journal stack
-   local tCd
-   put pData["card"] into tCd
-   go to card tCd
-   --put pData["lessonNum"] into tNum
-   --send "fetchLessonAndImage tNum" to this cd
-   
-end journalResume
-
-on closeStack
-   portal_SetLastStack "daily-lesson"
-end closeStack
-
---> Variables
--
-local sConfigA,sOnLine,sCurrentRealm,sViewState,sLesson,sLineStyle
-
---> Events
--
 on preOpenCard
    setCardCoords
    resetUI
@@ -110,6 +32,59 @@ on preOpenCard
    put empty into sLesson
    send "fetchLessonAndImage" to me in 20 milliseconds
 end preOpenCard
+
+
+on opencard
+   audioIsRunning  
+end opencard
+
+on mouseup
+   
+   local tTarget, tResizeText
+   
+   put the short name of the Target  into tTarget 
+   switch tTarget
+      
+      case "right-arrow"
+         goNextLesson
+         break
+         
+      case "left-arrow"
+         goPreviousLesson
+         break
+         
+      case "fontResize"
+         
+         if the vis of fld "daily-lesson-text" is true then
+            put the long id fld "daily-lesson-text" into tResizeText
+            if the textSize of  tResizeText  = 36 then
+               set the textSize of tResizeText to 20
+            else
+               set the textsize of tResizeText  to (the textsize of tResizeText  + 4)
+            end if
+         end if
+         
+         break
+         
+      case "turnOffAudio"
+         turnOffAudio
+         
+         break
+         
+         
+   end switch
+end mouseup
+
+
+command resetUI
+   put empty into fld "title"
+   put empty into fld "daily-lesson-text"
+end resetUI
+
+# more than needed but we may expand activities in this module later
+# so keeping Jacque's nice construct for now.
+
+
 
 on resizeStack
    lock screen
@@ -576,6 +551,40 @@ command styleLastLine sLineStyle
         set the x of line -1 of fld "daily-Lesson-Text" to sLineStyle[x]
     end repeat
 end styleLastLine
+
+command addJournalEntry -- save a bookmark to db
+   local tCdName, tData, tTitle
+   put sLastActivityA["CdName"] into tCdName
+   put tCdName into tData["card"] -- store the last user cd   
+   if tCdName = "daily-lesson" then -- store the lesson number
+      --put sLastActivityA["LessonNum"] into tLessonNum
+      --put tLessonNum into tData["lessonNum"]
+      --put "Master Course Dialy Lesson - " & tLessonNum into tTitle -- "lesson x"
+      put "Master Course Daily Lesson"  into tTitle
+   end if
+   Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
+end addJournalEntry
+
+
+on journalResume pData,pEntryA -- sent from journal stack
+   local tCd
+   put pData["card"] into tCd
+   go to card tCd
+   --put pData["lessonNum"] into tNum
+   --send "fetchLessonAndImage tNum" to this cd
+   
+end journalResume
+
+on setLastactivity  pLessonNum, pCdName  
+   put pCdName into sLastActivityA["CdName"]
+   put pLessonNum into sLastActivityA["LessonNum"]
+end setLastactivity
+
+on closeStack
+   --addJournalEntry
+   portal_SetLastStack "daily-lesson" 
+end closeStack
+
 
 
 
