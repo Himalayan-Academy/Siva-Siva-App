@@ -1,4 +1,4 @@
-﻿script "behavoir_DailyLesson"
+﻿script "behavior_DailyLesson"
 local sConfigA, sOnLine, sCurrentRealm, sViewState
 local sLastActivityA, sLesson, sLineStyle
 
@@ -30,6 +30,7 @@ on preOpenCard
    
    hide grp "lessonTextControl" 
    put empty into sLesson
+   
    send "fetchLessonAndImage" to me in 20 milliseconds
 end preOpenCard
 
@@ -42,7 +43,8 @@ on mouseup
    
    local tTarget, tResizeText
    
-   put the short name of the Target  into tTarget 
+   put the short name of the Target  into tTarget
+   --put tTarget
    switch tTarget
       
       case "right-arrow"
@@ -57,7 +59,7 @@ on mouseup
          
          if the vis of fld "daily-lesson-text" is true then
             put the long id fld "daily-lesson-text" into tResizeText
-            if the textSize of  tResizeText  = 36 then
+            if the textSize of  tResizeText  = 32 then
                set the textSize of tResizeText to 20
             else
                set the textsize of tResizeText  to (the textsize of tResizeText  + 4)
@@ -95,17 +97,23 @@ end resizeStack
 
 on updateUI
    local tFooter, tTitle, tRect, tControl
+   
    put the long id of grp "footerNavigation" into tFooter
    send "updateUI" to tFooter
+   
    put the long id of fld "Title" into tTitle
    topCenterMe tTitle, 7
+   
    put the long id of btn "right-arrow" into tControl
    topRightMe tControl
+   
    put the long id of btn "left-arrow" into tControl
    topLeftMe tControl
+   
    put the long id of grp "lessonTextControl" into tControl
    put (0,the bottom of tTitle + 30,CardWidth(),the top of tFooter) into tRect
    set the rect of tControl to tRect
+   
 end updateUI
 
 command goNextLesson
@@ -190,6 +198,15 @@ private function _getRandomImageSQL
    put the uRandomImageSelect of this card into tSQL
    return tSQL
 end _getRandomImageSQL
+
+on setLastactivity  pLessonNum, pCdName  
+   put pCdName into sLastActivityA["CdName"]
+   put pLessonNum into sLastActivityA["LessonNum"]
+end setLastactivity
+
+-----------------
+on _BuildTheLesson
+end _BuildTheLesson
 
 command buildLesson pLessonNumber
    local tStartYear, tToday, theNow, tNewYear, tLessonNo, tDwSNo, \
@@ -325,7 +342,7 @@ command buildLesson pLessonNumber
    #Book Title
    
    put line 1 of tTodaysDWS after fld "daily-lesson-text" 
-   put 20 into sLineStyle["textsize"]
+ -- put 20 into sLineStyle["textsize"]
    put "center" into sLineStyle["textalign"]
    put "italic" into sLineStyle["textstyle"]
    put 20 into sLineStyle["spaceBelow"]
@@ -342,7 +359,7 @@ command buildLesson pLessonNumber
    put cr & line 4 of tTodaysDWS after fld "daily-lesson-text"
    
    put "bold" into sLineStyle["textstyle"]
-   put 14 into sLineStyle["textsize"]
+   --put 14 into sLineStyle["textsize"]
    put 4 into sLineStyle["spaceBelow"]
    
    styleLastLIne sLineStyle
@@ -350,7 +367,7 @@ command buildLesson pLessonNumber
    # Sloka - text
    
    put cr & line 6 of tTodaysDWS after fld "daily-lesson-text"
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put  20 into sLineStyle["leftIndent"]
    put 4 into sLineStyle["spaceBelow"]
    put "plain" into sLineStyle["textstyle"]
@@ -363,7 +380,7 @@ command buildLesson pLessonNumber
    put  0 into sLineStyle["leftIndent"]
    put "center" into sLineStyle["textalign"]
    put "bold" into sLineStyle["textstyle"]
-   put 14 into sLineStyle["textsize"]
+   --put 14 into sLineStyle["textsize"]
    put 4 into sLineStyle["spaceBelow"]
    styleLastLIne sLineStyle
    
@@ -371,7 +388,7 @@ command buildLesson pLessonNumber
    
    put cr & line 10 of tTodaysDWS after fld "daily-lesson-text"
    
-   put 18 into sLineStyle["textsize"]
+   --put 18 into sLineStyle["textsize"]
    put  20 into sLineStyle["leftIndent"]
    put 4 into sLineStyle["spaceBelow"]
    put "plain" into sLineStyle["textstyle"]
@@ -388,7 +405,7 @@ command buildLesson pLessonNumber
    
    # Book Title
    put  cr & "Living with Siva" after fld "daily-Lesson-Text"
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put "center" into sLineStyle["textalign"]
    put "italic" into sLineStyle["textstyle"]
    put 20 into sLineStyle["spaceBelow"]
@@ -398,7 +415,7 @@ command buildLesson pLessonNumber
    put cr & (word 1 to 2 of line 1 of  tTodaysLWS) after fld "daily-lesson-text"
    
    put "bold" into sLineStyle["textstyle"]
-   put 14 into sLineStyle["textsize"]
+   --put 14 into sLineStyle["textsize"]
    put 6 into sLineStyle["spaceBelow"]  
    styleLastLIne sLineStyle
    
@@ -406,7 +423,7 @@ command buildLesson pLessonNumber
    
    put cr & line 3 of tTodaysLWS after fld "daily-lesson-text"
    put "bold" into sLineStyle["textstyle"]
-   put 20 into sLineStyle["textsize"]
+  --put 20 into sLineStyle["textsize"]
    put 20 into sLineStyle["spaceBelow"]
    styleLastLIne sLineStyle
    
@@ -415,7 +432,7 @@ command buildLesson pLessonNumber
    # just use one line to start
    
    put  cr  & line 5 of tTodaysLWS after fld "daily-lesson-text"    
-   put 18 into sLineStyle["textsize"]
+   --put 18 into sLineStyle["textsize"]
    put  20 into sLineStyle["leftIndent"]
    put "plain" into sLineStyle["textstyle"]
    put "left" into sLineStyle["textalign"]
@@ -439,27 +456,27 @@ command buildLesson pLessonNumber
    
    put cr & line 1 of tTodaysSUTRA after fld "daily-lesson-text"  #Book Title
    
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put "center" into sLineStyle["textalign"]
    put "italic" into sLineStyle["textstyle"]
    put 5 into sLineStyle["spaceBelow"]
    styleLastLIne sLineStyle
    
    put cr & line 2 of tTodaysSUTRA after fld "daily-lesson-text"  #Sutra section
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    styleLastLIne sLineStyle
    
    # Sutra- Number
    put cr & (trueword 1 to 2 of line 4 of tTodaysSUTRA) after fld "daily-lesson-text"    
    put "bold" into sLineStyle["textstyle"]
-   put 14 into sLineStyle["textsize"]
+   --put 14 into sLineStyle["textsize"]
    put 0 into sLineStyle["spaceBelow"]    
    styleLastLIne sLineStyle
    
    # Sutra- Title
    put cr &  (trueword 3 to-1 of line 4 of tTodaysSUTRA) after fld "daily-lesson-text"   
    put 10 into sLineStyle["spaceBelow"]
-   put 18 into sLineStyle["textsize"]
+   --put 18 into sLineStyle["textsize"]
    put 30 into sLineStyle["leftIndent"]
    put 30 into sLineStyle["RightIndent"]
    styleLastLIne sLineStyle
@@ -468,7 +485,7 @@ command buildLesson pLessonNumber
    put cr &   line 5 of tTodaysSUTRA after fld "daily-lesson-text"   
    
    
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put 20 into sLineStyle["leftIndent"]
    put "plain" into sLineStyle["textstyle"]
    put "center" into sLineStyle["textalign"]
@@ -486,7 +503,7 @@ command buildLesson pLessonNumber
    
    # Book Title
    put  cr & "Merging with Siva" after fld "daily-Lesson-Text"
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put "center" into sLineStyle["textalign"]
    put "italic" into sLineStyle["textstyle"]
    put 20 into sLineStyle["spaceBelow"]
@@ -496,7 +513,7 @@ command buildLesson pLessonNumber
    put cr & (word 1 to 2 of line 1 of  tTodaysMWS) after fld "daily-lesson-text"
    
    put "bold" into sLineStyle["textstyle"]
-   put 14 into sLineStyle["textsize"]
+   --put 14 into sLineStyle["textsize"]
    put 6 into sLineStyle["spaceBelow"]  
    styleLastLIne sLineStyle
    
@@ -504,7 +521,7 @@ command buildLesson pLessonNumber
    
    put cr & line 3 of tTodaysMWS after fld "daily-lesson-text"
    put "bold" into sLineStyle["textstyle"]
-   put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put 20 into sLineStyle["spaceBelow"]
    styleLastLIne sLineStyle
    
@@ -513,7 +530,7 @@ command buildLesson pLessonNumber
    # just use one line to start
    
    put  cr  & line 5 of tTodaysMWS after fld "daily-lesson-text"    
-   put 18 into sLineStyle["textsize"]
+  --put 18 into sLineStyle["textsize"]
    put  20 into sLineStyle["leftIndent"]
    put "plain" into sLineStyle["textstyle"]
    put "left" into sLineStyle["textalign"]
@@ -552,6 +569,11 @@ command styleLastLine sLineStyle
     end repeat
 end styleLastLine
 
+
+------------------
+on _JournalPostResume
+end _JournalPostResume
+
 command addJournalEntry -- save a bookmark to db
    local tCdName, tData, tTitle
    put sLastActivityA["CdName"] into tCdName
@@ -574,11 +596,6 @@ on journalResume pData,pEntryA -- sent from journal stack
    --send "fetchLessonAndImage tNum" to this cd
    
 end journalResume
-
-on setLastactivity  pLessonNum, pCdName  
-   put pCdName into sLastActivityA["CdName"]
-   put pLessonNum into sLastActivityA["LessonNum"]
-end setLastactivity
 
 on closeStack
    --addJournalEntry
