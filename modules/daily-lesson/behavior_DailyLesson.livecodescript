@@ -1,10 +1,14 @@
 ﻿script "behavior_DailyLesson"
 local sConfigA, sOnLine, sCurrentRealm, sViewState
-local sLastActivityA, sLesson, sLineStyle
+local sLastActivityA, sLesson, sLineStyle,  tOrientations
 
 on preopenstack
-   if isMobile() then    
-      mobileSetAllowedOrientations "portrait,portrait upside down"
+   
+   put  "portrait,portrait upside down" after tOrientations
+   --put "landscape left,landscape right" after tOrientations
+   
+   if isMobile() then 
+      mobileSetAllowedOrientations tOrientations 
    end if
 end preopenstack
 
