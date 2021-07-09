@@ -1,7 +1,7 @@
 Script "stack_journal_card_id_84667"
 
 /*
-# Name: card "edit entries" of stack "journal" of stack "Siva-Siva-App"
+# Name: card id 84667 of stack "journal" of stack "Siva-Siva-App"
 # ID: card id 84667 of stack "journal" of stack "Siva-Siva-App"
 */
 

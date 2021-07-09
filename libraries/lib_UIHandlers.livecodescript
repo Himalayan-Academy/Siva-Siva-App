@@ -440,7 +440,8 @@ command setImageToFullCardLoc pImage, pOrientation, x,y
       resizeToHeight pImage,(sCardHeight - x)
       --   end if
    else
-      resizeTowidth pImage,(sCardHeight - x)
+      --resizeTowidth pImage,(sCardHeight - x)
+      resizeTowidth pImage,(sCardWidth - x)
    end if
 end setImageToFullCardLoc
 
