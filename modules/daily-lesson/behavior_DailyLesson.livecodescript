@@ -1,11 +1,12 @@
 ﻿script "behavior_DailyLesson"
 local sConfigA, sOnLine, sCurrentRealm, sViewState
-local sLastActivityA, sLesson, sLineStyle,  tOrientations
+local sLastActivityA, sLesson, sLineStyle
 
 on preopenstack
+   local tOrientations
    
-   put  "portrait,portrait upside down" after tOrientations
-   --put "landscape left,landscape right" after tOrientations
+   put "portrait,portrait upside down" after tOrientations
+   put ",landscape left,landscape right" after tOrientations
    
    if isMobile() then 
       mobileSetAllowedOrientations tOrientations 
@@ -20,10 +21,6 @@ on preOpenCard
    # Fix image path from desktop when loading on Mobile
    # should not be required since David's method solve the issue (we think)
    
-   # ideally we only call this in start up   
-   if isMobile() then
-      mobileSetAllowedOrientations "portrait, portrait upside down"
-   end if
    # reusing some functions here from the gems module 
    # to pull in images for the background
    # only call God and Soul realm images for now.
@@ -100,10 +97,19 @@ on resizeStack
 end resizeStack
 
 on updateUI
-   local tFooter, tTitle, tRect, tControl
+   local tFooter, tTitle, tRect, tControl, tTextBottom, tOrientation
    
    put the long id of grp "footerNavigation" into tFooter
-   send "updateUI" to tFooter
+   if currentlyLandscape() then
+      set the visible of tFooter to false
+      put CardHeight() into tTextBottom
+      put "landscape" into tOrientation
+   else
+      set the visible of tFooter to true
+      send "updateUI" to tFooter
+      put the top of tFooter into tTextBottom
+      put "portrait" into tOrientation
+   end if
    
    put the long id of fld "Title" into tTitle
    topCenterMe tTitle, 7
@@ -114,10 +120,23 @@ on updateUI
    put the long id of btn "left-arrow" into tControl
    topLeftMe tControl
    
+   put the long id of grp "resizeFonts" into tControl
+   set the bottomRight of tControl to (CardWidth()-15,tTextBottom-6)
+   
    put the long id of grp "lessonTextControl" into tControl
-   put (0,the bottom of tTitle + 30,CardWidth(),the top of tFooter) into tRect
+   put (0,the bottom of tTitle + 30,CardWidth(),tTextBottom) into tRect
    set the rect of tControl to tRect
    
+   if isMobile() then
+      send "deleteMobileControl daily-lesson-text" to fld "daily-lesson-text"
+      if the formattedheight of fld "daily-lesson-text" > the height of fld "daily-lesson-text" then
+         send "CreateScroller daily-lesson-text" to fld "daily-lesson-text"
+      end if
+   end if
+   
+   put the long id of img "lesson-background" into tControl
+   setImageToFullCardLoc tControl, tOrientation
+   set the loc of tControl to CardLoc()
 end updateUI
 
 command goNextLesson
