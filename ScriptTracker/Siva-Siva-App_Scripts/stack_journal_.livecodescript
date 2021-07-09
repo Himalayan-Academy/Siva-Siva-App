@@ -47,7 +47,7 @@ on layoutHeader
    
    set the topleft of button "go-home-portal" to 0,0
    
-   set the topleft of fld "header text" to (the width of this card / 2) - (the width of fld "header text" / 2), 15
+   set the topleft of fld "header text" to (the width of this card / 2) - (the width of fld "header text" / 2), 10
 end layoutHeader
 
 

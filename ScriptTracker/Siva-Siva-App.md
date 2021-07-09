@@ -90,19 +90,19 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_journal_widget_id_84716](./ScriptTracker/Siva-Siva-App_Scripts/stack_journal_widget_id_84716.livecodescript)
 
-**card "edit entries" of stack "journal" of stack "Siva-Siva-App"**
+**card id 84667 of stack "journal" of stack "Siva-Siva-App"**
 * ID: card id 84667 of stack "journal" of stack "Siva-Siva-App"
 * [stack_journal_card_id_84667](./ScriptTracker/Siva-Siva-App_Scripts/stack_journal_card_id_84667.livecodescript)
 
-**field "header text" of card "edit entries" of stack "journal" of stack "Siva-Siva-App"**
+**field "header text" of card id 84667 of stack "journal" of stack "Siva-Siva-App"**
 * ID: field id 84663 of card id 84667 of stack "journal" of stack "Siva-Siva-App"
 * [stack_journal_field_id_84663](./ScriptTracker/Siva-Siva-App_Scripts/stack_journal_field_id_84663.livecodescript)
 
-**button "favorites" of card "edit entries" of stack "journal" of stack "Siva-Siva-App"**
+**button "favorites" of card id 84667 of stack "journal" of stack "Siva-Siva-App"**
 * ID: button id 84664 of card id 84667 of stack "journal" of stack "Siva-Siva-App"
 * [stack_journal_button_id_84664](./ScriptTracker/Siva-Siva-App_Scripts/stack_journal_button_id_84664.livecodescript)
 
-**group "Go Back" of card "edit entries" of stack "journal" of stack "Siva-Siva-App"**
+**group "Go Back" of card id 84667 of stack "journal" of stack "Siva-Siva-App"**
 * ID: group id 84666 of card id 84667 of stack "journal" of stack "Siva-Siva-App"
 * [stack_journal_group_id_84666](./ScriptTracker/Siva-Siva-App_Scripts/stack_journal_group_id_84666.livecodescript)
 
