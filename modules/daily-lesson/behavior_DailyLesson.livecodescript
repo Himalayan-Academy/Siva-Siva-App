@@ -365,7 +365,7 @@ command buildLesson pLessonNumber
    #Book Title
    
    put line 1 of tTodaysDWS after fld "daily-lesson-text" 
- -- put 20 into sLineStyle["textsize"]
+   -- put 20 into sLineStyle["textsize"]
    put "center" into sLineStyle["textalign"]
    put "italic" into sLineStyle["textstyle"]
    put 20 into sLineStyle["spaceBelow"]
@@ -446,7 +446,7 @@ command buildLesson pLessonNumber
    
    put cr & line 3 of tTodaysLWS after fld "daily-lesson-text"
    put "bold" into sLineStyle["textstyle"]
-  --put 20 into sLineStyle["textsize"]
+   --put 20 into sLineStyle["textsize"]
    put 20 into sLineStyle["spaceBelow"]
    styleLastLIne sLineStyle
    
@@ -553,7 +553,7 @@ command buildLesson pLessonNumber
    # just use one line to start
    
    put  cr  & line 5 of tTodaysMWS after fld "daily-lesson-text"    
-  --put 18 into sLineStyle["textsize"]
+   --put 18 into sLineStyle["textsize"]
    put  20 into sLineStyle["leftIndent"]
    put "plain" into sLineStyle["textstyle"]
    put "left" into sLineStyle["textalign"]
@@ -568,7 +568,7 @@ command buildLesson pLessonNumber
    put cr &cr & "Aum Tat Sat" after fld "daily-lesson-text"
    put "center" into sLineStyle["textalign"]
    styleLastLIne sLineStyle
-   
+   put cr & cr & cr & cr& cr after fld "daily-lesson-text"
    unlock screen with visual effect "dissolve" very fast
    	  
 end buildLesson
