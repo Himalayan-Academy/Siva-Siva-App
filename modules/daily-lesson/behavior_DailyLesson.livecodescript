@@ -121,7 +121,7 @@ on updateUI
    topLeftMe tControl
    
    put the long id of grp "resizeFonts" into tControl
-   set the bottomRight of tControl to (CardWidth()-15,tTextBottom-6)
+   set the bottomRight of tControl to (CardWidth()+40,tTextBottom)
    
    put the long id of grp "lessonTextControl" into tControl
    put (0,the bottom of tTitle + 30,CardWidth(),tTextBottom) into tRect
