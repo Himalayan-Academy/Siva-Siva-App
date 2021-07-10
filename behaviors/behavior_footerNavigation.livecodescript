@@ -31,6 +31,7 @@ on mouseup
    
    lock screen
    put short name of the target into tTarget
+   put the short name of this card into tCard
    put (there is a widget "body") into tBrowserExists
    
    switch tTarget
@@ -83,23 +84,24 @@ on mouseup
       case "journal"
          unlock screen
          
+         if  tCard is "surprise_audio" then
+            if the visible of grp "downloadSelection"  then
+               dialog_CustomMsg "You have not Downloaded."
+               exit to top
+            end if
+         end if
+         
          if tCard is among items of \
                "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-search" then
-            # nothing
+            exit to top
          else
-            --            put ( (tCard is "listen-file") AND (the visible of grp "downloadSelection" is true)  )into tDownloadIsVisible 
-            --            if tDownloadIsVisible  is false then
-            --               # nothing
-            --            else
-            AddJournalEntry
-            // will exit to top, no journal entry made
-            
-            moveMe target, 0,-100, 200
-            moveMe target, 0,100, 70
-            
-            dialog_CustomMsg "Saved to Journal"
-            --         end if
+            put "listen-file" into tCard
          end if
+         
+         AddJournalEntry
+         moveMe target, 0,-100, 200
+         moveMe target, 0,100, 70
+         dialog_CustomMsg "Saved to Journal"
          
          break
          

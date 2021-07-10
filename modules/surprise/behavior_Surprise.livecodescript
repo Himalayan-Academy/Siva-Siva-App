@@ -1,8 +1,8 @@
 ﻿script "behavior_Surprise"
-local sMediaURL,sQuoteData,sOnline
-local sCollection,sTimeStamp,sCard
-local sPlayerRect
-
+local sMediaURL, sQuoteData, sOnline
+local sCollection, sTimeStamp, sCard
+local sPlayerRect, sSelectHttp
+local sCurrentPlayListA,  sSelectNum
 
 on preOpenStack
    --breakpoint
@@ -55,12 +55,8 @@ on mouseup
                   deleteMobileControl "audioPlayer"
                end if
                
-               --               if isMobile() then
-               --                  mobileControlDelete "audioPlayer" 
-               --               end if
-               
-               --pausePlayer 0
                getNextItem
+               show grp "downloadSelection" 
                break
                
             case "pauseAudio"
@@ -86,6 +82,23 @@ on mouseup
                showBusyIndicator false
                put empty into fld "audioDetails"
                go to card "surprise_menu"
+               break
+               
+            case "downloadSelection"
+               
+               if connectivity_PingServer() <> "true" then
+                  dialog_CustomMsg "Offline or Low Bandwidth"
+                  exit mouseup
+               end if
+               
+               put mediaUrl_Get(sMediaURL) into sSelectHttp
+               
+               
+               if sSelectHttp<> empty then  # we have a selection
+                  doAnswer "Download this audio file?" &cr& "Journal entry requires a download.", "Download,Cancel","downloadAffirmed" 
+               end if
+               
+               
                break
                
          end switch #END  switch for audio card "surprise_audio"
@@ -252,25 +265,43 @@ on playPausedAudio sTimeStamp
    togglePause true, true
 end playPausedAudio
 
+command downloadAffirmed   
+   local tTitle, tNewRecordA, sLastTarget
+   if  sCurrentPlayListA["playListClass"] ="audiobook" then
+      put  sCurrentPlayListA["audioFiles"]["toc"][sSelectNum]["label"] into tTitle
+   else
+      put   sCurrentPlayListA["audioFiles"][sSelectNum]["title"]  into tTitle
+   end if
+   put sCurrentPlayListA["audioFiles"][sSelectNum] into tNewRecordA
+   jnanam_SaveNewItem tNewRecordA
+   show grp "downloadControls"
+   wait 100 milliseconds with messages
+   dispatch "downloadURL"  to group "downloadControls" with  tTitle, sSelectHttp, sSelectNum, sLastTarget
+   # sLastTarget becomes params pRequest by to the download stack
+end downloadAffirmed
+
+
+on hideDownloadControls
+   local tLastStack
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+   hide grp "downloadSelection"
+end hideDownloadControls
+
 
 command addJournalEntry-- save a bookmark to db
-   local tData,pDataA, tTitle, tURL
    
-   if sCard <> "surprise_audio" then 
-      put sCard into pDataA["title"] 
-      put sCard into tTitle
-      put sCard into pDataA["card"] 
-      --put "surprise" into pDataA["card"] 
-      Journal_RecordEntry "surprise",tTitle,pDataA
-   else
-      put getMediaMeta() into tData
-      put tData["item_id"] into pDataA["item_id"]
-      put tData["title"] into pDataA["title"]
-      put tData["title"] into tTitle
-      put mediaUrl_Get() into pDataA["url"] 
-      put "listen-file" into pDataA["card"] 
-      Journal_RecordEntry "listen",tTitle,pDataA
-   end if
+   local tData,pDataA, tTitle, tURL
+   put getMediaMeta() into tData
+   put tData["item_id"] into pDataA["item_id"]
+   put tData["title"] into pDataA["title"]
+   put tData["title"] into tTitle
+   
+   put mediaUrl_Get() into pDataA["url"] 
+   put sTimeStamp  into pDataA["timestamp"]
+   put "listen-file" into pDataA["card"] 
+   Journal_RecordEntry "listen",tTitle,pDataA
    
 end addJournalEntry
 
@@ -296,7 +327,7 @@ end resizeStack
 on updateUI
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground, tRect
    local tLoading, tPausePlay, tLoadingNotice,tTouchTrap
-   local tAudioDetails
+   local tAudioDetails, tDownloadSelection
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -363,15 +394,18 @@ on updateUI
          put (20, the bottom of tNext + 30 ,CardWidth() - 20, the top of tPausePlay - 50) into tRect
          set the rect of  tAudioDetails to tRect
          
-         
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
                into sPlayerRect
          set the rect of player "audioPlayer" to sPlayerRect
          
+         put the long id of grp  "downloadSelection" into tDownloadSelection
+         topLeftMe tDownloadSelection, 22, 0
          break
+         
       case "surprise_video"
          break
    end switch
+
    
    if there is a tBackground then
       setImageToFullCardLoc tBackground, "portrait"

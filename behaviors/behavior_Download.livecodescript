@@ -150,15 +150,11 @@ command downloadComplete pURL, pStatus
    else
       put  path_FileFromURL(sURL) into tLocalPath # includes filename
       put URL pURL into URL ("binfile:" & tLocalPath)
-      
-      -- to save memory, now unload the URL from memory
-      -- this also means that if you want to run the test again, it does not just use a cached version
+     
       unload pURL
       
-      delete word 1 to 4 of sRequestedBy
-      dispatch "updateCachedListings"  to sRequestedBy with sRecordNumber
       hideDownloadControls
-      put removeQuotes(sRequestedBy) into tModule     
+      put   pURL into tModule     
       tracking_RecordActivity tModule,"download/saved"
    end if
    hide grp "DownloadControls"
