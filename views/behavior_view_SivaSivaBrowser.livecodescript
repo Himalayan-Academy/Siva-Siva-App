@@ -185,13 +185,13 @@ end showBrowser
 
 on journal_AddEntry
    
-   local pData, tTitle, tOutput,tHardToParsePages
+   local pData, tTitle, tOutput, 
+   local tParseURL, tLastItemInURL, tWords
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
    # we get the title from the original mouseup of the portal screen
    
-   put "Pillars of Iraivan" into tHardToParsePages
    
    if sBrowserURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
@@ -200,31 +200,53 @@ on journal_AddEntry
       # leave it for now
       put portal_GetLabel() into tTitle
    else
-      # we have some web page, probably in portrait mode
-      # it could be HAP page form the /html folder, or a revOIgniter built media page, 
-      # or a internal page of some books that Andre build from exploded ePub/Zip
-      # the challenge is to get a proper label, especially from the books.
-      put getJournalData() into tTitle
       
-      --      if tTitle is not among the items of tHardToParsePages then
-      --         put parseTheHTML(sHTMLtext,"bookmark") into tTitle
-      --      end if
+      # if URL ends with "/web/" it is a "book"
+      # otherwise we have to parse the URL to get tTitle
       
-      --put titleFromURL(browser_GetLastURL())  into tTitle
-      --put parseTheHTML(the htmltext of widget "body","bookmark") into tTitle
-      --put titleFromURL(browser_GetLastURL())  into tTitle
+      put browser_GetLastURL() into pData["url"] 
+      put  pData["url"] into tParseURL
+      
+      set the  itemdelimiter to "/"
+      put item -1 of tParseURL into tLastItemInURL 
+      
+      if tParseURL contains "/web/" then
+         # book
+         put getJournalData() into tTitle
+         
+         # we get the title plus the url for "chapter"
+         #  for "chapter" in the book
+         
+         if tLastItemInURL <> "" then 
+            put tTitle &", " &  tLastItemInURL into tTitle
+         end if
+         
+      else
+         put "" into tTitle
+         
+         replace "-"  with " " in tLastItemInURL 
+         replace "_" with " " in tLastItemInURL 
+         
+         put the number of words of tLastItemInURL into tWords
+         
+         repeat with x  = 1 to tWords
+            put toUpper(char 1 of word  x of tLastItemInURL) into tWords
+            delete char 1 of word  x of tLastItemInURL
+            put tWords &  word  x of tLastItemInURL into  tWords
+            put tWords & " " after tTitle 
+         end repeat
+         delete char -1 of tTitle
+      end if
       
    end if
    
-   put browser_GetLastURL() into pData["url"] 
-   
    if sLandscapeOnly then
-      
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end if
-   --dialog_CustomMsg "Saved to Journal"
+   
+   dialog_CustomMsg "Saved to Journal"
 end journal_AddEntry
 
 
