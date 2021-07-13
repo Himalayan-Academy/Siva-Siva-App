@@ -468,8 +468,6 @@ on updateUI
          break
          
       case "mainImagePuzzle"
-         put the long id of btn "backArrow" into tBackArrow
-         bottomLeftMe tBackArrow, 0,10
          
          put the long ID of group "makeTiles" of me into tMakeTiles
          bottomCenterMe tMakeTiles, 180
@@ -483,7 +481,18 @@ on updateUI
    
 end updateUI
 
-
-on libraryStack
+command addJournalEntry -- save a bookmark to db
+   local tData, tTitle
    
-end libraryStack
+   put 1 into tData["card"] -- store the last user cd   
+   put "Image Puzzles" into tTitle
+   Journal_RecordEntry "imagepuzzles",tTitle,tData -- send to journal
+end addJournalEntry
+
+on journalResume pData,pEntryA -- sent from journal stack
+   local tCd
+   put pData["card"] into tCd
+   go to card tCd
+   
+end journalResume
+
