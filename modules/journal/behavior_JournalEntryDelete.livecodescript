@@ -1,4 +1,5 @@
 ﻿script "behavior_JournalEntryDelete"
+local tA
 
 on mouseUp
    put the cEntry of the target into tA
