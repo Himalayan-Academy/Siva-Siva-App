@@ -62,7 +62,7 @@ on mouseup
          else if tCard is   "listen-file" then
             unlock screen
             put portal_GetLastStack() into tLastStack
-            if tLastStack = "Journal" then
+            if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
                go to card "listen-collection"
             else 
                if fld "FilesOnDisk" of card "listen-delete-file" is empty then
