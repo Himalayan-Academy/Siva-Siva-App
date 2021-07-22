@@ -227,7 +227,7 @@ command updateUI
          set the rect of tAllCollections to (4, the bottom of tTitleLabel + 5, \
                CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, 0, 0
+         topRightMe tSearchFilter, -400, -400
          
          put CardWidth() - 4 into tRight
          repeat with i = 1 to 7 
@@ -249,7 +249,7 @@ command updateUI
          centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, 0, 0
+         topRightMe tSearchFilter, -400, -400
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
@@ -282,7 +282,7 @@ command updateUI
          centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, 0, 0
+         topRightMe tSearchFilter, -400, -400
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10, 0

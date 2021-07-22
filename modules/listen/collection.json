@@ -204,7 +204,7 @@
         "playlistClass": "cached",
         "data_query": {
           "media_type": "audio/chant",
-          "tags": "Vedic chant",
+          "tags": "%Vedic Chant%",
           "approved_for_public": "YES"
         }
       },
