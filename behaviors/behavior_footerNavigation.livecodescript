@@ -45,14 +45,14 @@ on mouseup
             go to card "surprise_verses"
          else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
             go to card "surprise_menu"
-         else if tCard is "main-calendar" and \  
-               the vis of grp "city-picker-view" then
-            unlock screen
-            lock screen for visual effect
-            hide grp "city-picker-view"
-            show grp "main-calendar-view"
-            show grp "headerGrp"
-            unlock screen with visual effect "dissolve" very fast
+            --         else if tCard is "main-calendar" and \  
+            --               the vis of grp "city-picker-view" then
+            --            unlock screen
+            --            lock screen for visual effect
+            --            hide grp "city-picker-view"
+            --            show grp "main-calendar-view"
+            --            show grp "headerGrp"
+            --            unlock screen with visual effect "dissolve" very fast
          else if tCard is "showStories" or tCard is "storyDeleteFile" then
             go card "storyHome"
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
@@ -82,7 +82,27 @@ on mouseup
          break
          
       case "journal"
+         local sCityName 
          unlock screen
+         
+         if tCard is "main-calendar" then
+            if sCityName is empty then
+               dialog_CustomMsg "Pick and Submit a City"
+               exit to top
+            end if
+            local  tTitle,pDataA
+            
+            put "Hindu Calendar,  " & sCityName into tTitle
+            put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
+            put tTitle into pDataA["title"]
+            
+            Journal_RecordEntry "calendar",tTitle,pDataA -- send to journal
+            
+            moveMe target, 0,-100, 200
+            moveMe target, 0,100, 70
+            dialog_CustomMsg "Saved to Journal"
+            exit to top
+         end if
          
          if  tCard is "surprise_audio" then
             if the visible of grp "downloadSelection"  then
@@ -98,9 +118,10 @@ on mouseup
             put "listen-file" into tCard
          end if
          
-         AddJournalEntry
+         
          moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
+         AddJournalEntry
          dialog_CustomMsg "Saved to Journal"
          
          break
