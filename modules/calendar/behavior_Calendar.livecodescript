@@ -63,6 +63,7 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
       put vObjectSplit("VEvent", tICSPath)  into tCalendarArrayA -- much faster to read file directly
       if tCalendarArrayA[1] contains "https:" then -- web 404 or redirect
          doAnswer "Could not retrieve calendar file.","OK"
+         -------
          delete file tICSPath
          exit to top
       end if
@@ -96,6 +97,7 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
       end repeat
       --   PUT THE MILLISECONDS - TSTART -- 335 ms
       put arrayEncode(sHinduCalendarA) into url ("binfile:" & tBinPath)
+      ------
       delete file tICSPath
       deleteOldCalendars
    end if
@@ -104,7 +106,7 @@ end parseUserICSfile
 function getCityList
    local tCitiesListFile
    put path_Modules() & "calendar/latestCityList.txt" into tCitiesListFile
-   return ( url ("file:" & tCitiesListFile ))
+   return  ( url ("file:" & tCitiesListFile )) 
 end getCityList
 
 function convertCityToURL pCityName,pYearRange
@@ -128,8 +130,8 @@ function convertCityToURL pCityName,pYearRange
    if pCityName contains "Kapaa" then
       put "Hawaii" into pCityName
    end if 
-   # nickname for kadavul is kealia
-   if pCityName contains "Kealia" then
+   # nickname for kadavul is Kealiasa
+   if pCityName contains "Kealiasa HI" then
       replace "https://www.minimela.com/panchangam/" with "http://dev.himalayanacademy.com/media/apps/panchangam/" in tURL
    end if
    replace space with "_" in pCityName
@@ -655,17 +657,34 @@ command fetchFile
    end if
 end fetchFile
 
+function getCityName
+   return sCityName
+end getCityName
+
+
 on showLocals
    get sHinduCalendarA
    get sCityName
    breakpoint
 end showLocals
 
-on clearLocals
+command AddJournalEntry
+   local tCdName, tData, tTitle
+   put 1 into tData["card"]
+   put "Hindu Calendar, " & sCityName into tTitle
+   Journal_RecordEntry "calendar",tTitle,tData -- send to journal
+end AddJournalEntry
+   
+   on cleanUpGui
+   put empty into fld "cityDisplay"
+   put empty into fld "monthDisplay"
+   put empty into fld "allDataForOneDay"
+   put empty into fld "current_days"
+   
    put empty into sHinduCalendarA
    put empty into sCityName
    put empty into sUserCalendarA
-end clearLocals
+end cleanUpGui
 
 ## JG: compare load times:
 ## JG: read from file above is fastest

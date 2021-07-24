@@ -4,6 +4,7 @@ Alsea OR
 Amarillo TX
 Anchorage AK
 Asheville NC
+Ashland NH
 Athens GA
 Atlanta GA
 Auburn AL
@@ -35,6 +36,9 @@ Cincinnati OH
 Cleveland OH
 Columbia SC
 Columbus OH
+Concord CA
+Concord NH
+Crown Point NY
 Dallas TX
 Davenport IA
 Denver CO
@@ -55,7 +59,7 @@ Gainesville FL
 Greenville SC
 Hartford CT
 Hattiesburg MS
-Kapaa HI
+HawaII
 Honolulu HI
 Houston TX
 Indianapolis IN
@@ -66,6 +70,7 @@ Knoxville TN
 Lanham MD
 Lansing MI
 Las Vegas NV
+Kealiasa HI
 Los Angeles CA
 Louisville KY
 Madison WI
@@ -75,16 +80,19 @@ Michigan City IN
 Midland TX
 Milwaukee WI
 Minneapolis St Paul MN
+Missoula MT
 Mobile AL
 Modesto CA
 Monroe NJ
 Montpelier VT
+Nashua NH
 Nashville TN
 New Orleans LA
 New York City NY
 Newport Beach CA
 Normal IL
 Norman OK
+North Haverhill NH
 Nutley NJ
 Omaha NE
 Orlando FL
@@ -106,12 +114,14 @@ San Antonio TX
 San Diego CA
 San Francisco CA
 San Jose CA
+San Juan PR
 San Ramon CA
 Santa Barbara CA
 Santa Clara CA
 Santa Fe NM
 Scottsdale AZ
 Seattle WA
+Sioux Falls SD
 Spokane WA
 Springfield OR
 St Helena CA
@@ -119,13 +129,13 @@ St Louis MO
 Stamford CT
 Syracuse NY
 Tampa FL
+Tempe AZ
 Volcano HI
 Walnut Creek CA
 Washington DC
 Wheaton IL
 Whittier CA
-Winter Garden FL
-Kealia HI
+Winter Garden F
 Abu Dhabi Ae
 Abu Road India
 Adana Turkey
@@ -135,6 +145,7 @@ Al-Khubar Saudi Arabia
 Almaty Kazakhstan
 Ambala India
 Amsterdam Netherlands
+Anuradhapura Sri Lanka
 Athens Greece
 Auckland New Zealand
 Bali Indonesia
@@ -280,11 +291,10 @@ Udaipur India
 Vancouver Canada
 Varanasi India
 Vienna Austria
-Vizianagaram India
 Vijayawada India
+Vizianagaram India
 Warsaw Poland
 Winnipeg Mb Canada
 Winterthur Switzerland
 Yangon Myanmar
 Yogyakarta Indonesia
-Zagreb Croatia
