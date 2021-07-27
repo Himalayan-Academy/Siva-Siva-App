@@ -37,27 +37,30 @@ We can now experiment with:
 
 global sConfigA
 local LocalArray,sHome,sOnlineStatus,sNow,sThen
+local sInitialized = false
 
 --> Events
 
 on preOpenStack
-   --breakpoint
-   set the fullscreenmode of this stack to "showAll"
-   -- start using this stack
-   # duplicates what's on the lib_SivaSiva, but we need to fire right away
-   --breakpoint
-   put the seconds into sThen
-   put specialFolderPath("resources") into sHome
-   logging "init_AppConfiguration"
-   init_AppConfiguration -- load all libraries and configure app
-   pass preOpenStack
+   if not sInitialized then
+      set the fullscreenmode of this stack to "showAll"
+      -- start using this stack
+      # duplicates what's on the lib_SivaSiva, but we need to fire right away
+      --breakpoint
+      put the milliseconds into sThen
+      put specialFolderPath("resources") into sHome
+      logging "---- init_AppConfiguration ----"
+      init_AppConfiguration -- load all libraries and configure app
+      put true into sInitialized
+      pass preOpenStack
+   end if
 end preOpenStack
 
 command init_AppConfiguration
-   local someJSON, tPlatform, tAction, pData
+   local someJSON, tPlatform, tAction, pData, tStart
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
-   
-   if the uBuildMode of this stack is "release" then
+   put the milliseconds into tStart
+   if the environment is not "development" then
       set the logMessage to empty
    else
       set the logMessage to "log"
@@ -69,7 +72,9 @@ command init_AppConfiguration
    # we have simple path scripts in the main backscript.  We load the first
    # this till deprecate all of David codes non-sense code in 
    
-   --   logging "finish loading json"
+   logging "finish loading json"
+   
+   init_LoadStackFilesFromConfiguration
    
    start using stack "lib_SivaSiva"
    
@@ -127,6 +132,7 @@ command init_AppConfiguration
    else
       ntDisableNetworkTracer
    end if
+   logging "---- time spent initializing app:" && (the milliseconds - tStart) &"ms ----"
 end init_AppConfiguration
 
 
@@ -139,7 +145,7 @@ command init_LoadStackFilesFromConfiguration
    put sConfigA["stackfiles"] into tStackFilesA
    repeat for each key k in tStackFilesA
       put tStackFilesA[k] into tTempA
-      if tTempA["name"] is not in the stackfiles of stack "Siva-Siva-App" then
+      if (tTempA["name"] & comma) is not in the stackfiles of stack "Siva-Siva-App" then
          put tTempA["name"]&comma& tTempA["file"] & cr after tBuffer
       end if
    end repeat
@@ -193,7 +199,7 @@ command  init_LoadLibraries
    filter items of stackNames without"animationEngine*" # should load onlyl when when needed
    
    repeat for each item stackName in stackNames
-      logging stackName
+      logging "loading" && stackName
       if there is a stack stackName then
          start using stack stackName
       else
@@ -409,13 +415,61 @@ command Logging pLogMessage
    local tInterval
    
    put the milliseconds into sNow
-   put sNow-sThen into tInterval
-   put pLogMessage  &&  sNow  & " : "  &  tInterval & cr after sConfigA["log"]
+   if sThen is not a number then
+      put sNow into sThen
+   end if
+   put sNow - sThen into tInterval
+   log (pLogMessage  &&  "(+"  &  tInterval &")")
    put sNow into sThen
 end logging
 
+-- this version is only available during intialization.
+private command log pLog 
+   set the itemdel to slash
+   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
+   
+   set the itemdel to comma
+   put parseContext(line -2 of the executionContexts) into tContextA
+   if tContextA["handler"] is "Logging" then
+      put parseContext(line -3 of the executionContexts) into tContextA
+   end if
+   if tContextA["behavior"] is empty then
+      put tContextA["object"] into tObject
+   else
+      put tContextA["behavior"] into tObject
+   end if
+   put tContextA["handler"] into tHandler
+   put tContextA["line"] into tLineNumber
+   
+   put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+end log
 
-
+-- this function is here because it is needed for initialization.
+private function parseContext pContextLine
+   local tKey = "object", tContextA
+   
+   repeat for each item tItem in pContextLine
+      if tContextA[tKey] is not empty then
+         put comma after tContextA[tKey]
+      end if
+      put tItem after tContextA[tKey]
+      
+      switch tKey
+         case "object"
+            if exists(tContextA[tKey]) then
+               put "handler" into tKey
+            end if
+            break
+         case "handler"
+            put "line" into tKey
+            break
+         case "line"
+            put "behavior" into tKey
+            break
+      end switch
+   end repeat
+   return tContextA
+end parseContext
 
 
 

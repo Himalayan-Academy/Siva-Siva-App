@@ -1,0 +1,15 @@
+﻿script "lib_DevelopmentTools"
+on libraryStack
+   if the target is not me then
+      pass libraryStack
+   end if
+   
+   send updateUI to me in 500 milliseconds
+end libraryStack
+
+on updateUI
+   if the environment is "development" then
+      --      go stack "DevelopmentTools"
+      put "development being called"
+   end if
+end updateUI

@@ -20,12 +20,6 @@ end ___INIT
 on libraryStack
    mobileRectSet
    fetchNavigationMap
-   if the uBuildMode of  stack "Siva-Siva-App" is "release" then
-      set the logMessage to empty
-   else
-      set the logMessage to "log"
-   end if
-   
 end libraryStack
 
 # disable ntinfo
@@ -843,10 +837,10 @@ command copyLogControl
    end if
 end copyLogControl
 
-on log pLog 
+on logOld pLog 
    put cr & pLog before tLogResult # latest on top
    showLogging
-end log
+end logOld
 
 on clearLog
    put empty into tLogResult
@@ -860,6 +854,52 @@ on showLogging
    end if 
 end showLogging
 
+command log pLog 
+   set the itemdel to slash
+   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
+   
+   set the itemdel to comma
+   put parseContext(line -2 of the executionContexts) into tContextA
+   if tContextA["behavior"] is empty then
+      put tContextA["object"] into tObject
+   else
+      put tContextA["behavior"] into tObject
+   end if
+   put tContextA["handler"] into tHandler
+   put tContextA["line"] into tLineNumber
+   
+   put textEncode(the merge of "[[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+end log
+
+function parseContext pContextLine
+   local tKey = "object", tContextA
+   
+   repeat for each item tItem in pContextLine
+      if tContextA[tKey] is not empty then
+         put comma after tContextA[tKey]
+      end if
+      put tItem after tContextA[tKey]
+      
+      switch tKey
+         case "object"
+            if exists(tContextA[tKey]) then
+               put "handler" into tKey
+            end if
+            break
+         case "handler"
+            put "line" into tKey
+            break
+         case "line"
+            put "behavior" into tKey
+            break
+      end switch
+   end repeat
+   return tContextA
+end parseContext
+
+on errorDialog pExecutionError
+   log "ERROR:" && line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors
+end errorDialog
 
 
 
