@@ -185,15 +185,16 @@ end showBrowser
 
 on journal_AddEntry
    
-   local pData, tTitle, tOutput, 
-   local tParseURL, tLastItemInURL, tWords
+   local tDataA, tTitle, tOutput, 
+   local tParseURL, tLastItemInURL, tWords, tURL
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
    # we get the title from the original mouseup of the portal screen
    
+   put the URL of widget "body" into tURL
    
-   if sBrowserURL contains "YouTube" then
+   if tURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
       # which are appears on this sub nav list.
       # for now, this implemention of Video is contrain to that list
@@ -204,46 +205,34 @@ on journal_AddEntry
       # if URL ends with "/web/" it is a "book"
       # otherwise we have to parse the URL to get tTitle
       
-      put browser_GetLastURL() into pData["url"] 
-      put  pData["url"] into tParseURL
+      put tURL into tDataA["url"] 
       
-      set the  itemdelimiter to "/"
-      put item -1 of tParseURL into tLastItemInURL 
-      
-      if tParseURL contains "/web/" then
-         # book
-         put getJournalData() into tTitle
-         
-         # we get the title plus the url for "chapter"
-         #  for "chapter" in the book
-         
-         if tLastItemInURL <> "" then 
-            put tTitle &", " &  tLastItemInURL into tTitle
-         end if
-         
-      else
-         put "" into tTitle
-         
-         replace "-"  with " " in tLastItemInURL 
-         replace "_" with " " in tLastItemInURL 
-         
-         put the number of words of tLastItemInURL into tWords
-         
-         repeat with x  = 1 to tWords
-            put toUpper(char 1 of word  x of tLastItemInURL) into tWords
-            delete char 1 of word  x of tLastItemInURL
-            put tWords &  word  x of tLastItemInURL into  tWords
-            put tWords & " " after tTitle 
-         end repeat
-         delete char -1 of tTitle
+      if not matchText(the htmltext of widget "body", "<title>(?s)(.*)(?s)</title>", tTitle ) then
+         put "Unknown title" into tTitle
       end if
       
+      repeat while char 1 of tTitle is among the items of format("\t,\n, ,\r")
+         delete char 1 of tTitle
+      end repeat
+      
+      repeat while char -1 of tTitle is among the items of format("\t,\n, ,\r")
+         delete char -1 of tTitle
+      end repeat
+      
+      set the  itemdelimiter to "/"
+      put item -1 of tURL into tLastItemInURL 
+      
+      if tURL contains "/web/" and tLastItemInURL <> "" then
+         put tTitle &", " &  tLastItemInURL into tTitle         
+      end if
    end if
    
+   answer tURL
+   
    if sLandscapeOnly then
-      Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
+      Journal_RecordEntry "view_BrowserLandscape",tTitle,tDataA  
    else
-      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,tDataA   
    end if
    
    dialog_CustomMsg "Saved to Journal"
