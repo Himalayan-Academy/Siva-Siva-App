@@ -218,18 +218,6 @@ command assignHomeLocations
    end repeat
 end assignHomeLocations
    
-command loadNewBgImg -- change img for each new puzzle
-   -- called by createWordPuzzle
-   --if not (the lockscreen)  then lock screen
-   local pControl, tFolderPath, tFiles, tImgPath
-   ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
-   put the long id of img "bgImage" into pControl
-   put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
-   put files(tFolderPath) into tFiles
-   put any line of tFiles into tImgPath
-   set the filename of img "bgImage" to tFolderPath&tImgPath
-   --if (the lockscreen)  then unlock screen
-end loadNewBgImg
 
 on checkLevel
    put sCurlevel
