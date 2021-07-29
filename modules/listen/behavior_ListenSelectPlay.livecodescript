@@ -229,6 +229,14 @@ on mouseup
          showBusyIndicator false
          stopPlayer
          break
+         
+         # Search 
+      case "Inspired Talks"
+         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
+         break
+      case "Songs - Chants"
+         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
+         break
    end switch
    
 end mouseup
@@ -257,7 +265,7 @@ command switchAudioUi pAudioUI
          break
          
          # song UI   
-      case  "songs" 
+      case  "Songs - Chants" 
          hide grp "author"
          show grp "titleDescription"
          show grp "songProperties"
