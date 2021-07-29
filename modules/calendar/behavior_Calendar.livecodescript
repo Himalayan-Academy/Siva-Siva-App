@@ -34,6 +34,83 @@ local sCityName -- city name as used in URL
 # set the cCityList of fld "cityList" to empty
 # 
 
+on preopencard
+   if isMobile() then    
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
+   hide fld "Downloading" 
+end preopencard
+
+on opencard
+   initCalendar
+   audioIsRunning  
+   pass opencard
+end opencard
+
+on resizeStack
+   lock screen
+   setCardCoords
+   updateUI
+   unlock screen
+end resizeStack
+
+on updateUI
+   local tFooter, tHeader, tRect, tControl, tWidth, tLoc
+   put CardWidth() into tWidth
+   
+   put the long id of grp "headerGrp" into tHeader
+   set the width of tHeader to CardWidth()
+   topCenterMe tHeader
+   
+   put the long id of grp "footerNavigation" into tFooter
+   send "updateUI" to tFooter
+   
+   set the rect of grc "calDisplayBkgnd" to \
+         (0,0,tWidth,the top of tFooter)
+   set the rect of grp "main-calendar-view" to \
+         (14,the bottom of tHeader + 10,tWidth - 14,the top of tFooter - 10)
+   
+   put the long id of grp "city-picker-view" into tControl
+   put the loc of tControl into tLoc
+   put horizCenter() into item 1 of tLoc
+   set the loc of tControl to tLoc
+end updateUI
+
+command initCalendar
+   local tYearRange, tCityName, tICSExists
+   put calcYearRange() into tYearRange
+   put getPref("preferences/modules/calendar/city") into tCityName -- empty if new launch
+   put (there is a file pathToCalendarICS(tYearRange,tCityName,"bin")) into tICSExists
+   set the vis of grp "main-calendar-view" of me to tICSExists
+   set the vis of grp "city-picker-view" of me to not tICSExists
+   set the vis of fld "cityName" of grp "city-picker-view" of me to tICSExists
+   if tICSExists then
+      show grp "main-calendar-view"
+      show grp "headerGrp"
+      put tCityName into fld "cityDisplay" of grp "headerGrp" of me
+      parseUserICSfile tCityName,tYearRange -- load existing calendar
+      insertDayInfo the date
+   else -- init
+      hide grp "main-calendar-view"
+      hide grp "headerGrp"
+      hide btn "Submit" of grp "city-picker-view" of me
+      put "" into fld "cityName" of grp "city-picker-view" of me
+      put tCityName into fld "cityDisplay" of grp "headerGrp" of me
+   end if
+end initCalendar
+
+on mouseUp -- mobile: dismiss grp
+  if the vis of grp "citySearchGrp" then send "showCityList false" to grp "citySearchGrp"
+end mouseUp
+
+on keyboardDeactivated -- if user dismisses keyboard during search, this allows them to bring it back by tapping the fld
+   focus on nothing
+end keyboardDeactivated
+
+
+
+
+
 command parseUserICSfile  pCityName,pYearRange -- loads the calendar script local
    local tBinPath, tICSPath, tURL, tCalendarArrayA, tDayNo, tEvent, tMoonDay, tDate, tIDel, tRawDescription
    -- pCityName = readable English name from city list
@@ -63,6 +140,7 @@ command parseUserICSfile  pCityName,pYearRange -- loads the calendar script loca
       put vObjectSplit("VEvent", tICSPath)  into tCalendarArrayA -- much faster to read file directly
       if tCalendarArrayA[1] contains "https:" then -- web 404 or redirect
          doAnswer "Could not retrieve calendar file.","OK"
+         hide fld "Downloading" 
          -------
          delete file tICSPath
          exit to top
@@ -130,10 +208,10 @@ function convertCityToURL pCityName,pYearRange
    if pCityName contains "Kapaa" then
       put "Hawaii" into pCityName
    end if 
-   # nickname for kadavul is Kealiasa
-   if pCityName contains "Kealiasa HI" then
-      replace "https://www.minimela.com/panchangam/" with "http://dev.himalayanacademy.com/media/apps/panchangam/" in tURL
-   end if
+   --   # nickname for kadavul is Kealiasa
+   --   if pCityName contains "Kealiasa HI" then
+   --      replace "https://www.minimela.com/panchangam/" with "http://dev.himalayanacademy.com/media/apps/panchangam/" in tURL
+   --   end if
    replace space with "_" in pCityName
    put pCityName & ".ics" after tURL
    put toLower(tURL) into tURL
@@ -668,6 +746,10 @@ on showLocals
    breakpoint
 end showLocals
 
+on journalResume pDataA, pEntryA
+   go to card "main-calendar"
+end journalResume
+
 command AddJournalEntry
    local tCdName, tData, tTitle
    put 1 into tData["card"]
@@ -675,16 +757,24 @@ command AddJournalEntry
    Journal_RecordEntry "calendar",tTitle,tData -- send to journal
 end AddJournalEntry
    
-   on cleanUpGui
+on cleanUpGui
    put empty into fld "cityDisplay"
    put empty into fld "monthDisplay"
    put empty into fld "allDataForOneDay"
    put empty into fld "current_days"
+   put empty into fld "cityName"
+   hide group "headerGrp"
+   hide btn "submit"
+   
    
    put empty into sHinduCalendarA
    put empty into sCityName
    put empty into sUserCalendarA
 end cleanUpGui
+
+on closeStack
+   portal_SetLastStack "calendar"
+end closeStack
 
 ## JG: compare load times:
 ## JG: read from file above is fastest

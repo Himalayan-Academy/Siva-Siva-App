@@ -61,6 +61,7 @@ Hartford CT
 Hattiesburg MS
 HawaII
 Honolulu HI
+Kadavul HI
 Houston TX
 Indianapolis IN
 Irvine CA
@@ -70,7 +71,6 @@ Knoxville TN
 Lanham MD
 Lansing MI
 Las Vegas NV
-Kealiasa HI
 Los Angeles CA
 Louisville KY
 Madison WI
