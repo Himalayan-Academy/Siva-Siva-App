@@ -53,6 +53,12 @@ on mouseup
             go card "listen-collection"
          else if tCard is   "listen-file" then
             unlock screen
+            
+            if fld "title-label" of card "listen-browse" contains "Search" then
+               go to card "listen-browse"
+               exit to top
+            end if
+            
             put portal_GetLastStack() into tLastStack
             if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
                go to card "listen-collection"
@@ -179,7 +185,3 @@ on resizeControl
    set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
-
-on socketTimeout pSocketID
-   
-end socketTimeout

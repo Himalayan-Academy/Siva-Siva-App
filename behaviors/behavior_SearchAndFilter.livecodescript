@@ -48,10 +48,6 @@ on executeSearch pTarget
    
 end executeSearch
 
-command setFindString
-   put fld "searchstring" into sStringToFind  
-   put (line 1 of sStringToFind) into sStringToFind 
-end setFindString
 
 ------------------------------------------------------------------------
 #  UNIQUE SEARCHES FOR DIFFERENT MODULES ARE ADDED HERE
@@ -65,44 +61,59 @@ command searchPlayList  # Search Audio
    local tAllCollection, pWhichClass, pFilterListQueryA
    local tDeity, tGenre, tTextTarget, pBrowseHeader, tAuthor
    
-   
-   
-   setFindString
    # we must get the original collection data
    # determine whether to it is an Inspired Talk or if it in a Songs or chant
    # We not do search audio books.
+   
    put  getCollectionsJson() into tAllCollection
    put the hilitedbuttonname of grp "collectionChoice" into pWhichClass
    put "YES" into pFilterListQueryA["approved_for_public"]
+   
+   put fld "searchstring" into sStringToFind  
+   put (line 1 of sStringToFind) into sStringToFind 
+   
    switch
       
-      # songs
+      # songs/chants
       case  (pWhichClass= "Songs") # unique seach criteria:
+         
          put "audio/song" into pFilterListQueryA["media_type"]
-         put the hilitedbuttonname of grp "deity"  into tDeity
-         if tDeity is not "All Collections" then
-            put tDeity into pFilterListQueryA["deity"]
-         end if
-         put the hilitedbuttonname of grp "genre" into tGenre
-         if tGenre is not "All Genres" then
-            put tGenre into pFilterListQueryA["genre"]
-         end if
-         put the hilitedButtonName of grp "titleDescription" into tTextTarget
-         if tTextTarget = "Subtitle" then
-            put "sub_title" into tTextTarget # has to match the dBase column name
-         end if
+         
+         put the hilitedButtonName of grp "Title" into tTextTarget
+         
          if the hilite of btn "artists" is true then 
             put "artists" into tTextTarget
          end if
          if (sStringToFind is empty) OR (tTextTarget is empty) then
-            put "Pick Title, Subtitle, Artists..." into fld "searchString"
-            wait 2 seconds
+            put "Pick a Title or Artists" into fld "searchString"
+            wait 1500 milliseconds
             put empty into fld "searchString"
             exit to top
          end if
          
          put sStringToFind into pFilterListQueryA[tTextTarget]    
-         put sStringToFind &&tDeity && tGenre into pBrowseHeader
+         --put sStringToFind &&tDeity && tGenre into pBrowseHeader
+         
+         break
+         
+      case  (pWhichClass= "Chants") # unique seach criteria:
+         
+         put "audio/chant" into pFilterListQueryA["media_type"]
+         
+         put the hilitedButtonName of grp "Title" into tTextTarget
+         
+         if the hilite of btn "artists" is true then 
+            put "artists" into tTextTarget
+         end if
+         if (sStringToFind is empty) OR (tTextTarget is empty) then
+            put "Pick a Title or Artists" into fld "searchString"
+            wait 1500 milliseconds
+            put empty into fld "searchString"
+            exit to top
+         end if
+         
+         put sStringToFind into pFilterListQueryA[tTextTarget]    
+         --put sStringToFind &&tDeity && tGenre into pBrowseHeader
          
          break
          
@@ -116,13 +127,10 @@ command searchPlayList  # Search Audio
          if tAuthor contains "Bodhinatha" then 
             put  "Satguru Bodhinatha Veylanswami" into pFilterListQueryA["author"]
          end if
-         put the hilitedButtonName of grp "titleDescription" into tTextTarget
-         if tTextTarget = "Subtitle" then
-            put "sub_title" into tTextTarget # has to match the dBase column name
-         end if
+         
          if (sStringToFind is empty) OR (tTextTarget is empty) then
-            put "Enter title, subtitle..." into fld "searchString"
-            wait 2 seconds
+            put "Enter Title" into fld "searchString"
+            wait 1500 milliseconds
             put empty into fld "searchString"
             exit to top
          else
