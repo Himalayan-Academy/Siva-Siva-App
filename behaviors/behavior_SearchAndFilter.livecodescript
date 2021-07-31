@@ -34,7 +34,7 @@
 
 ###################
 # There short always be string to finder 
-local  sStringToFind  
+local  sStringToFind
 local sSearchClass,sCallContext,sPlaylistQueryA
 
 on executeSearch pTarget
@@ -59,7 +59,7 @@ end executeSearch
 
 command searchPlayList  # Search Audio
    local tAllCollection, pWhichClass, pFilterListQueryA
-   local tDeity, tGenre, tTextTarget, pBrowseHeader, tAuthor
+   local tTextTarget, pBrowseHeader, sBrowseHeader, tAuthor
    
    # we must get the original collection data
    # determine whether to it is an Inspired Talk or if it in a Songs or chant
@@ -71,6 +71,9 @@ command searchPlayList  # Search Audio
    
    put fld "searchstring" into sStringToFind  
    put (line 1 of sStringToFind) into sStringToFind 
+   
+   # we are not coming to "listen-file" from a My Menu | Portal
+   portal_SetMyMenu false
    
    switch
       
@@ -119,13 +122,21 @@ command searchPlayList  # Search Audio
          
          # Talks
       case (pWhichClass contains "Inspired Talks")
+         
+         put "audio/inspiredtalk" into pFilterListQueryA["media_type"]
+         
          put the hilitedbuttonname of grp "author"  into tAuthor
-         put "inspiredtalk" into pFilterListQueryA["media_type"]
+         
          if tAuthor contains "Gurudeva" then 
             put  "Satguru Sivaya Subramuniyaswami" into pFilterListQueryA["author"]
          end if
          if tAuthor contains "Bodhinatha" then 
             put  "Satguru Bodhinatha Veylanswami" into pFilterListQueryA["author"]
+         end if
+         
+         
+         if the hilite of btn "Title" is true then 
+            put "Title" into tTextTarget
          end if
          
          if (sStringToFind is empty) OR (tTextTarget is empty) then
@@ -145,6 +156,7 @@ command searchPlayList  # Search Audio
    # will not access these in the search
    # we use "none" to be explicit
    put "Search:" && sStringToFind into pBrowseHeader
+   put pBrowseHeader into sBrowseHeader
    playList_fetchData "none","none", pFilterListQueryA,pBrowseHeader
    
 end searchPlayList

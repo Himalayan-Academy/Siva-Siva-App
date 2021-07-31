@@ -20,7 +20,7 @@
 ---------------------------------------------------------------------
 global gConfigA, gCardName
 local sSelectedItemA, sSelectedURL, sRemoteURL, sSelectNum, sLastTarget, sLineNum
-local sTimeStamp, sSelectionsA
+local sTimeStamp, sSelectionsA, sBrowseHeader
 local sDownloadedAudioA
 
 
@@ -54,6 +54,7 @@ on mouseup
          break
       case "listen-browse"
          go to card "listen-browse"
+         
          put "listen-browse" into gCardName
          break
       case "my-audio-label"
@@ -234,9 +235,13 @@ on mouseup
       case "Inspired Talks"
          switchAudioUI(the hilitedButtonName of grp "collectionChoice")
          break
-      case "Songs - Chants"
+      case "Songs"
          switchAudioUI(the hilitedButtonName of grp "collectionChoice")
          break
+      case "Chants"
+         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
+         break
+         
    end switch
    
 end mouseup
@@ -251,24 +256,32 @@ command switchAudioUi pAudioUI
    put pAudioUI into tUI
    switch tUI
       case "hideUI"
-         hide grp "titleDescription"
+         hide grp "Titlen"
          hide grp "author"
-         hide grp "songproperties"
+         hide grp "Artists"
          hide grp "searchControls"
          set the hilitedButton of group "collectionChoice" to empty
          break
       case  "Inspired Talks" 
-         hide grp "songProperties"
+         hide grp "Artists"
          show grp "author" 
-         show grp "titleDescription"   
+         show grp "Title"   
          show grp "searchControls"
          break
          
          # song UI   
-      case  "Songs - Chants" 
+      case  "Songs" 
          hide grp "author"
-         show grp "titleDescription"
-         show grp "songProperties"
+         show grp "Title"
+         show grp "Artists"
+         set the hilited of btn "Title" to true -- group "titleDescription" to empty
+         set the hilited of btn "Artists" to false
+         show grp "searchControls"
+         break
+      case  "Chants" 
+         hide grp "author"
+         show grp "Title"
+         show grp "Artists"
          set the hilited of btn "Title" to true -- group "titleDescription" to empty
          set the hilited of btn "Artists" to false
          show grp "searchControls"

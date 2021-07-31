@@ -799,9 +799,9 @@ on  playlist_Instantiate
    
    show fld "audioList"
    
+   portal_SetMyMenu false
    
    # here is where we have to check to see if any files are stored locally or not
-   
    
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
@@ -811,6 +811,9 @@ on  playlist_Instantiate
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
 
+function getBrowseHeaderText
+   return sBrowseHeader
+end getBrowseHeaderText
 
 command setSelectNumber pNum
    put pNum into sSelectNum
@@ -1238,6 +1241,9 @@ on journalResume pDataA, pEntry
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
    local tURL, tAudioPlayer   
    local tCard
+   
+   # we to set the coming of My Menu 
+   # to make it is done 
    
    if isMobile() then
       deleteAllMobileControls

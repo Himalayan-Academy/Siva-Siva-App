@@ -38,6 +38,7 @@ local LocalArray, sCurrentPortal, sLastStack, sLaunchStack, sLastLinkTitle, sNav
 local sLastModulesList, sOrientation, sDestinationCardOrStack, sDisplayLabel
 
 
+
 ------------- Navigation section -------------------
 # BR: this whole set of handlers probably should move to a separate lib dedicated to navigation
 # or all the way "up" to the primary back script: lib_SivaSiva
@@ -332,3 +333,11 @@ function portal_GetModulesList stackName
    return sLastModulesList  
 end portal_getModulesList
 
+local tYesOrNo
+command portal_SetMyMenu tMyMenu
+   put tMyMenu into tYesOrNo
+end portal_SetMyMenu
+
+function portal_GetMyMenu
+   return tYesOrNo
+end portal_GetMyMenu

@@ -26,8 +26,9 @@ end preOpenControl
 
 on mouseup
    local tTarget, tShareControl, tControl, tCard
-   local tBrowserExists, tBrowser, tBrowserRect
+   local tBrowserExists, tBrowser, tBrowserRect, sBrowseHeader
    local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
+   local tMyMenuYesNo
    
    lock screen
    put short name of the target into tTarget
@@ -53,14 +54,16 @@ on mouseup
             go card "listen-collection"
          else if tCard is   "listen-file" then
             unlock screen
+            put getBrowseHeaderText() into sBrowseHeader
             
-            if fld "title-label" of card "listen-browse" contains "Search" then
-               go to card "listen-browse"
-               exit to top
-            end if
+            go to card "listen-browse"
+            put sBrowseHeader into fld "title-label"
             
             put portal_GetLastStack() into tLastStack
-            if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
+            put portal_GetMyMenu() into tMyMenuYesNo
+            
+            if (tLastStack = "Journal") OR  (tMyMenuYesNo = true) then
+               --if (tLastStack = "Journal")  then
                go to card "listen-collection"
             else 
                if fld "FilesOnDisk" of card "listen-delete-file" is empty then
