@@ -146,12 +146,15 @@ end goMainMenu
 command goMyMenu
    local aTreeA, tMenuItem, pModule, pData
    
+   portal_SetMyMenu true
+   
    # User want to switch menus
    # avoid stepping thru unecessarily
    
    if sTarget = "(Back to Main Menu)" then
       set arraydata of widget "globalNavTree" to (the uMainMenuArray of me)
       set the uWhichMenu of me to "mainMenu"
+      portal_SetMyMenu false
       exit goMyMenu
    end if
    

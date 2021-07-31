@@ -26,8 +26,9 @@ end preOpenControl
 
 on mouseup
    local tTarget, tShareControl, tControl, tCard
-   local tBrowserExists, tBrowser, tBrowserRect
+   local tBrowserExists, tBrowser, tBrowserRect, sBrowseHeader
    local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
+   local tMyMenuYesNo
    
    lock screen
    put short name of the target into tTarget
@@ -53,8 +54,16 @@ on mouseup
             go card "listen-collection"
          else if tCard is   "listen-file" then
             unlock screen
+            put getBrowseHeaderText() into sBrowseHeader
+            
+            go to card "listen-browse"
+            put sBrowseHeader into fld "title-label"
+            
             put portal_GetLastStack() into tLastStack
-            if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
+            put portal_GetMyMenu() into tMyMenuYesNo
+            
+            if (tLastStack = "Journal") OR  (tMyMenuYesNo = true) then
+            
                go to card "listen-collection"
             else 
                if fld "FilesOnDisk" of card "listen-delete-file" is empty then
@@ -67,7 +76,7 @@ on mouseup
             go to card "listen-browse"
             put "listen-browse" into tCard
          else if tCard is "listen-search" then
-            go card "listen-browse"
+            go card "listen-collection"
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
@@ -180,6 +189,7 @@ on resizeControl
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
 
-on socketTimeout pSocketID
+
+on savingStandalone
    
-end socketTimeout
+end savingStandalone
