@@ -799,6 +799,7 @@ on  playlist_Instantiate
    
    show fld "audioList"
    
+   portal_SetLastStack "Listen"
    portal_SetMyMenu false
    
    # here is where we have to check to see if any files are stored locally or not
@@ -1244,6 +1245,8 @@ on journalResume pDataA, pEntry
    
    # we to set the coming of My Menu 
    # to make it is done 
+    portal_SetMyMenu false
+   
    
    if isMobile() then
       deleteAllMobileControls

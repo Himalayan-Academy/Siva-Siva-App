@@ -69,15 +69,7 @@ on mouseup
    put the short name of the target into sTarget
    
    switch sTarget
-      case "backArrow"
-         if (the visible of graphic "puzzleFrame")  then
-            up_InfoPanel
-         else 
-            clearImageTiles
-            portal_GoStack ("Siva-Siva-Portal")
-         end if
-         break
-         
+      
       case "Make a Puzzle"
          down_InfoPanel
          fetchImage sRealm
@@ -350,7 +342,6 @@ on checkCompletion
       fireCompletedAction sMsg
    end if 
    set the layer of grp "makeTiles" to top
-   set the layer of  btn "backArrow" to top
 end checkCompletion 
 
 command fireCompletedAction sMsg
@@ -457,7 +448,7 @@ end resizeStack
 
 on updateUI
    local tTitle, tInfoPanel, tStatus
-   local tBackArrow, tControl, tMakeTiles
+   local tControl, tMakeTiles
    
    switch sCard
       
