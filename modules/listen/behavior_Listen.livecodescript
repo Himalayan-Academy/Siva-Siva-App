@@ -1245,7 +1245,7 @@ on journalResume pDataA, pEntry
    
    # we to set the coming of My Menu 
    # to make it is done 
-    portal_SetMyMenu false
+    portal_SetMyMenu true
    
    
    if isMobile() then

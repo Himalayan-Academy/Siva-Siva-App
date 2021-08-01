@@ -53,7 +53,7 @@ on mouseup
          else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
          else if tCard is   "listen-file" then
-            unlock screen
+            
             put getBrowseHeaderText() into sBrowseHeader
             
             go to card "listen-browse"
@@ -63,7 +63,7 @@ on mouseup
             put portal_GetMyMenu() into tMyMenuYesNo
             
             if (tLastStack = "Journal") OR  (tMyMenuYesNo = true) then
-            
+               
                go to card "listen-collection"
             else 
                if fld "FilesOnDisk" of card "listen-delete-file" is empty then
@@ -72,6 +72,7 @@ on mouseup
                   go card "listen-my-audio"
                end if
             end if
+            unlock screen
          else if tCard is  "listen-delete-file" then
             go to card "listen-browse"
             put "listen-browse" into tCard
