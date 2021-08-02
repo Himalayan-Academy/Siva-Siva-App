@@ -326,12 +326,14 @@ end setTileGlow
 
 on checkCompletion 
    local  tTargetLocs,tImgLocs
-   
+  
    put the uTileList of this card into sTiles 
    repeat for each line x in sTiles 
       put the uTileLocation of img x & cr after tTargetLocs 
       put the loc of img x & cr after tImgLocs 
    end repeat 
+   
+   --breakpoint
    sort tTargetLocs numeric by item 2 of each 
    sort tImgLocs numeric by item 2 of each 
    sort tTargetLocs numeric by item 1 of each 
@@ -345,9 +347,15 @@ on checkCompletion
 end checkCompletion 
 
 command fireCompletedAction sMsg
+   local tStatus
+   --breakpoint
    put sMsg into fld "status"
    set the layer fld "status" to top
    show fld "status"
+   
+   put the long id of fld "status" into tStatus
+   bottomCenterMe tStatus, 30
+   
    wait 2 second 
    hide fld "status"  with visual effect "dissolve" very slowly
    put empty into fld "status"
