@@ -7,6 +7,7 @@ on preOpenStack
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
       iphoneSetAudioCategory "playback" 
+      mobileShowStatusBar
    end if
 end preOpenStack
 
