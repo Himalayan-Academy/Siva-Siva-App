@@ -3,7 +3,7 @@ local sTargetOwner, sTarget,sPuzzleLevel, sCard, sControl
 local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
-local sJournalData, sRealm
+local sJournalData, sRealm, 
 
 on preOpenStack
    if isMobile() then    
@@ -63,7 +63,7 @@ end down_InfoPanel
 
 
 on mouseup
-   local tTips
+   local tTips, tImagePuzzlesGuide
    
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
@@ -96,9 +96,29 @@ on mouseup
          put "Realm of Nature" into sRealm
          fieldShowCategory
          break
+      case "HelpButton"
+         put url ("file:"& path_Assets()& "info/image-puzzles-guide.html") into tImagePuzzlesGuide
+         set the htmltext of fld "helpField" to tImagePuzzlesGuide
          
-         -- UTILITiES
          
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show grp "helpField"
+         lock screen
+         --deleteMobileControl "helpField"
+         # recreate:
+         --set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         --set the top of fld "helpField" to the top of grp "helpField"
+         --send "CreateScroller helpField" to fld "helpField"
+         
+         unlock screen
+         break
+         
+      case "helpDismiss"
+         hide btn "helpDismiss"
+         hide grp "helpField"
+         hide grc "helpBkg"
+         break
       case "Clear"
          clearImageTiles
          break
@@ -457,6 +477,7 @@ end resizeStack
 on updateUI
    local tTitle, tInfoPanel, tStatus
    local tControl, tMakeTiles
+   local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss,
    
    switch sCard
       
@@ -474,9 +495,29 @@ on updateUI
          put the long id of fld "status" into tStatus
          bottomCenterMe tStatus, 30
          
+         put the long id of btn "helpButton" into tHelpButton
+         bottomRightMe tHelpButton, 0, 75
+         
+         put the long id of grc "helpBkg" into tHelpBkg
+         set the width of tHelpBkg to (CardWidth() + 20)
+         topLeftMe tHelpBkg, -10, 60
+         
+         put the long id of grp "helpField" into tHelpFieldGrp
+         set the width of tHelpFieldGrp to (CardWidth() - 30)
+         topLeftMe tHelpFieldGrp, 15, 110 
+     
+         put the long id of fld "helpField" into tHelpField
+         set the width of tHelpField to (CardWidth() - 30)
+         topLeftMe tHelpField, 15, 110
+         
+         put the long id of button "helpDismiss" into tHelpDismiss
+         topRightMe tHelpDismiss, 0, 55
+         
          break
          
    end switch
+   
+   
    
 end updateUI
 
