@@ -43,50 +43,53 @@ on mouseup
          if checkIsLoading() is true then exit mouseup
          put the short name of this card into tCard
          
-         if tCard is "mainImagePuzzle" then
+         if tCard is "surprise_verse" then
+            go to card "surprise_verses"
+         else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
+            go to card "surprise_menu"
+         else if tCard is "showStories" or tCard is "storyDeleteFile" then
+            go card "storyHome"
+         else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
+            showStoryMenu
+         else if tCard is among the items of "listen-browse,listen-my-audio" then
+            go card "listen-collection"
+         else if tCard is   "listen-file" then
+            
+            put getBrowseHeaderText() into sBrowseHeader
+            
+            go to card "listen-browse"
+            put sBrowseHeader into fld "title-label"
+            
+            put portal_GetLastStack() into tLastStack
+            put portal_GetMyMenu() into tMyMenuYesNo
+            
+            if (tLastStack = "Journal") OR  (tMyMenuYesNo = true) then
+               
+               go to card "listen-collection"
+            else 
+               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+                  go to card "listen-browse"
+               else
+                  go card "listen-my-audio"
+               end if
+            end if
+            unlock screen
+         else if tCard is  "listen-delete-file" then
+            go to card "listen-browse"
+            put "listen-browse" into tCard
+         else if tCard is "listen-search" then
+            go card "listen-collection"
+         else if tCard is "listen-collection" then
+            portal_GoStack ("Siva-Siva-Portal")
+         else if tCard is "mainImagePuzzle" then
             if there is a card image "tile_1"  then
                clearImageTiles
                show img "orion_nebula"
                show group "makeTiles"
-            else if tCard is "surprise_verse" then
-               go to card "surprise_verses"
-            else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
-               go to card "surprise_menu"
-            else if tCard is "showStories" or tCard is "storyDeleteFile" then
-               go card "storyHome"
-            else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
-               showStoryMenu
-            else if tCard is among the items of "listen-browse,listen-my-audio" then
-               go card "listen-collection"
-            else if tCard is   "listen-file" then
-               
-               put getBrowseHeaderText() into sBrowseHeader
-               
-               go to card "listen-browse"
-               put sBrowseHeader into fld "title-label"
-               
-               put portal_GetLastStack() into tLastStack
-               put portal_GetMyMenu() into tMyMenuYesNo
-               
-               if (tLastStack = "Journal") OR  (tMyMenuYesNo = true) then
-                  
-                  go to card "listen-collection"
-               else 
-                  if fld "FilesOnDisk" of card "listen-delete-file" is empty then
-                     go to card "listen-browse"
-                  else
-                     go card "listen-my-audio"
-                  end if
-               end if
-               unlock screen
-            else if tCard is  "listen-delete-file" then
-               go to card "listen-browse"
-               put "listen-browse" into tCard
-            else if tCard is "listen-search" then
-               go card "listen-collection"
-            else
-               portal_GoStack ("Siva-Siva-Portal")
             end if
+            
+            portal_GoStack ("Siva-Siva-Portal")
+            
          end if
          break
          
