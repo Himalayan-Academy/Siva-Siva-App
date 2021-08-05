@@ -97,7 +97,8 @@ on mouseup
          fieldShowCategory
          break
       case "HelpButton"
-         put url ("file:"& path_Assets()& "info/image-puzzles-guide.html") into tImagePuzzlesGuide
+       
+         put url ("file:"& path_Modules()& "games/imagepuzzles/image-puzzles-guide.html") into tImagePuzzlesGuide
          set the htmltext of fld "helpField" to tImagePuzzlesGuide
          
          

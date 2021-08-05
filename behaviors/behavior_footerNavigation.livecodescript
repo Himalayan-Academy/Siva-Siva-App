@@ -87,10 +87,9 @@ on mouseup
                show img "orion_nebula"
                show group "makeTiles"
             end if
-            
-            portal_GoStack ("Siva-Siva-Portal")
-            
          end if
+         
+         portal_GoStack ("Siva-Siva-Portal")
          break
          
       case "journal"
@@ -200,7 +199,3 @@ on resizeControl
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
 
-
-on savingStandalone
-   
-end savingStandalone
