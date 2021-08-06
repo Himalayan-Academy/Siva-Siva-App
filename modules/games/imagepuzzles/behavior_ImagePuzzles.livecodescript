@@ -106,11 +106,11 @@ on mouseup
          show btn "helpDismiss"
          show grp "helpField"
          lock screen
-         --deleteMobileControl "helpField"
+         deleteMobileControl "helpField"
          # recreate:
-         --set the height of fld "helpField" to the formattedHeight of fld "helpField"
-         --set the top of fld "helpField" to the top of grp "helpField"
-         --send "CreateScroller helpField" to fld "helpField"
+         set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         set the top of fld "helpField" to (the top of grp "helpField" + 20)
+         send "CreateScroller helpField" to fld "helpField"
          
          unlock screen
          break
