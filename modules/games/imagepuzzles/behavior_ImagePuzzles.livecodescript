@@ -38,7 +38,7 @@ on goToMainPuzzle
          visual effect "dissolve" very slow
          go to card 2
          show img "orion_nebula"
-         
+        
          up_InfoPanel
          
          break
@@ -53,6 +53,7 @@ command up_InfoPanel
    show img "orion_nebula"
    set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
    show grp "makeTiles"
+   show btn "helpButton"
 end up_InfoPanel
 
 command down_InfoPanel
@@ -71,6 +72,7 @@ on mouseup
    switch sTarget
       
       case "Make a Puzzle"
+         hide btn "helpButton"
          down_InfoPanel
          fetchImage sRealm
          makePuzzle
@@ -97,7 +99,7 @@ on mouseup
          fieldShowCategory
          break
       case "HelpButton"
-       
+         
          put url ("file:"& path_Modules()& "games/imagepuzzles/image-puzzles-guide.html") into tImagePuzzlesGuide
          set the htmltext of fld "helpField" to tImagePuzzlesGuide
          
@@ -109,7 +111,7 @@ on mouseup
          deleteMobileControl "helpField"
          # recreate:
          set the height of fld "helpField" to the formattedHeight of fld "helpField"
-         set the top of fld "helpField" to (the top of grp "helpField" + 20)
+         set the top of fld "helpField" to the top of grp "helpField"
          send "CreateScroller helpField" to fld "helpField"
          
          unlock screen
@@ -121,6 +123,7 @@ on mouseup
          hide grc "helpBkg"
          break
       case "Clear"
+         show btn "helpButton"
          clearImageTiles
          break
          
@@ -512,7 +515,7 @@ on updateUI
          topLeftMe tHelpField, 15, 110
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 55
+         topRightMe tHelpDismiss, 0, 11
          
          break
          

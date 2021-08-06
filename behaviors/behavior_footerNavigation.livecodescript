@@ -85,6 +85,7 @@ on mouseup
             clearImageTiles
             show img "orion_nebula"
             show group "makeTiles"
+            show btn "helpButton"
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
