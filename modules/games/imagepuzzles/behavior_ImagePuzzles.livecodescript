@@ -21,7 +21,7 @@ on preopenCard
    switch sCard
       case "Title" 
          setDefaultImage
-         send "goToMainPuzzle" to me in 200 milliseconds
+         --send "goToMainPuzzle" to me in 200 milliseconds
          break
       case "mainImagePuzzle" 
          resizeStack
@@ -48,12 +48,10 @@ on goToMainPuzzle
 end goToMainPuzzle
 
 command up_InfoPanel
-   
    clearImageTiles
    show img "orion_nebula"
    set the layer of image "orion_nebula" of card "mainImagePuzzle" of me to bottom
    show grp "makeTiles"
-   show btn "helpButton"
 end up_InfoPanel
 
 command down_InfoPanel
@@ -72,7 +70,6 @@ on mouseup
    switch sTarget
       
       case "Make a Puzzle"
-         hide btn "helpButton"
          down_InfoPanel
          fetchImage sRealm
          makePuzzle
@@ -499,6 +496,10 @@ on updateUI
          put the long id of fld "status" into tStatus
          bottomCenterMe tStatus, 30
          
+         break
+         
+      case Title
+         
          put the long id of btn "helpButton" into tHelpButton
          bottomRightMe tHelpButton, 0, 75
          
@@ -509,7 +510,7 @@ on updateUI
          put the long id of grp "helpField" into tHelpFieldGrp
          set the width of tHelpFieldGrp to (CardWidth() - 30)
          topLeftMe tHelpFieldGrp, 15, 110 
-     
+         
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
          topLeftMe tHelpField, 15, 110
