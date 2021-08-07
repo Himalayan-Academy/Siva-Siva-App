@@ -21,7 +21,6 @@ on preopenCard
    switch sCard
       case "Title" 
          setDefaultImage
-         --send "goToMainPuzzle" to me in 200 milliseconds
          break
       case "mainImagePuzzle" 
          resizeStack
@@ -69,6 +68,13 @@ on mouseup
    
    switch sTarget
       
+      case "goImagePuzzle"
+         
+         visual effect "dissolve"  slow
+         wait 300 milliseconds
+         go card "mainImagePuzzle"
+         break
+         
       case "Make a Puzzle"
          down_InfoPanel
          fetchImage sRealm
@@ -477,7 +483,7 @@ end resizeStack
 
 on updateUI
    local tTitle, tInfoPanel, tStatus
-   local tControl, tMakeTiles
+   local tControl, tMakeTiles, tGoImagePuzzle
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss,
    
    switch sCard
@@ -485,23 +491,13 @@ on updateUI
       case "Title"
          
          put the long id of grp "title" into tTitle
-         bottomCenterMe tTitle, 100
-         break
+         bottomCenterMe tTitle, 150
          
-      case "mainImagePuzzle"
-         
-         put the long ID of group "makeTiles" of me into tMakeTiles
-         bottomCenterMe tMakeTiles, 180
-         
-         put the long id of fld "status" into tStatus
-         bottomCenterMe tStatus, 30
-         
-         break
-         
-      case Title
+         put the long id of grp"goImagePuzzle" into tGoImagePuzzle
+         bottomCenterMe tGoImagePuzzle, 20
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, 75
+         bottomRightMe tHelpButton, 0, 70
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
@@ -519,6 +515,19 @@ on updateUI
          topRightMe tHelpDismiss, 0, 11
          
          break
+         
+         
+         
+      case "mainImagePuzzle"
+         
+         put the long ID of group "makeTiles" of me into tMakeTiles
+         bottomCenterMe tMakeTiles, 180
+         
+         put the long id of fld "status" into tStatus
+         bottomCenterMe tStatus, 30
+         
+         break
+         
          
    end switch
    
