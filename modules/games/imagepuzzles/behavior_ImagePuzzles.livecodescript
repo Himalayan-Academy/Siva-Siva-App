@@ -1,6 +1,6 @@
 ﻿script "behavior_ImagePuzzles"
 local sTargetOwner, sTarget,sPuzzleLevel, sCard, sControl
-local sTitleImage, sMainImage, sBrandImages, sBrandImageNumber
+local sTitleImage, sStarImage, sMainImage, sBrandImages, sBrandImageNumber
 local sIsHome,sImageForTiles, sLocPuzzleFrame
 local sTiles,sMsg, sMyHome
 local sJournalData, sRealm, 
@@ -419,7 +419,13 @@ command setDefaultImage pContext
    setImageToFullCardLoc sTitleImage,"portrait"
    centerMe sTitleImage
    
+   # optimize disk operations *after* the display is finished updating
+   
+   put the number of lines of sBrandImages into tTotalBrandImages
+   setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
 end setDefaultImage 
+
+
 
 function PhotoImagePath pImage
    local tPath
@@ -484,11 +490,16 @@ end resizeStack
 on updateUI
    local tTitle, tInfoPanel, tStatus
    local tControl, tMakeTiles, tGoImagePuzzle
-   local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss,
+   local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
+   Local tFooter
    
    switch sCard
       
       case "Title"
+         
+         put the long id of img "title" of card "Title" into sTitleImage
+         setImageToFullCardLoc sTitleImage,"portrait",0,0
+         centerMe sTitleImage,0,0
          
          put the long id of grp "title" into tTitle
          bottomCenterMe tTitle, 150
@@ -520,11 +531,18 @@ on updateUI
          
       case "mainImagePuzzle"
          
+         put the long id of img "orion_nebula" of card "mainImagePuzzle" into sStarImage
+         setImageToFullCardLoc sStarImage,"portrait",0,0
+         centerMe sStarImage,0,0
+         
          put the long ID of group "makeTiles" of me into tMakeTiles
          bottomCenterMe tMakeTiles, 180
          
          put the long id of fld "status" into tStatus
          bottomCenterMe tStatus, 30
+         
+         put the long id of grp "footerNavigation" into tFooter
+         send "updateUI" to tFooter
          
          break
          
