@@ -12,3 +12,6 @@ z-Siva-Siva-App.wiki
 **/*_Scripts/extra/*
 Siva-Siva-App-Test.livecode
 *-backup
+*.zip
+.nova
+.vscode

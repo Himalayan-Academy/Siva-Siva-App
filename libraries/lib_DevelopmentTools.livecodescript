@@ -9,7 +9,6 @@ end libraryStack
 
 on updateUI
    if the environment is "development" then
-      --      go stack "DevelopmentTools"
-      put "development being called"
+      go stack "DevelopmentTools"
    end if
 end updateUI

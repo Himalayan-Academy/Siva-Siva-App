@@ -60,11 +60,8 @@ command init_AppConfiguration
    local someJSON, tPlatform, tAction, pData, tStart
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
    put the milliseconds into tStart
-   if the environment is not "development" then
-      set the logMessage to empty
-   else
-      set the logMessage to "log"
-   end if
+   
+   set the logMessage to "log"
    
    put url ("binfile:" & sHome& "/" & "Siva-Siva-App.json") into someJSON 
    put jsonImport (someJSON) into sConfigA
@@ -441,7 +438,11 @@ private command log pLog
    put tContextA["handler"] into tHandler
    put tContextA["line"] into tLineNumber
    
-   put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+   if the environment is "development" then
+      put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+   else
+      put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8")
+   end if
 end log
 
 -- this function is here because it is needed for initialization.
