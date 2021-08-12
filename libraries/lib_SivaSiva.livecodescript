@@ -182,7 +182,7 @@ command showNewNotification pBool
    --news_NoNews # user has read the news, but is off line...
    if exists(fld "notification") then
       visMessageToUser pBool
-      put  "You have news!" & cr & "View in Settings." into fld "notification"
+      put  "You have news!" into fld "notification"
    end if
 end showNewNotification
 

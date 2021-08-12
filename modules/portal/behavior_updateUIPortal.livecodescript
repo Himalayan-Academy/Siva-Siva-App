@@ -47,7 +47,8 @@ command _USER_INTERACTION
 end _USER_INTERACTION
 
 on mouseup
-   local tTarget,tTargetOwner,tUserGuide
+   local tTarget, tTargetOwner, tUserGuide, tNews
+   
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    
@@ -65,6 +66,26 @@ on mouseup
       showbusyIndicator false
       exit Mouseup
       break
+      
+   case "News"
+      put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
+      set the htmltext of fld "helpField" to tNews
+      
+      
+      show grc "helpBkg"
+      show btn "helpDismiss"
+      show grp "helpField"
+      lock screen
+      deleteMobileControl "helpField"
+      # recreate:
+      set the height of fld "helpField" to the formattedHeight of fld "helpField"
+      set the top of fld "helpField" to the top of grp "helpField"
+      send "CreateScroller helpField" to fld "helpField"
+      
+      unlock screen
+      break
+      
+      
    case "HelpButton"
       put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
       set the htmltext of fld "helpField" to tUserGuide
@@ -367,6 +388,8 @@ command updateUIPortal
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
+   local tNews, tNotification
+   
    #  UI responsive
    
    put the long id of img "homeMainImage" of card "Home" into sMainImage
@@ -444,8 +467,14 @@ command updateUIPortal
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
          
+         put the long id of fld "notification" into tNotification
+         bottomLeftMe tNotification, 20, 70
+         
+         put the long id of btn "News" into tNews
+         bottomLeftMe tNews, 20, 40
+         
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, 40
+         bottomRightMe tHelpButton, 20, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
