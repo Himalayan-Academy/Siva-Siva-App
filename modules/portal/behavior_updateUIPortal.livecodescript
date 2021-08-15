@@ -83,6 +83,7 @@ on mouseup
       send "CreateScroller helpField" to fld "helpField"
       
       unlock screen
+      hide fld "ExplanationMarker"
       break
       
       
@@ -388,7 +389,7 @@ command updateUIPortal
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
-   local tNews, tNotification
+   local tNews, tNotification, tExplanationMarker
    
    #  UI responsive
    
@@ -473,8 +474,11 @@ command updateUIPortal
          put the long id of btn "News" into tNews
          bottomLeftMe tNews, 20, 40
          
-         put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 20, 40
+         put the long id of btn "News" into tNews
+         bottomLeftMe tNews, 20, 40
+         
+         put the long id of fld "explanationMarker" into tExplanationMarker
+         bottomLeftMe tExplanationMarker,90, 33
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)

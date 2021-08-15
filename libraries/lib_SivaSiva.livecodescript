@@ -123,34 +123,52 @@ check this first.
 
 ########################
 ON ___FETCH_NEWS
+   
 end ___FETCH_NEWS
 
+
 command News_Fetch
-   local tLocalNewsFile, tServerNews, tTargetLine, tLocalNewsDate, tLatestNewsDate
+   local tLocalNewsPath, tLocalNewsFile, tServerNews
+   Local tTargetLine, tServerLatestNews, tLocalNewsDate, tLatestNewsDate
+   
+   
    --breakpoint
    if connectivity_PingServer() = "false" then 
       exit news_Fetch
    end if
    
-   # path to news 
-   put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
+   # path to the Documents with the "old" news 
+   # we have to know that it exists
+   put (path_Documents()&"assets/info/siva-app-news.html") into tLocalNewsPath
+   put url ("file:"& tLocalNewsPath) into tLocalNewsFile
    
    # fetch the latest news on server
    put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
    
    # check for the existence of news file locally
    # get date data 
-   put format ("<p id=\"datestamp\">") into tTargetLine
-         
-   if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-      put  url ("file:"& tLocalNewsFile) into tLocalNewsDate
-      put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
-      put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
+   # we know it on line 1, but we can't guarantee that
+   # so we used lineoffset
+   
+   if (there is a file tLocalNewsPath) then # parse it for the date
+      
+      
+      put format ("<p id=\"datestamp\"")  into tTargetLine
+            
+      put line (lineoffset(tTargetLine,tLocalNewsFile)) of tLocalNewsFile  into tTargetLine
+      
+      put stripHTMLTags(tTargetLine) into tLocalNewsDate
+      
       convert tLocalNewsDate to seconds
    else
       put empty into tLocalNewsDate
    end if 
-   put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
+   
+   # have to get out the latest news date:
+   
+   put format ("<p id=\"datestamp\"")  into tServerLatestNews
+         
+   put line (lineoffset(tServerLatestNews,tServerNews)) of tServerNews  into tLatestNewsDate
    put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
    convert tLatestNewsDate to seconds
    
@@ -164,10 +182,12 @@ command News_Fetch
       # from the Setting Statck
       # otherwise to leave the flat the true
       news_NoNews
-      
+      hide fld "ExplanationMarker"
    else 
       # save it
-      put tServerNews into url ("file:"&tLocalNewsFile)
+      
+      put tServerNews into URL ("file:" & path_Documents()&"assets/info/siva-app-news.html") 
+      show fld "ExplanationMarker"
       put "true" into sNewNews
    end if
    
@@ -175,6 +195,8 @@ command News_Fetch
    if   sNewNews is empty then
       put "yes, empty"
    end if
+   
+   send "News_Fetch" to me in 7200 seconds
    
 end news_Fetch
 
@@ -526,8 +548,8 @@ function stripHTMLTags pString
    replace ">" with ">" & cr in pString
    filter pString without "*<*"
    filter pString without "*>*"
-   repeat for each line LNN in pString
-      put word 1 to -1 of LNN  & cr after newHtml
+   repeat for each line x in pString
+      put word 1 to -1 of x  after newHtml
    end repeat
    filter newHtml without empty
    --now there are no leading/trailing spaces, no empty lines
