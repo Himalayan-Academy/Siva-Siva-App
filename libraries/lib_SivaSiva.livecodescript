@@ -181,7 +181,7 @@ command News_Fetch
       # from the Setting Statck
       # otherwise to leave the flat the true
       news_NoNews
-      hide fld "ExplanationMarker"
+      hide fld "ExplanationMarker" of stack "Siva-Siva-Portal"
    else 
       # save it
       
