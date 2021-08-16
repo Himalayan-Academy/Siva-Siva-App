@@ -195,7 +195,7 @@ command News_Fetch
       put "yes, empty"
    end if
    
-   send "news_Fetch" to me in  2 seconds
+   send "news_Fetch" to me in  3600 seconds
    
 end news_Fetch
 
