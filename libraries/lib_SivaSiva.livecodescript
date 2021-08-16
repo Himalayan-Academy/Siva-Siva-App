@@ -152,7 +152,6 @@ command News_Fetch
    
    if (there is a file tLocalNewsPath) then # parse it for the date
       
-      
       put format ("<p id=\"datestamp\"")  into tTargetLine
             
       put line (lineoffset(tTargetLine,tLocalNewsFile)) of tLocalNewsFile  into tTargetLine
@@ -187,7 +186,7 @@ command News_Fetch
       # save it
       
       put tServerNews into URL ("file:" & path_Documents()&"assets/info/siva-app-news.html") 
-      show fld "ExplanationMarker"
+      show fld "ExplanationMarker" of stack "Siva-Siva-Portal"
       put "true" into sNewNews
    end if
    
@@ -196,7 +195,7 @@ command News_Fetch
       put "yes, empty"
    end if
    
-   send "News_Fetch" to me in 7200 seconds
+   send "news_Fetch" to me in  2 seconds
    
 end news_Fetch
 
@@ -204,6 +203,7 @@ command showNewNotification pBool
    --news_NoNews # user has read the news, but is off line...
    if exists(fld "notification") then
       visMessageToUser pBool
+      
       put  "You have news!" into fld "notification"
    end if
 end showNewNotification
