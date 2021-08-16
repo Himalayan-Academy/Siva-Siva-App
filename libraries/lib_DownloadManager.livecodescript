@@ -70,9 +70,56 @@ command downloadAssets
    send "_checkProgress" to me in 1 second
 end downloadAssets
 
+command verifyAndExpandAssets
+   put the documents folder & "/assets.zip" into tZipPath
+   put the documents folder & "/assets.txt" into tZipManifest
+   
+   if there is a file tZipPath then
+      revZipOpenArchive tZipPath, "read"
+      if the result is not empty then
+         dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr," & the result)
+      end if
+      
+      if there is not a folder (the documents folder & "/assets") then
+         create folder (the documents folder & "/assets")
+      end if
+      
+      put revZipEnumerateItems(tZipPath) into tFileList
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding 0" && the number of lines in tFileList )
+      repeat with x = 1 to the number of lines in tFileList
+         put line x of tFileList into tFile
+         put (the documents folder & "/assets/" & tFile) into tDestinationFile
+         replace "./" with empty in tDestinationFile
+         
+         createFolders tDestinationFile
+         
+         revZipExtractItemToFile tZipPath, tFile, tDestinationFile
+         if the result is not empty then
+            dispatch sConfigA["handler"] to sConfigA["target"] with the result
+            exit repeat
+         else
+            dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding" && x && the number of lines in tFileList )
+         end if
+      end repeat
+   else
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr,no assets.zip")
+   end if
+end verifyAndExpandAssets
+
+command createFolders pPath
+   set the itemdel to slash
+   put "" into tCurrPath
+   repeat with x = 1 to (the number of items in pPath - 1)
+      put "/" & item x of pPath after tCurrPath
+      if there is not a folder tCurrPath then
+         create folder tCurrPath
+      end if
+   end repeat
+end createFolders
+   
 on _checkProgress
    put tsNetGetStatus(kConnectionID) into tStatus
-   put tStatus
+   dispatch sConfigA["handler"] to sConfigA["target"] with tStatus
    if word 1 of tStatus is not "downloaded" then
       send "_checkProgress" to me in 2 seconds
    end if
@@ -81,9 +128,8 @@ end _checkProgress
 on _transferComplete pID, pResult, pBytes, pCurlCode
    local tData, tHeaders
    if pCurlCode is not 0 then
-      answer tsNetRetrError(pID)
+      dispatch sConfigA["handler"] to sConfigA["target"] with tsNetRetrError(pID)
    else
-      answer "File has been downloaded"
+      tsNetCloseConn pID
    end if
-   tsNetCloseConn pID
 end _transferComplete
