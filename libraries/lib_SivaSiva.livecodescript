@@ -130,106 +130,67 @@ end ___FETCH_NEWS
 command News_Fetch
    local tLocalNewsPath, tLocalNewsFile, tServerNews
    Local tTargetLine, tServerLatestNews, tLocalNewsDate, tLatestNewsDate
+   local tLocalNews
    
    
    --breakpoint
-   if connectivity_PingServer() = "false" then 
-      exit news_Fetch
-   end if
+   
    
    # path to the Documents with the "old" news 
    # we have to know that it exists
    put (path_Documents()&"assets/info/siva-app-news.html") into tLocalNewsPath
-   put url ("file:"& tLocalNewsPath) into tLocalNewsFile
    
    # fetch the latest news on server
    put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
+   
+   if the result is not empty then 
+      log the result
+      exit News_Fetch
+   end if
    
    # check for the existence of news file locally
    # get date data 
    # we know it on line 1, but we can't guarantee that
    # so we used lineoffset
    
-   if (there is a file tLocalNewsPath) then # parse it for the date
-      
-      put format ("<p id=\"datestamp\"")  into tTargetLine
-            
-      put line (lineoffset(tTargetLine,tLocalNewsFile)) of tLocalNewsFile  into tTargetLine
-      
-      put stripHTMLTags(tTargetLine) into tLocalNewsDate
-      
-      convert tLocalNewsDate to seconds
+   if ( there is a  file tLocalNewsPath) then # parse it for the date
+      put  url ("file:"& tLocalNewsPath) into tLocalNews
    else
-      put empty into tLocalNewsDate
+      put empty into tLocalNews
    end if 
    
-   # have to get out the latest news date:
-   
-   put format ("<p id=\"datestamp\"")  into tServerLatestNews
-         
-   put line (lineoffset(tServerLatestNews,tServerNews)) of tServerNews  into tLatestNewsDate
-   put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
-   convert tLatestNewsDate to seconds
-   
-   # compare dates
-   
-   if tLocalNewsDate = tLatestNewsDate then
+   if md5digest(tLocalNews) is md5Digest(tServerNews) then
       # do nothing
       # we don't want the user to see the message ever time they open app.
       # even if they not read it. 
       # TODO We should set a pref that tells that app of they did read the news
       # from the Setting Statck
       # otherwise to leave the flat the true
-      news_NoNews
-      hide fld "ExplanationMarker" of stack "Siva-Siva-Portal"
+      put "false" into sNewNews
    else 
       # save it
-      
-      put tServerNews into URL ("file:" & path_Documents()&"assets/info/siva-app-news.html") 
-      show fld "ExplanationMarker" of stack "Siva-Siva-Portal"
+      --put tServerNews into url ("file:"&tLocalNewsFile)
+      put tServerNews into url ("file:"& path_Documents()&"assets/info/siva-app-news.html")
       put "true" into sNewNews
    end if
    
-   showNewNotification sNewNews
-   if   sNewNews is empty then
-      put "yes, empty"
-   end if
-   
-   send "news_Fetch" to me in  3600 seconds
-   
+   showNewsNotification  sNewNews  --of card "Home" of stack "Siva-Siva-Portal"
 end news_Fetch
 
-command showNewNotification pBool
-   --news_NoNews # user has read the news, but is off line...
+command showNewsNotification pBool
    if exists(fld "notification") then
       visMessageToUser pBool
-      
-      put  "You have news!" into fld "notification"
+      if pBool is true then
+         put  "You have the latest news!" into fld "notification" of stack "Siva-Siva-Portal"
+         show fld "ExplanationMarker" 
+         wait 1500 milliseconds
+      else
+         hide fld "ExplanationMarker" 
+      end if
    end if
-end showNewNotification
-
-function news_Check
-   return sNewNews
-end news_Check
-
-command news_NoNews
-   put "false" into sNewNews
-end news_NoNews
+end showNewsNotification
 
 
-command newcontent_Check
-   local tBool
-   # Ping server for updates?
-   put "false" into tBool # for now
-   put tBool into sThereIsNewContent 
-end newcontent_Check
-
-#use this in appropriate places where you may want updates later
-# e.g. About this App; Privacy Policy are common use cases.
-
-function newcontent_IsThere
-   return sThereIsNewContent
-end newcontent_IsThere
 
 ##########################
 on ___PATHS

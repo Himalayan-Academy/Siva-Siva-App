@@ -174,16 +174,13 @@ on init_StoreControlsIds
 end init_StoreControlsIds
 
 command openPortalStack
+ 
    send "init_DocumentFiles" to me in 5 seconds
    open stack "Siva-Siva-Portal"
    if the environment is not "development" then
       hide stack "Siva-Siva-App"
    end if
-   # app will halt at this point  so now is a good
-   # time to check for updates on a new session
-   # check for news first
-   news_Fetch
-   newcontent_Check
+   
 end openPortalStack
 
 command  init_LoadLibraries

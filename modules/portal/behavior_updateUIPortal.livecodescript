@@ -16,7 +16,7 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- old "panel" navigation to here. I will leave that to you.
 
 on preOpenCard
-   local tControl, tCard
+   local tControl, tCard, sNewNews
    put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
@@ -29,14 +29,17 @@ on preOpenCard
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          setDefaultImage
          
-         
    end switch
+   
    updateUIPortal
    
    show btn "brandLogo"
 end preOpenCard
 
+
+
 on opencard
+   send "News_Fetch" to me in 500 milliseconds
    audioIsRunning    
 end opencard
 
@@ -68,6 +71,7 @@ on mouseup
       break
       
    case "News"
+      News_Fetch
       put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
       set the htmltext of fld "helpField" to tNews
       
@@ -160,6 +164,7 @@ switch tTargetOwner
       break
 end switch
 end mouseup
+
 
 
 on mouseDown

@@ -9,6 +9,7 @@ on preOpenStack
       iphoneSetAudioCategory "playback" 
       mobileShowStatusBar
    end if
+   
 end preOpenStack
 
 on openStack
