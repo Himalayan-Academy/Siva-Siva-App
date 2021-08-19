@@ -114,10 +114,6 @@ command portal_GoStack cardOrStackObject
       put "navigation/goContent" into pAction
    end if
    
-   if oStackName is "Siva-Siva-Portal" then
-      news_Fetch
-   end if
-   
    put oStackName into pTrackData["exitFrom"]
    tracking_RecordActivity "Portal", pAction, pTrackdata 
 end portal_GoStack

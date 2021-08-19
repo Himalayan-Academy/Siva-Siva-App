@@ -2,7 +2,7 @@
 global sConfigA
 local sStartLoc,sScreenRect
 local sLastImage, sMainImage,sBrandImageNumber
-
+ 
 
 ##################
 -- At the top of this script we use functions and handlers
@@ -39,7 +39,7 @@ end preOpenCard
 
 
 on opencard
-   send "News_Fetch" to me in 500 milliseconds
+ send "News_Fetch" to me in 500 milliseconds
    audioIsRunning    
 end opencard
 
@@ -170,6 +170,59 @@ end mouseup
 on mouseDown
    put the mouseLoc into sStartLoc
 end mouseDown
+
+
+command News_Fetch
+   local tLocalNewsPath, tLocalNewsFile, tServerNews
+   Local tTargetLine, tServerLatestNews, tLocalNewsDate, tLatestNewsDate
+   local tLocalNews, sNewNews
+   constant cRemoteNewsFile="siva-app-news.html"
+   
+   # we fetch old news in Documents fold
+   put (path_Documents()&"assets/info/siva-app-news.html") into tLocalNewsPath
+   
+   # fetch the latest news on server
+   put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
+   
+   # we tell the app that the  result is empty
+   # which case we are able took more a connection
+   if the result is not empty then 
+      log the result
+      exit News_Fetch
+   end if
+   
+   # we get a local file. Otherwise it is empty
+   if ( there is a  file tLocalNewsPath) then # parse it for the date
+      put  url ("file:"& tLocalNewsPath) into tLocalNews
+   else
+      put empty into tLocalNews
+   end if 
+   
+   # we test the size of the news in bytes
+   if md5digest(tLocalNews) is md5Digest(tServerNews) then
+      # here it  is the same
+      put "false" into sNewNews
+   else 
+      # here, it different
+      put tServerNews into url ("file:"& path_Documents()&"assets/info/siva-app-news.html")
+      put "true" into sNewNews
+   end if
+   
+   showNewsNotification  sNewNews  --of card "Home" of stack "Siva-Siva-Portal"
+end news_Fetch
+
+command showNewsNotification pBool
+   if exists(fld "notification") then
+      visMessageToUser pBool
+      if pBool is true then
+         put  "You have the latest news!" &cr& "Click " & quote & "News!" & quote into fld "notification" of stack "Siva-Siva-Portal"
+         show fld "ExplanationMarker" 
+         wait 3000 milliseconds
+      else
+         hide fld "ExplanationMarker" 
+      end if
+   end if
+end showNewsNotification
 
 
 on fetchSubMenu pTarget
@@ -473,9 +526,6 @@ command updateUIPortal
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
          
-         put the long id of fld "notification" into tNotification
-         bottomLeftMe tNotification, 20, 70
-         
          put the long id of btn "News" into tNews
          bottomLeftMe tNews, 20, 40
          
@@ -484,6 +534,10 @@ command updateUIPortal
          
          put the long id of fld "explanationMarker" into tExplanationMarker
          bottomLeftMe tExplanationMarker,90, 33
+         
+         
+         put the long id of btn "helpButton" into tHelpButton
+         bottomRightMe tHelpButton, 20, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
