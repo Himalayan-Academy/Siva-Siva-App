@@ -215,7 +215,7 @@ command showNewsNotification pBool
    if exists(fld "notification") then
       visMessageToUser pBool
       if pBool is true then
-         put  "You have the latest news!" &cr& "Click " & quote & "News!" & quote into fld "notification" of stack "Siva-Siva-Portal"
+         put  ("You have the latest news!" & cr & "Click  " & quote & "News!" & quote ) into fld "notification" of stack "Siva-Siva-Portal"
          show fld "ExplanationMarker" 
          wait 3000 milliseconds
       else
