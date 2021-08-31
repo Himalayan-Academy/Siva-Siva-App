@@ -101,14 +101,10 @@ command init_AppConfiguration
    
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
    
-   portal_SetLastStack "Siva-Siva-App"
-   
-   logging "open Portal Stack"
-   send "openPortalStack" to me in 50 milliseconds
+   -- This used to happen after opening the portal stack, not it happens before.
+   -- I couldn't see why it should happen after.
+   tsNetLibUrlReuseConnection false   
    set the effectrate to 500
-   
-   tsNetLibUrlReuseConnection false
-   set the socketTimeoutInterval to 2000
    
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
    put platform() into tPlatform
@@ -122,7 +118,6 @@ command init_AppConfiguration
    mobileRectSet
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
-   
    -- AAG enable or disable network tracer
    if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
       ntEnableNetworkTracer
@@ -130,7 +125,20 @@ command init_AppConfiguration
       ntDisableNetworkTracer
    end if
    logging "---- time spent initializing app:" && (the milliseconds - tStart) &"ms ----"
+   
+   if shouldDownloadNewAssets() then
+      open stack "updater"
+   else
+      continue_AppInitialization
+   end if
 end init_AppConfiguration
+
+command continue_AppInitialization
+   portal_SetLastStack "Siva-Siva-App"
+   
+   logging "open Portal Stack"
+   send "openPortalStack" to me in 50 milliseconds
+end continue_AppInitialization
 
 
 
@@ -177,6 +185,9 @@ on init_StoreControlsIds
 end init_StoreControlsIds
 
 command openPortalStack
+   -- AAG: init_DocumentFiles does network requests.
+   -- What it is doing could be replaced by the assets download.
+   -- This is a potential opportunity for future improvement.
    send "init_DocumentFiles" to me in 5 seconds
    open stack "Siva-Siva-Portal"
    if the environment is not "development" then

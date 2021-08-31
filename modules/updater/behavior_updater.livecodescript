@@ -13,14 +13,10 @@ end st
 
 on openCard
    st "Checking for updates..."
-   if shouldDownloadNewAssets() then
-      setDownloadStatusCallback "updateUI", the long id of this stack
-      show widget "spinner"
-      st "Downloading updates..."
-      downloadAssets
-   else
-      st "Up To Date."
-   end if
+   setDownloadStatusCallback "updateUI", the long id of this stack
+   show widget "spinner"
+   st "Downloading updates..."
+   downloadAssets
 end openCard
 
 on updateUI pStatus
@@ -32,9 +28,12 @@ on updateUI pStatus
          st ("Expanding:" && floor((word 2 of pStatus / word 3 of pStatus) * 100) &"%")
          break
       case "downloaded"
-         hide widget "spinner"
          st "Expanding assets..."
          verifyAndExpandAssets
+         break
+      case "expanded"
+         hide widget "spinner"
+         send "continue_AppInitialization" to card "InitializeApp" of stack "Siva-Siva-App"
          break
       default
          put the executionContexts

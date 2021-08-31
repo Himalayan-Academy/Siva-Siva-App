@@ -4,6 +4,8 @@ constant kAssetsZipURL = "https://dev.himalayanacademy.com/media/apps/sivasiva/a
 constant kConnectionID = "assets.zip"
 
 local sConfigA
+local sCheckStatusMsgID   
+
 
 function didDownloadAssets
    if there is a file (the documents folder & "/assets.txt") then
@@ -68,9 +70,12 @@ command downloadAssets
    put tsNetGetFile(kConnectionID, (the documents folder & "/assets.zip"), \
          kAssetsZipURL, tHeaders, "_transferComplete") into tResult
    send "_checkProgress" to me in 1 second
+   put the result into sCheckStatusMsgID   
 end downloadAssets
 
 command verifyAndExpandAssets
+   cancel sCheckStatusMsgID
+
    put the documents folder & "/assets.zip" into tZipPath
    put the documents folder & "/assets.txt" into tZipManifest
    
@@ -101,6 +106,7 @@ command verifyAndExpandAssets
             dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding" && x && the number of lines in tFileList )
          end if
       end repeat
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanded" && x && the number of lines in tFileList )
    else
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr,no assets.zip")
    end if
@@ -116,17 +122,29 @@ command createFolders pPath
       end if
    end repeat
 end createFolders
-   
+
+
 on _checkProgress
    put tsNetGetStatus(kConnectionID) into tStatus
+   
    if tStatus contains "tsneterr" then
       put tStatus
       exit _checkProgress
    end if
+   
    dispatch sConfigA["handler"] to sConfigA["target"] with tStatus
-   if word 1 of tStatus is not "downloaded" then
-      send "_checkProgress" to me in 2 seconds
-   end if
+
+   switch word 1 of tStatus 
+      case "downloaded"
+         // strange error
+         dispatch sConfigA["handler"] to sConfigA["target"] with "downloaded"
+      break
+      default
+         send "_checkProgress" to me in 2 seconds
+         put the result into sCheckStatusMsgID
+         break
+   end switch 
+   
 end _checkProgress
 
 on _transferComplete pID, pResult, pBytes, pCurlCode
@@ -134,6 +152,7 @@ on _transferComplete pID, pResult, pBytes, pCurlCode
    if pCurlCode is not 0 then
       dispatch sConfigA["handler"] to sConfigA["target"] with tsNetRetrError(pID)
    else
+      cancel sCheckStatusMsgID
       dispatch sConfigA["handler"] to sConfigA["target"] with "downloaded"
       tsNetCloseConn pID
    end if
