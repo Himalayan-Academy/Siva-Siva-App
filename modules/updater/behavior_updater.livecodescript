@@ -37,6 +37,7 @@ on updateUI pStatus
          verifyAndExpandAssets
          break
       default
-         st pStatus
+         put the executionContexts
+         put pStatus
    end switch
 end updateUI

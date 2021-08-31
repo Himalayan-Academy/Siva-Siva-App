@@ -119,6 +119,10 @@ end createFolders
    
 on _checkProgress
    put tsNetGetStatus(kConnectionID) into tStatus
+   if tStatus contains "tsneterr" then
+      put tStatus
+      exit _checkProgress
+   end if
    dispatch sConfigA["handler"] to sConfigA["target"] with tStatus
    if word 1 of tStatus is not "downloaded" then
       send "_checkProgress" to me in 2 seconds
@@ -130,6 +134,7 @@ on _transferComplete pID, pResult, pBytes, pCurlCode
    if pCurlCode is not 0 then
       dispatch sConfigA["handler"] to sConfigA["target"] with tsNetRetrError(pID)
    else
+      dispatch sConfigA["handler"] to sConfigA["target"] with "downloaded"
       tsNetCloseConn pID
    end if
 end _transferComplete

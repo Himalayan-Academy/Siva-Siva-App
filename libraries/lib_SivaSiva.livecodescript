@@ -120,11 +120,7 @@ ON ___FETCH_NEWS
 end ___FETCH_NEWS
 
 command News_Fetch
-   local tLocalNewsFile, tServerNews, tTargetLine, tLocalNewsDate, tLatestNewsDate
-   --breakpoint
-   if connectivity_PingServer() = "false" then 
-      exit news_Fetch
-   end if
+   local tLocalNewsFile, tServerNews, tTargetLine, tLocalNews
    
    # path to news 
    put path_Documents()&"assets/info/siva-app-news.html" into tLocalNewsFile
@@ -132,25 +128,18 @@ command News_Fetch
    # fetch the latest news on server
    put url ("https://www.himalayanacademy.com/media/apps/sivasiva/"& cRemoteNewsFile) into tServerNews
    
-   # check for the existence of news file locally
-   # get date data 
-   put format ("<p id=\"datestamp\">") into tTargetLine
-         
+   if the result is not empty then
+      log the result
+      exit News_Fetch
+   end if
+   
    if ( there is a file( tLocalNewsFile) ) then # parse it for the date
-      put  url ("file:"& tLocalNewsFile) into tLocalNewsDate
-      put line (lineoffset(tTargetLine,tLocalNewsDate)) of tLocalNewsDate  into tLocalNewsDate
-      put stripHTMLTags(tLocalNewsDate) into tLocalNewsDate
-      convert tLocalNewsDate to seconds
+      put  url ("file:"& tLocalNewsFile) into tLocalNews
    else
-      put empty into tLocalNewsDate
+      put empty into tLocalNews
    end if 
-   put line (lineoffset(tTargetLine,tServerNews)) of tServerNews  into tLatestNewsDate
-   put stripHTMLTags(tLatestNewsDate) into tLatestNewsDate
-   convert tLatestNewsDate to seconds
    
-   # compare dates
-   
-   if tLocalNewsDate = tLatestNewsDate then
+   if md5digest(tLocalNews) is md5Digest(tServerNews) then
       # do nothing
       # we don't want the user to see the message ever time they open app.
       # even if they not read it. 
