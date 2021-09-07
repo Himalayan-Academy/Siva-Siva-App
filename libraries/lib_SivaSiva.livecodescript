@@ -230,7 +230,7 @@ function path_Assets
    local tPath
    put path_HomeLocal() into tPath
    put "assets/" after tPath
-   return tPath
+   return (the documents folder & "/assets/")
 end path_Assets
 
 function path_Modules
@@ -250,9 +250,16 @@ end path_Models
 command fetchNavigationMap
    local tPath, tJSON
    put path_HomeLocal() into tPath
- put "models/model_SivaSiva/model_SivaSiva.json" after tPath
+   put "models/model_SivaSiva/model_SivaSiva.json" after tPath
    put url ("file:" & tPath) into tJSON
-   put JSONToArray(tJSON) into sSivaSivaNavigation
+   try
+      put JSONToArray(tJSON) into sSivaSivaNavigation
+   catch n
+      log "Error reading navigation map."
+      repeat for each line x in n
+         log x
+      end repeat
+   end try
 end fetchNavigationMap
 
 function getNavigationMap
@@ -887,7 +894,9 @@ function parseContext pContextLine
 end parseContext
 
 on errorDialog pExecutionError
-   log "ERROR:" && line (item 1 of line 1 of pExecutionError) of the scriptExecutionErrors
+   repeat for each line x in pExecutionError
+      log x
+   end repeat
 end errorDialog
 
 

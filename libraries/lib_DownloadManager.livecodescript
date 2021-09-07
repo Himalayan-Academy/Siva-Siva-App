@@ -1,6 +1,6 @@
 ﻿script "Lib_DownloadManager"
-constant kAssetsManifestURL = "https://dev.himalayanacademy.com/media/apps/sivasiva/assets.txt"
-constant kAssetsZipURL = "https://dev.himalayanacademy.com/media/apps/sivasiva/assets.zip"
+constant kAssetsManifestURL = "https://www.himalayanacademy.com/media/apps/sivasiva/assets.txt"
+constant kAssetsZipURL = "https://www.himalayanacademy.com/media/apps/sivasiva/assets.zip"
 constant kConnectionID = "assets.zip"
 
 local sConfigA
@@ -67,6 +67,7 @@ end setDownloadStatusCallback
 command downloadAssets
    local tHeaders, tResult
    tsNetInit
+   tsNetVerifySSLPeer false
    put tsNetGetFile(kConnectionID, (the documents folder & "/assets.zip"), \
          kAssetsZipURL, tHeaders, "_transferComplete") into tResult
    send "_checkProgress" to me in 1 second
@@ -105,6 +106,7 @@ command verifyAndExpandAssets
          else
             dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding" && x && the number of lines in tFileList )
          end if
+         wait 50 millisecs with messages
       end repeat
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanded" && x && the number of lines in tFileList )
    else
@@ -128,7 +130,8 @@ on _checkProgress
    put tsNetGetStatus(kConnectionID) into tStatus
    
    if tStatus contains "tsneterr" then
-      put tStatus
+      log "error fetching connection information"
+      log tStatus
       exit _checkProgress
    end if
    
