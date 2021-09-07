@@ -66,12 +66,14 @@ end setDownloadStatusCallback
 
 command downloadAssets
    local tHeaders, tResult
-   tsNetInit
-   tsNetVerifySSLPeer false
    put tsNetGetFile(kConnectionID, (the documents folder & "/assets.zip"), \
          kAssetsZipURL, tHeaders, "_transferComplete") into tResult
-   send "_checkProgress" to me in 1 second
-   put the result into sCheckStatusMsgID   
+   if tResult is empty then
+      send "_checkProgress" to me in 1 second
+      put the result into sCheckStatusMsgID
+   else 
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("error," & tResult)
+   end if
 end downloadAssets
 
 command verifyAndExpandAssets
@@ -136,12 +138,20 @@ on _checkProgress
    end if
    
    dispatch sConfigA["handler"] to sConfigA["target"] with tStatus
-
+   
    switch word 1 of tStatus 
       case "downloaded"
          // strange error
          dispatch sConfigA["handler"] to sConfigA["target"] with "downloaded"
-      break
+         break
+      case "error"
+         if the environment is "development" then
+            put tsNetRetrError(kConnectionID)
+         end if
+         
+         dispatch sConfigA["handler"] to sConfigA["target"] with ("error," & tsNetRetrError(kConnectionID))
+         exit _checkProgress
+         break
       default
          send "_checkProgress" to me in 2 seconds
          put the result into sCheckStatusMsgID

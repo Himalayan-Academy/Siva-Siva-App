@@ -231,6 +231,7 @@ function path_Assets
    put path_HomeLocal() into tPath
    put "assets/" after tPath
    return (the documents folder & "/assets/")
+   --return tPath
 end path_Assets
 
 function path_Modules

@@ -16,8 +16,12 @@ on errorDialog pExecutionError, pParseError
    end repeat
 end errorDialog
 
-private on log pText
-   put pText
+on log pText
+   if the environment is not "development" then
+      put pText
+   else 
+      pass log
+   end if
 end log
 
 
@@ -48,14 +52,16 @@ on updateUI pStatus
          break
       case "expanded"
          hide widget "spinner"
-         send "continue_AppInitialization" to card "InitializeApp" of stack "Siva-Siva-App"
+         send "continue_AppInitialization" to card "InitializeApp" of stack "Siva-Siva-App" in 50 millisecs
+         close this stack
          break
       case "contacted"
       case "requested"
          st word 1 of pStatus
          break
       case "error"
-         st "Error"
+         put pStatus
+         st word 2 to -1 of pStatus
          hide widget "Spinner" of card id 1002 of me
          break
       default

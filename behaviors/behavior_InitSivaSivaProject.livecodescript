@@ -61,6 +61,10 @@ command init_AppConfiguration
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
    put the milliseconds into tStart
    
+   tsNetInit
+   tsNetVerifySSLPeer false
+   libURLSetSSLVerification false
+   
    set the logMessage to "log"
    
    put url ("binfile:" & sHome& "/" & "Siva-Siva-App.json") into someJSON 
@@ -373,7 +377,7 @@ command copyBundledAssets
    filter lines of tFolders without "."
    
    repeat for each line tFile in tFiles
-      log "copying" && ("/assets/" & "/" & tFile)
+      log "copying" && ("/assets/" & tFile)
       put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & specialfolderPath("documents") & "/assets/" & tFile)
       if the result is not empty then
          log "error:" && the result
