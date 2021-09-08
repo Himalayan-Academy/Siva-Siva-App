@@ -27,7 +27,7 @@ end log
 
 command st pText
    put pText into field "status"
-   log pText
+   --   log pText
 end st
 
 on openCard
@@ -63,6 +63,12 @@ on updateUI pStatus
          put pStatus
          st word 2 to -1 of pStatus
          hide widget "Spinner" of card id 1002 of me
+         break
+      case "expanderr"
+         log "error expanding assets."
+         st "Error, will try again in couple seconds."
+         send "downloadAssets" to me in 3 seconds
+         exit updateUI 
          break
       default
          log "unknown status"

@@ -62,8 +62,10 @@ command init_AppConfiguration
    put the milliseconds into tStart
    
    tsNetInit
-   tsNetVerifySSLPeer false
-   libURLSetSSLVerification false
+   if the environment is "mobile" then
+      tsNetVerifySSLPeer false
+      libURLSetSSLVerification false
+   end if
    
    set the logMessage to "log"
    
@@ -109,8 +111,13 @@ command init_AppConfiguration
    copyBundledAssets
    logging "end copying bundled assets"
    
-   
-   fetchNavigationMap # we need it for the tree menu, but call once
+   try
+      log "--- about to try to fetch navigation map"
+      fetchNavigationMap # we need it for the tree menu, but call once
+   catch n
+      log "something wrong with navigation map"
+      errorDialog n
+   end try
    
    -- cacheGlobalNavImages
    
@@ -127,6 +134,7 @@ command init_AppConfiguration
       logging "opening updater"
       go stack "updater"
    else
+      logging "assets up to date"
       continue_AppInitialization
    end if
 end init_AppConfiguration
@@ -228,9 +236,10 @@ command  init_LoadLibraries
    filter items of stackNames without"animationEngine*" # should load onlyl when when needed
    
    repeat for each item stackName in stackNames
-      logging "loading" && stackName
       if there is a stack stackName then
          start using stack stackName
+         logging "loaded library" && stackName
+         
       else
          -- AAG: fix loading of stacks
          put the defaultFolder into tDF
@@ -253,9 +262,11 @@ command  init_LoadLibraries
             default
                put "modules/" & stackName & ".livecode" into stackName
                break   
-         end switch   
+         end switch 
+         log "looking for library" && stackName  
          if there is a file stackName then
             start using stackName
+            log "loaded" && stackName
          else
             answer error "can't find" && stackName
          end if  

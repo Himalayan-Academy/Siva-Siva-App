@@ -25,6 +25,10 @@ function getLocalAssetsChecksum
    end if
 end getLocalAssetsChecksum
 
+command saveAssetsChecksum
+   put url ("binfile:" & kAssetsManifestURL) into url ("binfile:" & the documents folder & "/assets.txt")
+end saveAssetsChecksum
+
 function getRemoteAssetsChecksum
    get url kAssetsManifestURL
    if the result is not empty then
@@ -78,7 +82,9 @@ end downloadAssets
 
 command verifyAndExpandAssets
    cancel sCheckStatusMsgID
-
+   
+   saveAssetsChecksum
+   
    put the documents folder & "/assets.zip" into tZipPath
    put the documents folder & "/assets.txt" into tZipManifest
    
@@ -144,16 +150,24 @@ on _checkProgress
          // strange error
          dispatch sConfigA["handler"] to sConfigA["target"] with "downloaded"
          break
+      case "timeout"
+         // try again...
+         tsNetCloseConn kConnectionID
+         send "downloadAssets" to me in 50 millisecs
+         exit _checkProgress
+         break
+      case "tsneterr"
       case "error"
          if the environment is "development" then
             put tsNetRetrError(kConnectionID)
          end if
          
          dispatch sConfigA["handler"] to sConfigA["target"] with ("error," & tsNetRetrError(kConnectionID))
+         tsNetCloseConn kConnectionID
          exit _checkProgress
          break
       default
-         send "_checkProgress" to me in 2 seconds
+         send "_checkProgress" to me in 3 seconds
          put the result into sCheckStatusMsgID
          break
    end switch 

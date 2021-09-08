@@ -18,6 +18,11 @@ end ___INIT
 
 
 on libraryStack
+   
+   if the target is not me then
+      pass libraryStack
+   end if
+   
    mobileRectSet
    fetchNavigationMap
 end libraryStack
@@ -250,15 +255,21 @@ end path_Models
 
 command fetchNavigationMap
    local tPath, tJSON
+   put "fetching navigation map"
    put path_HomeLocal() into tPath
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
+   if there is not a file tPath then
+      put "portalerr,model_SivaSiva.json not found"
+      exit fetchNavigationMap
+   end if
    put url ("file:" & tPath) into tJSON
    try
-      put JSONToArray(tJSON) into sSivaSivaNavigation
+      put jsonImport(tJSON) into sSivaSivaNavigation
+      log the keys of sSivaSivaNavigation
    catch n
-      log "Error reading navigation map."
+      put "Error reading navigation map."
       repeat for each line x in n
-         log x
+         put x
       end repeat
    end try
 end fetchNavigationMap
