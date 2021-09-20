@@ -26,7 +26,7 @@ function getLocalAssetsChecksum
 end getLocalAssetsChecksum
 
 command saveAssetsChecksum
-   put url ("binfile:" & kAssetsManifestURL) into url ("binfile:" & the documents folder & "/assets.txt")
+   put url kAssetsManifestURL into url ("binfile:" & the documents folder & "/assets.txt")
 end saveAssetsChecksum
 
 function getRemoteAssetsChecksum
