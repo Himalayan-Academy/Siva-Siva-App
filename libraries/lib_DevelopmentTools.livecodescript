@@ -8,7 +8,7 @@ on libraryStack
 end libraryStack
 
 on updateUI
-   if the environment is "development" then
+   if the environment is "development" and the altKey is down then
       go stack "DevelopmentTools"
    end if
 end updateUI
