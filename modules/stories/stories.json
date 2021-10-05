@@ -51,6 +51,12 @@
 			}
 		},
 		"Stories": {
+			"Largest Gathering In The World": {
+				"where": "server",
+				"Attribution": "Hinduism Today",
+				"imageSize": "32MB",
+				"orientation": "portrait"
+			},
 			"My Trek to Siva": {
 				"where": "server",
 				"Attribution": "Aravind Gopal",
