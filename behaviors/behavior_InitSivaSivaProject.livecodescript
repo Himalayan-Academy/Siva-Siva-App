@@ -62,10 +62,7 @@ command init_AppConfiguration
    put the milliseconds into tStart
    
    tsNetInit
-   if the environment is "mobile" then
-      tsNetVerifySSLPeer false
-      libURLSetSSLVerification false
-   end if
+   SetSSLVerificationForPlatform
    
    set the logMessage to "log"
    
@@ -139,10 +136,22 @@ command init_AppConfiguration
    end if
 end init_AppConfiguration
 
+command SetSSLVerificationForPlatform
+   if the platform is "android" then
+      tsNetVerifySSLPeer false
+      libURLSetSSLVerification false
+   else
+      tsNetVerifySSLPeer true
+      libURLSetSSLVerification true
+   end if
+end SetSSLVerificationForPlatform
+
 command continue_AppInitialization
    portal_SetLastStack "Siva-Siva-App"
    
    logging the documents folder
+   
+   send "continue_startWebServer" to me in 50 milliseconds
    
    logging "open Portal Stack"
    send "openPortalStack" to me in 50 milliseconds
@@ -166,6 +175,12 @@ command continue_AppInitialization
       ntDisableNetworkTracer
    end if
 end continue_AppInitialization
+
+on continue_startWebServer
+   logging "attempting to start web server"
+   -- AAG start folder explorer
+   --startFolderExplorer 8081
+end continue_startWebServer
 
 
 

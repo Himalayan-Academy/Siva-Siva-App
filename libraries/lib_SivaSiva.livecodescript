@@ -262,10 +262,12 @@ command fetchNavigationMap
       put "portalerr,model_SivaSiva.json not found"
       exit fetchNavigationMap
    end if
-   put url ("file:" & tPath) into tJSON
+   put tPath
+   put url("file:" & tPath) into tJSON
+   put tJSON
    try
-      put jsonImport(tJSON) into sSivaSivaNavigation
-      log the keys of sSivaSivaNavigation
+      put JSONToArray(tJSON) into sSivaSivaNavigation
+      put the keys of sSivaSivaNavigation
    catch n
       put "Error reading navigation map."
       repeat for each line x in n

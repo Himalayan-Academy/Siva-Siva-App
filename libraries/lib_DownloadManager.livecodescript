@@ -70,6 +70,7 @@ end setDownloadStatusCallback
 
 command downloadAssets
    local tHeaders, tResult
+
    put tsNetGetFile(kConnectionID, (the documents folder & "/assets.zip"), \
          kAssetsZipURL, tHeaders, "_transferComplete") into tResult
    if tResult is empty then
