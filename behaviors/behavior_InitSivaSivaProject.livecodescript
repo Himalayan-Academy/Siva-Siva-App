@@ -49,9 +49,23 @@ on preOpenStack
    put the seconds into sThen
    put specialFolderPath("resources") into sHome
    logging "init_AppConfiguration"
+   
+   # this come out as soon as we Android bug 
+   SetSSLVerification
+   
+   
    init_AppConfiguration -- load all libraries and configure app
    pass preOpenStack
 end preOpenStack
+
+# this come out as soon as we Android bug 
+command SetSSLVerification
+   if platform() = "android" then
+      libURLSetSSLVerification false
+   else
+      libURLSetSSLVerification true
+   end if
+end SetSSLVerification
 
 command init_AppConfiguration
    local someJSON, tPlatform, tAction, pData

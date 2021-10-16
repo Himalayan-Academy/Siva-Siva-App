@@ -601,7 +601,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  just sets the WHERE clause in the query with whatever you request. 
          # Then sorts on date sends back the request number of records.
          
-         --breakpoint
+        
          showBusyIndicator true,"Loading Collection"
          
          put "Contacting server... " into fld "audioList" of card "listen-browse"
@@ -629,7 +629,6 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            --portal_Link "Listen"
             exit to top
          else 
             put it into tRecords
