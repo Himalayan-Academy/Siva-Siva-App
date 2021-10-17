@@ -51,23 +51,11 @@ on preOpenStack
       put specialFolderPath("resources") into sHome
       logging "---- init_AppConfiguration ----"
 
-      # this come out as soon as we Android bug 
-      SetSSLVerification
-
       init_AppConfiguration -- load all libraries and configure app
       put true into sInitialized
       pass preOpenStack
    end if
 end preOpenStack
-
-# this come out as soon as we Android bug 
-command SetSSLVerification
-   if platform() = "android" then
-      libURLSetSSLVerification false
-   else
-      libURLSetSSLVerification true
-   end if
-end SetSSLVerification
 
 command init_AppConfiguration
    local someJSON, tPlatform, tAction, pData, tStart
@@ -160,9 +148,12 @@ command SetSSLVerificationForPlatform
 end SetSSLVerificationForPlatform
 
 command continue_AppInitialization
+   local tPlatform, tAction, pData
+   
    portal_SetLastStack "Siva-Siva-App"
    
-   logging the documents folder
+   --logging the documents folder
+   logging path_Documents()
    
    send "continue_startWebServer" to me in 50 milliseconds
    
@@ -171,7 +162,7 @@ command continue_AppInitialization
    
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
    put platform() into tPlatform
-   put "init/launch"into tAction
+   put "init/launch" into tAction
    put the screenrect into pData["screenRect"]
    put the machine into pData["device"]["hardware"]
    if platform() = "android" then
@@ -257,7 +248,7 @@ command  init_LoadLibraries
    local stackNames, tDF
    
    put init_ListStacksToUse() into stackNames   
-   filter items of stackNames without"animationEngine*" # should load onlyl when when needed
+   filter items of stackNames without "animationEngine*" # should load only when when needed
    
    repeat for each item stackName in stackNames
       if there is a stack stackName then
@@ -324,9 +315,9 @@ command init_CreateLocalFolders
    # global libraries, modules, behaviors only update when the app is updated
    # for media we just map to the web server media folder for all types
    
-   put path_Documents()  into tLocalFolderRoot 
+   put path_Documents() into tLocalFolderRoot 
    
-   # everything goes here path_Documents() alway has a slash 
+   # everything goes here path_Documents() always has a slash 
    # these top level will contain almost everything.
    # jnanam.sqlite and sivasivapreferences are outside on the top level.
    
@@ -405,15 +396,17 @@ command init_CreateLocalFolders
 end init_CreateLocalFolders
 
 command copyBundledAssets
+   local tFolders, tFiles
    put folders(specialFolderPath("resources") & "/assets/") into tFolders
    put files(specialFolderPath("resources") & "/assets/") into tFiles
    
    filter lines of tFolders without ".."
    filter lines of tFolders without "."
+   filter lines of tFiles without ".DS_Store"
    
    repeat for each line tFile in tFiles
       log "copying" && ("/assets/" & tFile)
-      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & specialfolderPath("documents") & "/assets/" & tFile)
+      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & path_Assets() & tFile)
       if the result is not empty then
          log "error:" && the result
       end if
@@ -426,14 +419,16 @@ command copyBundledAssets
 end copyBundledAssets
 
 command copyAssetsFrom pFolder
+   local tFolders, tFiles
    put folders(specialFolderPath("resources") & "/assets/" & pFolder) into tFolders
    filter lines of tFolders without ".."
    filter lines of tFolders without "."
    put files(specialFolderPath("resources") & "/assets/" & pFolder) into tFiles
+   filter lines of tFiles without ".DS_Store"
    repeat for each line tFile in tFiles
       log "copying" && ("/assets/" & pFolder & "/" & tFile)
-      createFolders  (specialfolderPath("documents") & "/assets/" & pFolder & "/" & tFile)
-      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & pFolder & "/" & tFile) into url ("binfile:" & specialfolderPath("documents") & "/assets/" & pFolder & "/" & tFile)
+      createFolders  (path_Assets() & pFolder & "/" & tFile)
+      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & pFolder & "/" & tFile) into url ("binfile:" & path_Assets() & pFolder & "/" & tFile)
       if the result is not empty then
          log "error:" && the result
       end if
@@ -445,6 +440,7 @@ command copyAssetsFrom pFolder
 end copyAssetsFrom
 
 command createFolders pPath
+   local tCurrPath
    set the itemdel to slash
    put "" into tCurrPath
    repeat with x = 1 to (the number of items in pPath - 1)
@@ -485,8 +481,6 @@ command init_DocumentFiles
    if tRemoteSeconds > tLocalSeconds then
       put tServer  into url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
-   
-   
 end init_DocumentFiles
 
 
@@ -536,7 +530,8 @@ command Logging pLogMessage
 end logging
 
 -- this version is only available during intialization.
-private command log pLog 
+private command log pLog
+   local tPath, tContextA, tObject, tHandler, tLineNumber
    set the itemdel to slash
    put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
    
@@ -593,8 +588,3 @@ on errorDialog pExecutionError, pParseError
       put line (item 1 of x) of the uScriptExecutionErrors of stack "Siva-Siva-App"
    end repeat
 end errorDialog
-
-
-
-
-

@@ -143,7 +143,7 @@ function path_Documents
    # remember not to precede path strings to follow with a slash in your 
    # final slashes are added here
    # handlers, double //   works on desktop but not on mobile, especially not on Android   
-   if  not isMobile() then
+   if not isMobile() then
       # We may have a desktop version in which case we want all content related to the app to go into a proper folder
       # in the Users/SomeUser/Documents
       put "SivaSivaApp/" after tPath 
@@ -156,10 +156,11 @@ end path_Documents
 
 function path_Assets
    local tPath
-   put path_HomeLocal() into tPath
+   --put path_HomeLocal() into tPath
+   put path_Documents() into tPath
    put "assets/" after tPath
-   return (the documents folder & "/assets/")
-   --return tPath
+   --return (the documents folder & "/assets/")
+   return tPath
 end path_Assets
 
 function path_Modules

@@ -8,7 +8,7 @@ local sCheckStatusMsgID
 
 
 function didDownloadAssets
-   if there is a file (the documents folder & "/assets.txt") then
+   if there is a file (path_Documents() & "assets.txt") then
       return true
    else
       return false
@@ -16,8 +16,8 @@ function didDownloadAssets
 end didDownloadAssets
 
 function getLocalAssetsChecksum
-   if there is a file (the documents folder & "/assets.txt") then
-      get url ("binfile:" & the documents folder & "/assets.txt")
+   if there is a file (path_Documents() & "assets.txt") then
+      get url ("binfile:" & path_Documents() & "assets.txt")
       get word -1 of it
       return it
    else
@@ -26,7 +26,7 @@ function getLocalAssetsChecksum
 end getLocalAssetsChecksum
 
 command saveAssetsChecksum
-   put url kAssetsManifestURL into url ("binfile:" & the documents folder & "/assets.txt")
+   put url kAssetsManifestURL into url ("binfile:" & path_Documents() & "assets.txt")
 end saveAssetsChecksum
 
 function getRemoteAssetsChecksum
@@ -39,6 +39,8 @@ function getRemoteAssetsChecksum
 end getRemoteAssetsChecksum
 
 function shouldDownloadNewAssets
+   local tLocalAssetsChecksum, tRemoteAssetsChecksum
+   
    put getLocalAssetsChecksum() into tLocalAssetsChecksum
    put getRemoteAssetsChecksum() into tRemoteAssetsChecksum
    
@@ -71,7 +73,7 @@ end setDownloadStatusCallback
 command downloadAssets
    local tHeaders, tResult
 
-   put tsNetGetFile(kConnectionID, (the documents folder & "/assets.zip"), \
+   put tsNetGetFile(kConnectionID, (path_Documents() & "assets.zip"), \
          kAssetsZipURL, tHeaders, "_transferComplete") into tResult
    if tResult is empty then
       send "_checkProgress" to me in 1 second
@@ -82,12 +84,14 @@ command downloadAssets
 end downloadAssets
 
 command verifyAndExpandAssets
+   local tZipPath, tZipManifest, tFileList, tFile, tDestinationFile
+   
    cancel sCheckStatusMsgID
    
    saveAssetsChecksum
    
-   put the documents folder & "/assets.zip" into tZipPath
-   put the documents folder & "/assets.txt" into tZipManifest
+   put path_Documents() & "assets.zip" into tZipPath
+   put path_Documents() & "assets.txt" into tZipManifest
    
    if there is a file tZipPath then
       revZipOpenArchive tZipPath, "read"
@@ -95,15 +99,15 @@ command verifyAndExpandAssets
          dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr," & the result)
       end if
       
-      if there is not a folder (the documents folder & "/assets") then
-         create folder (the documents folder & "/assets")
+      if there is not a folder (path_Documents() & "assets") then
+         create folder (path_Documents() & "assets")
       end if
       
       put revZipEnumerateItems(tZipPath) into tFileList
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding 0" && the number of lines in tFileList )
       repeat with x = 1 to the number of lines in tFileList
          put line x of tFileList into tFile
-         put (the documents folder & "/assets/" & tFile) into tDestinationFile
+         put (path_Assets() & tFile) into tDestinationFile
          replace "./" with empty in tDestinationFile
          
          createFolders tDestinationFile
@@ -124,6 +128,8 @@ command verifyAndExpandAssets
 end verifyAndExpandAssets
 
 command createFolders pPath
+   local tCurrPath
+   
    set the itemdel to slash
    put "" into tCurrPath
    repeat with x = 1 to (the number of items in pPath - 1)
@@ -136,6 +142,8 @@ end createFolders
 
 
 on _checkProgress
+   local tStatus
+   
    put tsNetGetStatus(kConnectionID) into tStatus
    
    if tStatus contains "tsneterr" then
