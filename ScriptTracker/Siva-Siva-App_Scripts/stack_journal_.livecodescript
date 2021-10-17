@@ -17,6 +17,7 @@ on preopenstack
       mobileSetAllowedOrientations "portrait,portrait upside down"
       mobileSetFullScreenRectForOrientations "portrait,portrait upside down","0,0,414,736"
    end if
+   go to card "entries"
 end preopenstack
 
 function getConfigForLayout pScreenIdentifier, pKey
