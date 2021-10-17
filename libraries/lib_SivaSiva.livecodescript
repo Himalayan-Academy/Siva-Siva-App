@@ -18,14 +18,13 @@ end ___INIT
 
 
 on libraryStack
-   mobileRectSet
-   fetchNavigationMap
-   if the uBuildMode of  stack "Siva-Siva-App" is "release" then
-      set the logMessage to empty
-   else
-      set the logMessage to "log"
+   
+   if the target is not me then
+      pass libraryStack
    end if
    
+   mobileRectSet
+   fetchNavigationMap
 end libraryStack
 
 # disable ntinfo
@@ -159,7 +158,8 @@ function path_Assets
    local tPath
    put path_HomeLocal() into tPath
    put "assets/" after tPath
-   return tPath
+   return (the documents folder & "/assets/")
+   --return tPath
 end path_Assets
 
 function path_Modules
@@ -178,10 +178,25 @@ end path_Models
 
 command fetchNavigationMap
    local tPath, tJSON
+   put "fetching navigation map"
    put path_HomeLocal() into tPath
- put "models/model_SivaSiva/model_SivaSiva.json" after tPath
-   put url ("file:" & tPath) into tJSON
-   put JSONToArray(tJSON) into sSivaSivaNavigation
+   put "models/model_SivaSiva/model_SivaSiva.json" after tPath
+   if there is not a file tPath then
+      put "portalerr,model_SivaSiva.json not found"
+      exit fetchNavigationMap
+   end if
+   put tPath
+   put url("file:" & tPath) into tJSON
+   put tJSON
+   try
+      put JSONToArray(tJSON) into sSivaSivaNavigation
+      put the keys of sSivaSivaNavigation
+   catch n
+      put "Error reading navigation map."
+      repeat for each line x in n
+         put x
+      end repeat
+   end try
 end fetchNavigationMap
 
 function getNavigationMap
@@ -755,10 +770,10 @@ command copyLogControl
    end if
 end copyLogControl
 
-on log pLog 
+on logOld pLog 
    put cr & pLog before tLogResult # latest on top
    showLogging
-end log
+end logOld
 
 on clearLog
    put empty into tLogResult
@@ -772,6 +787,54 @@ on showLogging
    end if 
 end showLogging
 
+command log pLog 
+   set the itemdel to slash
+   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
+   
+   set the itemdel to comma
+   put parseContext(line -2 of the executionContexts) into tContextA
+   if tContextA["behavior"] is empty then
+      put tContextA["object"] into tObject
+   else
+      put tContextA["behavior"] into tObject
+   end if
+   put tContextA["handler"] into tHandler
+   put tContextA["line"] into tLineNumber
+   
+   put textEncode(the merge of "[[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+end log
+
+function parseContext pContextLine
+   local tKey = "object", tContextA
+   
+   repeat for each item tItem in pContextLine
+      if tContextA[tKey] is not empty then
+         put comma after tContextA[tKey]
+      end if
+      put tItem after tContextA[tKey]
+      
+      switch tKey
+         case "object"
+            if exists(tContextA[tKey]) then
+               put "handler" into tKey
+            end if
+            break
+         case "handler"
+            put "line" into tKey
+            break
+         case "line"
+            put "behavior" into tKey
+            break
+      end switch
+   end repeat
+   return tContextA
+end parseContext
+
+on errorDialog pExecutionError
+   repeat for each line x in pExecutionError
+      log x
+   end repeat
+end errorDialog
 
 
 

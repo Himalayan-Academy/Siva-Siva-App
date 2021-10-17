@@ -37,25 +37,27 @@ We can now experiment with:
 
 global sConfigA
 local LocalArray,sHome,sOnlineStatus,sNow,sThen
+local sInitialized = false
 
 --> Events
 
 on preOpenStack
-   --breakpoint
-   set the fullscreenmode of this stack to "showAll"
-   -- start using this stack
-   # duplicates what's on the lib_SivaSiva, but we need to fire right away
-   --breakpoint
-   put the seconds into sThen
-   put specialFolderPath("resources") into sHome
-   logging "init_AppConfiguration"
-   
-   # this come out as soon as we Android bug 
-   SetSSLVerification
-   
-   
-   init_AppConfiguration -- load all libraries and configure app
-   pass preOpenStack
+   if not sInitialized then
+      set the fullscreenmode of this stack to "showAll"
+      -- start using this stack
+      # duplicates what's on the lib_SivaSiva, but we need to fire right away
+      --breakpoint
+      put the milliseconds into sThen
+      put specialFolderPath("resources") into sHome
+      logging "---- init_AppConfiguration ----"
+
+      # this come out as soon as we Android bug 
+      SetSSLVerification
+
+      init_AppConfiguration -- load all libraries and configure app
+      put true into sInitialized
+      pass preOpenStack
+   end if
 end preOpenStack
 
 # this come out as soon as we Android bug 
@@ -68,14 +70,14 @@ command SetSSLVerification
 end SetSSLVerification
 
 command init_AppConfiguration
-   local someJSON, tPlatform, tAction, pData
+   local someJSON, tPlatform, tAction, pData, tStart
    -- called by the "preOpenStack" of the Siva-Siva-App's first card script
+   put the milliseconds into tStart
    
-   if the uBuildMode of this stack is "release" then
-      set the logMessage to empty
-   else
-      set the logMessage to "log"
-   end if
+   tsNetInit
+   SetSSLVerificationForPlatform
+   
+   set the logMessage to "log"
    
    put url ("binfile:" & sHome& "/" & "Siva-Siva-App.json") into someJSON 
    put jsonImport (someJSON) into sConfigA
@@ -83,9 +85,17 @@ command init_AppConfiguration
    # we have simple path scripts in the main backscript.  We load the first
    # this till deprecate all of David codes non-sense code in 
    
-   --   logging "finish loading json"
+   logging "finish loading json"
    
-   start using stack "lib_SivaSiva"
+   init_LoadStackFilesFromConfiguration
+   
+   try
+      start using stack "lib_SivaSiva"
+   catch n
+      logging "can't start lib_SivaSiva"
+      logging the result
+      logging (there is a stack "lib_SivaSiva")
+   end try
    
    logging "start loading libraries"
    
@@ -107,20 +117,57 @@ command init_AppConfiguration
    init_Fonts
    logging "end  Fonts"
    
-   fetchNavigationMap # we need it for the tree menu, but call once
+   logging "coping bundled assets"
+   copyBundledAssets
+   logging "end copying bundled assets"
+   
+   try
+      log "--- about to try to fetch navigation map"
+      fetchNavigationMap # we need it for the tree menu, but call once
+   catch n
+      log "something wrong with navigation map"
+      errorDialog n
+   end try
    
    -- cacheGlobalNavImages
    
    set the socketTimeoutInterval to 2000   # we wait 2 seconds before informing user about connection issues.
    
+   -- This used to happen after opening the portal stack, not it happens before.
+   -- I couldn't see why it should happen after.
+   -- tsNetLibUrlReuseConnection false   
+   set the effectrate to 500
+   
+   logging "---- time spent initializing app:" && (the milliseconds - tStart) &"ms ----"
+   
+   if shouldDownloadNewAssets() then
+      logging "opening updater"
+      go stack "updater"
+   else
+      logging "assets up to date"
+      continue_AppInitialization
+   end if
+end init_AppConfiguration
+
+command SetSSLVerificationForPlatform
+   if the platform is "android" then
+      tsNetVerifySSLPeer false
+      libURLSetSSLVerification false
+   else
+      tsNetVerifySSLPeer true
+      libURLSetSSLVerification true
+   end if
+end SetSSLVerificationForPlatform
+
+command continue_AppInitialization
    portal_SetLastStack "Siva-Siva-App"
+   
+   logging the documents folder
+   
+   send "continue_startWebServer" to me in 50 milliseconds
    
    logging "open Portal Stack"
    send "openPortalStack" to me in 50 milliseconds
-   set the effectrate to 500
-   
-   tsNetLibUrlReuseConnection false
-   set the socketTimeoutInterval to 2000
    
    send "tracking_UploadData" to stack "model_SivaSivaTracking" in 2 seconds
    put platform() into tPlatform
@@ -134,14 +181,19 @@ command init_AppConfiguration
    mobileRectSet
    send  "tracking_RecordActivity SivaSivaApp,tAction,pData" to stack "model_SivaSivaTracking" in 3 seconds
    
-   
    -- AAG enable or disable network tracer
    if the cNetworkTracerEnabled of stack "Siva-Siva-App" is true then
       ntEnableNetworkTracer
    else
       ntDisableNetworkTracer
    end if
-end init_AppConfiguration
+end continue_AppInitialization
+
+on continue_startWebServer
+   logging "attempting to start web server"
+   -- AAG start folder explorer
+   --startFolderExplorer 8081
+end continue_startWebServer
 
 
 
@@ -153,7 +205,7 @@ command init_LoadStackFilesFromConfiguration
    put sConfigA["stackfiles"] into tStackFilesA
    repeat for each key k in tStackFilesA
       put tStackFilesA[k] into tTempA
-      if tTempA["name"] is not in the stackfiles of stack "Siva-Siva-App" then
+      if (tTempA["name"] & comma) is not in the stackfiles of stack "Siva-Siva-App" then
          put tTempA["name"]&comma& tTempA["file"] & cr after tBuffer
       end if
    end repeat
@@ -163,7 +215,9 @@ command init_LoadStackFilesFromConfiguration
    end if
    
    set the stackfiles of stack "Siva-Siva-App" to (tStartingList & tBuffer)
-   
+   --   repeat for each line t in (tStartingList & tBuffer)
+   --      logging t
+   --   end repeat
 end init_LoadStackFilesFromConfiguration
 
 
@@ -188,7 +242,9 @@ on init_StoreControlsIds
 end init_StoreControlsIds
 
 command openPortalStack
- 
+   -- AAG: init_DocumentFiles does network requests.
+   -- What it is doing could be replaced by the assets download.
+   -- This is a potential opportunity for future improvement.
    send "init_DocumentFiles" to me in 5 seconds
    open stack "Siva-Siva-Portal"
    if the environment is not "development" then
@@ -204,9 +260,10 @@ command  init_LoadLibraries
    filter items of stackNames without"animationEngine*" # should load onlyl when when needed
    
    repeat for each item stackName in stackNames
-      logging stackName
       if there is a stack stackName then
          start using stack stackName
+         logging "loaded library" && stackName
+         
       else
          -- AAG: fix loading of stacks
          put the defaultFolder into tDF
@@ -229,9 +286,11 @@ command  init_LoadLibraries
             default
                put "modules/" & stackName & ".livecode" into stackName
                break   
-         end switch   
+         end switch 
+         log "looking for library" && stackName  
          if there is a file stackName then
             start using stackName
+            log "loaded" && stackName
          else
             answer error "can't find" && stackName
          end if  
@@ -345,22 +404,70 @@ command init_CreateLocalFolders
    
 end init_CreateLocalFolders
 
+command copyBundledAssets
+   put folders(specialFolderPath("resources") & "/assets/") into tFolders
+   put files(specialFolderPath("resources") & "/assets/") into tFiles
+   
+   filter lines of tFolders without ".."
+   filter lines of tFolders without "."
+   
+   repeat for each line tFile in tFiles
+      log "copying" && ("/assets/" & tFile)
+      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & specialfolderPath("documents") & "/assets/" & tFile)
+      if the result is not empty then
+         log "error:" && the result
+      end if
+   end repeat
+   
+   repeat for each line tFolder in tFolders
+      logging "copying folder" && tFolder
+      copyAssetsFrom tFolder
+   end repeat 
+end copyBundledAssets
+
+command copyAssetsFrom pFolder
+   put folders(specialFolderPath("resources") & "/assets/" & pFolder) into tFolders
+   filter lines of tFolders without ".."
+   filter lines of tFolders without "."
+   put files(specialFolderPath("resources") & "/assets/" & pFolder) into tFiles
+   repeat for each line tFile in tFiles
+      log "copying" && ("/assets/" & pFolder & "/" & tFile)
+      createFolders  (specialfolderPath("documents") & "/assets/" & pFolder & "/" & tFile)
+      put url ("binfile:" & specialFolderPath("resources") & "/assets/" & pFolder & "/" & tFile) into url ("binfile:" & specialfolderPath("documents") & "/assets/" & pFolder & "/" & tFile)
+      if the result is not empty then
+         log "error:" && the result
+      end if
+   end repeat
+   
+   repeat for each line tFolder in tFolders
+      copyAssetsFrom tFolder
+   end repeat
+end copyAssetsFrom
+
+command createFolders pPath
+   set the itemdel to slash
+   put "" into tCurrPath
+   repeat with x = 1 to (the number of items in pPath - 1)
+      put "/" & item x of pPath after tCurrPath
+      if there is not a folder tCurrPath then
+         create folder tCurrPath
+      end if
+   end repeat
+end createFolders
+
 command init_DocumentFiles
    local tLocalJson, tLocalArray, tLocalSeconds, tServerSeconds
    local tServer, tRemoteSeconds,tServerArray, tRemoteServer
    # Here is the installing app 
-   if  there is a file (path_Documents()  & "modules/stories/stories.json") then
-      # do nothing
-      --      put "do nothing"
-   else
+   if  there is not a file (path_Documents()  & "modules/stories/stories.json") then
       put url ("binfile:" & path_Modules() & "stories/stories.json") into \
             url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
    
    # Here is getting the time difference > between the json on the server
    
-   put url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
-   put JSONToArray(tLocalJson) into tLocalArray
+   put url ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
+   put jsonImport(tLocalJson) into tLocalArray
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
    if tLocalSeconds is not a number then
       put 0 into tLocalSeconds
@@ -420,12 +527,72 @@ command Logging pLogMessage
    local tInterval
    
    put the milliseconds into sNow
-   put sNow-sThen into tInterval
-   put pLogMessage  &&  sNow  & " : "  &  tInterval & cr after sConfigA["log"]
+   if sThen is not a number then
+      put sNow into sThen
+   end if
+   put sNow - sThen into tInterval
+   log (pLogMessage  &&  "(+"  &  tInterval &")")
    put sNow into sThen
 end logging
 
+-- this version is only available during intialization.
+private command log pLog 
+   set the itemdel to slash
+   put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
+   
+   set the itemdel to comma
+   put parseContext(line -2 of the executionContexts) into tContextA
+   if tContextA["handler"] is among the items of "Logging,errorDialog" then
+      put parseContext(line -3 of the executionContexts) into tContextA
+   end if
+   if tContextA["behavior"] is empty then
+      put tContextA["object"] into tObject
+   else
+      put tContextA["behavior"] into tObject
+   end if
+   put tContextA["handler"] into tHandler
+   put tContextA["line"] into tLineNumber
+   
+   if the environment is "development" then
+      put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8") after url ("binfile:" & tPath & "/siva-siva.log")
+   else
+      put textEncode(the merge of "INIT : [[the short name of tObject]] ([[tHandler]]:[[tLineNumber]]) -> [[pLog]]" & cr, "utf8")
+   end if
+end log
 
+-- this function is here because it is needed for initialization.
+private function parseContext pContextLine
+   local tKey = "object", tContextA
+   
+   repeat for each item tItem in pContextLine
+      if tContextA[tKey] is not empty then
+         put comma after tContextA[tKey]
+      end if
+      put tItem after tContextA[tKey]
+      
+      switch tKey
+         case "object"
+            if exists(tContextA[tKey]) then
+               put "handler" into tKey
+            end if
+            break
+         case "handler"
+            put "line" into tKey
+            break
+         case "line"
+            put "behavior" into tKey
+            break
+      end switch
+   end repeat
+   return tContextA
+end parseContext
+
+on errorDialog pExecutionError, pParseError
+   repeat for each line x in pExecutionError
+      put x
+      put line (item 1 of x) of the uScriptExecutionErrors of stack "Siva-Siva-App"
+   end repeat
+end errorDialog
 
 
 
