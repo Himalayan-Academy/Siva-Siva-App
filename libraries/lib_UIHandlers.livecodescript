@@ -804,25 +804,18 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
       # Gets the visible of group
       put the long id of control "loadingGroup" into sLoadingGroup
       
-      # gets the grc which serves as button
-      put the long id of grc "loading" into sLoadingIndicator
-      
       # set a message
-      set the label of sLoadingIndicator to sLabel
+      --set the label of sLoadingIndicator to sLabel
+      set the label of sLoadingIndicator  to sMsg
       
       if there is a  sLoadingIndicator then
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
-            -- dispatch "loadingInProgress" to me 
-         else
-            set the vis of sLoadingGroup to pBool
-            --            put empty into sLoadProgress
-            set the label of sLoadingIndicator to ""
-            put false into sLoadingFlag
          end if
       end if
    end if
+   
 end showBusyIndicator
 
 command loadingInProgress

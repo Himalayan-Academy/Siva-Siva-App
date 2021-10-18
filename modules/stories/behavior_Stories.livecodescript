@@ -293,7 +293,9 @@ on setupOrDownloadStory
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
          if sLastStory is empty or sLastStory is not sStoryTitle then
+            
             dataLocalStack sStoryTitle
+            
          end if
          put true into sAllowLandscape
          break
@@ -316,7 +318,11 @@ end setupOrDownloadStory
 
 
 on downloadAndShowStory
-   showBusyIndicator true, "Loading Stories"
+   
+   local tMessage
+   
+   showBusyIndicator true, ("Loading. . . . A little long." & cr & "3 mins. . . Be patient")
+   
    dataServerStack sStoryTitle
    showBusyIndicator false
    put true into sAllowLandscape

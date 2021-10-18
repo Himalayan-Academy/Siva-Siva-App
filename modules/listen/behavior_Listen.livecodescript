@@ -519,16 +519,19 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
-   local tPlaylistClass, tRecordTypeCount, tDbaseColumns
+   local tPlaylistClass, tRecordTypeCount, tDbaseColumns, tMessage
    local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
-   
-   --showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
-   
-   --  dispatch "cleanUpGui" to card "listen-browse"      
-   
    put empty into sPlaylistQueryA 
+   
+   
+   
+   # Then sorts on date sends back the request number of records.
+   put "Loading....." & cr & "A little long. Be patient" into  tMessage
+   showBusyIndicator true, tMessage
+   show grp "LoadingGroup"
+   
    
    # if pFilterListQueryA is empty, it means we are coming in
    # the Search and Filter filter screen
@@ -599,14 +602,11 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          #  just sets the WHERE clause in the query with whatever you request. 
-         # Then sorts on date sends back the request number of records.
          
-        
-         showBusyIndicator true,"Loading Collection"
          
-         put "Contacting server... " into fld "audioList" of card "listen-browse"
          
-         # Set up the WHERE clause
+         # Set up the WHERE claus
+         
          put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
          put sPlayListQueryA["author"] into tQueryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into tQueryData["recordType"]
@@ -623,6 +623,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          # we need to check of back character in the dbase which breaks JSONtoARRAY
          # typically there CR in columns that shouldn't be there.
          --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
+         
          
          if the result is not empty then 
             # we did not get anything. Turn  off loader, inform the users
