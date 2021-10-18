@@ -170,12 +170,16 @@ on mouseup
          dispatch "getSums" to grp "displayFilesSizes" with "stories"
          dispatch "displayTargetFolders" to grp "displayFilesSizes" with "stories"
          break
-         --
+         
       case "Loading"
-         showBusyIndicator false
-         if isMobile() then
-            mobileClearTouches
+         
+         showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
+               & "Be patient."
+
+         if ismobile() then
+            mobileClearTouchesll
          end if
+         
          exit top
          break
          --

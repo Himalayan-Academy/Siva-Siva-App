@@ -527,10 +527,10 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
    
    
    
-   # Then sorts on date sends back the request number of records.
-   put "Loading....." & cr & "A little long. Be patient" into  tMessage
-   showBusyIndicator true, tMessage
-   show grp "LoadingGroup"
+   --   # Then sorts on date sends back the request number of records.
+   --   put "Loading....." & cr & "A little long. Be patient" into  tMessage
+   --   showBusyIndicator true, tMessage
+   --   show grp "LoadingGroup"
    
    
    # if pFilterListQueryA is empty, it means we are coming in
@@ -603,6 +603,10 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          #  just sets the WHERE clause in the query with whatever you request. 
          
+         # we have are showing busy singal
+         
+         showBusyIndicator true, "The Pause. . ." & cr & "It will take sometime." &cr \
+               & "Be patient."
          
          
          # Set up the WHERE claus
@@ -639,7 +643,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
-         showBusyIndicator true,"Loading Collection"
+         --showBusyIndicator true,"Loading Collection"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
          put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]

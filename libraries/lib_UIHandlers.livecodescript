@@ -796,7 +796,9 @@ command setBusySemphore pBool
 end setBusySemphore
 
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   --   breakpoint
+   --breakpoint
+   
+   
    if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       --put sMsg into sLoadProgress # this string will change through the loop below.
@@ -806,9 +808,9 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
       
       # set a message
       --set the label of sLoadingIndicator to sLabel
-      set the label of sLoadingIndicator  to sMsg
+      set the label of grc "Loading"  to sMsg
       
-      if there is a  sLoadingIndicator then
+      if there is a  sLoadingGroup then
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag

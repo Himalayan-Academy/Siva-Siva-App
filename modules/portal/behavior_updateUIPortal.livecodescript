@@ -66,7 +66,7 @@ on mouseup
       exit mouseup
       break
    case "loading"
-      showbusyIndicator false
+      --showbusyIndicator false
       exit Mouseup
       break
       
