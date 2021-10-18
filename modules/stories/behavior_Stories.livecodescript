@@ -175,11 +175,7 @@ on mouseup
          
          showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
                & "Be patient."
-
-         if ismobile() then
-            mobileClearTouchesll
-         end if
-         
+          
          exit top
          break
          --
