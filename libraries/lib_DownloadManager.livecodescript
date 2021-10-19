@@ -121,6 +121,7 @@ command verifyAndExpandAssets
          end if
          wait 50 millisecs with messages
       end repeat
+      jnanam_UpdatePhotoCache
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanded" && x && the number of lines in tFileList )
    else
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr,no assets.zip")

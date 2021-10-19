@@ -77,14 +77,14 @@ private function asset_GetFileFromItemArray pItemA
 end asset_GetFileFromItemArray
 
 function jnanam_GetDatabasePath
-      return path_Documents() & "jnanam.sqlite"
+   return path_Documents() & "jnanam.sqlite"
 end jnanam_GetDatabasePath
 
 
 --> Jnanam
 -
 function jnanamDB
-      if sID is not a number then
+   if sID is not a number then
       _loadDatabase
    end if
    return sID
@@ -150,7 +150,7 @@ private command updateCache pMediaType
          delete line 1 of tFileIDs# .. listing
          replace cr with comma in tFileIDs
          put format ("UPDATE item SET cached_on_disk=\"true\" WHERE file_id IN" ) into pSQL
-               put " (" & quoteValuesforSQLparam(tFileIDs) & ")" after pSQL
+         put " (" & quoteValuesforSQLparam(tFileIDs) & ")" after pSQL
          put JnanamDB() into pDatabaseConnectionID
          dbExecuteSQL pSQL, pDatabaseConnectionID
          break
@@ -179,9 +179,7 @@ private command updateCache pMediaType
                breakpoint
             end if
          end repeat
-         
    end switch
-   
 end updateCache
 
 function quoteValuesforSQLparam pValueList
@@ -203,6 +201,8 @@ function jnanam_GetItem pFileID
 end jnanam_GetItem
 
 command jnanam_SaveNewItem pItemA
+   local tA, tResult
+   
    if pItemA["file_id"] is empty then 
       return "jnanamerr, can't save item with no file_id"
    end if
