@@ -1,7 +1,7 @@
 Script "stack_journal_card_id_84667"
 
 /*
-# Name: card id 84667 of stack "journal" of stack "Siva-Siva-App"
+# Name: card "deleteEntries" of stack "journal" of stack "Siva-Siva-App"
 # ID: card id 84667 of stack "journal" of stack "Siva-Siva-App"
 */
 
@@ -36,14 +36,14 @@ end layoutHeader
 on layoutFilters
    local tRect
    put 10,(the bottom of grc "header bar" + 10),(the width of this card - 10), (the bottom of grc "header bar" + 70) into tRect
-   set the rect of button "favorites" to tRect
-   if the cFlag of button "favorites" then
-      set the backColor of button "favorites" to "green4"
-      set the foreColor of button "favorites" to 255,255,255
-   else
-      set the backColor of button "favorites" to 128,128,255
-      set the foreColor of button "favorites" to 255,255,255
-   end if
+   -- set the rect of button "favorites" to tRect
+   --   if the cFlag of button "favorites" then
+   --      set the backColor of button "favorites" to "green4"
+   --      set the foreColor of button "favorites" to 255,255,255
+   --   else
+   --      set the backColor of button "favorites" to 128,128,255
+   --      set the foreColor of button "favorites" to 255,255,255
+   --   end if
 end layoutFilters
 
 on layoutCard
@@ -212,7 +212,7 @@ on createNewJournalEntry pEntryA, pNum
    set the behavior of widget tName to (the long id of stack "behavior_JournalEntryDelete")
    
    set the iconPath of widget tName of me to the iconPath of widget "remove" of card "templates"
-   set the foreColor of widget tName to red
+   set the foreColor of widget tName to "red"
    
    set the width of widget tName to 44
    set the left of widget tName to 4

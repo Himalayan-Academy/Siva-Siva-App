@@ -1,7 +1,7 @@
 Script "stack_journal_button_id_84664"
 
 /*
-# Name: button "favorites" of card id 84667 of stack "journal" of stack "Siva-Siva-App"
+# Name: button "favorites" of card "deleteEntries" of stack "journal" of stack "Siva-Siva-App"
 # ID: button id 84664 of card id 84667 of stack "journal" of stack "Siva-Siva-App"
 */
 

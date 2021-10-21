@@ -479,7 +479,7 @@ command goNextScene
    put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tImagePath
    if sWhere is "local" then
       if tImagePath is empty then
-         put "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg" into tImagePath
+         put path_Assets()&"img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg" into tImagePath
       end if
       set the filename of sStoryImage to tImagePath
    else

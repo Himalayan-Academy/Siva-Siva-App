@@ -1,8 +1,4 @@
 # surprise
-**stack "surprise"**
-* ID: stack "surprise"
-* [stack_surprise_](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_.livecodescript)
-
 **graphic "bottomTabBkgnd" of bkgnd "bogusgroup" of stack "surprise"**
 * ID: graphic id 1024 of bkgnd id 1016 of stack "surprise"
 * [stack_surprise_graphic_id_1024](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_graphic_id_1024.livecodescript)
@@ -68,24 +64,16 @@
 * Behavior: stack "siva_fields_behavior"
 * [stack_surprise_field_id_1265](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1265.livecodescript)
 
+**graphic "touchTrap" of bkgnd "loadingGroup" of stack "surprise"**
+* ID: graphic id 1686 of bkgnd id 1601 of stack "surprise"
+* [stack_surprise_graphic_id_1686](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_graphic_id_1686.livecodescript)
+
 **bkgnd "share-ui" of stack "surprise"**
 * ID: bkgnd id 1509 of stack "surprise"
 * Behavior: stack "behavior_SocialShare"
 
 * Shared group on card IDs: 1494, 1002, 1106, 1031, 1039, 1037
 * [stack_surprise_bkgnd_id_1509](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_bkgnd_id_1509.livecodescript)
-
-**graphic "touchTrap" of bkgnd "loadingGroup" of stack "surprise"**
-* ID: graphic id 1686 of bkgnd id 1601 of stack "surprise"
-* [stack_surprise_graphic_id_1686](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_graphic_id_1686.livecodescript)
-
-**button "Hide" of bkgnd "viewLogging" of stack "surprise"**
-* ID: button id 1689 of bkgnd id 1687 of stack "surprise"
-* [stack_surprise_button_id_1689](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1689.livecodescript)
-
-**button "Clear" of bkgnd "viewLogging" of stack "surprise"**
-* ID: button id 1690 of bkgnd id 1687 of stack "surprise"
-* [stack_surprise_button_id_1690](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1690.livecodescript)
 
 **card "surprise" of stack "surprise"**
 * ID: card id 1494 of stack "surprise"
@@ -120,9 +108,17 @@
 * Behavior: stack "behavior_mobileScroller"
 * [stack_surprise_field_id_1105](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1105.livecodescript)
 
-**card "surprise_audio" of stack "surprise"**
-* ID: card id 1031 of stack "surprise"
-* [stack_surprise_card_id_1031](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_card_id_1031.livecodescript)
+**group "answerDlgGrp" of card "surprise_audio" of stack "surprise"**
+* ID: group id 1711 of card id 1031 of stack "surprise"
+* [stack_surprise_group_id_1711](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1711.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "surprise_audio" of stack "surprise"**
+* ID: graphic id 1712 of group id 1711 of card id 1031 of stack "surprise"
+* [stack_surprise_graphic_id_1712](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_graphic_id_1712.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "surprise_audio" of stack "surprise"**
+* ID: field id 1714 of group id 1713 of group id 1711 of card id 1031 of stack "surprise"
+* [stack_surprise_field_id_1714](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1714.livecodescript)
 
 **card "surprise_darshan" of stack "surprise"**
 * ID: card id 1039 of stack "surprise"

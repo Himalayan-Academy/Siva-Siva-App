@@ -9,4 +9,5 @@ Script "stack_journal_widget_id_84716"
 
 on mouseup
    go next card
+   hide button "favorites"
 end mouseup

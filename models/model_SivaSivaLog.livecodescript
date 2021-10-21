@@ -55,7 +55,7 @@ end display_RowLink
 -
 function log_GetFile
    --    if the environment is "mobile" then
-   put the documents folder & slash & "SivaSivaApp/Siva-Siva-App.log" into logFile
+   --put the documents folder & slash & "SivaSivaApp/Siva-Siva-App.log" into logFile
    -- else
    --    -- changed to use the system specific temp folder in development environment
    --    -- as we don't want to store changing log files in git
@@ -67,6 +67,7 @@ function log_GetFile
    --       put logFile into LocalArray ["logFile"]
    --    end if
    -- end if
+   put path_Documents() & "Siva-Siva-App.log" into logFile
    return logFile
 end log_GetFile
 

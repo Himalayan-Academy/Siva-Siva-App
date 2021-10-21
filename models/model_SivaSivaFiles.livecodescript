@@ -236,7 +236,9 @@ end sivasiva_PhotosFolder
 --> SivaSiva | Asset | Folders
 -
 function sivasiva_AssetFolder  pRelativeFolderPath
-   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
+   --   put sivasiva_ProjectFolder() & "assets/" into sharedAssetFolder
+   --put the documents folder & "/assets/" into sharedAssetFolder
+   put path_Assets() into sharedAssetFolder
    if pRelativeFolderPath is not empty then put pRelativeFolderPath after sharedAssetFolder
    return sharedAssetFolder
 end sivasiva_AssetFolder
