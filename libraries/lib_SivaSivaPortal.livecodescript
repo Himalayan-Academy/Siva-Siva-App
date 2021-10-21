@@ -100,14 +100,14 @@ command portal_GoStack cardOrStackObject
    else
       put empty into sDestinationCardOrStack
    end if
-   if there is a grp "loadingGroup" then
-      showBusyIndicator false
-   end if
+   --   if there is a grp "loadingGroup" then
+   --      showBusyIndicator false
+   --   end if
    close stack oStackName
    unlock screen
    
    go cardOrStackObject
- 
+   
    if oStackName is "Siva-Siva-Portal" then 
       put "navigation/topindex" into pAction
    else 
@@ -211,7 +211,7 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    local tMsg 
    put "Loading" into tMsg
    setBusySemphore (true) 
-   showBusyIndicator true, tMsg
+   --showBusyIndicator true, tMsg
    --showBusyIndicator true, tMsg
    
    --lock screen
