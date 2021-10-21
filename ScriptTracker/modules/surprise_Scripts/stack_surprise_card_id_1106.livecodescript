@@ -11,7 +11,7 @@ Script "stack_surprise_card_id_1106"
 on setUpQuote
    local aQuoteDetails
    
-   lock screen
+   --lock screen
    put getQuoteData() into aQuoteDetails
    put aQuoteDetails["content"] into fld "random-verse"
    
