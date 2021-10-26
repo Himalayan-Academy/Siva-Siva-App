@@ -156,10 +156,8 @@ end path_Documents
 
 function path_Assets
    local tPath
-   --put path_HomeLocal() into tPath
    put path_Documents() into tPath
    put "assets/" after tPath
-   --return (the documents folder & "/assets/")
    return tPath
 end path_Assets
 

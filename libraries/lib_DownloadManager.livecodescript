@@ -84,7 +84,7 @@ command downloadAssets
 end downloadAssets
 
 command verifyAndExpandAssets
-   local tZipPath, tZipManifest, tFileList, tFile, tDestinationFile
+   local tZipPath, tZipManifest, tFileList, tFile, tDestinationFile, tLine, tFileCount
    
    cancel sCheckStatusMsgID
    
@@ -104,9 +104,11 @@ command verifyAndExpandAssets
       end if
       
       put revZipEnumerateItems(tZipPath) into tFileList
-      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding 0" && the number of lines in tFileList )
-      repeat with x = 1 to the number of lines in tFileList
-         put line x of tFileList into tFile
+      put the number of lines in tFileList into tFileCount
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding 0" && tFileCount )
+      put 0 into tLine
+      repeat for each line tFile in tFileList
+         add 1 to tLine
          put (path_Assets() & tFile) into tDestinationFile
          replace "./" with empty in tDestinationFile
          
@@ -117,12 +119,12 @@ command verifyAndExpandAssets
             dispatch sConfigA["handler"] to sConfigA["target"] with the result
             exit repeat
          else
-            dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding" && x && the number of lines in tFileList )
+            dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding" && tLine && tFileCount )
          end if
-         wait 50 millisecs with messages
+         wait 5 millisecs with messages
       end repeat
       jnanam_UpdatePhotoCache
-      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanded" && x && the number of lines in tFileList )
+      dispatch sConfigA["handler"] to sConfigA["target"] with ("expanded" && tLine && tFileCount )
    else
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanderr,no assets.zip")
    end if
