@@ -435,7 +435,7 @@ command copyAssetsFrom pFolder
    end repeat
    
    repeat for each line tFolder in tFolders
-      copyAssetsFrom tFolder
+      copyAssetsFrom pFolder & "/" & tFolder
    end repeat
 end copyAssetsFrom
 

@@ -84,7 +84,7 @@ command downloadAssets
 end downloadAssets
 
 command verifyAndExpandAssets
-   local tZipPath, tZipManifest, tFileList, tFile, tDestinationFile, tLine, tFileCount
+   local tZipPath, tZipManifest, tFileList, tFile, tDestinationFile, tLine, tFileCount, tBasePath
    
    cancel sCheckStatusMsgID
    
@@ -104,12 +104,19 @@ command verifyAndExpandAssets
       end if
       
       put revZipEnumerateItems(tZipPath) into tFileList
+      filter tFileList without "__*"
+      filter tFileList without "*/"
+      if line 1 of tFileList begins with "assets" then
+         put path_Documents() into tBasePath
+      else
+         put path_Assets() into tBasePath
+      end if
       put the number of lines in tFileList into tFileCount
       dispatch sConfigA["handler"] to sConfigA["target"] with ("expanding 0" && tFileCount )
       put 0 into tLine
       repeat for each line tFile in tFileList
          add 1 to tLine
-         put (path_Assets() & tFile) into tDestinationFile
+         put (tBasePath & tFile) into tDestinationFile
          replace "./" with empty in tDestinationFile
          
          createFolders tDestinationFile
