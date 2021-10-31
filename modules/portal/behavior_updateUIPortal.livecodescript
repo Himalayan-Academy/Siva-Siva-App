@@ -71,7 +71,8 @@ on mouseup
       break
       
    case "News"
-      News_Fetch
+      
+       News_Fetch
       put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
       set the htmltext of fld "helpField" to tNews
       
@@ -525,9 +526,6 @@ command updateUIPortal
          put the long id of fld "subNavFld" into tControl
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
-         
-         put the long id of btn "News" into tNews
-         bottomLeftMe tNews, 20, 40
          
          put the long id of btn "News" into tNews
          bottomLeftMe tNews, 20, 40

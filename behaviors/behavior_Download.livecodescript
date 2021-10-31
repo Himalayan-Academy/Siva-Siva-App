@@ -52,7 +52,7 @@ local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 
 
 on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
-   
+   breakpoint
    put pTitle into fld "progressTitle"
    
    # store some info in local so we can use these when we send msg

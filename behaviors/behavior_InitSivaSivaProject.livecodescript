@@ -73,7 +73,7 @@ command init_AppConfiguration
    # we have simple path scripts in the main backscript.  We load the first
    # this till deprecate all of David codes non-sense code in 
    
-   logging "finish loading json"
+   --logging "finish loading json"
    
    init_LoadStackFilesFromConfiguration
    
