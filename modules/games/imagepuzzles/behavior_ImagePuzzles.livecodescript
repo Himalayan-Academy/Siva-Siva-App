@@ -502,13 +502,10 @@ on updateUI
          centerMe sTitleImage,0,0
          
          put the long id of grp "title" into tTitle
-         bottomCenterMe tTitle, 150
-         
-         put the long id of grp"goImagePuzzle" into tGoImagePuzzle
-         bottomCenterMe tGoImagePuzzle, 20
+         bottomCenterMe tTitle, 70
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, 70
+         bottomRightMe tHelpButton, 25, 130
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
