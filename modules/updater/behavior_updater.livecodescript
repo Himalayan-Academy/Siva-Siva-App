@@ -1,12 +1,13 @@
 ﻿script "behavior_updater"
 on preOpenCard 
-   
+   --breakpoint
+  
+   #  UI responsive
    
    if the environment is not "development" then
       hide stack "Siva-Siva-App"
-   end if  
+   end if  setCardCoords "portrait"
    
-   hide widget "Spinner"
 end preOpenCard
 
 on errorDialog pExecutionError, pParseError
@@ -31,25 +32,36 @@ end st
 
 on openCard
    
-   local tStatus, tSpinner, tImage
    
-   #  UI responsive
-   --breakpoint
-   put the long id of fld "status"  into tStatus
-   put the long id of widget "Spinner"  into tSpinner
+   local tHelpField, tStatus, tSpinner, tImage, tGraphic
+   local tAssetDownloaderGroup
    
-  
+   setCardCoords "portrait"
+   
+   
+   --   put the long id of img "vamadevaImage" into tImage
+   --   put the long id of grc "underLayout" into tGraphic
+   --   put the long id of fld "helpField"  into tHelpField 
+   --   put the long id of fld "status"  into tStatus
+   --   put the long id of widget "Spinner"  into tSpinner
+   
+   --   centerMe tImage, 0, 0
+   --   topCenterMe tHelpField, 445
+   --   topCenterMe tStatus, 570
+   --   topCenterMe tSpinner, 615
+   
+   put the long id of grp "assetDownloader" into tAssetDownloaderGroup
+   topCenterMe  tAssetDownloaderGroup, 400
+   
    st "Checking for updates..."
    setDownloadStatusCallback "updateUI", the long id of this stack
    show widget "spinner"
    st "Downloading updates..."
    downloadAssets
-
    
 end openCard
 
 on updateUI pStatus
-  
    
    switch word 1 of pStatus
       case "loading"
