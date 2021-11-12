@@ -531,7 +531,7 @@ command updateUIPortal
          bottomLeftMe tNews, 20, 40
          
          put the long id of fld "explanationMarker" into tExplanationMarker
-         bottomLeftMe tExplanationMarker,90, 33
+         bottomLeftMe tExplanationMarker,90, 38
          
          
          put the long id of btn "helpButton" into tHelpButton
