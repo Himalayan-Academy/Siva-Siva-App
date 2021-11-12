@@ -178,7 +178,7 @@ on updateUISettings
    switch (the short name of this card)
       
       case "settings-home"
-         put the long id of img "Logo" of me into tControl
+         put the long id of btn "Logo" of me into tControl
          topLeftMe tControl,19,16
          
          put the long id of grp "settings-options-1" of me into tControl
