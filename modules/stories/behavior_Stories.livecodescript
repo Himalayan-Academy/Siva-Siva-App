@@ -292,11 +292,11 @@ on setupOrDownloadStory
       case "local"
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
-         if sLastStory is empty or sLastStory is not sStoryTitle then
+         --if sLastStory is empty or sLastStory is not sStoryTitle then
             
             dataLocalStack sStoryTitle
             
-         end if
+         --end if
          put true into sAllowLandscape
          break
       case "server"
@@ -393,6 +393,7 @@ end visualArticle
 
 
 command goNextScene
+   
    local tImagePath, tMsg, tLoc, tShowPhoto
    --
    lock screen
@@ -713,6 +714,7 @@ on journalResume pData -- sent from journal stack
       setupOrDownloadStory
       put sStoryTitle into sLastStory
       visualArticle
+      showStoryText
    else
       go to card tCd
    end if
