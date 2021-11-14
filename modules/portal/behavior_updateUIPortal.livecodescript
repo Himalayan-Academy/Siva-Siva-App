@@ -531,15 +531,15 @@ command updateUIPortal
          bottomLeftMe tNews, 20, 40
          
          put the long id of fld "explanationMarker" into tExplanationMarker
-         bottomLeftMe tExplanationMarker,90, 38
+         bottomLeftMe tExplanationMarker,90, 35
          
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 20, 40
+         bottomRightMe tHelpButton, 20, 35
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 60
+         topLeftMe tHelpBkg, -10, 30
          
          put the long id of grp "helpField" into tHelpFieldGrp
          set the width of tHelpFieldGrp to (CardWidth() - 30)
