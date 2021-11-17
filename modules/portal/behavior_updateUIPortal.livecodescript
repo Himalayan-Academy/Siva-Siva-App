@@ -535,7 +535,7 @@ command updateUIPortal
          
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 20, 35
+         bottomRightMe tHelpButton, 20, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
