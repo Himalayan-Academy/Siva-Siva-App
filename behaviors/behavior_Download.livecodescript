@@ -32,7 +32,7 @@ path_FileForUrl  # will creae a folder if needed for the request URL
 -------------------------------
 -- vars
 global sConfigA
-local sURL, sRequestedBy, sRecordNumber, sDownloadStart
+local sURL, sRequestedBy, sRecordNumber, sDownloadStart, sFilePath
 
 ---------------------------------
 -- downLoadURL
@@ -51,7 +51,7 @@ local sURL, sRequestedBy, sRecordNumber, sDownloadStart
 -- otherwise it is not even called in the first place.
 
 
-on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
+on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy,pFilePath
    --breakpoint
    put pTitle into fld "progressTitle"
    
@@ -61,13 +61,14 @@ on downLoadURL pTitle,pURL,pRecordNumber,pRequestedBy
    put pURL into sURL 
    put pRecordNumber into sRecordNumber
    put pRequestedBy into sRequestedBy
+   put pFilePath into sFilePath
    
    -- set up a message to show the status of the download as it progresses
    libURLSetStatusCallback "showDownloadProgress", the long name of grp "downloadControls"
    	
    -- make sure the progress bar is hidden, as this property is used to initialise it
    hide scrollbar "ProgressBar"
-   put "Waiting for connection"  into fld "ProgressField"
+   put "Waiting for connection" into fld "ProgressField"
    put the seconds into sDownloadStart
    	
    -- start the download process, telling Rev to call the "downloadComplete" handler when finished
@@ -88,8 +89,6 @@ command showDownloadProgress pURL, pStatus
    
    local tTotalBytes, tBytesReceived, tKBreceived, tTotalKB, tElapsedSeconds
    local tKBperSecond,
-   
-   
    
    if the number of items in pStatus = 3 then
       if the visible of scrollbar "Progressbar" = false then
@@ -146,19 +145,27 @@ command downloadComplete pURL, pStatus
       wait 1 second with messages
       put removeQuotes(sRequestedBy) into tModule     
       tracking_RecordActivity tModule,"download/failed"
-      hidedDownloadControls
+      hideDownloadControls
    else
-      put  path_FileFromURL(sURL) into tLocalPath # includes filename
+      if sFilePath is not empty then
+         put sFilePath into tLocalPath
+      else
+         put path_FileFromURL(sURL) into tLocalPath # includes filename
+      end if
       put URL pURL into URL ("binfile:" & tLocalPath)
-     
+      
       unload pURL
       
       hideDownloadControls
-      put   pURL into tModule     
+      put pURL into tModule     
       tracking_RecordActivity tModule,"download/saved"
+      if sRequestedBy is "Stories" then
+         send "dataServerStack" to me in 0 milliseconds
+      end if
    end if
    hide grp "DownloadControls"
 end downloadComplete
+
 
 on mouseup
    local tMouseEvent
@@ -167,7 +174,7 @@ on mouseup
    switch tMouseEvent
       case "cancel"
          unload sURL
-        hide grp "DownloadControls"
+         hide grp "DownloadControls"
          break
    end switch
    hideDownloadControls

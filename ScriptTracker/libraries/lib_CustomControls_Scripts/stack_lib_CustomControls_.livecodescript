@@ -6,6 +6,6 @@ Script "stack_lib_CustomControls_"
 */
 
 
-on preopencard
-   set the label of this stack to the short name of this card
-end preopencard
+--on preopencard
+--   set the label of this stack to the short name of this card
+--end preopencard

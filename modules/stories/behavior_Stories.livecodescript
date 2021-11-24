@@ -293,9 +293,9 @@ on setupOrDownloadStory
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
          --if sLastStory is empty or sLastStory is not sStoryTitle then
-            
-            dataLocalStack sStoryTitle
-            
+         
+         dataLocalStack sStoryTitle
+         
          --end if
          put true into sAllowLandscape
          break
@@ -308,7 +308,7 @@ on setupOrDownloadStory
                   && "of images.  Once the story is complete" && \
                   "you will have an opportunity to delete the images." && \
                   "Would you like to proceed?" into tMsg
-            doAnswer tMsg, "Download,Cancel", "downloadAndShowStory"
+            doAnswer tMsg, "Download,Cancel", "downloadStory"
             exit to top
          end if
          put true into sAllowLandscape
@@ -317,19 +317,24 @@ on setupOrDownloadStory
 end setupOrDownloadStory
 
 
-on downloadAndShowStory
-   
-   local tMessage
-   
-   showBusyIndicator true, ("Loading. . . . A little long." & cr & "3 mins. . . Be patient")
-   
-   dataServerStack sStoryTitle
-   showBusyIndicator false
+on downloadStory
+   downloadStoryStack sStoryTitle
+end downloadStory
+
+
+on showDownloadedStory
    put true into sAllowLandscape
    if there is a file sStoryDataStack then
       visualArticle
    end if
-end downloadAndShowStory
+end showDownloadedStory
+
+on hideDownloadControls
+   put empty into fld "ProgressTitle"
+   put empty into fld "progressField"
+   hide scrollbar "progressbar"
+   set the thumbPosition of scrollbar "Progressbar" to 0
+end hideDownloadControls
 
 
 on deleteFinishedStory

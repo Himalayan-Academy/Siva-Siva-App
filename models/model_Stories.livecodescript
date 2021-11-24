@@ -14,7 +14,7 @@
 # CHANGES  10-08-2019 Added a command to call a class of story (future use case, current a slideshow from the app) and random function 
 # CHANGES: 10-20-2018 CREATED Brahmanathaswami
 
-local  sStoriesMetaArray, sStoryTitle
+local  sStoriesMetaArray, sStoryTitle, sFilePath
 
 
 function loadStoriesMetadata 
@@ -102,12 +102,12 @@ on dataLocalStack pPassTitle
 end dataLocalStack
 
 
-on dataServerStack pStoryTitle
+on downloadStoryStack pStoryTitle
    put loadStoriesMetadata() into sStoriesMetaArray
+   put pStoryTitle into sStoryTitle
    
    local tHttpsServerRoot, tLocalDocumentsStories
-   local tFilePath, tServerPath, tFiles, tLocation
-   local tItems, tCompressionMethod,tItem,tZipItem
+   local tServerPath
    
    put "https://dev.himalayanacademy.com/media/stories/" into tHttpsServerRoot
    put path_Documents()& "media/stories/" into tLocalDocumentsStories
@@ -117,26 +117,35 @@ on dataServerStack pStoryTitle
    
    create folder tLocalDocumentsStories & pStoryTitle
    
-   put tLocalDocumentsStories & pStoryTitle & "/" & pStoryTitle & ".zip" into tFilePath
-   put URL (tServerPath) into  URL ("binfile:" & tFilePath)
+   put tLocalDocumentsStories & pStoryTitle & "/" & pStoryTitle & ".zip" into sFilePath
+   --put URL (tServerPath) into  URL ("binfile:" & tFilePath)
+   
+   show grp "downloadControls"
+   wait 100 milliseconds with messages
+   dispatch "downloadURL" to group "downloadControls" with pStoryTitle, tServerPath, 0, "Stories", sFilePath
+end downloadStoryStack
+
+on dataServerStack
+   local tFiles, tLocation
+   local tItems, tCompressionMethod,tItem,tZipItem
    
    ------ # open the database
    
    set the itemDel to "/"
-   put item 1 to -2 of tFilePath into tLocation
+   put item 1 to -2 of sFilePath into tLocation
    --put "/" & char 1 to -5 of item -1 of tFilePath after tLocation
    ensureFolder tLocation
    
-   revZipOpenArchive tFilePath, "read"
+   revZipOpenArchive sFilePath, "read"
    local tZipContents
    --   put revZipEnumerateItems(tFilePath) into tZipContents
-   put revZipEnumerateItems(tFilePath) into tFiles
+   put revZipEnumerateItems(sFilePath) into tFiles
    
    repeat for each line tZipItem in tFiles
       set the itemDel to comma
-      put item 6 of revZipDescribeItem(tFilePath,tItem) into tCompressionMethod
+      put item 6 of revZipDescribeItem(sFilePath,tItem) into tCompressionMethod
       set the itemDel to "/"
-      if item 1 of tZipItem is pStoryTitle then
+      if item 1 of tZipItem is sStoryTitle then
          -- some zip files include an extra folder level
          put item 2 to -1 of tZipItem into tItem
       else
@@ -151,16 +160,17 @@ on dataServerStack pStoryTitle
       else if tCompressionMethod is "deflate" then
          -- first make sure that the folder exists
          ensureFolder tLocation & "/" & item 1 to -2 of tItem
-         revZipExtractItemToFile tFilePath, tZipItem, tLocation & "/" & tItem
+         revZipExtractItemToFile sFilePath, tZipItem, tLocation & "/" & tItem
       else
          -- ignore this item, possibly displaying a message to the user, that this file cannot be extracted
          -- because its compression type is not supported by this program
       end if
    end repeat
    
-   revZipCloseArchive tFilePath
+   revZipCloseArchive sFilePath
    
-   delete file tFilePath
+   delete file sFilePath
+   showDownloadedStory
 end dataServerStack
 
 on ensureFolder pFolder

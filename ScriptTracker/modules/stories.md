@@ -15,6 +15,30 @@
 * ID: graphic id 1386 of bkgnd id 1385 of stack "stories"
 * [stack_stories_graphic_id_1386](./../../ScriptTracker/modules/stories_Scripts/stack_stories_graphic_id_1386.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1402 of bkgnd id 1400 of stack "stories"
+* [stack_stories_button_id_1402](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1402.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1403 of bkgnd id 1400 of stack "stories"
+* [stack_stories_button_id_1403](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1403.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1413 of bkgnd id 1411 of stack "stories"
+* [stack_stories_button_id_1413](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1413.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1414 of bkgnd id 1411 of stack "stories"
+* [stack_stories_button_id_1414](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1414.livecodescript)
+
+**button "Hide" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1418 of bkgnd id 1416 of stack "stories"
+* [stack_stories_button_id_1418](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1418.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1419 of bkgnd id 1416 of stack "stories"
+* [stack_stories_button_id_1419](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1419.livecodescript)
+
 **button "Edit Model Stories" of group "Tools" of card "storyHome" of stack "stories"**
 * ID: button id 1297 of group id 1298 of card id 1002 of stack "stories"
 * [stack_stories_button_id_1297](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1297.livecodescript)
