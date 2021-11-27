@@ -741,6 +741,7 @@ on updateUI
    local tCard, tFooter, tControl, tRect
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
    local tStoryTextBkg, tGoNext, tGoPrev
+   local tProgressTitle
    --
    put the short name of this card into tCard
    --
@@ -790,6 +791,10 @@ on updateUI
       --
       put the long id of grc "Loading" into tControl
       set the loc of tControl to CardLoc()
+      --
+      put the long id of fld "ProgressTitle" into tControl
+      bottomCenterMe tControl, 450
+      
    end if
    --
    if tCard is "storyDeleteFile" then
