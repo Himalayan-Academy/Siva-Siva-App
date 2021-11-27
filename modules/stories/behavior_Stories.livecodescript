@@ -793,7 +793,7 @@ on updateUI
       set the loc of tControl to CardLoc()
       --
       put the long id of fld "ProgressTitle" into tControl
-      bottomCenterMe tControl, 450
+      bottomCenterMe tControl, 500
       
    end if
    --

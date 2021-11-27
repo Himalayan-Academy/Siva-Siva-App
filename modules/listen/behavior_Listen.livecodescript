@@ -202,6 +202,7 @@ command updateUI
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
    local tFldInformation, tGroupAudioDetails
    Local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
+   Local tProgressTitle
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
