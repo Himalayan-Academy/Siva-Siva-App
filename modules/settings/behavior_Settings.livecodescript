@@ -111,7 +111,7 @@ on displayInfo pVis, pSubject
          case "About"
             put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
             break
-         case "tos-privacy-eula"
+         case "privacy-tos-eula"
             put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
             break
          case "release-notes"
