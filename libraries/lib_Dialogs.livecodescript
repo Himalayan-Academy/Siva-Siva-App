@@ -224,4 +224,72 @@ command doAnswerResponse
    end if
 end doAnswerResponse
 
+---------------------------
+----------------------------------------------
+--> displayInfo
+-- DESCRIPTION: 
+-- 2017-06-19: that control is only in the /module/settings/settings.livecode stack at the moment
+-- PARAMETERS
+-- pVis : 1 ="true" and we turn on the vis of the control after setting it up.
+-- pSubject... use as a case in the switch to determine what info is placed in the display-text field
+-- can call some html file like from /assets/info/*.html 
+-- or could come from a specific module folder to a specific module "how to" info 
+-- CHANGES:
+-- 2017-06-12, Brahmanatahswami: created
+------------------------------------------------
+--on displayInfo pVis, pSubject
+--   local tCardName, tTextPath
+--   put the short name of this card into tCardName
+
+--   if pVis = "1" then   # We are showing the control
+
+--      # set up background image first, if no param 
+--      # then use landscapes as default
+
+--      # next insert the text we need, either stored on the app somewhere or from a web URL
+
+--      switch pSubject
+--         case "App News"
+--            put path_Documents() & "assets/info/siva-app-news.html" into tTextPath
+--            break
+--         case "About"
+--            put path_Assets()&"info/about-siva-siva-app.html" into tTextPath
+--            break
+--         case "privacy-tos-eula"
+--            put path_Assets()&"info/privacy-tos-eula.html" into tTextPath
+--            break
+--         case "release-notes"
+--            put path_Assets()&"info/release-notes.html" into tTextPath
+--            break
+--         case "credits"
+--            put path_Assets()&"info/credits.html" into tTextPath
+--            break
+--         case "User Guide"
+--            put path_Assets()&"info/user-guide.html" into tTextPath
+--            break
+--      end switch
+
+--      switch tCardName
+--         case  "info" 
+--            set the htmltext of fld "info-text" of card "info" to url ("file:" &tTextPath)
+--            break
+
+--         case "home"
+--            set the htmltext of fld "info-text" of card "home" to url ("file:" &tTextPath) 
+--            break
+
+--      End switch
+
+--   else 
+--      put empty into fld "info-text"
+--      deleteMobileControl "info-text" 
+
+--   end if
+
+--end displayInfo
+
+--on linkClicked pLink
+--   displayInfo 1,pLink   
+--end linkClicked
+
 

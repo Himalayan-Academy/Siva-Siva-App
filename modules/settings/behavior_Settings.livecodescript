@@ -81,9 +81,7 @@ on hideMe
    set the textsize of fld "info-text" to 18
    deleteMobileControl "info-text" 
 end hideMe
-
-
-
+----------
 
 ----------------------------------------------
 --> displayInfo
@@ -133,7 +131,12 @@ on displayInfo pVis, pSubject
    
 end displayInfo
 
+on linkClicked pLink
+  displayInfo 1,pLink   
+end linkClicked
 
+
+-------------
 on closeStack
    portal_SetLastStack "settings"
 end closeStack
