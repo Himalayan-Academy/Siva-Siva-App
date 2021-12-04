@@ -39,7 +39,8 @@ end preOpenCard
 
 
 on opencard
- send "News_Fetch" to me in 500 milliseconds
+   News_Fetch
+   --send "News_Fetch" to me in 500 milliseconds
    audioIsRunning    
 end opencard
 
@@ -72,19 +73,20 @@ on mouseup
       
    case "News"
       
-       News_Fetch
+      News_Fetch
       put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
+      
       set the htmltext of fld "helpField" to tNews
       
       
       show grc "helpBkg"
       show btn "helpDismiss"
-      show grp "helpField"
+      show fld "helpField"
       lock screen
       deleteMobileControl "helpField"
       # recreate:
-      set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      set the top of fld "helpField" to the top of grp "helpField"
+    -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
+      --set the top of fld "helpField" to the top of grp "helpField"
       send "CreateScroller helpField" to fld "helpField"
       
       unlock screen
@@ -99,19 +101,19 @@ on mouseup
       
       show grc "helpBkg"
       show btn "helpDismiss"
-      show grp "helpField"
+      show fld "helpField"
       lock screen
       deleteMobileControl "helpField"
       # recreate:
-      set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      set the top of fld "helpField" to the top of grp "helpField"
+      --set the height of fld "helpField" to the formattedHeight of fld "helpField"
+      --set the top of fld "helpField" to the top of grp "helpField"
       send "CreateScroller helpField" to fld "helpField"
       
       unlock screen
       break
       
    case "helpDismiss"
-      hide grp "helpField"
+      hide fld "helpField"
       hide btn "helpDismiss"
       hide grc "helpBkg"
       break
@@ -218,7 +220,7 @@ command showNewsNotification pBool
       if pBool is true then
          put  ("You have the latest news!" & cr & "Click  " & quote & "News!" & quote ) into fld "notification" of stack "Siva-Siva-Portal"
          show fld "ExplanationMarker" 
-         wait 3000 milliseconds
+         wait 300 milliseconds
       else
          hide fld "ExplanationMarker" 
       end if
@@ -533,7 +535,6 @@ command updateUIPortal
          put the long id of fld "explanationMarker" into tExplanationMarker
          bottomLeftMe tExplanationMarker,90, 35
          
-         
          put the long id of btn "helpButton" into tHelpButton
          bottomRightMe tHelpButton, 20, 40
          
@@ -541,13 +542,9 @@ command updateUIPortal
          set the width of tHelpBkg to (CardWidth() + 20)
          topLeftMe tHelpBkg, -10, 30
          
-         put the long id of grp "helpField" into tHelpFieldGrp
-         set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 105
-         
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 105
+         topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 55
