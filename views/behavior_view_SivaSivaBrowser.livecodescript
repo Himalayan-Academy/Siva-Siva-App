@@ -198,8 +198,9 @@ on journal_AddEntry
       # which are appears on this sub nav list.
       # for now, this implemention of Video is contrain to that list
       # leave it for now
-      put portal_GetLabel() into tTitle
+      put getJournalData() into tTitle
       put browser_GetLastURL() into pData["url"] 
+      
    else
       
       # if URL ends with "/web/" it is a "book"
