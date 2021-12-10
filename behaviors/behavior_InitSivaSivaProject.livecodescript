@@ -584,7 +584,7 @@ end parseContext
 
 on errorDialog pExecutionError, pParseError
    repeat for each line x in pExecutionError
-      put x
+      --put x
       put line (item 1 of x) of the uScriptExecutionErrors of stack "Siva-Siva-App"
    end repeat
 end errorDialog

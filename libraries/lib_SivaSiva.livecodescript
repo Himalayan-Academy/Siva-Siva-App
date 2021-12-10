@@ -189,7 +189,7 @@ command fetchNavigationMap
    put tJSON
    try
       put JSONToArray(tJSON) into sSivaSivaNavigation
-      put the keys of sSivaSivaNavigation
+    -- put the keys of sSivaSivaNavigation
    catch n
       put "Error reading navigation map."
       repeat for each line x in n
@@ -787,6 +787,7 @@ on showLogging
 end showLogging
 
 command log pLog 
+   local tPath, tContextA,tObject, tHandler, tLineNumber
    set the itemdel to slash
    put item 1 to -2 of the effective filename of stack "Siva-Siva-App" into tPath
    
