@@ -898,5 +898,15 @@ on closestack
 end closestack
 
 
+on changeTool
+   set the hilitedButton of group 1 to \
+         itemOffset(word 1 of the tool, "select,pencil,brush,eraser,spray,bucket,dropper,line,polygon,curve,rectangle,oval,rounded,regular")
+end changeTool
+
+--on closeStack
+--choose browse Tool
+--end closeStack
+
+
 
 

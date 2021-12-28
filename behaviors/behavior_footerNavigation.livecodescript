@@ -77,7 +77,7 @@ on mouseup
             go card "listen-browse"
             put "listen-browse" into tCard
          else if tCard is "listen-search" then
-            go card "listen-collection"
+            open card "listen-collection"
          else if tCard is "listen-collection" then
             portal_GoStack ("Siva-Siva-Portal")
          else if tCard is "mainImagePuzzle" and \
@@ -92,7 +92,9 @@ on mouseup
          --
          break
          --
+         
       case "journal"
+         put the long name of this card into tCard
          local sCityName 
          unlock screen
          --
@@ -168,7 +170,21 @@ on mouseup
          --
          break
          --
-      default
+      case "ColorIt"
+         local tFile
+         
+         --put (specialFolderPath("resources") & slash) into tFile
+         --palette stack (tFile & "hapaint.livecode")
+         show grc "paintBkgnd"
+         show btn "cancel"
+         show grp "ColorsBrushesBrowse"
+         show grp "paintTool"
+         
+         
+         
+         break
+         
+      default    
          unlock screen
          pass mouseUp
    end switch
@@ -188,7 +204,7 @@ end updateUI
 
 
 on resizeControl
-   local tHSpace, tV, tH, tControl, tRect
+   local tHSpace, tV, tH, tRect, tControl
    put the width of me / (the number of items in sButtons) into tHSpace
    put item 2 of the loc of button 1 of me into tV
    put the left of me + (tHSpace / 2) into tH
@@ -204,3 +220,5 @@ on resizeControl
    set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
+
+
