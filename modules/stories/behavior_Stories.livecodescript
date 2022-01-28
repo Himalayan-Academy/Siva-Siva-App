@@ -26,6 +26,9 @@ local sTarget, sTargetOwner
 
 
 on preOpenStack
+   breakpoint
+   
+   
    landscapeOrientation "off"
    put loadStoriesMetadata() into sStoriesMetaArray
    set the filename of img "menuImage" of cd "storyHome" to \
@@ -132,6 +135,9 @@ end showStoryMenu
 UX for user for the stack and cardi
 */
 on mouseup
+   
+   breakpoint
+   
    local tTips
    --
    put the short name of the owner of the target into sTargetOwner
