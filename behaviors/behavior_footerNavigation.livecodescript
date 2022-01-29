@@ -28,7 +28,7 @@ on mouseup
    local tTarget, tShareControl, tControl, tCard
    local tBrowserExists, tBrowser, tBrowserRect, tBrowseHeader
    local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
-   local tMyMenuYesNo
+   local tMyMenuYesNo, tColorIt
    --
    lock screen
    put short name of the target into tTarget
@@ -168,12 +168,24 @@ on mouseup
          --
          break
          --
-      default
-         unlock screen
-         pass mouseUp
-   end switch
-   unlock screen
-end mouseup
+         
+      case "ColorIt"
+         if the vis of  grp "ColorsBrushesBrowser" is true then 
+            hide grp "ColorsBrushesBrowser"
+         else
+            show grp "ColorsBrushesBrowser"
+        end if
+            
+            
+            --
+            break
+            
+         default
+            unlock screen
+            pass mouseUp
+      end switch
+      unlock screen
+   end mouseup
 
 
 command unHiliteBtn pTarget
