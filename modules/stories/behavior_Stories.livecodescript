@@ -13,13 +13,13 @@ local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameter
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
-local sAllowLandscape, sStoryMenuTree, sStoryMetaArray
+local sAllowLandscape, sStoryMenuTree, sStoryMetaArray, sColorItImage
 
 # story control variables, stored cache
 # must wipe them on end of story
-local  sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
-local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
-local sStoryDataStack
+local sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
+local sAttribution, sStoryTitle, sLastScene, sTotalSceneCount
+local sStoryDataStack, sKeepStoryLoaded
 
 # various screen display options
 local sTarget, sTargetOwner
@@ -68,6 +68,9 @@ on preOpenCard
       hide sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
+   else if tCard is "colorIt" then
+      put the long id of img "colorItImage" into sColorItImage
+      set the filename of sColorItImage to the filename of sStoryImage
    end if
    updateUI
 end preopenCard
@@ -113,6 +116,7 @@ on opencard
       --
       showStoryMenu
    else if tCard is "showStories" then
+      put false into sKeepStoryLoaded
       --send "goNextScene" to me in 0 milliseconds
    end if
 end opencard
@@ -126,6 +130,18 @@ command showStoryMenu
    hide grp "tipsGroup" of cd "storyHome"
    show grp "storyMenu" of cd "storyHome"
 end showStoryMenu 
+
+
+function showColorItIcon
+   return (sStoryMetaArray["StoryType"] = "Arts")
+end showColorItIcon
+
+# when going to colorIt card, do not clear the story
+# flag set by footer navigation when going to colorIt card
+# flag cleared in openCard handler
+command keepStoryLoaded
+   put true into sKeepStoryLoaded
+end keepStoryLoaded
 
 
 /*
@@ -170,12 +186,10 @@ on mouseup
          dispatch "getSums" to grp "displayFilesSizes" with "stories"
          dispatch "displayTargetFolders" to grp "displayFilesSizes" with "stories"
          break
-         
+         --
       case "Loading"
-         
          showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
                & "Be patient."
-          
          exit top
          break
          --
@@ -218,6 +232,12 @@ on mouseup
          else
             showStoryText
          end if
+         break
+      case "cancel" # colorIt card
+         go cd "showStories"
+         break
+      case "save" # colorIt card
+         put "image saved here..."
          break
    end switch
 end mouseup
@@ -270,6 +290,9 @@ on hiliteChanged
    if the number of items in tHilitedElement = 2 then
       put char 3 to -1 of item 2 of tHilitedElement into sStoryTitle
       put sStoriesMetaArray["Stories"][char 3 to -1 of item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
+      # potentially a temporary solution, need to identify story type (folder) to know if
+      # the colorIt icon should be displayed
+      put char 3 to -1 of item 1 of tHilitedElement into sStoryMetaArray["StoryType"]
       --
       setupOrDownloadStory
       --
@@ -740,17 +763,19 @@ end resizeStack
 on updateUI
    local tCard, tFooter, tControl, tRect
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
-   local tStoryTextBkg, tGoNext, tGoPrev
+   local tStoryTextBkg, tGoNext, tGoPrev, tCancel, tSave
    local tProgressTitle
    --
    put the short name of this card into tCard
    --
-   put the long id of grp "footer" into tFooter
-   if currentlyLandscape() then
-      hide tFooter
-   else
-      show tFooter
-      send "updateUI" to tFooter
+   if tCard is not "colorIt" then
+      put the long id of grp "footer" into tFooter
+      if currentlyLandscape() then
+         hide tFooter
+      else
+         show tFooter
+         send "updateUI" to tFooter
+      end if
    end if
    --
    if there is a control "Title" then
@@ -862,7 +887,19 @@ on updateUI
       updateImageState true
    end if
    --
-   set the width of grp "share-ui" to cardWidth()
+   if tCard is "colorIt" then
+      put the long id of btn "cancel" into tCancel
+      put the long id of btn "save" into tSave
+      --
+      topLeftMe tCancel, 0, 8
+      topRightMe tSave, 0, 8
+      set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, cardWidth(), CardHeight())
+      resetCycleImage sColorItImage
+   end if
+   --
+   if tCard is not "colorIt" then
+      set the width of grp "share-ui" to cardWidth()
+   end if
 end updateUI
 
 
@@ -877,18 +914,23 @@ on closeCard
       show grp "storyMenu" of cd "storyHome"
       deleteMobileControl "storyNavTree"
    else if tCard is "showStories" then
-      set the text of sStoryText to empty
-      set the text of sCaptionText to empty
-      set the filename of sStoryImage to empty
-      --set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
-      set the destroyStack of stack sStoryDataStack to true
-      close stack sStoryDataStack
-      hide sStoryText
-      hide sStoryTextBkg
-      hide sCaptionText
-      hide sCaptionBkg
-      show grc "footerBackground" of grp "footer"
-      landscapeOrientation "off"
+      if sKeepStoryLoaded then
+         # going to colorIt card, leave everything in place for return
+      else
+         set the text of sStoryText to empty
+         set the text of sCaptionText to empty
+         set the filename of sStoryImage to empty
+         set the destroyStack of stack sStoryDataStack to true
+         close stack sStoryDataStack
+         hide sStoryText
+         hide sStoryTextBkg
+         hide sCaptionText
+         hide sCaptionBkg
+         show grc "footerBackground" of grp "footer"
+         landscapeOrientation "off"
+      end if
+   else if tCard is "colorIt" then
+      set the filename of sColorItImage to empty
    end if
 end closecard
 

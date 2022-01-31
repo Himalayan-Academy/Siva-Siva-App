@@ -39,6 +39,14 @@
 * ID: button id 1419 of bkgnd id 1416 of stack "stories"
 * [stack_stories_button_id_1419](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1419.livecodescript)
 
+**button "Hide" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1424 of bkgnd id 1422 of stack "stories"
+* [stack_stories_button_id_1424](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1424.livecodescript)
+
+**button "Clear" of bkgnd "viewLogging" of stack "stories"**
+* ID: button id 1425 of bkgnd id 1422 of stack "stories"
+* [stack_stories_button_id_1425](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1425.livecodescript)
+
 **button "Edit Model Stories" of group "Tools" of card "storyHome" of stack "stories"**
 * ID: button id 1297 of group id 1298 of card id 1002 of stack "stories"
 * [stack_stories_button_id_1297](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1297.livecodescript)
@@ -58,4 +66,16 @@
 **field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "storyHome" of stack "stories"**
 * ID: field id 1396 of group id 1395 of group id 1393 of card id 1002 of stack "stories"
 * [stack_stories_field_id_1396](./../../ScriptTracker/modules/stories_Scripts/stack_stories_field_id_1396.livecodescript)
+
+**group "answerDlgGrp" of card "showStories" of stack "stories"**
+* ID: group id 1441 of card id 1291 of stack "stories"
+* [stack_stories_group_id_1441](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1441.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "showStories" of stack "stories"**
+* ID: graphic id 1442 of group id 1441 of card id 1291 of stack "stories"
+* [stack_stories_graphic_id_1442](./../../ScriptTracker/modules/stories_Scripts/stack_stories_graphic_id_1442.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "showStories" of stack "stories"**
+* ID: field id 1444 of group id 1443 of group id 1441 of card id 1291 of stack "stories"
+* [stack_stories_field_id_1444](./../../ScriptTracker/modules/stories_Scripts/stack_stories_field_id_1444.livecodescript)
 
