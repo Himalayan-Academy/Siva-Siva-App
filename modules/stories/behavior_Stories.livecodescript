@@ -772,9 +772,9 @@ on updateUI
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      put the long id of grp "displayDelete" into tControl
-      bottomRightMe tControl, 0, 50
-      set the bottom of tControl to the top of tFooter - 18
+      --put the long id of grp "displayDelete" into tControl
+      --bottomRightMe tControl, 0, 50
+      --set the bottom of tControl to the top of tFooter - 18
       --
       set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
       set the uRect of sStoryMenu to the rect of sStoryMenu

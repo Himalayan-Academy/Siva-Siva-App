@@ -7,6 +7,7 @@ local sButtons
 
 on preOpenControl
    --breakpoint
+   
    local tStack
    put the short name of this stack into tStack
    switch tStack
@@ -19,8 +20,12 @@ on preOpenControl
       default
          put "home,journal,share,settings" into sButtons
          hide btn "save" of me
-         send "resizeControl" to me
+         --breakpoint
+         
+         --send "resizeControl" to me
+         --resizeControl
    end switch
+   
 end preOpenControl
 
 
@@ -170,22 +175,28 @@ on mouseup
          --
          
       case "ColorIt"
-         if the vis of  grp "ColorsBrushesBrowser" is true then 
-            hide grp "ColorsBrushesBrowser"
-         else
-            show grp "ColorsBrushesBrowser"
-        end if
+         
+         local tColorsBrushesBrowser
+         
+         if tCard is "showStories" then
             
-            
-            --
-            break
-            
-         default
-            unlock screen
-            pass mouseUp
-      end switch
-      unlock screen
-   end mouseup
+            if the vis of  grp "ColorsBrushesBrowse" is true then 
+               hide grp "ColorsBrushesBrowse"
+            else
+               show grp "ColorsBrushesBrowse"
+            end if
+         end if
+         --
+         break
+         
+      default
+         unlock screen
+         pass mouseUp
+         
+   end switch
+   
+   unlock screen
+end mouseup
 
 
 command unHiliteBtn pTarget
@@ -199,20 +210,20 @@ on updateUI
 end updateUI
 
 
-on resizeControl
-   local tHSpace, tV, tH, tControl, tRect
-   put the width of me / (the number of items in sButtons) into tHSpace
-   put item 2 of the loc of button 1 of me into tV
-   put the left of me + (tHSpace / 2) into tH
-   --
-   repeat for each item tName in sButtons
-      put the long name of btn tName of me into tControl
-      set the width of tControl to tHSpace
-      set the loc of tControl to (tH, tV)
-      add tHSpace to tH
-   end repeat
-   --
-   set the height of me to 50 + safeBottomMargin()
-   set the bottom of me to CardHeight()
-   set the rect of grc "footerBackground" to the rect of me
-end resizeControl
+--on resizeControl
+--   local tHSpace, tV, tH, tControl, tRect
+--   put (the width of me) / (the number of items in sButtons) into tHSpace
+--   put item 2 of the loc of button 1 of me into tV
+--   put the left of me + (tHSpace / 2) into tH
+--   --
+--   repeat for each item tName in sButtons
+--      put the long name of btn tName of me into tControl
+--      set the width of tControl to tHSpace
+--      set the loc of tControl to (tH, tV)
+--      add tHSpace to tH
+--   end repeat
+--   --
+--   set the height of me to 50 + safeBottomMargin()
+--   set the bottom of me to CardHeight()
+--   set the rect of grc "footerBackground" to the rect of me
+--end resizeControl
