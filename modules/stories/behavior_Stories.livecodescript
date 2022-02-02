@@ -768,7 +768,10 @@ on updateUI
    --
    put the short name of this card into tCard
    --
-   if tCard is not "colorIt" then
+   if tCard is "colorIt" then
+      put the long id of grp "ToolGroup" into tFooter
+      send "updateUI" to tFooter
+   else
       put the long id of grp "footer" into tFooter
       if currentlyLandscape() then
          hide tFooter
@@ -893,7 +896,8 @@ on updateUI
       --
       topLeftMe tCancel, 0, 8
       topRightMe tSave, 0, 8
-      set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, cardWidth(), CardHeight())
+      --
+      set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
       resetCycleImage sColorItImage
    end if
    --

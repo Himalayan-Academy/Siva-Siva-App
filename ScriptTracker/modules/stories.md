@@ -79,3 +79,11 @@
 * ID: field id 1444 of group id 1443 of group id 1441 of card id 1291 of stack "stories"
 * [stack_stories_field_id_1444](./../../ScriptTracker/modules/stories_Scripts/stack_stories_field_id_1444.livecodescript)
 
+**group "ToolGroup" of card "colorIt" of stack "stories"**
+* ID: group id 1449 of card id 1421 of stack "stories"
+* [stack_stories_group_id_1449](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1449.livecodescript)
+
+**group "Icons" of group "ToolGroup" of card "colorIt" of stack "stories"**
+* ID: group id 1453 of group id 1449 of card id 1421 of stack "stories"
+* [stack_stories_group_id_1453](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1453.livecodescript)
+
