@@ -177,16 +177,16 @@ end path_Models
 
 command fetchNavigationMap
    local tPath, tJSON
-   put "fetching navigation map"
+   --put "fetching navigation map"
    put path_HomeLocal() into tPath
    put "models/model_SivaSiva/model_SivaSiva.json" after tPath
    if there is not a file tPath then
       put "portalerr,model_SivaSiva.json not found"
       exit fetchNavigationMap
    end if
-   put tPath
+   --put tPath
    put url("file:" & tPath) into tJSON
-   put tJSON
+   --put tJSON
    try
       put JSONToArray(tJSON) into sSivaSivaNavigation
     -- put the keys of sSivaSivaNavigation
@@ -271,7 +271,7 @@ function path_FileFromURL pURL
       end if
    end repeat
    return tDF & tFolderToCreate & "/" & tFile   into tCheckURL
-   put tCheckURL
+   --put tCheckURL
    return tCheckURL # inclues filename after last interaion.
 end  path_FileFromURL
 
@@ -389,7 +389,7 @@ on displayCache
       repeat for each key x in sCacheA
          put x & ": " & sCacheA[x] & cr after tOutput
       end repeat
-      put tOutput
+      --put tOutput
    end if
 end displayCache
 
