@@ -6,6 +6,9 @@ Script "stack_stories_group_id_1449"
 */
 
 
+constant kButtons = "select,pencil,brush,eraser,spray can,bucket,line"
+
+
 on updateUI
    set the width of me to CardWidth()
    bottomCenterMe (the long id of me), -safeBottomMargin()
@@ -13,13 +16,13 @@ end updateUI
 
 
 on resizeControl
-   local tHSpace, tV, tH, tControl, tRect, tButtons
-   put "select,pencil,brush,eraser,spray can,bucket,line" into tButtons
-   put the width of me / (the number of items in tButtons) into tHSpace
+   local tHSpace, tV, tH, tControl, tRect
+   --
+   put the width of me / (the number of items in kButtons) into tHSpace
    put item 2 of the loc of button 1 of grp "Icons" of me into tV
    put the left of me + (tHSpace / 2) into tH
    --
-   repeat for each item tName in tButtons
+   repeat for each item tName in kButtons
       put the long name of btn tName of grp "Icons" of me into tControl
       --set the width of tControl to tHSpace
       set the loc of tControl to (tH, tV)
@@ -31,3 +34,11 @@ on resizeControl
    set the rect of grc "colorItBg" to the rect of me
 end resizeControl
 
+
+on clearHighlight
+   local tControl
+   --
+   repeat for each item tControl in kButtons
+      set the hilite of button tControl of grp "Icons" of me to false
+   end repeat
+end clearHighlight

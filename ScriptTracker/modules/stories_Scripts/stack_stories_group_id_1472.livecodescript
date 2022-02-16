@@ -12,13 +12,10 @@ on mouseUp
    if the target contains "button" and the hilite of the target then
       put the icon of the target into tTargetIcon
       if the tool is "eraser tool" then
-         --set the eraser to the number of the target
          set the eraser to tTargetIcon
       else if the tool is "spray tool" then
-         --set the spray to the number of the target
          set the spray to tTargetIcon
       else
-         --set the brush to the number of the target
          set the brush to tTargetIcon
       end if
       set the icon of btn "CurrentBrush" of grp "ToolGroup" of cd "ColorIt" to tTargetIcon

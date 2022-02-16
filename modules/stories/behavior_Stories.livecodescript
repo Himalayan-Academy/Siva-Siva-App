@@ -71,6 +71,7 @@ on preOpenCard
    else if tCard is "colorIt" then
       put the long id of img "colorItImage" into sColorItImage
       set the filename of sColorItImage to the filename of sStoryImage
+      --set the imageData of sColorItImage to the imageData of sColorItImage
       hide group "BrushIcons" of card "colorIt"
    end if
    updateUI
@@ -936,9 +937,8 @@ on closeCard
       end if
    else if tCard is "colorIt" then
       set the filename of sColorItImage to empty
-      repeat for each item tControl in "select,pencil,brush,eraser,spray can,bucket,line"
-         set the hilite of button tControl of grp "Icons" of grp "ToolGroup" of cd "colorIt" to false
-      end repeat
+      --set the imageData of sColorItImage to empty
+      send "clearHighlight" to grp "ToolGroup" of cd "colorIt"
    end if
 end closecard
 

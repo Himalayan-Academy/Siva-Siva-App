@@ -7,5 +7,6 @@ Script "stack_stories_button_id_1464"
 
 
 on mouseUp pButtonNumber
-   show group "BrushIcons" of cd "ColorIt"
+   set the layer of grp "BrushIcons" of cd "colorIt" to 99
+   show grp "BrushIcons" of cd "colorIt"
 end mouseUp
