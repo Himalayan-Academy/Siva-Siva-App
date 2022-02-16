@@ -1,13 +1,44 @@
 ﻿script "behavior_WordPuzzles"
-doAnswer "Could not find your city. Tap the location pin to choose one.","OK"local sWordCount, sQuote,sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
+doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
+
+local sWordCount, sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
-local sSourceURL
+
 
 /*
 The important handles for the tiles are  located in the script
 behavior_WordTile, which apply each tile, this were we post to the 
 array that keeps the track tile locations.
 */
+
+--script "behavior_WordPuzzles"
+local thePixie,tFadeIncrement,sPixies,sPuzzleLevel,sCardRect
+
+on preOpenStack
+   if isMobile() then
+      mobileSetAllowedOrientations "landscape left,landscape right" 
+      mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
+      set the fullscreenmode of this stack to "showAll" -- better for wider screens
+   end if
+   hide grc "blankScreen"
+   setCardCoords "landscape"
+end preOpenStack
+
+function getUserPreferences
+   local aWordPuzzleLevel
+   put getPref ("preferences/modules/word-puzzle") into aWordPuzzleLevel
+   put aWordPuzzleLevel["level"] into sPuzzleLevel
+   return sPuzzleLevel
+end getUserPreferences
+
+command saveUserPrefs sPuzzleLevel
+   setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
+   get getUserPreferences()
+end saveUserPrefs
+
+command storeCurrentLevel pLevel
+   put pLevel into sPuzzleLevel
+end storeCurrentLevel
 --> Events
 -
 on preopencard
@@ -16,7 +47,7 @@ on preopencard
 end preopencard
 
 on openCard
-   
+   --fetchMesmorizeMap
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
@@ -43,7 +74,7 @@ local tWordLoc
 
 on createWordPuzzle
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
-   local sWordCount
+   --local sWordCount
    if (the acceleratedRendering of this stack is true ) then
       set the acceleratedRendering of this stack to false 
    end if
@@ -248,7 +279,8 @@ command showTitle pBool
 end showTitle
 
 command fetchQuote
-   local tConnectionID, tSQL, tCurRange, aSelectedQuotes, tNo
+   --local tConnectionID, tSQL, tCurRange, aSelectedQuotes, tNo
+   local tConnectionID, tSQL, tCurRange,  aSelectedQuotes, tNo
    
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
@@ -283,7 +315,33 @@ command fetchQuote
    
    
 end fetchQuote
- 
+
+local sMesmoriseGame
+
+command fetchMesmorizeMap
+   local tPath, tJSON
+   put path_HomeLocal() into tPath
+   
+   put "modules/wordpuzzles/mesmorize-game-1.json" after tPath
+   if there is not a file tPath then
+      put "portalerr,mesmorize-game-1.json not found"
+      exit fetchMesmorizeMap
+   end if
+   
+   put url("file:" & tPath) into tJSON
+   
+   try
+      put JSONToArray(tJSON) into sMesmoriseGame
+     
+   catch n
+      put "Error reading navigation map."
+      repeat for each line x in n
+         put x
+      end repeat
+   end try
+end fetchMesmorizeMap
+
+
 command setSizeAndLocationOfQuote sQuote
    local tCharCount, tRequiredHeight
    # we want to call quotes of different lengths
@@ -745,6 +803,22 @@ command resetUI
    clearBoard
 end resetUI
 
+
+
+command addJournalEntry 
+   local pData, tTitle
+   put "word-puzzle" into pData["card"]
+   put "Word Puzzles" into tTitle
+   Journal_RecordEntry "wordpuzzles",tTitle,pData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
+end addJournalEntry
+
+on journalResume pDataA, pEntryA
+   local pLevel
+   go to card  pDataA["card"] 
+   put pDataA["lastLevel"] into pLevel
+end journalResume
+
 on closeCard
    hide graphic "startHere"
    hide btn "New Puzzle"
@@ -753,3 +827,11 @@ on closeCard
    ntInfo "closing word puzzle card"
 end closeCard
 
+on closeStack
+   local pTrackdata -- BWM looks like something is missing
+   tracking_RecordActivity "Word Puzzles", "navigation/exit", pTrackdata
+   if isMobile() then
+      mobileSetFullScreenRectForOrientations "landscape left,landscape right"
+   end if
+   portal_SetLastStack "wordpuzzles"
+end closeStack
