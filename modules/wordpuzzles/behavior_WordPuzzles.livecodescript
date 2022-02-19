@@ -24,25 +24,11 @@ on preOpenStack
    setCardCoords "landscape"
 end preOpenStack
 
-function getUserPreferences
-   local aWordPuzzleLevel
-   put getPref ("preferences/modules/word-puzzle") into aWordPuzzleLevel
-   put aWordPuzzleLevel["level"] into sPuzzleLevel
-   return sPuzzleLevel
-end getUserPreferences
 
-command saveUserPrefs sPuzzleLevel
-   setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
-   get getUserPreferences()
-end saveUserPrefs
-
-command storeCurrentLevel pLevel
-   put pLevel into sPuzzleLevel
-end storeCurrentLevel
 --> Events
 -
 on preopencard
-   hide grp "puzzleControls"
+   hide grp "randomPuzzleControls"
    wait 333 milliseconds
 end preopencard
 
@@ -51,7 +37,7 @@ on openCard
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
-   --clearBoard  # Always save the stack with no puzzle show
+   clearBoard  # Always save the stack with no puzzle show
    # we don't want to issue clearBoard when the stack opens
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
@@ -64,13 +50,86 @@ on openCard
    send "showTitle false" to me in 90 ticks
    setTileGlow "small"
    put 0 into sCluesGiven
-   show grp "puzzleControls" with visual effect "dissolve" very fast
+   show grp "randomPuzzleControls" with visual effect "dissolve" very fast
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
 end opencard
   
- --> CREATE THE PUZZLE
-local tWordLoc
+  --> CREATE THE PUZZLE
+  local tWordLoc
+  local sSelectedQuotes
+  
+on mouseup
+   
+   local tTarget, tTargetOwner
+   
+   put the short name of the owner of the target into tTargetOwner
+   put the short name of the target into tTarget
+   
+   # one set of actions occurs if the user hits grp ""bkgndcontrol"
+   # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
+   # and not abpout the UI perse
+   
+   switch tTarget
+      
+      case "New Puzzle"
+         clearBoard
+         createWordPuzzle
+         break
+         
+      case "i"
+         displayAbout (the short name of this card)
+         break
+         
+      case "Clear"
+         clearBoard
+         break
+         
+      case "Clues"
+         showClues
+         
+         break
+         
+      case "back-arrow"
+         
+         local tParam
+         --show grc "blankScreen"
+         --clearBoard
+         portal_GoStack "Siva-Siva-Portal"
+         break
+   end switch
+   
+end mouseup
+
+on mousedown
+   
+   local tTarget, tTargetOwner
+   
+   put the short name of the owner of the target into tTargetOwner
+   put the short name of the target into tTarget
+   
+   switch tTarget
+      
+      case "Reveal"
+         revealQuote
+         break
+         
+   end switch
+   
+end mousedown
+
+command loadNewBgImg -- change img for each new puzzle
+   -- called by createWordPuzzle
+   --if not (the lockscreen)  then lock screen
+   local pControl, tFolderPath, tFiles, tImgPath
+   ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
+   put the long id of img "bgImage" into pControl
+   put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
+   put files(tFolderPath) into tFiles
+   put any line of tFiles into tImgPath
+   set the filename of img "bgImage" to tFolderPath&tImgPath
+   --if (the lockscreen)  then unlock screen
+end loadNewBgImg
 
 on createWordPuzzle
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
@@ -106,21 +165,21 @@ on createWordPuzzle
    put getColors() into tColors
    put line 1 of tColors into tRGB
    put line 2 of tColors into tTileBkgndRGB
-   set the foregroundcolor of fld "_Quote" to tRGB
+   set the foregroundcolor of fld "revealQuote" to tRGB
    set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
    
    
    -- Set the quote in a field
    put (the number of words of sQuote) into sWordCount
-   put sQuote into fld "_quote"
+   put sQuote into fld "revealQuote"
    setSizeAndLocationOfQuote sQuote
    
-   set the blendlevel of fld "_quote" to 0  
-   show grp "quoteGroup"
-   show fld "_quote"
+   set the blendlevel of fld "revealQuote" to 0  
+   show grp "revealQuoteGroup"
+   show fld "revealQuote"
    
    -- Take a snapsite of the quote, move it off screen
-   import snapshot from   grp "quoteGroup"
+   import snapshot from   grp "revealQuoteGroup"
    
    
    # need to save it because we are going to crop each word in a loop
@@ -133,14 +192,14 @@ on createWordPuzzle
    
    put empty into tLoc  # set the extents of loc array to 0 each iterations
    
-   repeat with x = 1 to the number of words of fld "_quote"  
+   repeat with x = 1 to the number of words of fld "revealQuote"  
       
       copy img "CurrentPuzzle" to this card
       set the name of the last image to "tempForCrop"
-      set the rect of the last image to the rect of fld "_quote"
+      set the rect of the last image to the rect of fld "revealQuote"
       
       --make individual word tiles
-      put the formattedRect of word x of fld "_quote" into tNextWordRect  
+      put the formattedRect of word x of fld "revealQuote" into tNextWordRect  
       
       subtract 8 from item 1 of tNextWordRect
       add 2 to item 2 of tNextWordRect
@@ -149,7 +208,7 @@ on createWordPuzzle
       
       #####################################################################
       ### BM: `tNextWord` is undefined on the first time through this loop.
-      put word x of fld "_quote" into tNextWord
+      put word x of fld "revealQuote" into tNextWord
       local tWordCantBeTileName
       ### BM: this block of code seems unnecessary
       if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
@@ -172,8 +231,8 @@ on createWordPuzzle
       set the showborder of the last image to true
       set the behavior of the last image to the long id of btn "behavior_tileScript"
       
-      set the cWord of last image to word x of fld "_quote"
-      put word x of fld "_quote" into tNextWord
+      set the cWord of last image to word x of fld "revealQuote"
+      put word x of fld "revealQuote" into tNextWord
       
       --Store tiles of screen, ready to distribute
       
@@ -207,8 +266,8 @@ on createWordPuzzle
    set the vis of grc "startHere" to true
    
    
-   hide grp "quoteGroup"
-   hide fld "_quote" -- comment this out to see the quote during dev
+   hide grp "revealQuoteGroup"
+   hide fld "revealQuote" -- comment this out to see the quote during dev
    
    local pTile, pTrackdata
    put the long id of image "word_1" into pTile
@@ -222,7 +281,7 @@ on createWordPuzzle
    set the acceleratedRendering  of this stack to true
    show fld "wordPuzzleSubject"
    send "hideSubjectFld" to me in 10 seconds
-   show grp "puzzleInProgress"
+   show grp "randomPuzzleInProgress"
    
 end createWordPuzzle
 
@@ -249,18 +308,6 @@ command assignHomeLocations
    end repeat
 end assignHomeLocations
    
-command loadNewBgImg -- change img for each new puzzle
-   -- called by createWordPuzzle
-   --if not (the lockscreen)  then lock screen
-   local pControl, tFolderPath, tFiles, tImgPath
-   ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
-   put the long id of img "bgImage" into pControl
-   put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
-   put files(tFolderPath) into tFiles
-   put any line of tFiles into tImgPath
-   set the filename of img "bgImage" to tFolderPath&tImgPath
-   --if (the lockscreen)  then unlock screen
-end loadNewBgImg
 
 on checkLevel
    put sCurlevel
@@ -268,19 +315,19 @@ end checkLevel
 
 command showTitle pBool
    if pBool then -- show title
-      hide grp "puzzleControls" with visual effect "dissolve" very fast
-      hide grp "puzzleinProgress" with visual effect "dissolve" very fast
+      hide grp "randomPuzzleControls" with visual effect "dissolve" very fast
+      hide grp "randomPuzzleinProgress" with visual effect "dissolve" very fast
       visual effect "dissolve" slow
-      show fld "titleFld"
+      show fld "titleUnjumbleFld"
    else -- hide title
-      hide fld "titleFld" with visual effect "dissolve"  fast
-      show grp "puzzleControls" with visual effect "dissolve" fast
+      hide fld "titleUnjumbleFld" with visual effect "dissolve"  fast
+      show grp "randomPuzzleControls" with visual effect "dissolve" fast
    end if
 end showTitle
 
 command fetchQuote
-   --local tConnectionID, tSQL, tCurRange, aSelectedQuotes, tNo
-   local tConnectionID, tSQL, tCurRange,  aSelectedQuotes, tNo
+   
+   local tConnectionID, tSQL, tCurRange, tNo
    
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
@@ -299,11 +346,11 @@ command fetchQuote
    
    dbSetSQL tSQL
    
-   put dbGet("quote", tConnectionID) into aSelectedQuotes
-   put random (the number of lines of the keys of aSelectedQuotes) into tNo
-   put textDecode ( aSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
-   put textDecode ( aSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
-   put textDecode ( aSelectedQuotes[tNo]["source_url"], "UTF8")  into sSourceURL
+   put dbGet("quote", tConnectionID) into sSelectedQuotes
+   put random (the number of lines of the keys of sSelectedQuotes) into tNo
+   put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
+   put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
+   put textDecode ( sSelectedQuotes[tNo]["source_url"], "UTF8")  into sSourceURL
    
    #hack to deal with endline bug
    replace "\n" with space in sQuote
@@ -365,25 +412,25 @@ command setSizeAndLocationOfQuote sQuote
    switch 
       # must stay in order to work!
       case tCharCount < 101
-         set the textSize of fld "_quote" to 50
+         set the textSize of fld "revealQuote" to 50
          break
       case tCharCount < 141
-         set the textSize of fld "_quote" to 45
+         set the textSize of fld "revealQuote" to 45
          break
       case tCharCount < 206
-         set the textSize of fld "_quote" to 40
+         set the textSize of fld "revealQuote" to 40
          break
       case tCharCount < 271
-         set the textSize of fld "_quote" to 35
+         set the textSize of fld "revealQuote" to 35
          break
    end switch
    
-   set the textstyle of fld "_quote" to "bold"
+   set the textstyle of fld "revealQuote" to "bold"
    
-   put the formattedHeight of fld "_Quote" into tRequiredHeight
-   set the height of fld "_quote" to tRequiredHeight
-   set the top of fld "_Quote" to 40
-   set the rect of grc "quoteBkgnd" to the rect of fld "_quote"
+   put the formattedHeight of fld "revealQuote" into tRequiredHeight
+   set the height of fld "revealQuote" to tRequiredHeight
+   set the top of fld "revealQuote" to 40
+   set the rect of grc "quoteBkgnd" to the rect of fld "revealQuote"
    
 end setSizeAndLocationOfQuote
 
@@ -431,20 +478,20 @@ end getLocation
 
 on clearBoard
    # use case: User want to leave the current puzzle and and new one
-
+   lock screen
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
    hide group "prefsSelectorGrp"
    stopTimer
-   lock screen
+   
    put empty into fld "Minutes" of me
    put empty into fld "seconds" of me
    --hide widget "context"
    --set the vis of grc "startHere" to false
-   put empty into fld "_Quote" of me
-   hide  fld "_Quote" of me
+   put empty into fld "revealQuote" of me
+   hide  fld "revealQuote" of me
    hide fld "wordPuzzleSubject"
-   hide group "quoteGroup"
+   hide group "revealQuoteGroup"
    if the uwordlist of me = "" then exit clearBoard -- assume imgs are gone
    repeat with x = the number of imgs of me down to 1
       if the short name of img x of me begins with "word_"
@@ -452,12 +499,12 @@ on clearBoard
    end repeat
    repeat 10 times
       try
-      delete image "currentPuzzle" of me
-      delete image "tempForCrop" of me
-   end try
+         delete image "currentPuzzle" of me
+         delete image "tempForCrop" of me
+      end try
    end repeat
    set the uWordList of me to empty
-   hide grp "puzzleInProgress"
+   hide grp "randomPuzzleInProgress"
    hide graphic "startHere" of me
    unlock screen
 end clearBoard 
@@ -647,19 +694,19 @@ end hideSubjectFld
 command revealQuote
    set the layer of grc "blankScreen" to top
    show grc "blankScreen"
-   set the layer of grp "quoteGroup"  to top
-   show fld "_Quote"
-   show grp "quoteGroup" 
+   set the layer of grp "revealQuoteGroup"  to top
+   show fld "revealQuote"
+   show grp "revealQuoteGroup" 
    wait 2 seconds
-   hide grp "quoteGroup" 
-   hide fld "_Quote"
+   hide grp "revealQuoteGroup" 
+   hide fld "revealQuote"
    hide grc "blankScreen"
    --losePoints # later when we give badges
 end revealQuote
 
 on showClues
    local pMsg
-   if sTimerOnFlag <> true then exit showClues
+ -- if sTimerOnFlag <> true then exit showClues
    
    put the uWordList of me into sClues
    if sClues is empty then
@@ -803,7 +850,21 @@ command resetUI
    clearBoard
 end resetUI
 
+function getUserPreferences
+   local aWordPuzzleLevel
+   put getPref ("preferences/modules/word-puzzle") into aWordPuzzleLevel
+   put aWordPuzzleLevel["level"] into sPuzzleLevel
+   return sPuzzleLevel
+end getUserPreferences
 
+command saveUserPrefs sPuzzleLevel
+   setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
+   get getUserPreferences()
+end saveUserPrefs
+
+command storeCurrentLevel pLevel
+   put pLevel into sPuzzleLevel
+end storeCurrentLevel
 
 command addJournalEntry 
    local pData, tTitle
