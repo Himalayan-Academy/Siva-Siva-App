@@ -44,7 +44,7 @@ Based on the card name
 */
 
 on preOpenCard
-   local tCard 
+   local tCard, tFileName
    put the short name of this card into tCard
    --
    if the logMessage <> empty then
@@ -69,9 +69,16 @@ on preOpenCard
       hide sCaptionText
       hide sCaptionBkg
    else if tCard is "colorIt" then
-      put the long id of img "colorItImage" into sColorItImage
-      set the filename of sColorItImage to the filename of sStoryImage
-      --set the imageData of sColorItImage to the imageData of sColorItImage
+      put the filename of sStoryImage into tFileName
+      import paint from file tFileName
+      put the long id of the last image into sColorItImage
+      set the layer of sColorItImage to bottom
+      --put the long id of img "colorItImage" into sColorItImage
+      --set the itemDelimiter to "."
+      --put "gif" into the last item of tFileName
+      --export sStoryImage to file tFileName as GIF
+      --set the filename of sColorItImage to tFileName
+      --set the filename of sColorItImage to the filename of sStoryImage
       hide group "BrushIcons" of card "colorIt"
    end if
    updateUI
@@ -936,7 +943,8 @@ on closeCard
          landscapeOrientation "off"
       end if
    else if tCard is "colorIt" then
-      set the filename of sColorItImage to empty
+      delete sColorItImage
+      --set the filename of sColorItImage to empty
       --set the imageData of sColorItImage to empty
       send "clearHighlight" to grp "ToolGroup" of cd "colorIt"
    end if
