@@ -148,6 +148,7 @@ command SetSSLVerificationForPlatform
 end SetSSLVerificationForPlatform
 
 command continue_AppInitialization
+   
    local tPlatform, tAction, pData
    
    portal_SetLastStack "Siva-Siva-App"
@@ -236,7 +237,7 @@ command openPortalStack
    -- AAG: init_DocumentFiles does network requests.
    -- What it is doing could be replaced by the assets download.
    -- This is a potential opportunity for future improvement.
-   send "init_DocumentFiles" to me in 5 seconds
+   send "init_DocumentFiles" to me in 3 seconds
    open stack "Siva-Siva-Portal"
    if the environment is not "development" then
       hide stack "Siva-Siva-App"

@@ -28,37 +28,37 @@ end preOpenStack
 --> Events
 -
 on preopencard
+   # we have to  clear everything
+   # while in development
+   
+   hide grp "indexOfQuotes"
    hide grp "randomPuzzleControls"
-   wait 333 milliseconds
+   hide grp "randomPuzzleInProgress"
+   hide fld "MesmorizeFld"
+   hide fld  "titleUnjumbleFld"
 end preopencard
 
 on openCard
    --fetchMesmorizeMap
+   
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
    clearBoard  # Always save the stack with no puzzle show
+   
    # we don't want to issue clearBoard when the stack opens
    # only if the users calls of this.
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
    
    loadNewBgImg
-   wait 300 milliseconds
-   showTitle true
-   wait 300 milliseconds
-   send "showTitle false" to me in 90 ticks
-   setTileGlow "small"
-   put 0 into sCluesGiven
-   show grp "randomPuzzleControls" with visual effect "dissolve" very fast
+   showTitle
+   
+   --show grp "randomPuzzleControls" with visual effect "dissolve" very fast
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
 end opencard
-  
-  --> CREATE THE PUZZLE
-  local tWordLoc
-  local sSelectedQuotes
-  
+
 on mouseup
    
    local tTarget, tTargetOwner
@@ -72,16 +72,16 @@ on mouseup
    
    switch tTarget
       
-      case "New Puzzle"
+      case "Random Puzzle"
          clearBoard
-         createWordPuzzle
+         createRandomPuzzle
          break
          
       case "i"
          displayAbout (the short name of this card)
          break
          
-      case "Clear"
+       case "Clear"
          clearBoard
          break
          
@@ -119,8 +119,6 @@ on mousedown
 end mousedown
 
 command loadNewBgImg -- change img for each new puzzle
-   -- called by createWordPuzzle
-   --if not (the lockscreen)  then lock screen
    local pControl, tFolderPath, tFiles, tImgPath
    ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
@@ -128,10 +126,38 @@ command loadNewBgImg -- change img for each new puzzle
    put files(tFolderPath) into tFiles
    put any line of tFiles into tImgPath
    set the filename of img "bgImage" to tFolderPath&tImgPath
-   --if (the lockscreen)  then unlock screen
 end loadNewBgImg
 
-on createWordPuzzle
+command showTitle
+   local tFld
+   
+   
+   wait 300 milliseconds
+   show fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   
+   wait 1000 milliseconds
+   hide fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   
+   wait 1000 milliseconds
+   show fld "MesmorizeFld"  with visual effect "dissolve"  fast
+   
+   wait 1000 milliseconds
+   hide fld "MesmorizeFld" 
+   
+   wait 1000 milliseconds
+   show grp "indexOfQuotes"
+   
+   wait 300 milliseconds
+   setTileGlow "small"
+   put 0 into sCluesGiven
+   
+end showTitle
+
+--> CREATE THE PUZZLE
+local tWordLoc
+local sSelectedQuotes
+
+on createRandomPuzzle
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
    --local sWordCount
    if (the acceleratedRendering of this stack is true ) then
@@ -283,7 +309,7 @@ on createWordPuzzle
    send "hideSubjectFld" to me in 10 seconds
    show grp "randomPuzzleInProgress"
    
-end createWordPuzzle
+end createRandomPuzzle
 
 command getLocations tNextWord,tNextWordRect
    -- set up an array of the location(x) of a word.
@@ -313,19 +339,7 @@ on checkLevel
    put sCurlevel
 end checkLevel
 
-command showTitle pBool
-   if pBool then -- show title
-      hide grp "randomPuzzleControls" with visual effect "dissolve" very fast
-      hide grp "randomPuzzleinProgress" with visual effect "dissolve" very fast
-      visual effect "dissolve" slow
-      show fld "titleUnjumbleFld"
-   else -- hide title
-      hide fld "titleUnjumbleFld" with visual effect "dissolve"  fast
-      show grp "randomPuzzleControls" with visual effect "dissolve" fast
-   end if
-end showTitle
-
-command fetchQuote
+command fetchRandomQuote
    
    local tConnectionID, tSQL, tCurRange, tNo
    
@@ -361,7 +375,7 @@ command fetchQuote
    replace (quote& space) with ( "”"& space) in sQuote 
    
    
-end fetchQuote
+end fetchRandomQuote
 
 local sMesmoriseGame
 
@@ -882,7 +896,7 @@ end journalResume
 
 on closeCard
    hide graphic "startHere"
-   hide btn "New Puzzle"
+   hide btn "Random Puzzle"
    storeCurrentLevel sCurLevel
    --showTitle true
    ntInfo "closing word puzzle card"
