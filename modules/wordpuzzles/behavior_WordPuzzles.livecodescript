@@ -36,9 +36,12 @@ on preopencard
    hide grp "randomPuzzleInProgress"
    hide fld "MesmorizeFld"
    hide fld  "titleUnjumbleFld"
+   
+   loadNewBgImg
 end preopencard
 
-on openCard
+on openStack
+   --on openCard
    --fetchMesmorizeMap
    
    if sCurLevel is empty then
@@ -51,13 +54,14 @@ on openCard
    # so, in dev, clear the board first, then save the stack
    # use resetUI then save and close the stack
    
-   loadNewBgImg
+   --loadNewBgImg
    showTitle
    
    --show grp "randomPuzzleControls" with visual effect "dissolve" very fast
    # we should be storing the user's pref for length, but for V1
    # we will just default to the lowest level every time the puzzles are opened:
-end opencard
+   --end opencard
+end openStack
 
 on mouseup
    
@@ -73,21 +77,49 @@ on mouseup
    switch tTarget
       
       case "Random Puzzle"
+         hide grp "indexOfQuotes"
+         
+         show  group "randomPuzzleControls"
+         --show  group "randomPuzzleInProgress"
+         
+         break
+         
+      case "Random"
          clearBoard
+         hide widget "randomPuzzleSettings"
+         hide btn "getInfo"
          createRandomPuzzle
+         
          break
          
-      case "i"
-         displayAbout (the short name of this card)
-         break
-         
-       case "Clear"
+      case "Clear"
          clearBoard
+         show widget "randomPuzzleSettings" 
+         show button "getInfo"
          break
          
       case "Clues"
          showClues
          
+         break
+         
+      case "Index"
+         clearBoard
+         
+         hide  group "randomPuzzleControls"
+         hide group "randomPuzzleInProgress"
+         
+         show grp "indexOfQuotes"
+         
+         break
+         
+      case "randomPuzzleSettings"
+         clearBoard
+         show grp "prefsSelectorGrp"
+         break
+         
+      case "getInfo"
+         displayAbout (the short name of this card)
          break
          
       case "back-arrow"
@@ -131,23 +163,43 @@ end loadNewBgImg
 command showTitle
    local tFld
    
+   --   wait 300 milliseconds
+   --   show fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
    
-   wait 300 milliseconds
-   show fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   --   wait 1000 milliseconds
+   --   hide fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
    
-   wait 1000 milliseconds
-   hide fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   --   wait 1000 milliseconds
+   --   show fld "MesmorizeFld"  with visual effect "dissolve"  fast
    
-   wait 1000 milliseconds
+   --   wait 1000 milliseconds
+   --   hide fld "MesmorizeFld" 
+   
+   --lock screen for visual effec
+   --wait 1 seconds
+   
+   show fld "titleUnjumbleFld"  with visual effect "dissolve" slow --  fast
+   --unlock screen -- with visual effect
+   
+   --wait 222 milliseconds
+   move fld "titleUnjumbleFld" relative 0,15 in 1 seconds without waiting 
+   
+   --wait 1 seconds
+   
    show fld "MesmorizeFld"  with visual effect "dissolve"  fast
    
-   wait 1000 milliseconds
-   hide fld "MesmorizeFld" 
    
    wait 1000 milliseconds
+   
+   hide fld "MesmorizeFld"  
+   hide fld "titleUnjumbleFld" 
+   
+   show button "Yamas" 
+   show button "Niyamas"
+   show button "Random Puzzle"
    show grp "indexOfQuotes"
    
-   wait 300 milliseconds
+   
    setTileGlow "small"
    put 0 into sCluesGiven
    
@@ -175,7 +227,7 @@ on createRandomPuzzle
    --getPixieList # deprecated for now... 
    put empty into sQuote
    
-   fetchQuote # get a different one -- random for now dbase
+   fetchRandomQuote # get a different one -- random for now dbase
    
    # for testing. comment the above an uncomment this quote:
    --put "The group helps the individual and the individual helps the group." into sQuote
@@ -447,16 +499,6 @@ command setSizeAndLocationOfQuote sQuote
    set the rect of grc "quoteBkgnd" to the rect of fld "revealQuote"
    
 end setSizeAndLocationOfQuote
-
-
-
-on movestopped
-   answer "Move stopped" with "OK"
-   --      if the number of lines of  tWordList  > 15 then
-   --       put line 15 of tWordList into timage
-   --       send "clueGoHome" to image tImage in 1500 milliseconds
-   --    end if
-end movestopped
 
 function getColors -- return a random RGB set
    -- color sets stored in custom prop uColorSets in format: rgb1|rgb2
