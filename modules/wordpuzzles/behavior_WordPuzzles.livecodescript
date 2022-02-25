@@ -78,7 +78,7 @@ on mouseup
       
       case "Random Puzzle"
          hide grp "indexOfQuotes"
-         
+         hide fld "MesmorizeFld"
          show  group "randomPuzzleControls"
          --show  group "randomPuzzleInProgress"
          
@@ -163,47 +163,29 @@ end loadNewBgImg
 command showTitle
    local tFld
    
-   --   wait 300 milliseconds
-   --   show fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   wait 300 milliseconds with messages
+   show fld "titleUnjumbleFld"  with visual effect "dissolve" very slow
    
-   --   wait 1000 milliseconds
-   --   hide fld "titleUnjumbleFld"  with visual effect "dissolve"  fast
+   put the long name of fld id 2958 into tFld
+   send "hide tFld" to cd "word-puzzle" in 3 seconds
    
-   --   wait 1000 milliseconds
-   --   show fld "MesmorizeFld"  with visual effect "dissolve"  fast
+   put the long name of fld "MesmorizeFld" into tFld
+   send "show tFld" to cd "word-puzzle" in 4 seconds
    
-   --   wait 1000 milliseconds
-   --   hide fld "MesmorizeFld" 
-   
-   --lock screen for visual effec
-   --wait 1 seconds
-   
-   show fld "titleUnjumbleFld"  with visual effect "dissolve" slow --  fast
-   --unlock screen -- with visual effect
-   
-   --wait 222 milliseconds
-   move fld "titleUnjumbleFld" relative 0,15 in 1 seconds without waiting 
-   
-   --wait 1 seconds
-   
-   show fld "MesmorizeFld"  with visual effect "dissolve"  fast
-   
-   
-   wait 1000 milliseconds
-   
-   hide fld "MesmorizeFld"  
-   hide fld "titleUnjumbleFld" 
-   
-   show button "Yamas" 
-   show button "Niyamas"
-   show button "Random Puzzle"
-   show grp "indexOfQuotes"
-   
-   
-   setTileGlow "small"
-   put 0 into sCluesGiven
-   
+   put the long name of grp "indexOfQuotes" into tGrp
+   send "show tGrp" to cd "word-puzzle" in 5 seconds
+      
 end showTitle
+
+command toggleFldVis pFldName,pVis, pEffect, pSecs
+   lock screen for visual effect
+   if pVis = true then
+      show fld pFldName
+   else
+      hide fld pFldName
+   end if
+   send "unlock screen with visual effect pEffect" to this cd in pSecs seconds
+end toggleFldVis
 
 --> CREATE THE PUZZLE
 local tWordLoc
