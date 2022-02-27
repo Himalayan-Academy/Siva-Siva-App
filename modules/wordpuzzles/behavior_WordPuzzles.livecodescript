@@ -41,26 +41,13 @@ on preopencard
 end preopencard
 
 on openStack
-   --on openCard
-   --fetchMesmorizeMap
    
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
-   clearBoard  # Always save the stack with no puzzle show
    
-   # we don't want to issue clearBoard when the stack opens
-   # only if the users calls of this.
-   # so, in dev, clear the board first, then save the stack
-   # use resetUI then save and close the stack
-   
-   --loadNewBgImg
    showTitle
    
-   --show grp "randomPuzzleControls" with visual effect "dissolve" very fast
-   # we should be storing the user's pref for length, but for V1
-   # we will just default to the lowest level every time the puzzles are opened:
-   --end opencard
 end openStack
 
 on mouseup
@@ -163,18 +150,18 @@ end loadNewBgImg
 command showTitle
    local tFld
    
-   wait 300 milliseconds with messages
-   show fld "titleUnjumbleFld"  with visual effect "dissolve" very slow
+   wait 300 milliseconds --with messages
+   show fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
-   put the long name of fld id 2958 into tFld
-   send "hide tFld" to cd "word-puzzle" in 3 seconds
+   wait 1000 milliseconds
+   hide fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
-   put the long name of fld "MesmorizeFld" into tFld
-   send "show tFld" to cd "word-puzzle" in 4 seconds
+   wait 200 milliseconds --with messages
+   show fld "MesmorizeFld" with visual effect "dissolve" very slow
    
-   put the long name of grp "indexOfQuotes" into tGrp
-   send "show tGrp" to cd "word-puzzle" in 5 seconds
-      
+   wait 500 milliseconds --with messages
+   show grp "indexOfQuotes"  with visual effect "dissolve" very slow
+   
 end showTitle
 
 command toggleFldVis pFldName,pVis, pEffect, pSecs
@@ -345,34 +332,6 @@ on createRandomPuzzle
    
 end createRandomPuzzle
 
-command getLocations tNextWord,tNextWordRect
-   -- set up an array of the location(x) of a word.
-   local tCoords, tLoc, theX, theY
-   put tNextWordRect into tCoords
-   if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
-         tNextWord is among the keys of sWordLocationsA then
-      --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
-      put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
-      put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
-      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
-      put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
-      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
-   end if
-end getLocations
-
-command assignHomeLocations
-   repeat with x = 1 to ( the number of images on this card)
-      if the short name of image x contains "word" then
-         set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
-      end if
-   end repeat
-end assignHomeLocations
-   
-
-on checkLevel
-   put sCurlevel
-end checkLevel
-
 command fetchRandomQuote
    
    local tConnectionID, tSQL, tCurRange, tNo
@@ -427,7 +386,7 @@ command fetchMesmorizeMap
    
    try
       put JSONToArray(tJSON) into sMesmoriseGame
-     
+      
    catch n
       put "Error reading navigation map."
       repeat for each line x in n
@@ -435,6 +394,38 @@ command fetchMesmorizeMap
       end repeat
    end try
 end fetchMesmorizeMap
+
+
+
+command getLocations tNextWord,tNextWordRect
+   -- set up an array of the location(x) of a word.
+   local tCoords, tLoc, theX, theY
+   put tNextWordRect into tCoords
+   if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
+         tNextWord is among the keys of sWordLocationsA then
+      --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
+      put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
+      put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
+      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+      put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
+      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
+   end if
+end getLocations
+
+command assignHomeLocations
+   repeat with x = 1 to ( the number of images on this card)
+      if the short name of image x contains "word" then
+         set the uWordLocations of image x to sWordLocationsA[the cWord of image x]
+      end if
+   end repeat
+end assignHomeLocations
+   
+
+on checkLevel
+   put sCurlevel
+end checkLevel
+
+
 
 
 command setSizeAndLocationOfQuote sQuote
