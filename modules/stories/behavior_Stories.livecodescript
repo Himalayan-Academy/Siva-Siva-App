@@ -71,14 +71,17 @@ on preOpenCard
    else if tCard is "colorIt" then
       put the filename of sStoryImage into tFileName
       import paint from file tFileName
+      set the name of the last image to "colorItImage"
       put the long id of the last image into sColorItImage
-      set the layer of sColorItImage to bottom
-      --put the long id of img "colorItImage" into sColorItImage
-      --set the itemDelimiter to "."
-      --put "gif" into the last item of tFileName
-      --export sStoryImage to file tFileName as GIF
-      --set the filename of sColorItImage to tFileName
-      --set the filename of sColorItImage to the filename of sStoryImage
+      relayer sColorItImage to front of grp "colorItImageGroup"
+      put the long id of img "colorItImage" into sColorItImage
+      --      put the long id of img "colorItImage" into sColorItImage
+      --      set the itemDelimiter to "."
+      --      put "gif" into the last item of tFileName
+      --      export sStoryImage to file tFileName as GIF
+      --      set the filename of sColorItImage to tFileName
+      --      --set the filename of sColorItImage to the filename of sStoryImage
+      --      set the layer of sColorItImage to bottom
       hide group "BrushIcons" of card "colorIt"
    end if
    updateUI
@@ -206,6 +209,7 @@ on mouseup
       case "storyImage"
       case "captionText"
       case "white-feathered-rect"
+      case "colorItImage"
          updateImageState
          break
          --
@@ -403,6 +407,7 @@ on doScrollerTap
    --
    switch sTarget
       case "storyImage"
+      case "colorItImage"
          updateImageState
          break
       case "storyText"
@@ -611,27 +616,47 @@ command setupCaptionField
 end setupCaptionField
 
 
+command setColorItImage pName
+   put pName into sColorItImage
+end setColorItImage
+
+
+function getColorItImage
+   return sColorItImage
+end getColorItImage
+
+
 command updateImageState pResizeOnly
    -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
-   local tState, tLoc
+   local tState, tLoc, tImage, tImageGroup, tOnColorItCard
+   put (the short name of this card is "colorIt") into tOnColorItCard
+   if tOnColorItCard then
+      put sColorItImage into tImage
+      put "colorItImageGroup" into tImageGroup
+   else
+      put sStoryImage into tImage
+      put "storyImageGroup" into tImageGroup
+   end if
    lock screen for visual effect
-   if (not the visible of sStoryText) or (pResizeOnly is true) then
+   if tOnColorItCard or (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
-         resetCycleImage sStoryImage
+         resetCycleImage tImage
       else
-         cycleImageState sStoryImage
+         cycleImageState tImage
       end if
       put the result into tState
       if tState is 2 then
-         if the text of sCaptionText is not empty then
-            show sCaptionText
-            show sCaptionBkg
+         if not tOnColorItCard then
+            if the text of sCaptionText is not empty then
+               show sCaptionText
+               show sCaptionBkg
+            end if
+            show grp "footer"
+            show btn "goPrev"
+            show btn "goNext"
+            dispatch "deleteMobileControl" to grp tImageGroup with tImageGroup
+            landscapeOrientation "allowed"
          end if
-         show grp "footer"
-         show btn "goPrev"
-         show btn "goNext"
-         dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
-         landscapeOrientation "allowed"
       else
          if tState >= 3 then
             if the platform is "iPhone" then
@@ -642,31 +667,35 @@ command updateImageState pResizeOnly
                   lockPortrait
                end if
             end if
-            hide grp "footer"
+            if not tOnColorItCard then
+               hide grp "footer"
+            end if
             -- hide btn "goPrev"
             -- hide btn "goNext"
-            set the hscroll of grp "storyImageGroup" to 0
-            set the vscroll of grp "storyImageGroup" to 0
-            if the width of sStoryImage < CardWidth() then
-               put the loc of sStoryImage into tLoc
+            set the hscroll of grp tImageGroup to 0
+            set the vscroll of grp tImageGroup to 0
+            if the width of tImage < CardWidth() then
+               put the loc of tImage into tLoc
                put item 1 of CardLoc() into item 1 of tLoc
-               set the loc of sStoryImage to tLoc
+               set the loc of tImage to tLoc
             else
-               set the left of sStoryImage to 0
-               set the hScroll of grp "storyImageGroup" to (the width of sStoryImage - CardWidth()) div 2
+               set the left of tImage to 0
+               set the hScroll of grp tImageGroup to (the width of tImage - CardWidth()) div 2
             end if
-            if the height of sStoryImage < CardHeight() then
-               put the loc of sStoryImage into tLoc
+            if the height of tImage < CardHeight() then
+               put the loc of tImage into tLoc
                put item 2 of CardLoc() into item 2 of tLoc
-               set the loc of sStoryImage to tLoc
+               set the loc of tImage to tLoc
             else
-               set the top of sStoryImage to 0
-               set the vScroll of grp "storyImageGroup" to (the height of sStoryImage - CardHeight()) div 2
+               set the top of tImage to 0
+               set the vScroll of grp tImageGroup to (the height of tImage - CardHeight()) div 2
             end if
-            dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
+            dispatch "createImageScroller" to grp tImageGroup with tImageGroup
          end if
-         hide sCaptionText
-         hide sCaptionBkg
+         if not tOnColorItCard then
+            hide sCaptionText
+            hide sCaptionBkg
+         end if
       end if
    end if
    unlock screen with visual effect "dissolve"

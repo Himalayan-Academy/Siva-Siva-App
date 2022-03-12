@@ -16,6 +16,9 @@ on mouseUp
    --
    if word 1 of the name of the target is "button" then
       put false into sStarted
+      dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
+      relayer getColorItImage() to back of cd "colorIt"
+      setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
       choose tTarget tool
    end if
@@ -43,6 +46,9 @@ on checkLoc
          choose the browse tool
          put false into sStarted
          clearHighlight
+         relayer getColorItImage() to front of grp "colorItImageGroup"
+         setColorItImage (the long id of img "colorItImage")
+         dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
          exit "checkLoc"
       end if
    end if
