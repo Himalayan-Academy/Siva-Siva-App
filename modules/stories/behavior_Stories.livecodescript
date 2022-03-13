@@ -75,6 +75,7 @@ on preOpenCard
       put the long id of the last image into sColorItImage
       relayer sColorItImage to front of grp "colorItImageGroup"
       put the long id of img "colorItImage" into sColorItImage
+      initializeCycleImage sColorItImage
       --      put the long id of img "colorItImage" into sColorItImage
       --      set the itemDelimiter to "."
       --      put "gif" into the last item of tFileName
@@ -83,6 +84,7 @@ on preOpenCard
       --      --set the filename of sColorItImage to the filename of sStoryImage
       --      set the layer of sColorItImage to bottom
       hide group "BrushIcons" of card "colorIt"
+      hide control "Color map" of card "colorIt"
    end if
    updateUI
 end preopenCard
@@ -160,7 +162,7 @@ end keepStoryLoaded
 UX for user for the stack and cardi
 */
 on mouseup
-   local tTips
+   local tTips, tFileName
    --
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
@@ -247,10 +249,15 @@ on mouseup
          end if
          break
       case "cancel" # colorIt card
+         initializeCycleImage sStoryImage
          go cd "showStories"
          break
       case "save" # colorIt card
          put "image saved here..."
+         put the filename of sStoryImage into tFileName
+         set the itemDelimiter to "."
+         put "gif" into the last item of tFileName
+         export sColorItImage to file tFileName as GIF
          break
    end switch
 end mouseup
@@ -809,6 +816,8 @@ on updateUI
    if tCard is "colorIt" then
       put the long id of grp "ToolGroup" into tFooter
       send "updateUI" to tFooter
+      put the long id of grp "footer" into tFooter
+      send "updateUI" to tFooter
    else
       put the long id of grp "footer" into tFooter
       if currentlyLandscape() then
@@ -936,6 +945,7 @@ on updateUI
       topRightMe tSave, 0, 8
       --
       set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+      set the rect of control "Color map" to the rect of grp "colorItImageGroup"
       resetCycleImage sColorItImage
    end if
    --

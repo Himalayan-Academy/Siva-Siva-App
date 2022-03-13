@@ -19,7 +19,9 @@ on mouseUp
          set the brush to tTargetIcon
       end if
       set the icon of btn "CurrentBrush" of grp "ToolGroup" of cd "ColorIt" to tTargetIcon
+      set the icon of btn "eraserIcon" of grp "footer" of cd "ColorIt" to tTargetIcon
       hide me
+      dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
 end mouseUp
 
