@@ -6,7 +6,7 @@ Script "stack_stories_group_id_1539"
 */
 
 
-constant kButtons = "eraser,eraserIcon,bucket,fillColor"
+constant kButtons = "eraser,bucket,fillColor"
 # select,pencil,brush,eraser,spray can,bucket,line
 
 local sStarted
@@ -21,10 +21,10 @@ on mouseUp
       dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
    --
-   if tTarget is "eraserIcon" then
-      set the layer of grp "BrushIcons" of cd "colorIt" to 99
-      show grp "BrushIcons" of cd "colorIt"
-   end if
+   --   if tTarget is "eraserIcon" then
+   --      set the layer of grp "BrushIcons" of cd "colorIt" to 99
+   --      show grp "BrushIcons" of cd "colorIt"
+   --   end if
    if tTarget is "fillColor" then
       show control "Color map"
    end if
@@ -34,14 +34,20 @@ on mouseUp
       relayer getColorItImage() to back of cd "colorIt"
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
-      choose tTarget tool
+      choose "bucket" tool
    end if
    --
-   if the tool is "eraser tool" then
-      set the eraser to the icon of btn "eraserIcon"
-   else if the tool is "bucket tool" then
+   if tTarget is "bucket" then
       set the brushColor to the backgroundColor of btn "fillColor"
+   else
+      set the brushColor to "white"
    end if
+   --
+   --   if the tool is "eraser tool" then
+   --      set the eraser to the icon of btn "eraserIcon"
+   --   else if the tool is "bucket tool" then
+   --      set the brushColor to the backgroundColor of btn "fillColor"
+   --   end if
 end mouseUp
 
 on checkLoc

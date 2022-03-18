@@ -162,7 +162,7 @@ end keepStoryLoaded
 UX for user for the stack and cardi
 */
 on mouseup
-   local tTips, tFileName
+   local tTips, tFileName, tImageState
    --
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
@@ -257,7 +257,12 @@ on mouseup
          put the filename of sStoryImage into tFileName
          set the itemDelimiter to "."
          put "gif" into the last item of tFileName
+         lock screen
+         put getImageState() into tImageState
+         setImageState sColorItImage, "fullSize"
          export sColorItImage to file tFileName as GIF
+         setImageState sColorItImage, tImageState
+         unlock screen
          break
    end switch
 end mouseup
