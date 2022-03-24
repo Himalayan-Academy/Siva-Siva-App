@@ -147,7 +147,7 @@ end showStoryMenu
 
 
 function showColorItIcon
-   return (sStoryMetaArray["StoryType"] = "Arts")
+   return (sStoryMetaArray["color"] = "yes")
 end showColorItIcon
 
 # when going to colorIt card, do not clear the story
