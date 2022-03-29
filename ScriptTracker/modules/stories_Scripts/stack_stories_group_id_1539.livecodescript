@@ -7,7 +7,6 @@ Script "stack_stories_group_id_1539"
 
 
 constant kButtons = "eraser,bucket,fillColor"
-# select,pencil,brush,eraser,spray can,bucket,line
 
 local sStarted
 
@@ -15,44 +14,31 @@ local sStarted
 on mouseUp
    local tTarget, tBrushIcon
    --
-   put the short name of the target into tTarget
-   --
    if (the visible of control "Color map") then
       pass mouseUp
    end if
    --
+   put the short name of the target into tTarget
    if tTarget is among the items kButtons then
       dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
    --
-   --   if tTarget is "eraserIcon" then
-   --      set the layer of grp "BrushIcons" of cd "colorIt" to 99
-   --      show grp "BrushIcons" of cd "colorIt"
-   --   end if
    if tTarget is "fillColor" then
       show control "Color map"
-   end if
-   --
-   if tTarget is among the items "eraser,bucket" then
+   else if tTarget is among the items "eraser,bucket" then
       put false into sStarted
       relayer getColorItImage() to back of cd "colorIt"
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
+      if tTarget is "bucket" then
+         set the brushColor to the backgroundColor of btn "fillColor"
+      else
+         set the brushColor to "white"
+      end if
       choose "bucket" tool
    end if
-   --
-   if tTarget is "bucket" then
-      set the brushColor to the backgroundColor of btn "fillColor"
-   else
-      set the brushColor to "white"
-   end if
-   --
-   --   if the tool is "eraser tool" then
-   --      set the eraser to the icon of btn "eraserIcon"
-   --   else if the tool is "bucket tool" then
-   --      set the brushColor to the backgroundColor of btn "fillColor"
-   --   end if
 end mouseUp
+
 
 on checkLoc
    if item 2 of the mouseloc < item 2 of the rect of grp "footer" of cd "colorIt" then
