@@ -666,7 +666,9 @@ command updateImageState pResizeOnly
             show grp "footer"
             show btn "goPrev"
             show btn "goNext"
-            dispatch "deleteMobileControl" to grp tImageGroup with tImageGroup
+         end if
+         dispatch "deleteMobileControl" to grp tImageGroup with tImageGroup
+         if not tOnColorItCard then
             landscapeOrientation "allowed"
          end if
       else
