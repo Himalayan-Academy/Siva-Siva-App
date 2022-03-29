@@ -1,7 +1,6 @@
 # pathtosiva
 **stack "pathtosiva"**
 * ID: stack "pathtosiva"
-* Behavior: button id 1251 of stack "pathToSiva"
 * [stack_pathtosiva_](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_.livecodescript)
 
 **button "SVG Menu" of bkgnd "headerGrp" of stack "pathtosiva"**
