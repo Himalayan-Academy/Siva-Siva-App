@@ -17,6 +17,10 @@ on mouseUp
    --
    put the short name of the target into tTarget
    --
+   if (the visible of control "Color map") then
+      pass mouseUp
+   end if
+   --
    if tTarget is among the items kButtons then
       dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
