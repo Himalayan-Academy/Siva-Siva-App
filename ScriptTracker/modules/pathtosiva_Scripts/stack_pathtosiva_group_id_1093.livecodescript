@@ -53,6 +53,7 @@ on mouseUp -- not sent on mobile when swiping, works on taps.
          default
       end switch 
    end if
+   pass mouseup
 end  mouseup
 
 on mouseRelease
@@ -131,29 +132,29 @@ end turnPage
 
 -- local sDistance
 
-command slideCaption pBool -- animate the caption view
-   local tCaptionFld, tGap, tDistance
-   --   pBool = true to show, false to hide
-   put the long id of fld "caption" into tCaptionFld
-   put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
-   put the height of tCaptionFld - tGap into tDistance
-   if not pBool then put tDistance * -1 into tDistance
-   set the bottom of widget "expander" to (the bottom of fld "caption")-6
-   --set the bottom of button "expander" to (the bottom of fld "caption")+6
-   -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
-   lock moves
-   move tCaptionFld relative 0,tDistance without waiting
-   move fld "bodytext" relative 0,tDistance without waiting
-   move widget "expander" relative 0,tDistance without waiting
-   --move button "expander" relative 0,tDistance without waiting
-   move group "lessonNav" relative 0,tDistance without waiting
-   unlock moves
-   
-   
-   if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
-   set the flipped of widget "expander" to pBool --not pBool
-   createScroller the short name of me -- adjust for new height
-end slideCaption
+--command slideCaption pBool -- animate the caption view
+--   local tCaptionFld, tGap, tDistance
+--   --   pBool = true to show, false to hide
+--   put the long id of fld "caption" into tCaptionFld
+--   put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
+--   put the height of tCaptionFld - tGap into tDistance
+--   if not pBool then put tDistance * -1 into tDistance
+--   set the bottom of widget "expander" to (the bottom of fld "caption")-6
+--   --set the bottom of button "expander" to (the bottom of fld "caption")+6
+--   -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
+--   lock moves
+--   move tCaptionFld relative 0,tDistance without waiting
+--   move fld "bodytext" relative 0,tDistance without waiting
+--   move widget "expander" relative 0,tDistance without waiting
+--   --move button "expander" relative 0,tDistance without waiting
+--   move group "lessonNav" relative 0,tDistance without waiting
+--   unlock moves
+
+
+--   if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
+--   set the flipped of widget "expander" to pBool --not pBool
+--   createScroller the short name of me -- adjust for new height
+--end slideCaption
 
 
 command doGlossaryLookup pTerm -- display term with definition

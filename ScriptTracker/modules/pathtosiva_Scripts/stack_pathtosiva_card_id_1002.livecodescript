@@ -6,12 +6,9 @@ Script "stack_pathtosiva_card_id_1002"
 */
 
 
-on openCard
-   if isMobile() then
-      createScroller "indexGrp"
-   end if
-   hide button "SVG Menu"
-   pass openCard
-end openCard
-
-
+--on openCard
+--   if isMobile() then
+--      createScroller "indexGrp"
+--   end if
+--   pass openCard
+--end openCard

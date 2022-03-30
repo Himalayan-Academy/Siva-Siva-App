@@ -1,12 +1,8 @@
 ﻿script "behavior_PathToSiva"
-local sLastActivityA,sStackPendingMessagesA
+global sConfigA
 
-on setLastactivity pCdName, pLessonNum   
-   # never set this if moving to cards: cover, photo index, choose your path
-   # for about and glossary we don't pass a lesson number.
-   put pCdName into sLastActivityA["CdName"]
-   put pLessonNum into sLastActivityA["LessonNum"]
-end setLastactivity
+local sLastActivityA,sStackPendingMessagesA
+local sCard
 
 on preOpenStack
    if isMobile() then
@@ -26,13 +22,74 @@ on openStack
 end openStack
 
 on opencard
+   put the short name of this card into sCard
+   if sCard = "Photo Index" then
+      if isMobile() then
+         createScroller "indexGrp"
+      end if
+   end if
    audioIsRunning  
+   pass opencard
 end opencard
+
+on mouseup
+   
+   --   breakpoint
+   
+   local tTarget, tTargetOwner
+   
+   put the short name of the owner of the target into tTargetOwner
+   put short name of the target into tTarget
+   put the short name of this card into sCard
+   
+   switch sCard
+      case "lessonView"
+         
+         switch tTarget
+            case "heroImg"
+            case "expander"
+               if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+                  slideCaption true 
+               end if
+               
+               break
+         end switch
+         
+         break
+   end switch
+   
+end mouseup
+
 
 on resizeStack
    setCardCoords
    updateUI
 end resizeStack
+
+command slideCaption pBool -- animate the caption view
+   local tCaptionFld, tGap, tDistance
+   --   pBool = true to show, false to hide
+   put the long id of fld "caption" into tCaptionFld
+   put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
+   put the height of tCaptionFld - tGap into tDistance
+   if not pBool then put tDistance * -1 into tDistance
+   set the bottom of widget "expander" to (the bottom of fld "caption")-6
+   --set the bottom of button "expander" to (the bottom of fld "caption")+6
+   -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
+   lock moves
+   move tCaptionFld relative 0,tDistance without waiting
+   move fld "bodytext" relative 0,tDistance without waiting
+   move widget "expander" relative 0,tDistance without waiting
+   --move button "expander" relative 0,tDistance without waiting
+   move group "lessonNav" relative 0,tDistance without waiting
+   unlock moves
+   
+   
+   if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
+   set the flipped of widget "expander" to pBool --not pBool
+   createScroller the short name of me -- adjust for new height
+end slideCaption
+
 
 on closestack
    portal_SetLastStack "pathtosiva"
@@ -43,19 +100,12 @@ on closeCard
    deleteCardMobileControls
 end closeCard
 
---command addJournalEntry -- save a bookmark to db
---   local tTitle, pData
---   put "photo index" into pData["card"]
---      put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
---   Journal_RecordEntry "pathtosiva","Path to Siva - Photo Index",pData -- send to journal
---end addJournalEntry
-
-
---on journalResume pData -- sent from journal stack
---   local tCd
---   put pData["card"] into tCd
---   goCd tCd
---end journalResume
+on setLastactivity pCdName, pLessonNum   
+   # never set this if moving to cards: cover, photo index, choose your path
+   # for about and glossary we don't pass a lesson number.
+   put pCdName into sLastActivityA["CdName"]
+   put pLessonNum into sLastActivityA["LessonNum"]
+end setLastactivity
 
 command addJournalEntry -- save a bookmark to db
    local tCdName,pData,tLessonNum,tTitle
@@ -193,8 +243,21 @@ function isMobile
    return the environment is "mobile"
 end isMobile
 
+
+--command doScrollerTap  -- navigate
+--   local tNum, tLesson, tTrackdata
+--   setPref "index","photo index"
+--   put char 1 to 2 of the short name of the mousecontrol into tNum
+--   set the numberformat to "0"
+--   add 0 to tNum -- remove any leading zero
+--   put "lesson" && tNum into tLesson
+--   goCd tLesson,"reveal left"
+--   put tLesson into tTrackdata["targetContent"]
+--   tracking_RecordActivity "Path To Siva", "navigation/goContent", tTrackdata
+--end doScrollerTap
+
 command doScrollerTap
-   -- trap
+--   -- trap
 end doScrollerTap
 
 local sShareItemsA
