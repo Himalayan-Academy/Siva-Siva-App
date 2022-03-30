@@ -67,10 +67,6 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_pathtosiva_widget_id_51286](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51286.livecodescript)
 
-**card "photo index" of stack "pathtosiva"**
-* ID: card id 1002 of stack "pathtosiva"
-* [stack_pathtosiva_card_id_1002](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1002.livecodescript)
-
 **group "indexGrp" of card "photo index" of stack "pathtosiva"**
 * ID: group id 1071 of card id 1002 of stack "pathtosiva"
 * Behavior: button id 1252 of stack "pathToSiva"
@@ -80,21 +76,9 @@
 * ID: card id 1094 of stack "pathtosiva"
 * [stack_pathtosiva_card_id_1094](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1094.livecodescript)
 
-**card "lessonView" of stack "pathtosiva"**
-* ID: card id 1083 of stack "pathtosiva"
-* [stack_pathtosiva_card_id_1083](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1083.livecodescript)
-
 **group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
 * ID: group id 1093 of card id 1083 of stack "pathtosiva"
 * [stack_pathtosiva_group_id_1093](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_1093.livecodescript)
-
-**button "prevLesson" of group "lessonNav" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
-* ID: button id 51303 of group id 51299 of group id 1093 of card id 1083 of stack "pathtosiva"
-* [stack_pathtosiva_button_id_51303](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51303.livecodescript)
-
-**button "nextLesson" of group "lessonNav" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
-* ID: button id 51304 of group id 51299 of group id 1093 of card id 1083 of stack "pathtosiva"
-* [stack_pathtosiva_button_id_51304](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51304.livecodescript)
 
 **field "glossaryDef" of card "lessonView" of stack "pathtosiva"**
 * ID: field id 1264 of card id 1083 of stack "pathtosiva"
