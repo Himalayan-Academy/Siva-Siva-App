@@ -10,6 +10,7 @@ Revised 2020-10-01
 
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
+local sImageUndoCache
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
@@ -626,6 +627,29 @@ command setupCaptionField
    end if
    set the loc of sCaptionBkg to the loc of sCaptionText
 end setupCaptionField
+
+
+command pushImage
+   local tNow, tKeyList
+   put the seconds into tNow
+   put the imagedata of sColorItImage into sImageUndoCache[tNow]
+   put the keys of sImageUndoCache into tKeyList
+   sort tKeyList ascending numeric
+   if the number of lines of tKeyList > 5 then
+      delete variable sImageUndoCache[line 1 of tKeyList]
+   end if
+end pushImage
+
+
+command popImage
+   local tKeyList
+   put the keys of sImageUndoCache into tKeyList
+   if the number of lines of tKeyList > 0 then
+      sort tKeyList ascending numeric
+      set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
+      delete variable sImageUndoCache[line -1 of tKeyList]
+   end if
+end popImage
 
 
 command setColorItImage pName
