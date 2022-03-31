@@ -6,9 +6,9 @@ Script "stack_stories_group_id_1539"
 */
 
 
-constant kButtons = "eraser,bucket,fillColor"
+constant kButtons = "eraser,brush,toolIcon,bucket,fillColor"
 
-local sStarted
+local sStarted, sSaveTime
 
 
 on mouseUp
@@ -25,23 +25,32 @@ on mouseUp
    --
    if tTarget is "fillColor" then
       show control "Color map"
-   else if tTarget is among the items "eraser,bucket" then
+   else if tTarget is "toolIcon" then
+      set the layer of grp "BrushIcons" of cd "colorIt" to 99
+      show grp "BrushIcons" of cd "colorIt"
+   else if tTarget is among the items "brush,bucket" then
       put false into sStarted
       relayer getColorItImage() to back of cd "colorIt"
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
+      set the brushColor to the backgroundColor of btn "fillColor"
       if tTarget is "bucket" then
-         set the brushColor to the backgroundColor of btn "fillColor"
+         choose "bucket" tool
       else
-         set the brushColor to "white"
+         choose "brush" tool
       end if
-      choose "bucket" tool
+   else -- erase
+      popImage
    end if
 end mouseUp
 
 
 on checkLoc
    if item 2 of the mouseloc < item 2 of the rect of grp "footer" of cd "colorIt" then
+      if not sStarted then
+         pushImage
+         put the seconds + 5 into sSaveTime
+      end if
       put true into sStarted
    end if
    if sStarted then
@@ -53,6 +62,11 @@ on checkLoc
          setColorItImage (the long id of img "colorItImage")
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
          exit "checkLoc"
+      else
+         if the seconds > sSaveTime then
+            pushImage
+            put the seconds + 5 into sSaveTime
+         end if
       end if
    end if
    send "checkLoc" to me in 50 milliseconds
@@ -85,6 +99,8 @@ end resizeControl
 
 
 on preOpenControl
-   set the icon of btn "eraserIcon" to 102
+   set the icon of btn "toolIcon" to 102
+   set the brush to 102
+   set the hilite of button id 1474 to true
    set the backgroundColor of btn "fillColor" to "red"
 end preOpenControl
