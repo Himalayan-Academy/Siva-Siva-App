@@ -53,64 +53,77 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into sCard
    
-   switch sCard
-      case "lessonView"
+   switch tTarget
+      
+      # Cases of group "headerGrp"
+      
+      case "prevLesson"
+         if sCard = "Photo Index" then 
+            answer "Do you want to exit Path to Siva?" with "Yes" or "No"
+            if it = "Yes" then
+               portal_GoStack "Siva-Siva-Portal"
+               exit mouseup
+            end if
+         end if
          
-         switch tTarget
-            case "heroImg"
-            case "expander"
-               if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
-                  slideCaption true 
-               end if
-               break
-               
-            case "prevLesson"
-               turnPage "prev"
-               break
-               
-            case "nextLesson"
-               turnPage "next"
-               break
-               
-            case "SVG Menu"
-               turnPage "next"
-               break
-               
-            case "SVG Back"
-               if tocVisible() then 
-                  toggleMenu
-                  exit to top
-               end if 
-               
-               
-               if the short name of this cd <> "Photo Index" then
-                  goCd "Photo Index","push right"
-                  --               else -- photo index cd
-                  
-                  --                  # NOTE: for now we take the user home
-                  --                  # in the future with will go back to "Choose Your Path"
-                  
-                  --                  portal_GoStack "Siva-Siva-Portal"
-                  
-                  --                  # goCd "choose your path","reveal right"
-                  
-               end if
-               break
-               
-            case "SVG Journal"
-               turnPage "next"
-               break
-               
-               
-         end switch
+         put first word of line 1 of fld "bodytext" into tFirstWord
          
+         if tFirstWord = "path" OR tFirstWord = "Glossary" then
+            turnPage "next", sCurrentLesson
+            exit mouseup
+         end if
+         turnPage "next"
          break
+         
+      case "nextLesson"
+         turnPage "next"
+         break 
+         
+      case "photo index"
+         go to card "photo index"
+         break 
+         
+      case "SVG Journal"
+         addJournalEntry
+         moveMe "SVG Journal", 0,-100,200
+         wait 100 milliseconds
+         show fld "message"
+         wait 500 milliseconds
+         hide  fld "message" with visual effect "dissolve" slow
+         wait 100 milliseconds
+         moveMe "SVG Journal", 0,100,70
+         break
+         
+      case "SVG Menu"
+         toggleMenu
+         break
+         
+      case  "showTerms"
+         hiliteChanged
+         flagGlossaryTerms the hilited of me
+         toggleMenu
+         break
+         
+         switch sCard
+            case "lessonView"
+               
+               switch tTarget
+                  case "heroImg"
+                  case "expander"
+                     if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+                        slideCaption true 
+                     end if
+                     break
+                     
+               end switch
+               
+               break
+         end switch
    end switch
-   
 end mouseup
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   put pLessonNum into sCurrentLesson # for sharing
+   --put pLessonNum into sCurrentLesson # for sharing
    setLastactivity "lessonView", pLessonNum  
    lock screen
    hide fld "glossaryDef"
@@ -134,7 +147,7 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    set the htmltext of fld "bodytext" to tHTML
    set the height of fld "bodytext" to the formattedheight of fld "bodytext"
    set the top of fld "bodytext" to the bottom of fld "caption"
-   set the top of grp "lessonNav" to the bottom of fld "caption" + 14
+   --   set the top of grp "lessonNav" to the bottom of fld "caption" + 14
    put pLessonNum into sConfigA["pathToSivaLastActivity"]
    unlock screen
    if the hilited of widget "showTerms" then flagGlossaryTerms true -- flag all glossary terms in the text
@@ -143,7 +156,7 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
 end loadLesson
 
-command turnPage pDir -- navigate to another lesson
+command turnPage pDir, pLesson -- navigate to another lesson
    local tLesson, tEffect
    -- pDir = "next" or "prev"
    put last word of line 1 of fld "bodytext" into tLesson
@@ -159,7 +172,7 @@ command turnPage pDir -- navigate to another lesson
          break
       default
    end switch
-   toggleHeader false
+   --toggleHeader false
    lock screen for visual effect
    loadLesson tLesson
    unlock screen with visual effect tEffect
@@ -306,10 +319,15 @@ command goCd pCdName,pEffect -- optional effect param
    if the short name of this cd = pCdName then exit goCd
    if pEffect = "" then put "plain" into pEffect
    put (pCdName begins with "lesson") into tIslesson
-   lock screen for visual effect
+   lock screen for visual effect 
    if there is a cd pCdName then
       go cd pCdName
    else if tIslesson then
+      put (word 2 of pCdName) into tlastLesson
+      if tlastLesson is a number then
+         put tlastLesson into sCurrentLesson # for sharingsCurrentLesson # for sharing
+      end if
+      
       go cd "lessonView"
       send "loadLesson (word 2 of pCdName)" to this cd
    else if pCdName = "home" then -- return to project
@@ -318,7 +336,7 @@ command goCd pCdName,pEffect -- optional effect param
       unlock screen with visual effect pEffect fast
       exit goCd
    end if
-   toggleHeader not tIslesson and (the number of cd pCdName > 2)
+   --toggleHeader not tIslesson and (the number of cd pCdName > 2)
    unlock screen with visual effect pEffect fast
 end goCd
 
@@ -401,49 +419,34 @@ function isMobile
    return the environment is "mobile"
 end isMobile
 
+command doScrollerTap
+   local tLine,tcd,tCdNum,tEffect
+   put the clickline into tLine
+   if tLine = "" or word 2 of tLine < 2 then exit doScrollerTap -- empty or "show glossary terms"
+   set the hilitedline of fld "toc" to word 2 of tLine
+   wait 100 millisecs -- to see it
+   put the text of tLine into tCd
+   if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
+      put word 1 to 2 of tCd into tCd
+   else if tCd contains "introduction" then
+      put "lesson 0" into tCd
+   end if
+   if tCd = the short name of this cd or \
+         (the short name of this cd = "lessonView" and line 1 of fld "bodytext" = tCd) then
+      toggleMenu
+      exit doScrollerTap
+   end if
+   if tocVisible() then toggleMenu
+   if tCd begins with "lesson" then
+      put the number of cd "lessonview" into tCdNum
+   else if there is a cd tCd then
+      put the number of cd tCd into tCdNum
+   end if
+   put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
+   goCd tCd,tEffect
+end doScrollerTap
 
---command doScrollerTap  -- navigate
---   local tNum, tLesson, tTrackdata
---   setPref "index","photo index"
---   put char 1 to 2 of the short name of the mousecontrol into tNum
---   set the numberformat to "0"
---   add 0 to tNum -- remove any leading zero
---   put "lesson" && tNum into tLesson
---   goCd tLesson,"reveal left"
---   put tLesson into tTrackdata["targetContent"]
---   tracking_RecordActivity "Path To Siva", "navigation/goContent", tTrackdata
---end doScrollerTap
 
---command doScrollerTap
-----   -- trap
---end doScrollerTap
-
---command doScrollerTap
---   local tShow
---   switch the short name of the target
---      case "bodytext"
---         switch
---            case the milliseconds - sStartMS > kLongPressMS -- long press
---               send "doGlossaryLookup the mouseText" to me in 0
---               break
---               --            case the mouseH > (the width of this cd) - 60 -- tap right side
---               --               turnPage "next"
---               --               break
---               --            case the mouseH < 60 -- tap left side
---               --               turnPage "prev"
---               --               break
---               --            default
---               --               toggleHeader
---         end switch
---         break
---         --      case "heroImg"
---         --         toggleHeader
---         --         break
---      case "caption"
---         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
---         slideCaption tShow
---   end switch
---end doScrollerTap
 
 
 local sShareItemsA
