@@ -3,10 +3,6 @@
 * ID: button id 51301 of bkgnd id 1078 of stack "pathtosiva"
 * [stack_pathtosiva_button_id_51301](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51301.livecodescript)
 
-**button "SVG Back" of bkgnd "headerGrp" of stack "pathtosiva"**
-* ID: button id 51302 of bkgnd id 1078 of stack "pathtosiva"
-* [stack_pathtosiva_button_id_51302](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_button_id_51302.livecodescript)
-
 **widget "SVG Journal" of bkgnd "headerGrp" of stack "pathtosiva"**
 * ID: widget id 51309 of bkgnd id 1078 of stack "pathtosiva"
 * Widget Kind: com.livecode.widget.svgpath

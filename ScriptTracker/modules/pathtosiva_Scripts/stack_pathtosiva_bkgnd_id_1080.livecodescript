@@ -35,5 +35,5 @@ command doScrollerTap
     put the number of cd tCd into tCdNum
   end if
   put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
-  goCd tCd,tEffect
+  --goCd tCd,tEffect
 end doScrollerTap

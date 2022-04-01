@@ -34,7 +34,7 @@ on mouseUp -- not sent on mobile when swiping, works on taps.
    put "" into sMouseLoc
    if tocVisible() then
       toggleMenu
-      toggleHeader false
+      --toggleHeader false
    else if the vis of fld "glossaryDef" then
       hide fld "glossaryDef"
    else
@@ -73,32 +73,32 @@ on mouseMove x,y -- desktop scrolling
    put x,y into sMouseLoc
 end mouseMove
 
-command doScrollerTap
-   local tShow
-   switch the short name of the target
-      case "bodytext"
-         switch
-            case the milliseconds - sStartMS > kLongPressMS -- long press
-               send "doGlossaryLookup the mouseText" to me in 0
-               break
-            case the mouseH > (the width of this cd) - 60 -- tap right side
-               turnPage "next"
-               break
-            case the mouseH < 60 -- tap left side
-               turnPage "prev"
-               break
-            default
-               toggleHeader
-         end switch
-         break
-      case "heroImg"
-         toggleHeader
-         break
-      case "caption"
-         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
-         slideCaption tShow
-   end switch
-end doScrollerTap
+--command doScrollerTap
+--   local tShow
+--   switch the short name of the target
+--      case "bodytext"
+--         switch
+--            case the milliseconds - sStartMS > kLongPressMS -- long press
+--               send "doGlossaryLookup the mouseText" to me in 0
+--               break
+--            case the mouseH > (the width of this cd) - 60 -- tap right side
+--               turnPage "next"
+--               break
+--            case the mouseH < 60 -- tap left side
+--               turnPage "prev"
+--               break
+--            default
+--               toggleHeader
+--         end switch
+--         break
+--         --      case "heroImg"
+--         --         toggleHeader
+--         --         break
+--      case "caption"
+--         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
+--         slideCaption tShow
+--   end switch
+--end doScrollerTap
 
 command scrollingDown
    toggleHeader false

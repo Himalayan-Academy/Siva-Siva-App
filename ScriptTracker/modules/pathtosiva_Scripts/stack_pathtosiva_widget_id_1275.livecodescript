@@ -10,6 +10,6 @@ Script "stack_pathtosiva_widget_id_1275"
 
 on hiliteChanged
   flagGlossaryTerms the hilited of me
-  toggleHeader false
+  --toggleHeader false
   toggleMenu
 end hiliteChanged

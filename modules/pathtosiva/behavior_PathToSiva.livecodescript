@@ -72,6 +72,35 @@ on mouseup
                turnPage "next"
                break
                
+            case "SVG Menu"
+               turnPage "next"
+               break
+               
+            case "SVG Back"
+               if tocVisible() then 
+                  toggleMenu
+                  exit to top
+               end if 
+               
+               
+               if the short name of this cd <> "Photo Index" then
+                  goCd "Photo Index","push right"
+                  --               else -- photo index cd
+                  
+                  --                  # NOTE: for now we take the user home
+                  --                  # in the future with will go back to "Choose Your Path"
+                  
+                  --                  portal_GoStack "Siva-Siva-Portal"
+                  
+                  --                  # goCd "choose your path","reveal right"
+                  
+               end if
+               break
+               
+            case "SVG Journal"
+               turnPage "next"
+               break
+               
                
          end switch
          
@@ -178,10 +207,9 @@ command slideCaption pBool -- animate the caption view
    move tCaptionFld relative 0,tDistance without waiting
    move fld "bodytext" relative 0,tDistance without waiting
    move widget "expander" relative 0,tDistance without waiting
-   --move button "expander" relative 0,tDistance without waiting
+   
    move group "lessonNav" relative 0,tDistance without waiting
    unlock moves
-   
    
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
    set the flipped of widget "expander" to pBool --not pBool
@@ -386,9 +414,37 @@ end isMobile
 --   tracking_RecordActivity "Path To Siva", "navigation/goContent", tTrackdata
 --end doScrollerTap
 
-command doScrollerTap
---   -- trap
-end doScrollerTap
+--command doScrollerTap
+----   -- trap
+--end doScrollerTap
+
+--command doScrollerTap
+--   local tShow
+--   switch the short name of the target
+--      case "bodytext"
+--         switch
+--            case the milliseconds - sStartMS > kLongPressMS -- long press
+--               send "doGlossaryLookup the mouseText" to me in 0
+--               break
+--               --            case the mouseH > (the width of this cd) - 60 -- tap right side
+--               --               turnPage "next"
+--               --               break
+--               --            case the mouseH < 60 -- tap left side
+--               --               turnPage "prev"
+--               --               break
+--               --            default
+--               --               toggleHeader
+--         end switch
+--         break
+--         --      case "heroImg"
+--         --         toggleHeader
+--         --         break
+--      case "caption"
+--         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
+--         slideCaption tShow
+--   end switch
+--end doScrollerTap
+
 
 local sShareItemsA
 command share_Items 
