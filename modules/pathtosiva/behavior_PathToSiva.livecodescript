@@ -45,7 +45,7 @@ end opencard
 
 on mouseup
    
-   --   breakpoint
+    --breakpoint
    
    local tTarget, tTargetOwner
    
@@ -53,34 +53,31 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into sCard
    
+ 
    switch tTarget
       
       # Cases of group "headerGrp"
       
       case "prevLesson"
-         if sCard = "Photo Index" then 
-            answer "Do you want to exit Path to Siva?" with "Yes" or "No"
-            if it = "Yes" then
-               portal_GoStack "Siva-Siva-Portal"
-               exit mouseup
-            end if
-         end if
          
-         put first word of line 1 of fld "bodytext" into tFirstWord
+         switch sCard
+            case "Photo Index" 
+               answer "Do you want to exit Path to Siva?" with "Yes" or "No"
+               if it = "Yes" then
+                  portal_GoStack "Siva-Siva-Portal"
+                  exit mouseup
+               else
+                  exit mouseup
+               end if
+               break
+               
+         end switch
          
-         if tFirstWord = "path" OR tFirstWord = "Glossary" then
-            turnPage "next", sCurrentLesson
-            exit mouseup
-         end if
-         turnPage "next"
+         turnPage "prev", sCurrentLesson
          break
          
       case "nextLesson"
-         turnPage "next"
-         break 
-         
-      case "photo index"
-         go to card "photo index"
+         turnPage "next", sCurrentLesson
          break 
          
       case "SVG Journal"
@@ -95,6 +92,7 @@ on mouseup
          break
          
       case "SVG Menu"
+         put sCurrentLesson
          toggleMenu
          break
          
@@ -122,11 +120,55 @@ on mouseup
    end switch
 end mouseup
 
+command goCd pCdName,pEffect -- optional effect param
+   local tIslesson
+   ntInfo pCdName && pEffect
+   if pCdName is empty then
+      ntInfo "tried going to empty card"
+      exit goCd
+   end if
+   if the short name of this cd = pCdName then exit goCd
+   if pEffect = "" then put "plain" into pEffect
+   put (pCdName begins with "lesson") into tIslesson
+   lock screen for visual effect 
+   if there is a cd pCdName then
+      go cd pCdName
+   else if tIslesson then
+      put (word 2 of pCdName) into tlastLesson
+      go cd "lessonView"
+      send "loadLesson (word 2 of pCdName)" to this cd
+   else if pCdName = "home" then -- return to project
+      put "push right" into pEffect
+      portal_GoStack "Siva-Siva-Portal"
+      unlock screen with visual effect pEffect fast
+      exit goCd
+   end if
+   
+   unlock screen with visual effect pEffect fast
+end goCd
+
+
+
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   --put pLessonNum into sCurrentLesson # for sharing
+   --put  pLessonNum & cr & sCurrentLesson
+   
+   if pLessonNum   <> 0 then
+      put pLessonNum  into sCurrentLesson
+   else
+      if pLessonNum   = 0 then
+         put pLessonNum  into  pLessonNum
+         put 0 into sCurrentLesson
+      end if
+   end if
+   
+   --put  pLessonNum & cr & sCurrentLesson
+   
    setLastactivity "lessonView", pLessonNum  
    lock screen
-   hide fld "glossaryDef"
+   
+   if there is a  fld "glossaryDef" then
+      hide fld "glossaryDef"
+   end if
    put the chapterContent[plessonNum] of this cd into tText
    if tText = "" then -- out of range
       exit loadLesson
@@ -147,7 +189,6 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    set the htmltext of fld "bodytext" to tHTML
    set the height of fld "bodytext" to the formattedheight of fld "bodytext"
    set the top of fld "bodytext" to the bottom of fld "caption"
-   --   set the top of grp "lessonNav" to the bottom of fld "caption" + 14
    put pLessonNum into sConfigA["pathToSivaLastActivity"]
    unlock screen
    if the hilited of widget "showTerms" then flagGlossaryTerms true -- flag all glossary terms in the text
@@ -156,27 +197,63 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
 end loadLesson
 
-command turnPage pDir, pLesson -- navigate to another lesson
-   local tLesson, tEffect
-   -- pDir = "next" or "prev"
-   put last word of line 1 of fld "bodytext" into tLesson
-   if tLesson is not an integer then put 0 into tLesson -- intro cd
+command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
+   
+   --breakpoint
+   
+   local tEffect
+   
+   --put last word of line 1 of fld "bodytext" into tLesson
+   --if tLesson is not an integer then put 0 into tLesson -- intro cd
+   
    switch pDir
       case "next"
-         add 1 to tLesson
+         add 1 to sCurrentLesson
          put "reveal left" into tEffect
          break
       case "prev"
-         subtract 1 from tLesson
+         subtract 1 from sCurrentLesson
          put "reveal right" into tEffect
          break
       default
    end switch
-   --toggleHeader false
+
    lock screen for visual effect
-   loadLesson tLesson
+   loadLesson sCurrentLesson
    unlock screen with visual effect tEffect
 end turnPage
+
+command doScrollerTap
+   local tLine,tcd,tCdNum,tEffect
+   put the clickline into tLine
+   if tLine = "" or word 2 of tLine < 2 then exit doScrollerTap -- empty or "show glossary terms"
+   set the hilitedline of fld "toc" to word 2 of tLine
+   wait 100 millisecs -- to see it
+   put the text of tLine into tCd
+   if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
+      put word 1 to 2 of tCd into tCd
+   else if tCd contains "introduction" then
+      put "lesson 0" into tCd
+   end if
+   if tCd = the short name of this cd or \
+         (the short name of this cd = "lessonView" and line 1 of fld "bodytext" = tCd) then
+      toggleMenu
+      exit doScrollerTap
+   end if
+   if tocVisible() then toggleMenu
+   if tCd begins with "lesson" then
+      put the number of cd "lessonview" into tCdNum
+   else if there is a cd tCd then
+      put the number of cd tCd into tCdNum
+   end if
+   put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
+   goCd tCd,tEffect
+   if sCurrentLesson <> 0 then
+      put sCurrentLesson into sCurrentLesson
+   end if
+end doScrollerTap
+
+
 
 
 on resizeStack
@@ -284,7 +361,7 @@ command addJournalEntry -- save a bookmark to db
    put tCdName into pData["card"] -- store the last user cd   
    if tCdName = "lessonView" then -- store the lesson number
       put sLastActivityA["LessonNum"] into tLessonNum
-      --- if tLessonNum is not an integer then put 0 into tLessonNum -- intro cd
+       if tLessonNum is not an integer then put 0 into tLessonNum -- intro cd
       put tLessonNum into pData["lessonNum"]
       put "Lesson " & tLessonNum into tTitle -- "lesson x"
       if tLessonNum = 0 then
@@ -308,37 +385,6 @@ on journalResume pData,pEntryA -- sent from journal stack
    goCd tCd
 end journalResume
 
-
-command goCd pCdName,pEffect -- optional effect param
-   local tIslesson
-   ntInfo pCdName && pEffect
-   if pCdName is empty then
-      ntInfo "tried going to empty card"
-      exit goCd
-   end if
-   if the short name of this cd = pCdName then exit goCd
-   if pEffect = "" then put "plain" into pEffect
-   put (pCdName begins with "lesson") into tIslesson
-   lock screen for visual effect 
-   if there is a cd pCdName then
-      go cd pCdName
-   else if tIslesson then
-      put (word 2 of pCdName) into tlastLesson
-      if tlastLesson is a number then
-         put tlastLesson into sCurrentLesson # for sharingsCurrentLesson # for sharing
-      end if
-      
-      go cd "lessonView"
-      send "loadLesson (word 2 of pCdName)" to this cd
-   else if pCdName = "home" then -- return to project
-      put "push right" into pEffect
-      portal_GoStack "Siva-Siva-Portal"
-      unlock screen with visual effect pEffect fast
-      exit goCd
-   end if
-   --toggleHeader not tIslesson and (the number of cd pCdName > 2)
-   unlock screen with visual effect pEffect fast
-end goCd
 
 
 local sMenuLine = 0 -- current cd's TOC line, tracked for text hiliting
@@ -418,34 +464,6 @@ end pathToImgs
 function isMobile
    return the environment is "mobile"
 end isMobile
-
-command doScrollerTap
-   local tLine,tcd,tCdNum,tEffect
-   put the clickline into tLine
-   if tLine = "" or word 2 of tLine < 2 then exit doScrollerTap -- empty or "show glossary terms"
-   set the hilitedline of fld "toc" to word 2 of tLine
-   wait 100 millisecs -- to see it
-   put the text of tLine into tCd
-   if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
-      put word 1 to 2 of tCd into tCd
-   else if tCd contains "introduction" then
-      put "lesson 0" into tCd
-   end if
-   if tCd = the short name of this cd or \
-         (the short name of this cd = "lessonView" and line 1 of fld "bodytext" = tCd) then
-      toggleMenu
-      exit doScrollerTap
-   end if
-   if tocVisible() then toggleMenu
-   if tCd begins with "lesson" then
-      put the number of cd "lessonview" into tCdNum
-   else if there is a cd tCd then
-      put the number of cd tCd into tCdNum
-   end if
-   put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
-   goCd tCd,tEffect
-end doScrollerTap
-
 
 
 
