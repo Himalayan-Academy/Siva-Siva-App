@@ -151,18 +151,21 @@ end mouseMove
 --end mouseMove
 
 on setScroll
+   local tMouseH, tMouseV
    if the mouse is down then
       lock screen
+      put the mouseH into tMouseH
+      put the mouseV into tMouseV
       if abs (item 2 of sMouseLoc ) > 20 then
-         if item 1 of sMouseLoc > the mouseH then
-            set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
+         if item 1 of sMouseLoc > tMouseH then
+            set the hscroll of me to the hscroll of me - (tMouseH - item 1 of sMouseLoc)
          else
-            set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
+            set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - tMouseH)
          end if
-         if item 2 of sMouseLoc > the mouseV then
-            set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)
+         if item 2 of sMouseLoc > tMouseV then
+            set the vscroll of me to the vscroll of me - (tMouseV - item 2 of sMouseLoc)
          else
-            set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - the mouseV)
+            set the vscroll of me to the vscroll of me + (item 2 of sMouseLoc - tMouseV)
          end if
          put the mouseloc into sMouseLoc
       end if

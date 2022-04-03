@@ -6,15 +6,15 @@ Script "stack_stories_group_id_1539"
 */
 
 
-constant kButtons = "eraser,brush,toolIcon,bucket,fillColor"
+constant kButtons = "eraser,brush,bucket,fillColor"
 
-local sStarted, sSaveTime
+local sStarted, sSaveTime, sTool
 
 
 on mouseUp
    local tTarget, tBrushIcon
    --
-   if (the visible of control "Color map") then
+   if (the visible of control "Color map") or (the visible of grp "BrushIcons") then
       pass mouseUp
    end if
    --
@@ -25,15 +25,18 @@ on mouseUp
    --
    if tTarget is "fillColor" then
       show control "Color map"
-   else if tTarget is "toolIcon" then
-      set the layer of grp "BrushIcons" of cd "colorIt" to 99
-      show grp "BrushIcons" of cd "colorIt"
+      put empty into sTool
+      --   else if tTarget is "toolIcon" then
+      --      set the layer of grp "BrushIcons" of cd "colorIt" to 99
+      --      show grp "BrushIcons" of cd "colorIt"
    else if tTarget is among the items "brush,bucket" then
       put false into sStarted
+      put tTarget into sTool
       relayer getColorItImage() to back of cd "colorIt"
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
       set the brushColor to the backgroundColor of btn "fillColor"
+      set the opaque of the target to true
       if tTarget is "bucket" then
          choose "bucket" tool
       else
@@ -61,11 +64,22 @@ on checkLoc
          relayer getColorItImage() to front of grp "colorItImageGroup"
          setColorItImage (the long id of img "colorItImage")
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
+         set the opaque of btn "brush" of grp "footer" to false
+         set the opaque of btn "bucket" of grp "footer" to false
          exit "checkLoc"
       else
          if the seconds > sSaveTime then
             pushImage
             put the seconds + 5 into sSaveTime
+         end if
+      end if
+   else
+      if the mouse is down then
+         if the mouseloc is within the rect of btn "brush" and sTool is "brush" then
+            choose the browse tool
+            set the layer of grp "BrushIcons" of cd "colorIt" to 99
+            show grp "BrushIcons" of cd "colorIt"
+            exit checkLoc
          end if
       end if
    end if

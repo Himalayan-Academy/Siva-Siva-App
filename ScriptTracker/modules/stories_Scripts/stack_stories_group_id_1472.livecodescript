@@ -11,17 +11,20 @@ on mouseUp
    --
    if the target contains "button" and the hilite of the target then
       put the icon of the target into tTargetIcon
-      if the tool is "eraser tool" then
-         set the eraser to tTargetIcon
-      else if the tool is "spray tool" then
-         set the spray to tTargetIcon
-      else
-         set the brush to tTargetIcon
-      end if
+      --      if the tool is "eraser tool" then
+      --         set the eraser to tTargetIcon
+      --      else if the tool is "spray tool" then
+      --         set the spray to tTargetIcon
+      --      else
+      --         set the brush to tTargetIcon
+      --      end if
+      set the brush to tTargetIcon
       set the icon of btn "CurrentBrush" of grp "ToolGroup" of cd "ColorIt" to tTargetIcon
       set the icon of btn "toolIcon" of grp "footer" of cd "ColorIt" to tTargetIcon
       hide me
-      dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
+      choose "brush" tool
+      send "checkLoc" to grp "footer" in 50 milliseconds
+      --      dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
 end mouseUp
 
