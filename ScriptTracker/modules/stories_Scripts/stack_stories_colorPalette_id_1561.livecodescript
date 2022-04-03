@@ -10,5 +10,6 @@ on mouseUp
    set the selectedColor2 of me to the mouseColor
    set the backgroundColor of btn "fillColor" of grp "footer" to the mouseColor
    hide me
-   dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
+   updateImageState true
+   --dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
 end mouseUp
