@@ -4,6 +4,11 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_pathtosiva_widget_id_51292](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_51292.livecodescript)
 
+**widget "showTerms" of bkgnd "menuGrp" of stack "pathtosiva"**
+* ID: widget id 1275 of bkgnd id 1080 of stack "pathtosiva"
+* Widget Kind: com.livecode.widget.switchbutton
+* [stack_pathtosiva_widget_id_1275](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_1275.livecodescript)
+
 **card "cover" of stack "pathtosiva"**
 * ID: card id 1088 of stack "pathtosiva"
 * [stack_pathtosiva_card_id_1088](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1088.livecodescript)

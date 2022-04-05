@@ -45,7 +45,7 @@ end opencard
 
 on mouseup
    
-    --breakpoint
+   --breakpoint
    
    local tTarget, tTargetOwner
    
@@ -53,15 +53,21 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into sCard
    
- 
+   
+   
    switch tTarget
-      
       # Cases of group "headerGrp"
       
+         
+      case "Photo Index" 
+         
+         go to card "Photo Index"
+         break
+         
       case "prevLesson"
          
          switch sCard
-            case "Photo Index" 
+            case "Photo Index"
                answer "Do you want to exit Path to Siva?" with "Yes" or "No"
                if it = "Yes" then
                   portal_GoStack "Siva-Siva-Portal"
@@ -71,12 +77,22 @@ on mouseup
                end if
                break
                
+            case "glossary"
+            case "about"
+               go to card "lessonView"
+               break
          end switch
          
          turnPage "prev", sCurrentLesson
          break
          
       case "nextLesson"
+         switch sCard
+            case "glossary"
+            case "about"
+               go to card "lessonView"
+               break
+         end switch
          turnPage "next", sCurrentLesson
          break 
          
@@ -96,11 +112,7 @@ on mouseup
          toggleMenu
          break
          
-      case  "showTerms"
-         hiliteChanged
-         flagGlossaryTerms the hilited of me
-         toggleMenu
-         break
+         
          
          switch sCard
             case "lessonView"
@@ -123,6 +135,7 @@ end mouseup
 command goCd pCdName,pEffect -- optional effect param
    local tIslesson
    ntInfo pCdName && pEffect
+   
    if pCdName is empty then
       ntInfo "tried going to empty card"
       exit goCd
@@ -146,8 +159,6 @@ command goCd pCdName,pEffect -- optional effect param
    
    unlock screen with visual effect pEffect fast
 end goCd
-
-
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    --put  pLessonNum & cr & sCurrentLesson
@@ -190,8 +201,13 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    set the height of fld "bodytext" to the formattedheight of fld "bodytext"
    set the top of fld "bodytext" to the bottom of fld "caption"
    put pLessonNum into sConfigA["pathToSivaLastActivity"]
+   
    unlock screen
-   if the hilited of widget "showTerms" then flagGlossaryTerms true -- flag all glossary terms in the text
+   
+   if the hilited of widget "showTerms" then
+      flagGlossaryTerms true -- flag all glossary terms in the text
+   end if
+   
    createScroller "bodytextGrp" -- replaces any existing
    put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
@@ -226,10 +242,31 @@ end turnPage
 command doScrollerTap
    local tLine,tcd,tCdNum,tEffect
    put the clickline into tLine
-   if tLine = "" or word 2 of tLine < 2 then exit doScrollerTap -- empty or "show glossary terms"
+   
+   # We set the glossary terms by hilite to "Show Defined Words"
+   # but the doScrollerTap doesn't do any be besides 
+   # hilite or not hilited the widget "showTerms"
+   if tLine = "" or word 2 of tLine < 2 then
+      exit doScrollerTap -- empty or "show glossary terms"
+   end if
    set the hilitedline of fld "toc" to word 2 of tLine
    wait 100 millisecs -- to see it
    put the text of tLine into tCd
+   
+   
+   # here we to stop and go the "Siva-Siva-Portal"
+   if tCd = "Home" then
+      answer "Do you want to go the Siva Portal?" with "Yes" or "No"
+      if it = "Yes" then
+         portal_GoStack "Siva-Siva-Portal"
+         exit doScrollerTap
+      else
+         exit doScrollerTap
+      end if
+   end if
+   
+   # Next we go to the lesson 1-68 or
+   # Cover, Choose your Path, About, Glossary, Home, Intriduction
    if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
       put word 1 to 2 of tCd into tCd
    else if tCd contains "introduction" then
@@ -247,14 +284,17 @@ command doScrollerTap
       put the number of cd tCd into tCdNum
    end if
    put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
+   
+   # here we to Lesson or card "glossary" or "about"
    goCd tCd,tEffect
-   if sCurrentLesson <> 0 then
-      put sCurrentLesson into sCurrentLesson
+   
+   # we have set have to set the lesson we wish go to 
+   if (sCard <> "glossary") OR (sCard <> "about") then
+      if sCurrentLesson <> 0 then
+         put sCurrentLesson into sCurrentLesson
+      end if
    end if
 end doScrollerTap
-
-
-
 
 on resizeStack
    setCardCoords
@@ -331,6 +371,48 @@ command flagGlossaryTerms pBool -- underline all glossary words in body text
    put "Hilite Glossary Words" into pTrackdata["userAction"]
    tracking_RecordActivity "Path To Siva", "options/choose", pTrackdata
 end flagGlossaryTerms
+
+command doGlossaryLookup pTerm -- display term with definition
+   local tDef
+   
+   if pTerm = "" then exit doGlossaryLookup
+   
+   dispatch function "getGlossaryDef" to cd "glossary" with pTerm
+   put the result into tDef
+   if tDef = "" then
+      --     put "No definition found" into fld "glossaryDef"
+      exit doGlossaryLookup
+   else
+      set the itemdel to colon
+      put item 1 of tDef &cr& word 1 to -1 of item 2 to -1 of tDef into fld "glossaryDef"
+      set the textstyle of line 1 of fld "glossaryDef" to "bold"
+   end if
+   set the spacebelow of line -1 of fld "glossaryDef" to 8
+   set the height of fld "glossaryDef" to the formattedheight of fld "glossaryDef"
+   set the loc of fld "glossaryDef" to the loc of me
+   show fld "glossaryDef"
+   put removeQuotes(pTerm) into pTrackdata["targetContent"]
+   tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdatai
+end doGlossaryLookup
+
+
+on checkGlossary pChunk -- flag a word if it's in the glossary; used for brief flag on touch; replaced by TOC lookups
+   -- Note: "is among the lines of" fails on 2-word strings or in white space;
+   -- using offset incorrectly matches partials (i.e. "the" matches "theism".)
+   -- Using moustext, there are less errors.
+   get the mousetext
+   if it = "" then exit checkGlossary
+   if it is among the lines of the cGlossaryTerms of cd "glossary" then -- show a temp flag
+      put the mouseChunk into tWordChunk
+      setGlossaryIndicator tWordChunk,true
+      send "setGlossaryIndicator tWordChunk,false" to me in 60 -- remove flag
+   end if
+end checkGlossary
+
+command setGlossaryIndicator pChunk,pBool -- turn glossary indicator on/off; for manual word flagging
+  set the flagged of pChunk to pBool
+end setGlossaryIndicator
+
 
 on linkClicked pLink
    switch pLink
