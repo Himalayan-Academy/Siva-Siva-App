@@ -7,14 +7,7 @@ Script "stack_pathtosiva_widget_id_1275"
 */
 
 
-on mouseup
-   
-
-   put the short name of the owner of the target into tTargetOwner
-   put tTargetOwner
-   hiliteChanged
+on hiliteChanged
    flagGlossaryTerms the hilited of me
-   
-   --toggleMenu
-   
-end mouseup
+   toggleMenu
+end hiliteChanged

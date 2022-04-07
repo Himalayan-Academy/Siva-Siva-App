@@ -6,7 +6,6 @@ Script "stack_pathtosiva_field_id_1264"
 */
 
 
-
 on mouseUp
   hide me
 end mouseUp

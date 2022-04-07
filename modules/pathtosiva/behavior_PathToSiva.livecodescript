@@ -7,6 +7,11 @@ local sCard
 local sCurrentLesson, tText,tHTML, pLessonNumber
 local pTrackdata
 
+
+constant kLongPressMS = 400 -- google says 300 but seems too short
+local sMouseLoc,sStartLoc,sStartMS
+
+
 on preOpenStack
    if isMobile() then
       mobileSetAllowedOrientations "portrait,portrait upside down"
@@ -58,10 +63,19 @@ on mouseup
    switch tTarget
       # Cases of group "headerGrp"
       
-         
+      
       case "Photo Index" 
          
          go to card "Photo Index"
+         break
+         
+      case "bodytext"
+         switch
+            case the milliseconds - sStartMS > kLongPressMS -- long press
+               send "doGlossaryLookup the mouseText" to me in 0
+               break
+               
+         end switch
          break
          
       case "prevLesson"
@@ -106,13 +120,11 @@ on mouseup
          wait 100 milliseconds
          moveMe "SVG Journal", 0,100,70
          break
-         
+     
       case "SVG Menu"
-         put sCurrentLesson
-         toggleMenu
-         break
+         show grp "menuGrp"
          
-         
+          
          
          switch sCard
             case "lessonView"
@@ -295,6 +307,33 @@ command doScrollerTap
       end if
    end if
 end doScrollerTap
+
+--command doScrollerTap
+--   local tShow
+--   switch the short name of the target
+--      case "bodytext"
+--         switch
+--           case the milliseconds - sStartMS > kLongPressMS -- long press
+--               send  "doGlossaryLookup the mouseText" to me in 0
+--               break
+--            case the mouseH > (the width of this cd) - 60 -- tap right side
+--               turnPage "next"
+--               break
+--            case the mouseH < 60 -- tap left side
+--               turnPage "prev"
+--               break
+--            default
+--               toggleHeader
+--         end switch
+--         break
+--         --      case "heroImg"
+--         --         toggleHeader
+--         --         break
+--      case "caption"
+--         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
+--         slideCaption tShow
+--   end switch
+--end doScrollerTap
 
 on resizeStack
    setCardCoords
