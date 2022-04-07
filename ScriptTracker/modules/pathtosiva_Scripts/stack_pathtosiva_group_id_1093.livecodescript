@@ -10,7 +10,7 @@ Script "stack_pathtosiva_group_id_1093"
 -- scrolling specific to the lesson group,
 -- handles taps, swipes, and glossary lookups
 
-constant kLongPressMS = 400 -- google says 300 but seems too short
+constant kLongPressMS = 200 -- google says 300 but seems too short
 local sMouseLoc,sStartLoc,sStartMS
 
 on mouseDown
@@ -33,31 +33,32 @@ on mouseUp -- not sent on mobile when swiping, works on taps.
    local tHDist, tVDist
    
    put "" into sMouseLoc
-   --   if tocVisible() then
-   --      toggleMenu
-   --      --toggleHeader false
-   --   else 
-   
-   if the vis of fld "glossaryDef" then
-      hide fld "glossaryDef"
-   else
-      put abs(the mouseH - item 1 of sStartLoc) into tHDist
-      put abs(the mouseV - item 2 of sStartLoc) into tVDist
-      switch
-         case tHDist <= 10 and tVDist <= 10 -- a tap
-            send "doScrollerTap" to the target in 0
-            break
-         case (item 1 of sStartLoc > the mouseH) and (tHDist > 50) and (tVDist < 100)  -- swipe left
-            turnPage "next"
-            break
-         case (item 1 of sStartLoc < the mouseH) and (tHDist > 50) and (tVDist < 100)  -- swipe right
-            turnPage "prev"
-            break
-         default
-      end switch 
-   end if
-   --pass mouseup
-end  mouseup
+   if tocVisible() then
+      toggleMenu
+      --toggleHeader false
+   else 
+      
+      if the vis of fld "glossaryDef" then
+         hide fld "glossaryDef"
+      else
+         put abs(the mouseH - item 1 of sStartLoc) into tHDist
+         put abs(the mouseV - item 2 of sStartLoc) into tVDist
+         switch
+            case tHDist <= 10 and tVDist <= 10 -- a tap
+               send "doScrollerTap" to the target in 0
+               break
+            case (item 1 of sStartLoc > the mouseH) and (tHDist > 50) and (tVDist < 100)  -- swipe left
+               turnPage "next"
+               break
+            case (item 1 of sStartLoc < the mouseH) and (tHDist > 50) and (tVDist < 100)  -- swipe right
+               turnPage "prev"
+               break
+            default
+         end switch 
+      end if
+      end if
+      --pass mouseup
+   end  mouseup
 
 on mouseRelease
   put "" into sMouseLoc
