@@ -576,7 +576,6 @@ command toggleHeader pBool -- show/hide header
    if there is no grp "headergrp" of this cd then exit toggleHeader
    if pBool = "" then put not the vis of grp "headerGrp" into pBool
    get (the short name of this cd = "lessonView" and pBool = true)
-   set the blendlevel of grp "headerGrp" to item itemOffset(it,"true,false") of "40,0"
    set the vis of grp "headerGrp" to pBool
 end toggleHeader
 
