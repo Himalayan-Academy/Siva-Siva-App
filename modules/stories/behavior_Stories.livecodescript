@@ -10,7 +10,7 @@ Revised 2020-10-01
 
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
-local sImageUndoCache
+local sImageUndoCache, sImageUndoRect
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
@@ -630,24 +630,39 @@ end setupCaptionField
 
 
 command pushImage
-   local tNow, tKeyList
+   local tNow, tKeyList, tRect
    put the seconds into tNow
+   lock screen
+   put the rect of sColorItImage into tRect
+   put (0,0,the formattedWidth of sColorItImage,the formattedHeight of sColorItImage) into sImageUndoRect[tNow]
+   set the rect of sColorItImage to sImageUndoRect[tNow]
+   put tRect & cr & sImageUndoRect[tNow]
    put the imagedata of sColorItImage into sImageUndoCache[tNow]
+   set the rect of sColorItImage to tRect
+   unlock screen
    put the keys of sImageUndoCache into tKeyList
    sort tKeyList ascending numeric
-   if the number of lines of tKeyList > 5 then
+   if the number of lines of tKeyList > 10 then
       delete variable sImageUndoCache[line 1 of tKeyList]
+      delete variable sImageUndoRect[line 1 of tKeyList]
    end if
 end pushImage
 
 
 command popImage
-   local tKeyList
+   local tKeyList, tRect
    put the keys of sImageUndoCache into tKeyList
    if the number of lines of tKeyList > 0 then
       sort tKeyList ascending numeric
+      lock screen
+      put the rect of sColorItImage into tRect
+      set the rect of sColorItImage to sImageUndoRect[line -1 of tKeyList]
+      put tRect & cr & sImageUndoRect[line -1 of tKeyList]
       set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
+      set the rect of sColorItImage to tRect
+      unlock screen
       delete variable sImageUndoCache[line -1 of tKeyList]
+      delete variable sImageUndoRect[line -1 of tKeyList]
    end if
 end popImage
 
@@ -1014,6 +1029,8 @@ on closeCard
       end if
    else if tCard is "colorIt" then
       delete sColorItImage
+      delete variable sImageUndoCache
+      delete variable sImageUndoRect
       --set the filename of sColorItImage to empty
       --set the imageData of sColorItImage to empty
       send "clearHighlight" to grp "ToolGroup" of cd "colorIt"
