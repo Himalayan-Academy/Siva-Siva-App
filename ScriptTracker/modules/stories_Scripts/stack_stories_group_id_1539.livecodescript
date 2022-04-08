@@ -43,7 +43,10 @@ on mouseUp
          choose "brush" tool
       end if
    else -- erase
+      set the opaque of the target to true
       popImage
+      wait 250 milliseconds
+      set the opaque of the target to false
    end if
 end mouseUp
 
