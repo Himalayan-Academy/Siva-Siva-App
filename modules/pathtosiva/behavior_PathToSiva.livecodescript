@@ -45,7 +45,7 @@ on opencard
    end switch
    
    audioIsRunning  
-   pass opencard
+   --pass opencard
 end opencard
 
 on mouseup
@@ -92,8 +92,18 @@ on mouseup
                break
                
             case "glossary"
+               moveMe "SVG Journal", 0,-100,200
+               wait 100 milliseconds
+               put "No Glossary" into fld "message"
+               wait 500 milliseconds
+               hide  fld "message" with visual effect "dissolve" slow
+               wait 100 milliseconds
+               moveMe "SVG Journal", 0,100,70
+               
             case "about"
+               
                go to card "lessonView"
+               exit mouseup
                break
          end switch
          
@@ -105,6 +115,7 @@ on mouseup
             case "glossary"
             case "about"
                go to card "lessonView"
+               exit mouseup
                break
          end switch
          turnPage "next", sCurrentLesson
@@ -112,6 +123,7 @@ on mouseup
          
       case "SVG Journal"
          addJournalEntry
+         put "Journal" into fld "message"
          moveMe "SVG Journal", 0,-100,200
          wait 100 milliseconds
          show fld "message"
@@ -120,11 +132,25 @@ on mouseup
          wait 100 milliseconds
          moveMe "SVG Journal", 0,100,70
          break
-     
-      case "SVG Menu"
-         show grp "menuGrp"
          
-          
+      case "SVG Menu"
+         
+         switch sCard
+            case "Glossary"
+            case "about"
+               put "No Glossary" into fld "message"
+               moveMe "SVG Journal", 0,-100,200
+               wait 100 milliseconds
+               show  fld "message"
+               wait 500 milliseconds
+               hide  fld "message" with visual effect "dissolve" slow
+               wait 100 milliseconds
+               moveMe "SVG Journal", 0,100,70
+               exit mouseup
+               break
+         end switch
+         
+         show grp "menuGrp"
          
          switch sCard
             case "lessonView"
@@ -173,57 +199,61 @@ command goCd pCdName,pEffect -- optional effect param
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   --put  pLessonNum & cr & sCurrentLesson
    
-   if pLessonNum   <> 0 then
-      put pLessonNum  into sCurrentLesson
-   else
-      if pLessonNum   = 0 then
-         put pLessonNum  into  pLessonNum
-         put 0 into sCurrentLesson
-      end if
-   end if
-   
-   --put  pLessonNum & cr & sCurrentLesson
-   
-   setLastactivity "lessonView", pLessonNum  
-   lock screen
-   
-   if there is a  fld "glossaryDef" then
-      hide fld "glossaryDef"
-   end if
-   put the chapterContent[plessonNum] of this cd into tText
-   if tText = "" then -- out of range
+   if pLessonNum = "pLessonNum" then
       exit loadLesson
    end if
-   set the filename of img "heroImg" to (pathToImgs() & tText["image"]) -- load photo; will resize
-   resizeToWidth "heroImg"
-   set the vScroll of grp "bodytextGrp" to 0
-   topCenterMe the long id of img "heroImg"
-   put tText["caption"] & cr & space into fld "caption" -- overhang by one line
-   resetCaption
-   
-   -- bodytext:  -- CH. 17 and 47: list/instructions come after quote 
-   put "" into tHTML
-   put tText["headingHTML"] into tHTML
-   put tText["body"] & "<p></p>" after tHTML
-   put tText["quote"] after tHTML
-   put tText["addendum"] after tHTML -- only in lessons 17 and 47
-   set the htmltext of fld "bodytext" to tHTML
-   set the height of fld "bodytext" to the formattedheight of fld "bodytext"
-   set the top of fld "bodytext" to the bottom of fld "caption"
-   put pLessonNum into sConfigA["pathToSivaLastActivity"]
-   
-   unlock screen
-   
-   if the hilited of widget "showTerms" then
-      flagGlossaryTerms true -- flag all glossary terms in the text
-   end if
-   
-   createScroller "bodytextGrp" -- replaces any existing
-   put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
-   tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
-end loadLesson
+      --put  pLessonNum & cr & sCurrentLesson
+      
+      if pLessonNum   <> 0 then
+         put pLessonNum  into sCurrentLesson
+      else
+         if pLessonNum   = 0 then
+            put pLessonNum  into  pLessonNum
+            put 0 into sCurrentLesson
+         end if
+      end if
+      
+      --put  pLessonNum & cr & sCurrentLesson
+      
+      setLastactivity "lessonView", pLessonNum  
+      lock screen
+      
+      if there is a  fld "glossaryDef" then
+         hide fld "glossaryDef"
+      end if
+      put the chapterContent[plessonNum] of this cd into tText
+      if tText = "" then -- out of range
+         exit loadLesson
+      end if
+      set the filename of img "heroImg" to (pathToImgs() & tText["image"]) -- load photo; will resize
+      resizeToWidth "heroImg"
+      set the vScroll of grp "bodytextGrp" to 0
+      topCenterMe the long id of img "heroImg"
+      put tText["caption"] & cr & space into fld "caption" -- overhang by one line
+      resetCaption
+      
+      -- bodytext:  -- CH. 17 and 47: list/instructions come after quote 
+      put "" into tHTML
+      put tText["headingHTML"] into tHTML
+      put tText["body"] & "<p></p>" after tHTML
+      put tText["quote"] after tHTML
+      put tText["addendum"] after tHTML -- only in lessons 17 and 47
+      set the htmltext of fld "bodytext" to tHTML
+      set the height of fld "bodytext" to the formattedheight of fld "bodytext"
+      set the top of fld "bodytext" to the bottom of fld "caption"
+      put pLessonNum into sConfigA["pathToSivaLastActivity"]
+      
+      unlock screen
+      
+      if the hilited of widget "showTerms" then
+         flagGlossaryTerms true -- flag all glossary terms in the text
+      end if
+      
+      createScroller "bodytextGrp" -- replaces any existing
+      put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
+      tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
+   end loadLesson
 
 command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
    
@@ -233,7 +263,7 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
    
    --put last word of line 1 of fld "bodytext" into tLesson
    --if tLesson is not an integer then put 0 into tLesson -- intro cd
-   
+  
    switch pDir
       case "next"
          add 1 to sCurrentLesson
@@ -245,7 +275,7 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
          break
       default
    end switch
-
+   
    lock screen for visual effect
    loadLesson sCurrentLesson
    unlock screen with visual effect tEffect

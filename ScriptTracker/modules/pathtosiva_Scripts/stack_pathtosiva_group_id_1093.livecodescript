@@ -86,12 +86,13 @@ command doScrollerTap
             case the milliseconds - sStartMS > kLongPressMS -- long press
                send "doGlossaryLookup the mouseText" to me in 0
                break
-            case the mouseH > (the width of this cd) - 60 -- tap right side
-               turnPage "next"
-               break
-            case the mouseH < 60 -- tap left side
-               turnPage "prev"
-               break
+               --            case the mouseH > (the width of this cd) - 60 -- tap right side
+               --               turnPage "next"
+               --               break
+               --            case the mouseH < 60 -- tap left side
+               --               turnPage "prev"
+               --               break
+               
             default
                toggleHeader
          end switch
