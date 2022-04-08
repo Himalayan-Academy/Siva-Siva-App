@@ -82,24 +82,10 @@ on mouseup
          
          switch sCard
             case "Photo Index"
-               answer "Do you want to exit Path to Siva?" with "Yes" or "No"
-               if it = "Yes" then
-                  portal_GoStack "Siva-Siva-Portal"
-                  exit mouseup
-               else
-                  exit mouseup
-               end if
+               doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
                break
                
             case "glossary"
-               moveMe "SVG Journal", 0,-100,200
-               wait 100 milliseconds
-               put "No Glossary" into fld "message"
-               wait 500 milliseconds
-               hide  fld "message" with visual effect "dissolve" slow
-               wait 100 milliseconds
-               moveMe "SVG Journal", 0,100,70
-               
             case "about"
                
                go to card "lessonView"
@@ -138,6 +124,7 @@ on mouseup
          switch sCard
             case "Glossary"
             case "about"
+            case "photo index"
                put "No Glossary" into fld "message"
                moveMe "SVG Journal", 0,-100,200
                wait 100 milliseconds
@@ -188,7 +175,7 @@ command goCd pCdName,pEffect -- optional effect param
       put (word 2 of pCdName) into tlastLesson
       go cd "lessonView"
       send "loadLesson (word 2 of pCdName)" to this cd
-   else if pCdName = "home" then -- return to project
+   else if pCdName = "Siva Portal, Go Home" then -- return to project
       put "push right" into pEffect
       portal_GoStack "Siva-Siva-Portal"
       unlock screen with visual effect pEffect fast
@@ -203,57 +190,57 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    if pLessonNum = "pLessonNum" then
       exit loadLesson
    end if
-      --put  pLessonNum & cr & sCurrentLesson
-      
-      if pLessonNum   <> 0 then
-         put pLessonNum  into sCurrentLesson
-      else
-         if pLessonNum   = 0 then
-            put pLessonNum  into  pLessonNum
-            put 0 into sCurrentLesson
-         end if
+   --put  pLessonNum & cr & sCurrentLesson
+   
+   if pLessonNum   <> 0 then
+      put pLessonNum  into sCurrentLesson
+   else
+      if pLessonNum   = 0 then
+         put pLessonNum  into  pLessonNum
+         put 0 into sCurrentLesson
       end if
-      
-      --put  pLessonNum & cr & sCurrentLesson
-      
-      setLastactivity "lessonView", pLessonNum  
-      lock screen
-      
-      if there is a  fld "glossaryDef" then
-         hide fld "glossaryDef"
-      end if
-      put the chapterContent[plessonNum] of this cd into tText
-      if tText = "" then -- out of range
-         exit loadLesson
-      end if
-      set the filename of img "heroImg" to (pathToImgs() & tText["image"]) -- load photo; will resize
-      resizeToWidth "heroImg"
-      set the vScroll of grp "bodytextGrp" to 0
-      topCenterMe the long id of img "heroImg"
-      put tText["caption"] & cr & space into fld "caption" -- overhang by one line
-      resetCaption
-      
-      -- bodytext:  -- CH. 17 and 47: list/instructions come after quote 
-      put "" into tHTML
-      put tText["headingHTML"] into tHTML
-      put tText["body"] & "<p></p>" after tHTML
-      put tText["quote"] after tHTML
-      put tText["addendum"] after tHTML -- only in lessons 17 and 47
-      set the htmltext of fld "bodytext" to tHTML
-      set the height of fld "bodytext" to the formattedheight of fld "bodytext"
-      set the top of fld "bodytext" to the bottom of fld "caption"
-      put pLessonNum into sConfigA["pathToSivaLastActivity"]
-      
-      unlock screen
-      
-      if the hilited of widget "showTerms" then
-         flagGlossaryTerms true -- flag all glossary terms in the text
-      end if
-      
-      createScroller "bodytextGrp" -- replaces any existing
-      put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
-      tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
-   end loadLesson
+   end if
+   
+   --put  pLessonNum & cr & sCurrentLesson
+   
+   setLastactivity "lessonView", pLessonNum  
+   lock screen
+   
+   if there is a  fld "glossaryDef" then
+      hide fld "glossaryDef"
+   end if
+   put the chapterContent[plessonNum] of this cd into tText
+   if tText = "" then -- out of range
+      exit loadLesson
+   end if
+   set the filename of img "heroImg" to (pathToImgs() & tText["image"]) -- load photo; will resize
+   resizeToWidth "heroImg"
+   set the vScroll of grp "bodytextGrp" to 0
+   topCenterMe the long id of img "heroImg"
+   put tText["caption"] & cr & space into fld "caption" -- overhang by one line
+   resetCaption
+   
+   -- bodytext:  -- CH. 17 and 47: list/instructions come after quote 
+   put "" into tHTML
+   put tText["headingHTML"] into tHTML
+   put tText["body"] & "<p></p>" after tHTML
+   put tText["quote"] after tHTML
+   put tText["addendum"] after tHTML -- only in lessons 17 and 47
+   set the htmltext of fld "bodytext" to tHTML
+   set the height of fld "bodytext" to the formattedheight of fld "bodytext"
+   set the top of fld "bodytext" to the bottom of fld "caption"
+   put pLessonNum into sConfigA["pathToSivaLastActivity"]
+   
+   unlock screen
+   
+   if the hilited of widget "showTerms" then
+      flagGlossaryTerms true -- flag all glossary terms in the text
+   end if
+   
+   createScroller "bodytextGrp" -- replaces any existing
+   put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
+   tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
+end loadLesson
 
 command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
    
@@ -263,7 +250,7 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
    
    --put last word of line 1 of fld "bodytext" into tLesson
    --if tLesson is not an integer then put 0 into tLesson -- intro cd
-  
+   
    switch pDir
       case "next"
          add 1 to sCurrentLesson
@@ -295,20 +282,8 @@ command doScrollerTap
    wait 100 millisecs -- to see it
    put the text of tLine into tCd
    
-   
-   # here we to stop and go the "Siva-Siva-Portal"
-   if tCd = "Home" then
-      answer "Do you want to go the Siva Portal?" with "Yes" or "No"
-      if it = "Yes" then
-         portal_GoStack "Siva-Siva-Portal"
-         exit doScrollerTap
-      else
-         exit doScrollerTap
-      end if
-   end if
-   
    # Next we go to the lesson 1-68 or
-   # Cover, Choose your Path, About, Glossary, Home, Intriduction
+   # Cover, Choose your Path, About, Glossary, Home, Introduction
    if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
       put word 1 to 2 of tCd into tCd
    else if tCd contains "introduction" then
@@ -391,6 +366,10 @@ command resizeToWidth pImgName
       put tErr
    end try
 end resizeToWidth
+
+command downloadAffirmed   
+   portal_GoStack "Siva-Siva-Portal"
+end downloadAffirmed
 
 command slideCaption pBool -- animate the caption view
    local tCaptionFld, tGap, tDistance
