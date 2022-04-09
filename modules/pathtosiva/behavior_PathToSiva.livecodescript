@@ -403,6 +403,7 @@ command flagGlossaryTerms pBool -- underline all glossary words in body text
    if pBool then put "240,238,143" into tcolor -- or try: lightyellow, beige, cornsilk
    else put "" into tColor
    lock screen
+   set wholematches to true
    repeat for each line l in tList
       put 0 into tSkip
       if l is among the trueWords of tText then
