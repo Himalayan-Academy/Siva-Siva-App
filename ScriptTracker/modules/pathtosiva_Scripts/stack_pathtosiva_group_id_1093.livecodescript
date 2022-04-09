@@ -86,55 +86,44 @@ command doScrollerTap
             case the milliseconds - sStartMS > kLongPressMS -- long press
                send "doGlossaryLookup the mouseText" to me in 0
                break
-               --            case the mouseH > (the width of this cd) - 60 -- tap right side
-               --               turnPage "next"
-               --               break
-               --            case the mouseH < 60 -- tap left side
-               --               turnPage "prev"
-               --               break
                
-            default
-               toggleHeader
          end switch
-         break
-         --      case "heroImg"
-         --         toggleHeader
-         --         break
+        
       case "caption"
          put (the bottom of img "heroImg") > the top of fld "caption" into tShow
          slideCaption tShow
    end switch
 end doScrollerTap
 
-command scrollingDown
-  toggleHeader false
-end scrollingDown
+--command scrollingDown
+--  toggleHeader false
+--end scrollingDown
 
-command scrollingUp
-  toggleHeader true
-end scrollingUp
+--command scrollingUp
+--  toggleHeader true
+--end scrollingUp
 
-command turnPage pDir -- navigate to another lesson
-  local tLesson, tEffect
-  -- pDir = "next" or "prev"
-  put last word of line 1 of fld "bodytext" into tLesson
-  if tLesson is not an integer then put 0 into tLesson -- intro cd
-  switch pDir
-     case "next"
-        add 1 to tLesson
-        put "reveal left" into tEffect
-        break
-     case "prev"
-        subtract 1 from tLesson
-        put "reveal right" into tEffect
-        break
-     default
-  end switch
-  toggleHeader false
-  lock screen for visual effect
-  loadLesson tLesson
-  unlock screen with visual effect tEffect
-end turnPage
+--command turnPage pDir -- navigate to another lesson
+--   local tLesson, tEffect
+--   -- pDir = "next" or "prev"
+--   put last word of line 1 of fld "bodytext" into tLesson
+--   if tLesson is not an integer then put 0 into tLesson -- intro cd
+--   switch pDir
+--      case "next"
+--         add 1 to tLesson
+--         put "reveal left" into tEffect
+--         break
+--      case "prev"
+--         subtract 1 from tLesson
+--         put "reveal right" into tEffect
+--         break
+--      default
+--   end switch
+--   toggleHeader false
+--   lock screen for visual effect
+--   loadLesson tLesson
+--   unlock screen with visual effect tEffect
+--   --end turnPage
 
 command doGlossaryLookup pTerm -- display term with definition
   local tDef, pTrackdata

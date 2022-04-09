@@ -52,17 +52,23 @@ on mouseup
    
    --breakpoint
    
-   local tTarget, tTargetOwner
+   local tTarget, tTargetOwner, tExpander
    
    put the short name of the owner of the target into tTargetOwner
    put short name of the target into tTarget
    put the short name of this card into sCard
    
+   put the long name of grp "expander" into tExpander
+   
+   if tExpander is the target then
+      if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+         slideCaption true 
+      end if
+   end if 
    
    
    switch tTarget
       # Cases of group "headerGrp"
-      
       
       case "Photo Index" 
          
@@ -349,9 +355,30 @@ command resetCaption
    set the height of fld "caption" to (the formattedheight of fld "caption") + 4 -- extra underhang
    set the bottom of fld "caption" to the bottom of img "heroImg" + \
          (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
-   set the flipped of widget "expander" to false
-   set the bottom of widget "expander" to (the bottom of fld "caption")-6
+   set the flipped of widget "theExpander" to false
+   set the bottom of grp "expander" to (the bottom of fld "caption")-6
 end resetCaption
+
+command slideCaption pBool -- animate the caption view
+   local tCaptionFld, tGap, tDistance
+   --   pBool = true to show, false to hide
+   put the long id of fld "caption" into tCaptionFld
+   put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
+   put the height of tCaptionFld - tGap into tDistance
+   if not pBool then put tDistance * -1 into tDistance
+   set the bottom of grp "expander" to (the bottom of fld "caption")-6
+   --set the bottom of button "expander" to (the bottom of fld "caption")+6
+   -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
+   lock moves
+   move tCaptionFld relative 0,tDistance without waiting
+   move fld "bodytext" relative 0,tDistance without waiting
+   move group "expander" relative 0,tDistance without waiting
+   unlock moves
+   
+   if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
+   set the flipped of grp "expander" to pBool --not pBool
+   createScroller the short name of me -- adjust for new height
+end slideCaption
 
 command resizeToWidth pImgName
    local tW,tOrigW,tOrigH,tRatio
@@ -371,28 +398,7 @@ command downloadAffirmed
    portal_GoStack "Siva-Siva-Portal"
 end downloadAffirmed
 
-command slideCaption pBool -- animate the caption view
-   local tCaptionFld, tGap, tDistance
-   --   pBool = true to show, false to hide
-   put the long id of fld "caption" into tCaptionFld
-   put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
-   put the height of tCaptionFld - tGap into tDistance
-   if not pBool then put tDistance * -1 into tDistance
-   set the bottom of widget "expander" to (the bottom of fld "caption")-6
-   --set the bottom of button "expander" to (the bottom of fld "caption")+6
-   -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
-   lock moves
-   move tCaptionFld relative 0,tDistance without waiting
-   move fld "bodytext" relative 0,tDistance without waiting
-   move widget "expander" relative 0,tDistance without waiting
-   
-   move group "lessonNav" relative 0,tDistance without waiting
-   unlock moves
-   
-   if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
-   set the flipped of widget "expander" to pBool --not pBool
-   createScroller the short name of me -- adjust for new height
-end slideCaption
+
 
 command flagGlossaryTerms pBool -- underline all glossary words in body text
    local tList,tColor, tSkip,tOffset
@@ -552,12 +558,12 @@ command toggleMenu
    end if
 end toggleMenu
 
-command toggleHeader pBool -- show/hide header
-   if there is no grp "headergrp" of this cd then exit toggleHeader
-   if pBool = "" then put not the vis of grp "headerGrp" into pBool
-   get (the short name of this cd = "lessonView" and pBool = true)
-   set the vis of grp "headerGrp" to pBool
-end toggleHeader
+--command toggleHeader pBool -- show/hide header
+--   if there is no grp "headergrp" of this cd then exit toggleHeader
+--   if pBool = "" then put not the vis of grp "headerGrp" into pBool
+--   get (the short name of this cd = "lessonView" and pBool = true)
+--   set the vis of grp "headerGrp" to pBool
+--end toggleHeader
 
 local sPrefsArray
 
