@@ -58,13 +58,13 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into sCard
    
-   put the long name of grp "expander" into tExpander
+   --   put the long name of grp "expander" into tExpander
    
-   if tExpander is the target then
-      if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
-         slideCaption true 
-      end if
-   end if 
+   --   if tExpander is the target then
+   --      if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+   --         slideCaption true 
+   --      end if
+   --   end if 
    
    
    switch tTarget
@@ -123,6 +123,8 @@ on mouseup
          hide  fld "message" with visual effect "dissolve" slow
          wait 100 milliseconds
          moveMe "SVG Journal", 0,100,70
+         wait 200 millisecond
+         doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
       case "SVG Menu"
@@ -145,21 +147,25 @@ on mouseup
          
          show grp "menuGrp"
          
+         break
+         
+      case "theExpander"
          switch sCard
             case "lessonView"
                
                switch tTarget
                   case "heroImg"
-                  case "expander"
+                  case "theExpander"
                      if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
                         slideCaption true 
+                     else
+                        slideCaption false
                      end if
                      break
                      
                end switch
-               
-               break
          end switch
+         break
    end switch
 end mouseup
 
@@ -356,7 +362,7 @@ command resetCaption
    set the bottom of fld "caption" to the bottom of img "heroImg" + \
          (the textheight of fld "caption") + (the bottomMargin of fld "caption") -- visible bottom edge
    set the flipped of widget "theExpander" to false
-   set the bottom of grp "expander" to (the bottom of fld "caption")-6
+   set the bottom of grp "expander" to (the bottom of fld "caption")  -4
 end resetCaption
 
 command slideCaption pBool -- animate the caption view
@@ -366,7 +372,7 @@ command slideCaption pBool -- animate the caption view
    put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
    put the height of tCaptionFld - tGap into tDistance
    if not pBool then put tDistance * -1 into tDistance
-   set the bottom of grp "expander" to (the bottom of fld "caption")-6
+   set the bottom of grp "expander" to (the bottom of fld "caption") -4
    --set the bottom of button "expander" to (the bottom of fld "caption")+6
    -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
    lock moves
@@ -376,7 +382,7 @@ command slideCaption pBool -- animate the caption view
    unlock moves
    
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
-   set the flipped of grp "expander" to pBool --not pBool
+   set the flipped of widget"theExpander" to pBool --not pBool
    createScroller the short name of me -- adjust for new height
 end slideCaption
 
