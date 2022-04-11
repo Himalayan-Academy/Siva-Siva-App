@@ -294,6 +294,10 @@ command doScrollerTap
    wait 100 millisecs -- to see it
    put the text of tLine into tCd
    
+   if tCd = "About / Usage Guide" then 
+      put "About" into tCd
+   end if
+    
    # Next we go to the lesson 1-68 or
    # Cover, Choose your Path, About, Glossary, Home, Introduction
    if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
