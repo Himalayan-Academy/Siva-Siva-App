@@ -58,20 +58,10 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into sCard
    
-   --   put the long name of grp "expander" into tExpander
-   
-   --   if tExpander is the target then
-   --      if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
-   --         slideCaption true 
-   --      end if
-   --   end if 
-   
-   
    switch tTarget
       # Cases of group "headerGrp"
       
       case "Photo Index" 
-         
          go to card "Photo Index"
          break
          
@@ -85,7 +75,6 @@ on mouseup
          break
          
       case "prevLesson"
-         
          switch sCard
             case "Photo Index"
                doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
@@ -133,7 +122,7 @@ on mouseup
             case "Glossary"
             case "about"
             case "photo index"
-               put "No Glossary" into fld "message"
+               put ("No Glossary" & cr & "Right Arrow") into fld "message"
                moveMe "SVG Journal", 0,-100,200
                wait 100 milliseconds
                show  fld "message"
@@ -387,7 +376,8 @@ command slideCaption pBool -- animate the caption view
    
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
    set the flipped of widget"theExpander" to pBool --not pBool
-   createScroller the short name of me -- adjust for new height
+   --  createScroller the short name of me -- adjust for new height
+    createScroller  "bodytextGrp" -- adjust for new height
 end slideCaption
 
 command resizeToWidth pImgName
@@ -625,17 +615,64 @@ private command __GEOMETRY__
 end __GEOMETRY__
 
 on updateUI
+   
+   local tCard,
+   local tControl
+   
+   put the short name of this card into tCard
+   
    if the cLayoutRect of this card is CardRect() then exit updateUI
-   switch the short name of this card
+   set the cLayoutRect of this card to CardRect()
+   
+   switch tCard
+      
+      case "photo index"
+      case "lessonview"
+      case "about"
+      case "glossary"
+         ## we do the grp "headerGrp"
+         
+         
+         put the long id of grp "headerGrp" into tHeaderGrp
+         topCenterMe tHeaderGrp, 0
+         
+         put the long id of fld "headerBgFld" into tHeaderBgFld
+         topCenterMe tHeaderBgFld, 0
+         
+         put the long id of btn "prevLesson" into tPrevLesson
+         topLeftMe tPrevLesson, 0, 2
+         
+         put the long id of widget "photo index" into tPhotoIndex
+         topLeftMe tPhotoIndex, 80, 8
+         
+         put the long id of widget "SVG Journal" into tSVGJournal
+         topCenterMe tSVGJournal, 9
+         
+         put the long id of fld "message" into tMessage
+         topCenterMe tMessage, 3
+         
+         put the long id of btn "SVG Menu" into tSVGMenu
+         topRightMe tSVGMenu, 80, 3
+         
+         put the long id of btn "nextLesson" into tNextLesson
+         topRightMe tNextLesson, 0, 3
+         
+         put the long id of widget "turnOffAudio" of grp "audioGlobalControl" into tTurnOffAudio
+         topRightMe tTurnOffAudio, 18, 74
+         break
+         
+   end switch
+   
+   switch tCard
       case "cover"
          updateCoverUI
          break
       case "choose your path"
          updateChooseYourPathUI
          break
-      case "photo index"
-         updatePhotoIndexUI
-         break
+      --case "photo index"
+         --updatePhotoIndexUI
+         --break
       case "explore realms"
          updateExploreRealmsUI
          break
@@ -649,7 +686,31 @@ on updateUI
          updateGlossaryUI
          break
    end switch
-   set the cLayoutRect of this card to CardRect()
+ 
+   updateMenuGrpUI
+   
+   
+   
+   --local tControl, tRect, tRight, tTextSize
+   
+   --   put the long id of grp "headerGrp" into tControl
+   --   put the rect of tControl into tRect
+   --   put item 4 of tRect into item 2 of tRect
+   --   put CardHeight() into item 4 of tRect
+   --   set the rect of grp "indexGrp" to tRect
+   
+   --   put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
+   --   repeat with tNum = 1 to 68 
+   --      set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
+   --   end repeat
+   --   if CardWidth() < 414 then
+   --      put the textSize of grp "indexGrp" into tTextSize
+   --      set the textSize of grp "indexGrp" to tTextSize-1
+   --   end if
+   
+   --set the left of btn "prevLesson" of grp "headerGrp" to 0
+   --set the right of btn "nextLesson" of grp "headerGrp" to CardWidth()
+   
 end updateUI
 
 private command updateCoverUI
@@ -707,46 +768,24 @@ private command updateChooseYourPathUI
    adjustLoc the long id of widget "about", tDeltaX, tDeltaY
 end updateChooseYourPathUI
 
-private command updatePhotoIndexUI
-   local tControl, tRect, tRight, tTextSize
-   
-   updateHeaderGrpUI
-   put the long id of grp "headerGrp" into tControl
-   put the rect of tControl into tRect
-   put item 4 of tRect into item 2 of tRect
-   put CardHeight() into item 4 of tRect
-   set the rect of grp "indexGrp" to tRect
-   
-   put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
-   repeat with tNum = 1 to 68 
-      set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
-   end repeat
-   if CardWidth() < 414 then
-      put the textSize of grp "indexGrp" into tTextSize
-      set the textSize of grp "indexGrp" to tTextSize-1
-   end if
-end updatePhotoIndexUI
+
 
 private command updateExploreRealmsUI
    local tControl, tRect, tRight
-   
-   updateHeaderGrpUI
    centerMe the long id of img "map.jpg"
 end updateExploreRealmsUI
 
 private command updateLessonViewUI
    local tControl, tRect, tRight, tLoc
    
-   updateHeaderGrpUI
    set the rect of grp "bodytextGrp" to safeRect()
    set the width of fld "bodytext" to CardWidth()-2*safeSideMargin()
    set the left of fld "bodytext" to safeSideMargin()
    topCenterMe the long id of img "heroImg"
    topCenterMe the long id of fld "caption", 163
-   topCenterMe the long id of btn "expander", 432
-   topCenterMe the long id of widget "expander", 267
-   set the left of btn "prevLesson" of grp "lessonNav" to -14
-   set the right of btn "nextLesson" of grp "lessonNav" to CardWidth()+14
+   topCenterMe the long id of grp "expander", 371
+   --topCenterMe the long id of widget "theExpander", 267
+  
    
    put the long id of fld "glossaryDef" into tControl
    put the loc of tControl into tLoc
@@ -757,7 +796,7 @@ end updateLessonViewUI
 private command updateAboutUI
    local tControl, tRect
    
-   updateHeaderGrpUI
+   --updateHeaderGrpUI
    put the long id of img "C_Introduction_366w_opt.jpg" into tControl
    topCenterMe tControl, 67
    set the bottom of fld "aboutTitle" to the bottom of tControl
@@ -774,7 +813,7 @@ end updateAboutUI
 private command updateGlossaryUI
    local tControl, tRect
    
-   updateHeaderGrpUI
+   --updateHeaderGrpUI
    put the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tControl
    topCenterMe tControl, 67
    set the bottom of fld "glossaryTitle" to the bottom of tControl
@@ -788,22 +827,7 @@ private command updateGlossaryUI
    set the topLeft of fld "glossaryText" to the topLeft of tControl
 end updateGlossaryUI
 
-private command updateHeaderGrpUI
-   local tControl
-   
-   put the long id of grp "headerGrp" into tControl
-   if the cLayoutRect of tControl is CardRect() then exit updateHeaderGrpUI
-   
-   topCenterMe tControl
-   set the left of btn "SVG Back" of grp "headerGrp" to -11
-   set the right of btn "SVG Menu" of grp "headerGrp" to CardWidth()+2
-   
-   topRightMe the long id of widget "turnOffAudio" of grp "audioGlobalControl", 18, 74
-   
-   updateMenuGrpUI
-   
-   set the cLayoutRect of tControl to CardRect()
-end updateHeaderGrpUI
+
 
 private command updateMenuGrpUI
    local tControl
@@ -835,12 +859,14 @@ constant kCheckScrollMS = 50
 
 command createScroller pName
    local tRect
+   put  (0,0,the formattedwidth of control pName,the formattedheight of control pName+ 60) into tRect
    if not isMobile() then exit createScroller
    deleteMobileControl pName -- delete any existing
    --   set the vScroll of control pName to 0 -- init for alignment
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", (the rect of control pName)
-   put  (0,0,the formattedwidth of control pName,the formattedheight of control pName+ 60) into tRect
+   
+   
    mobileControlSet pName, "contentRect",tRect
    mobileControlSet pName, "hScroll",0
    wait 0 milliseconds -- workaround for mobile vscroll bug
