@@ -286,7 +286,7 @@ command doScrollerTap
    if tCd = "About / Usage Guide" then 
       put "About" into tCd
    end if
-    
+   
    # Next we go to the lesson 1-68 or
    # Cover, Choose your Path, About, Glossary, Home, Introduction
    if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
@@ -377,7 +377,7 @@ command slideCaption pBool -- animate the caption view
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
    set the flipped of widget"theExpander" to pBool --not pBool
    --  createScroller the short name of me -- adjust for new height
-    createScroller  "bodytextGrp" -- adjust for new height
+   createScroller  "bodytextGrp" -- adjust for new height
 end slideCaption
 
 command resizeToWidth pImgName
@@ -465,7 +465,7 @@ on checkGlossary pChunk -- flag a word if it's in the glossary; used for brief f
 end checkGlossary
 
 command setGlossaryIndicator pChunk,pBool -- turn glossary indicator on/off; for manual word flagging
-  set the flagged of pChunk to pBool
+   set the flagged of pChunk to pBool
 end setGlossaryIndicator
 
 
@@ -498,7 +498,7 @@ command addJournalEntry -- save a bookmark to db
    put tCdName into pData["card"] -- store the last user cd   
    if tCdName = "lessonView" then -- store the lesson number
       put sLastActivityA["LessonNum"] into tLessonNum
-       if tLessonNum is not an integer then put 0 into tLessonNum -- intro cd
+      if tLessonNum is not an integer then put 0 into tLessonNum -- intro cd
       put tLessonNum into pData["lessonNum"]
       put "Lesson " & tLessonNum into tTitle -- "lesson x"
       if tLessonNum = 0 then
@@ -643,7 +643,7 @@ on updateUI
          topLeftMe tPrevLesson, 0, 2
          
          put the long id of widget "photo index" into tPhotoIndex
-         topLeftMe tPhotoIndex, 80, 8
+         topLeftMe tPhotoIndex, 75, 8
          
          put the long id of widget "SVG Journal" into tSVGJournal
          topCenterMe tSVGJournal, 9
@@ -670,9 +670,9 @@ on updateUI
       case "choose your path"
          updateChooseYourPathUI
          break
-      --case "photo index"
-         --updatePhotoIndexUI
-         --break
+      case "photo index"
+         updatePhotoIndexUI
+         break
       case "explore realms"
          updateExploreRealmsUI
          break
@@ -686,7 +686,7 @@ on updateUI
          updateGlossaryUI
          break
    end switch
- 
+   
    updateMenuGrpUI
    
    
@@ -785,13 +785,33 @@ private command updateLessonViewUI
    topCenterMe the long id of fld "caption", 163
    topCenterMe the long id of grp "expander", 371
    --topCenterMe the long id of widget "theExpander", 267
-  
+   
    
    put the long id of fld "glossaryDef" into tControl
    put the loc of tControl into tLoc
    put item 1 of the loc of img "heroImg" into item 1 of tLoc
    set the loc of tControl to tLoc
 end updateLessonViewUI
+
+private command updatePhotoIndexUI
+   local tControl, tRect, tRight, tTextSize
+   
+   --updateHeaderGrpUI
+   put the long id of grp "headerGrp" into tControl
+   put the rect of tControl into tRect
+   put item 4 of tRect into item 2 of tRect
+   put CardHeight() into item 4 of tRect
+   set the rect of grp "indexGrp" to tRect
+   
+   put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
+   repeat with tNum = 1 to 68 
+      set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
+   end repeat
+   if CardWidth() < 414 then
+      put the textSize of grp "indexGrp" into tTextSize
+      set the textSize of grp "indexGrp" to tTextSize-1
+   end if
+end updatePhotoIndexUI
 
 private command updateAboutUI
    local tControl, tRect
