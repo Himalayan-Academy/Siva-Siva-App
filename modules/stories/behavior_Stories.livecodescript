@@ -77,13 +77,6 @@ on preOpenCard
       relayer sColorItImage to front of grp "colorItImageGroup"
       put the long id of img "colorItImage" into sColorItImage
       initializeCycleImage sColorItImage
-      --      put the long id of img "colorItImage" into sColorItImage
-      --      set the itemDelimiter to "."
-      --      put "gif" into the last item of tFileName
-      --      export sStoryImage to file tFileName as GIF
-      --      set the filename of sColorItImage to tFileName
-      --      --set the filename of sColorItImage to the filename of sStoryImage
-      --      set the layer of sColorItImage to bottom
       hide group "BrushIcons" of card "colorIt"
       hide control "Color map" of card "colorIt"
    end if
@@ -636,7 +629,7 @@ command pushImage
    put the rect of sColorItImage into tRect
    put (0,0,the formattedWidth of sColorItImage,the formattedHeight of sColorItImage) into sImageUndoRect[tNow]
    set the rect of sColorItImage to sImageUndoRect[tNow]
-   put tRect & cr & sImageUndoRect[tNow]
+   --put tRect & cr & sImageUndoRect[tNow]
    put the imagedata of sColorItImage into sImageUndoCache[tNow]
    set the rect of sColorItImage to tRect
    unlock screen
@@ -657,7 +650,7 @@ command popImage
       lock screen
       put the rect of sColorItImage into tRect
       set the rect of sColorItImage to sImageUndoRect[line -1 of tKeyList]
-      put tRect & cr & sImageUndoRect[line -1 of tKeyList]
+      --put tRect & cr & sImageUndoRect[line -1 of tKeyList]
       set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
       set the rect of sColorItImage to tRect
       unlock screen
@@ -723,8 +716,6 @@ command updateImageState pResizeOnly
             if not tOnColorItCard then
                hide grp "footer"
             end if
-            -- hide btn "goPrev"
-            -- hide btn "goNext"
             set the hscroll of grp tImageGroup to 0
             set the vscroll of grp tImageGroup to 0
             if the width of tImage < CardWidth() then
