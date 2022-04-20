@@ -952,3 +952,20 @@ on deleteCardMobileControls -- delete all mobile controls of any type on current
    end repeat
 end deleteCardMobileControls
 
+--command runUtility
+--   local tFile
+
+--   put (quote & "lbl-chapterText ") into tFile
+
+--   repeat with x = 1 to 68
+--      put (tFile & x & quote) into tFile
+--      set the disabled of fld tFile to false
+--      set the lockText of field tFile to false
+
+--      set the textstyle  of line 1 of  fld tFile to "bold"
+--      set the textstyle  of line 2 of  fld tFile to "plain"
+
+--      set the disabled of fld tFile to true
+--      set the lockText of field tFile to true
+--   end repeat
+--end runUtility

@@ -136,7 +136,7 @@ switch tTargetOwner
       hide grp "subNav"
       break
    case "navMandala"
-      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
+      if tTarget is among the items of "Stories,Path to Siva,pathtosiva,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
          # These are top links, some go  directly to another module stack
          portal_GoStack tTarget
          exit mouseup

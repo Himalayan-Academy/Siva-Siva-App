@@ -30,6 +30,7 @@ on mouseUp
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
       send "doScrollerTap" to the target in 0
    end if
+   pass mouseup
 end  mouseup
 
 on mouseMove x,y -- desktop scrolling

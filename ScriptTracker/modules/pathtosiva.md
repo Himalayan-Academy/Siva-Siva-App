@@ -52,6 +52,18 @@
 * Behavior: button id 1252 of stack "pathToSiva"
 * [stack_pathtosiva_group_id_1071](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_1071.livecodescript)
 
+**group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
+* ID: group id 51335 of card id 1002 of stack "pathtosiva"
+* [stack_pathtosiva_group_id_51335](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51335.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
+* ID: graphic id 51336 of group id 51335 of card id 1002 of stack "pathtosiva"
+* [stack_pathtosiva_graphic_id_51336](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51336.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
+* ID: field id 51338 of group id 51337 of group id 51335 of card id 1002 of stack "pathtosiva"
+* [stack_pathtosiva_field_id_51338](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51338.livecodescript)
+
 **card "explore realms" of stack "pathtosiva"**
 * ID: card id 1094 of stack "pathtosiva"
 * [stack_pathtosiva_card_id_1094](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1094.livecodescript)
@@ -60,17 +72,37 @@
 * ID: group id 1093 of card id 1083 of stack "pathtosiva"
 * [stack_pathtosiva_group_id_1093](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_1093.livecodescript)
 
-**group "expander" of group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
-* ID: group id 51328 of group id 1093 of card id 1083 of stack "pathtosiva"
-* [stack_pathtosiva_group_id_51328](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51328.livecodescript)
-
 **field "glossaryDef" of card "lessonView" of stack "pathtosiva"**
 * ID: field id 1264 of card id 1083 of stack "pathtosiva"
 * [stack_pathtosiva_field_id_1264](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_1264.livecodescript)
 
+**group "answerDlgGrp" of card "lessonView" of stack "pathtosiva"**
+* ID: group id 51329 of card id 1083 of stack "pathtosiva"
+* [stack_pathtosiva_group_id_51329](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51329.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "lessonView" of stack "pathtosiva"**
+* ID: graphic id 51330 of group id 51329 of card id 1083 of stack "pathtosiva"
+* [stack_pathtosiva_graphic_id_51330](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51330.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "lessonView" of stack "pathtosiva"**
+* ID: field id 51332 of group id 51331 of group id 51329 of card id 1083 of stack "pathtosiva"
+* [stack_pathtosiva_field_id_51332](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51332.livecodescript)
+
 **card "about" of stack "pathtosiva"**
 * ID: card id 1246 of stack "pathtosiva"
 * [stack_pathtosiva_card_id_1246](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1246.livecodescript)
+
+**group "answerDlgGrp" of card "about" of stack "pathtosiva"**
+* ID: group id 51341 of card id 1246 of stack "pathtosiva"
+* [stack_pathtosiva_group_id_51341](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51341.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "about" of stack "pathtosiva"**
+* ID: graphic id 51342 of group id 51341 of card id 1246 of stack "pathtosiva"
+* [stack_pathtosiva_graphic_id_51342](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51342.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "about" of stack "pathtosiva"**
+* ID: field id 51344 of group id 51343 of group id 51341 of card id 1246 of stack "pathtosiva"
+* [stack_pathtosiva_field_id_51344](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51344.livecodescript)
 
 **card "glossary" of stack "pathtosiva"**
 * ID: card id 1244 of stack "pathtosiva"

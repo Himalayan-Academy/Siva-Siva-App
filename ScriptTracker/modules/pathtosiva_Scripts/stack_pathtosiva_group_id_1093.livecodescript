@@ -57,7 +57,7 @@ on mouseUp -- not sent on mobile when swiping, works on taps.
          end switch 
       end if
       end if
-      --pass mouseup
+      pass mouseup
    end  mouseup
 
 on mouseRelease
