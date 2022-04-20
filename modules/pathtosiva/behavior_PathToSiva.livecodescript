@@ -187,7 +187,7 @@ command goCd pCdName,pEffect -- optional effect param
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   
+   put sCard
    if pLessonNum = "pLessonNum" then
       exit loadLesson
    end if
@@ -225,9 +225,17 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    put "" into tHTML
    put tText["headingHTML"] into tHTML
    put tText["body"] & "<p></p>" after tHTML
+   
+   
    put tText["quote"] after tHTML
    put tText["addendum"] after tHTML -- only in lessons 17 and 47
+   
+   
+   set the textstyle  of fld "bodytext"  to "plain"
+   
    set the htmltext of fld "bodytext" to tHTML
+   
+   
    set the height of fld "bodytext" to the formattedheight of fld "bodytext"
    set the top of fld "bodytext" to the bottom of fld "caption"
    put pLessonNum into sConfigA["pathToSivaLastActivity"]
@@ -363,6 +371,9 @@ command slideCaption pBool -- animate the caption view
    --   pBool = true to show, false to hide
    put the long id of fld "caption" into tCaptionFld
    put the textheight of tCaptionFld + the bottomMargin of tCaptionFld into tGap
+   
+   set the textstyle  of tCaptionFld to "plain"
+   
    put the height of tCaptionFld - tGap into tDistance
    if not pBool then put tDistance * -1 into tDistance
    set the bottom of grp "expander" to (the bottom of fld "caption") -4
