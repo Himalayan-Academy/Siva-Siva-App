@@ -119,8 +119,6 @@ on mouseup
       case "SVG Menu"
          
          switch sCard
-            case "Glossary"
-            case "about"
             case "photo index"
                put ("No Glossary" & cr & "Right Arrow") into fld "message"
                moveMe "SVG Journal", 0,-100,200
@@ -133,7 +131,6 @@ on mouseup
                exit mouseup
                break
          end switch
-         
          show grp "menuGrp"
          
          break
@@ -187,7 +184,7 @@ command goCd pCdName,pEffect -- optional effect param
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   put sCard
+   
    if pLessonNum = "pLessonNum" then
       exit loadLesson
    end if
@@ -295,6 +292,10 @@ command doScrollerTap
       put "About" into tCd
    end if
    
+   if tCd = "Glossary" then 
+      put "Glossary" into tCd
+   end if
+   
    # Next we go to the lesson 1-68 or
    # Cover, Choose your Path, About, Glossary, Home, Introduction
    if word 1 of tCd = "lesson" and word 2 of tCd is an integer then
@@ -319,11 +320,10 @@ command doScrollerTap
    goCd tCd,tEffect
    
    # we have set have to set the lesson we wish go to 
-   if (sCard <> "glossary") OR (sCard <> "about") then
+   
       if sCurrentLesson <> 0 then
          put sCurrentLesson into sCurrentLesson
       end if
-   end if
 end doScrollerTap
 
 --command doScrollerTap
@@ -412,11 +412,19 @@ end downloadAffirmed
 
 
 command flagGlossaryTerms pBool -- underline all glossary words in body text
+--  put sCard
    local tList,tColor, tSkip,tOffset
    -- Toggled from TOC selection.
    -- pBool = boolean
+   
+   if (sCard is "glossary") then --OR  (sCard is "about") t
+      exit flagGlossaryTerms 
+   end if
    put the cGlossaryTerms of cd "glossary" into tList
+   
+   
    put the text of fld "bodytext" into tText
+   
    if pBool then put "240,238,143" into tcolor -- or try: lightyellow, beige, cornsilk
    else put "" into tColor
    lock screen
@@ -427,8 +435,11 @@ command flagGlossaryTerms pBool -- underline all glossary words in body text
          repeat
             put trueWordOffset(l,tText,tSkip) into tOffset
             if tOffset = 0 then exit repeat
-            --         set the flagged of trueword (tOffset + tSkip) of fld "bodytext" to pBool -- enable to use underlines
-            set the backcolor of trueword (tOffset + tSkip) of fld "bodytext" to tColor -- enable to use color
+            
+            set the flagged of trueword (tOffset + tSkip) of fld "bodytext" to pBool -- enable to use underlines
+            
+            set the backcolor of trueword (tOffset + tSkip) of fld "bodytext" to tColor -- enable to use colo
+            
             add tOffset to tSkip
          end repeat
       end if

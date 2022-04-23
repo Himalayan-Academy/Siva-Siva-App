@@ -39,9 +39,9 @@ function getGlossaryDef pTerm -- return definition for display elsewhere
    return line tLine of fld "glossaryText" of cd "glossary"
 end getGlossaryDef
 
-command resetFldColor
-   set the backcolor of line 1 to -1 of fld "glossaryText" of me to empty
-end resetFldColor
+_command resetFldColor
+ --set the backcolor of line 1 to -1 of fld "glossaryText" of me to empty
+--end resetFldColor
 
 
 -- dev --
