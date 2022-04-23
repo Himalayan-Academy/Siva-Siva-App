@@ -84,6 +84,7 @@ on mouseup
             case "about"
                
                go to card "lessonView"
+               resetCaption
                exit mouseup
                break
          end switch
@@ -96,6 +97,7 @@ on mouseup
             case "glossary"
             case "about"
                go to card "lessonView"
+               resetCaption
                exit mouseup
                break
          end switch
@@ -120,16 +122,19 @@ on mouseup
          
          switch sCard
             case "photo index"
-               put ("No Glossary" & cr & "Right Arrow") into fld "message"
+               
+               put "No Glossary" into fld "message"
                moveMe "SVG Journal", 0,-100,200
                wait 100 milliseconds
-               show  fld "message"
+               show fld "message"
                wait 500 milliseconds
                hide  fld "message" with visual effect "dissolve" slow
                wait 100 milliseconds
                moveMe "SVG Journal", 0,100,70
+               wait 200 millisecond
                exit mouseup
                break
+               
          end switch
          show grp "menuGrp"
          
