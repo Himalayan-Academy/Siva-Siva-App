@@ -80,89 +80,111 @@ on mouseup
                doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
                break
                
-            case "glossary"
+            case"glossary"
             case "about"
-               
-               go to card "lessonView"
-               resetCaption
+               goCd sCurrentLesson 
+               exit mouseup
+               break
                exit mouseup
                break
          end switch
+         
          
          turnPage "prev", sCurrentLesson
          break
          
       case "nextLesson"
-         switch sCard
-            case "glossary"
-            case "about"
-               go to card "lessonView"
-               resetCaption
-               exit mouseup
-               break
-         end switch
-         turnPage "next", sCurrentLesson
-         break 
-         
-      case "SVG Journal"
-         addJournalEntry
-         put "Journal" into fld "message"
-         moveMe "SVG Journal", 0,-100,200
-         wait 100 milliseconds
-         show fld "message"
-         wait 500 milliseconds
-         hide  fld "message" with visual effect "dissolve" slow
-         wait 100 milliseconds
-         moveMe "SVG Journal", 0,100,70
-         wait 200 millisecond
-         doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
-         break
-         
-      case "SVG Menu"
          
          switch sCard
-            case "photo index"
-               
-               put "No Glossary" into fld "message"
-               moveMe "SVG Journal", 0,-100,200
-               wait 100 milliseconds
-               show fld "message"
-               wait 500 milliseconds
-               hide  fld "message" with visual effect "dissolve" slow
-               wait 100 milliseconds
-               moveMe "SVG Journal", 0,100,70
-               wait 200 millisecond
-               exit mouseup
-               break
-               
-         end switch
-         show grp "menuGrp"
-         
-         break
-         
-      case "theExpander"
-         switch sCard
-            case "lessonView"
-               
-               switch tTarget
-                  case "heroImg"
-                  case "theExpander"
-                     if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
-                        slideCaption true 
-                     else
-                        slideCaption false
-                     end if
-                     break
-                     
-               end switch
-         end switch
-         break
-   end switch
+            case  "photo index"
+            put "Pick a lesson" &cr& "in Photo Index" into fld "message"
+            moveMe "SVG Journal", 0,-100,200
+            wait 100 milliseconds
+            show fld "message"
+            wait 500 milliseconds
+            hide  fld "message" with visual effect "dissolve" slow
+            wait 100 milliseconds
+            moveMe "SVG Journal", 0,100,70
+            wait 200 millisecond
+            exit mouseup
+            break
+            
+            
+            
+         case "glossary"
+         case "about"
+            goCd sCurrentLesson 
+            exit mouseup
+            break
+      end switch
+      
+      turnPage "next", sCurrentLesson
+      break 
+      
+   case "SVG Journal"
+      addJournalEntry
+      put "Journal" into fld "message"
+      moveMe "SVG Journal", 0,-100,200
+      wait 100 milliseconds
+      show fld "message"
+      wait 500 milliseconds
+      hide  fld "message" with visual effect "dissolve" slow
+      wait 100 milliseconds
+      moveMe "SVG Journal", 0,100,70
+      wait 200 millisecond
+      doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
+      break
+      
+   case "SVG Menu"
+      
+      switch sCard
+         case "photo index"
+            
+            put "No Glossary" into fld "message"
+            moveMe "SVG Journal", 0,-100,200
+            wait 100 milliseconds
+            show fld "message"
+            wait 500 milliseconds
+            hide  fld "message" with visual effect "dissolve" slow
+            wait 100 milliseconds
+            moveMe "SVG Journal", 0,100,70
+            wait 200 millisecond
+            exit mouseup
+            break
+            
+      end switch
+      show grp "menuGrp"
+      
+      break
+      
+   case "theExpander"
+      switch sCard
+         case "lessonView"
+            
+            switch tTarget
+               case "heroImg"
+               case "theExpander"
+                  if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+                     slideCaption true 
+                  else
+                     slideCaption false
+                  end if
+                  break
+                  
+            end switch
+      end switch
+      break
+end switch
 end mouseup
 
 command goCd pCdName,pEffect -- optional effect param
    local tIslesson
    ntInfo pCdName && pEffect
+   
+   if (sCard is "glossary") OR (sCard is "about")  then
+      put "lesson " before pCdName
+   end if
+   
    
    if pCdName is empty then
       ntInfo "tried going to empty card"
@@ -170,14 +192,19 @@ command goCd pCdName,pEffect -- optional effect param
    end if
    if the short name of this cd = pCdName then exit goCd
    if pEffect = "" then put "plain" into pEffect
+   
    put (pCdName begins with "lesson") into tIslesson
+
    lock screen for visual effect 
    if there is a cd pCdName then
       go cd pCdName
    else if tIslesson then
       put (word 2 of pCdName) into tlastLesson
       go cd "lessonView"
+      
       send "loadLesson (word 2 of pCdName)" to this cd
+      --send "loadLesson pCdName" to this cd
+      
    else if pCdName = "Siva Portal, Go Home" then -- return to project
       put "push right" into pEffect
       portal_GoStack "Siva-Siva-Portal"
@@ -258,10 +285,6 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
    --breakpoint
    
    local tEffect
-   
-   --put last word of line 1 of fld "bodytext" into tLesson
-   --if tLesson is not an integer then put 0 into tLesson -- intro cd
-   
    switch pDir
       case "next"
          add 1 to sCurrentLesson
@@ -331,33 +354,6 @@ command doScrollerTap
       end if
 end doScrollerTap
 
---command doScrollerTap
---   local tShow
---   switch the short name of the target
---      case "bodytext"
---         switch
---           case the milliseconds - sStartMS > kLongPressMS -- long press
---               send  "doGlossaryLookup the mouseText" to me in 0
---               break
---            case the mouseH > (the width of this cd) - 60 -- tap right side
---               turnPage "next"
---               break
---            case the mouseH < 60 -- tap left side
---               turnPage "prev"
---               break
---            default
---               toggleHeader
---         end switch
---         break
---         --      case "heroImg"
---         --         toggleHeader
---         --         break
---      case "caption"
---         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
---         slideCaption tShow
---   end switch
---end doScrollerTap
-
 on resizeStack
    setCardCoords
    updateUI
@@ -382,7 +378,7 @@ command slideCaption pBool -- animate the caption view
    put the height of tCaptionFld - tGap into tDistance
    if not pBool then put tDistance * -1 into tDistance
    set the bottom of grp "expander" to (the bottom of fld "caption") -4
-   --set the bottom of button "expander" to (the bottom of fld "caption")+6
+   
    -- LC BUG: DOES NOT RECALC NEW GRP HEIGHT WHEN USING "MOVE" [bug 18965]
    lock moves
    move tCaptionFld relative 0,tDistance without waiting
@@ -392,7 +388,6 @@ command slideCaption pBool -- animate the caption view
    
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
    set the flipped of widget"theExpander" to pBool --not pBool
-   --  createScroller the short name of me -- adjust for new height
    createScroller  "bodytextGrp" -- adjust for new height
 end slideCaption
 
@@ -417,16 +412,13 @@ end downloadAffirmed
 
 
 command flagGlossaryTerms pBool -- underline all glossary words in body text
---  put sCard
+
    local tList,tColor, tSkip,tOffset
-   -- Toggled from TOC selection.
-   -- pBool = boolean
    
    if (sCard is "glossary") then --OR  (sCard is "about") t
       exit flagGlossaryTerms 
    end if
    put the cGlossaryTerms of cd "glossary" into tList
-   
    
    put the text of fld "bodytext" into tText
    
@@ -462,7 +454,6 @@ command doGlossaryLookup pTerm -- display term with definition
    dispatch function "getGlossaryDef" to cd "glossary" with pTerm
    put the result into tDef
    if tDef = "" then
-      --     put "No definition found" into fld "glossaryDef"
       exit doGlossaryLookup
    else
       set the itemdel to colon
@@ -585,12 +576,6 @@ command toggleMenu
    end if
 end toggleMenu
 
---command toggleHeader pBool -- show/hide header
---   if there is no grp "headergrp" of this cd then exit toggleHeader
---   if pBool = "" then put not the vis of grp "headerGrp" into pBool
---   get (the short name of this cd = "lessonView" and pBool = true)
---   set the vis of grp "headerGrp" to pBool
---end toggleHeader
 
 local sPrefsArray
 
@@ -615,8 +600,6 @@ on backKey
 end backKey
 
 function tocVisible
-   --   put the long id of grp "menuGrp" into tMenu
-   --   return the right of tMenu <= the right of this cd
    return the vis of grp "menuGrp"
 end tocVisible
 
@@ -716,28 +699,6 @@ on updateUI
    
    updateMenuGrpUI
    
-   
-   
-   --local tControl, tRect, tRight, tTextSize
-   
-   --   put the long id of grp "headerGrp" into tControl
-   --   put the rect of tControl into tRect
-   --   put item 4 of tRect into item 2 of tRect
-   --   put CardHeight() into item 4 of tRect
-   --   set the rect of grp "indexGrp" to tRect
-   
-   --   put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
-   --   repeat with tNum = 1 to 68 
-   --      set the right of fld ("lbl-chapterText"&&tNum) of grp "indexGrp" to tRight
-   --   end repeat
-   --   if CardWidth() < 414 then
-   --      put the textSize of grp "indexGrp" into tTextSize
-   --      set the textSize of grp "indexGrp" to tTextSize-1
-   --   end if
-   
-   --set the left of btn "prevLesson" of grp "headerGrp" to 0
-   --set the right of btn "nextLesson" of grp "headerGrp" to CardWidth()
-   
 end updateUI
 
 private command updateCoverUI
@@ -811,8 +772,6 @@ private command updateLessonViewUI
    topCenterMe the long id of img "heroImg"
    topCenterMe the long id of fld "caption", 163
    topCenterMe the long id of grp "expander", 371
-   --topCenterMe the long id of widget "theExpander", 267
-   
    
    put the long id of fld "glossaryDef" into tControl
    put the loc of tControl into tLoc
@@ -843,7 +802,6 @@ end updatePhotoIndexUI
 private command updateAboutUI
    local tControl, tRect
    
-   --updateHeaderGrpUI
    put the long id of img "C_Introduction_366w_opt.jpg" into tControl
    topCenterMe tControl, 67
    set the bottom of fld "aboutTitle" to the bottom of tControl
@@ -979,20 +937,3 @@ on deleteCardMobileControls -- delete all mobile controls of any type on current
    end repeat
 end deleteCardMobileControls
 
---command runUtility
---   local tFile
-
---   put (quote & "lbl-chapterText ") into tFile
-
---   repeat with x = 1 to 68
---      put (tFile & x & quote) into tFile
---      set the disabled of fld tFile to false
---      set the lockText of field tFile to false
-
---      set the textstyle  of line 1 of  fld tFile to "bold"
---      set the textstyle  of line 2 of  fld tFile to "plain"
-
---      set the disabled of fld tFile to true
---      set the lockText of field tFile to true
---   end repeat
---end runUtility
