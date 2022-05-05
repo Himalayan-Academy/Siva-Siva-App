@@ -95,35 +95,6 @@ command doScrollerTap
    end switch
 end doScrollerTap
 
---command scrollingDown
---  toggleHeader false
---end scrollingDown
-
---command scrollingUp
---  toggleHeader true
---end scrollingUp
-
---command turnPage pDir -- navigate to another lesson
---   local tLesson, tEffect
---   -- pDir = "next" or "prev"
---   put last word of line 1 of fld "bodytext" into tLesson
---   if tLesson is not an integer then put 0 into tLesson -- intro cd
---   switch pDir
---      case "next"
---         add 1 to tLesson
---         put "reveal left" into tEffect
---         break
---      case "prev"
---         subtract 1 from tLesson
---         put "reveal right" into tEffect
---         break
---      default
---   end switch
---   toggleHeader false
---   lock screen for visual effect
---   loadLesson tLesson
---   unlock screen with visual effect tEffect
---   --end turnPage
 
 command doGlossaryLookup pTerm -- display term with definition
   local tDef, pTrackdata
