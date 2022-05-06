@@ -89,9 +89,6 @@ command doScrollerTap
                
          end switch
         
-      case "caption"
-         put (the bottom of img "heroImg") > the top of fld "caption" into tShow
-         slideCaption tShow
    end switch
 end doScrollerTap
 
