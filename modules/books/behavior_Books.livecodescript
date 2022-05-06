@@ -1,9 +1,18 @@
 ﻿script "behavior_Books"
 local sBookNavTree, sTips
+local sBooksMetaData, sBookData, sBookLanguage, sBookTitle
+
+
+on preOpenStack
+   loadBooksMetaData
+   set the filename of img "menuImage" of cd "bookHome" to \
+         (path_Assets()&"img/portal-screens/Iravan-pillars-ceiling_opt-80.jpg")
+   go cd "bookHome"
+end preOpenStack
 
 
 on preOpenCard
-   local tCard 
+   local tCard
    put the short name of this card into tCard
    --
    setCardCoords "portrait"
@@ -11,16 +20,17 @@ on preOpenCard
    if tCard is "bookHome" then
       put the long id of widget "bookNavTree" into sBookNavTree
       put the long id of fld "tips" into sTips
+      buildBooksMenu
    else if tCard is "bookDetail" then
-      --      put the long id of img "storyImage" into sStoryImage
-      --      put the long id of fld "storyText" into sStoryText
-      --      put the long id of grc "storyTextBkg" into sStoryTextBkg
-      --      put the long id of fld "captionText" into sCaptionText
-      --      put the long id of img "white-tran.png" into sCaptionBkg
-      --      hide sStoryText
-      --      hide sStoryTextBkg
-      --      hide sCaptionText
-      --      hide sCaptionBkg
+      put sBookTitle into fld "bookTitle"
+      put sBookData["sub_title"] into fld "bookSubtitle"
+      put sBookData["copyright_holder"] into fld "bookAuthor"
+      put sBookLanguage into fld "bookLanguage"
+      put sBookData["sales_blurb"] into fld "bookSalesBlurb"
+      put sBookData["description"] into fld "bookDescription"
+      put sBookData["subject"] & "; " & sBookData["product_details"] into fld "bookSubject"
+      put sBookData["publisher"] & "; " & sBookData["edition"] & "; " & sBookData["copyright"] & "; " \
+            & sBookData["category"] into fld "bookCategories"
    end if
    updateUI
 end preopenCard
@@ -52,12 +62,10 @@ on hiliteChanged
    unlock screen
    --
    if the number of items in tHilitedElement = 2 then
-      --      put char 3 to -1 of item 2 of tHilitedElement into sStoryTitle
-      --      put sStoriesMetaArray["Stories"][char 3 to -1 of item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
-      --      --
-      --      setupOrDownloadStory
-      --      --
-      --      visualArticle
+      put char 3 to -1 of item 1 of tHilitedElement into sBookLanguage
+      put char 3 to -1 of item 2 of tHilitedElement into sBookTitle
+      put sBooksMetaData[sBookLanguage][sBookTitle] into sBookData
+      go cd "bookDetail"
    end if
 end hiliteChanged
 
@@ -76,7 +84,7 @@ end resizeStack
 
 
 on updateUI
-   local tCard, tFooter, tControl, tRect
+   local tCard, tFooter, tControl, tRect, tWidth, tLeft
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
    local tStoryTextBkg, tGoNext, tGoPrev
    local tProgressTitle
@@ -122,9 +130,121 @@ on updateUI
    end if
    --
    if tCard is "bookDetail" then
-      
+      put the long id of btn "openBook" into tControl
+      bottomCenterMe tControl,70
+      set the bottom of tControl to the top of tFooter - 18
+      --
+      put 12 into tLeft
+      put CardWidth() - (2 * tLeft) into tWidth
+      put the long id of fld "bookTitle" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      topCenterMe tControl, 47
+      put the rect of tControl into tRect
+      --
+      set the rect of grp "bookDataGroup" to (tLeft, (item 4 of tRect) + 18, \
+            item 3 of tRect, the top of btn "openBook" - 18)
+      set the vScroll of grp "bookDataGroup" to 0
+      --
+      put the long id of fld "bookSubtitle" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookAuthor" into tControl
+      set the width of tControl to tWidth
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookLanguage" into tControl
+      set the width of tControl to tWidth
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookSalesBlurb" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookDescription" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookSubject" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
+      --
+      put the long id of fld "bookCategories" into tControl
+      set the width of tControl to tWidth
+      set the height of tControl to the formattedHeight of tControl
+      set the top of tControl to (item 4 of tRect) + 18
+      set the left of tControl to tLeft
+      put the rect of tControl into tRect
    end if
    --
-   --set the width of grp "share-ui" to cardWidth()
+   if there is a grp "share-ui" then
+      set the width of grp "share-ui" to cardWidth()
+   end if
 end updateUI
 
+
+command loadBooksMetaData
+   local tBooksJson
+   put url ("binfile:" & path_Documents()& "modules/books/books-all.json") into tBooksJson
+   if tBooksJson is empty then
+      put url ("binfile:" & path_Modules()& "books/books-all.json") into tBooksJson
+   end if
+   put JSONToArray(tBooksJson) into sBooksMetaData 
+end loadBooksMetaData
+
+
+command buildBooksMenu
+   local tLanguage, tFoldState, tBooksTree
+   # load the menu
+   # path delimiter is not currently saved with the widget
+   set the pathDelimiter of sBookNavTree to "|"
+   repeat for each key tKey1 in sBooksMetaData
+      if tKey1 is "ISO 639-1" then
+         next repeat
+      end if
+      put tKey1 into tLanguage
+      switch char 1 to 2 of tKey1
+         case "En"
+            put "1 " before tLanguage
+            put false into tFoldState[tLanguage]["folded"]
+            break
+         default
+            put "4 " before tLanguage
+      end switch
+      repeat for each key tKey2 in sBooksMetaData[tKey1]
+         put empty into tBooksTree[tLanguage]["--" & tKey2]
+      end repeat -- tKey2
+   end repeat -- tKey1
+   set the arraydata of sBookNavTree to tBooksTree
+   set the foldstate of sBookNavTree to tFoldState
+end buildBooksMenu
+
+
+on mouseUp
+   local tTarget
+   put the short name of the target into tTarget
+   switch tTarget
+      case "openBook"
+         if sBookData["link"]["portal command"] is "portal_GoUrl" then
+            portal_GoUrl sBookData["link"]["portal param"]
+         end if
+         break
+   end switch
+end mouseUp
