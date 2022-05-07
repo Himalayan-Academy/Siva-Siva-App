@@ -154,11 +154,11 @@ on mouseup
       switch sCard
          case "photo index"
             
-            put "No Glossary" into fld "message"
+            put "No Index." & CR & "Pick a Lesson." into fld "message"
             moveMe "SVG Journal", 0,-100,200
             wait 100 milliseconds
             show fld "message"
-            wait 500 milliseconds
+            wait 750 milliseconds
             hide  fld "message" with visual effect "dissolve" slow
             wait 100 milliseconds
             moveMe "SVG Journal", 0,100,70
