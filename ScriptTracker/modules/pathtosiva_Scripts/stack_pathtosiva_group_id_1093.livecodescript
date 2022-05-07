@@ -94,24 +94,25 @@ end doScrollerTap
 
 
 command doGlossaryLookup pTerm -- display term with definition
-  local tDef, pTrackdata
-  if pTerm = "" then exit doGlossaryLookup
-  dispatch function "getGlossaryDef" to cd "glossary" with pTerm
-  put the result into tDef
-  if tDef = "" then
-     --     put "No definition found" into fld "glossaryDef"
-     exit doGlossaryLookup
-  else
-     set the itemdel to colon
-     put item 1 of tDef &cr& word 1 to -1 of item 2 to -1 of tDef into fld "glossaryDef"
-     set the textstyle of line 1 of fld "glossaryDef" to "bold"
-  end if
-  set the spacebelow of line -1 of fld "glossaryDef" to 8
-  set the height of fld "glossaryDef" to the formattedheight of fld "glossaryDef"
-  set the loc of fld "glossaryDef" to the loc of me
-  show fld "glossaryDef"
-  put removeQuotes(pTerm) into pTrackdata["targetContent"]
-  tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdatai
+   local tDef, pTrackdata
+   if pTerm = "" then exit doGlossaryLookup
+   dispatch function "getGlossaryDef" to cd "glossary" with pTerm
+   put the result into tDef
+   if tDef = "" then
+      --     put "No definition found" into fld "glossaryDef"
+      exit doGlossaryLookup
+   else
+      set the itemdel to colon
+      put item 1 of tDef &cr& word 1 to -1 of item 2 to -1 of tDef into fld "glossaryDef"
+      set the textstyle of line 1 of fld "glossaryDef" to "bold"
+   end if
+   set the spacebelow of line -1 of fld "glossaryDef" to 8
+   set the height of fld "glossaryDef" to the formattedheight of fld "glossaryDef"
+   
+   set the top of fld "glossaryDef" to 300
+   show fld "glossaryDef"
+   put removeQuotes(pTerm) into pTrackdata["targetContent"]
+   tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdatai
 end doGlossaryLookup
 
 

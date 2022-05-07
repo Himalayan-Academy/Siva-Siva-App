@@ -50,8 +50,6 @@ end opencard
 
 on mouseup
    
-   --breakpoint
-   
    local tTarget, tTargetOwner, tExpander
    
    put the short name of the owner of the target into tTargetOwner
@@ -467,6 +465,8 @@ command doGlossaryLookup pTerm -- display term with definition
    
    if pTerm = "" then exit doGlossaryLookup
    
+   lock screen
+   
    dispatch function "getGlossaryDef" to cd "glossary" with pTerm
    put the result into tDef
    if tDef = "" then
@@ -477,9 +477,13 @@ command doGlossaryLookup pTerm -- display term with definition
       set the textstyle of line 1 of fld "glossaryDef" to "bold"
    end if
    set the spacebelow of line -1 of fld "glossaryDef" to 8
-   set the height of fld "glossaryDef" to the formattedheight of fld "glossaryDef"
-   set the loc of fld "glossaryDef" to the loc of me
+   set the height of fld "glossaryDef" to the formattedheight of fld "glossaryDef" 
+   
+   put the long id of fld "glossaryDef" into tGlossaryDefFld
+   topCenterMe tGlossaryDefFld, 207
+   
    show fld "glossaryDef"
+   unlock screen
    put removeQuotes(pTerm) into pTrackdata["targetContent"]
    tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdatai
 end doGlossaryLookup
