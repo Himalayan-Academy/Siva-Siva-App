@@ -30,6 +30,8 @@ on openStack
 end openStack
 
 on opencard
+
+   
    put the short name of this card into sCard
    
    switch sCard
@@ -47,6 +49,13 @@ on opencard
    audioIsRunning  
    --pass opencard
 end opencard
+
+--on mousedown
+--   put the short name of the owner of the target into tTargetOwner
+--   put short name of the target into tTarget
+--   put the short name of this card into sCard
+--   put tTarget
+--end mousedown
 
 on mouseup
    
@@ -80,8 +89,81 @@ on mouseup
                
             case "lessonView"
                if (sCurrentLesson = 0)  OR  (sCurrentLesson =  -1) then
+                  
+                  put "It is the last" &cr& "messageI" into fld "message"
+                  moveMe "SVG Journal", 0,-100,200
+                  wait 100 milliseconds
+                  show fld "message"
+                  wait 750 milliseconds
+                  hide  fld "message" with visual effect "dissolve" slow
+                  wait 100 milliseconds
+                  moveMe "SVG Journal", 0,100,70
+                  wait 200 millisecond
+                  exit mouseup
+                  break
+               end if
+            case"glossary"
+            case "about"
+               goCd sCurrentLesson 
+               exit mouseup
+               break
+               exit mouseup
+               break
+         end switch
+         
+         
+         
+         turnPage "prev", sCurrentLesson
+         break
+         
+      case "nextLesson"
+         
+         switch sCard
+            case  "photo index"
+               put "Pick a lesson" &cr& "in Photo Index" into fld "message"
+               moveMe "SVG Journal", 0,-100,200
+               wait 100 milliseconds
+               show fld "message"
+               wait 500 milliseconds
+               hide  fld "message" with visual effect "dissolve" slow
+               wait 100 milliseconds
+               moveMe "SVG Journal", 0,100,70
+               wait 200 millisecond
+               exit mouseup
+               break
                
-               put "It is the last" &cr& "messageI" into fld "message"
+               
+               
+            case "glossary"
+            case "about"
+               goCd sCurrentLesson 
+               exit mouseup
+               break
+         end switch
+         
+         turnPage "next", sCurrentLesson
+         break 
+         
+      case "SVG Journal"
+         addJournalEntry
+         put "Journal" into fld "message"
+         moveMe "SVG Journal", 0,-100,200
+         wait 100 milliseconds
+         show fld "message"
+         wait 750 milliseconds
+         hide  fld "message" with visual effect "dissolve" slow
+         wait 100 milliseconds
+         moveMe "SVG Journal", 0,100,70
+         wait 200 millisecond
+         doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
+         break
+         
+      case "SVG Menu"
+         
+         switch sCard
+            case "photo index"
+               
+               put "No Index." & CR & "Pick a Lesson." into fld "message"
                moveMe "SVG Journal", 0,-100,200
                wait 100 milliseconds
                show fld "message"
@@ -92,103 +174,49 @@ on mouseup
                wait 200 millisecond
                exit mouseup
                break
-            end if
-         case"glossary"
-         case "about"
-            goCd sCurrentLesson 
-            exit mouseup
-            break
-            exit mouseup
-            break
-      end switch
-      
-      
-      
-      turnPage "prev", sCurrentLesson
-      break
-      
-   case "nextLesson"
-      
-      switch sCard
-         case  "photo index"
-            put "Pick a lesson" &cr& "in Photo Index" into fld "message"
-            moveMe "SVG Journal", 0,-100,200
-            wait 100 milliseconds
-            show fld "message"
-            wait 500 milliseconds
-            hide  fld "message" with visual effect "dissolve" slow
-            wait 100 milliseconds
-            moveMe "SVG Journal", 0,100,70
-            wait 200 millisecond
-            exit mouseup
-            break
-            
-            
-            
-         case "glossary"
-         case "about"
-            goCd sCurrentLesson 
-            exit mouseup
-            break
-      end switch
-      
-      turnPage "next", sCurrentLesson
-      break 
-      
-   case "SVG Journal"
-      addJournalEntry
-      put "Journal" into fld "message"
-      moveMe "SVG Journal", 0,-100,200
-      wait 100 milliseconds
-      show fld "message"
-      wait 500 milliseconds
-      hide  fld "message" with visual effect "dissolve" slow
-      wait 100 milliseconds
-      moveMe "SVG Journal", 0,100,70
-      wait 200 millisecond
-      doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
-      break
-      
-   case "SVG Menu"
-      
-      switch sCard
-         case "photo index"
-            
-            put "No Index." & CR & "Pick a Lesson." into fld "message"
-            moveMe "SVG Journal", 0,-100,200
-            wait 100 milliseconds
-            show fld "message"
-            wait 750 milliseconds
-            hide  fld "message" with visual effect "dissolve" slow
-            wait 100 milliseconds
-            moveMe "SVG Journal", 0,100,70
-            wait 200 millisecond
-            exit mouseup
-            break
-            
-      end switch
-      show grp "menuGrp"
-      
-      break
-      
-   case "theExpander"
-      switch sCard
-         case "lessonView"
-            
-            switch tTarget
-               case "heroImg"
-               case "theExpander"
-                  if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
-                     slideCaption true 
-                  else
-                     slideCaption false
-                  end if
-                  break
-                  
-            end switch
-      end switch
-      break
-end switch
+               
+            case "about" 
+            case "glossary"
+               put "No Index." & CR & "Pick a Lesson." into fld "message"
+               moveMe "SVG Journal", 0,-100,200
+               wait 100 milliseconds
+               show fld "message"
+               wait 750 milliseconds
+               hide  fld "message" with visual effect "dissolve" slow
+               wait 100 milliseconds
+               moveMe "SVG Journal", 0,100,70
+               wait 200 millisecond
+               
+               turnPage
+               
+               exit mouseup
+               break
+               
+         end switch
+         
+         
+         show grp "menuGrp"
+         
+         break
+         
+      case "theExpander"
+         switch sCard
+            case "lessonView"
+               
+               switch tTarget
+                  case "heroImg"
+                  case "theExpander"
+                     if ( ( the bottom of fld "caption" ) -  (the bottom of img "heroImg") ) <  50 then -- expanded
+                        slideCaption true 
+                     else
+                        slideCaption false
+                     end if
+                     break
+                     
+               end switch
+         end switch
+         break
+   end switch
 end mouseup
 
 command goCd pCdName,pEffect -- optional effect param
@@ -426,15 +454,16 @@ end downloadAffirmed
 
 
 command flagGlossaryTerms pBool -- underline all glossary words in body text
-
+   
    local tList,tColor, tSkip,tOffset
    
-   if (sCard is "glossary") then --OR  (sCard is "about") t
+   if (sCard is "glossary") OR  (sCard is "about") then --OR  (sCard is "about") t
       exit flagGlossaryTerms 
    end if
-   put the cGlossaryTerms of cd "glossary" into tList
    
    put the text of fld "bodytext" into tText
+   
+   put the cGlossaryTerms of cd "glossary" into tList
    
    if pBool then put "240,238,143" into tcolor -- or try: lightyellow, beige, cornsilk
    else put "" into tColor

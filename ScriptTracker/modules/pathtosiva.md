@@ -9,6 +9,20 @@
 * Widget Kind: com.livecode.widget.switchbutton
 * [stack_pathtosiva_widget_id_1275](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_1275.livecodescript)
 
+**bkgnd "answerDlgGrp" of stack "pathtosiva"**
+* ID: bkgnd id 51335 of stack "pathtosiva"
+
+* Background on card IDs: 1002, 1246
+* [stack_pathtosiva_bkgnd_id_51335](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_bkgnd_id_51335.livecodescript)
+
+**graphic "cover" of bkgnd "answerDlgGrp" of stack "pathtosiva"**
+* ID: graphic id 51336 of bkgnd id 51335 of stack "pathtosiva"
+* [stack_pathtosiva_graphic_id_51336](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51336.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of bkgnd "answerDlgGrp" of stack "pathtosiva"**
+* ID: field id 51338 of group id 51337 of bkgnd id 51335 of stack "pathtosiva"
+* [stack_pathtosiva_field_id_51338](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51338.livecodescript)
+
 **card "cover" of stack "pathtosiva"**
 * ID: card id 1088 of stack "pathtosiva"
 * [stack_pathtosiva_card_id_1088](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_card_id_1088.livecodescript)
@@ -55,18 +69,6 @@
 * ID: group id 1071 of card id 1002 of stack "pathtosiva"
 * Behavior: button id 1252 of stack "pathToSiva"
 * [stack_pathtosiva_group_id_1071](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_1071.livecodescript)
-
-**group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
-* ID: group id 51335 of card id 1002 of stack "pathtosiva"
-* [stack_pathtosiva_group_id_51335](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51335.livecodescript)
-
-**graphic "cover" of group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
-* ID: graphic id 51336 of group id 51335 of card id 1002 of stack "pathtosiva"
-* [stack_pathtosiva_graphic_id_51336](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51336.livecodescript)
-
-**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "photo index" of stack "pathtosiva"**
-* ID: field id 51338 of group id 51337 of group id 51335 of card id 1002 of stack "pathtosiva"
-* [stack_pathtosiva_field_id_51338](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51338.livecodescript)
 
 **group "bodytextGrp" of card "lessonView" of stack "pathtosiva"**
 * ID: group id 1093 of card id 1083 of stack "pathtosiva"

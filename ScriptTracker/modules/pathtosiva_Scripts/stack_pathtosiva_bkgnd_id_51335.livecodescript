@@ -1,8 +1,10 @@
-Script "stack_pathtosiva_group_id_51335"
+Script "stack_pathtosiva_bkgnd_id_51335"
 
 /*
-# Name: group "answerDlgGrp" of card "photo index" of stack "pathtosiva"
-# ID: group id 51335 of card id 1002 of stack "pathtosiva"
+# Name: bkgnd "answerDlgGrp" of stack "pathtosiva"
+# ID: bkgnd id 51335 of stack "pathtosiva"
+
+# Background on card IDs: 1002, 1246
 */
 
 
