@@ -5,6 +5,7 @@ local sLastActivityA,sStackPendingMessagesA
 local sCard
 
 local sCurrentLesson, tText,tHTML, pLessonNumber
+--BWM: this is a bad variable name... p is the prefix for a parameter
 local pTrackdata
 
 
@@ -41,7 +42,8 @@ on opencard
          break
          
       case  "lessonView"
-         loadLesson pLessonNum
+         --BWM: this is wrong... pLessonNum is not defined here
+         --loadLesson pLessonNum
          break
          
    end switch
@@ -241,7 +243,8 @@ command goCd pCdName,pEffect -- optional effect param
    if there is a cd pCdName then
       go cd pCdName
    else if tIslesson then
-      put (word 2 of pCdName) into tlastLesson
+      --BWM:  this is wrong... tLastLesson is not defined and never used again
+      --put (word 2 of pCdName) into tlastLesson
       go cd "lessonView"
       
       send "loadLesson (word 2 of pCdName)" to this cd
@@ -490,7 +493,7 @@ command flagGlossaryTerms pBool -- underline all glossary words in body text
 end flagGlossaryTerms
 
 command doGlossaryLookup pTerm -- display term with definition
-   local tDef
+   local tDef, tGlossaryDefFld
    
    if pTerm = "" then exit doGlossaryLookup
    
@@ -514,7 +517,7 @@ command doGlossaryLookup pTerm -- display term with definition
    show fld "glossaryDef"
    unlock screen
    put removeQuotes(pTerm) into pTrackdata["targetContent"]
-   tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdatai
+   tracking_RecordActivity "Path To Siva", "options/glossarylookup", pTrackdata
 end doGlossaryLookup
 
 
@@ -522,6 +525,7 @@ on checkGlossary pChunk -- flag a word if it's in the glossary; used for brief f
    -- Note: "is among the lines of" fails on 2-word strings or in white space;
    -- using offset incorrectly matches partials (i.e. "the" matches "theism".)
    -- Using moustext, there are less errors.
+   local tWordChunk
    get the mousetext
    if it = "" then exit checkGlossary
    if it is among the lines of the cGlossaryTerms of cd "glossary" then -- show a temp flag
@@ -675,8 +679,8 @@ end __GEOMETRY__
 
 on updateUI
    
-   local tCard,
-   local tControl
+   local tCard, tHeaderGrp, tHeaderBgFld, tPrevLesson, tPhotoIndex, tSVGJournal, tMessage
+   local tControl, tSVGMenu, tNextLesson, tTurnOffAudio
    
    put the short name of this card into tCard
    
