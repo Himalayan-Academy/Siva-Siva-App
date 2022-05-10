@@ -1,9 +1,11 @@
-Script "stack_pathtosiva_group_id_1071"
+Script "stack_pathtosiva_bkgnd_id_1071"
 
 /*
-# Name: group "indexGrp" of card "photo index" of stack "pathtosiva"
-# ID: group id 1071 of card id 1002 of stack "pathtosiva"
+# Name: bkgnd "indexGrp" of stack "pathtosiva"
+# ID: bkgnd id 1071 of stack "pathtosiva"
 # Behavior: button id 1252 of stack "pathToSiva"
+
+# Shared group on card IDs: 1002
 */
 
 

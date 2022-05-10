@@ -53,9 +53,10 @@ on opencard
 end opencard
 
 --on mousedown
+--   local tTargetOwner, tTarget
 --   put the short name of the owner of the target into tTargetOwner
 --   put short name of the target into tTarget
---   put the short name of this card into sCard
+--   --put the short name of this card into sCard
 --   put tTarget
 --end mousedown
 

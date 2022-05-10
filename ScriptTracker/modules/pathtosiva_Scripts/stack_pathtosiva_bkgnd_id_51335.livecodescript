@@ -4,7 +4,7 @@ Script "stack_pathtosiva_bkgnd_id_51335"
 # Name: bkgnd "answerDlgGrp" of stack "pathtosiva"
 # ID: bkgnd id 51335 of stack "pathtosiva"
 
-# Background on card IDs: 1002, 1246
+# Shared group on card IDs: 1002, 1246
 */
 
 
