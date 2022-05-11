@@ -58,6 +58,7 @@ end opencard
 on mouseup
    
    local tTarget, tTargetOwner, tExpander
+   local pHeaderMessage
    
    put the short name of the owner of the target into tTargetOwner
    put short name of the target into tTarget
@@ -68,18 +69,9 @@ on mouseup
       
       case "Photo Index" 
          if (sCard = "Photo Index") then
-            put "It is Photo Index." &cr& "Pick the Lesson."  into fld "message"
-            hide widget "photo index" with visual effect "dissolve" fast
-            wait 100 milliseconds
-            set topleft of fld "message" to 63,5
-            show fld "message"
-            wait 750 milliseconds
-            hide  fld "message" with visual effect "dissolve" slow
-            wait 100 milliseconds
-            set topleft of widget "photo index" to 83,8
-            show widget "photo index" with visual effect "dissolve" fast
-            wait 200 millisecond
-            exit mouseup
+            put "It is Photo Index." &cr& "Pick the Lesson."  into pHeaderMessage
+            deployHeaders pHeaderMessage, "photo index", 68, 5
+            exit to top
          end if
          
          go to card "Photo Index"
@@ -104,14 +96,8 @@ on mouseup
                if (sCurrentLesson = 0)  OR  (sCurrentLesson =  -1) then
                   
                   put "It is the last" &cr& "messageI" into fld "message"
-                  hide widget "SVG Journal" with visual effect "dissolve" fast
-                  wait 100 milliseconds
-                  show fld "message"
-                  wait 750 milliseconds
-                  hide  fld "message" with visual effect "dissolve" slow
-                  wait 100 milliseconds
-                  show widget "SVG Journal" with visual effect "dissolve" fast
-                  wait 200 millisecond
+                  
+                  deployHeaders pHeaderMessage, "photo index", 68, 5
                   exit mouseup
                   break
                end if
@@ -149,23 +135,13 @@ on mouseup
       case "SVG Journal"
          
          if sCard is "photo index" then
-            put "No Journal" & CR & "Was Made." into fld "message"
-            set topleft of fld "message" to 148,3
+            put "No Journal" & CR & "Was Made." into pHeaderMessage
          else
             addJournalEntry
-            set topleft of fld "message" to 148,3
-            put "Journal Entry" & CR & "Was Made." into fld "message"
+            put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
-         
-         hide widget "SVG Journal" with visual effect "dissolve" fast
-         wait 100 milliseconds
-         show fld "message"
-         wait 750 milliseconds
-         hide  fld "message" with visual effect "dissolve" slow
-         wait 100 milliseconds
-         show widget "SVG Journal" with visual effect "dissolve" fast
-         wait 200 millisecond
+         deployHeaders pHeaderMessage, "SVG Journal", 148,3
          doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
@@ -174,31 +150,15 @@ on mouseup
          switch sCard
             case "photo index"
                
-               put "No Index." & CR & "Pick a Lesson." into fld "message"
-               hide widget "SVG Journal" with visual effect "dissolve" fast
-               wait 100 milliseconds
-               set topleft of fld "message" to 148,3
-               show fld "message"
-               wait 750 milliseconds
-               hide  fld "message" with visual effect "dissolve" slow
-               wait 100 milliseconds
-               show widget "SVG Journal" with visual effect "dissolve" fast
-               wait 200 millisecond
-               exit mouseup
+               put "No Index." & CR & "Pick a Lesson." into pHeaderMessage
+               deployHeaders pHeaderMessage, "SVG Menu", 250,3
+               exit to top
                break
                
             case "about" 
             case "glossary"
-               put "No Index." & CR & "Pick a Lesson." into fld "message"
-               hide widget "SVG Journal" with visual effect "dissolve" fast
-               set topleft of fld "message" to 148,3
-               wait 100 milliseconds
-               show fld "message"
-               wait 750 milliseconds
-               hide  fld "message" with visual effect "dissolve" slow
-               wait 100 milliseconds
-               show widget "SVG Journal" with visual effect "dissolve" fast
-               wait 200 millisecond
+               put "No Index." & CR & "Pick a Lesson." into pHeaderMessage
+               deployHeaders pHeaderMessage, "SVG Menu", 250,3
                
                turnPage
                
@@ -231,6 +191,22 @@ on mouseup
          break
    end switch
 end mouseup
+
+command deployHeaders pHeaderMessage, pHeaderControl, x, y
+   
+   put pHeaderMessage into fld "message"
+   hide control pHeaderControl with visual effect "dissolve" fast
+   wait 100 milliseconds
+   set topleft of fld "message" to x, y
+   show fld "message"
+   wait 750 milliseconds
+   hide  fld "message" with visual effect "dissolve" slow
+   wait 100 milliseconds
+   set topleft of fld "message" to x, y
+   show control pHeaderControl with visual effect "dissolve" fast
+   wait 200 millisecond
+   
+end deployHeaders
 
 command goCd pCdName,pEffect -- optional effect param
    local tIslesson
