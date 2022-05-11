@@ -130,8 +130,9 @@ on mouseup
          switch sCard
             case  "photo index"
                
-               put 1 into sCurrentLesson
-               go to card "lessonView"
+               lock screen
+               go card "lessonView"
+               loadLesson sCurrentLesson
                exit mouseup
                break
                
@@ -146,9 +147,17 @@ on mouseup
          break 
          
       case "SVG Journal"
-         addJournalEntry
          
-         put "Journal Entry" & CR & "Was Made." into fld "message"
+         if sCard is "photo index" then
+            put "No Journal" & CR & "Was Made." into fld "message"
+            set topleft of fld "message" to 148,3
+         else
+            addJournalEntry
+            set topleft of fld "message" to 148,3
+            put "Journal Entry" & CR & "Was Made." into fld "message"
+         end if
+         
+         
          hide widget "SVG Journal" with visual effect "dissolve" fast
          wait 100 milliseconds
          show fld "message"
