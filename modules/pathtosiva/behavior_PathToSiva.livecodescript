@@ -41,11 +41,6 @@ on opencard
          createScroller "indexGrp"
          break
          
-      case  "lessonView"
-         --BWM: this is wrong... pLessonNum is not defined here
-         --loadLesson pLessonNum
-         break
-         
    end switch
    
    audioIsRunning  
@@ -72,6 +67,21 @@ on mouseup
       # Cases of group "headerGrp"
       
       case "Photo Index" 
+         if (sCard = "Photo Index") then
+            put "It is Photo Index." &cr& "Pick the Lesson."  into fld "message"
+            hide widget "photo index" with visual effect "dissolve" fast
+            wait 100 milliseconds
+            set topleft of fld "message" to 63,5
+            show fld "message"
+            wait 750 milliseconds
+            hide  fld "message" with visual effect "dissolve" slow
+            wait 100 milliseconds
+            set topleft of widget "photo index" to 83,8
+            show widget "photo index" with visual effect "dissolve" fast
+            wait 200 millisecond
+            exit mouseup
+         end if
+         
          go to card "Photo Index"
          break
          
@@ -94,27 +104,23 @@ on mouseup
                if (sCurrentLesson = 0)  OR  (sCurrentLesson =  -1) then
                   
                   put "It is the last" &cr& "messageI" into fld "message"
-                  moveMe "SVG Journal", 0,-100,200
+                  hide widget "SVG Journal" with visual effect "dissolve" fast
                   wait 100 milliseconds
                   show fld "message"
                   wait 750 milliseconds
                   hide  fld "message" with visual effect "dissolve" slow
                   wait 100 milliseconds
-                  moveMe "SVG Journal", 0,100,70
+                  show widget "SVG Journal" with visual effect "dissolve" fast
                   wait 200 millisecond
                   exit mouseup
                   break
                end if
-            case"glossary"
-            case "about"
-               goCd sCurrentLesson 
-               exit mouseup
                break
-               exit mouseup
+            case "glossary"
+            case "about"
+               go to card "lessonView"
                break
          end switch
-         
-         
          
          turnPage "prev", sCurrentLesson
          break
@@ -123,19 +129,11 @@ on mouseup
          
          switch sCard
             case  "photo index"
-               put "Pick a lesson" &cr& "in Photo Index" into fld "message"
-               moveMe "SVG Journal", 0,-100,200
-               wait 100 milliseconds
-               show fld "message"
-               wait 500 milliseconds
-               hide  fld "message" with visual effect "dissolve" slow
-               wait 100 milliseconds
-               moveMe "SVG Journal", 0,100,70
-               wait 200 millisecond
+               
+               put 1 into sCurrentLesson
+               go to card "lessonView"
                exit mouseup
                break
-               
-               
                
             case "glossary"
             case "about"
@@ -149,14 +147,15 @@ on mouseup
          
       case "SVG Journal"
          addJournalEntry
-         put "Journal" into fld "message"
-         moveMe "SVG Journal", 0,-100,200
+         
+         put "Journal Entry" & CR & "Was Made." into fld "message"
+         hide widget "SVG Journal" with visual effect "dissolve" fast
          wait 100 milliseconds
          show fld "message"
          wait 750 milliseconds
          hide  fld "message" with visual effect "dissolve" slow
          wait 100 milliseconds
-         moveMe "SVG Journal", 0,100,70
+         show widget "SVG Journal" with visual effect "dissolve" fast
          wait 200 millisecond
          doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
@@ -167,13 +166,14 @@ on mouseup
             case "photo index"
                
                put "No Index." & CR & "Pick a Lesson." into fld "message"
-               moveMe "SVG Journal", 0,-100,200
+               hide widget "SVG Journal" with visual effect "dissolve" fast
                wait 100 milliseconds
+               set topleft of fld "message" to 148,3
                show fld "message"
                wait 750 milliseconds
                hide  fld "message" with visual effect "dissolve" slow
                wait 100 milliseconds
-               moveMe "SVG Journal", 0,100,70
+               show widget "SVG Journal" with visual effect "dissolve" fast
                wait 200 millisecond
                exit mouseup
                break
@@ -181,13 +181,14 @@ on mouseup
             case "about" 
             case "glossary"
                put "No Index." & CR & "Pick a Lesson." into fld "message"
-               moveMe "SVG Journal", 0,-100,200
+               hide widget "SVG Journal" with visual effect "dissolve" fast
+               set topleft of fld "message" to 148,3
                wait 100 milliseconds
                show fld "message"
                wait 750 milliseconds
                hide  fld "message" with visual effect "dissolve" slow
                wait 100 milliseconds
-               moveMe "SVG Journal", 0,100,70
+               show widget "SVG Journal" with visual effect "dissolve" fast
                wait 200 millisecond
                
                turnPage
@@ -244,8 +245,7 @@ command goCd pCdName,pEffect -- optional effect param
    if there is a cd pCdName then
       go cd pCdName
    else if tIslesson then
-      --BWM:  this is wrong... tLastLesson is not defined and never used again
-      --put (word 2 of pCdName) into tlastLesson
+   
       go cd "lessonView"
       
       send "loadLesson (word 2 of pCdName)" to this cd
@@ -337,6 +337,18 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
          put "reveal left" into tEffect
          break
       case "prev"
+         ## on continue as the very beginning
+         
+         if "sCurrentLesson = -1" then
+            add 2 to sCurrentLesson
+         end if
+         if "sCurrentLesson = 0" then
+            add 1 to sCurrentLesson
+         end if
+         if "sCurrentLesson = 1" then
+            add 0  to sCurrentLesson
+        end if
+            
          subtract 1 from sCurrentLesson
          put "reveal right" into tEffect
          break
