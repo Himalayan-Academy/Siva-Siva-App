@@ -24,7 +24,7 @@ on preOpenCard
    else if tCard is "bookDetail" then
       put sBookTitle into fld "bookTitle"
       put sBookData["sub_title"] into fld "bookSubtitle"
-      put sBookData["copyright_holder"] into fld "bookAuthor"
+      put sBookData["author"] into fld "bookAuthor"
       put sBookLanguage into fld "bookLanguage"
       put sBookData["sales_blurb"] into fld "bookSalesBlurb"
       put sBookData["description"] into fld "bookDescription"
