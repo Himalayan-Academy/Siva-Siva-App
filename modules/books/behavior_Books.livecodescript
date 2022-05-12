@@ -64,7 +64,7 @@ on hiliteChanged
    if the number of items in tHilitedElement = 2 then
       put char 3 to -1 of item 1 of tHilitedElement into sBookLanguage
       put char 3 to -1 of item 2 of tHilitedElement into sBookTitle
-      put sBooksMetaData[sBookLanguage][sBookTitle] into sBookData
+      put sBooksMetaData["books"][sBookLanguage][sBookTitle] into sBookData
       go cd "bookDetail"
    end if
 end hiliteChanged
@@ -202,9 +202,9 @@ end updateUI
 
 command loadBooksMetaData
    local tBooksJson
-   put url ("binfile:" & path_Documents()& "modules/books/books-all.json") into tBooksJson
+   put url ("binfile:" & path_Documents()& "modules/books/books.json") into tBooksJson
    if tBooksJson is empty then
-      put url ("binfile:" & path_Modules()& "books/books-all.json") into tBooksJson
+      put url ("binfile:" & path_Modules()& "books/books.json") into tBooksJson
    end if
    put JSONToArray(tBooksJson) into sBooksMetaData 
 end loadBooksMetaData
@@ -215,10 +215,7 @@ command buildBooksMenu
    # load the menu
    # path delimiter is not currently saved with the widget
    set the pathDelimiter of sBookNavTree to "|"
-   repeat for each key tKey1 in sBooksMetaData
-      if tKey1 is "ISO 639-1" then
-         next repeat
-      end if
+   repeat for each key tKey1 in sBooksMetaData["books"]
       put tKey1 into tLanguage
       switch char 1 to 2 of tKey1
          case "En"
@@ -228,7 +225,7 @@ command buildBooksMenu
          default
             put "4 " before tLanguage
       end switch
-      repeat for each key tKey2 in sBooksMetaData[tKey1]
+      repeat for each key tKey2 in sBooksMetaData["books"][tKey1]
          put empty into tBooksTree[tLanguage]["--" & tKey2]
       end repeat -- tKey2
    end repeat -- tKey1
