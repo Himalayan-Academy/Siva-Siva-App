@@ -31,13 +31,16 @@ on openStack
 end openStack
 
 on opencard
-
+   
    
    put the short name of this card into sCard
    
    switch sCard
       
       case  "Photo Index"
+         hide widget "photo index"
+         hide widget "SVG Journal"
+         hide btn "SVG Menu"
          createScroller "indexGrp"
          break
          
@@ -68,12 +71,6 @@ on mouseup
       # Cases of group "headerGrp"
       
       case "Photo Index" 
-         if (sCard = "Photo Index") then
-            put "It is Photo Index." &cr& "Pick the Lesson."  into pHeaderMessage
-            deployHeaders pHeaderMessage, "photo index", 68, 5
-            exit to top
-         end if
-         
          go to card "Photo Index"
          break
          
@@ -141,35 +138,12 @@ on mouseup
             put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
-         deployHeaders pHeaderMessage, "SVG Journal", 148,3
+         deployHeaders pHeaderMessage, "SVG Journal", 148,5
          doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
       case "SVG Menu"
-         
-         switch sCard
-            case "photo index"
-               
-               put "No Index." & CR & "Pick a Lesson." into pHeaderMessage
-               deployHeaders pHeaderMessage, "SVG Menu", 250,3
-               exit to top
-               break
-               
-            case "about" 
-            case "glossary"
-               put "No Index." & CR & "Pick a Lesson." into pHeaderMessage
-               deployHeaders pHeaderMessage, "SVG Menu", 250,3
-               
-               turnPage
-               
-               exit mouseup
-               break
-               
-         end switch
-         
-         
          show grp "menuGrp"
-         
          break
          
       case "theExpander"
@@ -193,16 +167,16 @@ on mouseup
 end mouseup
 
 command deployHeaders pHeaderMessage, pHeaderControl, x, y
-   
-   put pHeaderMessage into fld "message"
+   put the long id of fld "message" into pHeaderMessage
+   --put pHeaderMessage into fld "message"
    hide control pHeaderControl with visual effect "dissolve" fast
    wait 100 milliseconds
-   set topleft of fld "message" to x, y
+   topLeftMe pHeaderMessage,x,y
    show fld "message"
    wait 750 milliseconds
    hide  fld "message" with visual effect "dissolve" slow
    wait 100 milliseconds
-   set topleft of fld "message" to x, y
+   topLeftMe pHeaderMessage,x,y
    show control pHeaderControl with visual effect "dissolve" fast
    wait 200 millisecond
    
@@ -216,7 +190,6 @@ command goCd pCdName,pEffect -- optional effect param
       put "lesson " before pCdName
    end if
    
-   
    if pCdName is empty then
       ntInfo "tried going to empty card"
       exit goCd
@@ -225,12 +198,13 @@ command goCd pCdName,pEffect -- optional effect param
    if pEffect = "" then put "plain" into pEffect
    
    put (pCdName begins with "lesson") into tIslesson
-
+   
    lock screen for visual effect 
    if there is a cd pCdName then
       go cd pCdName
+      
    else if tIslesson then
-   
+      
       go cd "lessonView"
       
       send "loadLesson (word 2 of pCdName)" to this cd
@@ -243,10 +217,18 @@ command goCd pCdName,pEffect -- optional effect param
       exit goCd
    end if
    
+   if (sCard is "about") OR (sCard is "glossary") then
+      hide btn "SVG menu"
+   end if
    unlock screen with visual effect pEffect fast
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
+   
+   show widget "photo index"
+   show widget "SVG Journal"
+  show btn "SVG Menu"
+   
    
    if pLessonNum = "pLessonNum" then
       exit loadLesson
@@ -386,15 +368,14 @@ command doScrollerTap
       put the number of cd tCd into tCdNum
    end if
    put item itemoffset(the number of this cd > tCdNum,"false,true") of "push left,push right" into tEffect
-   
    # here we to Lesson or card "glossary" or "about"
    goCd tCd,tEffect
    
    # we have set have to set the lesson we wish go to 
    
-      if sCurrentLesson <> 0 then
-         put sCurrentLesson into sCurrentLesson
-      end if
+   if sCurrentLesson <> 0 then
+      put sCurrentLesson into sCurrentLesson
+   end if
 end doScrollerTap
 
 on resizeStack
