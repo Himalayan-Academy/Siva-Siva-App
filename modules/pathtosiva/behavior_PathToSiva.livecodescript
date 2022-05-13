@@ -41,6 +41,7 @@ on opencard
          hide widget "photo index"
          hide widget "SVG Journal"
          hide btn "SVG Menu"
+         hide btn "nextLesson"
          createScroller "indexGrp"
          break
          
@@ -71,6 +72,10 @@ on mouseup
       # Cases of group "headerGrp"
       
       case "Photo Index" 
+         hide widget "photo index"
+         hide widget "SVG Journal"
+         hide btn "SVG Menu"
+         hide btn "nextLesson"
          go to card "Photo Index"
          break
          
@@ -87,6 +92,7 @@ on mouseup
          switch sCard
             case "Photo Index"
                doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
+               exit to top
                break
                
             case "lessonView"
@@ -227,8 +233,8 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    
    show widget "photo index"
    show widget "SVG Journal"
-  show btn "SVG Menu"
-   
+   show btn "SVG Menu"
+   show btn "nextLesson"
    
    if pLessonNum = "pLessonNum" then
       exit loadLesson
@@ -872,7 +878,7 @@ private command updateMenuGrpUI
    put the long id of grp "menuGrp" into tControl
    if the cLayoutRect of tControl is CardRect() then exit updateMenuGrpUI
    
-   set the right of tControl to CardWidth()+91
+   set the right of tControl to CardWidth()+5
    set the height of tControl to CardHeight()
    set the top of tControl to 0
    set the height of fld "TOC" to ((the formattedheight of fld "TOC")+safeBottomMargin()+24)
