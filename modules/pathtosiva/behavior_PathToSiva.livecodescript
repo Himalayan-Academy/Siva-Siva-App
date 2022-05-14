@@ -91,7 +91,7 @@ on mouseup
       case "prevLesson"
          switch sCard
             case "Photo Index"
-               doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
+               doAnswer "Want to go Home - SivaSiva Portal?", "Yes,Cancel","downloadAffirmed"
                exit to top
                break
                
@@ -101,6 +101,9 @@ on mouseup
                   put "It is the last" &cr& "messageI" into fld "message"
                   
                   deployHeaders pHeaderMessage, "photo index", 68, 5
+                  wait 100 milliseconds
+                  doAnswer "Want to go Home - SivaSiva Portal?", "Yes,Cancel","downloadAffirmed"
+                  
                   exit mouseup
                   break
                end if
@@ -216,7 +219,7 @@ command goCd pCdName,pEffect -- optional effect param
       send "loadLesson (word 2 of pCdName)" to this cd
       --send "loadLesson pCdName" to this cd
       
-   else if pCdName = "Siva Portal, Go Home" then -- return to project
+   else if pCdName = "GO HOME - SIVASIVA PORTAL" then -- return to project
       put "push right" into pEffect
       portal_GoStack "Siva-Siva-Portal"
       unlock screen with visual effect pEffect fast
@@ -243,6 +246,9 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
    
    if pLessonNum   <> 0 then
       put pLessonNum  into sCurrentLesson
+      if pLessonNum > 68 then
+         doAnswer "Want to go Home - SivaSiva Portal?", "Yes,Cancel","downloadAffirmed"
+      end if
    else
       if pLessonNum   = 0 then
          put pLessonNum  into  pLessonNum
