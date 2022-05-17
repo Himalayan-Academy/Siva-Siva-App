@@ -1,12 +1,13 @@
 ﻿script "behavior_Books"
 local sBookNavTree, sTips
-local sBooksMetaData, sBookData, sBookLanguage, sBookTitle
+local sBooksMetaData, sBookData, sBookLanguage, sBookTitle, sDataLabels
 
 
 on preOpenStack
    loadBooksMetaData
    set the filename of img "menuImage" of cd "bookHome" to \
          (path_Assets()&"img/portal-screens/Iravan-pillars-ceiling_opt-80.jpg")
+   initDataLabels
    go cd "bookHome"
 end preOpenStack
 
@@ -23,17 +24,24 @@ on preOpenCard
       buildBooksMenu
    else if tCard is "bookDetail" then
       put sBookTitle into fld "bookTitle"
-      put sBookData["sub_title"] into fld "bookSubtitle"
-      put sBookData["author"] into fld "bookAuthor"
-      put sBookLanguage into fld "bookLanguage"
-      put sBookData["sales_blurb"] into fld "bookSalesBlurb"
-      put sBookData["description"] into fld "bookDescription"
-      put sBookData["subject"] & "; " & sBookData["product_details"] into fld "bookSubject"
-      put sBookData["publisher"] & "; " & sBookData["edition"] & "; " & sBookData["copyright"] & "; " \
-            & sBookData["category"] into fld "bookCategories"
+      buildBookDetail
    end if
    updateUI
 end preopenCard
+
+
+on closeCard
+   local tCard
+   put the short name of this card into tCard
+   --
+   if tCard is "bookHome" then
+      deleteMobileControl "bookNavTree"
+   else
+      deleteMobileControl "bookDataGroup"
+      put empty into fld "bookData"
+      put empty into fld "bookTitle"
+   end if
+end closeCard
 
 
 # Tree Widget handler
@@ -146,52 +154,16 @@ on updateUI
             item 3 of tRect, the top of btn "openBook" - 18)
       set the vScroll of grp "bookDataGroup" to 0
       --
-      put the long id of fld "bookSubtitle" into tControl
-      set the width of tControl to tWidth
+      put the long id of fld "bookData" into tControl
+      set the width of tControl to tWidth - 4
       set the height of tControl to the formattedHeight of tControl
       set the top of tControl to (item 4 of tRect) + 18
       set the left of tControl to tLeft
       put the rect of tControl into tRect
       --
-      put the long id of fld "bookAuthor" into tControl
-      set the width of tControl to tWidth
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
-      --
-      put the long id of fld "bookLanguage" into tControl
-      set the width of tControl to tWidth
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
-      --
-      put the long id of fld "bookSalesBlurb" into tControl
-      set the width of tControl to tWidth
-      set the height of tControl to the formattedHeight of tControl
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
-      --
-      put the long id of fld "bookDescription" into tControl
-      set the width of tControl to tWidth
-      set the height of tControl to the formattedHeight of tControl
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
-      --
-      put the long id of fld "bookSubject" into tControl
-      set the width of tControl to tWidth
-      set the height of tControl to the formattedHeight of tControl
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
-      --
-      put the long id of fld "bookCategories" into tControl
-      set the width of tControl to tWidth
-      set the height of tControl to the formattedHeight of tControl
-      set the top of tControl to (item 4 of tRect) + 18
-      set the left of tControl to tLeft
-      put the rect of tControl into tRect
+      if the height of fld "bookData" > the height of grp "bookDataGroup" then
+         dispatch "createScroller" to grp "bookDataGroup" with "bookDataGroup"
+      end if
    end if
    --
    if there is a grp "share-ui" then
@@ -232,6 +204,41 @@ command buildBooksMenu
    set the arraydata of sBookNavTree to tBooksTree
    set the foldstate of sBookNavTree to tFoldState
 end buildBooksMenu
+
+
+command buildBookDetail
+   local tDetail, tKeyList
+   --
+   put "sub_title,author,language,sales_blurb,description" into tKeyList
+   repeat for each item tKey in tKeyList
+      if sBookData[tKey] is not empty then
+         put sBookData[tKey] & lf & lf after tDetail
+      end if
+   end repeat
+   --
+   put "subject,product_details,publisher,edition,copyright,category" into tKeyList
+   repeat for each item tKey in tKeyList
+      if sBookData[tKey] is not empty then
+         put sDataLabels[tKey] & ":" && sBookData[tKey] & lf & lf after tDetail
+      end if
+   end repeat
+   --
+   put tDetail into fld "bookData"
+end buildBookDetail
+
+
+command initDataLabels
+   put "Sales Blurb" into sDataLabels["sales_blurb"]
+   put "Description" into sDataLabels["description"]
+   put "Subject" into sDataLabels["subject"]
+   put "Product Details" into sDataLabels["product_details"]
+   put "Publisher" into sDataLabels["publisher"]
+   put "Edition" into sDataLabels["edition"]
+   put "Copyright" into sDataLabels["copyright"]
+   put "Categories" into sDataLabels["category"]
+   --put "" into sDataLabels[""]
+   --put "" into sDataLabels[""]
+end initDataLabels
 
 
 on mouseUp
