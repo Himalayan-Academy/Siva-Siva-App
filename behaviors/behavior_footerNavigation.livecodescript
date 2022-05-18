@@ -58,6 +58,7 @@ on mouseup
             put getBrowseHeaderText() into tBrowseHeader
             --
             go card "listen-browse"
+            send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
             put tBrowseHeader into fld "title-label"
             --
             put portal_GetLastStack() into tLastStack

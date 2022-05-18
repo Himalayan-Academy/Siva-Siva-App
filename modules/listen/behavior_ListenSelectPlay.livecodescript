@@ -99,27 +99,25 @@ on mouseup
          
       case "AudioList"
          local tTitle,localURL
+         lock screen
          
+         repeat with x = 1 to 200
+            
+            set the backgroundcolor of line x of fld "audiolist" to empty
+         end repeat
          # need to off  the Mobile Player
          
-         if isMobile() then
-            deleteAllMobileControls
-            wait 100 milliseconds
-         end if
+         --         if isMobile() then
+         --            deleteAllMobileControls
+         --            wait 100 milliseconds
+         --         end if
          
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
-         # clear the color of the last line before setting the  sLineNum
-         
          # we needed to stop player
-         
-         if sLineNum <> empty then
-            --setAudioListColors sLineNum,"0,0,0"
-            setAudioListColors sLineNum, empty
-         end if
-         
          # now we register the user interaction: clicks on a line.
+         
          put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
          
          # every 2 line is one entry; we just one to color the Title
@@ -128,60 +126,58 @@ on mouseup
          if (sLineNum mod 2) = 0 then
             subtract 1 from sLineNum
          end if
+         
          put line sLineNum of fld "audiolist" into tTitle
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         
-         go to card "listen-file"
-         
-         put sSelectNum into fld "theSelectNum"
-         
-         
-         # we have get sCardName to determine who to show download 
-         put gCardName into tHideDownload
-         
-         
-         --         lock screen
-         
-         # but we have stopPlayer  
-         # on by mobile
-         stopPlayer  
-         
-         # if the use had downloaded audio it appears on my-audio card
-         # we can start the player; get the audio locally
-         
-         lock screen
-         
-         if gCardName = "listen-my-audio" then
-            direct_Play  sSelectNum, gCardName
-         else
-            select_Play false, sSelectNum  # will use either the line number or item id
+         if (the mouseChar is "|") then
+            
+            go to card "listen-file"
+            put sSelectNum into fld "theSelectNum"
+            
+            # we have get sCardName to determine who to show download 
+            put gCardName into tHideDownload
+            
+            
+            # but we have stopPlayer  
+            # on by mobile
+            stopPlayer  
+            
+            # if the use had downloaded audio it appears on my-audio card
+            # we can start the player; get the audio locally
+            
+            lock screen
+            
+            if gCardName = "listen-my-audio" then
+               direct_Play  sSelectNum, gCardName
+            else
+               select_Play false, sSelectNum  # will use either the line number or item id
+            end if
+            
+            local tURL 
+            
+            if  "audio/book" is not in tURL then # no display details
+               select_ShowDetails "downloaded"
+            end if 
+            
+            informationGrp
+            
+            if tHideDownload = "listen-my-audio" then
+               hide grp "DownloadSelection"
+            else
+               show grp "DownloadSelection"
+            end if
+            
+            --         unlock screen
+            # this if for showing lyric, artist or transcript
+            # add appears iinterrupt()
+            # it have pass sTimeStamp before you touch the player
          end if
          
-         local tURL 
-         
-         if  "audio/book" is not in tURL then # no display details
-            select_ShowDetails "downloaded"
-         end if 
-         
-         informationGrp
-         
-         if tHideDownload = "listen-my-audio" then
-            hide grp "DownloadSelection"
-         else
-            show grp "DownloadSelection"
-         end if
-         
-         --         unlock screen
-         # this if for showing lyric, artist or transcript
-         # add appears iinterrupt()
-         # it have pass sTimeStamp before you touch the player
          break
-         
-         // we go to lib_MobileControls
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
          local tPlayPause

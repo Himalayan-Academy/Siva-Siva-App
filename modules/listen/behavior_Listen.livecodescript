@@ -785,7 +785,7 @@ on  playlist_Instantiate
    
    
    # Now we switch cards, 
-   
+   breakpoint
    go to card "listen-browse"
    put "listen-browse" into gCardName
    show fld "collections-label"
@@ -794,7 +794,9 @@ on  playlist_Instantiate
    hide fld "audioList"
    put tTitles into fld "audioList"  
    
-   typesetAudioList
+   typeSetAudioList
+   
+   
    
    repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
@@ -803,6 +805,8 @@ on  playlist_Instantiate
    put sBrowseHeader into fld "title-label" of card "listen-browse"
    
    show fld "audioList"
+   
+   put the number of lines in fld "audioList"
    
    portal_SetLastStack "Listen"
    portal_SetMyMenu false
@@ -999,19 +1003,37 @@ end select_ShowDetails
 
 
 command typeSetAudioList
-   local tX
+   local tAudioFlag, tX
+   put the long id of fld "audioList" into tAudioFlag
+   
    put 0 into tX
+   
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
+      
+      set the textSize of line x of fld "audioList" to 17
+      set the tabWidths of fld "audioList" to CardWidth() - 60 --  (card width -20)
+      
+      # we have get the Title down to 35 chars
+      put 35 into pTruncate
+      
+      if (tX mod 2) = 1 then
+         put length(line x of fld "audioList") into tCount
+         
+         if tCount > 35 then
+            put truncateText (line x of fld "audioList", 35, true) into line x of fld "audioList"
+         end if
+         put tab & "|||" after line x of fld "audioList"
+      end if  
+      
       if (tX mod 2) = 0 then
          set the leftIndent of line x of fld "audioList" to 10
+         set the textSize of line x of fld "audioList" to 13
          if  line x of fld "audioList" <> empty then
-            set the spaceBelow of line x of fld "audioList" to 10
+            set the spaceBelow of line x of fld "audioList" to 15
          end if   
-         set the textSize of line x of fld "audioList" to 15
-      else
-         set the textSize of line x of fld "audioList" to 17
       end if
+      
    end repeat 
    
 end typeSetAudioList
