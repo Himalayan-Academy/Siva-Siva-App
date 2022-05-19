@@ -59,13 +59,13 @@ on mouseup
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         if fld "AudioList" is empty then
-            wait 1 second
-            go card "listen-browse"
-            put "listen-browse" into gCardName 
-         else
-            put "listen-my-audio" into gCardName 
-         end if
+         --if fld "AudioList" is empty then
+            --wait 500 milliseconds
+           --go card "listen-browse"
+            --put "listen-browse" into gCardName 
+         --else
+            --put "listen-my-audio" into gCardName 
+         --end if
          break
       case "deleteOn"
       case "Display"
@@ -129,6 +129,10 @@ on mouseup
          
          put line sLineNum of fld "audiolist" into tTitle
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
+         
+         if (tTitle is empty) then
+            exit mouseup
+         end if
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 

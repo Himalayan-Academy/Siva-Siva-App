@@ -785,7 +785,8 @@ on  playlist_Instantiate
    
    
    # Now we switch cards, 
-   breakpoint
+   --breakpoint
+   
    go to card "listen-browse"
    put "listen-browse" into gCardName
    show fld "collections-label"

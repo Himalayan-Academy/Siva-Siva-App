@@ -51,7 +51,9 @@ on mouseup
             go card "storyHome"
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
             showStoryMenu
-         else if tCard is among the items of "listen-browse,listen-my-audio" then
+         else if tCard is among the items of "listen-browse" then
+            go card "listen-collection"
+         else if tCard is among the items of "listen-my-audio" then
             go card "listen-collection"
          else if tCard is "listen-file" then
             --
@@ -74,13 +76,17 @@ on mouseup
                end if
             end if
             unlock screen
+         
          else if tCard is "listen-delete-file" then
             go card "listen-browse"
             put "listen-browse" into tCard
+         
          else if tCard is "listen-search" then
             go card "listen-collection"
+         
          else if tCard is "listen-collection" then
             portal_GoStack ("Siva-Siva-Portal")
+         
          else if tCard is "mainImagePuzzle" and \
                there is an image "tile_1"  then
             clearImageTiles
