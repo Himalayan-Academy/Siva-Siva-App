@@ -29,6 +29,8 @@ local sDownloadedAudioA
 -----------------------------------------------------------------------
 
 on mouseup
+   
+   
    local tTargetLongID, tTarget, tHideDownload, tDetailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
@@ -60,11 +62,11 @@ on mouseup
       case "my-audio-label"
          go to card "listen-my-audio"
          --if fld "AudioList" is empty then
-            --wait 500 milliseconds
-           --go card "listen-browse"
-            --put "listen-browse" into gCardName 
+         --wait 500 milliseconds
+         --go card "listen-browse"
+         --put "listen-browse" into gCardName 
          --else
-            --put "listen-my-audio" into gCardName 
+         --put "listen-my-audio" into gCardName 
          --end if
          break
       case "deleteOn"
@@ -105,12 +107,9 @@ on mouseup
             
             set the backgroundcolor of line x of fld "audiolist" to empty
          end repeat
-         # need to off  the Mobile Player
          
-         --         if isMobile() then
-         --            deleteAllMobileControls
-         --            wait 100 milliseconds
-         --         end if
+         --breakpoint
+         
          
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
@@ -118,7 +117,7 @@ on mouseup
          # we needed to stop player
          # now we register the user interaction: clicks on a line.
          
-         put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
+         put word 2 of clickline() into sLineNum 
          
          # every 2 line is one entry; we just one to color the Title
          # though the use might click on the artist...
@@ -128,16 +127,17 @@ on mouseup
          end if
          
          put line sLineNum of fld "audiolist" into tTitle
-         set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          if (tTitle is empty) then
             exit mouseup
-         end if
+         end if 
+
+         set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         if (the mouseChar is "|") then
+         if (the mouseChar is "|")  OR (the mouseChar is tab) then
             
             go to card "listen-file"
             put sSelectNum into fld "theSelectNum"
@@ -152,8 +152,6 @@ on mouseup
             
             # if the use had downloaded audio it appears on my-audio card
             # we can start the player; get the audio locally
-            
-            lock screen
             
             if gCardName = "listen-my-audio" then
                direct_Play  sSelectNum, gCardName
@@ -301,3 +299,8 @@ command share_Items
    return tShareItemsA
 end share_Items
 
+on closecard
+   if isMobile() then
+      deleteMobileControl "audioPlayer" # in case one is open already and playing
+   end if  
+end closecard

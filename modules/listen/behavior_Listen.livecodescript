@@ -807,8 +807,6 @@ on  playlist_Instantiate
    
    show fld "audioList"
    
-   put the number of lines in fld "audioList"
-   
    portal_SetLastStack "Listen"
    portal_SetMyMenu false
    

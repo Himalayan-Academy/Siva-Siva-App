@@ -17,32 +17,28 @@ local tHGroup, sLoadingIndicator
 --end preopencard
 
 
-on opencard
-   audioIsRunning
-   pass opencard
-end opencard
+--on opencard
+--   audioIsRunning
+--   pass opencard
+--end opencard
 
 
 on touchStart pTouchID
-   if the short name target is "Loading" then
-      showBusyIndicator false
-      if isMobile() then
-         mobileClearTouches
-      end if
-      exit top 
-   else
-      put empty into sStartX
-      put empty into sStartY
-      
-      put the vScroll of grp "all-collections" into sStartYScroll
-      
-      put the long owner of the target into tHGroup  
-      put the hScroll of tHGroup into sStartHScroll
-   end if
+  
+   --breakpoint
+   put empty into sStartX
+   put empty into sStartY
+   
+   put the vScroll of grp "all-collections" into sStartYScroll
+   
+   put the long owner of the target into tHGroup  
+   put the hScroll of tHGroup into sStartHScroll
+
 end touchStart
 
 
 on touchMove pTouchID, pTouchX, pTouchY
+   
    if sStartY is empty then 
       put pTouchY into sStartY
    end if
@@ -104,7 +100,7 @@ on mouseup
       end if
    end if
    
-   if abs(the mouseH - item 1 of sStartLoc) <= 1 and abs(the mouseV - item 2 of sStartLoc) <= 1 then
+   if abs(the mouseH - item 1 of sStartLoc) <= 3 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
       put the target into pSelection
       selectPlayList pSelection # handles collection and other clicks on the UI
    end if

@@ -139,7 +139,7 @@ on mouseup
          break 
          
       case "SVG Journal"
-         
+         hide fld "glossaryDef"
          if sCard is "photo index" then
             put "No Journal" & CR & "Was Made." into pHeaderMessage
          else

@@ -17,15 +17,11 @@
 * ID: button id 2240 of bkgnd id 2234 of stack "listen"
 * [stack_listen_button_id_2240](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2240.livecodescript)
 
-**group "collectionChoice" of bkgnd "filterAudio" of stack "listen"**
-* ID: group id 2212 of bkgnd id 2176 of stack "listen"
-* [stack_listen_group_id_2212](./../../ScriptTracker/modules/listen_Scripts/stack_listen_group_id_2212.livecodescript)
+**button "Title" of group "Title" of bkgnd "filterAudio" of stack "listen"**
+* ID: button id 2181 of group id 2180 of bkgnd id 2176 of stack "listen"
+* [stack_listen_button_id_2181](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2181.livecodescript)
 
-**group "titleDescription" of bkgnd "filterAudio" of stack "listen"**
-* ID: group id 2180 of bkgnd id 2176 of stack "listen"
-* [stack_listen_group_id_2180](./../../ScriptTracker/modules/listen_Scripts/stack_listen_group_id_2180.livecodescript)
-
-**button "Artists" of group "songProperties" of bkgnd "filterAudio" of stack "listen"**
+**button "Artists" of group "Artists" of bkgnd "filterAudio" of stack "listen"**
 * ID: button id 2208 of group id 2185 of bkgnd id 2176 of stack "listen"
 * [stack_listen_button_id_2208](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2208.livecodescript)
 
@@ -45,10 +41,6 @@
 **button "Clear" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2695 of bkgnd id 2692 of stack "listen"
 * [stack_listen_button_id_2695](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2695.livecodescript)
-
-**graphic "touchTrap" of bkgnd "loadingGroup" of stack "listen"**
-* ID: graphic id 2859 of bkgnd id 2732 of stack "listen"
-* [stack_listen_graphic_id_2859](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_2859.livecodescript)
 
 **bkgnd "share-ui" of stack "listen"**
 * ID: bkgnd id 2899 of stack "listen"
@@ -105,6 +97,10 @@
 * ID: button id 2992 of bkgnd id 2989 of stack "listen"
 * [stack_listen_button_id_2992](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2992.livecodescript)
 
+**graphic "touchTrap" of bkgnd "loadingGroup" of stack "listen"**
+* ID: graphic id 2859 of bkgnd id 2732 of stack "listen"
+* [stack_listen_graphic_id_2859](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_2859.livecodescript)
+
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
 * [stack_listen_card_id_1158](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_1158.livecodescript)
@@ -121,6 +117,18 @@
 * ID: field id 2924 of group id 2923 of group id 2921 of card id 1158 of stack "listen"
 * [stack_listen_field_id_2924](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2924.livecodescript)
 
+**group "answerDlgGrp" of card "listen-browse" of stack "listen"**
+* ID: group id 3032 of card id 1002 of stack "listen"
+* [stack_listen_group_id_3032](./../../ScriptTracker/modules/listen_Scripts/stack_listen_group_id_3032.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "listen-browse" of stack "listen"**
+* ID: graphic id 3033 of group id 3032 of card id 1002 of stack "listen"
+* [stack_listen_graphic_id_3033](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_3033.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "listen-browse" of stack "listen"**
+* ID: field id 3035 of group id 3034 of group id 3032 of card id 1002 of stack "listen"
+* [stack_listen_field_id_3035](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_3035.livecodescript)
+
 **group "answerDlgGrp" of card "listen-file" of stack "listen"**
 * ID: group id 2914 of card id 2660 of stack "listen"
 * [stack_listen_group_id_2914](./../../ScriptTracker/modules/listen_Scripts/stack_listen_group_id_2914.livecodescript)
@@ -133,12 +141,19 @@
 * ID: field id 2917 of group id 2916 of group id 2914 of card id 2660 of stack "listen"
 * [stack_listen_field_id_2917](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2917.livecodescript)
 
-**card "listen-search" of stack "listen"**
-* ID: card id 2052 of stack "listen"
-* Behavior: stack "behavior_ListenSelectPlay"
-* [stack_listen_card_id_2052](./../../ScriptTracker/modules/listen_Scripts/stack_listen_card_id_2052.livecodescript)
-
 **button "Misc Tests" of group "devtools" of card "listen-search" of stack "listen"**
 * ID: button id 2053 of group id 2043 of card id 2052 of stack "listen"
 * [stack_listen_button_id_2053](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2053.livecodescript)
+
+**group "answerDlgGrp" of card "listen-search" of stack "listen"**
+* ID: group id 3022 of card id 2052 of stack "listen"
+* [stack_listen_group_id_3022](./../../ScriptTracker/modules/listen_Scripts/stack_listen_group_id_3022.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "listen-search" of stack "listen"**
+* ID: graphic id 3023 of group id 3022 of card id 2052 of stack "listen"
+* [stack_listen_graphic_id_3023](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_3023.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "listen-search" of stack "listen"**
+* ID: field id 3025 of group id 3024 of group id 3022 of card id 2052 of stack "listen"
+* [stack_listen_field_id_3025](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_3025.livecodescript)
 
