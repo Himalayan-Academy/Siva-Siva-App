@@ -700,13 +700,13 @@ on updateUI
          topLeftMe tPhotoIndex, 75, 8
          
          put the long id of widget "SVG Journal" into tSVGJournal
-         topCenterMe tSVGJournal, 9
+         topCenterMe tSVGJournal, 5
          
          put the long id of fld "message" into tMessage
          topCenterMe tMessage, 3
          
          put the long id of btn "SVG Menu" into tSVGMenu
-         topRightMe tSVGMenu, 80, 3
+         topRightMe tSVGMenu, 80, 0
          
          put the long id of btn "nextLesson" into tNextLesson
          topRightMe tNextLesson, 0, 3

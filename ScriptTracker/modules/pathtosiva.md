@@ -136,3 +136,15 @@
 * ID: field id 51352 of card id 1244 of stack "pathtosiva"
 * [stack_pathtosiva_field_id_51352](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51352.livecodescript)
 
+**group "answerDlgGrp" of card "glossary" of stack "pathtosiva"**
+* ID: group id 51355 of card id 1244 of stack "pathtosiva"
+* [stack_pathtosiva_group_id_51355](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_group_id_51355.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "glossary" of stack "pathtosiva"**
+* ID: graphic id 51356 of group id 51355 of card id 1244 of stack "pathtosiva"
+* [stack_pathtosiva_graphic_id_51356](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_graphic_id_51356.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "glossary" of stack "pathtosiva"**
+* ID: field id 51358 of group id 51357 of group id 51355 of card id 1244 of stack "pathtosiva"
+* [stack_pathtosiva_field_id_51358](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_field_id_51358.livecodescript)
+

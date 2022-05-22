@@ -310,6 +310,9 @@ command updateUI
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 75
          
+         put the long id of fld "collections-label" into tCollectionsLabel
+         topLeftMe tCollectionsLabel, 11, 30
+         
          break
          
       case "listen-delete-file"
@@ -1010,24 +1013,24 @@ command typeSetAudioList
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
       
-      set the textSize of line x of fld "audioList" to 17
+      set the textSize of line x of fld "audioList" to 20
       set the tabWidths of fld "audioList" to CardWidth() - 60 --  (card width -20)
       
-      # we have get the Title down to 35 chars
-      put 35 into pTruncate
+      # we have get the Title down to 25 chars
+      put 25 into pTruncate
       
       if (tX mod 2) = 1 then
          put length(line x of fld "audioList") into tCount
          
-         if tCount > 35 then
-            put truncateText (line x of fld "audioList", 35, true) into line x of fld "audioList"
+         if tCount > 25 then
+            put truncateText (line x of fld "audioList", 25, true) into line x of fld "audioList"
          end if
          put tab & "|||" after line x of fld "audioList"
       end if  
       
       if (tX mod 2) = 0 then
          set the leftIndent of line x of fld "audioList" to 10
-         set the textSize of line x of fld "audioList" to 13
+         set the textSize of line x of fld "audioList" to 15
          if  line x of fld "audioList" <> empty then
             set the spaceBelow of line x of fld "audioList" to 15
          end if   
