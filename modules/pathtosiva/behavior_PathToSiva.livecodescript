@@ -609,7 +609,8 @@ command toggleMenu
       get the short name of this cd
       if it begins with "lesson" then get line 1 of fld "bodytext"
       put lineoffset(it, fld "toc") into tLineNum
-      set the textcolor of line tLineNum of fld "toc" to "black"
+      --set the textcolor of line tLineNum of fld "toc" to "black"
+      set the foregroundcolor of line tLineNum of fld "toc" to "green"
       put tLineNum into sMenuLine
       show tMenu
       if isMobile() then

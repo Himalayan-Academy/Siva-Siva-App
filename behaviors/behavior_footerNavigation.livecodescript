@@ -54,7 +54,7 @@ on mouseup
          else if tCard is among the items of "listen-browse" then
             go card "listen-collection"
          else if tCard is among the items of "listen-my-audio" then
-            go card "listen-collection"
+            go card "listen-browse"
          else if tCard is "listen-file" then
             --
             put getBrowseHeaderText() into tBrowseHeader
