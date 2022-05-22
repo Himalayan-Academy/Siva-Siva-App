@@ -152,7 +152,7 @@ on mouseup
          break
          
       case "SVG Menu"
-         show grp "menuGrp"
+         toggleMenu
          break
          
       case "theExpander"
