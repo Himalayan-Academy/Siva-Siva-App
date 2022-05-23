@@ -51,6 +51,8 @@ on mouseup
             go card "storyHome"
          else if tCard is "storiesHome" and (the vis of grp "storiesMenu") = false then
             showStoryMenu
+         else if tCard is "bookDetail" then
+            go card "readHome"
          else if tCard is among the items of "listen-browse" then
             go card "listen-collection"
          else if tCard is among the items of "listen-my-audio" then

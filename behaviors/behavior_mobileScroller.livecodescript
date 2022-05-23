@@ -54,7 +54,10 @@ end createImageScroller
 on updateScroller pName
    -- NOTE: this is not intended for image scrollers
    local tRect
-   if not isMobile() then exit updateScroller
+   if not isMobile() then
+      put pName into sName
+      exit updateScroller 
+   end if
    if pName is among the lines of mobileControls() then -- update
       put ("0,0," & (the formattedwidth of control pName) & "," & \
             the formattedheight of control pName + 60) into tRect
@@ -128,27 +131,15 @@ on mouseRelease
    put "" into sStartLoc
 end mouseRelease
 
-on mouseMove x,y -- desktop scrolling
-   if isMobile() or sMouseLoc = "" then pass mouseMove
-   setScroll
-end mouseMove
 
+-- BWM: This should not be necessary.  If it is, let me know because something else needs to be fixed.
+--      Mousedown should start tracking the position of the mouse
+--
 --on mouseMove x,y -- desktop scrolling
---   local tHDist,  tVDist
 --   if isMobile() or sMouseLoc = "" then pass mouseMove
---   put abs(x - item 1 of sMouseLoc) into tHDist
---   put abs(y - item 2 of sMouseLoc) into tVDist
---   --  lock screen
---   if item 2 of sMouseLoc > y then -- pushing up
---      if not (the name of me contains "field") then set the hscroll of me to the hscroll of me + tHDist -- bgImg okay
---      set the vscroll of me to the vscroll of me + tVDist
---   else if item 2 of sMouseLoc < y then -- pushing down
---      if not (the name of me contains "field") then set the hscroll of me to the hscroll of me - tHDist
---      set the vscroll of me to the vscroll of me - tVDist
---   end if
---   put x,y into sMouseLoc
---   --  unlock screen
+--   setScroll
 --end mouseMove
+
 
 on setScroll
    if the mouse is down then
