@@ -1,14 +1,14 @@
-﻿script "behavior_Books"
+﻿script "behavior_Read"
 local sBookNavTree, sTips
 local sBooksMetaData, sBookData, sBookLanguage, sBookTitle, sDataLabels
 
 
 on preOpenStack
    loadBooksMetaData
-   set the filename of img "menuImage" of cd "bookHome" to \
+   set the filename of img "menuImage" of cd "readHome" to \
          (path_Assets()&"img/portal-screens/Iravan-pillars-ceiling_opt-80.jpg")
    initDataLabels
-   go cd "bookHome"
+   go cd "readHome"
 end preOpenStack
 
 
@@ -18,7 +18,7 @@ on preOpenCard
    --
    setCardCoords "portrait"
    display_SetStatusBarVis true
-   if tCard is "bookHome" then
+   if tCard is "readHome" then
       put the long id of widget "bookNavTree" into sBookNavTree
       put the long id of fld "tips" into sTips
       buildBooksMenu
@@ -34,7 +34,7 @@ on closeCard
    local tCard
    put the short name of this card into tCard
    --
-   if tCard is "bookHome" then
+   if tCard is "readHome" then
       deleteMobileControl "bookNavTree"
    else
       deleteMobileControl "bookDataGroup"
@@ -72,7 +72,7 @@ on hiliteChanged
    if the number of items in tHilitedElement = 2 then
       put char 3 to -1 of item 1 of tHilitedElement into sBookLanguage
       put char 3 to -1 of item 2 of tHilitedElement into sBookTitle
-      put sBooksMetaData["books"][sBookLanguage][sBookTitle] into sBookData
+      put sBooksMetaData[sBookLanguage][sBookTitle] into sBookData
       go cd "bookDetail"
    end if
 end hiliteChanged
@@ -112,7 +112,7 @@ on updateUI
       topCenterMe tControl, 7
    end if
    --
-   if tCard is "bookHome" then
+   if tCard is "readHome" then
       put the long id of img "menuImage" into tMenuImage
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
@@ -161,6 +161,10 @@ on updateUI
       set the left of tControl to tLeft
       put the rect of tControl into tRect
       --
+      put the rect of grp "bookDataGroup" into tRect
+      put the top of fld "bookTitle" - 6 into item 2 of tRect
+      set the rect of grc "textBackground" to tRect
+      --
       if the height of fld "bookData" > the height of grp "bookDataGroup" then
          dispatch "createScroller" to grp "bookDataGroup" with "bookDataGroup"
       end if
@@ -173,12 +177,12 @@ end updateUI
 
 
 command loadBooksMetaData
-   local tBooksJson
-   put url ("binfile:" & path_Documents()& "modules/books/books.json") into tBooksJson
-   if tBooksJson is empty then
-      put url ("binfile:" & path_Modules()& "books/books.json") into tBooksJson
+   local tBooksData, tArray
+   put url ("binfile:" & path_Documents()& "modules/read/read.lson") into tBooksData
+   if tBooksData is empty then
+      put url ("binfile:" & path_Modules()& "read/read.lson") into tBooksData
    end if
-   put JSONToArray(tBooksJson) into sBooksMetaData 
+   put arrayDecode(tBooksData) into sBooksMetaData
 end loadBooksMetaData
 
 
@@ -187,7 +191,7 @@ command buildBooksMenu
    # load the menu
    # path delimiter is not currently saved with the widget
    set the pathDelimiter of sBookNavTree to "|"
-   repeat for each key tKey1 in sBooksMetaData["books"]
+   repeat for each key tKey1 in sBooksMetaData
       put tKey1 into tLanguage
       switch char 1 to 2 of tKey1
          case "En"
@@ -197,7 +201,7 @@ command buildBooksMenu
          default
             put "4 " before tLanguage
       end switch
-      repeat for each key tKey2 in sBooksMetaData["books"][tKey1]
+      repeat for each key tKey2 in sBooksMetaData[tKey1]
          put empty into tBooksTree[tLanguage]["--" & tKey2]
       end repeat -- tKey2
    end repeat -- tKey1
