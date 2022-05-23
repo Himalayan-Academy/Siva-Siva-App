@@ -111,11 +111,17 @@ on mouseup
          
       case "back-arrow"
          
-         local tParam
-         --show grc "blankScreen"
-         --clearBoard
-         portal_GoStack "Siva-Siva-Portal"
+         if (the vis of grp "randomPuzzleControls") then
+            clearBoard
+            hide grp "randomPuzzleControls"
+            show grp "indexOfQuotes"
+            exit mouseUp
+         else
+            local tParam
+            portal_GoStack "Siva-Siva-Portal"
+         end if
          break
+         
    end switch
    
 end mouseup
