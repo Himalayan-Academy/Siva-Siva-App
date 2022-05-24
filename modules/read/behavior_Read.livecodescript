@@ -33,6 +33,9 @@ end preopenCard
 on closeCard
    local tCard
    put the short name of this card into tCard
+   
+   --
+   portal_SetLastStack "read" 
    --
    if tCard is "readHome" then
       deleteMobileControl "bookNavTree"

@@ -131,14 +131,14 @@ on mouseup
          if (tTitle is empty) then
             exit mouseup
          end if 
-
+         
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
          if (the mouseChar is "|")  OR (the mouseChar is tab) then
-            
+        
             go to card "listen-file"
             put sSelectNum into fld "theSelectNum"
             

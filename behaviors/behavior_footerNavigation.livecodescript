@@ -24,8 +24,9 @@ on preOpenControl
 end preOpenControl
 
 
-on mouseup
-   local tTarget, tShareControl, tControl, tCard
+on mouseup  
+   
+   local tTarget, tShareControl, tControl, tCard, tLongTarget
    local tBrowserExists, tBrowser, tBrowserRect, tBrowseHeader
    local tCdHeight, tSharingHeight, tLastStack, tDownloadIsVisible
    local tMyMenuYesNo
@@ -34,6 +35,7 @@ on mouseup
    put short name of the target into tTarget
    put the short name of this card into tCard
    put (there is a widget "body") into tBrowserExists
+   put the long id of the target into tLongTarget
    --
    switch tTarget
       case "home"
@@ -78,17 +80,17 @@ on mouseup
                end if
             end if
             unlock screen
-         
+            
          else if tCard is "listen-delete-file" then
             go card "listen-browse"
             put "listen-browse" into tCard
-         
+            
          else if tCard is "listen-search" then
             go card "listen-collection"
-         
+            
          else if tCard is "listen-collection" then
             portal_GoStack ("Siva-Siva-Portal")
-         
+            
          else if tCard is "mainImagePuzzle" and \
                there is an image "tile_1"  then
             clearImageTiles
@@ -144,6 +146,7 @@ on mouseup
          --
          break
          --
+         
       case "share"
          unlock screen
          lock screen for visual effect
@@ -213,3 +216,37 @@ on resizeControl
    set the bottom of me to CardHeight()
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
+
+
+
+
+--   if tTarget is not "add-favorites" and \
+--         tTarget is not "share" then
+--      terminateBrowser
+--      show grc "blankImage"
+--      wait 10 milliseconds with messages
+--   end if
+
+--   switch tTarget
+--      case "go-home-portal"
+--         lock screen
+--         portal_GoStack ("Siva-Siva-Portal")
+--         unlock screen
+--         break
+
+--      Case "settings-gear"
+--         portal_GoStack "settings"
+--         break
+
+
+
+--      case "add-favorites"
+--         -- record the last URL they were on
+--         if not (the vis of widget "loader") then
+--            moveMe tTarget, 0,-100,200
+--            moveMe tTarget, 0,100,70
+--            journal_AddEntry
+--         end if
+--         break
+--   end switch
+--end mouseup
