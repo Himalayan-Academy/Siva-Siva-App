@@ -297,7 +297,7 @@ end checkRealm
 --   end switch
 --end toggleReadContext
 
-on addJournalEntry pContext
+on journal_AddEntry pContext
    local tRealm, pDataA, pData, tTitle
    switch pContext
       case "pReadQuote"
@@ -315,7 +315,7 @@ on addJournalEntry pContext
          --         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
    end switch
    dialog_CustomMsg "Saved to Journal"
-end addJournalEntry
+end  journal_AddEntry 
 
 command switchViewState 
    switch sViewState

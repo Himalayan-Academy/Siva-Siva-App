@@ -587,9 +587,9 @@ function returnFiles pBook,pNumber
 end returnFiles
 
 command styleLastLine sLineStyle
-    repeat for each key x in sLineStyle
-        set the x of line -1 of fld "daily-Lesson-Text" to sLineStyle[x]
-    end repeat
+   repeat for each key x in sLineStyle
+      set the x of line -1 of fld "daily-Lesson-Text" to sLineStyle[x]
+   end repeat
 end styleLastLine
 
 
@@ -597,7 +597,7 @@ end styleLastLine
 on _JournalPostResume
 end _JournalPostResume
 
-command addJournalEntry -- save a bookmark to db
+command  journal_AddEntry -- save a bookmark to db
    local tCdName, tData, tTitle
    put sLastActivityA["CdName"] into tCdName
    put tCdName into tData["card"] -- store the last user cd   
@@ -608,7 +608,7 @@ command addJournalEntry -- save a bookmark to db
       put "Master Course Daily Lesson"  into tTitle
    end if
    Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
-end addJournalEntry
+end  journal_AddEntry
 
 
 on journalResume pData,pEntryA -- sent from journal stack

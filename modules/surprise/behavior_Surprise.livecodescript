@@ -290,7 +290,7 @@ on hideDownloadControls
 end hideDownloadControls
 
 
-command addJournalEntry-- save a bookmark to db
+command journal_AddEntry -- save a bookmark to db
    
    local tData,pDataA, tTitle, tURL
    put getMediaMeta() into tData
@@ -303,7 +303,7 @@ command addJournalEntry-- save a bookmark to db
    put "listen-file" into pDataA["card"] 
    Journal_RecordEntry "listen",tTitle,pDataA
    
-end addJournalEntry
+end journal_AddEntry 
 
 on journalResume pData,pEntryA -- sent from journal stack
    lock screen

@@ -45,7 +45,15 @@ on mouseup
          if checkIsLoading() is true then exit mouseup
          put the short name of this card into tCard
          
-         if tCard is "surprise_verse" then
+         if tCard is "SivaSivaBrowser" then
+            
+            put portal_GetLastStack() into tLastStack
+            if tLastStack is "read" then
+               portal_GoStack "read"
+               exit mouseup
+            end if
+            
+         else if tCard is "surprise_verse" then
             go card "surprise_verses"
          else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
             go card "surprise_menu"
@@ -131,7 +139,7 @@ on mouseup
          --
          moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
-         AddJournalEntry
+         Journal_AddEntry
          dialog_CustomMsg "Saved to Journal"
          --
          break
@@ -142,7 +150,7 @@ on mouseup
          move control target relative 0,-100 in 100 milliseconds
          move control target relative 0,100 in 70 milliseconds
          --
-         AddJournalEntry "pReadQuote"
+         Journal_AddEntry "pReadQuote"
          --
          break
          --

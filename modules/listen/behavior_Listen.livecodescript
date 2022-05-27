@@ -1198,7 +1198,7 @@ end markCachedItems
 
 
 -- AAG: Needs a ton of work
-command addJournalEntry -- save a bookmark to databast
+command journal_AddEntry -- save a bookmark to databast
    
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
@@ -1264,7 +1264,7 @@ command addJournalEntry -- save a bookmark to databast
    
    Journal_RecordEntry "listen", tTitle, sDataA 
    
-end addJournalEntry
+end  journal_AddEntry
 
 on journalResume pDataA, pEntry
    
