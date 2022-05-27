@@ -79,7 +79,7 @@ end hiliteChanged
 
 
 on formattedHeightChanged -- tree changed dimensions
-   if the target is sBookNavTree then
+   if the target is (the name of sBookNavTree) then
       dispatch "updateScroller" to sBookNavTree with "bookNavTree"
    end if
 end formattedHeightChanged
@@ -126,13 +126,16 @@ on updateUI
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      set the rect sBookNavTree to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
-      set the uRect of sBookNavTree to the rect of sBookNavTree
+      --      set the rect sBookNavTree to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
       set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
       --
       set the rect of sBookNavTree to the rect of tMenuBkgnd
+      set the uRect of sBookNavTree to the rect of sBookNavTree
+      if the formattedHeight of sBookNavTree > the height of sBookNavTree then
+         dispatch "createScroller" to sBookNavTree with "bookNavTree"
+      end if
       --
       show grc "footerBackground" of grp "footer"
    end if

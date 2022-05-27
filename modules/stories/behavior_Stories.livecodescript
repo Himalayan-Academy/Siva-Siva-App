@@ -279,7 +279,7 @@ end hiliteChanged
 
 
 on formattedHeightChanged -- tree changed dimensions
-   if the target is sStoryMenuTree then
+   if the target is (the name of sStoryMenuTree) then
       dispatch "updateScroller" to sStoryMenuTree with "storyNavTree"
    end if
 end formattedHeightChanged
