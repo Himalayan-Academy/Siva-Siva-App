@@ -196,7 +196,7 @@ command buildBooksMenu
       switch char 1 to 2 of tKey1
          case "En"
             put "1 " before tLanguage
-            put false into tFoldState[tLanguage]["folded"]
+            --put false into tFoldState[tLanguage]["folded"] --uncomment line to have "English" start unfolded
             break
          default
             put "4 " before tLanguage
