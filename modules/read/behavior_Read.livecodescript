@@ -80,7 +80,7 @@ end hiliteChanged
 
 on formattedHeightChanged -- tree changed dimensions
    if the target is sBookNavTree then
-      dispatch "updateScroller" to sBookNavTree with "storyNavTree"
+      dispatch "updateScroller" to sBookNavTree with "bookNavTree"
    end if
 end formattedHeightChanged
 
