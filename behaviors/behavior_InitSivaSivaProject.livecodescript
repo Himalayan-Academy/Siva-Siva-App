@@ -454,32 +454,65 @@ end createFolders
 command init_DocumentFiles
    local tLocalJson, tLocalArray, tLocalSeconds, tServerSeconds
    local tServer, tRemoteSeconds,tServerArray, tRemoteServer
-   # Here is the installing app 
+   
+   #
+   # STORIES
+   #
+   
+   # Initialize stories.json file for new installs 
    if  there is not a file (path_Documents()  & "modules/stories/stories.json") then
       put url ("binfile:" & path_Modules() & "stories/stories.json") into \
-            url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+            url ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
    
    # Here is getting the time difference > between the json on the server
    
-   put url ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
+   put url ("binfile:" & path_Documents() & "modules/stories/stories.json") into tLocalJson
    put jsonImport(tLocalJson) into tLocalArray
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
    if tLocalSeconds is not a number then
       put 0 into tLocalSeconds
    end if
    
-   --breakpoint
    try
       put url ("https://www.himalayanacademy.com/media/stories/stories.json") into tServer
       put JSONToArray(tServer) into tServerArray
       put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
    catch errorStatement
-      
    end try 
    
    if tRemoteSeconds > tLocalSeconds then
       put tServer  into url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+   end if
+   
+   #
+   # READ
+   #
+   
+   # Initialize read.lson file for new installs
+   if  there is not a file (path_Documents()  & "modules/read/read.lson") then
+      put url ("binfile:" & path_Modules() & "read/read.lson") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.lson")
+      put url ("binfile:" & path_Modules() & "read/read.date") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.date")
+   end if
+   
+   # get the version info for the local and server file; convert to seconds
+   try
+      put empty into tLocalSeconds
+      put empty into tRemoteSeconds
+      put url ("binfile:" & path_Documents() & "modules/read/read.date") into tLocalSeconds
+      convert tLocalSeconds from internet date to seconds
+      put url ("https://dev.himalayanacademy.com/media/books/read.date") into tRemoteSeconds
+      convert tRemoteSeconds from internet date to seconds
+   catch errorStatement
+   end try
+   
+   if tRemoteSeconds > tLocalSeconds then
+      put url ("https://www.himalayanacademy.com/media/books/read.lson") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.lson")
+      put url ("https://www.himalayanacademy.com/media/books/read.date") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.date")
    end if
 end init_DocumentFiles
 
