@@ -16,6 +16,10 @@ on preOpenCard
    local tCard
    put the short name of this card into tCard
    --
+   if tCard is "readHome" then
+      hide grp "tipsGroup"
+   end if
+   --
    setCardCoords "portrait"
    display_SetStatusBarVis true
    if tCard is "readHome" then
@@ -33,6 +37,9 @@ end preopenCard
 on closeCard
    local tCard
    put the short name of this card into tCard
+   
+   --
+   portal_SetLastStack "read" 
    --
    if tCard is "readHome" then
       deleteMobileControl "bookNavTree"
@@ -79,8 +86,8 @@ end hiliteChanged
 
 
 on formattedHeightChanged -- tree changed dimensions
-   if the target is (the name of sBookNavTree) then
-      dispatch "updateScroller" to sBookNavTree with "bookNavTree"
+   if the target is sBookNavTree then
+      dispatch "updateScroller" to sBookNavTree with "storyNavTree"
    end if
 end formattedHeightChanged
 
@@ -99,7 +106,7 @@ on updateUI
    --
    put the short name of this card into tCard
    --
-   put the long id of grp "footer" into tFooter
+   put the long id of grp "footerNavigation" into tFooter
    if currentlyLandscape() then
       hide tFooter
    else
@@ -116,28 +123,25 @@ on updateUI
       put the long id of img "menuImage" into tMenuImage
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
-      put the long id of btn "back" into tGoBack
-      bottomCenterMe tGoBack,65
-      set the bottom of tGoBack to the top of tFooter - 15
+      --put the long id of btn "back" into tGoBack
+      --bottomCenterMe tGoBack,65
+      --set the bottom of tGoBack to the top of tFooter - 15
       --
       put the long id of btn "showTips" into tGoTips
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
-      set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
+      --set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      --      set the rect sBookNavTree to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
+      set the rect sBookNavTree to (45, 141, cardWidth() - 24, the top of btn "showTips" - 21)
+      set the uRect of sBookNavTree to the rect of sBookNavTree
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
-      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
+      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "showTips" - 9)
       --
       set the rect of sBookNavTree to the rect of tMenuBkgnd
-      set the uRect of sBookNavTree to the rect of sBookNavTree
-      if the formattedHeight of sBookNavTree > the height of sBookNavTree then
-         dispatch "createScroller" to sBookNavTree with "bookNavTree"
-      end if
       --
-      show grc "footerBackground" of grp "footer"
+      show grc "footerBackground" of grp "footerNavigation"
    end if
    --
    if tCard is "bookDetail" then
@@ -199,7 +203,7 @@ command buildBooksMenu
       switch char 1 to 2 of tKey1
          case "En"
             put "1 " before tLanguage
-            --put false into tFoldState[tLanguage]["folded"] --uncomment line to have "English" start unfolded
+            put false into tFoldState[tLanguage]["folded"]
             break
          default
             put "4 " before tLanguage
@@ -257,5 +261,20 @@ on mouseUp
             portal_GoUrl sBookData["link"]["portal param"]
          end if
          break
+      case "backFromTips"
+         hide grp "tipsGroup"
+         break
+      case "showTips"
+         set the filename of img "tipsImage" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
+         put url ("file:"& path_Modules()& "read/read-user-guide.html") into tTips
+         set the htmltext of fld "tips" to tTips 
+         dispatch "createscroller" to sTips with "tips"
+         show grp "tipsGroup"
+         break
+         --
    end switch
+   
+   
 end mouseUp
+
+

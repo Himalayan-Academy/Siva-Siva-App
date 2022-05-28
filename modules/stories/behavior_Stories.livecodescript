@@ -685,7 +685,7 @@ end lockPortrait
 -------
 local pData, tCd
 
-command addJournalEntry -- save a bookmark to db
+command journal_AddEntry -- save a bookmark to db
    local tTitle
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle
@@ -698,8 +698,7 @@ command addJournalEntry -- save a bookmark to db
       put "showStories" into pData["card"]
    end if
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
-end addJournalEntry
-
+end journal_AddEntry --
 		
 on journalResume pData -- sent from journal stack
    put pData["Card"] into tCd
@@ -745,7 +744,7 @@ on updateUI
    --
    put the short name of this card into tCard
    --
-   put the long id of grp "footer" into tFooter
+   put the long id of grp "footerNavigation" into tFooter
    if currentlyLandscape() then
       hide tFooter
    else
@@ -784,7 +783,7 @@ on updateUI
       --
       set the rect of sStoryMenuTree to the rect of tMenuBkgnd
       --
-      show grc "footerBackground" of grp "footer"
+      show grc "footerBackground" of grp "footerNavigation"
       --
       put the long id of grc "touchTrap" into tControl
       set the rect of tControl to CardRect()
