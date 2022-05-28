@@ -225,36 +225,3 @@ on resizeControl
    set the rect of grc "footerBackground" to the rect of me
 end resizeControl
 
-
-
-
---   if tTarget is not "add-favorites" and \
---         tTarget is not "share" then
---      terminateBrowser
---      show grc "blankImage"
---      wait 10 milliseconds with messages
---   end if
-
---   switch tTarget
---      case "go-home-portal"
---         lock screen
---         portal_GoStack ("Siva-Siva-Portal")
---         unlock screen
---         break
-
---      Case "settings-gear"
---         portal_GoStack "settings"
---         break
-
-
-
---      case "add-favorites"
---         -- record the last URL they were on
---         if not (the vis of widget "loader") then
---            moveMe tTarget, 0,-100,200
---            moveMe tTarget, 0,100,70
---            journal_AddEntry
---         end if
---         break
---   end switch
---end mouseup

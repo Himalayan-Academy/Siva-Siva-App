@@ -128,16 +128,17 @@ on updateUI
       --set the bottom of tGoBack to the top of tFooter - 15
       --
       put the long id of btn "showTips" into tGoTips
-      bottomCenterMe tGoTips,70
+      bottomCenterMe tGoTips,30
       set the bottom of tGoTips to the top of tFooter - 18
       --
       --set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      set the rect sBookNavTree to (45, 141, cardWidth() - 24, the top of btn "showTips" - 21)
+      set the rect of sBookNavTree to (0, 0, cardWidth() - 24, the top of btn "showTips" - 21)
       set the uRect of sBookNavTree to the rect of sBookNavTree
+    
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
-      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "showTips" - 9)
+      set the rect tMenuBkgnd to (0, 75, cardWidth(), the top of btn "showTips" - 9)
       --
       set the rect of sBookNavTree to the rect of tMenuBkgnd
       --
@@ -154,7 +155,7 @@ on updateUI
       put the long id of fld "bookTitle" into tControl
       set the width of tControl to tWidth
       set the height of tControl to the formattedHeight of tControl
-      topCenterMe tControl, 47
+      topCenterMe tControl, 60
       put the rect of tControl into tRect
       --
       set the rect of grp "bookDataGroup" to (tLeft, (item 4 of tRect) + 18, \
@@ -169,7 +170,7 @@ on updateUI
       put the rect of tControl into tRect
       --
       put the rect of grp "bookDataGroup" into tRect
-      put the top of fld "bookTitle" - 6 into item 2 of tRect
+      put the top of fld "bookTitle" - 16 into item 2 of tRect
       set the rect of grc "textBackground" to tRect
       --
       if the height of fld "bookData" > the height of grp "bookDataGroup" then
