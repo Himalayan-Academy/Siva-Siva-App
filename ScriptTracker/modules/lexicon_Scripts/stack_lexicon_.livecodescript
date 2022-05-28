@@ -6,12 +6,12 @@ Script "stack_lexicon_"
 */
 
 
-command addJournalEntry -- save a bookmark to db
+command Journal_AddEntry -- save a bookmark to db
    local tTitle,pData
    put "Lexicon" into tTitle
-   put "MainCard" into pData["Card"]
+   put "loader" into pData["Card"]
    Journal_RecordEntry "lexicon",(tTitle), pData -- send to journal
-end addJournalEntry
+end Journal_AddEntry
 		
 on journalResume pData -- sent from journal stack
    local tCD

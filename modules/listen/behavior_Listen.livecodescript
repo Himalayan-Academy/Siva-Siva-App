@@ -1006,6 +1006,7 @@ end select_ShowDetails
 
 command typeSetAudioList
    local tAudioFlag, tX
+   local pTruncate, tCount
    put the long id of fld "audioList" into tAudioFlag
    
    put 0 into tX
@@ -1198,7 +1199,7 @@ end markCachedItems
 
 
 -- AAG: Needs a ton of work
-command journal_AddEntry -- save a bookmark to databast
+command Journal_AddEntry -- save a bookmark to databast
    
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
@@ -1211,7 +1212,7 @@ command journal_AddEntry -- save a bookmark to databast
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to save to Journal. Go an audio file." into tMsg
       exit to top
-      --exit addJournalEntry
+      --exit Journal_AddEntry
    end if
    
    if (the visible of grp "downloadSelection" = false) then
@@ -1220,7 +1221,7 @@ command journal_AddEntry -- save a bookmark to databast
       if sDataA["url"] contains "http" then
          dialog_CustomMsg "Download to Save to Journal."
          exit to top
-         --exit addJournalEntry
+         --exit Journal_AddEntry
       end if
    end if
    
@@ -1263,8 +1264,8 @@ command journal_AddEntry -- save a bookmark to databast
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
-   
 end  journal_AddEntry
+
 
 on journalResume pDataA, pEntry
    
