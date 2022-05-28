@@ -8,7 +8,7 @@ Script "stack_color-meditation_widget_id_1198"
 
 
 on mouseUp
-   addJournalEntry
+   journal_AddEntry
    moveMe me,0,-100,200
    moveMe me,0,100,70
 end mouseUp
