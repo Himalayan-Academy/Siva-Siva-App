@@ -83,18 +83,6 @@
 * ID: image id 1496 of card id 1494 of stack "surprise"
 * [stack_surprise_image_id_1496](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_image_id_1496.livecodescript)
 
-**group "bottomToast" of card "surprise" of stack "surprise"**
-* ID: group id 1623 of card id 1494 of stack "surprise"
-* [stack_surprise_group_id_1623](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1623.livecodescript)
-
-**field "lbl-dialogPrompt" of group "bottomToast" of card "surprise" of stack "surprise"**
-* ID: field id 1624 of group id 1623 of card id 1494 of stack "surprise"
-* [stack_surprise_field_id_1624](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_field_id_1624.livecodescript)
-
-**button "DIALOGAFFIRM" of group "bottomToast" of card "surprise" of stack "surprise"**
-* ID: button id 1625 of group id 1623 of card id 1494 of stack "surprise"
-* [stack_surprise_button_id_1625](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_button_id_1625.livecodescript)
-
 **group "verse-collections" of card "surprise_verses" of stack "surprise"**
 * ID: group id 1303 of card id 1002 of stack "surprise"
 * [stack_surprise_group_id_1303](./../../ScriptTracker/modules/surprise_Scripts/stack_surprise_group_id_1303.livecodescript)

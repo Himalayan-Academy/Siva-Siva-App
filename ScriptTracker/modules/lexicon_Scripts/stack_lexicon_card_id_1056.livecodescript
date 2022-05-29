@@ -18,7 +18,7 @@ on preOpenCard
    --put "this is preOpenStack"
    put specialFolderPath("resources") into tUrl
    if the platform is not "android" then
-      put "file://" before tUrl
+      put "file:" before tUrl
    end if
    if the environment is not "development" then
       put "/modules/lexicon/web/index.html" after tUrl
@@ -42,7 +42,7 @@ on resizeStack
 end resizeStack
 
 on goHome   
-   addJournalEntry
+   Journal_AddEntry
    if getPhoneModel() is "iPhoneX" then
       mobileHideStatusBar
    end if
