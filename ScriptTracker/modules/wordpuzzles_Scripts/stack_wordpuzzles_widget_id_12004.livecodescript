@@ -8,6 +8,6 @@ Script "stack_wordpuzzles_widget_id_12004"
 
 
 on mouseUp
-   addJournalEntry
+   journal_AddEntry
    hide grp "prefsSelectorGrp"
 end mouseUp

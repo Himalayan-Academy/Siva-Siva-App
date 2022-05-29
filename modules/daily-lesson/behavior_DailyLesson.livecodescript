@@ -621,7 +621,7 @@ on journalResume pData,pEntryA -- sent from journal stack
 end journalResume
 
 on closeStack
-   --addJournalEntry
+   --journal_AddEntry
    portal_SetLastStack "daily-lesson" 
 end closeStack
 

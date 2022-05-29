@@ -22,7 +22,7 @@ on preopenstack
 end preopenstack
 
 on opencard
-   set the acceleratedRendering of this stack to true
+   --set the acceleratedRendering of this stack to true
    audioIsRunning  
    pass opencard
 end opencard
@@ -78,6 +78,7 @@ on resizeStack
 end resizeStack
 
 on updateUI
+   
    local tHeader, tFooter, tControl, tRect, tCardRect
    
    put CardRect() into tCardRect
@@ -110,13 +111,18 @@ on updateUI
    else
       put the long id of grc "colorMeditationBkgnd" into tControl
       set the rect of tControl to tCardRect
-      
-      put the long id of grp "titleControls" into tControl
-      topCenterMe tControl, 214
-      if CardWidth() < the width of tControl then
-         set the textsize of fld "moduleTitle" to 50
-      end if
    end if
+   
+   put the long id of fld "moduleTitle" into tControl
+   if CardWidth() < the width of tControl then
+      set the textsize of fld "moduleTitle" to 50
+   end if
+   topCenterMe tControl, 214
+   
+   if CardWidth() < the width of tControl then
+      set the textsize of fld "moduleTitle" to 50
+   end if
+   topCenterMe tControl, 214
    
    if the short name of this card is "levelsIndex" then
       put the long id of grp "levelsLinks" into tControl
@@ -375,12 +381,12 @@ end resetUI
 # more than needed but we may expand activities in this module later
 # so keeping Jacque's nice construct for now.
 
-command addJournalEntry -- save a bookmark to db
+command  journal_AddEntry -- save a bookmark to db
    local pData, tTitle
    put "runColors" into pData["card"] 
    put ("Color Meditation") into tTitle
    Journal_RecordEntry "color-meditation",tTitle,pData -- send to journal
-end addJournalEntry
+end  journal_AddEntry
 
 
 on journalResume pData,pEntryA -- sent from journal stack

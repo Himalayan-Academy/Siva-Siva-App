@@ -143,7 +143,7 @@ on mouseup
          if sCard is "photo index" then
             put "No Journal" & CR & "Was Made." into pHeaderMessage
          else
-            addJournalEntry
+            Journal_AddEntry
             put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
@@ -326,8 +326,8 @@ command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
          end if
          if "sCurrentLesson = 1" then
             add 0  to sCurrentLesson
-        end if
-            
+         end if
+         
          subtract 1 from sCurrentLesson
          put "reveal right" into tEffect
          break
@@ -554,7 +554,7 @@ on setLastactivity pCdName, pLessonNum
    put pLessonNum into sLastActivityA["LessonNum"]
 end setLastactivity
 
-command addJournalEntry -- save a bookmark to db
+command Journal_AddEntry -- save a bookmark to db
    local tCdName,pData,tLessonNum,tTitle
    put sLastActivityA["CdName"] into tCdName
    put tCdName into pData["card"] -- store the last user cd   
@@ -571,7 +571,7 @@ command addJournalEntry -- save a bookmark to db
       put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
    end if
    Journal_RecordEntry "pathtosiva",tTitle,pData -- send to journal
-end addJournalEntry
+end Journal_AddEntry
 
 on journalResume pData,pEntryA -- sent from journal stack
    local tCd,tNum

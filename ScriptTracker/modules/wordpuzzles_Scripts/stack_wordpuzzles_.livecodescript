@@ -43,13 +43,13 @@ command storeCurrentLevel pLevel
    put pLevel into sPuzzleLevel
 end storeCurrentLevel
 
-command addJournalEntry 
+command  journal_AddEntry
    local pData, tTitle
    put "word-puzzle" into pData["card"]
    put "Word Puzzles" into tTitle
    Journal_RecordEntry "wordpuzzles",tTitle,pData -- send to journal
    dialog_CustomMsg "Saved to Journal"
-end addJournalEntry
+end  journal_AddEntry
 
 on journalResume pDataA, pEntryA
    local pLevel
