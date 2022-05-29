@@ -98,9 +98,9 @@ on mouseup
             case "lessonView"
                if (sCurrentLesson = 0)  OR  (sCurrentLesson =  -1) then
                   
-                  put "It is the last" &cr& "messageI" into fld "message"
+                  --put "It is the last" &cr& "messageI" into fld "message"
                   
-                  deployHeaders pHeaderMessage, "photo index", 68, 5
+                  --deployHeaders pHeaderMessage, "photo index", 68, 5
                   wait 100 milliseconds
                   doAnswer "Want to go Home - SivaSiva Portal?", "Yes,Cancel","downloadAffirmed"
                   
@@ -147,7 +147,7 @@ on mouseup
             put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
-         deployHeaders pHeaderMessage, "SVG Journal", 148,5
+         deployHeaders pHeaderMessage, "SVG Journal", 175,8
          doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
@@ -176,19 +176,18 @@ on mouseup
 end mouseup
 
 command deployHeaders pHeaderMessage, pHeaderControl, x, y
-   put the long id of fld "message" into pHeaderMessage
-   --put pHeaderMessage into fld "message"
-   hide control pHeaderControl with visual effect "dissolve" fast
+   put long id of widget "SVG Journal" into pHeaderControl
+   put pHeaderMessage into fld "message"
+   hide pHeaderControl with visual effect "dissolve" fast
    wait 100 milliseconds
-   topLeftMe pHeaderMessage,x,y
+   topLeftMe pHeaderControl,x,y
    show fld "message"
    wait 750 milliseconds
    hide  fld "message" with visual effect "dissolve" slow
    wait 100 milliseconds
-   topLeftMe pHeaderMessage,x,y
-   show control pHeaderControl with visual effect "dissolve" fast
+   topLeftMe pHeaderControl,x,y
+   show pHeaderControl with visual effect "dissolve" fast
    wait 200 millisecond
-   
 end deployHeaders
 
 command goCd pCdName,pEffect -- optional effect param

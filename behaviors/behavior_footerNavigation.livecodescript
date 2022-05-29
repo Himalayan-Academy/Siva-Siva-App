@@ -39,21 +39,22 @@ on mouseup
    --
    switch tTarget
       case "home"
-         if tBrowserExists then
-            terminateBrowser
-         end if
-         if checkIsLoading() is true then exit mouseup
+         --         if tBrowserExists then
+         --            terminateBrowser
+         --         end if
+         --         if checkIsLoading() is true then exit mouseup
+         
          put the short name of this card into tCard
          
          if tCard is "SivaSivaBrowser" then
-            
             put portal_GetLastStack() into tLastStack
             if tLastStack is "read" then
                portal_GoStack "read"
                exit mouseup
             end if
-            
-         else if tCard is "surprise_verse" then
+         end if
+         
+         if tCard is "surprise_verse" then
             go card "surprise_verses"
          else if tCard is among the items of "surprise,surprise_verses,surprise_audio,surprise_darshan,surprise_art" then
             go card "surprise_menu"
@@ -75,18 +76,18 @@ on mouseup
             send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
             put tBrowseHeader into fld "title-label"
             --
-            put portal_GetLastStack() into tLastStack
-            put portal_GetMyMenu() into tMyMenuYesNo
-            --
-            if (tLastStack = "Journal") OR (tMyMenuYesNo = true) then            
-               go card "listen-collection"
-            else 
-               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
-                  go card "listen-browse"
-               else
-                  go card "listen-my-audio"
-               end if
-            end if
+            --            put portal_GetLastStack() into tLastStack
+            --            put portal_GetMyMenu() into tMyMenuYesNo
+            --            --
+            --            if (tLastStack = "Journal") OR (tMyMenuYesNo = true) then            
+            --               go card "listen-collection"
+            --            else 
+            --               if fld "FilesOnDisk" of card "listen-delete-file" is empty then
+            --                  go card "listen-browse"
+            --               else
+            --                  go card "listen-my-audio"
+            --               end if
+            --         end if
             unlock screen
             
          else if tCard is "listen-delete-file" then
