@@ -225,7 +225,7 @@ end mouseup
 
 on showStoryText
    lock screen
-   show grp "footer"
+   show grp "footerNavigation"
    show sStoryText
    show sStoryTextBkg
    hide sCaptionText
@@ -595,7 +595,7 @@ command updateImageState pResizeOnly
             show sCaptionText
             show sCaptionBkg
          end if
-         show grp "footer"
+         show grp "footerNavigation"
          show btn "goPrev"
          show btn "goNext"
          dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
@@ -610,7 +610,7 @@ command updateImageState pResizeOnly
                   lockPortrait
                end if
             end if
-            hide grp "footer"
+            hide grp "footerNavigation"
             -- hide btn "goPrev"
             -- hide btn "goNext"
             set the hscroll of grp "storyImageGroup" to 0
@@ -857,7 +857,7 @@ on updateUI
       put the long id of grc "storyTextBkg" into tStoryTextBkg
       set the rect of tStoryTextBkg to CardRect()
       --
-      hide grc "footerBackground" of grp "footer"
+      hide grc "footerBackground" of grp "footerNavigation"
       updateImageState true
    end if
    --
@@ -886,7 +886,7 @@ on closeCard
       hide sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
-      show grc "footerBackground" of grp "footer"
+      show grc "footerBackground" of grp "footerNavigation"
       landscapeOrientation "off"
    end if
 end closecard

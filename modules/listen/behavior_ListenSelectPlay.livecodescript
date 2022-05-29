@@ -102,13 +102,13 @@ on mouseup
       case "AudioList"
          local tTitle,localURL
          lock screen
+         put empty into tTitle
          
-         repeat with x = 1 to 200
-            
+         repeat with x = 1 to 100
             set the backgroundcolor of line x of fld "audiolist" to empty
          end repeat
          
-         --breakpoint
+         --         --         breakpoint
          
          
          # sLineNum is the physical line number the user clicks on the field
@@ -128,18 +128,24 @@ on mouseup
          
          put line sLineNum of fld "audiolist" into tTitle
          
-         if (tTitle is empty) then
-            exit mouseup
-         end if 
+         --         if (tTitle is empty) then
+         --            exit mouseup
+         --         end if 
          
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
+         
+         
          if (the mouseChar is "|")  OR (the mouseChar is tab) then
-        
+            
             go to card "listen-file"
+            
+            stopPlayer
+            wait for 200 milliseconds with messages
+            
             put sSelectNum into fld "theSelectNum"
             
             # we have get sCardName to determine who to show download 
@@ -148,7 +154,7 @@ on mouseup
             
             # but we have stopPlayer  
             # on by mobile
-            stopPlayer  
+            -- stopPlayer  
             
             # if the use had downloaded audio it appears on my-audio card
             # we can start the player; get the audio locally
