@@ -108,9 +108,6 @@ on mouseup
             set the backgroundcolor of line x of fld "audiolist" to empty
          end repeat
          
-         --         --         breakpoint
-         
-         
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
@@ -128,62 +125,10 @@ on mouseup
          
          put line sLineNum of fld "audiolist" into tTitle
          
-         --         if (tTitle is empty) then
-         --            exit mouseup
-         --         end if 
-         
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
-         
-         
-         
-         if (the mouseChar is "|")  OR (the mouseChar is tab) then
-            
-            go to card "listen-file"
-            
-            stopPlayer
-            wait for 200 milliseconds with messages
-            
-            put sSelectNum into fld "theSelectNum"
-            
-            # we have get sCardName to determine who to show download 
-            put gCardName into tHideDownload
-            
-            
-            # but we have stopPlayer  
-            # on by mobile
-            -- stopPlayer  
-            
-            # if the use had downloaded audio it appears on my-audio card
-            # we can start the player; get the audio locally
-            
-            if gCardName = "listen-my-audio" then
-               direct_Play  sSelectNum, gCardName
-            else
-               select_Play false, sSelectNum  # will use either the line number or item id
-            end if
-            
-            local tURL 
-            
-            if  "audio/book" is not in tURL then # no display details
-               select_ShowDetails "downloaded"
-            end if 
-            
-            informationGrp
-            
-            if tHideDownload = "listen-my-audio" then
-               hide grp "DownloadSelection"
-            else
-               show grp "DownloadSelection"
-            end if
-            
-            --         unlock screen
-            # this if for showing lyric, artist or transcript
-            # add appears iinterrupt()
-            # it have pass sTimeStamp before you touch the player
-         end if
          
          break
          
@@ -249,6 +194,55 @@ on mouseup
    end switch
    
 end mouseup
+
+on mouseDoubleDown
+   
+      go to card "listen-file"
+      
+      stopPlayer
+      wait for 200 milliseconds with messages
+      
+      put sSelectNum into fld "theSelectNum"
+      
+      # we have get sCardName to determine who to show download 
+      put gCardName into tHideDownload
+      
+      
+      # but we have stopPlayer  
+      # on by mobile
+      -- stopPlayer  
+      
+      # if the use had downloaded audio it appears on my-audio card
+      # we can start the player; get the audio locally
+      
+      if gCardName = "listen-my-audio" then
+         direct_Play  sSelectNum, gCardName
+      else
+         select_Play false, sSelectNum  # will use either the line number or item id
+      end if
+      
+      local tURL 
+      
+      if  "audio/book" is not in tURL then # no display details
+         select_ShowDetails "downloaded"
+      end if 
+      
+      informationGrp
+      
+      if tHideDownload = "listen-my-audio" then
+         hide grp "DownloadSelection"
+      else
+         show grp "DownloadSelection"
+      end if
+      
+      --         unlock screen
+      # this if for showing lyric, artist or transcript
+      # add appears iinterrupt()
+      # it have pass sTimeStamp before you touch the player
+ 
+end mouseDoubleDown
+
+
 
 command switchAudioUi pAudioUI
    local tUI

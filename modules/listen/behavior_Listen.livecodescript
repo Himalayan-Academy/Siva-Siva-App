@@ -1015,18 +1015,15 @@ command typeSetAudioList
       add 1 to tX
       
       set the textSize of line x of fld "audioList" to 20
-      set the tabWidths of fld "audioList" to CardWidth() - 60 --  (card width -20)
       
       # we have get the Title down to 25 chars
-      put 28 into pTruncate
+      put 35 into pTruncate
       
       if (tX mod 2) = 1 then
          put length(line x of fld "audioList") into tCount
-         
-         if tCount > 28 then
-            put truncateText (line x of fld "audioList", 28, true) into line x of fld "audioList"
+         if tCount > 35 then
+            put truncateText (line x of fld "audioList", 35, true) into line x of fld "audioList"
          end if
-         put tab & "|||" after line x of fld "audioList"
       end if  
       
       if (tX mod 2) = 0 then
@@ -1036,7 +1033,6 @@ command typeSetAudioList
             set the spaceBelow of line x of fld "audioList" to 15
          end if   
       end if
-      
    end repeat 
    
 end typeSetAudioList
