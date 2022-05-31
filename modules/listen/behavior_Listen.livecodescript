@@ -97,7 +97,7 @@ on openCard
       case "listen-browse"
          getPlaying false
          
-         clearSelection
+         --clearSelection
          setAudioListcolors
          put playlist_GetCurrent() into  tBrowseHeader
          replace cr with " " in tBrowseHeader
@@ -128,8 +128,8 @@ on openCard
          put empty into fld "my-audio-label"
          break
       case "listen-file"
-       
-         clearSelection
+         
+         --clearSelection
          
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
@@ -152,9 +152,9 @@ on openCard
    
    playlist_Reset 
    audioIsRunning
-   if the logMessage <> empty then
-      copyLogControl
-   end if
+   --   if the logMessage <> empty then
+   --      copyLogControl
+   --   end if
    
 end openCard
 
@@ -903,7 +903,7 @@ on select_Play pItemID, pSelectionNum
    # but we may be dropping in from the journal or another type of list that
    # simple passes the item_id for the record.. and there is no pSelectedLIne
    
-   showBusyIndicator true,"Loading Audio"
+   --showBusyIndicator true,"Loading Audio"
    
    if pItemID is false then # search from the click line
       put getItemURL(pSelectionNum) into sRemoteURL
@@ -912,19 +912,19 @@ on select_Play pItemID, pSelectionNum
       put sCurrentPlayListA["audioFiles"][pSelectionNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sCurrentPlayListA["audioFiles"][pSelectionNum]["myURL"]["filename"] into sSelectedURL
-      log sSelectedURL
-      log examineArray(sSelectedItemA)
+      --log sSelectedURL
+      --log examineArray(sSelectedItemA)
       put pSelectionNum into sSelectNum
    else
       put pitemID into tSearchA["item_id"]
       put fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
       put tTargetRecordA[1] into sSelectedItemA
-      log examineArray(sSelectedItemA)
+      --log examineArray(sSelectedItemA)
       
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
       put sSelectedURL into sRemoteURL // AAG: who knows how this works...
-      log sSelectedURL
+      --log sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
    
@@ -1015,15 +1015,18 @@ command typeSetAudioList
       add 1 to tX
       
       set the textSize of line x of fld "audioList" to 20
+      set the tabStops of fld "audioList" to (the width of this card - 60 ) 
       
       # we have get the Title down to 25 chars
-      put 35 into pTruncate
+      put 28 into pTruncate
       
       if (tX mod 2) = 1 then
          put length(line x of fld "audioList") into tCount
-         if tCount > 35 then
-            put truncateText (line x of fld "audioList", 35, true) into line x of fld "audioList"
+         if tCount > 28 then
+            put truncateText (line x of fld "audioList", 28, true) into line x of fld "audioList"
          end if
+         
+         put tab & "|||" after line x of fld "audioList"
       end if  
       
       if (tX mod 2) = 0 then
@@ -1033,7 +1036,10 @@ command typeSetAudioList
             set the spaceBelow of line x of fld "audioList" to 15
          end if   
       end if
+      
+      
    end repeat 
+   
    
 end typeSetAudioList
 
@@ -1598,7 +1604,7 @@ on errorDialog pExecutionError, pParseError
    
    -- for now, just log it. We need to figure out what kind of errors we're getting
    -- before we create routines for recovering from them.
-   log tDescriptiveMessage
+   --log tDescriptiveMessage
    put tDescriptiveMessage
 end errorDialog
 

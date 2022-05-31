@@ -109,13 +109,13 @@ command init_AppConfiguration
    copyBundledAssets
    logging "end copying bundled assets"
    
-   try
-      log "--- about to try to fetch navigation map"
-      fetchNavigationMap # we need it for the tree menu, but call once
-   catch n
-      log "something wrong with navigation map"
-      errorDialog n
-   end try
+   --   try
+   --      log "--- about to try to fetch navigation map"
+   fetchNavigationMap # we need it for the tree menu, but call once
+   --catch n
+   --   log "something wrong with navigation map"
+   --   errorDialog n
+   --end try
    
    -- cacheGlobalNavImages
    
@@ -278,10 +278,10 @@ command  init_LoadLibraries
                put "modules/" & stackName & ".livecode" into stackName
                break   
          end switch 
-         log "looking for library" && stackName  
+         --         log "looking for library" && stackName  
          if there is a file stackName then
             start using stackName
-            log "loaded" && stackName
+            --            log "loaded" && stackName
          else
             answer error "can't find" && stackName
          end if  
@@ -405,10 +405,10 @@ command copyBundledAssets
    filter lines of tFiles without ".DS_Store"
    
    repeat for each line tFile in tFiles
-      log "copying" && ("/assets/" & tFile)
+      --      log "copying" && ("/assets/" & tFile)
       put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & path_Assets() & tFile)
       if the result is not empty then
-         log "error:" && the result
+         --         log "error:" && the result
       end if
    end repeat
    
@@ -426,11 +426,11 @@ command copyAssetsFrom pFolder
    put files(specialFolderPath("resources") & "/assets/" & pFolder) into tFiles
    filter lines of tFiles without ".DS_Store"
    repeat for each line tFile in tFiles
-      log "copying" && ("/assets/" & pFolder & "/" & tFile)
+      --      log "copying" && ("/assets/" & pFolder & "/" & tFile)
       createFolders  (path_Assets() & pFolder & "/" & tFile)
       put url ("binfile:" & specialFolderPath("resources") & "/assets/" & pFolder & "/" & tFile) into url ("binfile:" & path_Assets() & pFolder & "/" & tFile)
       if the result is not empty then
-         log "error:" && the result
+         --         log "error:" && the result
       end if
    end repeat
    

@@ -57,7 +57,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    --breakpoint
    
-   log "createMobilePlayer"
+   --log "createMobilePlayer"
    local tHeight,tPlayloc,
    
    if pPlayerName is among the lines of mobileControls() then
@@ -78,11 +78,11 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    mobileControlSet pPlayerName, "rect", sPlayerRect
    mobileControlSet pPlayerName, "filename", pURL 
    
-   --   if the platform is "android" then
-   --      androidStartAudioPlayingInBackground pURL
-   --   end if
+   if the platform is "android" then
+      androidStartAudioPlayingInBackground pURL
+   end if
    
-   log pURL
+   --log pURL
    
    
    if mobileIdleTimerLocked() is false then
@@ -100,11 +100,11 @@ end getMobileAudioPlayerRect
 -- we toggle on our local widget to "pause" 
 
 on playerPropertyAvailable theProperty -- msg sent when enough has content is loaded
-   Log "duration available"
+   --Log "duration available"
    
    
    if theProperty is "duration" then
-      log "Should be setting closing the loading indicator"
+      --log "Should be setting closing the loading indicator"
       showBusyIndicator false -- Remove the "Loading..." indicator and start playing
       
       put mobileControlGet("audioPlayer","playableDuration") into sDuration
@@ -146,7 +146,7 @@ end setDuration
 
 command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    --showBusyIndicator false -- in case it's still showing
-   log "setMobileAudioPlayer: " & pState
+   --log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
    -- pState = "pause", "play", or "stop"
    
@@ -158,6 +158,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
          androidStopAudioPlayingInBackground
       end if
       
+      put false into sPlaying
+      updateTimer 
+      
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
       mobileControlDelete pPlayerName
@@ -168,8 +171,8 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       end if
       get runningAudioIndicatorVis("false")
       
-      put false into sPlaying
-      updateTimer 
+      --put false into sPlaying
+      --updateTimer 
       
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
@@ -272,59 +275,63 @@ command updateTimer
    --      exit updateTimer
    --   end if
    
-   // Update the time indicator
-   if sPlaying is true then
-      
-      if there is no fld "currentTime" of stack "listen" then
-         exit updateTimer 
-      end if
-      
-      lock screen
-      
-      
-      if isMobile() then
-         put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
-         put mobileControlGet("audioPlayer","playableDuration") into sDuration
-         
-         if sDuration is 0 then  
-            put mobileControlGet("audioPlayer","Duration") into sDuration
-         end if
-         
-      else
-         if the timeScale of player "audioPlayer" of stack "listen" is 0 then
-            -- audio player thinks it is not playing any track...
-            send "updateTimer" to me in 100 millisecs
-            exit updateTimer
-         end if
-         put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
-         put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
-      end if
-      
-      
-      if sCurrentTime > 0 and sDuration > 0 then         
-         // Update the time indicator
-         put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
-         
-         // Update time fields
-         put convertTime(sCurrentTime) into tHoursMinutes
-         put convertTime(sDuration) into tDuration
-         
-         put tHoursMinutes into fld "currentTime" of stack "listen"
-         put tDuration into fld "endTime" of stack "listen"
-         
-         // Update the time indicator
-         set the width of graphic "durationProgress" of stack "listen" to tWidth
-         
-         --         set the left of graphic "durationProgress" of stack "listen" to 20
-         set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
-      end if
-      
-      unlock screen
-      
-      send "updateTimer" to me in 100 millisecs
+   if sPlaying is false then
+      exit updateTimer
    end if
-end updateTimer  
+   
+      // Update the time indicator
+      if sPlaying is true then
+         
+         if there is no fld "currentTime" of stack "listen" then
+            exit updateTimer 
+         end if
+         
+         lock screen
+         
+         
+         if isMobile() then
+            put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
+            put mobileControlGet("audioPlayer","playableDuration") into sDuration
+            
+            if sDuration is 0 then  
+               put mobileControlGet("audioPlayer","Duration") into sDuration
+            end if
+            
+         else
+            if the timeScale of player "audioPlayer" of stack "listen" is 0 then
+               -- audio player thinks it is not playing any track...
+               send "updateTimer" to me in 100 millisecs
+               exit updateTimer
+            end if
+            put (the duration of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sDuration
+            put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
+         end if
+         
+         
+         if sCurrentTime > 0 and sDuration > 0 then         
+            // Update the time indicator
+            put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
+            
+            // Update time fields
+            put convertTime(sCurrentTime) into tHoursMinutes
+            put convertTime(sDuration) into tDuration
+            
+            put tHoursMinutes into fld "currentTime" of stack "listen"
+            put tDuration into fld "endTime" of stack "listen"
+            
+            // Update the time indicator
+            set the width of graphic "durationProgress" of stack "listen" to tWidth
+            
+            --         set the left of graphic "durationProgress" of stack "listen" to 20
+            set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+            set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
+         end if
+         
+         unlock screen
+         
+         send "updateTimer" to me in 100 millisecs
+      end if
+   end updateTimer  
 
 function getCurrentTime 
    return sCurrentTime

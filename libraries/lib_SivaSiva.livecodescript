@@ -720,7 +720,7 @@ end if
 
 4) you can put log messages anywhere e.g.
 
-log "the vis of sHomeText" # htere is no overhead to leaving these in the code
+-- log "the vis of sHomeText" # htere is no overhead to leaving these in the code
 
 Logging will be turn on mobile.
 
