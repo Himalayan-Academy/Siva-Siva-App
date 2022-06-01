@@ -62,6 +62,7 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
    if pPlayerName is among the lines of mobileControls() then
       mobileControlDelete pPlayerName -- init
+      wait 300 milliseconds
    end if
    
    mobileControlCreate "player", pPlayerName
