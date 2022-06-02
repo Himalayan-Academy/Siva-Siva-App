@@ -957,15 +957,12 @@ command turnOffAudio
       
    else
       # delete it
-      
+      deleteMobileControl "audioPlayer"
       deleteMobileControl "audioPlayer"
       put "false" into sStopRunningAudio
       if exists (grp "audioGlobalControl") then
          hide grp "audioGlobalControl"
       end if
-      --      if exists (widget "turnOffAudio") then
-      --         hide widget "turnOffAudio"
-      --      end if
    end if
 end turnOffAudio
 

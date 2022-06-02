@@ -55,7 +55,7 @@ local pDataA, tPausePlayAndroid
 
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    
-   --breakpoint
+   breakpoint
    
    --log "createMobilePlayer"
    local tHeight,tPlayloc,
