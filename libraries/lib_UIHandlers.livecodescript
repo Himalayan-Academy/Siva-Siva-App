@@ -888,11 +888,16 @@ command audioIsRunning
    # show global speaker when it installed  on a card
    # inside group audioGlobalControl 
    if runningAudioIndicatorVis() = "true" then
-      if there is a widget "turnOffAudio"  then 
-         show widget "turnOffAudio" 
+      
+      if there is a grp "audioGlobalControl"  then 
+         show grp "audioGlobalControl" 
       end if
+      
+      --      if there is a widget "turnOffAudio"  then 
+      --         show widget "turnOffAudio" 
+      --      end if
    end if
-  
+   
 end audioIsRunning
 
 command togglePause pVisible, pState
@@ -957,7 +962,6 @@ command turnOffAudio
       
    else
       # delete it
-      deleteMobileControl "audioPlayer"
       deleteMobileControl "audioPlayer"
       put "false" into sStopRunningAudio
       if exists (grp "audioGlobalControl") then

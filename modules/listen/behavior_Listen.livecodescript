@@ -151,7 +151,9 @@ on openCard
    end switch
    
    playlist_Reset 
+   --
    audioIsRunning
+   
    --   if the logMessage <> empty then
    --      copyLogControl
    --   end if
@@ -1455,7 +1457,7 @@ on stopPlayer
       set the filename of player "audioPlayer"  to empty
       put false into sPlaying
    else 
-      --setMobileAudioPlayer "audioPlayer", false
+      setMobileAudioPlayer "audioPlayer", false
       deleteMobileControl "audioPlayer"
    end if
    
