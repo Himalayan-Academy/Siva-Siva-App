@@ -100,50 +100,9 @@ on mouseup
          # which means he is NOT playing. He is on PAUSE
          
       case "AudioList"
+         
          local tTitle,localURL
          put empty into tTitle
-         
-         if (the mouseChar is "|")  then --OR (the mouseChar is tab) then
-            
-            go to card "listen-file"
-            
-            lock screen
-            put empty into fld "currentTitleLabel" 
-            put empty into fld "audioDetails" 
-            
-            stopPlayer
-            
-            put sSelectNum into fld "theSelectNum"
-            
-            # we have get sCardName to determine who to show download 
-            put gCardName into tHideDownload
-            
-            # if the use had downloaded audio it appears on my-audio card
-            # we can start the player; get the audio locally
-            
-            if gCardName = "listen-my-audio" then
-               direct_Play  sSelectNum, gCardName
-            else
-               select_Play false, sSelectNum  # will use either the line number or item id
-            end if
-            
-            local tURL 
-            
-            if  "audio/book" is not in tURL then # no display details
-               select_ShowDetails "downloaded"
-            end if 
-            
-            informationGrp
-            
-            if tHideDownload = "listen-my-audio" then
-               hide grp "DownloadSelection"
-            else
-               show grp "DownloadSelection"
-            end if
-            exit to top
-             unlock screen
-         end if
-         
          
          lock screen
          
@@ -167,6 +126,9 @@ on mouseup
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
+         
+         set the doubleClickDelta to 10
+         set the doubleClickInterval to 300
          
          break
          
@@ -234,6 +196,51 @@ on mouseup
    
 end mouseup
 
+on mouseDoubleUp
+   --if (the mouseChar is "|")  then --OR (the mouseChar is tab) then
+   
+   go to card "listen-file"
+   
+   lock screen
+   put empty into fld "currentTitleLabel" 
+   put empty into fld "audioDetails" 
+   
+   stopPlayer
+   
+   put sSelectNum into fld "theSelectNum"
+   
+   # we have get sCardName to determine who to show download 
+   put gCardName into tHideDownload
+   
+   # if the use had downloaded audio it appears on my-audio card
+   # we can start the player; get the audio locally
+   
+   if gCardName = "listen-my-audio" then
+      direct_Play  sSelectNum, gCardName
+   else
+      select_Play false, sSelectNum  # will use either the line number or item id
+   end if
+   
+   local tURL 
+   
+   if  "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+   
+   informationGrp
+   
+   if tHideDownload = "listen-my-audio" then
+      hide grp "DownloadSelection"
+   else
+      show grp "DownloadSelection"
+   end if
+   exit to top
+   
+   runningAudioIndicatorVis
+   
+   unlock screen
+   --end if
+end mouseDoubleUp
 
 command switchAudioUi pAudioUI
    local tUI

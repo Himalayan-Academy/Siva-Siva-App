@@ -910,7 +910,7 @@ command togglePause pVisible, pState
    #         false: shows that the triangle button, saying that the audio is pause
    #                  and that you can click to resume
    ntInfo "about to hide/show pause-play"
-   -- if not isMobile() then 
+ 
       if exists (group "pause-play") then
          set the vis grp "pause-play" to pVisible
          
@@ -933,7 +933,7 @@ command togglePause pVisible, pState
             
          end if
       end if
-   -- end if
+   
 end togglePause
 
 
@@ -952,8 +952,10 @@ end runningAudioIndicatorVis
 
 command turnOffAudio 
    # called by the speaker "widget" if it is showing
+   put runningAudioIndicatorVis into sStopRunningAudio
+   
    if  sStopRunningAudio is "true" then
-      
+      show grp "audioGlobalControl"
       # the audioPlayer exists, it may be paused.
       # we will start is again.  
       

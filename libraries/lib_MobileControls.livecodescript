@@ -52,10 +52,12 @@ local sPlayerId, sPlayerRect, sDuration
 local sPlaying
 local sCurrentTime, tHoursMinutes, sTimeStamp, tDuration,  tWidth,
 local pDataA, tPausePlayAndroid
+local tCard
 
 command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
+   put the short name of this card into tCard
    
-   breakpoint
+   --breakpoint
    
    --log "createMobilePlayer"
    local tHeight,tPlayloc,
@@ -79,9 +81,12 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    mobileControlSet pPlayerName, "rect", sPlayerRect
    mobileControlSet pPlayerName, "filename", pURL 
    
-   if the platform is "android" then
-      androidStartAudioPlayingInBackground pURL
-   end if
+   
+   --         if the platform is "android" then
+   --            androidStartAudioPlayingInBackground pURL
+   --         end if
+   
+   break
    
    --log pURL
    
@@ -154,13 +159,13 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    mobileControlDo pPlayerName, pState
    
    if pState = "stop" then
-      
-      if the platform is "android" then
-         androidStopAudioPlayingInBackground
-      end if
-      
-      put false into sPlaying
-      updateTimer 
+
+            if the platform is "android" then
+               androidStopAudioPlayingInBackground pURL
+            end if
+            
+      --put false into sPlaying
+      --updateTimer 
       
       mobileControlSet pPlayerName, "showController", false
       mobileControlSet pPlayerName, "visible", false
@@ -172,8 +177,8 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       end if
       get runningAudioIndicatorVis("false")
       
-      --put false into sPlaying
-      --updateTimer 
+      put false into sPlaying
+      updateTimer 
       
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
@@ -183,27 +188,29 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    
    if pState = "pause" then
       
-      if the platform is "android" then
-         androidPauseAudioPlayingInBackground
-      end if
-      
+            if the platform is "android" then
+               androidStopAudioPlayingInBackground pURL
+            end if
+       
       # user hit pause
       put mobileControlGet ("currentTime")  into pTimeStamp
       mobileControlDo pPlayerName, "pause"
       put false into sPlaying
-      get runningAudioIndicatorVis("true")
       
       put false into sPlaying
       updateTimer
+      
+      get runningAudioIndicatorVis("true")
+      
       
       # icon switch to "play"
       if there is a widget "PlayPause" then
          set the iconPresetName of widget "PlayPause" of stack "listen" to "play"
          
-         if the platform is "android" then
-            androidResumeAudioPlayingInBackground 
-         end if
-         
+               if the platform is "android" then
+                  androidStartAudioPlayingInBackground pURL
+               end if
+             
       else
          togglePause true,false
       end if
@@ -218,9 +225,9 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlSet pPlayerName, "currentTime", pTimeStamp
       mobileControlDo pPlayerName, "play"
       
-      if the platform is "android" then
-         androidResumeAudioPlayingInBackground
-      end if
+            if the platform is "android" then
+               androidStartAudioPlayingInBackground pURL
+            end if
       
       put true into sPlaying
       send "updateTimer sPlaying" to me in 20 milliseconds
