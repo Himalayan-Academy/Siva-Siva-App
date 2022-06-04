@@ -198,23 +198,25 @@ on mouseup
 end mouseup
 
 on mouseDoubleUp
-   --if (the mouseChar is "|")  then --OR (the mouseChar is tab) then
-   
    go to card "listen-file"
    
-   lock screen
-   put empty into fld "currentTitleLabel" 
-   put empty into fld "audioDetails" 
-   
-   stopPlayer
-   
    put sSelectNum into fld "theSelectNum"
+   
    
    # we have get sCardName to determine who to show download 
    put gCardName into tHideDownload
    
+   
+   --         lock screen
+   
+   # but we have stopPlayer  
+   # on by mobile
+   stopPlayer  
+   
    # if the use had downloaded audio it appears on my-audio card
    # we can start the player; get the audio locally
+   
+   lock screen
    
    if gCardName = "listen-my-audio" then
       direct_Play  sSelectNum, gCardName
@@ -235,11 +237,65 @@ on mouseDoubleUp
    else
       show grp "DownloadSelection"
    end if
-
-   get runningAudioIndicatorVis("true")
    
-   unlock screen
- 
+   --         unlock screen
+   # this if for showing lyric, artist or transcript
+   # add appears iinterrupt()
+   # it have pass sTimeStamp before you touch the player
+   break
+   
+   // we go to lib_MobileControls
+   
+case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
+   local tPlayPause
+   
+   get the iconPresetName of widget "PlayPause"
+   put it into tPlayPause
+   
+   if tPlayPause is "pause" then
+      if not isMobile() then
+         put  the currentTime of player "audioPlayer" into sTimeStamp
+      else
+         put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+      end if
+      pausePlayer sTimeStamp
+   else
+      if not isMobile() then
+         put  the currentTime of player "audioPlayer" into sTimeStamp
+      end if
+      playPausedAudio sTimeStamp
+   end if
+   
+   break
+   
+case "noForwardBackup"
+   dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
+   break
+   
+case "SeekForward"
+   audioSeekForward
+   break
+   
+case "SeekBack"
+   audioSeekBack
+   break
+   
+case "DownloadSelection"  
+   
+   put fld "theSelectNum" into sSelectNum
+   if connectivity_PingServer() <> "true" then
+      dialog_CustomMsg "Offline or Low Bandwidth"
+      exit mouseup
+   end if
+   downloadSelection sSelectNum, tTargetLongID
+   break
+case "Loading"
+   showBusyIndicator false
+   stopPlayer
+   break
+end switch
+
+
 end mouseDoubleUp
 
 command switchAudioUi pAudioUI

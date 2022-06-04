@@ -932,36 +932,36 @@ command togglePause pVisible, pState
 end togglePause
 
 
-function runningAudioIndicatorVis visBool
-   local tList
-   if isMobile() then
-      put mobileControls() into tList
-      if tList contains "audioPlayer" then 
-         put "true" into sStopRunningAudio
-      end if
-   end if
-   put "false" into sStopRunningAudio
-   --put sStopRunningAudio into fld "log"
-   --exit to top
-   return sStopRunningAudio
-end runningAudioIndicatorVis
-
-
 --function runningAudioIndicatorVis visBool
 --   local tList
 --   if isMobile() then
 --      put mobileControls() into tList
 --      if tList contains "audioPlayer" then 
 --         put "true" into sStopRunningAudio
-
---      else
---         put "false" into sStopRunningAudio
---         put sStopRunningAudio into fld "log"
---         exit to top
 --      end if
 --   end if
+--   put "false" into sStopRunningAudio
+--   --put sStopRunningAudio into fld "log"
+--   --exit to top
 --   return sStopRunningAudio
 --end runningAudioIndicatorVis
+
+
+function runningAudioIndicatorVis visBool
+   local tList
+   if isMobile() then
+      put mobileControls() into tList
+      if tList contains "audioPlayer" then 
+         put "true" into sStopRunningAudio
+         
+      else
+         put "false" into sStopRunningAudio
+         --put sStopRunningAudio into fld "log"
+         --exit to top
+      end if
+   end if
+   return sStopRunningAudio
+end runningAudioIndicatorVis
 
 command turnOffAudio 
    # called by the speaker "widget" if it is showing
@@ -979,7 +979,7 @@ command turnOffAudio
       # delete it
       deleteMobileControl "audioPlayer"
       put "false" into sStopRunningAudio
-      if exists (grp "audioGlobalControl") then
+      if exists (grc "audioGlobalControl") then
          hide grp "audioGlobalControl"
       end if
    end if
