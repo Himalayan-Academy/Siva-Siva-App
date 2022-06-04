@@ -70,12 +70,12 @@ on mouseup
             go card "listen-browse"
          else if tCard is "listen-file" then
             --
-            get runningAudioIndicatorVis("true")
-            show grp "viewLogging"
-            put sStopRunningAudio into fld "log"
-            wait 1000 milliseconds
-            show grp "viewLogging"
-            exit to top
+            --            get runningAudioIndicatorVis("true")
+            --            show grp "viewLogging"
+            --            put sStopRunningAudio into fld "log"
+            --            wait 1000 milliseconds
+            --            show grp "viewLogging"
+            --            exit to top
             --
             put getBrowseHeaderText() into tBrowseHeader
             --
