@@ -96,11 +96,10 @@
 * ID: graphic id 2859 of bkgnd id 2732 of stack "listen"
 * [stack_listen_graphic_id_2859](./../../ScriptTracker/modules/listen_Scripts/stack_listen_graphic_id_2859.livecodescript)
 
-**bkgnd "audioGlobalControl" of stack "listen"**
-* ID: bkgnd id 2446 of stack "listen"
-
-* Shared group on card IDs: 1158, 1002, 2000, 2945, 2052
-* [stack_listen_bkgnd_id_2446](./../../ScriptTracker/modules/listen_Scripts/stack_listen_bkgnd_id_2446.livecodescript)
+**widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "listen"**
+* ID: widget id 2447 of bkgnd id 2446 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2447](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2447.livecodescript)
 
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"

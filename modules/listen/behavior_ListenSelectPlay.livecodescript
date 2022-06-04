@@ -29,8 +29,7 @@ local sDownloadedAudioA
 -----------------------------------------------------------------------
 
 on mouseup
-   
-   
+
    local tTargetLongID, tTarget, tHideDownload, tDetailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
@@ -55,6 +54,8 @@ on mouseup
          put "listen-collection" into gCardName
          break
       case "listen-browse"
+         clearSelection
+         
          go to card "listen-browse"
          
          put "listen-browse" into gCardName
@@ -234,12 +235,11 @@ on mouseDoubleUp
    else
       show grp "DownloadSelection"
    end if
-   exit to top
-   
-   runningAudioIndicatorVis
+
+   get runningAudioIndicatorVis("true")
    
    unlock screen
-   --end if
+ 
 end mouseDoubleUp
 
 command switchAudioUi pAudioUI

@@ -189,7 +189,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    if pState = "pause" then
       
             if the platform is "android" then
-               androidStopAudioPlayingInBackground pURL
+               androidPauseAudioPlayingInBackground pURL
             end if
        
       # user hit pause
@@ -226,7 +226,7 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
       mobileControlDo pPlayerName, "play"
       
             if the platform is "android" then
-               androidStartAudioPlayingInBackground pURL
+               androidResumeAudioPlayingInBackground pURL
             end if
       
       put true into sPlaying

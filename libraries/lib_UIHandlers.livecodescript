@@ -800,7 +800,7 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
    
    
    if there is a control "loadingGroup" then
-      put sMsg into sLabel # stable string
+      --put sMsg into sLabel # stable string
       --put sMsg into sLoadProgress # this string will change through the loop below.
       
       # Gets the visible of group
@@ -943,12 +943,30 @@ function runningAudioIndicatorVis visBool
       put mobileControls() into tList
       if tList contains "audioPlayer" then 
          put "true" into sStopRunningAudio
-      else
-         put "false" into sStopRunningAudio
       end if
    end if
+   put "false" into sStopRunningAudio
+   --put sStopRunningAudio into fld "log"
+   --exit to top
    return sStopRunningAudio
 end runningAudioIndicatorVis
+
+
+--function runningAudioIndicatorVis visBool
+--   local tList
+--   if isMobile() then
+--      put mobileControls() into tList
+--      if tList contains "audioPlayer" then 
+--         put "true" into sStopRunningAudio
+
+--      else
+--         put "false" into sStopRunningAudio
+--         put sStopRunningAudio into fld "log"
+--         exit to top
+--      end if
+--   end if
+--   return sStopRunningAudio
+--end runningAudioIndicatorVis
 
 command turnOffAudio 
    # called by the speaker "widget" if it is showing

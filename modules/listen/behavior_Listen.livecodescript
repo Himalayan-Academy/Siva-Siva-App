@@ -670,6 +670,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          if the result is not empty then 
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+            portal_Link "Listen"
             showBusyIndicator false
             exit to top
          else 
