@@ -255,7 +255,7 @@ command updateUI
          topLeftMe tAudioGlobalControl, 10,0
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, the height of tFooter
+         bottomRightMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
@@ -292,7 +292,7 @@ command updateUI
          
          -------- Help
          put the long id of btn "helpButton" into tHelpButton
-         bottomLeftMe tHelpButton, 0, the height of tFooter
+         bottomLeftMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the width of tHelpBkg to (CardWidth() + 20)
