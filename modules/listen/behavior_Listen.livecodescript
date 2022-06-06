@@ -994,18 +994,46 @@ command typeSetAudioList
    put 0 into tX
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
+      
+      if (tX mod 2) = 1 then
+         set the textSize of line x of fld "audioList" to 20
+         set the tabStops of line x of fld "audioList" to "360"
+         if  length(line x of fld "audioList") > 32 then 
+            put char 1 to 32 of  line x of fld "audioList" into line x of fld "audioList"
+            put "..." after  line x of fld "audioList"
+         end if
+         
+         put line x of fld "audioList" & tab & "|||" into line x of fld "audioList"
+      end if
+      
       if (tX mod 2) = 0 then
          set the leftIndent of line x of fld "audioList" to 10
          if  line x of fld "audioList" <> empty then
             set the spaceBelow of line x of fld "audioList" to 10
          end if   
-         set the textSize of line x of fld "audioList" to 15
-      else
          set the textSize of line x of fld "audioList" to 17
       end if
    end repeat 
    
 end typeSetAudioList
+
+--command typeSetAudioList
+--   local tX
+--   put 0 into tX
+--   repeat with x =1 to the number lines  in fld "audioList"
+--      add 1 to tX
+--      if (tX mod 2) = 0 then
+--         set the leftIndent of line x of fld "audioList" to 10
+--         if  line x of fld "audioList" <> empty then
+--            set the spaceBelow of line x of fld "audioList" to 10
+--         end if   
+--         set the textSize of line x of fld "audioList" to 15
+--      else
+--         set the textSize of line x of fld "audioList" to 17
+--      end if
+--   end repeat 
+
+--end typeSetAudioList
 
 
 command getPlayListURLs pKeys
