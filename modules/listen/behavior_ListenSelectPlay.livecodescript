@@ -60,8 +60,8 @@ on mouseup
          go to card "listen-my-audio"
          if fld "AudioList" is empty then
             wait 1 second
-            go card "listen-browse"
-            put "listen-browse" into gCardName 
+            go card "listen-collection"
+            put "listen-collection" into gCardName 
          else
             put "listen-my-audio" into gCardName 
          end if
@@ -133,55 +133,67 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         
-         go to card "listen-file"
-         
-         put sSelectNum into fld "theSelectNum"
-         
-         
-         # we have get sCardName to determine who to show download 
-         put gCardName into tHideDownload
-         
-         
-         --         lock screen
-         
-         # but we have stopPlayer  
-         # on by mobile
-         stopPlayer  
-         
-         # if the use had downloaded audio it appears on my-audio card
-         # we can start the player; get the audio locally
-         
-         lock screen
-         
-         if gCardName = "listen-my-audio" then
-            direct_Play  sSelectNum, gCardName
-         else
-            select_Play false, sSelectNum  # will use either the line number or item id
-         end if
-         
-         local tURL 
-         
-         if  "audio/book" is not in tURL then # no display details
-            select_ShowDetails "downloaded"
-         end if 
-         
-         informationGrp
-         
-         if tHideDownload = "listen-my-audio" then
-            hide grp "DownloadSelection"
-         else
-            show grp "DownloadSelection"
-         end if
-         
-         --         unlock screen
-         # this if for showing lyric, artist or transcript
-         # add appears iinterrupt()
-         # it have pass sTimeStamp before you touch the player
+         set the doubleClickInterval to 300 -- 1/10 second
+         set the doubleClickDelta to 10
          break
          
-         // we go to lib_MobileControls
-         
+   end switch
+   
+end mouseup
+
+--on mouseDoubleUp
+--   if "on mouseUp" is in the script of "audioList" then-- and \"on mouseDoubleUp" is not in the script of the target then
+--      if gCardName = "listen-browse"  then
+--         send "mouseUp"  to "audioList"
+--      end if
+--   end if
+--end mouseDoubleUp
+
+on mouseDoubleup
+   
+   go to card "listen-file"
+   
+   put sSelectNum into fld "theSelectNum"
+   
+   
+   # we have get sCardName to determine who to show download 
+   put gCardName into tHideDownload
+   
+   
+   --         lock screen
+   
+   # but we have stopPlayer  
+   # on by mobile
+   stopPlayer  
+   
+   # if the use had downloaded audio it appears on my-audio card
+   # we can start the player; get the audio locally
+   
+   lock screen
+   
+   if gCardName = "listen-my-audio" then
+      direct_Play  sSelectNum, gCardName
+   else
+      select_Play false, sSelectNum  # will use either the line number or item id
+   end if
+   
+   local tURL 
+   
+   if  "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+   
+   informationGrp
+   
+   if tHideDownload = "listen-my-audio" then
+      hide grp "DownloadSelection"
+   else
+      show grp "DownloadSelection"
+   end if
+   
+   // we go to lib_MobileControls
+   
+   switch tTarget
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
          local tPlayPause
          
@@ -221,7 +233,7 @@ on mouseup
          put fld "theSelectNum" into sSelectNum
          if connectivity_PingServer() <> "true" then
             dialog_CustomMsg "Offline or Low Bandwidth"
-            exit mouseup
+            exit mouseDoubleup
          end if
          downloadSelection sSelectNum, tTargetLongID
          break
@@ -231,7 +243,8 @@ on mouseup
          break
    end switch
    
-end mouseup
+end mouseDoubleup
+
 
 command switchAudioUi pAudioUI
    local tUI
