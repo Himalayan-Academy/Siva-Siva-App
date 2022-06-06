@@ -97,7 +97,7 @@ on openCard
       case "listen-browse"
          getPlaying false
          
-         --clearSelection
+         clearSelection
          setAudioListcolors
          put playlist_GetCurrent() into  tBrowseHeader
          replace cr with " " in tBrowseHeader
@@ -128,8 +128,8 @@ on openCard
          put empty into fld "my-audio-label"
          break
       case "listen-file"
-         
-         --clearSelection
+       
+         clearSelection
          
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
@@ -151,12 +151,10 @@ on openCard
    end switch
    
    playlist_Reset 
-   --
    audioIsRunning
-   
-   --   if the logMessage <> empty then
-   --      copyLogControl
-   --   end if
+   if the logMessage <> empty then
+      copyLogControl
+   end if
    
 end openCard
 
@@ -204,7 +202,6 @@ command updateUI
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
    local tFldInformation, tGroupAudioDetails
    Local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
-   Local tProgressTitle
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
@@ -230,7 +227,7 @@ command updateUI
          set the rect of tAllCollections to (4, the bottom of tTitleLabel + 5, \
                CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, -15, 5
+         topRightMe tSearchFilter, -400, -400
          
          put CardWidth() - 4 into tRight
          repeat with i = 1 to 7 
@@ -252,7 +249,7 @@ command updateUI
          centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, -15, 5
+         topRightMe tSearchFilter, -400, -400
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
@@ -311,9 +308,6 @@ command updateUI
          
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 75
-         
-         put the long id of fld "collections-label" into tCollectionsLabel
-         topLeftMe tCollectionsLabel, 11, 30
          
          break
          
@@ -388,7 +382,7 @@ command updateUI
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         TopCenterMe tFilterAudio, 80
+         topLeftMe tFilterAudio, 30, 80
          break
          
    end switch
@@ -525,19 +519,16 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
-   local tPlaylistClass, tRecordTypeCount, tDbaseColumns, tMessage
+   local tPlaylistClass, tRecordTypeCount, tDbaseColumns
    local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
+   
+   --showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
+   
+   --  dispatch "cleanUpGui" to card "listen-browse"      
+   
    put empty into sPlaylistQueryA 
-   
-   
-   
-   --   # Then sorts on date sends back the request number of records.
-   --   put "Loading....." & cr & "A little long. Be patient" into  tMessage
-   --   showBusyIndicator true, tMessage
-   --   show grp "LoadingGroup"
-   
    
    # if pFilterListQueryA is empty, it means we are coming in
    # the Search and Filter filter screen
@@ -608,15 +599,14 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          #  just sets the WHERE clause in the query with whatever you request. 
+         # Then sorts on date sends back the request number of records.
          
-         # we have are showing busy singal
+         --breakpoint
+         showBusyIndicator true,"Loading Collection"
          
-         showBusyIndicator true, "The Pause. . ." & cr & "It will take sometime." &cr \
-               & "Be patient."
+         put "Contacting server... " into fld "audioList" of card "listen-browse"
          
-         
-         # Set up the WHERE claus
-         
+         # Set up the WHERE clause
          put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
          put sPlayListQueryA["author"] into tQueryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into tQueryData["recordType"]
@@ -634,12 +624,12 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          # typically there CR in columns that shouldn't be there.
          --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
          
-         
          if the result is not empty then 
             # we did not get anything. Turn  off loader, inform the users
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+            portal_Link "Listen"
             exit to top
          else 
             put it into tRecords
@@ -649,7 +639,7 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
-         --showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading Collection"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
          put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]
@@ -670,7 +660,6 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          if the result is not empty then 
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            portal_Link "Listen"
             showBusyIndicator false
             exit to top
          else 
@@ -791,7 +780,6 @@ on  playlist_Instantiate
    
    
    # Now we switch cards, 
-   --breakpoint
    
    go to card "listen-browse"
    put "listen-browse" into gCardName
@@ -801,9 +789,7 @@ on  playlist_Instantiate
    hide fld "audioList"
    put tTitles into fld "audioList"  
    
-   typeSetAudioList
-   
-   
+   typesetAudioList
    
    repeat for each line x in sCached
       set the foregroundcolor line (x*2-1) of fld "audioList" to 245,200,190
@@ -813,10 +799,9 @@ on  playlist_Instantiate
    
    show fld "audioList"
    
-   portal_SetLastStack "Listen"
-   portal_SetMyMenu false
    
    # here is where we have to check to see if any files are stored locally or not
+   
    
    if the formattedHeight fld "audioList" > the height of fld "AudioList" then
       send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
@@ -826,9 +811,6 @@ on  playlist_Instantiate
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
 
-function getBrowseHeaderText
-   return sBrowseHeader
-end getBrowseHeaderText
 
 command setSelectNumber pNum
    put pNum into sSelectNum
@@ -906,7 +888,7 @@ on select_Play pItemID, pSelectionNum
    # but we may be dropping in from the journal or another type of list that
    # simple passes the item_id for the record.. and there is no pSelectedLIne
    
-   --showBusyIndicator true,"Loading Audio"
+   showBusyIndicator true,"Loading Audio"
    
    if pItemID is false then # search from the click line
       put getItemURL(pSelectionNum) into sRemoteURL
@@ -915,19 +897,19 @@ on select_Play pItemID, pSelectionNum
       put sCurrentPlayListA["audioFiles"][pSelectionNum] into sSelectedItemA   
       metadata_SetRecord sSelectedItemA
       put sCurrentPlayListA["audioFiles"][pSelectionNum]["myURL"]["filename"] into sSelectedURL
-      --log sSelectedURL
-      --log examineArray(sSelectedItemA)
+      log sSelectedURL
+      log examineArray(sSelectedItemA)
       put pSelectionNum into sSelectNum
    else
       put pitemID into tSearchA["item_id"]
       put fetchMediaItems(tSearchA) into tTargetRecordA # returns only 1 record
       put tTargetRecordA[1] into sSelectedItemA
-      --log examineArray(sSelectedItemA)
+      log examineArray(sSelectedItemA)
       
       metadata_SetRecord sSelectedItemA
       put getMediaURL() into sSelectedURL
       put sSelectedURL into sRemoteURL // AAG: who knows how this works...
-      --log sSelectedURL
+      log sSelectedURL
       put path_isFileOnDisk(sSelectedURL) into tLocalStatus
    end if
    
@@ -1008,41 +990,20 @@ end select_ShowDetails
 
 
 command typeSetAudioList
-   local tAudioFlag, tX
-   local pTruncate, tCount
-   put the long id of fld "audioList" into tAudioFlag
-   
+   local tX
    put 0 into tX
-   
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
-      
-      set the textSize of line x of fld "audioList" to 20
-      set the tabStops of fld "audioList" to (the width of this card - 60 ) 
-      
-      # we have get the Title down to 25 chars
-      put 28 into pTruncate
-      
-      if (tX mod 2) = 1 then
-         put length(line x of fld "audioList") into tCount
-         if tCount > 28 then
-            put truncateText (line x of fld "audioList", 28, true) into line x of fld "audioList"
-         end if
-         
-         put tab & "|||" after line x of fld "audioList"
-      end if  
-      
       if (tX mod 2) = 0 then
          set the leftIndent of line x of fld "audioList" to 10
-         set the textSize of line x of fld "audioList" to 15
          if  line x of fld "audioList" <> empty then
-            set the spaceBelow of line x of fld "audioList" to 15
+            set the spaceBelow of line x of fld "audioList" to 10
          end if   
+         set the textSize of line x of fld "audioList" to 15
+      else
+         set the textSize of line x of fld "audioList" to 17
       end if
-      
-      
    end repeat 
-   
    
 end typeSetAudioList
 
@@ -1204,7 +1165,7 @@ end markCachedItems
 
 
 -- AAG: Needs a ton of work
-command Journal_AddEntry -- save a bookmark to databast
+command addJournalEntry -- save a bookmark to databast
    
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
@@ -1217,7 +1178,7 @@ command Journal_AddEntry -- save a bookmark to databast
    if the short name of this card is among the items of tNoSavingCards then
       put "Nothing to save to Journal. Go an audio file." into tMsg
       exit to top
-      --exit Journal_AddEntry
+      --exit addJournalEntry
    end if
    
    if (the visible of grp "downloadSelection" = false) then
@@ -1226,7 +1187,7 @@ command Journal_AddEntry -- save a bookmark to databast
       if sDataA["url"] contains "http" then
          dialog_CustomMsg "Download to Save to Journal."
          exit to top
-         --exit Journal_AddEntry
+         --exit addJournalEntry
       end if
    end if
    
@@ -1269,19 +1230,14 @@ command Journal_AddEntry -- save a bookmark to databast
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
-end  journal_AddEntry
-
+   
+end addJournalEntry
 
 on journalResume pDataA, pEntry
    
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
    local tURL, tAudioPlayer   
    local tCard
-   
-   # we to set the coming of My Menu 
-   # to make it is done 
-    portal_SetMyMenu true
-   
    
    if isMobile() then
       deleteAllMobileControls
@@ -1607,7 +1563,7 @@ on errorDialog pExecutionError, pParseError
    
    -- for now, just log it. We need to figure out what kind of errors we're getting
    -- before we create routines for recovering from them.
-   --log tDescriptiveMessage
+   log tDescriptiveMessage
    put tDescriptiveMessage
 end errorDialog
 

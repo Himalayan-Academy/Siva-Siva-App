@@ -20,7 +20,7 @@
 ---------------------------------------------------------------------
 global gConfigA, gCardName
 local sSelectedItemA, sSelectedURL, sRemoteURL, sSelectNum, sLastTarget, sLineNum
-local sTimeStamp, sSelectionsA, sBrowseHeader
+local sTimeStamp, sSelectionsA
 local sDownloadedAudioA
 
 
@@ -29,7 +29,6 @@ local sDownloadedAudioA
 -----------------------------------------------------------------------
 
 on mouseup
-
    local tTargetLongID, tTarget, tHideDownload, tDetailVis, 
    -- answer "hello" with "OK"
    # there are no scripts at all ( or should not be unless really needed)
@@ -54,21 +53,18 @@ on mouseup
          put "listen-collection" into gCardName
          break
       case "listen-browse"
-         clearSelection
-         
          go to card "listen-browse"
-         
          put "listen-browse" into gCardName
          break
       case "my-audio-label"
          go to card "listen-my-audio"
-         --if fld "AudioList" is empty then
-         --wait 500 milliseconds
-         --go card "listen-browse"
-         --put "listen-browse" into gCardName 
-         --else
-         --put "listen-my-audio" into gCardName 
-         --end if
+         if fld "AudioList" is empty then
+            wait 1 second
+            go card "listen-browse"
+            put "listen-browse" into gCardName 
+         else
+            put "listen-my-audio" into gCardName 
+         end if
          break
       case "deleteOn"
       case "Display"
@@ -101,18 +97,29 @@ on mouseup
          # which means he is NOT playing. He is on PAUSE
          
       case "AudioList"
-         
          local tTitle,localURL
-         put empty into tTitle
          
-         lock screen
+         # need to off  the Mobile Player
          
-         set the backgroundcolor of line 1 to -1 of fld "audiolist" to empty
+         if isMobile() then
+            deleteAllMobileControls
+            wait 100 milliseconds
+         end if
          
          # sLineNum is the physical line number the user clicks on the field
          # sRecentNum is the numeric key value is the sSelectionsA play list array
          
-         put word 2 of clickline() into sLineNum 
+         # clear the color of the last line before setting the  sLineNum
+         
+         # we needed to stop player
+         
+         if sLineNum <> empty then
+            --setAudioListColors sLineNum,"0,0,0"
+            setAudioListColors sLineNum, empty
+         end if
+         
+         # now we register the user interaction: clicks on a line.
+         put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
          
          # every 2 line is one entry; we just one to color the Title
          # though the use might click on the artist...
@@ -120,19 +127,60 @@ on mouseup
          if (sLineNum mod 2) = 0 then
             subtract 1 from sLineNum
          end if
-         
          put line sLineNum of fld "audiolist" into tTitle
-         
          set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
          
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         set the doubleClickDelta to 10
-         set the doubleClickInterval to 300
          
+         go to card "listen-file"
+         
+         put sSelectNum into fld "theSelectNum"
+         
+         
+         # we have get sCardName to determine who to show download 
+         put gCardName into tHideDownload
+         
+         
+         --         lock screen
+         
+         # but we have stopPlayer  
+         # on by mobile
+         stopPlayer  
+         
+         # if the use had downloaded audio it appears on my-audio card
+         # we can start the player; get the audio locally
+         
+         lock screen
+         
+         if gCardName = "listen-my-audio" then
+            direct_Play  sSelectNum, gCardName
+         else
+            select_Play false, sSelectNum  # will use either the line number or item id
+         end if
+         
+         local tURL 
+         
+         if  "audio/book" is not in tURL then # no display details
+            select_ShowDetails "downloaded"
+         end if 
+         
+         informationGrp
+         
+         if tHideDownload = "listen-my-audio" then
+            hide grp "DownloadSelection"
+         else
+            show grp "DownloadSelection"
+         end if
+         
+         --         unlock screen
+         # this if for showing lyric, artist or transcript
+         # add appears iinterrupt()
+         # it have pass sTimeStamp before you touch the player
          break
          
+         // we go to lib_MobileControls
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
          local tPlayPause
@@ -181,66 +229,9 @@ on mouseup
          showBusyIndicator false
          stopPlayer
          break
-         
-         # Search 
-      case "Inspired Talks"
-         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
-         break
-      case "Songs"
-         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
-         break
-      case "Chants"
-         switchAudioUI(the hilitedButtonName of grp "collectionChoice")
-         break
-         
    end switch
    
 end mouseup
-
-on mouseDoubleUp
-   --if (the mouseChar is "|")  then --OR (the mouseChar is tab) then
-   
-   go to card "listen-file"
-   
-   lock screen
-   put empty into fld "currentTitleLabel" 
-   put empty into fld "audioDetails" 
-   
-   stopPlayer
-   
-   put sSelectNum into fld "theSelectNum"
-   
-   # we have get sCardName to determine who to show download 
-   put gCardName into tHideDownload
-   
-   # if the use had downloaded audio it appears on my-audio card
-   # we can start the player; get the audio locally
-   
-   if gCardName = "listen-my-audio" then
-      direct_Play  sSelectNum, gCardName
-   else
-      select_Play false, sSelectNum  # will use either the line number or item id
-   end if
-   
-   local tURL 
-   
-   if  "audio/book" is not in tURL then # no display details
-      select_ShowDetails "downloaded"
-   end if 
-   
-   informationGrp
-   
-   if tHideDownload = "listen-my-audio" then
-      hide grp "DownloadSelection"
-   else
-      show grp "DownloadSelection"
-   end if
-
-   get runningAudioIndicatorVis("true")
-   
-   unlock screen
- 
-end mouseDoubleUp
 
 command switchAudioUi pAudioUI
    local tUI
@@ -252,32 +243,24 @@ command switchAudioUi pAudioUI
    put pAudioUI into tUI
    switch tUI
       case "hideUI"
-         hide grp "Titlen"
+         hide grp "titleDescription"
          hide grp "author"
-         hide grp "Artists"
+         hide grp "songproperties"
          hide grp "searchControls"
          set the hilitedButton of group "collectionChoice" to empty
          break
       case  "Inspired Talks" 
-         hide grp "Artists"
+         hide grp "songProperties"
          show grp "author" 
-         show grp "Title"   
+         show grp "titleDescription"   
          show grp "searchControls"
          break
          
          # song UI   
-      case  "Songs" 
+      case  "songs" 
          hide grp "author"
-         show grp "Title"
-         show grp "Artists"
-         set the hilited of btn "Title" to true -- group "titleDescription" to empty
-         set the hilited of btn "Artists" to false
-         show grp "searchControls"
-         break
-      case  "Chants" 
-         hide grp "author"
-         show grp "Title"
-         show grp "Artists"
+         show grp "titleDescription"
+         show grp "songProperties"
          set the hilited of btn "Title" to true -- group "titleDescription" to empty
          set the hilited of btn "Artists" to false
          show grp "searchControls"
@@ -297,8 +280,4 @@ command share_Items
    return tShareItemsA
 end share_Items
 
-on closecard
-   if isMobile() then
-      deleteMobileControl "audioPlayer" # in case one is open already and playing
-   end if  
-end closecard
+

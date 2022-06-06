@@ -796,28 +796,33 @@ command setBusySemphore pBool
 end setBusySemphore
 
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   --breakpoint
-   
-   
+   --   breakpoint
    if there is a control "loadingGroup" then
-      --put sMsg into sLabel # stable string
+      put sMsg into sLabel # stable string
       --put sMsg into sLoadProgress # this string will change through the loop below.
       
       # Gets the visible of group
       put the long id of control "loadingGroup" into sLoadingGroup
       
-      # set a message
-      --set the label of sLoadingIndicator to sLabel
-      set the label of grc "Loading"  to sMsg
+      # gets the grc which serves as button
+      put the long id of grc "loading" into sLoadingIndicator
       
-      if there is a  sLoadingGroup then
+      # set a message
+      set the label of sLoadingIndicator to sLabel
+      
+      if there is a  sLoadingIndicator then
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
+            -- dispatch "loadingInProgress" to me 
+         else
+            set the vis of sLoadingGroup to pBool
+            --            put empty into sLoadProgress
+            set the label of sLoadingIndicator to ""
+            put false into sLoadingFlag
          end if
       end if
    end if
-   
 end showBusyIndicator
 
 command loadingInProgress
@@ -892,7 +897,7 @@ command audioIsRunning
          show widget "turnOffAudio" 
       end if
    end if
-   
+  
 end audioIsRunning
 
 command togglePause pVisible, pState
@@ -905,7 +910,7 @@ command togglePause pVisible, pState
    #         false: shows that the triangle button, saying that the audio is pause
    #                  and that you can click to resume
    ntInfo "about to hide/show pause-play"
- 
+   -- if not isMobile() then 
       if exists (group "pause-play") then
          set the vis grp "pause-play" to pVisible
          
@@ -928,7 +933,7 @@ command togglePause pVisible, pState
             
          end if
       end if
-   
+   -- end if
 end togglePause
 
 
@@ -938,37 +943,17 @@ function runningAudioIndicatorVis visBool
       put mobileControls() into tList
       if tList contains "audioPlayer" then 
          put "true" into sStopRunningAudio
+      else
+         put "false" into sStopRunningAudio
       end if
    end if
-   put "false" into sStopRunningAudio
-   --put sStopRunningAudio into fld "log"
-   --exit to top
    return sStopRunningAudio
 end runningAudioIndicatorVis
 
-
---function runningAudioIndicatorVis visBool
---   local tList
---   if isMobile() then
---      put mobileControls() into tList
---      if tList contains "audioPlayer" then 
---         put "true" into sStopRunningAudio
-
---      else
---         put "false" into sStopRunningAudio
---         put sStopRunningAudio into fld "log"
---         exit to top
---      end if
---   end if
---   return sStopRunningAudio
---end runningAudioIndicatorVis
-
 command turnOffAudio 
    # called by the speaker "widget" if it is showing
-   put runningAudioIndicatorVis into sStopRunningAudio
-   
    if  sStopRunningAudio is "true" then
-      show grp "audioGlobalControl"
+      
       # the audioPlayer exists, it may be paused.
       # we will start is again.  
       
@@ -977,10 +962,11 @@ command turnOffAudio
       
    else
       # delete it
+      
       deleteMobileControl "audioPlayer"
       put "false" into sStopRunningAudio
-      if exists (grp "audioGlobalControl") then
-         hide grp "audioGlobalControl"
+      if exists (widget "turnOffAudio") then
+         hide widget "turnOffAudio"
       end if
    end if
 end turnOffAudio

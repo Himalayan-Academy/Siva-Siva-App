@@ -454,4 +454,3 @@ end setZeroDurationProgress
 --   end if
 --   set the iconPresetName of widget "PlayPause" to "pause"
 --end playPausedAudio
-git 
