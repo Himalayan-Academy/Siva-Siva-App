@@ -997,9 +997,9 @@ command typeSetAudioList
       
       if (tX mod 2) = 1 then
          set the textSize of line x of fld "audioList" to 20
-         set the tabStops of line x of fld "audioList" to "360"
-         if  length(line x of fld "audioList") > 32 then 
-            put char 1 to 32 of  line x of fld "audioList" into line x of fld "audioList"
+         set the tabStops of line x of fld "audioList" to "330"
+         if  length(line x of fld "audioList") > 30 then 
+            put char 1 to 30 of  line x of fld "audioList" into line x of fld "audioList"
             put "..." after  line x of fld "audioList"
          end if
          
