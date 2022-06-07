@@ -1,4 +1,8 @@
 # view_SivaSivaBrowser
+**group "footerNavigation" of card "SivaSivaBrowser" of stack "view_SivaSivaBrowser"**
+* ID: group id 1006 of card id 1002 of stack "view_SivaSivaBrowser"
+* [stack_view_SivaSivaBrowser_group_id_1006](./../ScriptTracker/views/view_SivaSivaBrowser_Scripts/stack_view_SivaSivaBrowser_group_id_1006.livecodescript)
+
 **button "Load HTML" of card "SivaSivaBrowser" of stack "view_SivaSivaBrowser"**
 * ID: button id 1431 of card id 1002 of stack "view_SivaSivaBrowser"
 * [stack_view_SivaSivaBrowser_button_id_1431](./../ScriptTracker/views/view_SivaSivaBrowser_Scripts/stack_view_SivaSivaBrowser_button_id_1431.livecodescript)
