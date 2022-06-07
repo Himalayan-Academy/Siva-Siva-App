@@ -133,8 +133,58 @@ on mouseup
          # the follow "trick" return the array key
          put round(sLineNum/2) into sSelectNum 
          
-         set the doubleClickInterval to 300 -- 1/10 second
+         set the doubleClickInterval to 1000-- 1/10 second
          set the doubleClickDelta to 10
+         
+         break
+         // we go to lib_MobileControls
+         
+      case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
+         local tPlayPause
+         
+         get the iconPresetName of widget "PlayPause"
+         put it into tPlayPause
+         
+         if tPlayPause is "pause" then
+            if not isMobile() then
+               put  the currentTime of player "audioPlayer" into sTimeStamp
+            else
+               put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
+            end if
+            pausePlayer sTimeStamp
+         else
+            if not isMobile() then
+               put  the currentTime of player "audioPlayer" into sTimeStamp
+            end if
+            playPausedAudio sTimeStamp
+         end if
+         
+         break
+         
+      case "noForwardBackup"
+         dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
+         break
+         
+      case "SeekForward"
+         audioSeekForward
+         break
+         
+      case "SeekBack"
+         audioSeekBack
+         break
+         
+      case "DownloadSelection"  
+         
+         put fld "theSelectNum" into sSelectNum
+         if connectivity_PingServer() <> "true" then
+            dialog_CustomMsg "Offline or Low Bandwidth"
+            exit mouseup
+         end if
+         downloadSelection sSelectNum, tTargetLongID
+         break
+      case "Loading"
+         showBusyIndicator false
+         stopPlayer
          break
          
    end switch
@@ -191,57 +241,9 @@ on mouseDoubleup
       show grp "DownloadSelection"
    end if
    
-   // we go to lib_MobileControls
+   unlock screen
    
-   switch tTarget
-      case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
-         local tPlayPause
-         
-         get the iconPresetName of widget "PlayPause"
-         put it into tPlayPause
-         
-         if tPlayPause is "pause" then
-            if not isMobile() then
-               put  the currentTime of player "audioPlayer" into sTimeStamp
-            else
-               put mobileControlGet ( "audioPlayer", "currentTime" ) into sTimeStamp
-            end if
-            pausePlayer sTimeStamp
-         else
-            if not isMobile() then
-               put  the currentTime of player "audioPlayer" into sTimeStamp
-            end if
-            playPausedAudio sTimeStamp
-         end if
-         
-         break
-         
-      case "noForwardBackup"
-         dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
-         break
-         
-      case "SeekForward"
-         audioSeekForward
-         break
-         
-      case "SeekBack"
-         audioSeekBack
-         break
-         
-      case "DownloadSelection"  
-         
-         put fld "theSelectNum" into sSelectNum
-         if connectivity_PingServer() <> "true" then
-            dialog_CustomMsg "Offline or Low Bandwidth"
-            exit mouseDoubleup
-         end if
-         downloadSelection sSelectNum, tTargetLongID
-         break
-      case "Loading"
-         showBusyIndicator false
-         stopPlayer
-         break
-   end switch
+   
    
 end mouseDoubleup
 
