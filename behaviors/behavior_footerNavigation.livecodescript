@@ -68,6 +68,10 @@ on mouseup
             put "listen-browse" into tCard
          else if tCard is "listen-search" then
             go card "listen-browse"
+         else if tCard is "SivaSivaBrowser" then
+            put portal_GetLastStack() into tLastStack
+            portal_GoStack ("read")
+            --go card "listen-browse"
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if

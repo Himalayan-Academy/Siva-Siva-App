@@ -140,6 +140,10 @@ on mouseup
          // we go to lib_MobileControls
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
+         
+         
+         breakpoint
+         
          local tPlayPause
          
          get the iconPresetName of widget "PlayPause"
@@ -201,16 +205,16 @@ end mouseup
 
 on mouseDoubleup
    
+   --showBusyIndicator true, "We take time to load."
+   
+   lock screen
+   
    go to card "listen-file"
    
    put sSelectNum into fld "theSelectNum"
    
-   
    # we have get sCardName to determine who to show download 
    put gCardName into tHideDownload
-   
-   
-   --         lock screen
    
    # but we have stopPlayer  
    # on by mobile
@@ -219,7 +223,6 @@ on mouseDoubleup
    # if the use had downloaded audio it appears on my-audio card
    # we can start the player; get the audio locally
    
-   lock screen
    
    if gCardName = "listen-my-audio" then
       direct_Play  sSelectNum, gCardName

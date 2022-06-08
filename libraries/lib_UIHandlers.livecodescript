@@ -799,7 +799,6 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
    --   breakpoint
    if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
-      --put sMsg into sLoadProgress # this string will change through the loop below.
       
       # Gets the visible of group
       put the long id of control "loadingGroup" into sLoadingGroup
@@ -814,10 +813,8 @@ command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
-            -- dispatch "loadingInProgress" to me 
          else
             set the vis of sLoadingGroup to pBool
-            --            put empty into sLoadProgress
             set the label of sLoadingIndicator to ""
             put false into sLoadingFlag
          end if
