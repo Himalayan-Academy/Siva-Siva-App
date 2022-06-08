@@ -97,52 +97,10 @@ on mouseup
          # which means he is NOT playing. He is on PAUSE
          
       case "AudioList"
-         local tTitle,localURL
-         
-         # need to off  the Mobile Player
-         
-         if isMobile() then
-            deleteAllMobileControls
-            wait 100 milliseconds
-         end if
-         
-         # sLineNum is the physical line number the user clicks on the field
-         # sRecentNum is the numeric key value is the sSelectionsA play list array
-         
-         # clear the color of the last line before setting the  sLineNum
-         
-         # we needed to stop player
-         
-         if sLineNum <> empty then
-            --setAudioListColors sLineNum,"0,0,0"
-            setAudioListColors sLineNum, empty
-         end if
-         
-         # now we register the user interaction: clicks on a line.
-         put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
-         
-         # every 2 line is one entry; we just one to color the Title
-         # though the use might click on the artist...
-         
-         if (sLineNum mod 2) = 0 then
-            subtract 1 from sLineNum
-         end if
-         put line sLineNum of fld "audiolist" into tTitle
-         set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
-         
-         # the follow "trick" return the array key
-         put round(sLineNum/2) into sSelectNum 
-         
-         set the doubleClickInterval to 1000-- 1/10 second
-         set the doubleClickDelta to 10
-         
+         audioPlays
          break
-         // we go to lib_MobileControls
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
-         
-         
-         breakpoint
          
          local tPlayPause
          
@@ -203,53 +161,101 @@ end mouseup
 --   end if
 --end mouseDoubleUp
 
-on mouseDoubleup
+command audioPlays
+   
+   local tTitle,localURL
+   
+   # need to off  the Mobile Player
+   
+   if isMobile() then
+      deleteAllMobileControls
+      wait 100 milliseconds
+   end if
+   
+   # sLineNum is the physical line number the user clicks on the field
+   # sRecentNum is the numeric key value is the sSelectionsA play list array
+   
+   # clear the color of the last line before setting the  sLineNum
+   
+   # we needed to stop player
+   
+   if sLineNum <> empty then
+      --setAudioListColors sLineNum,"0,0,0"
+      setAudioListColors sLineNum, empty
+   end if
+   
+   # now we register the user interaction: clicks on a line.
+   put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
+   
+   # every 2 line is one entry; we just one to color the Title
+   # though the use might click on the artist...
+   
+   if (sLineNum mod 2) = 0 then
+      subtract 1 from sLineNum
+   end if
+   put line sLineNum of fld "audiolist" into tTitle
+   set the backgroundcolor of line sLineNum of fld "audiolist" to "174,30,66"
+   
+   # the follow "trick" return the array key
+   put round(sLineNum/2) into sSelectNum 
+   
+   set the doubleClickInterval to 500-- 1/10 second
+   set the doubleClickDelta to 10
+   
+end audioPlays
+   
+on mouseDoubleUp
+   
+   local tStartLoc
    
    --showBusyIndicator true, "We take time to load."
    
-   lock screen
+   put the mouseloc into tStartLoc
    
-   go to card "listen-file"
+ --if abs(the mouseH - item 1 of tStartLoc) <= 3 and abs(the mouseH - item 2 of tStartLoc) >= 20 then
+      
+      lock screen
+      
+      go to card "listen-file"
+      
+      put sSelectNum into fld "theSelectNum"
+      
+      # we have get sCardName to determine who to show download 
+      put gCardName into tHideDownload
+      
+      # but we have stopPlayer  
+      # on by mobile
+      stopPlayer  
+      
+      # if the use had downloaded audio it appears on my-audio card
+      # we can start the player; get the audio locally
+      
+      
+      if gCardName = "listen-my-audio" then
+         direct_Play  sSelectNum, gCardName
+      else
+         select_Play false, sSelectNum  # will use either the line number or item id
+      end if
+      
+      local tURL 
+      
+      if  "audio/book" is not in tURL then # no display details
+         select_ShowDetails "downloaded"
+      end if 
+      
+      informationGrp
+      
+      if tHideDownload = "listen-my-audio" then
+         hide grp "DownloadSelection"
+      else
+         show grp "DownloadSelection"
+      end if
+      
+      unlock screen
+      
+   --end if
    
-   put sSelectNum into fld "theSelectNum"
-   
-   # we have get sCardName to determine who to show download 
-   put gCardName into tHideDownload
-   
-   # but we have stopPlayer  
-   # on by mobile
-   stopPlayer  
-   
-   # if the use had downloaded audio it appears on my-audio card
-   # we can start the player; get the audio locally
-   
-   
-   if gCardName = "listen-my-audio" then
-      direct_Play  sSelectNum, gCardName
-   else
-      select_Play false, sSelectNum  # will use either the line number or item id
-   end if
-   
-   local tURL 
-   
-   if  "audio/book" is not in tURL then # no display details
-      select_ShowDetails "downloaded"
-   end if 
-   
-   informationGrp
-   
-   if tHideDownload = "listen-my-audio" then
-      hide grp "DownloadSelection"
-   else
-      show grp "DownloadSelection"
-   end if
-   
-   unlock screen
-   
-   
-   
-end mouseDoubleup
-
+end mouseDoubleUp
 
 command switchAudioUi pAudioUI
    local tUI
@@ -299,3 +305,87 @@ command share_Items
 end share_Items
 
 
+---------
+
+--on touchStart pTouchID
+
+--   --breakpoint
+--   put empty into sStartX
+--   put empty into sStartY
+
+--   put the vScroll of grp "all-collections" into sStartYScroll
+
+--   put the long owner of the target into tHGroup  
+--   put the hScroll of tHGroup into sStartHScroll
+
+--end touchStart
+
+
+--on touchMove pTouchID, pTouchX, pTouchY
+
+--   if sStartY is empty then 
+--      put pTouchY into sStartY
+--   end if
+
+--   if sStartX is empty then
+--      put pTouchX into sStartX
+--   end if
+
+--   // Check for vertical scroll
+
+--   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
+--      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
+--   else
+--      // Check for horizontal scroll
+
+--      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
+--         put the long owner of the target into tHGroup  
+--         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
+--      end if
+--   end if
+
+--end touchMove
+
+
+--on touchEnd pTouchID
+--   -- code
+--end touchEnd
+
+
+--on touchRelease pTouchID
+--   -- code
+--end touchRelease
+
+
+--## responds to user to interaction
+
+--on mouseDown 
+--   put the mouseloc into sStartLoc
+--   put the long owner of the target into tHGroup 
+--   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead    
+--      setScroll tHGroup  
+--   end if
+--end mouseDown
+
+
+--on mouseup
+--   local pSelection
+
+--   if the short name target is "title-label" then
+--      go to card "listen-my-audio"
+
+--   else
+--      if the short name target is "Loading"then
+--         showBusyIndicator false
+--         if isMobile() then
+--            mobileClearTouches
+--         end if
+--         exit top 
+--      end if
+--   end if
+
+--   if abs(the mouseH - item 1 of sStartLoc) <= 3 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+--      put the target into pSelection
+--      selectPlayList pSelection # handles collection and other clicks on the UI
+--   end if
+--end mouseup
