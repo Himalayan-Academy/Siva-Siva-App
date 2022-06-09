@@ -770,6 +770,7 @@ on updateUI
       set the bottom of tGoTips to the top of tFooter - 18
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
+      set the rect of img "tipsImage" to (0, 0, cardWidth(), the top of tFooter)
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
