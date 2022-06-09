@@ -51,7 +51,7 @@ on mouseup
             showStoryMenu
          else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
-         else if tCard is   "listen-file" then
+         else if tCard is "listen-file" then
             unlock screen
             put portal_GetLastStack() into tLastStack
             if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
@@ -63,7 +63,7 @@ on mouseup
                   go card "listen-my-audio"
                end if
             end if
-         else if tCard is  "listen-delete-file" then
+         else if tCard is "listen-delete-file" then
             go to card "listen-browse"
             put "listen-browse" into tCard
          else if tCard is "listen-search" then
@@ -72,6 +72,8 @@ on mouseup
             put portal_GetLastStack() into tLastStack
             portal_GoStack ("read")
             --go card "listen-browse"
+         else if tCard is "bookDetail" then
+            go card "readHome"
          else
             portal_GoStack ("Siva-Siva-Portal")
          end if
