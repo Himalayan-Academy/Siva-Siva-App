@@ -25,6 +25,7 @@ on preOpenCard
    if tCard is "readHome" then
       put the long id of widget "bookNavTree" into sBookNavTree
       put the long id of fld "tips" into sTips
+      set the vscroll of sBookNavTree to 0
       buildBooksMenu
    else if tCard is "bookDetail" then
       put sBookTitle into fld "bookTitle"
@@ -86,8 +87,8 @@ end hiliteChanged
 
 
 on formattedHeightChanged -- tree changed dimensions
-   if the target is sBookNavTree then
-      dispatch "updateScroller" to sBookNavTree with "storyNavTree"
+   if the target is (the name of sBookNavTree) then
+      dispatch "updateScroller" to sBookNavTree with "bookNavTree"
    end if
 end formattedHeightChanged
 
@@ -133,14 +134,14 @@ on updateUI
       --
       --set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
       --
-      set the rect of sBookNavTree to (0, 0, cardWidth() - 24, the top of btn "showTips" - 21)
-      set the uRect of sBookNavTree to the rect of sBookNavTree
-    
-      --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
       set the rect tMenuBkgnd to (0, 75, cardWidth(), the top of btn "showTips" - 9)
       --
       set the rect of sBookNavTree to the rect of tMenuBkgnd
+      set the uRect of sBookNavTree to the rect of sBookNavTree
+      if the formattedheight of sBookNavTree > the height of sBookNavTree then
+         dispatch "updateScroller" to sBookNavTree with "bookNavTree"
+      end if
       --
       show grc "footerBackground" of grp "footerNavigation"
    end if
@@ -254,7 +255,7 @@ end initDataLabels
 
 
 on mouseUp
-   local tTarget
+   local tTarget, tTips
    put the short name of the target into tTarget
    switch tTarget
       case "openBook"
@@ -274,8 +275,6 @@ on mouseUp
          break
          --
    end switch
-   
-   
 end mouseUp
 
 
