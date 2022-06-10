@@ -199,7 +199,7 @@ command audioPlays
    # the follow "trick" return the array key
    put round(sLineNum/2) into sSelectNum 
    
-   set the doubleClickInterval to 500-- 1/10 second
+   --set the doubleClickInterval to 500-- 1/10 second
    set the doubleClickDelta to 10
    
 end audioPlays
