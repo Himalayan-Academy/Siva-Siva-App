@@ -917,7 +917,7 @@ on select_Play pItemID, pSelectionNum
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
       showBusyIndicator false
-      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into tMsg
+      put "Sound file unavailable. Connected to the internet?" & cr & "Try it again." into tMsg
       doAnswer tMsg,"OK", tAnswerURLunavailable
       exit to top
    end if
@@ -1497,7 +1497,8 @@ command offLineGoMyAudio
          go to card "listen-collection"
       else
          dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
-         go to card "listen-my-audio" 
+         go to card "listen-my-audio"
+         exit to top
       end if
    end if
 end offLineGoMyAudio
@@ -1529,6 +1530,11 @@ command informationGrp
    end if
 end informationGrp
 
+command doAnswerResponse -- sent from doAnswer dlg
+   if gCardName = "listen-browse" then
+      go to card "listen-collection"
+   end if
+end doAnswerResponse
 
 command helpAudio
    local tTarget, tAudioGuide
