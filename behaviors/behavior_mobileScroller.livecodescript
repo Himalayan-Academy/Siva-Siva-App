@@ -7,12 +7,12 @@ local sName, sImageScroller
 
 command createScroller pName -- scrolling fields
    local tRect
+   deleteMobileControl pName -- delete any existing
    put false into sImageScroller
+   put pName into sName
    if not isMobile() then
-      put pName into sName
       exit CreateScroller
    end if
-   deleteMobileControl pName -- delete any existing
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
@@ -31,12 +31,12 @@ end createScroller
 
 command createImageScroller pName
    local tRect
+   deleteMobileControl pName -- delete any existing
    put true into sImageScroller
+   put pName into sName
    if not isMobile() then
-      put pName into sName
       exit createImageScroller
    end if
-   deleteMobileControl pName -- delete any existing
    put (the rect of control pName) into tRect
    mobileControlCreate "scroller", pName
    mobileControlSet pName, "rect", tRect
@@ -54,8 +54,8 @@ end createImageScroller
 on updateScroller pName
    -- NOTE: this is not intended for image scrollers
    local tRect
+   put pName into sName
    if not isMobile() then
-      put pName into sName
       exit updateScroller 
    end if
    if pName is among the lines of mobileControls() then -- update
@@ -91,8 +91,8 @@ end scrollerDidScroll
 on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as
    -- they are overlaid on the stack and will float over all cards
+   if pName is sName then put empty into sName
    if not isMobile() then
-      if pName is sName then put empty into sName
       exit deleteMobileControl -- do nothing on desktop
    end if
    repeat while pName is among the lines of mobileControls()
@@ -116,7 +116,7 @@ end mouseDown
 
 on mouseUp
    put "" into sMouseLoc
-   if sImageScroller then
+   if sImageScroller or (sName = "audioList") then
       if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
          send "doScrollerTap" to the target
       end if
@@ -145,10 +145,12 @@ on setScroll
    if the mouse is down then
       lock screen
       if abs (item 2 of sMouseLoc ) > 20 then
-         if item 1 of sMouseLoc > the mouseH then
-            set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
-         else
-            set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
+         if sImageScroller then
+            if item 1 of sMouseLoc > the mouseH then
+               set the hscroll of me to the hscroll of me - (the mouseH - item 1 of sMouseLoc)
+            else
+               set the hscroll of me to the hscroll of me + (item 1 of sMouseLoc - the mouseH)
+            end if
          end if
          if item 2 of sMouseLoc > the mouseV then
             set the vscroll of me to the vscroll of me - (the mouseV - item 2 of sMouseLoc)

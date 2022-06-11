@@ -96,9 +96,9 @@ on mouseup
          hide widget "playAudio" 
          # which means he is NOT playing. He is on PAUSE
          
-      case "AudioList"
-         audioPlays
-         break
+         --      case "AudioList"
+         --         audioPlays
+         --         break
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
          
@@ -153,13 +153,46 @@ on mouseup
    
 end mouseup
 
---on mouseDoubleUp
---   if "on mouseUp" is in the script of "audioList" then-- and \"on mouseDoubleUp" is not in the script of the target then
---      if gCardName = "listen-browse"  then
---         send "mouseUp"  to "audioList"
---      end if
---   end if
---end mouseDoubleUp
+
+on doScrollerTap
+   local tHideDownload, tURL
+   
+   audioPlays
+   
+   go to card "listen-file"
+   
+   put sSelectNum into fld "theSelectNum"
+   
+   # we have get sCardName to determine who to show download 
+   put gCardName into tHideDownload
+   
+   # but we have stopPlayer  
+   # on by mobile
+   stopPlayer  
+   
+   # if the use had downloaded audio it appears on my-audio card
+   # we can start the player; get the audio locally
+   
+   if gCardName = "listen-my-audio" then
+      direct_Play sSelectNum, gCardName
+   else
+      select_Play false, sSelectNum  # will use either the line number or item id
+   end if
+   
+   -- the following doesn't make sense.  tURL is not set to anything, so it will never contain audio/book
+   if "audio/book" is not in tURL then # no display details
+      select_ShowDetails "downloaded"
+   end if 
+   
+   informationGrp
+   
+   if tHideDownload = "listen-my-audio" then
+      hide grp "DownloadSelection"
+   else
+      show grp "DownloadSelection"
+   end if
+end doScrollerTap
+
 
 command audioPlays
    
@@ -199,53 +232,64 @@ command audioPlays
    # the follow "trick" return the array key
    put round(sLineNum/2) into sSelectNum 
    
-   set the doubleClickInterval to 200 
-   set the doubleClickDelta to 10
+   --   set the doubleClickInterval to 200 
+   --   set the doubleClickDelta to 10
    
 end audioPlays
    
-on mouseDoubleUp
+   --on mouseDoubleUp
    
-      lock screen
-      
-      go to card "listen-file"
-      
-      put sSelectNum into fld "theSelectNum"
-      
-      # we have get sCardName to determine who to show download 
-      put gCardName into tHideDownload
-      
-      # but we have stopPlayer  
-      # on by mobile
-      stopPlayer  
-      
-      # if the use had downloaded audio it appears on my-audio card
-      # we can start the player; get the audio locally
-      
-      if gCardName = "listen-my-audio" then
-         direct_Play  sSelectNum, gCardName
-      else
-         select_Play false, sSelectNum  # will use either the line number or item id
-      end if
-      
-      local tURL 
-      
-      if  "audio/book" is not in tURL then # no display details
-         select_ShowDetails "downloaded"
-      end if 
-      
-      informationGrp
-      
-      if tHideDownload = "listen-my-audio" then
-         hide grp "DownloadSelection"
-      else
-         show grp "DownloadSelection"
-      end if
-      
-      unlock screen
-      
-end mouseDoubleUp
-
+   --   local tStartLoc
+   
+   --   --showBusyIndicator true, "We take time to load."
+   
+   --   put the mouseloc into tStartLoc
+   
+   -- --if abs(the mouseH - item 1 of tStartLoc) <= 3 and abs(the mouseH - item 2 of tStartLoc) >= 20 then
+   
+   --      lock screen
+   
+   --      go to card "listen-file"
+   
+   --      put sSelectNum into fld "theSelectNum"
+   
+   --      # we have get sCardName to determine who to show download 
+   --      put gCardName into tHideDownload
+   
+   --      # but we have stopPlayer  
+   --      # on by mobile
+   --      stopPlayer  
+   
+   --      # if the use had downloaded audio it appears on my-audio card
+   --      # we can start the player; get the audio locally
+   
+   
+   --      if gCardName = "listen-my-audio" then
+   --         direct_Play  sSelectNum, gCardName
+   --      else
+   --         select_Play false, sSelectNum  # will use either the line number or item id
+   --      end if
+   
+   --      local tURL 
+   
+   --      if  "audio/book" is not in tURL then # no display details
+   --         select_ShowDetails "downloaded"
+   --      end if 
+   
+   --      informationGrp
+   
+   --      if tHideDownload = "listen-my-audio" then
+   --         hide grp "DownloadSelection"
+   --      else
+   --         show grp "DownloadSelection"
+   --      end if
+   
+   --      unlock screen
+   
+   --   --end if
+   
+   --end mouseDoubleUp
+   
 command switchAudioUi pAudioUI
    local tUI
    if pAudioUI is empty then
@@ -293,3 +337,88 @@ command share_Items
    return tShareItemsA
 end share_Items
 
+
+---------
+
+--on touchStart pTouchID
+
+--   --breakpoint
+--   put empty into sStartX
+--   put empty into sStartY
+
+--   put the vScroll of grp "all-collections" into sStartYScroll
+
+--   put the long owner of the target into tHGroup  
+--   put the hScroll of tHGroup into sStartHScroll
+
+--end touchStart
+
+
+--on touchMove pTouchID, pTouchX, pTouchY
+
+--   if sStartY is empty then 
+--      put pTouchY into sStartY
+--   end if
+
+--   if sStartX is empty then
+--      put pTouchX into sStartX
+--   end if
+
+--   // Check for vertical scroll
+
+--   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
+--      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
+--   else
+--      // Check for horizontal scroll
+
+--      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
+--         put the long owner of the target into tHGroup  
+--         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
+--      end if
+--   end if
+
+--end touchMove
+
+
+--on touchEnd pTouchID
+--   -- code
+--end touchEnd
+
+
+--on touchRelease pTouchID
+--   -- code
+--end touchRelease
+
+
+--## responds to user to interaction
+
+--on mouseDown 
+--   put the mouseloc into sStartLoc
+--   put the long owner of the target into tHGroup 
+--   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead    
+--      setScroll tHGroup  
+--   end if
+--end mouseDown
+
+
+--on mouseup
+--   local pSelection
+
+--   if the short name target is "title-label" then
+--      go to card "listen-my-audio"
+
+--   else
+--      if the short name target is "Loading"then
+--         showBusyIndicator false
+--         if isMobile() then
+--            mobileClearTouches
+--         end if
+--         exit top 
+--      end if
+--   end if
+
+--   if abs(the mouseH - item 1 of sStartLoc) <= 3 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
+--      put the target into pSelection
+--      selectPlayList pSelection # handles collection and other clicks on the UI
+--   end if
+--end mouseup
