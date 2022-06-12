@@ -10,28 +10,26 @@ on returnInField
    if (char -1 of me) is CR then
       delete char -1 of me
    end if
-   focus on fld "changeFocus"
+   focus on fld "searchString"
 end returnInfield
 
 on inputReturnKey
-    if (char -1 of me) is CR then
+   if (char -1 of me) is CR then
       delete char -1 of me
    end if
-   focus on fld "changeFocus"
+   focus on fld "searchString"
 end inputReturnKey
 
 on returnkey
-   focus on fld "changeFocus"
+   focus on fld "searchString"
 end returnkey
 
 on keyDown pKey
-
-if the platform="android" and pKey = cr then
- -- do all of the stuff you would have done in the ReturninField handler.
- -- Or just put this line in and execute your existing ReturninField handler.
- ReturninField 
-else
- pass keyDown
-end if
-
+   if the platform="android" and pKey = cr then
+      -- do all of the stuff you would have done in the ReturninField handler.
+      -- Or just put this line in and execute your existing ReturninField handler.
+      ReturninField 
+   else
+      pass keyDown
+   end if
 end keyDown

@@ -45,7 +45,6 @@ on mouseup
    put the short name of the Target  into tTarget   
    --breakpoint
    
-   
    switch tTarget
       # card navigaton
       case "collections-label"
@@ -191,7 +190,6 @@ end doScrollerTap
 
 
 command audioPlays
-   
    local tTitle,localURL
    
    # need to off  the Mobile Player
@@ -227,64 +225,8 @@ command audioPlays
    
    # the follow "trick" return the array key
    put round(sLineNum/2) into sSelectNum 
-   
-   --   set the doubleClickInterval to 200 
-   --   set the doubleClickDelta to 10
-   
 end audioPlays
    
-   --on mouseDoubleUp
-   
-   --   local tStartLoc
-   
-   --   --showBusyIndicator true, "We take time to load."
-   
-   --   put the mouseloc into tStartLoc
-   
-   -- --if abs(the mouseH - item 1 of tStartLoc) <= 3 and abs(the mouseH - item 2 of tStartLoc) >= 20 then
-   
-   --      lock screen
-   
-   --      go to card "listen-file"
-   
-   --      put sSelectNum into fld "theSelectNum"
-   
-   --      # we have get sCardName to determine who to show download 
-   --      put gCardName into tHideDownload
-   
-   --      # but we have stopPlayer  
-   --      # on by mobile
-   --      stopPlayer  
-   
-   --      # if the use had downloaded audio it appears on my-audio card
-   --      # we can start the player; get the audio locally
-   
-   
-   --      if gCardName = "listen-my-audio" then
-   --         direct_Play  sSelectNum, gCardName
-   --      else
-   --         select_Play false, sSelectNum  # will use either the line number or item id
-   --      end if
-   
-   --      local tURL 
-   
-   --      if  "audio/book" is not in tURL then # no display details
-   --         select_ShowDetails "downloaded"
-   --      end if 
-   
-   --      informationGrp
-   
-   --      if tHideDownload = "listen-my-audio" then
-   --         hide grp "DownloadSelection"
-   --      else
-   --         show grp "DownloadSelection"
-   --      end if
-   
-   --      unlock screen
-   
-   --   --end if
-   
-   --end mouseDoubleUp
    
 command switchAudioUi pAudioUI
    local tUI
@@ -320,6 +262,7 @@ command switchAudioUi pAudioUI
    end switch
 end switchAudioUi
 
+
 command share_Items 
    local tURL,  tShareItemsA
    if sRemoteURL is empty then
@@ -332,10 +275,3 @@ command share_Items
    put "Audio available in the SivaSiva app." into tShareItemsA["text"] 
    return tShareItemsA
 end share_Items
-
-
-
-
-
-
-

@@ -802,11 +802,6 @@ on  playlist_Instantiate
    
    # here is where we have to check to see if any files are stored locally or not
    
-   
-   if the formattedHeight fld "audioList" > the height of fld "AudioList" then
-      send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
-   end if
-   
    put  sTargetPlayList into tData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
@@ -1012,7 +1007,7 @@ command typeSetAudioList
          set the textSize of line x of fld "audioList" to 17
       end if
    end repeat 
-   
+   send "CreateScroller audioList" to fld "audioList" of this card
 end typeSetAudioList
 
 --command typeSetAudioList
