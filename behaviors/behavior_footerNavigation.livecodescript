@@ -58,14 +58,14 @@ on mouseup
                go to card "listen-collection"
             else 
                if fld "FilesOnDisk" of card "listen-delete-file" is empty then
-                  go to card "listen-browse"
+                  go to card "listen-collection"
                else
                   go card "listen-my-audio"
                end if
             end if
          else if tCard is "listen-delete-file" then
-            go to card "listen-browse"
-            put "listen-browse" into tCard
+               go to card "listen-collection"
+               put "listen-collection" into tCard
          else if tCard is "listen-search" then
             go card "listen-browse"
          else if tCard is "SivaSivaBrowser" then

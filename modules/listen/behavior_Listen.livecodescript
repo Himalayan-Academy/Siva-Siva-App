@@ -997,13 +997,11 @@ command typeSetAudioList
       
       if (tX mod 2) = 1 then
          set the textSize of line x of fld "audioList" to 20
-         set the tabStops of line x of fld "audioList" to "330"
-         if  length(line x of fld "audioList") > 30 then 
-            put char 1 to 30 of  line x of fld "audioList" into line x of fld "audioList"
+         
+         if  length(line x of fld "audioList") > 35 then 
+            put char 1 to 35 of  line x of fld "audioList" into line x of fld "audioList"
             put "..." after  line x of fld "audioList"
          end if
-         
-         put line x of fld "audioList" & tab & "|||" into line x of fld "audioList"
       end if
       
       if (tX mod 2) = 0 then
@@ -1530,11 +1528,11 @@ command informationGrp
    end if
 end informationGrp
 
-command doAnswerResponse -- sent from doAnswer dlg
-   if gCardName = "listen-browse" then
-      go to card "listen-collection"
-   end if
-end doAnswerResponse
+--command doAnswerResponse -- sent from doAnswer dlg
+--   if gCardName = "listen-browse" then
+--      go to card "listen-collection"
+--   end if
+--end doAnswerResponse
 
 command helpAudio
    local tTarget, tAudioGuide

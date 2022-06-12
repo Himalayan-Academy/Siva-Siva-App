@@ -59,7 +59,6 @@ on mouseup
       case "my-audio-label"
          go to card "listen-my-audio"
          if fld "AudioList" is empty then
-            wait 1 second
             go card "listen-collection"
             put "listen-collection" into gCardName 
          else
@@ -78,7 +77,8 @@ on mouseup
          helpAudio
          break
       case "listen-file"
-         -- local tTrue -- AAG: not used
+      case "listen-my-audio"
+         
          go to card "listen-file"
          
          show grp "audioDetails"
@@ -95,10 +95,6 @@ on mouseup
          # which means he is listen because it is already running
          hide widget "playAudio" 
          # which means he is NOT playing. He is on PAUSE
-         
-         --      case "AudioList"
-         --         audioPlays
-         --         break
          
       case "PlayPause" #  audio is playing; the icon to 2 vertical bars;
          
@@ -338,87 +334,8 @@ command share_Items
 end share_Items
 
 
----------
-
---on touchStart pTouchID
-
---   --breakpoint
---   put empty into sStartX
---   put empty into sStartY
-
---   put the vScroll of grp "all-collections" into sStartYScroll
-
---   put the long owner of the target into tHGroup  
---   put the hScroll of tHGroup into sStartHScroll
-
---end touchStart
 
 
---on touchMove pTouchID, pTouchX, pTouchY
-
---   if sStartY is empty then 
---      put pTouchY into sStartY
---   end if
-
---   if sStartX is empty then
---      put pTouchX into sStartX
---   end if
-
---   // Check for vertical scroll
-
---   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
---      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
---   else
---      // Check for horizontal scroll
-
---      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
---         put the long owner of the target into tHGroup  
---         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
---      end if
---   end if
-
---end touchMove
 
 
---on touchEnd pTouchID
---   -- code
---end touchEnd
 
-
---on touchRelease pTouchID
---   -- code
---end touchRelease
-
-
---## responds to user to interaction
-
---on mouseDown 
---   put the mouseloc into sStartLoc
---   put the long owner of the target into tHGroup 
---   if not isMobile() then -- jg: mobile will use stack handlers to scroll instead    
---      setScroll tHGroup  
---   end if
---end mouseDown
-
-
---on mouseup
---   local pSelection
-
---   if the short name target is "title-label" then
---      go to card "listen-my-audio"
-
---   else
---      if the short name target is "Loading"then
---         showBusyIndicator false
---         if isMobile() then
---            mobileClearTouches
---         end if
---         exit top 
---      end if
---   end if
-
---   if abs(the mouseH - item 1 of sStartLoc) <= 3 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
---      put the target into pSelection
---      selectPlayList pSelection # handles collection and other clicks on the UI
---   end if
---end mouseup
