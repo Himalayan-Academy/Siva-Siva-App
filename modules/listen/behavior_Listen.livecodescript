@@ -92,6 +92,7 @@ on openCard
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "My Downloads" into fld "title-label"
+         put empty into  fld "search-label"
          break
          
       case "listen-browse"
@@ -104,6 +105,7 @@ on openCard
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         put "Search" into  fld "search-label"
          break
          
       case "listen-my-audio"
@@ -113,6 +115,8 @@ on openCard
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
          put empty into fld "audioList"
+         put "Search" into  fld "search-label"
+         
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          if (fld "audioList" is empty) then
@@ -126,14 +130,17 @@ on openCard
          put "Delete File" into fld "title-label"
          put empty into fld "collections-label"
          put empty into fld "my-audio-label"
+         put empty into  fld "search-label"
+         
          break
       case "listen-file"
-       
+         
          clearSelection
          
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         put "Search" into  fld "search-label"
          
          // lib_MobileControls
          setZeroDurationProgress
@@ -146,6 +153,7 @@ on openCard
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
          put "Search" into fld "title-label"
+         put empty  into  fld "search-label"
          
          break
    end switch
@@ -208,11 +216,13 @@ command updateUI
    
    put the long id of fld "title-label" into tTitleLabel
    put the long id of fld "collections-label" into tCollectionsLabel
-   put the long id of fld "my-audio-label" into tMyAudioLabel 
+   put the long id of fld "my-audio-label" into tMyAudioLabel
+   put the long id of fld "search-label" into tMySearchLabel
    
    topCenterMe tTitleLabel, 5
    topLeftMe tCollectionsLabel, 10, 30
-   topRightMe tMyAudioLabel, 10, 30
+   topRightMe tMyAudioLabel, 5, 30
+   topLeftMe tMySearchLabel, 160,30
    
    if there is a grp "loadingGroup" then
       put the long id of grc "Loading" into tControl

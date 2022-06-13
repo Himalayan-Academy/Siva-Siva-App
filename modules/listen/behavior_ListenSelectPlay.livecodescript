@@ -51,6 +51,12 @@ on mouseup
          go to card "listen-collection"
          put "listen-collection" into gCardName
          break
+         
+      case "search-label"
+         go to card "listen-search"
+         put "listen-search" into gCardName
+         break
+         
       case "listen-browse"
          go to card "listen-browse"
          put "listen-browse" into gCardName
