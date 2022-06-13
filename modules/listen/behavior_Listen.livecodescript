@@ -392,7 +392,7 @@ command updateUI
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         topLeftMe tFilterAudio, 30, 80
+         topLeftMe tFilterAudio, 30, 100
          break
          
    end switch

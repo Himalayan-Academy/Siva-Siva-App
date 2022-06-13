@@ -54,6 +54,12 @@ on mouseup
          else if tCard is "listen-file" then
             unlock screen
             put portal_GetLastStack() into tLastStack
+            
+            if tLastStack = "Listen" then
+               go to card "listen-browse"
+               exit to top
+            end if
+            
             if (tLastStack = "Journal") OR (tLastStack = "Siva-Siva-Portal")   then
                go to card "listen-collection"
             else 
@@ -64,8 +70,8 @@ on mouseup
                end if
             end if
          else if tCard is "listen-delete-file" then
-               go to card "listen-collection"
-               put "listen-collection" into tCard
+            go to card "listen-collection"
+            put "listen-collection" into tCard
          else if tCard is "listen-search" then
             go card "listen-browse"
          else if tCard is "SivaSivaBrowser" then

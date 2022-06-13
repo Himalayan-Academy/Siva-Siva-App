@@ -150,6 +150,15 @@ on mouseup
          stopPlayer
          break
          
+      case "Songs"
+      case "Chants"
+         hide grp "author"
+         break
+         
+      case "Inspired Talks"
+         show grp "author"
+         break
+         
    end switch
    
 end mouseup
