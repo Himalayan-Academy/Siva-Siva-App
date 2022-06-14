@@ -114,7 +114,7 @@ on mouseup
          
          moveMe target, 0,-100, 200
          moveMe target, 0,100, 70
-         AddJournalEntry
+         journal_AddEntry
          dialog_CustomMsg "Saved to Journal"
          
          break
@@ -125,7 +125,7 @@ on mouseup
          move control target relative 0,-100 in 100 milliseconds
          move control target relative 0,100 in 70 milliseconds
          
-         AddJournalEntry "pReadQuote"
+         journal_AddEntry "pReadQuote"
          break
          
       case "share"

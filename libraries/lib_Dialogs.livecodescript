@@ -109,7 +109,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    --move grp "BottomToast" relative 0,-(tDialogHeight+400) in 500 milliseconds
    set the layer of grp "BottomToast" to top 
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 50 milliseconds
-   wait 750 milliseconds
+   wait 1000 milliseconds
    if isMobile() then
       mobileClearTouches
    end if
