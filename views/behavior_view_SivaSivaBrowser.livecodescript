@@ -1,6 +1,7 @@
 ﻿script "behavior_view_SivaSivaBrowser"
 # this behavior is also use  by the view_BrowserLandscape.livecode stack
 # 
+global sConfigA
 local sMediaURL,sBrowserURL
 
 #local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
@@ -188,6 +189,7 @@ on journal_AddEntry
    local pData, tTitle, tOutput, 
    local tParseURL, tLastItemInURL, tWords
    
+   
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
    # we get the title from the original mouseup of the portal screen
@@ -214,7 +216,8 @@ on journal_AddEntry
       
       if tParseURL contains "/web/" then
          # book
-         put getJournalData() into tTitle
+         --put getJournalData() into tTitle
+         put sConfigA["bookTitle"]  into tTitle
          
          # we get the title plus the url for "chapter"
          #  for "chapter" in the book
