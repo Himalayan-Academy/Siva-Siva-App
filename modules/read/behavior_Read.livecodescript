@@ -32,6 +32,7 @@ on preOpenCard
       buildBooksMenu
    else if tCard is "bookDetail" then
       put sBookTitle into fld "bookTitle"
+      put sBookTitle into sConfigA["bookTitle"]
       buildBookDetail
    end if
    updateUI
