@@ -1,4 +1,5 @@
 ﻿script "behavior_Read"
+global sConfigA
 local sBookNavTree, sTips
 local sBooksMetaData, sBookData, sBookLanguage, sBookTitle, sDataLabels
 
@@ -158,7 +159,7 @@ on updateUI
       put CardWidth() - (2 * tLeft) into tWidth
       put the long id of fld "bookTitle" into tControl
       set the width of tControl to tWidth
-      set the height of tControl to the formattedHeight of tControl
+      set the height of tControl to the formattedHeight of tControl + 4
       topCenterMe tControl, 60
       put the rect of tControl into tRect
       --
@@ -169,7 +170,7 @@ on updateUI
       put the long id of fld "bookData" into tControl
       set the width of tControl to tWidth - 4
       set the height of tControl to the formattedHeight of tControl
-      set the top of tControl to (item 4 of tRect) + 18
+      set the top of tControl to (item 4 of tRect) + 25
       set the left of tControl to tLeft
       put the rect of tControl into tRect
       --
