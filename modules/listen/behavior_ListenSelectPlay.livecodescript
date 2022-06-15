@@ -227,7 +227,7 @@ command audioPlays
    end if
    
    # now we register the user interaction: clicks on a line.
-   put word 2 of clickline() into sLineNum -- AAG: this line doesn't work
+   put word 2 of clickline() into sLineNum 
    
    # every 2 line is one entry; we just one to color the Title
    # though the use might click on the artist...

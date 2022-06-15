@@ -532,7 +532,6 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
    local tPlaylistClass, tRecordTypeCount, tDbaseColumns
    local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
-   
    --showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
