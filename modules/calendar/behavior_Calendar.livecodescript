@@ -755,6 +755,7 @@ command  journal_AddEntry
    put 1 into tData["card"]
    put "Hindu Calendar, " & sCityName into tTitle
    Journal_RecordEntry "calendar",tTitle,tData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
 end  journal_AddEntry
 
 on cleanUpGui

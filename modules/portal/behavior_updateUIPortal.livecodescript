@@ -148,7 +148,7 @@ switch tTargetOwner
       show  img "subNavBkgImage"
       unlock screen
       fetchSubMenu tTarget
-      wait 400 milliseconds
+      wait 200 milliseconds
       
       show grp "SubNav" with visual effect "dissolve fast"
       break

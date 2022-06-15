@@ -1260,6 +1260,7 @@ command journal_AddEntry -- save a bookmark to databast
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
+   dialog_CustomMsg "Saved to Journal"
    
 end journal_AddEntry
 

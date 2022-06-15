@@ -698,6 +698,7 @@ command journal_AddEntry -- save a bookmark to db
       put "showStories" into pData["card"]
    end if
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
 end journal_AddEntry --
 		
 on journalResume pData -- sent from journal stack

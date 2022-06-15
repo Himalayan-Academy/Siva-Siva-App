@@ -570,6 +570,7 @@ command Journal_AddEntry -- save a bookmark to db
       put toUpper(char 1 of tTitle) into char 1 of tTitle -- cap first letter
    end if
    Journal_RecordEntry "pathtosiva",tTitle,pData -- send to journal
+   dialog_CustomMsg "Saved to Journal"
 end Journal_AddEntry
 
 on journalResume pData,pEntryA -- sent from journal stack

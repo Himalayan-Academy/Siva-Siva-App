@@ -238,6 +238,9 @@ on journal_AddEntry
             put toUpper(char 1 of word  x of tLastItemInURL) into tWords
             delete char 1 of word  x of tLastItemInURL
             put tWords &  word  x of tLastItemInURL into  tWords
+            if tWords contains "Publication" then
+               put "Hinduism Today Magazine, " into tTitle
+            end if
             put tWords & " " after tTitle 
          end repeat
          delete char -1 of tTitle
@@ -249,8 +252,8 @@ on journal_AddEntry
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
-      --dialog_CustomMsg "Saved to Journal"
    end if
+   dialog_CustomMsg "Saved to Journal"
 end journal_AddEntry
 
 

@@ -105,7 +105,7 @@ on mouseup
          end if
          
          if tCard is among items of \
-               "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-searchl" then
+               "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-search" then
             exit to top
          else
             put "listen-file" into tCard
@@ -113,10 +113,7 @@ on mouseup
          
          
          try 
-            moveMe target, 0,-100, 200
-            moveMe target, 0,100, 70
             journal_AddEntry
-            dialog_CustomMsg "Saved to Journal"
          end try
          
          break

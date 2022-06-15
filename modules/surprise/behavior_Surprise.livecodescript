@@ -302,6 +302,7 @@ command journal_AddEntry -- save a bookmark to db
    put sTimeStamp  into pDataA["timestamp"]
    put "listen-file" into pDataA["card"] 
    Journal_RecordEntry "listen",tTitle,pDataA
+   dialog_CustomMsg "Saved to Journal"
    
 end journal_AddEntry 
 
