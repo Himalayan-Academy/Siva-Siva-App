@@ -6,7 +6,8 @@ on preOpenCard
    
    if the environment is not "development" then
       hide stack "Siva-Siva-App"
-   end if  setCardCoords "portrait"
+   end if
+   setCardCoords "portrait"
    
 end preOpenCard
 
@@ -32,23 +33,13 @@ end st
 
 on openCard
    
-   
-   local tHelpField, tStatus, tSpinner, tImage, tGraphic
-   local tAssetDownloaderGroup
+   local tImage, tAssetDownloaderGroup
    
    setCardCoords "portrait"
    
-   
-   --   put the long id of img "vamadevaImage" into tImage
-   --   put the long id of grc "underLayout" into tGraphic
-   --   put the long id of fld "helpField"  into tHelpField 
-   --   put the long id of fld "status"  into tStatus
-   --   put the long id of widget "Spinner"  into tSpinner
-   
-   --   centerMe tImage, 0, 0
-   --   topCenterMe tHelpField, 445
-   --   topCenterMe tStatus, 570
-   --   topCenterMe tSpinner, 615
+   put the long id of img "vamadevaImage" into tImage
+   setImageToFullCardLoc tImage, "Portrait"
+   centerMe tImage, 0, 0
    
    put the long id of grp "assetDownloader" into tAssetDownloaderGroup
    topCenterMe  tAssetDownloaderGroup, 400
