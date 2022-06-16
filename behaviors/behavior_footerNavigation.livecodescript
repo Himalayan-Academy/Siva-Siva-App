@@ -120,10 +120,6 @@ on mouseup
          
       case "save"
          unlock screen
-         
-         move control target relative 0,-100 in 100 milliseconds
-         move control target relative 0,100 in 70 milliseconds
-         
          journal_AddEntry "pReadQuote"
          break
          
