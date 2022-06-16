@@ -144,10 +144,10 @@ on mouseup
             put "No Journal" & CR & "Was Made." into pHeaderMessage
          else
             Journal_AddEntry
-            put "Journal Entry" & CR & "Was Made." into pHeaderMessage
+            --put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
-         deployHeaders pHeaderMessage, "SVG Journal", 175,8
+         --deployHeaders pHeaderMessage, "SVG Journal", 175,8
          doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
@@ -228,7 +228,10 @@ command goCd pCdName,pEffect -- optional effect param
    if (sCard is "about") OR (sCard is "glossary") then
       hide btn "SVG menu"
    end if
+   
+   createScroller  "bodytextGrp" --
    unlock screen with visual effect pEffect fast
+   
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
@@ -574,6 +577,7 @@ command Journal_AddEntry -- save a bookmark to db
 end Journal_AddEntry
 
 on journalResume pData,pEntryA -- sent from journal stack
+  --breakpoint
    local tCd,tNum
    close stack "journal"
    put pData["card"] into tCd
