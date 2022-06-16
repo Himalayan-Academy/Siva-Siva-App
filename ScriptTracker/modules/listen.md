@@ -17,23 +17,6 @@
 * ID: button id 2240 of bkgnd id 2234 of stack "listen"
 * [stack_listen_button_id_2240](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2240.livecodescript)
 
-**button "Title" of group "Title" of bkgnd "filterAudio" of stack "listen"**
-* ID: button id 2181 of group id 2180 of bkgnd id 2176 of stack "listen"
-* [stack_listen_button_id_2181](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2181.livecodescript)
-
-**button "Artists" of group "Artists" of bkgnd "filterAudio" of stack "listen"**
-* ID: button id 2208 of group id 2185 of bkgnd id 2176 of stack "listen"
-* [stack_listen_button_id_2208](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2208.livecodescript)
-
-**field "searchString" of group "searchControls" of bkgnd "filterAudio" of stack "listen"**
-* ID: field id 2210 of group id 2317 of bkgnd id 2176 of stack "listen"
-* [stack_listen_field_id_2210](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2210.livecodescript)
-
-**widget "search" of group "searchControls" of bkgnd "filterAudio" of stack "listen"**
-* ID: widget id 2211 of group id 2317 of bkgnd id 2176 of stack "listen"
-* Widget Kind: com.livecode.widget.svgpath
-* [stack_listen_widget_id_2211](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2211.livecodescript)
-
 **button "Hide" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 2694 of bkgnd id 2692 of stack "listen"
 * [stack_listen_button_id_2694](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2694.livecodescript)
@@ -110,6 +93,23 @@
 **button "Clear" of bkgnd "viewLogging" of stack "listen"**
 * ID: button id 3110 of bkgnd id 3107 of stack "listen"
 * [stack_listen_button_id_3110](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_3110.livecodescript)
+
+**button "Artists" of group "Artists" of bkgnd "filterAudio" of stack "listen"**
+* ID: button id 2208 of group id 2185 of bkgnd id 2176 of stack "listen"
+* [stack_listen_button_id_2208](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_2208.livecodescript)
+
+**button "Title" of group "Title" of bkgnd "filterAudio" of stack "listen"**
+* ID: button id 3114 of group id 3113 of bkgnd id 2176 of stack "listen"
+* [stack_listen_button_id_3114](./../../ScriptTracker/modules/listen_Scripts/stack_listen_button_id_3114.livecodescript)
+
+**field "searchString" of group "searchControls" of bkgnd "filterAudio" of stack "listen"**
+* ID: field id 2210 of group id 2317 of bkgnd id 2176 of stack "listen"
+* [stack_listen_field_id_2210](./../../ScriptTracker/modules/listen_Scripts/stack_listen_field_id_2210.livecodescript)
+
+**widget "search" of group "searchControls" of bkgnd "filterAudio" of stack "listen"**
+* ID: widget id 2211 of group id 2317 of bkgnd id 2176 of stack "listen"
+* Widget Kind: com.livecode.widget.svgpath
+* [stack_listen_widget_id_2211](./../../ScriptTracker/modules/listen_Scripts/stack_listen_widget_id_2211.livecodescript)
 
 **card "listen-collection" of stack "listen"**
 * ID: card id 1158 of stack "listen"
