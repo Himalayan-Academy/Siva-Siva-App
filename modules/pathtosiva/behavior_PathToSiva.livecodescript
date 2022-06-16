@@ -229,7 +229,10 @@ command goCd pCdName,pEffect -- optional effect param
       hide btn "SVG menu"
    end if
    
-   createScroller  "bodytextGrp" --
+   if sCard = "lessonView" then
+      createScroller  "bodytextGrp" 
+   end if
+   --
    unlock screen with visual effect pEffect fast
    
 end goCd
