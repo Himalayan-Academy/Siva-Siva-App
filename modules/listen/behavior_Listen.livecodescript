@@ -204,7 +204,7 @@ command updateUI
    
    local tHeader, tFooter, tAudioGlobalControl
    local tSearchFilter, tPausePlay, tAudioPlayer
-   local tTitleLabel, tCollectionsLabel, tMyAudioLabel
+   local tTitleLabel, tCollectionsLabel, tMyAudioLabel, tMySearchLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
@@ -329,8 +329,6 @@ command updateUI
          break
          
       case "listen-file"
-         
-         
          put the long id of player "audioPlayer" into tAudioPlayer
          topLeftMe tAudioPlayer, 20, -1111
          
@@ -392,7 +390,7 @@ command updateUI
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         topLeftMe tFilterAudio, 30, 100
+         topCenterMe tFilterAudio, 100
          break
          
    end switch

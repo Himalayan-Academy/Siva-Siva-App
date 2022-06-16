@@ -53,9 +53,9 @@ on touchMove pTouchID, pTouchX, pTouchY
       set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
    else
       // Check for horizontal scroll
-      
-      if pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3) then
-         put the long owner of the target into tHGroup  
+      put the long owner of the target into tHGroup
+      if (the short name of tHgroup <> "all-collections") and \
+            (pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3)) then
          set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
       end if
    end if
@@ -77,7 +77,7 @@ end touchRelease
 
 on mouseDown 
    put the mouseloc into sStartLoc
-   put the long owner of the target into tHGroup 
+   put the long owner of the target into tHGroup
    if not isMobile() then -- jg: mobile will use stack handlers to scroll instead    
       setScroll tHGroup  
    end if
@@ -121,7 +121,7 @@ on setScroll tHGroup
             set the vscroll of grp "all-collections" to the vscroll of grp "all-collections" + (item 2 of sStartLoc - the mouseV)
          end if  
       end if  
-      if abs (item 1 of sStartLoc ) > 40 then
+      if abs (item 1 of sStartLoc ) > 40 and (the short name of tHgroup <> "all-collections") then
          if item 1 of sStartLoc > the mouseH then
             set the hscroll of tHGroup to the hscroll of tHGroup - (the mouseH - item 1 of sStartLoc)
          else
