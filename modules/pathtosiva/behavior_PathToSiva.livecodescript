@@ -305,7 +305,7 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
       flagGlossaryTerms true -- flag all glossary terms in the text
    end if
    
-   createScroller "bodytextGrp" -- replaces any existing
+   --createScroller "bodytextGrp" -- replaces any existing
    put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
 end loadLesson

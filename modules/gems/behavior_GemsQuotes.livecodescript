@@ -317,6 +317,10 @@ on journal_AddEntry pContext
    dialog_CustomMsg "Saved to Journal"
 end  journal_AddEntry 
 
+on journalResume  pDataA, pEntryA
+   dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
+end journalResume
+
 command switchViewState 
    switch sViewState
       case 0          # img is full size and quote is showing    
