@@ -190,7 +190,8 @@ command deployHeaders pHeaderMessage, pHeaderControl, x, y
    wait 200 millisecond
 end deployHeaders
 
-command goCd pCdName,pEffect -- optional effect param
+command goCd pCdName --,pEffect -- optional effect param
+   --breakpoint
    local tIslesson
    ntInfo pCdName && pEffect
    
@@ -203,11 +204,12 @@ command goCd pCdName,pEffect -- optional effect param
       exit goCd
    end if
    if the short name of this cd = pCdName then exit goCd
-   if pEffect = "" then put "plain" into pEffect
+   
+   --if pEffect = "" then put "plain" into pEffect
    
    put (pCdName begins with "lesson") into tIslesson
    
-   lock screen for visual effect 
+   lock screen  
    if there is a cd pCdName then
       go cd pCdName
       
@@ -229,16 +231,12 @@ command goCd pCdName,pEffect -- optional effect param
       hide btn "SVG menu"
    end if
    
-   if sCard = "lessonView" then
-      createScroller  "bodytextGrp" 
-   end if
-   --
-   unlock screen with visual effect pEffect fast
+   unlock screen --  with visual effect pEffect fast
    
 end goCd
 
 command loadLesson pLessonNum -- lesson pages, dynamically loaded html
-   
+   --breakpoint
    show widget "photo index"
    show widget "SVG Journal"
    show btn "SVG Menu"
@@ -305,9 +303,13 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
       flagGlossaryTerms true -- flag all glossary terms in the text
    end if
    
-   --createScroller "bodytextGrp" -- replaces any existing
+      createScroller "bodytextGrp" -- replaces any existing
+   
    put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
+   
+   
+   
 end loadLesson
 
 command turnPage pDir,  sCurrentLesson -- pLesson -- navigate to another lesson
