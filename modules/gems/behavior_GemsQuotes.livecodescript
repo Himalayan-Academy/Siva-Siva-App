@@ -324,6 +324,32 @@ command share_Items
    return tShareItemsA
 end share_Items
 
+
+on journal_AddEntry pContext
+   local tRealm, pDataA, pData, tTitle
+   switch pContext
+      case "pReadQuote"
+         put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
+         put "images-quotes" into pDataA["card"]
+         put tRealm into sConfigA["currentRealm"]
+         put tRealm into pDataA["realm"]
+         put getLastImagePath() into pDataA["lastImage"]
+         put getLastQuoteID() into pDataA["lastQuote"]
+         Journal_RecordEntry "gems", sTruncFirstLine, pDataA
+         break
+         --      case "pBookPage"        
+         --         put browser_GetLastURL() into pData["weburl"]
+         --         put  browser_GetLastPageTitle() into tTitle
+         --         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+   end switch
+   dialog_CustomMsg "Saved to Journal"
+end  journal_AddEntry 
+
+on journalResume  pDataA, pEntryA
+   dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
+end journalResume
+
+
 --command resetUI
 --   set the uSourceURL of button "loadContext" to empty
 --   put empty into sCurrentSourceURL
