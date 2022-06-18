@@ -188,7 +188,7 @@ on journal_AddEntry
    
    local pData, tTitle, tOutput, 
    local tParseURL, tLastItemInURL, tWords
-   
+   local tFavorites
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
@@ -250,10 +250,14 @@ on journal_AddEntry
    
    if sLandscapeOnly then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
+      --put the long ID of btn "add-favorites" into tFavorites
+      moveMe "add-favorites", 0, -25, 200
+      moveMe "add-favorites", 0, 25, 200    --pControlName, pHorz, pVert, pSpeed
    else
-      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData
+      dialog_CustomMsg "Saved to Journal"   
    end if
-   dialog_CustomMsg "Saved to Journal"
+   
 end journal_AddEntry
 
 

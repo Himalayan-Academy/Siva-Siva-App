@@ -226,7 +226,7 @@ end fetchImage
 on updateImages
    jnanam_UpdatePhotoCache
 end updateImages
- 
+
 private function _getRandomSQL
    local tSQL
    put the uRandomSQLQuery of this card into tSQL
@@ -297,6 +297,21 @@ end checkRealm
 --   end switch
 --end toggleReadContext
 
+on  journal_AddEntry pContext
+   local tRealm, pDataA, pData, tTitle
+   switch pContext
+      case "pReadQuote"
+         put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
+         put "images-quotes" into pDataA["card"]
+         put tRealm into sConfigA["currentRealm"]
+         put tRealm into pDataA["realm"]
+         put getLastImagePath() into pDataA["lastImage"]
+         put getLastQuoteID() into pDataA["lastQuote"]
+         Journal_RecordEntry "gems", sTruncFirstLine, pDataA
+         break 
+   end switch
+   dialog_CustomMsg "Saved to Journal"
+end  journal_AddEntry
 
 command switchViewState 
    switch sViewState
@@ -323,32 +338,6 @@ command share_Items
    put "Gems of Wisdom from SivaSiva.App" into tShareItemsA["subject"]
    return tShareItemsA
 end share_Items
-
-
-on journal_AddEntry pContext
-   local tRealm, pDataA, pData, tTitle
-   switch pContext
-      case "pReadQuote"
-         put  item sCurrentRealm of ("God,Soul,Life") into  tRealm
-         put "images-quotes" into pDataA["card"]
-         put tRealm into sConfigA["currentRealm"]
-         put tRealm into pDataA["realm"]
-         put getLastImagePath() into pDataA["lastImage"]
-         put getLastQuoteID() into pDataA["lastQuote"]
-         Journal_RecordEntry "gems", sTruncFirstLine, pDataA
-         break
-         --      case "pBookPage"        
-         --         put browser_GetLastURL() into pData["weburl"]
-         --         put  browser_GetLastPageTitle() into tTitle
-         --         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
-   end switch
-   dialog_CustomMsg "Saved to Journal"
-end  journal_AddEntry 
-
-on journalResume  pDataA, pEntryA
-   dispatch "restoreFromJournalEntry" to card "images-quotes" with pDataA
-end journalResume
-
 
 --command resetUI
 --   set the uSourceURL of button "loadContext" to empty
