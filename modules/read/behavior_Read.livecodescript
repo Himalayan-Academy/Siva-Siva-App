@@ -35,6 +35,7 @@ on preOpenCard
       put sBookTitle into sConfigA["bookTitle"]
       buildBookDetail
    end if
+   
    updateUI
 end preopenCard
 
@@ -42,7 +43,6 @@ end preopenCard
 on closeCard
    local tCard
    put the short name of this card into tCard
-   
    --
    portal_SetLastStack "read" 
    --
