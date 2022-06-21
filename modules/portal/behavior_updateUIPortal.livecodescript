@@ -508,14 +508,13 @@ command updateUIPortal
          
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
-            
             set the textSize of tControl to 14
             set the textSize of fld "pathtosiva"to 13
-            -- set the textSize of fld "fun" to 14
-            -- set the textSize of fld "look" to 14
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
+         else if CardHeight() > 900 then
+            centerMe tControl, the bottom of button "brandLogo", CardHeight() - the top of img "hideNavMandala"
          else
             topCenterMe tControl,75
          end if
