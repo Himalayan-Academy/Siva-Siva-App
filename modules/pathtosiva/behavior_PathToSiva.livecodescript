@@ -694,14 +694,13 @@ on updateUI
       case "lessonview"
       case "about"
       case "glossary"
+         
+         put the long id of grc "headerBkgGrc" into tHeaderBkgGrc
+         centerMe tHeaderBkgGrc, 0, 0
+         
          ## we do the grp "headerGrp"
-         
-         
          put the long id of grp "headerGrp" into tHeaderGrp
          topCenterMe tHeaderGrp, 0
-         
-         put the long id of fld "headerBgFld" into tHeaderBgFld
-         topCenterMe tHeaderBgFld, 0
          
          put the long id of btn "prevLesson" into tPrevLesson
          topLeftMe tPrevLesson, 0, 2

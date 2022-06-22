@@ -1,9 +1,4 @@
 # pathtosiva
-**widget "showTerms" of bkgnd "menuGrp" of stack "pathtosiva"**
-* ID: widget id 1275 of bkgnd id 1080 of stack "pathtosiva"
-* Widget Kind: com.livecode.widget.switchbutton
-* [stack_pathtosiva_widget_id_1275](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_1275.livecodescript)
-
 **widget "turnOffAudio" of bkgnd "audioGlobalControl" of stack "pathtosiva"**
 * ID: widget id 51292 of bkgnd id 51291 of stack "pathtosiva"
 * Widget Kind: com.livecode.widget.svgpath
@@ -29,6 +24,11 @@
 
 * Shared group on card IDs: 1002
 * [stack_pathtosiva_bkgnd_id_1071](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_bkgnd_id_1071.livecodescript)
+
+**widget "showTerms" of bkgnd "menuGrp" of stack "pathtosiva"**
+* ID: widget id 1275 of bkgnd id 1080 of stack "pathtosiva"
+* Widget Kind: com.livecode.widget.switchbutton
+* [stack_pathtosiva_widget_id_1275](./../../ScriptTracker/modules/pathtosiva_Scripts/stack_pathtosiva_widget_id_1275.livecodescript)
 
 **card "cover" of stack "pathtosiva"**
 * ID: card id 1088 of stack "pathtosiva"
