@@ -19,9 +19,9 @@ on preOpenStack
    end if
 end preOpenStack
 
-on preOpenCard
-   updateUI
-end preOpenCard
+--on preOpenCard
+--   updateUI
+--end preOpenCard
 
 on openStack
    set the acceleratedRendering of this stack to "true"
@@ -32,6 +32,7 @@ end openStack
 
 on opencard
    
+   updateUI
    
    put the short name of this card into sCard
    
@@ -685,7 +686,7 @@ on updateUI
    
    put the short name of this card into tCard
    
-   if the cLayoutRect of this card is CardRect() then exit updateUI
+    if the cLayoutRect of this card is CardRect() then exit updateUI
    set the cLayoutRect of this card to CardRect()
    
    switch tCard
