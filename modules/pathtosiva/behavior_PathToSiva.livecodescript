@@ -17,11 +17,12 @@ on preOpenStack
    if isMobile() then
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
+   setCardCoords
 end preOpenStack
 
---on preOpenCard
---   updateUI
---end preOpenCard
+on preOpenCard
+   updateUI
+end preOpenCard
 
 on openStack
    set the acceleratedRendering of this stack to "true"
@@ -31,9 +32,6 @@ on openStack
 end openStack
 
 on opencard
-   
-   updateUI
-   
    put the short name of this card into sCard
    
    switch sCard
@@ -191,10 +189,10 @@ command deployHeaders pHeaderMessage, pHeaderControl, x, y
    wait 200 millisecond
 end deployHeaders
 
-command goCd pCdName --,pEffect -- optional effect param
+command goCd pCdName
    --breakpoint
    local tIslesson
-   ntInfo pCdName && pEffect
+   ntInfo pCdName
    
    if (sCard is "glossary") OR (sCard is "about")  then
       put "lesson " before pCdName
@@ -205,8 +203,6 @@ command goCd pCdName --,pEffect -- optional effect param
       exit goCd
    end if
    if the short name of this cd = pCdName then exit goCd
-   
-   --if pEffect = "" then put "plain" into pEffect
    
    put (pCdName begins with "lesson") into tIslesson
    
@@ -222,9 +218,8 @@ command goCd pCdName --,pEffect -- optional effect param
       --send "loadLesson pCdName" to this cd
       
    else if pCdName = "GO HOME - SIVASIVA PORTAL" then -- return to project
-      put "push right" into pEffect
       portal_GoStack "Siva-Siva-Portal"
-      unlock screen with visual effect pEffect fast
+      unlock screen with visual effect "push right" fast
       exit goCd
    end if
    
@@ -431,7 +426,7 @@ command slideCaption pBool -- animate the caption view
    unlock moves
    
    if pBool then set the top of tCaptionFld to the bottom of img "heroImg" -- adjust in case
-   set the flipped of widget"theExpander" to pBool --not pBool
+   set the flipped of widget "theExpander" to pBool --not pBool
    createScroller  "bodytextGrp" -- adjust for new height
 end slideCaption
 
@@ -679,20 +674,26 @@ end share_Items
 private command __GEOMETRY__
 end __GEOMETRY__
 
+on forceUpdateUI
+   # used to cause the UI to adjust in the IDE
+   set the cLayoutRect of this card to empty
+   updateUI
+end forceUpdateUI
+
 on updateUI
    
-   local tCard, tHeaderGrp, tHeaderBgFld, tPrevLesson, tPhotoIndex, tSVGJournal, tMessage
+   local tCard, tHeaderGrp, tHeaderBgFld, tPrevLesson, tPhotoIndex, tSVGJournal, tMessage, tHeaderBkgGrc
    local tControl, tSVGMenu, tNextLesson, tTurnOffAudio
    
    put the short name of this card into tCard
    
-    if the cLayoutRect of this card is CardRect() then exit updateUI
+   if the cLayoutRect of this card is CardRect() then exit updateUI
    set the cLayoutRect of this card to CardRect()
    
    switch tCard
       
       case "photo index"
-      case "lessonview"
+      case "lessonView"
       case "about"
       case "glossary"
          
@@ -820,12 +821,17 @@ end updateExploreRealmsUI
 private command updateLessonViewUI
    local tControl, tRect, tRight, tLoc
    
-   set the rect of grp "bodytextGrp" to safeRect()
+   put safeRect() into tRect
+   put the bottom of grp "headerGrp" into item 2 of tRect
+   set the rect of grp "bodytextGrp" to tRect
    set the width of fld "bodytext" to CardWidth()-2*safeSideMargin()
    set the left of fld "bodytext" to safeSideMargin()
    topCenterMe the long id of img "heroImg"
-   topCenterMe the long id of fld "caption", 163
-   topCenterMe the long id of grp "expander", 371
+   --topCenterMe the long id of fld "caption", 152
+   topCenterMe the long id of grp "expander", 261
+   set the width of fld "caption" to CardWidth()
+   set the left of fld "caption" to 0
+   set the bottom of fld "caption" to the bottom of grp "expander" + 4
    
    put the long id of fld "glossaryDef" into tControl
    put the loc of tControl into tLoc
