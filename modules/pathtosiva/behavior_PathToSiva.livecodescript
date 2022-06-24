@@ -785,6 +785,9 @@ private command updateChooseYourPathUI
    put the long id of img "app-img_dsc_0209_736h-landscape_med.jpg" into tControl
    put the loc of tControl into tOldLoc
    set the bottom of tControl to tFooterTop
+   if the width of tControl < CardWidth() or the top of tControl > 0 then
+      centerMe tControl, 0, the height of grp "footerNavigation"
+   end if
    put the loc of tControl into tNewLoc
    
    # adjust everything left for narrower screens
@@ -842,17 +845,13 @@ end updateLessonViewUI
 private command updatePhotoIndexUI
    local tControl, tRect, tRight, tTextSize, tLoc
    
-   --updateHeaderGrpUI
-   put the long id of grp "headerGrp" into tControl
-   put the rect of tControl into tRect
-   put item 4 of tRect into item 2 of tRect
+   put the rect of grp "indexGrp" into tRect
+   put the bottom of grp "headerGrp" + 1 into item 2 of tRect
    put CardHeight() into item 4 of tRect
    set the rect of grp "indexGrp" to tRect
    put the loc of grp "indexGrp" into tLoc
-   if the width of grp "indexGrp" > 520 then
-      set the width of grp "indexGrp" to 520
-      set the loc of grp "indexGrp" to tLoc
-   end if
+   put horizCenter() into item 1 of tLoc
+   set the loc of grp "indexGrp" to tLoc
    
    put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
    repeat with tNum = 1 to 68 
@@ -901,6 +900,8 @@ end updateGlossaryUI
 
 private command updateMenuGrpUI
    local tControl
+   
+   if there is no grp "menuGrp" then exit updateMenuGrpUI
    
    put the long id of grp "menuGrp" into tControl
    if the cLayoutRect of tControl is CardRect() then exit updateMenuGrpUI
