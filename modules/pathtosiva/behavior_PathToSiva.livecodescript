@@ -840,7 +840,7 @@ private command updateLessonViewUI
 end updateLessonViewUI
 
 private command updatePhotoIndexUI
-   local tControl, tRect, tRight, tTextSize
+   local tControl, tRect, tRight, tTextSize, tLoc
    
    --updateHeaderGrpUI
    put the long id of grp "headerGrp" into tControl
@@ -848,6 +848,11 @@ private command updatePhotoIndexUI
    put item 4 of tRect into item 2 of tRect
    put CardHeight() into item 4 of tRect
    set the rect of grp "indexGrp" to tRect
+   put the loc of grp "indexGrp" into tLoc
+   if the width of grp "indexGrp" > 520 then
+      set the width of grp "indexGrp" to 520
+      set the loc of grp "indexGrp" to tLoc
+   end if
    
    put min(CardWidth(),the right of grp "indexGrp")-4 into tRight
    repeat with tNum = 1 to 68 
