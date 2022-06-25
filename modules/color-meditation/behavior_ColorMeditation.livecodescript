@@ -16,12 +16,12 @@ end preopenstack
 
 on opencard
    --initializeColorMeditation
-
+   
    --send  "colorizeControlChars" && "moduleTitle" to this stack in 200 milliseconds
-
---set the acceleratedRendering of this stack to true
-audioIsRunning  
-pass opencard
+   
+   --set the acceleratedRendering of this stack to true
+   audioIsRunning  
+   
 end opencard
 
 --on preopencard
@@ -35,9 +35,9 @@ end opencard
 --end preopencard
 
 
-getProp iAmVisible
-   show fld "moduleTitle"
-end iAmVisible
+--getProp iAmVisible
+--   show fld "moduleTitle"
+--end iAmVisible
 
 on setLastactivity  sCurrentColorLevel 
    put sCurrentColorLevel into sLastLevel 
@@ -98,12 +98,14 @@ on updateUI
    put the short name of this card into tCard
    put CardRect() into tCardRect
    
-   -- check to see if the card has already been updated
-   -- if the uCardRect of this card is tCardRect then exit updateUI
+   
    
    Switch tCard
       
+      
       case  "colorOpening"
+         put the long id of grp "colorMedBkgnd" into tControl
+         centerMe tControl,0,0
          
          put the long id of grp "contentCardHeader" into tHeader
          set the width of tHeader to CardWidth()
@@ -116,21 +118,14 @@ on updateUI
          centerMe tControl, 0, 62
          
          put the long id of fld "moduleTitle" into tControl
-         if CardWidth() < the width of tControl then
-            set the textsize of fld "moduleTitle" to 50
-         end if
          topCenterMe tControl, 214
          
-         if CardWidth() < the width of tControl then
-            set the textsize of fld "moduleTitle" to 50
-         end if
-         topCenterMe tControl, 214
+         break
          
-         if the short name of this card is "levelsIndex" then
-            put the long id of grp "levelsLinks" into tControl
-            centerMe tControl, the height of tHeader, 116
-         end if
+      case "levelsIndex"
          
+         put the long id of grp "levelsLinks" into tControl
+         centerMe tControl, 0, 0
          break
          
       case  "runColors" 
@@ -150,6 +145,7 @@ on updateUI
          --            set the rect of tControl to tCardRect
          --         end if
          break
+         
       case   "colorPreferences" 
          put the long id of grp "prefsSelectorGrp" into tControl
          set the height of tControl to \
