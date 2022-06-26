@@ -1,6 +1,6 @@
 ﻿script "behavior_ColorMeditation"
 local sColorA,sAboutText,sLastLevel,sLastLevelCycle,sMylocation,sLastActivityA
-local sCurrentFillGradientColor,sCurrentLevel,sColorCount,aColorMedPrefs
+local sCurrentFillGradientColor,sCurrentLevel,sColorCount,aColorMedPrefs, sColorLaunch
 local  sBreathCount, sBreathPace, sCycles,sAudioOn
 
 # BR vars are a bit of a mess... I would do it differnently today
@@ -48,8 +48,11 @@ command initializeColorMeditation
    showTools
    ####### INITIALIZE COMMON VARS
    #############################
+  
+   put path_HomeLocal() & "modules/color-meditation/color-meditation.json" into sColorLaunch
+   put url ("binfile:" & sColorLaunch) into someJSON
+   put jsonImport (someJSON) into sColorA
    
-   put sivasiva_GetModuleConfigArray("color-meditation") into sColorA
    put ("255,0,255") into sCurrentFillGradientColor
    setBackGroundGradient sCurrentFillGradientColor
    setCurrentLevel ("colorOpening")  
