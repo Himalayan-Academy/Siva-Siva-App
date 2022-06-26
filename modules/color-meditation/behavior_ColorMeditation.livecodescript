@@ -11,18 +11,11 @@ on preopenstack
    if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
    end if
-  
+   initializeColorMeditation
+   
 end preopenstack
 
-on opencard
-   --initializeColorMeditation
-   
-   --send  "colorizeControlChars" && "moduleTitle" to this stack in 200 milliseconds
-   
-   --set the acceleratedRendering of this stack to true
-   audioIsRunning  
-   
-end opencard
+
 
 --on preopencard
 --   local tColor
@@ -34,10 +27,16 @@ end opencard
 --   pass preOpenCard
 --end preopencard
 
+on opencard
+   --set the acceleratedRendering of this stack to true
+   audioIsRunning  
+   
+   updateUI
+end opencard
 
---getProp iAmVisible
---   show fld "moduleTitle"
---end iAmVisible
+getProp iAmVisible
+   show fld "moduleTitle"
+end iAmVisible
 
 on setLastactivity  sCurrentColorLevel 
    put sCurrentColorLevel into sLastLevel 
@@ -65,6 +64,7 @@ on hideTools
    hide group "contentCardHeader"
    hide group "colorMedsToolbar"
    hide group "aboutDisplay"
+   
 end hidetools
 
 
@@ -91,20 +91,20 @@ on resizeStack
 end resizeStack
 
 on updateUI
-   
+   --breakpoint
    local tHeader, tFooter, tControl, tRect, tCardRect
    local tCard
    
    put the short name of this card into tCard
    put CardRect() into tCardRect
    
-   
-   
    Switch tCard
-      
-      
       case  "colorOpening"
+         
          put the long id of grp "colorMedBkgnd" into tControl
+         centerMe tControl,0,0
+         
+         put the long id of fld "moduleTitle" into tControl
          centerMe tControl,0,0
          
          put the long id of grp "contentCardHeader" into tHeader
@@ -117,8 +117,7 @@ on updateUI
          put the long id of grp "aboutDisplay" into tControl
          centerMe tControl, 0, 62
          
-         put the long id of fld "moduleTitle" into tControl
-         topCenterMe tControl, 214
+         
          
          break
          
@@ -166,7 +165,7 @@ on updateUI
          
          break
    end Switch
-   set the uCardRect of this card to tCardRect
+   --set the uCardRect of this card to tCardRect
 end updateUI
 
 ####### SOUND CONTROL
