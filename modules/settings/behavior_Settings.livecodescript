@@ -13,9 +13,7 @@ end preopenstack
 
 
 on preOpenCard
-   --updateUI
-   
-   resizeStack
+   updateUI
    
    if there is a fld "info-text" then
       send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
@@ -183,28 +181,23 @@ on updateUI
       case "settings-home"
          put the long id of btn "Logo" of me into tControl
          topLeftMe tControl,19,16
-         --put bottom of tControl into tTop
          
          put the long id of grp "settings-options-1" of me into tControl
          centerMe tControl,30,120
          
+         put the left of tControl into tLeft
+         put the bottom of tControl into tBottom
          
          put the long id of button "Close App" of me into tControl
          bottomLeftMe tControl,-20,90
-         --put bottom  of tControl into tBottom
-         
-         --put tBottom - 75 into tBottom
-         --put tTop + 50 into tTop
-         
-         put the bottom of btn "Privacy-TOS-EULA" into tBottom
-         put the top of btn "App News" into tTop 
-         
-         if (tBottom) > (tTop) then
-            # handle s mall screens
-            put the top of btn "App News" - the bottom of btn "Privacy-TOS-EULA" - \
-                  trunc((tBottom - tTop)/7) into tOffset
-            put the bottom of btn "Privacy-TOS-EULA" + tOffset into tTop
-            put "App News,User Guide,Feedback,My Data,About,Credits,Privacy-TOS-EULA" into tItems
+         put the top of tControl into tTop
+      
+         if tBottom > tTop then
+            # handle small screens
+            put the top of btn "User Guide" - the bottom of btn "App News" - \
+                  trunc((tBottom - tTop)/6) into tOffset
+            put the bottom of btn "App News" + tOffset into tTop
+            put "User Guide,Feedback,My Data,About,Credits,Privacy-TOS-EULA" into tItems
             repeat for each item tControl in tItems
                set the top of btn tControl to tTop
                put the bottom of btn tControl + tOffset into tTop
