@@ -687,7 +687,7 @@ on updateUI
    
    put the short name of this card into tCard
    
-   if the cLayoutRect of this card is CardRect() then exit updateUI
+   --if the cLayoutRect of this card is CardRect() then exit updateUI
    set the cLayoutRect of this card to CardRect()
    
    switch tCard
@@ -825,12 +825,14 @@ private command updateLessonViewUI
    local tControl, tRect, tRight, tLoc
    
    put safeRect() into tRect
+   
    put the bottom of grp "headerGrp" into item 2 of tRect
+   
    set the rect of grp "bodytextGrp" to tRect
    set the width of fld "bodytext" to CardWidth()-2*safeSideMargin()
    set the left of fld "bodytext" to safeSideMargin()
    topCenterMe the long id of img "heroImg"
-   --topCenterMe the long id of fld "caption", 152
+   
    topCenterMe the long id of grp "expander", 261
    set the width of fld "caption" to CardWidth()
    set the left of fld "caption" to 0
@@ -841,6 +843,28 @@ private command updateLessonViewUI
    put item 1 of the loc of img "heroImg" into item 1 of tLoc
    set the loc of tControl to tLoc
 end updateLessonViewUI
+
+private command updateAboutUI
+   --breakpoint
+   
+   local tControl, tRect, tLoc, tField
+   
+   put the long id of fld "aboutFld" into tField
+   
+   put safeRect() into tRect
+   put the bottom of grp "headerGrp" into item 2 of tRect
+   
+   --
+   topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
+   topCenterMe the long id of fld "aboutTitle", 163
+   
+   put "0,218," & (CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   set the rect of grp "aboutTextGrp" to tRect 
+   set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
+   set the left of fld "aboutFld" to safeSideMargin() 
+  
+end updateAboutUI
+
 
 private command updatePhotoIndexUI
    local tControl, tRect, tRight, tTextSize, tLoc
@@ -863,21 +887,6 @@ private command updatePhotoIndexUI
    end if
 end updatePhotoIndexUI
 
-private command updateAboutUI
-   local tControl, tRect
-   
-   put the long id of img "C_Introduction_470-80_opt.jpg" into tControl
-   topCenterMe tControl, 50
-   set the bottom of fld "aboutTitle" to the bottom of tControl
-   set the right of fld "aboutTitle" to CardWidth()-max(safeSideMargin(),12)
-   
-   put the long id of grp "aboutTextGrp" into tControl
-   put (max(safeSideMargin(),12), the bottom of fld "aboutTitle"+6, \
-         the right of fld "aboutTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
-   set the rect of tControl to tRect
-   set the width of fld "aboutFld" to the width of tControl
-   set the topLeft of fld "aboutFld" to the topLeft of tControl
-end updateAboutUI
 
 private command updateGlossaryUI
    local tControl, tRect
