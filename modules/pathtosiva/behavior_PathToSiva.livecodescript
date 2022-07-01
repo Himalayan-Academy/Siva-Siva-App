@@ -866,8 +866,8 @@ end updatePhotoIndexUI
 private command updateAboutUI
    local tControl, tRect
    
-   put the long id of img "C_Introduction_366w_opt.jpg" into tControl
-   topCenterMe tControl, 67
+   put the long id of img "C_Introduction_470-80_opt.jpg" into tControl
+   topCenterMe tControl, 50
    set the bottom of fld "aboutTitle" to the bottom of tControl
    set the right of fld "aboutTitle" to CardWidth()-max(safeSideMargin(),12)
    
