@@ -847,24 +847,61 @@ end updateLessonViewUI
 private command updateAboutUI
    --breakpoint
    
-   local tControl, tRect, tLoc, tField
+   local tControl, tRect, tLoc, tField, tImgBottom
    
    put the long id of fld "aboutFld" into tField
    
    put safeRect() into tRect
    put the bottom of grp "headerGrp" into item 2 of tRect
-   
+   --
+   resizeToWidth "C_Introduction_470-80_opt.jpg"
    --
    topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
-   topCenterMe the long id of fld "aboutTitle", 163
    
-   put "0,218," & (CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
+   topCenterMe the long id of fld "aboutTitle", tImgBottom-55
+
+   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "aboutTextGrp" to tRect 
    set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
    set the left of fld "aboutFld" to safeSideMargin() 
-  
+   
 end updateAboutUI
 
+private command updateGlossaryUI
+   local tControl, tRect, tLoc, tField, tImgBottom
+   
+   put the long id of fld "glossaryTitle" into tField
+   
+   put safeRect() into tRect
+   put the bottom of grp "glossaryTextGrp" into item 2 of tRect
+   --
+   resizeToWidth "C2_TOC-shutterstock-278201699_366w_opt.jpg"
+   --
+   
+   topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
+   
+   put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
+   topCenterMe the long id of fld "glossaryTitle", tImgBottom - 70
+   
+   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   set the rect of grp "glossaryTextGrp" to tRect 
+   set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
+   set the left of fld "glossaryText" to safeSideMargin() 
+   
+   --
+   --   put the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tControl
+   --   topCenterMe tControl, 67
+   --   set the bottom of fld "glossaryTitle" to the bottom of tControl
+   --   set the right of fld "glossaryTitle" to CardWidth()-max(safeSideMargin(),12)
+   
+   --   put the long id of grp "glossaryTextGrp" into tControl
+   --   put (max(safeSideMargin(),12), the bottom of fld "glossaryTitle"+6, \
+   --         the right of fld "glossaryTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
+   --   set the rect of tControl to tRect
+   --   set the width of fld "glossaryText" to the width of tControl
+   --   set the topLeft of fld "glossaryText" to the topLeft of tControl
+end updateGlossaryUI
 
 private command updatePhotoIndexUI
    local tControl, tRect, tRight, tTextSize, tLoc
@@ -888,22 +925,6 @@ private command updatePhotoIndexUI
 end updatePhotoIndexUI
 
 
-private command updateGlossaryUI
-   local tControl, tRect
-   
-   --updateHeaderGrpUI
-   put the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tControl
-   topCenterMe tControl, 67
-   set the bottom of fld "glossaryTitle" to the bottom of tControl
-   set the right of fld "glossaryTitle" to CardWidth()-max(safeSideMargin(),12)
-   
-   put the long id of grp "glossaryTextGrp" into tControl
-   put (max(safeSideMargin(),12), the bottom of fld "glossaryTitle"+6, \
-         the right of fld "glossaryTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
-   set the rect of tControl to tRect
-   set the width of fld "glossaryText" to the width of tControl
-   set the topLeft of fld "glossaryText" to the topLeft of tControl
-end updateGlossaryUI
 
 
 
