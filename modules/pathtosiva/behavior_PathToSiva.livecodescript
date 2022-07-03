@@ -171,6 +171,33 @@ on mouseup
                end switch
          end switch
          break
+         
+         --      case "Search"
+         --         local  tSearchString
+         
+         --         put fld "searchString" into tSearchString
+         --         find string tSearchString in fld "glossaryText"
+         
+         
+         --         --   switch pWhich
+         --         --      case "Find"
+         --         --         ask "Find What?"
+         --         --         if it is empty then break
+         --         --         set cursor to watch
+         --         --         put it into tSearchString
+         --         --         set the lockmessages to true
+         --         --         find string tSearchString in fld "text"
+         --         --         if the result is not empty then answer "Sorry, no such text." with "OK"
+         --         --         break
+         --         --      case "Find Again"
+         --         --         set cursor to watch
+         --         --         set the lockmessages to true
+         --         --         find string tSearchString in fld "text"
+         --         --         break
+         --         --      case "Bigger Text"
+         --         --   end switch
+         --         break
+         
    end switch
 end mouseup
 
@@ -299,7 +326,7 @@ command loadLesson pLessonNum -- lesson pages, dynamically loaded html
       flagGlossaryTerms true -- flag all glossary terms in the text
    end if
    
-      createScroller "bodytextGrp" -- replaces any existing
+   createScroller "bodytextGrp" -- replaces any existing
    
    put "Lesson" && pLessonNumber into pTrackdata["targetContent"]
    tracking_RecordActivity "Path To Siva", "navigation/goLesson", pTrackdata
@@ -882,25 +909,16 @@ private command updateGlossaryUI
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
    
    put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
-   topCenterMe the long id of fld "glossaryTitle", tImgBottom - 70
+   topCenterMe the long id of fld "glossaryTitle", tImgBottom - 130
+   topRightMe the long id of btn "Search", 40, tImgBottom - 40
+   topLeftMe the long id of fld "searchString", 40, tImgBottom - 40
    
    put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "glossaryTextGrp" to tRect 
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
    set the left of fld "glossaryText" to safeSideMargin() 
    
-   --
-   --   put the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tControl
-   --   topCenterMe tControl, 67
-   --   set the bottom of fld "glossaryTitle" to the bottom of tControl
-   --   set the right of fld "glossaryTitle" to CardWidth()-max(safeSideMargin(),12)
    
-   --   put the long id of grp "glossaryTextGrp" into tControl
-   --   put (max(safeSideMargin(),12), the bottom of fld "glossaryTitle"+6, \
-   --         the right of fld "glossaryTitle", CardHeight()-max(safeBottomMargin(),12)) into tRect
-   --   set the rect of tControl to tRect
-   --   set the width of fld "glossaryText" to the width of tControl
-   --   set the topLeft of fld "glossaryText" to the topLeft of tControl
 end updateGlossaryUI
 
 private command updatePhotoIndexUI
@@ -1033,3 +1051,7 @@ on deleteCardMobileControls -- delete all mobile controls of any type on current
    end repeat
 end deleteCardMobileControls
 
+
+on startup pMode
+   
+end startup
