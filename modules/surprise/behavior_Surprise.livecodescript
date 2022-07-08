@@ -126,15 +126,15 @@ command setUpSurprise
    local tTargets, tTarget, tCard
    if connectivity_PingServer() = "true" then 
       --put "video" into tTarget # for test one card only: comment out the following 2 lines
-      --put "verse,audio,darshan,art,video" into tTargets
+      --put "verses" into tTarget --,audio,darshan,art,video" into tTargets
       # for some reason, video will not send the
       # broader download complete or  hideLoader to the browser
       # from this context so we are taking in out
-      put "verse,audio,darshan,art,video" into tTargets
+      put "verses,audio,darshan,art,video" into tTargets
       put item (random(5)) of tTargets into tTarget
       put "surprise_"&tTarget into tCard
    else
-      put "surprise_verse" into tCard
+      put "surprise_verses" into tCard
    end if
    
    switch tCard
