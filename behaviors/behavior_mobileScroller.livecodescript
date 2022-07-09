@@ -113,7 +113,6 @@ on mouseDown
    pass mousedown
 end mouseDown
 
-
 on mouseUp
    put "" into sMouseLoc
    if sImageScroller or (sName = "audioList") then
@@ -125,21 +124,10 @@ on mouseUp
    end if
 end mouseUp
 
-
 on mouseRelease
    put "" into sMouseLoc
    put "" into sStartLoc
 end mouseRelease
-
-
--- BWM: This should not be necessary.  If it is, let me know because something else needs to be fixed.
---      Mousedown should start tracking the position of the mouse
---
---on mouseMove x,y -- desktop scrolling
---   if isMobile() or sMouseLoc = "" then pass mouseMove
---   setScroll
---end mouseMove
-
 
 on setScroll
    if the mouse is down then

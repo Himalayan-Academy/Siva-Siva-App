@@ -424,7 +424,13 @@ command selectPlaylist pSelection
       exit to top
    else
       # we should put this a common library, but the are too many sceneros per moldule
-      offLineGoMyAudio
+      --offLineGoMyAudio
+      if not connectivity_PingServer() then
+         dialog_CustomMsg "Connection required." & CR & "You can play 'My Download'"
+         --go to card "listen-my-audio"
+         exit to top
+      end if
+   
    end if
    
    set the itemDelimiter to "-"
@@ -855,6 +861,7 @@ on direct_Play pSelectNum, pCardName
    put sDownloadedAudioA[pSelectNum]["localURL"] into sRemoteURL
    put sDownloadedAudioA[pSelectNum]["metadata"]["1"]["title"]  into pTitle
    put pTitle into fld "currentTitleLabel" 
+   
    startPlayer sRemoteURL,pTitle,pCardName,pSelectNum
    # skip the card name Parameter in this context.
    showBusyIndicator false
@@ -919,7 +926,7 @@ on select_Play pItemID, pSelectionNum
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
       showBusyIndicator false
-      put "Sound file unavailable. Connected to the internet?" & cr & "Try it again." into tMsg
+      put "Sound file unavailable." & CR & "Connected to the internet?" & cr & "Try it again." into tMsg
       doAnswer tMsg,"OK", tAnswerURLunavailable
       exit to top
    end if
@@ -1391,8 +1398,6 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
       # Metadata is missing.
       put sDownloadedAudioA[pSelectNum]["localURL"] into pURL
       put sDownloadedAudioA[pSelectNum]["metadata"][1]["item_id"] into tItemID
-      
-      
       put tItemID into sDataA["item_id"]
       put pTitle  into sDataA["title"]
       
@@ -1407,18 +1412,20 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
       put sSelectedItemA["item_id"] into tItemID
    end if
    
-   if isMobile() then
-      createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
-      wait 300 milliseconds
-   else
-      set the filename of player "audioPlayer" to pURL
-   end if
    put pURL into sDataA["url"]
    
    if sTimeStamp is empty then
       put 0 into sTimeStamp
    end if
    --
+   
+   if isMobile() then
+      createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
+      wait 300 milliseconds
+   else
+      set the filename of player "audioPlayer" to pURL
+   end if
+   
    if not isMobile() then
       start player "audioPlayer"
       set the currenttime player "audioPlayer" to sTimeStamp
@@ -1493,15 +1500,15 @@ command offLineGoMyAudio
    if not connectivity_PingServer() then
       put (path_Documents() & "media/audio") into tFolder
       put listFilesWithPaths(tFolder, "true")  into tList
-      if tList is empty then
-         dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
-         go to card "listen-collection"
-      else
-         dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
-         go to card "listen-my-audio"
-         exit to top
-      end if
-   end if
+      --      if tList is empty then
+      --         dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
+      --          go to card "listen-collection"
+      --      else
+      dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
+      --go to card "listen-my-audio"
+      exit to top
+   --end if
+end if
 end offLineGoMyAudio
 
 

@@ -209,10 +209,10 @@ command audioPlays
    
    # need to off  the Mobile Player
    
-   if isMobile() then
-      deleteAllMobileControls
-      wait 100 milliseconds
-   end if
+   --   if isMobile() then
+   --      deleteAllMobileControls
+   --      wait 100 milliseconds
+   --   end if
    
    # sLineNum is the physical line number the user clicks on the field
    # sRecentNum is the numeric key value is the sSelectionsA play list array
