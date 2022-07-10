@@ -6,34 +6,24 @@ Script "stack_listen_card_id_1158"
 */
 
 
-local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll
+global gConfigA, gCardName
+local sStartX, sStartY,sStartLoc,sStartHScroll, sStartYScroll, sScrollDirection
 local tHGroup, sLoadingIndicator
 ## touch commands to scroll the groups
 
---on preopencard
---   put the long id of control "loading" into sLoadingIndicator
---   setCardCoords
---   pass preopencard
---end preopencard
-
-
---on opencard
---   audioIsRunning
---   pass opencard
---end opencard
-
 
 on touchStart pTouchID
-  
+   
    --breakpoint
    put empty into sStartX
    put empty into sStartY
+   put "none" into sScrollDirection
    
    put the vScroll of grp "all-collections" into sStartYScroll
    
    put the long owner of the target into tHGroup  
    put the hScroll of tHGroup into sStartHScroll
-
+   
 end touchStart
 
 
@@ -47,18 +37,31 @@ on touchMove pTouchID, pTouchX, pTouchY
       put pTouchX into sStartX
    end if
    
-   // Check for vertical scroll
-   
-   if pTouchY > (sStartY + 60) or pTouchY < (sStartY - 60) then
-      set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
-   else
-      // Check for horizontal scroll
-      put the long owner of the target into tHGroup
-      if (the short name of tHgroup <> "all-collections") and \
-            (pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3)) then
-         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
+   if sScrollDirection is "none" then
+      // Check for vertical scroll
+      if pTouchY > (sStartY + 45) or pTouchY < (sStartY - 45) then
+         put "vertical" into sScrollDirection
+      else
+         // Check for horizontal scroll
+         if (the short name of tHgroup <> "all-collections") and \
+               (pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3)) then
+            put "horizontal" into sScrollDirection
+         end if
       end if
    end if
+   
+   switch sScrollDirection
+      case "none"
+         # have not moved enough to establish a direction yet
+         break
+      case "vertical"
+         set the vScroll of group "all-collections" to sStartYScroll + (sStartY - pTouchY)
+         break
+      case "horizontal"
+         put the long owner of the target into tHGroup
+         set the hScroll of tHGroup to sStartHScroll + (sStartX - pTouchX)
+         break
+   end switch
    
 end touchMove
 
@@ -88,6 +91,7 @@ on mouseup
    local pSelection
    
    if the short name target is "title-label" then
+      put "listen-my-audio" into gCardName
       go to card "listen-my-audio"
       
    else
