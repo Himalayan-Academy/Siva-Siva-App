@@ -353,12 +353,14 @@ end setTileGlow
 
 on checkCompletion 
    local  tTargetLocs,tImgLocs
-  
+   
    put the uTileList of this card into sTiles 
    repeat for each line x in sTiles 
       put the uTileLocation of img x & cr after tTargetLocs 
       put the loc of img x & cr after tImgLocs 
    end repeat 
+   
+   --put  tTargetLocs  & cr &cr & tImgLocs  & cr after fld "log"
    
    --breakpoint
    sort tTargetLocs numeric by item 2 of each 
