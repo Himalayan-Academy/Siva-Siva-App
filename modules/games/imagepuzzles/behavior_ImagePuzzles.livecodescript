@@ -150,7 +150,7 @@ local tNextTileName, tTileLocation,tTileList
 local  sCurrentPuzzle, tformattedHeight
 
 on makePuzzle
-   lock screen
+   --lock screen
    set the uTileList of this card to empty
    put empty into tTileList
    put empty into tImageData["image"] 
