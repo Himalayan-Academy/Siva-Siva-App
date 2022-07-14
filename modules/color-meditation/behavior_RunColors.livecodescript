@@ -14,7 +14,7 @@ CONSTANT kLEVELS="Primary Colors,Tertiary Colors,Transmute to Whilte"
  
 
 on preopencard
-   -- breakpoint
+   --   breakpoint
    hide grc "currentColor" # only used on third level
    set the blendlevel of grc "currentColor" to 0
    put getColorWheel() into sColorList 
@@ -53,7 +53,7 @@ on preopencard
    set the itemdel to tab
    put the number of items of sColors into sColorsTotal
    put 0 into sCurrentColor #this is an integer which tell us we item of sColor we are on
- 
+   
    
    # clear the stage in case anything left over from 
    # previous run
@@ -61,6 +61,7 @@ on preopencard
    hide fld "progressMessage"
    put 0 into sStopFlag   
    
+   hide grp "breathControl"
    # Need to store the current color count in the stack
    pass preOpenCard
 end preopencard
@@ -78,6 +79,7 @@ on mouseUp
       # the runColors show UI controllers
       case "Start"
          hide group "aboutDisplay"
+         show grp "breathControl"
          try
             visProgressMessage false
          end try
@@ -231,7 +233,7 @@ command colorHueBreath
       set the backgroundcolor of grc "currentColor" to sColorValue 
    end if
    put  "Visualize" & cr &  sColorName  into fld "practiceInstructions"
-
+   
    
    -- Now we  inhale
    put 0 into sCountDown 

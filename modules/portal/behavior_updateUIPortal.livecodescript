@@ -136,7 +136,7 @@ switch tTargetOwner
       hide grp "subNav"
       break
    case "navMandala"
-      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
+      if tTarget is among the items of "Stories,Path to Siva,pathtosiva,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Read,read,Video,Journal,My Menu,Settings" then
          # These are top links, some go  directly to another module stack
          portal_GoStack tTarget
          exit mouseup
@@ -148,7 +148,7 @@ switch tTargetOwner
       show  img "subNavBkgImage"
       unlock screen
       fetchSubMenu tTarget
-      wait 400 milliseconds
+      wait 200 milliseconds
       
       show grp "SubNav" with visual effect "dissolve fast"
       break
@@ -509,11 +509,12 @@ command updateUIPortal
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
             set the textSize of tControl to 14
-            set the textSize of fld "fun" to 14
-            set the textSize of fld "look" to 14
+            set the textSize of fld "pathtosiva"to 13
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
+         else if CardHeight() > 900 then
+            centerMe tControl, the bottom of button "brandLogo", CardHeight() - the top of img "hideNavMandala"
          else
             topCenterMe tControl,75
          end if
@@ -629,7 +630,13 @@ private command updateNavMandalaUI
    setBottomAndLoc the long id of widget "Journal", (the top of fld "Journal")-3, tMidX-tDeltaX
    setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX+1
    setBottomAndLoc the long id of button "Settings", (the top of fld "Settings")-3, tMidX+tDeltaX
+   
+   set left of grc "pathtosiva" to the left of  grc "Stories" + 5
+   set top of grc "pathtosiva" to the bottom of  grc "Gems" + 5
+   set the loc of fld "pathtosiva" to (the loc of grc "pathtosiva" ) 
+   set the top of fld "pathtosiva" to (the top of grc "pathtosiva" + 5 ) 
 end updateNavMandalaUI
+
 
 private command setTopAndLoc pControl, pTop, pXLoc
    local tLoc

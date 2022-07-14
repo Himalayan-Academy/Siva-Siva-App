@@ -7,6 +7,8 @@ Script "stack_listen_widget_id_2211"
 */
 
 
+local pTarget
+
 on mouseup
    focus on the mouseControl
    put the shortName of me into pTarget

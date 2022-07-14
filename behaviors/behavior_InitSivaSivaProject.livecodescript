@@ -109,13 +109,13 @@ command init_AppConfiguration
    copyBundledAssets
    logging "end copying bundled assets"
    
-   try
-      log "--- about to try to fetch navigation map"
-      fetchNavigationMap # we need it for the tree menu, but call once
-   catch n
-      log "something wrong with navigation map"
-      errorDialog n
-   end try
+   --   try
+   --      log "--- about to try to fetch navigation map"
+   fetchNavigationMap # we need it for the tree menu, but call once
+   --catch n
+   --   log "something wrong with navigation map"
+   --   errorDialog n
+   --end try
    
    -- cacheGlobalNavImages
    
@@ -278,10 +278,10 @@ command  init_LoadLibraries
                put "modules/" & stackName & ".livecode" into stackName
                break   
          end switch 
-         log "looking for library" && stackName  
+         --         log "looking for library" && stackName  
          if there is a file stackName then
             start using stackName
-            log "loaded" && stackName
+            --            log "loaded" && stackName
          else
             answer error "can't find" && stackName
          end if  
@@ -405,10 +405,10 @@ command copyBundledAssets
    filter lines of tFiles without ".DS_Store"
    
    repeat for each line tFile in tFiles
-      log "copying" && ("/assets/" & tFile)
+      --      log "copying" && ("/assets/" & tFile)
       put url ("binfile:" & specialFolderPath("resources") & "/assets/" & tFile) into url ("binfile:" & path_Assets() & tFile)
       if the result is not empty then
-         log "error:" && the result
+         --         log "error:" && the result
       end if
    end repeat
    
@@ -426,11 +426,11 @@ command copyAssetsFrom pFolder
    put files(specialFolderPath("resources") & "/assets/" & pFolder) into tFiles
    filter lines of tFiles without ".DS_Store"
    repeat for each line tFile in tFiles
-      log "copying" && ("/assets/" & pFolder & "/" & tFile)
+      --      log "copying" && ("/assets/" & pFolder & "/" & tFile)
       createFolders  (path_Assets() & pFolder & "/" & tFile)
       put url ("binfile:" & specialFolderPath("resources") & "/assets/" & pFolder & "/" & tFile) into url ("binfile:" & path_Assets() & pFolder & "/" & tFile)
       if the result is not empty then
-         log "error:" && the result
+         --         log "error:" && the result
       end if
    end repeat
    
@@ -454,32 +454,65 @@ end createFolders
 command init_DocumentFiles
    local tLocalJson, tLocalArray, tLocalSeconds, tServerSeconds
    local tServer, tRemoteSeconds,tServerArray, tRemoteServer
-   # Here is the installing app 
+   
+   #
+   # STORIES
+   #
+   
+   # Initialize stories.json file for new installs 
    if  there is not a file (path_Documents()  & "modules/stories/stories.json") then
       put url ("binfile:" & path_Modules() & "stories/stories.json") into \
-            url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+            url ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
    
    # Here is getting the time difference > between the json on the server
    
-   put url ("binfile:" &  path_Documents()  & "modules/stories/stories.json") into tLocalJson
+   put url ("binfile:" & path_Documents() & "modules/stories/stories.json") into tLocalJson
    put jsonImport(tLocalJson) into tLocalArray
    put tLocalArray["lastUpDate"]["theTime"] into tLocalSeconds
    if tLocalSeconds is not a number then
       put 0 into tLocalSeconds
    end if
    
-   --breakpoint
    try
-      put url ("https://dev.himalayanacademy.com/media/stories/stories.json") into tServer
+      put url ("https://www.himalayanacademy.com/media/stories/stories.json") into tServer
       put JSONToArray(tServer) into tServerArray
       put tServerArray["lastUpDate"]["theTime"] into tRemoteSeconds
    catch errorStatement
-      
    end try 
    
    if tRemoteSeconds > tLocalSeconds then
       put tServer  into url  ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
+   end if
+   
+   #
+   # READ
+   #
+   
+   # Initialize read.lson file for new installs
+   if  there is not a file (path_Documents()  & "modules/read/read.lson") then
+      put url ("binfile:" & path_Modules() & "read/read.lson") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.lson")
+      put url ("binfile:" & path_Modules() & "read/read.date") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.date")
+   end if
+   
+   # get the version info for the local and server file; convert to seconds
+   try
+      put empty into tLocalSeconds
+      put empty into tRemoteSeconds
+      put url ("binfile:" & path_Documents() & "modules/read/read.date") into tLocalSeconds
+      convert tLocalSeconds from internet date to seconds
+      put url ("https://dev.himalayanacademy.com/media/books/read.date") into tRemoteSeconds
+      convert tRemoteSeconds from internet date to seconds
+   catch errorStatement
+   end try
+   
+   if tRemoteSeconds > tLocalSeconds then
+      put url ("https://www.himalayanacademy.com/media/books/read.lson") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.lson")
+      put url ("https://www.himalayanacademy.com/media/books/read.date") into \
+            url ("binfile:" &  path_Documents()  & "modules/read/read.date")
    end if
 end init_DocumentFiles
 

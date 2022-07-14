@@ -7,8 +7,6 @@ Script "stack_listen_graphic_id_2915"
 
 
 on mouseUp
+   hide grp "answerDlgGrp"
 end mouseUp
-
-on mouseDown
-end mouseDown
 

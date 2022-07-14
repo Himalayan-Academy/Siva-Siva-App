@@ -226,7 +226,7 @@ end fetchImage
 on updateImages
    jnanam_UpdatePhotoCache
 end updateImages
- 
+
 private function _getRandomSQL
    local tSQL
    put the uRandomSQLQuery of this card into tSQL
@@ -297,7 +297,7 @@ end checkRealm
 --   end switch
 --end toggleReadContext
 
-on addJournalEntry pContext
+on  journal_AddEntry pContext
    local tRealm, pDataA, pData, tTitle
    switch pContext
       case "pReadQuote"
@@ -308,14 +308,10 @@ on addJournalEntry pContext
          put getLastImagePath() into pDataA["lastImage"]
          put getLastQuoteID() into pDataA["lastQuote"]
          Journal_RecordEntry "gems", sTruncFirstLine, pDataA
-         break
-         --      case "pBookPage"        
-         --         put browser_GetLastURL() into pData["weburl"]
-         --         put  browser_GetLastPageTitle() into tTitle
-         --         Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
+         break 
    end switch
    dialog_CustomMsg "Saved to Journal"
-end addJournalEntry
+end  journal_AddEntry
 
 command switchViewState 
    switch sViewState

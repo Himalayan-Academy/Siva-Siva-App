@@ -10,8 +10,8 @@ on preOpenCard
    setLastactivity "glossary"  # for journal
    set the scroll of grp "glossaryTextGrp" to 0
    createScroller "glossaryTextGrp"
-   
-   pass preOpenCard
+
+  pass preOpenCard
 end preOpenCard
 
 command glossaryLookup pTerm -- look up a term
@@ -39,14 +39,6 @@ function getGlossaryDef pTerm -- return definition for display elsewhere
    return line tLine of fld "glossaryText" of cd "glossary"
 end getGlossaryDef
 
-command resetFldColor
-   set the backcolor of line 1 to -1 of fld "glossaryText" of me to empty
-end resetFldColor
-
-
--- dev --
-
-on resetscroll
-   set the scroll of grp "glossaryTextGrp" to 0
-   set the top of fld "glossarytext" to the top of grp "glossarytextgrp"
-end resetscroll
+_command resetFldColor
+--set the backcolor of line 1 to -1 of fld "glossaryText" of me to empty
+--end resetFldColor

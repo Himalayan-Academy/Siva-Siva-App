@@ -550,13 +550,14 @@ on updateUI
    
 end updateUI
 
-command addJournalEntry -- save a bookmark to db
+command journal_AddEntry -- save a bookmark to db
    local tData, tTitle
    
    put 1 into tData["card"] -- store the last user cd   
    put "Image Puzzles" into tTitle
    Journal_RecordEntry "imagepuzzles",tTitle,tData -- send to journal
-end addJournalEntry
+   dialog_CustomMsg "Saved to Journal"
+end journal_AddEntry
 
 on journalResume pData,pEntryA -- sent from journal stack
    local tCd

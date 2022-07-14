@@ -603,16 +603,31 @@ function stripHTML pText
    return tPlainText
 end stripHTML
 
- 
 function truncateText pText,pNumChars,pEllipsisBool  # last parameter is "true" or "false"
    Local tTruncatedText
-   put char 1 to  pNumChars of pText into tTruncatedText
-   if pEllipsisBool then put "..." after tTruncatedText
+   if len(pText) <= pNumChars then
+      put pText into tTruncatedText
+   else
+      put char 1 to pNumChars of pText into tTruncatedText
+      if pEllipsisBool then put "..." after tTruncatedText
+   end if
    return tTruncatedText
 end truncateText
 
+--function truncateText pText, tCount, pEllipsisBool  # last parameter is "true" or "false"
+--   Local tTruncatedText
 
- 
+--   if tCount > 35 then 
+--      put char 1 to  35 of pText into tTruncatedText
+--      if pEllipsisBool then put "..." after tTruncatedText
+--      put tTruncatedText
+--   end if
+--   return tTruncatedText
+
+--end truncateText
+
+
+
 #####################
 on _____Deprecated
 end _____Deprecated

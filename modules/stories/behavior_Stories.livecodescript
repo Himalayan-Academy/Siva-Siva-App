@@ -264,7 +264,7 @@ end mouseup
 
 on showStoryText
    lock screen
-   show grp "footer"
+   show grp "footerNavigation"
    show sStoryText
    show sStoryTextBkg
    hide sCaptionText
@@ -321,7 +321,7 @@ end hiliteChanged
 
 
 on formattedHeightChanged -- tree changed dimensions
-   if the target is sStoryMenuTree then
+   if the target is (the name of sStoryMenuTree) then
       dispatch "updateScroller" to sStoryMenuTree with "storyNavTree"
    end if
 end formattedHeightChanged
@@ -695,7 +695,7 @@ command updateImageState pResizeOnly
                show sCaptionText
                show sCaptionBkg
             end if
-            show grp "footer"
+            show grp "footerNavigation"
             show btn "goPrev"
             show btn "goNext"
          end if
@@ -714,7 +714,7 @@ command updateImageState pResizeOnly
                end if
             end if
             if not tOnColorItCard then
-               hide grp "footer"
+               hide grp "footerNavigation"
             end if
             set the hscroll of grp tImageGroup to 0
             set the vscroll of grp tImageGroup to 0
@@ -790,7 +790,7 @@ end lockPortrait
 -------
 local pData, tCd
 
-command addJournalEntry -- save a bookmark to db
+command journal_AddEntry -- save a bookmark to db
    local tTitle
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle
@@ -803,8 +803,8 @@ command addJournalEntry -- save a bookmark to db
       put "showStories" into pData["card"]
    end if
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
-end addJournalEntry
-
+   dialog_CustomMsg "Saved to Journal"
+end journal_AddEntry --
 		
 on journalResume pData -- sent from journal stack
    put pData["Card"] into tCd
@@ -856,7 +856,7 @@ on updateUI
       put the long id of grp "footer" into tFooter
       send "updateUI" to tFooter
    else
-      put the long id of grp "footer" into tFooter
+      put the long id of grp "footerNavigation" into tFooter
       if currentlyLandscape() then
          hide tFooter
       else
@@ -883,6 +883,7 @@ on updateUI
       set the bottom of tGoTips to the top of tFooter - 18
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
+      set the rect of img "tipsImage" to (0, 0, cardWidth(), the top of tFooter)
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
@@ -896,7 +897,7 @@ on updateUI
       --
       set the rect of sStoryMenuTree to the rect of tMenuBkgnd
       --
-      show grc "footerBackground" of grp "footer"
+      show grc "footerBackground" of grp "footerNavigation"
       --
       put the long id of grc "touchTrap" into tControl
       set the rect of tControl to CardRect()
@@ -970,7 +971,7 @@ on updateUI
       put the long id of grc "storyTextBkg" into tStoryTextBkg
       set the rect of tStoryTextBkg to CardRect()
       --
-      hide grc "footerBackground" of grp "footer"
+      hide grc "footerBackground" of grp "footerNavigation"
       updateImageState true
    end if
    --
@@ -1015,7 +1016,7 @@ on closeCard
          hide sStoryTextBkg
          hide sCaptionText
          hide sCaptionBkg
-         show grc "footerBackground" of grp "footer"
+         show grc "footerBackground" of grp "footerNavigation"
          landscapeOrientation "off"
       end if
    else if tCard is "colorIt" then
