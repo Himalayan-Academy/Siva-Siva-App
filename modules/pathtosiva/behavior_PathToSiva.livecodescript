@@ -172,31 +172,26 @@ on mouseup
          end switch
          break
          
-         --      case "Search"
-         --         local  tSearchString
+      case "Search"
+         local  tSearchString
+         if the foundText is not empty then  
+            set the backcolor of the foundText to empty
+         end if
+         set the caseSensitive to false
+         put fld "searchString" into tSearchString
+         find string tSearchString in fld "glossaryText"
          
-         --         put fld "searchString" into tSearchString
-         --         find string tSearchString in fld "glossaryText"
+         if the foundText is empty then  
+            exit to top
+         end if
          
          
-         --         --   switch pWhich
-         --         --      case "Find"
-         --         --         ask "Find What?"
-         --         --         if it is empty then break
-         --         --         set cursor to watch
-         --         --         put it into tSearchString
-         --         --         set the lockmessages to true
-         --         --         find string tSearchString in fld "text"
-         --         --         if the result is not empty then answer "Sorry, no such text." with "OK"
-         --         --         break
-         --         --      case "Find Again"
-         --         --         set cursor to watch
-         --         --         set the lockmessages to true
-         --         --         find string tSearchString in fld "text"
-         --         --         break
-         --         --      case "Bigger Text"
-         --         --   end switch
-         --         break
+         if tSearchString is not empty then
+            set the backcolor of the foundText to  "#AEAEFF"
+            wait 1500 milliseconds
+            set the backcolor of the foundText to  empty 
+         end if
+         break
          
    end switch
 end mouseup
