@@ -886,13 +886,14 @@ private command updateAboutUI
    topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
    
    put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
-   topCenterMe the long id of fld "aboutTitle", tImgBottom-55
-
+   topCenterMe the long id of fld "aboutTitle", 110
+   
    put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "aboutTextGrp" to tRect 
    set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
    set the left of fld "aboutFld" to safeSideMargin() 
    
+   put tImgBottom & CR into fld "log"
 end updateAboutUI
 
 private command updateGlossaryUI
@@ -908,11 +909,12 @@ private command updateGlossaryUI
    
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
    
-   put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
-   topCenterMe the long id of fld "glossaryTitle", tImgBottom - 130
-   topRightMe the long id of btn "Search", 40, tImgBottom - 40
-   topLeftMe the long id of fld "searchString", 40, tImgBottom - 40
+   topCenterMe the long id of fld "glossaryTitle", 67
    
+   topRightMe the long id of btn "Search", 40, 150
+   topLeftMe the long id of fld "searchString", 40, 145
+   
+   put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
    put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "glossaryTextGrp" to tRect 
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
@@ -1051,7 +1053,3 @@ on deleteCardMobileControls -- delete all mobile controls of any type on current
    end repeat
 end deleteCardMobileControls
 
-
-on startup pMode
-   
-end startup
