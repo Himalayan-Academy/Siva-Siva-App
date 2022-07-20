@@ -891,7 +891,8 @@ private command updateAboutUI
    put tImgBottom & CR into fld "log"
 end updateAboutUI
 
-private command updateGlossaryUI
+--private 
+command updateGlossaryUI
    local tControl, tRect, tLoc, tField, tImgBottom
    
    put the long id of fld "glossaryTitle" into tField
@@ -903,7 +904,6 @@ private command updateGlossaryUI
    --
    
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
-   
    topCenterMe the long id of fld "glossaryTitle", 67
    
    topRightMe the long id of btn "Search", 40, 150
@@ -912,13 +912,13 @@ private command updateGlossaryUI
    put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
    put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "glossaryTextGrp" to tRect 
+   set the rect of fld "glossaryText" to tRect 
+   
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
    set the left of fld "glossaryText" to safeSideMargin() 
-   
-   --set the height of field "glossaryText" to the formattedHeight of field "glossaryText" 
+    
    set the vscrollbar of field "glossaryText" to not (the environment is "mobile")
    
-   topCenterMe the long id of fld "glossaryText", tImgBottom 
 end updateGlossaryUI
 
 private command updatePhotoIndexUI
