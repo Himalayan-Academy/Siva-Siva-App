@@ -914,7 +914,10 @@ private command updateGlossaryUI
    set the rect of grp "glossaryTextGrp" to tRect 
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
    set the left of fld "glossaryText" to safeSideMargin() 
-   set the height of field "glossaryText" to the formattedHeight of field "glossaryText" 
+   
+   --set the height of field "glossaryText" to the formattedHeight of field "glossaryText" 
+   set the vscrollbar of field "glossaryText" to not (the environment is "mobile")
+   
    topCenterMe the long id of fld "glossaryText", tImgBottom 
 end updateGlossaryUI
 
