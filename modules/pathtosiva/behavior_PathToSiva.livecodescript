@@ -178,7 +178,7 @@ on mouseup
             set the backcolor of the foundText to empty
          end if
          set the caseSensitive to false
-         put fld "searchString" into tSearchString
+         put (fld "searchString" of card "glossary") into tSearchString
          find string tSearchString in fld "glossaryText"
          
          if the foundText is empty then  
@@ -869,54 +869,53 @@ end updateLessonViewUI
 private command updateAboutUI
    --breakpoint
    
-   local tControl, tRect, tLoc, tField, tImgBottom
-   
-   put the long id of fld "aboutFld" into tField
+   local tControl, tRect, tLoc
    
    put safeRect() into tRect
    put the bottom of grp "headerGrp" into item 2 of tRect
    --
-   resizeToWidth "C_Introduction_470-80_opt.jpg"
+   --resizeToWidth "C_Introduction_470-80_opt.jpg"
    --
    topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
    
-   put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
+   --put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
    topCenterMe the long id of fld "aboutTitle", 110
    
-   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   put "0," & (the bottom of img "C_Introduction_470-80_opt.jpg") & "," &\
+         (CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   
    set the rect of grp "aboutTextGrp" to tRect 
+   set the rect of fld "aboutFld" to tRect 
+   
    set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
    set the left of fld "aboutFld" to safeSideMargin() 
    
-   put tImgBottom & CR into fld "log"
+   --put tImgBottom & CR into fld "log"
 end updateAboutUI
 
---private 
-command updateGlossaryUI
+private command updateGlossaryUI
    local tControl, tRect, tLoc, tField, tImgBottom
    
-   put the long id of fld "glossaryTitle" into tField
-   
    put safeRect() into tRect
-   put the bottom of grp "glossaryTextGrp" into item 2 of tRect
+   --put the bottom of grp "glossaryTextGrp" into item 2 of tRect
+   put the bottom of grp "headerGrp" into item 2 of tRect
    --
-   resizeToWidth "C2_TOC-shutterstock-278201699_366w_opt.jpg"
+   --resizeToWidth "C2_TOC-shutterstock-278201699_366w_opt.jpg"
    --
    
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
    topCenterMe the long id of fld "glossaryTitle", 67
    
-   topRightMe the long id of btn "Search", 40, 150
-   topLeftMe the long id of fld "searchString", 40, 145
+   topRightMe the long id of widget"Search", 20, 145
+   topLeftMe the long id of fld "searchString", 30, 145
    
-   put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
-   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   put "0," & (the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg") & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "glossaryTextGrp" to tRect 
    set the rect of fld "glossaryText" to tRect 
    
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
    set the left of fld "glossaryText" to safeSideMargin() 
-    
+   
    set the vscrollbar of field "glossaryText" to not (the environment is "mobile")
    
 end updateGlossaryUI
