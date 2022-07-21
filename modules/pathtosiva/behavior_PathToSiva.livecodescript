@@ -727,22 +727,22 @@ on updateUI
          topCenterMe tHeaderGrp, 0
          
          put the long id of btn "prevLesson" into tPrevLesson
-         topLeftMe tPrevLesson, 0, 2
+         topLeftMe tPrevLesson, 0, 0
          
          put the long id of widget "photo index" into tPhotoIndex
-         topLeftMe tPhotoIndex, 75, 8
+         topLeftMe tPhotoIndex, 86, 10
          
          put the long id of widget "SVG Journal" into tSVGJournal
-         topCenterMe tSVGJournal, 5
+         topCenterMe tSVGJournal, 10
          
          put the long id of fld "message" into tMessage
          topCenterMe tMessage, 3
          
          put the long id of btn "SVG Menu" into tSVGMenu
-         topRightMe tSVGMenu, 80, 0
+         topRightMe tSVGMenu, 85, 2
          
          put the long id of btn "nextLesson" into tNextLesson
-         topRightMe tNextLesson, 0, 3
+         topRightMe tNextLesson, 0, 0
          
          put the long id of widget "turnOffAudio" of grp "audioGlobalControl" into tTurnOffAudio
          topRightMe tTurnOffAudio, 18, 74
