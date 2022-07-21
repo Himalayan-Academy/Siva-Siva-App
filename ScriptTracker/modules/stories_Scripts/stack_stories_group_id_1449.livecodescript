@@ -8,6 +8,7 @@ Script "stack_stories_group_id_1449"
 
 constant kButtons = "select,pencil,brush,eraser,spray can,bucket,line"
 
+# needs to be updated for landscape presentation
 
 on updateUI
    set the width of me to CardWidth()

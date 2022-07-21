@@ -59,6 +59,10 @@ on preOpenCard
       put the long id of fld "tips" into sTips
       hide group "loadingGroup"
    else if tCard is "showStories" then
+      if isMobile() then
+         mobileSetAllowedOrientations "portrait"
+      end if
+      send "landscapeOrientation allowed" to me in 5 seconds
       display_SetStatusBarVis false
       put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
@@ -76,7 +80,12 @@ on preOpenCard
       put the long id of the last image into sColorItImage
       relayer sColorItImage to front of grp "colorItImageGroup"
       put the long id of img "colorItImage" into sColorItImage
-      initializeCycleImage sColorItImage
+      if the width of sColorItImage > the height of sColorItImage then
+         lockLandscape
+      else
+         lockPortrait
+      end if
+      wait 10 milliseconds
       hide group "BrushIcons" of card "colorIt"
       hide control "Color map" of card "colorIt"
    end if
@@ -205,8 +214,10 @@ on mouseup
       case "storyImage"
       case "captionText"
       case "white-feathered-rect"
-      case "colorItImage"
          updateImageState
+         break
+         --
+      case "colorItImage"
          break
          --
       case "goPrev"
@@ -249,13 +260,15 @@ on mouseup
       case "save" # colorIt card
          put "image saved here..."
          put the filename of sStoryImage into tFileName
-         set the itemDelimiter to "."
-         put "gif" into the last item of tFileName
+         set the itemDelimiter to "-"
+         if item -1 of tFileName is not "edited.gif" then
+            set the itemDelimiter to "."
+            put item 1 to -2 of tFileName & "-edited.gif" into tFileName
+         end if
          lock screen
-         put getImageState() into tImageState
-         setImageState sColorItImage, "fullSize"
          export sColorItImage to file tFileName as GIF
-         setImageState sColorItImage, tImageState
+         set the filename of sStoryImage to empty
+         set the filename of sStoryImage to tFileName
          unlock screen
          break
    end switch
@@ -533,7 +546,12 @@ command goNextScene
       set the filename of sStoryImage to tImagePath
    else
       set the itemdel to "/"
-      set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
+      put item 1 to -2 of sStoryDataStack & "/" before tImagePath
+      set the itemdel to "."
+      if there is a file (item 1 to -2 of tImagePath & "-edited.gif") then
+         put item 1 to -2 of tImagePath & "-edited.gif" into tImagePath
+      end if
+      set the filename of sStoryImage to tImagePath
    end if
    put there is a file (the filename of sStoryImage) into tShowPhoto
    if sLastScene is 1 then
@@ -682,7 +700,9 @@ command updateImageState pResizeOnly
       put "storyImageGroup" into tImageGroup
    end if
    lock screen for visual effect
-   if tOnColorItCard or (not the visible of sStoryText) or (pResizeOnly is true) then
+   if tOnColorItCard then
+      setupImageScroller tImage, tImageGroup
+   else if (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
          resetCycleImage tImage
       else
@@ -716,25 +736,26 @@ command updateImageState pResizeOnly
             if not tOnColorItCard then
                hide grp "footerNavigation"
             end if
-            set the hscroll of grp tImageGroup to 0
-            set the vscroll of grp tImageGroup to 0
-            if the width of tImage < CardWidth() then
-               put the loc of tImage into tLoc
-               put item 1 of CardLoc() into item 1 of tLoc
-               set the loc of tImage to tLoc
-            else
-               set the left of tImage to 0
-               set the hScroll of grp tImageGroup to (the width of tImage - CardWidth()) div 2
-            end if
-            if the height of tImage < CardHeight() then
-               put the loc of tImage into tLoc
-               put item 2 of CardLoc() into item 2 of tLoc
-               set the loc of tImage to tLoc
-            else
-               set the top of tImage to 0
-               set the vScroll of grp tImageGroup to (the height of tImage - CardHeight()) div 2
-            end if
-            dispatch "createImageScroller" to grp tImageGroup with tImageGroup
+            setupImageScroller tImage, tImageGroup
+            --            set the hscroll of grp tImageGroup to 0
+            --            set the vscroll of grp tImageGroup to 0
+            --            if the width of tImage < CardWidth() then
+            --               put the loc of tImage into tLoc
+            --               put item 1 of CardLoc() into item 1 of tLoc
+            --               set the loc of tImage to tLoc
+            --            else
+            --               set the left of tImage to 0
+            --               set the hScroll of grp tImageGroup to (the width of tImage - CardWidth()) div 2
+            --            end if
+            --            if the height of tImage < CardHeight() then
+            --               put the loc of tImage into tLoc
+            --               put item 2 of CardLoc() into item 2 of tLoc
+            --               set the loc of tImage to tLoc
+            --            else
+            --               set the top of tImage to 0
+            --               set the vScroll of grp tImageGroup to (the height of tImage - CardHeight()) div 2
+            --            end if
+            --            dispatch "createImageScroller" to grp tImageGroup with tImageGroup
          end if
          if not tOnColorItCard then
             hide sCaptionText
@@ -746,10 +767,40 @@ command updateImageState pResizeOnly
 end updateImageState
 
 
+command setupImageScroller pImage, pGroup
+   local tGroupLoc, tGroupWidth, tGroupHeight, tLoc, tOnColorItCard
+   put (the short name of this card is "colorIt") into tOnColorItCard
+   --
+   set the hscroll of grp pGroup to 0
+   set the vscroll of grp pGroup to 0
+   put the loc of grp pGroup into tGroupLoc
+   put the width of grp pGroup into tGroupWidth
+   put the height of grp pGroup into tGroupHeight
+   if the width of pImage < tGroupWidth then
+      put the loc of pImage into tLoc
+      put item 1 of tGroupLoc into item 1 of tLoc
+      set the loc of pImage to tLoc
+   else
+      set the left of pImage to the left of grp pGroup
+      set the hScroll of grp pGroup to (the width of pImage - tGroupWidth) div 2
+   end if
+   if the height of pImage < tGroupHeight then
+      put the loc of pImage into tLoc
+      put item 2 of tGroupLoc into item 2 of tLoc
+      set the loc of pImage to tLoc
+   else
+      set the top of pImage to the top of grp pGroup
+      set the vScroll of grp pGroup to (the height of pImage - tGroupHeight) div 2
+   end if
+   dispatch "createImageScroller" to grp pGroup with pGroup
+end setupImageScroller
+
+
 command landscapeOrientation pLandscapeMode
    # "off"     disables landscape
    # "allowed" enables rotation to landscape
    # "forced"  initially locks to landscape, unlocks in 5 seconds
+   # "only"    only allows landscape
    local tOrientations
    --
    if "landscapeOrientation" is in the pendingMessages then
@@ -762,8 +813,10 @@ command landscapeOrientation pLandscapeMode
    if sAllowLandscape then
       switch pLandscapeMode
          case "forced"
-            put empty into tOrientations
             send "landscapeOrientation allowed" to me in 5 seconds
+            -- fall through
+         case "only"
+            put empty into tOrientations
             -- fall through
          case "allowed"
             put "landscape left,landscape right," after tOrientations
@@ -778,12 +831,16 @@ end landscapeOrientation
 
 
 command lockLandscape
-   mobileSetAllowedOrientations "landscape left,landscape right"
+   if isMobile() then
+      mobileSetAllowedOrientations "landscape left,landscape right"
+   end if
 end lockLandscape
 
 
 command lockPortrait
-   mobileSetAllowedOrientations "portrait,portrait upside down"
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
 end lockPortrait
 
 
@@ -979,12 +1036,23 @@ on updateUI
       put the long id of btn "cancel" into tCancel
       put the long id of btn "save" into tSave
       --
-      topLeftMe tCancel, 0, 8
-      topRightMe tSave, 0, 8
-      --
-      set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+      setRectOfCurrentGrc sColorItImage
+      if currentlyLandscape() then
+         bottomRightMe tCancel, 0, 8
+         topRightMe tSave, 0, 8
+         --
+         set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
+               CardHeight() - safeBottomMargin())
+         resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
+      else
+         topLeftMe tCancel, 0, 8
+         topRightMe tSave, 0, 8
+         --
+         set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+         resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
+      end if
+      send "setupImageScroller sColorItImage, colorItImageGroup" to me in 10 milliseconds
       set the rect of control "Color map" to the rect of grp "colorItImageGroup"
-      resetCycleImage sColorItImage
    end if
    --
    if tCard is not "colorIt" then
