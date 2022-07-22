@@ -873,12 +873,8 @@ private command updateAboutUI
    
    put safeRect() into tRect
    put the bottom of grp "headerGrp" into item 2 of tRect
-   --
-   --resizeToWidth "C_Introduction_470-80_opt.jpg"
-   --
-   topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
    
-   --put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
+   topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
    topCenterMe the long id of fld "aboutTitle", 110
    
    put "0," & (the bottom of img "C_Introduction_470-80_opt.jpg") & "," &\
@@ -890,6 +886,8 @@ private command updateAboutUI
    set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
    set the left of fld "aboutFld" to safeSideMargin() 
    
+   set the vscrollbar of field "aboutFld" to not (the environment is "mobile")
+   
    --put tImgBottom & CR into fld "log"
 end updateAboutUI
 
@@ -897,12 +895,8 @@ private command updateGlossaryUI
    local tControl, tRect, tLoc, tField, tImgBottom
    
    put safeRect() into tRect
-   --put the bottom of grp "glossaryTextGrp" into item 2 of tRect
    put the bottom of grp "headerGrp" into item 2 of tRect
-   --
-   --resizeToWidth "C2_TOC-shutterstock-278201699_366w_opt.jpg"
-   --
-   
+  
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
    topCenterMe the long id of fld "glossaryTitle", 67
    
