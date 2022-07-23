@@ -94,15 +94,14 @@ on mouseup
    case "Bodhinatha Latest"
       hide grp "newsItems"
       portal_GoStack "Listen"
-      wait 200 milliseconds
-      put image "1-2-playlist-image" into tSelection
-      selectPlayList tSelection
+      put the long name of image "1-2-playlist-image" into tSelection
+      send "selectPlayList tSelection" to stack "Listen" in 200 milliseconds
       exit Mouseup
       break
       
    case "Webinars"
       hide grp "newsItems"
-      hide grp "newsItems"
+      portal_GoURL "https://www.youtube.com/user/kauaiaadheenam/videos"
       exit Mouseup
       break
       
