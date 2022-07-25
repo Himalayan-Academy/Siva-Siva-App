@@ -84,11 +84,11 @@ command goMainMenu
    # now, the tree widget does this automatically, so no code is necessary for
    # but to save processing time: we explicity exit.
    
-   if sTarget is among items of "Practice,Read,Fun & Games" then
+   if sTarget is among items of "Practice,Fun & Games" then
       exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Listen,Look,Video,Websites,Journal,My Menu" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Read,Listen,Look,Video,Websites,Journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
       # Some have to trigger connectivity, but do nothing (look and websites)
@@ -98,6 +98,13 @@ command goMainMenu
          # Cases where we to go to stacks directly with no secondary navigation
          case "Gems of Wisdom"
             put "gems" into sTarget # portal stack in not its "label"
+            portal_GoStack sTarget
+            break
+         case "Read"
+            portal_GoStack sTarget
+            break
+         case "Path to Siva"
+            put "pathtosiva" into sTarget # portal stack in not its "label"
             portal_GoStack sTarget
             break
          case "Surprise Me"
@@ -111,6 +118,7 @@ command goMainMenu
          case "Journal"
             portal_GoStack sTarget
             break
+            
             
             # cases that require connectivity, 
             # and there are sub-level URLs or Modules
@@ -128,7 +136,6 @@ command goMainMenu
             put "fun" into sTarget
             break
          case "Practice"
-         case "Read"
             break
             
          case "My Menu"
@@ -301,7 +308,7 @@ command createNavTree pMenu
          # eliminate the deprecated row data in the json file
          # argh! is not among does not work...
          
-         put "gems,listen,surprise,stories,journal,settings,myMenu" into tSkipSubMenu
+         put "gems,listen,surprise,read,stories,journal,settings,myMenu" into tSkipSubMenu
          
          repeat with x = 1 to the number of items in tSortTopMenu # Later, will have to refactor.
             put item x of tSortTopMenu into sTarget
