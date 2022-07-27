@@ -20,6 +20,7 @@ on preOpenCard
    put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
+   hide grp "newsItems"
    hide grp "loadingGroup"
    switch tCard
       case "Home"

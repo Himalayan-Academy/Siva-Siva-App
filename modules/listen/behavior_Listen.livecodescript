@@ -78,6 +78,7 @@ end preopencard
 
 
 on openCard
+   --breakpoint
    local tCardName
    local tLabelLoc, tLabelWidth, tBrowseHeader
    
@@ -614,10 +615,9 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  just sets the WHERE clause in the query with whatever you request. 
          # Then sorts on date sends back the request number of records.
          
-         --breakpoint
          showBusyIndicator true,"Loading Collection"
          
-         put "Contacting server... " into fld "audioList" of card "listen-browse"
+         --put "Contacting server... " into fld "audioList" of card "listen-browse"
          
          # Set up the WHERE clause
          put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
@@ -626,6 +626,10 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          put sPlayListQueryA["recordCount"] into tQueryData["recordcount"]
          
          put arrayToJson(tQueryData) into tJSON # from server
+         
+         --
+         --put tJSON
+         --
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
@@ -646,6 +650,9 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
             exit to top
          else 
             put it into tRecords
+            --
+            --put tRecords
+            --
             put jsonToArray(tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
