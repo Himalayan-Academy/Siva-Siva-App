@@ -789,14 +789,25 @@ command display_Log
 end display_Log
 
 local sLoadingIndicator,sLoadingGroup,sLoadingFlag, sLabel, sLoadProgress
-local sBusySemaphore
+local sBusySemaphore, sLoadingDismiss
 
 command setBusySemphore pBool
    put pbool into sBusySemaphore
 end setBusySemphore
 
+
+on dismissLoading
+   put the long id of btn "cancelLoading" into sLoadingDismiss
+   click button 2 at the loc of sLoadingDismiss
+   hide grc "loading"
+   
+   --showBusyIndicator false
+end dismissLoading
+
+
 command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
    --   breakpoint
+   
    if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
       
