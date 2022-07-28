@@ -41,7 +41,7 @@ on mouseUp
       relayer getColorItImage() to back of cd "colorIt"
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
-      set the brushColor to the backgroundColor of btn "fillColor"
+      set the brushColor to the backgroundColor of grc "fillColor"
       set the opaque of the target to true
       if tTarget is "bucket" then
          choose "bucket" tool
@@ -146,6 +146,7 @@ on resizeControl
    end if
    --
    set the rect of grc "footerBackground" to the rect of me
+   set the rect of grc "fillColor" to the rect of btn "fillColor"
 end resizeControl
 
 
@@ -153,5 +154,5 @@ on preOpenControl
    set the icon of btn "toolIcon" to 102
    set the brush to 102
    set the hilite of button id 1474 to true
-   set the backgroundColor of btn "fillColor" to "red"
+   set the backgroundColor of grc "fillColor" to "red"
 end preOpenControl

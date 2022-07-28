@@ -8,7 +8,7 @@ Script "stack_stories_colorPalette_id_1561"
 
 on mouseUp
    set the selectedColor2 of me to the mouseColor
-   set the backgroundColor of btn "fillColor" of grp "footer" to the mouseColor
+   set the backgroundColor of grc "fillColor" of grp "footer" to the mouseColor
    hide me
    show btn "cancel"
    show btn "save"
