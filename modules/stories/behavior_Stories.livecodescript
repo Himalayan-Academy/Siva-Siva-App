@@ -10,7 +10,7 @@ Revised 2020-10-01
 
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
-local sImageUndoCache, sImageUndoRect
+local sImageUndoCache, sImageUndoRect, sImageUndoHash
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
@@ -254,11 +254,17 @@ on mouseup
          end if
          break
       case "cancel" # colorIt card
+         set the opaque of the target to true
+         wait 250 milliseconds
+         lock screen
          initializeCycleImage sStoryImage
          go cd "showStories"
+         unlock screen
+         set the opaque of the target to false
          break
       case "save" # colorIt card
-         put "image saved here..."
+         set the opaque of the target to true
+         --put "image saved here..."
          put the filename of sStoryImage into tFileName
          set the itemDelimiter to "-"
          if item -1 of tFileName is not "edited.gif" then
@@ -270,6 +276,8 @@ on mouseup
          set the filename of sStoryImage to empty
          set the filename of sStoryImage to tFileName
          unlock screen
+         wait 250 milliseconds
+         set the opaque of the target to false
          break
    end switch
 end mouseup
@@ -650,31 +658,55 @@ command pushImage
    --put tRect & cr & sImageUndoRect[tNow]
    put the imagedata of sColorItImage into sImageUndoCache[tNow]
    set the rect of sColorItImage to tRect
+   put messageDigest(sImageUndoCache[tNow], "MD5") into sImageUndoHash[tNow]
    unlock screen
    put the keys of sImageUndoCache into tKeyList
    sort tKeyList ascending numeric
+   if the number of lines of tKeyList > 1 and \
+         sImageUndoHash[tNow] = sImageUndoHash[line -2 of tKeyList] then
+      delete variable sImageUndoCache[line 1 of tKeyList]
+      delete variable sImageUndoRect[line 1 of tKeyList]
+      delete variable sImageUndoHash[line 1 of tKeyList]
+   end if
    if the number of lines of tKeyList > 10 then
       delete variable sImageUndoCache[line 1 of tKeyList]
       delete variable sImageUndoRect[line 1 of tKeyList]
+      delete variable sImageUndoHash[line 1 of tKeyList]
    end if
 end pushImage
 
 
 command popImage
-   local tKeyList, tRect
+   local tKeyList, tRect, tFileName
+   lock screen
    put the keys of sImageUndoCache into tKeyList
    if the number of lines of tKeyList > 0 then
       sort tKeyList ascending numeric
-      lock screen
       put the rect of sColorItImage into tRect
       set the rect of sColorItImage to sImageUndoRect[line -1 of tKeyList]
       --put tRect & cr & sImageUndoRect[line -1 of tKeyList]
       set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
       set the rect of sColorItImage to tRect
-      unlock screen
       delete variable sImageUndoCache[line -1 of tKeyList]
       delete variable sImageUndoRect[line -1 of tKeyList]
+      delete variable sImageUndoHash[line -1 of tKeyList]
+   else
+      put the filename of sStoryImage into tFileName
+      set the itemDelimiter to "-"
+      if item -1 of tFileName is "edited.gif" then
+         put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tFileName
+         set the itemdel to "/"
+         put item 1 to -2 of sStoryDataStack & "/" before tFileName
+      end if
+      delete sColorItImage
+      import paint from file tFileName
+      set the name of the last image to "colorItImage"
+      put the long id of the last image into sColorItImage
+      relayer sColorItImage to front of grp "colorItImageGroup"
+      put the long id of img "colorItImage" into sColorItImage
+      updateUI
    end if
+   unlock screen
 end popImage
 
 
@@ -1051,6 +1083,7 @@ on updateUI
          set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
       end if
+      set the loc of sColorItImage to the loc of grp "colorItImageGroup"
       send "setupImageScroller sColorItImage, colorItImageGroup" to me in 10 milliseconds
       set the rect of control "Color map" to the rect of grp "colorItImageGroup"
    end if
@@ -1091,6 +1124,7 @@ on closeCard
       delete sColorItImage
       delete variable sImageUndoCache
       delete variable sImageUndoRect
+      delete variable sImageUndoHash
       --set the filename of sColorItImage to empty
       --set the imageData of sColorItImage to empty
       send "clearHighlight" to grp "ToolGroup" of cd "colorIt"

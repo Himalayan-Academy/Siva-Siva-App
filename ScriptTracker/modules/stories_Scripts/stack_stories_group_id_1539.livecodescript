@@ -36,6 +36,7 @@ on mouseUp
       hide btn "cancel"
       hide btn "save"
       --
+      pushImage
       put false into sStarted
       put tTarget into sTool
       relayer getColorItImage() to back of cd "colorIt"
