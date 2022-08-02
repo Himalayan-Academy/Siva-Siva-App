@@ -26,6 +26,7 @@ on mouseUp
    if tTarget is "fillColor" then
       hide btn "cancel"
       hide btn "save"
+      hide grc "btnBackground"
       --
       show control "Color map"
       put empty into sTool
@@ -35,6 +36,7 @@ on mouseUp
    else if tTarget is among the items "brush,bucket" then
       hide btn "cancel"
       hide btn "save"
+      hide grc "btnBackground"
       --
       pushImage
       put false into sStarted
@@ -81,6 +83,9 @@ on checkLoc
          set the opaque of btn "bucket" of grp "footer" to false
          show btn "cancel"
          show btn "save"
+         if currentlyLandscape() then
+            show grc "btnBackground"
+         end if
          --
          exit "checkLoc"
       else
@@ -91,7 +96,7 @@ on checkLoc
       end if
    else
       if the mouse is down then
-         if the mouseloc is within the rect of btn "brush" and sTool is "brush" then
+         if the mouseloc is within the rect of btn "brush" of me and sTool is "brush" then
             choose the browse tool
             set the layer of grp "BrushIcons" of cd "colorIt" to 99
             show grp "BrushIcons" of cd "colorIt"
