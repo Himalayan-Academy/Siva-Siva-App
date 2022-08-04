@@ -254,33 +254,46 @@ on mouseup
          end if
          break
       case "cancel" # colorIt card
-         set the opaque of the target to true
-         wait 250 milliseconds
-         lock screen
-         initializeCycleImage sStoryImage
-         go cd "showStories"
-         unlock screen
-         set the opaque of the target to false
+         
+         doAnswer "Do you want save an image?", "Yes,No","downloadAffirmed"
+         
          break
       case "save" # colorIt card
-         set the opaque of the target to true
-         --put "image saved here..."
-         put the filename of sStoryImage into tFileName
-         set the itemDelimiter to "-"
-         if item -1 of tFileName is not "edited.gif" then
-            set the itemDelimiter to "."
-            put item 1 to -2 of tFileName & "-edited.gif" into tFileName
-         end if
-         lock screen
-         export sColorItImage to file tFileName as GIF
-         set the filename of sStoryImage to empty
-         set the filename of sStoryImage to tFileName
-         unlock screen
-         wait 250 milliseconds
-         set the opaque of the target to false
+         saveTheImage
          break
    end switch
 end mouseup
+
+command saveTheImage
+   local tFileName
+   set the opaque btn "cancel"  to true
+   --put "image saved here..."
+   put the filename of sStoryImage into tFileName
+   set the itemDelimiter to "-"
+   if item -1 of tFileName is not "edited.gif" then
+      set the itemDelimiter to "."
+      put item 1 to -2 of tFileName & "-edited.gif" into tFileName
+   end if
+   lock screen
+   export sColorItImage to file tFileName as GIF
+   set the filename of sStoryImage to empty
+   set the filename of sStoryImage to tFileName
+   unlock screen
+   wait 250 milliseconds
+   set the opaque btn "cancel"  to false
+end saveTheImage
+
+
+command dontSaveImage
+   set the opaque of the target to true
+   wait 250 milliseconds
+   lock screen
+   initializeCycleImage sStoryImage
+   go cd "showStories"
+   unlock screen
+   set the opaque of the target to false
+end dontSaveImage
+
 
 
 on showStoryText
@@ -301,6 +314,17 @@ on showStoryText
    unlock screen
 end showStoryText
 
+command downloadAffirmed pDailogParam
+   
+   if pDailogParam <> empty then
+      saveTheImage
+   end if
+   
+   dontSaveImage
+   
+end downloadAffirmed
+   
+end down
 
 # Tree Widget handler
 on hiliteChanged
