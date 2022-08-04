@@ -1099,8 +1099,8 @@ on updateUI
          set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
                CardHeight() - safeBottomMargin())
          resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
-         set the rect of grc "btnBackground" to (the left of tCancel, 0, CardWidth(), CardHeight())
-         show grc "btnBackground"
+         --set the rect of grc "btnBackground" to (the left of tCancel, 0, CardWidth(), CardHeight())
+         --show grc "btnBackground"
          set the loc of grp "BrushIcons" to CardLoc()
          set the left of grp "BrushIcons" to the right of tFooter + 50
       else
@@ -1109,7 +1109,7 @@ on updateUI
          --
          set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
-         hide grc "btnBackground"
+         --hide grc "btnBackground"
          set the loc of grp "BrushIcons" to CardLoc()
          set the bottom of grp "BrushIcons" to the top of tFooter - 50
       end if
