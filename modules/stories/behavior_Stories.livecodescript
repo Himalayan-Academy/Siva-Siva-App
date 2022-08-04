@@ -20,7 +20,7 @@ local sAllowLandscape, sStoryMenuTree, sStoryMetaArray, sColorItImage
 # must wipe them on end of story
 local sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
 local sAttribution, sStoryTitle, sLastScene, sTotalSceneCount
-local sStoryDataStack, sKeepStoryLoaded
+local sStoryDataStack, sKeepStoryLoaded, sImageDirty
 
 # various screen display options
 local sTarget, sTargetOwner
@@ -88,6 +88,7 @@ on preOpenCard
       wait 10 milliseconds
       hide group "BrushIcons" of card "colorIt"
       hide control "Color map" of card "colorIt"
+      put false into sImageDirty
    end if
    updateUI
 end preopenCard
@@ -254,20 +255,38 @@ on mouseup
          end if
          break
       case "cancel" # colorIt card
-         
-         doAnswer "Do you want save an image?", "No,Yes","downloadAffirmed"
-         
+         if sImageDirty then
+            doAnswer "Do you want to save the image?", "No,Yes", "backToStorySaveImage"
+         else
+            backToStorySaveImage "No"
+         end if
          break
       case "save" # colorIt card
+         set the opaque btn "save" to true
+         wait 250 milliseconds
+         set the opaque btn "save" to false
+         --
          saveTheImage
+         put false into sImageDirty
          break
    end switch
 end mouseup
 
+
+command backToStorySaveImage pSaveImage
+   if pSaveImage is "Yes" then
+      saveTheImage
+   end if
+   lock screen
+   initializeCycleImage sStoryImage
+   go cd "showStories"
+   unlock screen
+end backToStorySaveImage
+
+
 command saveTheImage
    local tFileName
-   set the opaque btn "cancel"  to true
-   --put "image saved here..."
+   --
    put the filename of sStoryImage into tFileName
    set the itemDelimiter to "-"
    if item -1 of tFileName is not "edited.gif" then
@@ -279,21 +298,7 @@ command saveTheImage
    set the filename of sStoryImage to empty
    set the filename of sStoryImage to tFileName
    unlock screen
-   wait 250 milliseconds
-   set the opaque btn "cancel"  to false
 end saveTheImage
-
-
-command dontSaveImage
-   set the opaque of the target to true
-   wait 250 milliseconds
-   lock screen
-   initializeCycleImage sStoryImage
-   go cd "showStories"
-   unlock screen
-   set the opaque of the target to false
-end dontSaveImage
-
 
 
 on showStoryText
@@ -314,18 +319,6 @@ on showStoryText
    unlock screen
 end showStoryText
 
-command downloadAffirmed pDailogParam
-   
-   if pDailogParam is "Yes" then
-      saveTheImage
-      dontSaveImage
-   else
-      dontSaveImage
-   end if
-   
-end downloadAffirmed
-   
-end down
 
 # Tree Widget handler
 on hiliteChanged
@@ -743,6 +736,11 @@ end setColorItImage
 function getColorItImage
    return sColorItImage
 end getColorItImage
+
+
+command makeImageDirty
+   put true into sImageDirty
+end makeImageDirty
 
 
 command updateImageState pResizeOnly

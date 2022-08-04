@@ -103,3 +103,15 @@
 * ID: group id 1472 of card id 1421 of stack "stories"
 * [stack_stories_group_id_1472](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1472.livecodescript)
 
+**group "answerDlgGrp" of card "colorIt" of stack "stories"**
+* ID: group id 1686 of card id 1421 of stack "stories"
+* [stack_stories_group_id_1686](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1686.livecodescript)
+
+**graphic "cover" of group "answerDlgGrp" of card "colorIt" of stack "stories"**
+* ID: graphic id 1687 of group id 1686 of card id 1421 of stack "stories"
+* [stack_stories_graphic_id_1687](./../../ScriptTracker/modules/stories_Scripts/stack_stories_graphic_id_1687.livecodescript)
+
+**field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "colorIt" of stack "stories"**
+* ID: field id 1689 of group id 1688 of group id 1686 of card id 1421 of stack "stories"
+* [stack_stories_field_id_1689](./../../ScriptTracker/modules/stories_Scripts/stack_stories_field_id_1689.livecodescript)
+

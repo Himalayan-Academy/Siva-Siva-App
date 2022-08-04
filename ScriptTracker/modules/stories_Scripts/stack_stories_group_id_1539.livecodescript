@@ -54,6 +54,7 @@ on mouseUp
    else -- erase
       set the opaque of the target to true
       popImage
+      makeImageDirty
       wait 250 milliseconds
       set the opaque of the target to false
    end if
@@ -70,6 +71,7 @@ on checkLoc
          put the seconds + 5 into sSaveTime
       end if
       put true into sStarted
+      makeImageDirty
    end if
    if sStarted then
       if the mouseloc is within the rect of grp "footer" of cd "colorIt" or \
