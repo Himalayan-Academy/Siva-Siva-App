@@ -172,31 +172,26 @@ on mouseup
          end switch
          break
          
-         --      case "Search"
-         --         local  tSearchString
+      case "Search"
+         local  tSearchString
+         if the foundText is not empty then  
+            set the backcolor of the foundText to empty
+         end if
+         set the caseSensitive to false
+         put (fld "searchString" of card "glossary") into tSearchString
+         find string tSearchString in fld "glossaryText"
          
-         --         put fld "searchString" into tSearchString
-         --         find string tSearchString in fld "glossaryText"
+         if the foundText is empty then  
+            exit to top
+         end if
          
          
-         --         --   switch pWhich
-         --         --      case "Find"
-         --         --         ask "Find What?"
-         --         --         if it is empty then break
-         --         --         set cursor to watch
-         --         --         put it into tSearchString
-         --         --         set the lockmessages to true
-         --         --         find string tSearchString in fld "text"
-         --         --         if the result is not empty then answer "Sorry, no such text." with "OK"
-         --         --         break
-         --         --      case "Find Again"
-         --         --         set cursor to watch
-         --         --         set the lockmessages to true
-         --         --         find string tSearchString in fld "text"
-         --         --         break
-         --         --      case "Bigger Text"
-         --         --   end switch
-         --         break
+         if tSearchString is not empty then
+            set the backcolor of the foundText to  "#AEAEFF"
+            wait 1500 milliseconds
+            set the backcolor of the foundText to  empty 
+         end if
+         break
          
    end switch
 end mouseup
@@ -732,22 +727,22 @@ on updateUI
          topCenterMe tHeaderGrp, 0
          
          put the long id of btn "prevLesson" into tPrevLesson
-         topLeftMe tPrevLesson, 0, 2
+         topLeftMe tPrevLesson, 0, 0
          
          put the long id of widget "photo index" into tPhotoIndex
-         topLeftMe tPhotoIndex, 75, 8
+         topLeftMe tPhotoIndex, 86, 10
          
          put the long id of widget "SVG Journal" into tSVGJournal
-         topCenterMe tSVGJournal, 5
+         topCenterMe tSVGJournal, 10
          
          put the long id of fld "message" into tMessage
          topCenterMe tMessage, 3
          
          put the long id of btn "SVG Menu" into tSVGMenu
-         topRightMe tSVGMenu, 80, 0
+         topRightMe tSVGMenu, 85, 2
          
          put the long id of btn "nextLesson" into tNextLesson
-         topRightMe tNextLesson, 0, 3
+         topRightMe tNextLesson, 0, 0
          
          put the long id of widget "turnOffAudio" of grp "audioGlobalControl" into tTurnOffAudio
          topRightMe tTurnOffAudio, 18, 74
@@ -874,51 +869,49 @@ end updateLessonViewUI
 private command updateAboutUI
    --breakpoint
    
-   local tControl, tRect, tLoc, tField, tImgBottom
-   
-   put the long id of fld "aboutFld" into tField
+   local tControl, tRect, tLoc
    
    put safeRect() into tRect
    put the bottom of grp "headerGrp" into item 2 of tRect
-   --
-   resizeToWidth "C_Introduction_470-80_opt.jpg"
-   --
-   topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
    
-   put the bottom of img "C_Introduction_470-80_opt.jpg" into tImgBottom
-   topCenterMe the long id of fld "aboutTitle", tImgBottom-55
-
-   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   topCenterMe the long id of img "C_Introduction_470-80_opt.jpg", 50
+   topCenterMe the long id of fld "aboutTitle", 110
+   
+   put "0," & (the bottom of img "C_Introduction_470-80_opt.jpg") & "," &\
+         (CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   
    set the rect of grp "aboutTextGrp" to tRect 
+   set the rect of fld "aboutFld" to tRect 
+   
    set the width of fld "aboutFld" to CardWidth()-2*safeSideMargin()
    set the left of fld "aboutFld" to safeSideMargin() 
    
+   set the vscrollbar of field "aboutFld" to not (the environment is "mobile")
+   
+   --put tImgBottom & CR into fld "log"
 end updateAboutUI
 
 private command updateGlossaryUI
    local tControl, tRect, tLoc, tField, tImgBottom
    
-   put the long id of fld "glossaryTitle" into tField
-   
    put safeRect() into tRect
-   put the bottom of grp "glossaryTextGrp" into item 2 of tRect
-   --
-   resizeToWidth "C2_TOC-shutterstock-278201699_366w_opt.jpg"
-   --
-   
+   put the bottom of grp "headerGrp" into item 2 of tRect
+  
    topCenterMe the long id of img "C2_TOC-shutterstock-278201699_366w_opt.jpg", 50
+   topCenterMe the long id of fld "glossaryTitle", 67
    
-   put the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg" into tImgBottom
-   topCenterMe the long id of fld "glossaryTitle", tImgBottom - 130
-   topRightMe the long id of btn "Search", 40, tImgBottom - 40
-   topLeftMe the long id of fld "searchString", 40, tImgBottom - 40
+   topRightMe the long id of widget"Search", 20, 145
+   topLeftMe the long id of fld "searchString", 30, 145
    
-   put "0," & tImgBottom & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
+   put "0," & (the bottom of img "C2_TOC-shutterstock-278201699_366w_opt.jpg") & "," &(CardWidth()-2*safeSideMargin()) & "," & CardHeight() into tRect
    set the rect of grp "glossaryTextGrp" to tRect 
+   set the rect of fld "glossaryText" to tRect 
+   
    set the width of fld "glossaryText" to CardWidth()-2*safeSideMargin()
    set the left of fld "glossaryText" to safeSideMargin() 
-   set the height of field "glossaryText" to the formattedHeight of field "glossaryText" 
-   topCenterMe the long id of fld "glossaryText", tImgBottom 
+   
+   set the vscrollbar of field "glossaryText" to not (the environment is "mobile")
+   
 end updateGlossaryUI
 
 private command updatePhotoIndexUI
@@ -1051,7 +1044,3 @@ on deleteCardMobileControls -- delete all mobile controls of any type on current
    end repeat
 end deleteCardMobileControls
 
-
-on startup pMode
-   
-end startup

@@ -20,6 +20,7 @@ on preOpenCard
    put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
+   hide grp "newsItems"
    hide grp "loadingGroup"
    switch tCard
       case "Home"
@@ -52,31 +53,67 @@ end _USER_INTERACTION
 
 on mouseup
    local tTarget, tTargetOwner, tUserGuide, tNews
+   local tSelection
    
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    
    # one set of actions occurs if the user hits grp ""bkgndcontrol"
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
-   # and not abpout the UI perse
+   # and not about the UI perse
    
    switch tTarget
       local tMsg
+      
    case "Topics"
       portal_GoUrl  "https://www.himalayanacademy.com/topics"
       exit mouseup
       break
+      
    case "loading"
       --showbusyIndicator false
       exit Mouseup
       break
       
-   case "News"
+      # beginning News!
+   case "news"
+      show grp "newsItems"
+      exit Mouseup
+      break
       
+   case "newsDismiss"
+      hide grp "newsItems"
+      exit Mouseup
+      break
+      
+   case "TAKA"
+      hide grp "newsItems"
+      portal_GoURL "https://www.himalayanacademy.com/blog/taka/"
+      exit Mouseup
+      break
+      
+   case "Bodhinatha Latest"
+      hide grp "newsItems"
+      portal_GoStack "Listen"
+      put the long name of image "1-2-playlist-image" into tSelection
+      send "selectPlayList tSelection" to stack "Listen" in 200 milliseconds
+      exit Mouseup
+      break
+      
+   case "Webinars"
+      hide grp "newsItems"
+      portal_GoURL "https://www.youtube.com/user/kauaiaadheenam/videos"
+      exit Mouseup
+      break
+      
+   case "App News"
+      hide grp "newsItems"
       News_Fetch
       put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
       
       set the htmltext of fld "helpField" to tNews
+      
+      # end of News!
       
       
       show grc "helpBkg"
@@ -85,12 +122,12 @@ on mouseup
       lock screen
       deleteMobileControl "helpField"
       # recreate:
-    -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
+      -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
       --set the top of fld "helpField" to the top of grp "helpField"
       send "CreateScroller helpField" to fld "helpField"
       
       unlock screen
-      hide fld "ExplanationMarker"
+      
       break
       
       
@@ -218,11 +255,8 @@ command showNewsNotification pBool
    if exists(fld "notification") then
       visMessageToUser pBool
       if pBool is true then
-         put  ("You have the latest news!" & cr & "Click  " & quote & "News!" & quote ) into fld "notification" of stack "Siva-Siva-Portal"
-         show fld "ExplanationMarker" 
-         wait 300 milliseconds
-      else
-         hide fld "ExplanationMarker" 
+         put  ("You have the latest " & quote &"App News!" & quote) into fld "notification" of stack "Siva-Siva-Portal"
+         wait 500 milliseconds
       end if
    end if
 end showNewsNotification
@@ -450,7 +484,7 @@ command updateUIPortal
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
-   local tNews, tNotification, tExplanationMarker
+   local tNews, tNotification, tExplanationMarker, tNewsItems
    
    #  UI responsive
    
@@ -465,13 +499,13 @@ command updateUIPortal
    
    topCenterMe tBrandLogo,150 
    
-   --show sMainImage with visual effect "dissolve"
-   
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
    else
       put 8 into tBottomMargin
    end if
+   
+   
    
    switch (the short name of this card)
       case "Home"
@@ -530,12 +564,6 @@ command updateUIPortal
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
          
-         put the long id of btn "News" into tNews
-         bottomLeftMe tNews, 20, 40
-         
-         put the long id of fld "explanationMarker" into tExplanationMarker
-         bottomLeftMe tExplanationMarker,90, 35
-         
          put the long id of btn "helpButton" into tHelpButton
          bottomRightMe tHelpButton, 20, 40
          
@@ -552,6 +580,9 @@ command updateUIPortal
          break
          
    end switch
+   
+   put the long id of grp "newsItems" into tNewsItems
+   centerMe tNewsItems, -85
    
    # background group of all cards
    

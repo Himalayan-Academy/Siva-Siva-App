@@ -194,19 +194,16 @@
         "1": {
           "rowName": "Our Daily Blog"
         }, 
-        "3": {
+        "2": {
           "rowName": "Meet the Monks"
         }, 
-        "2": {
-          "rowName": "Aller au coeur de l'hindouisme"
-        }, 
-        "5": {
+        "3": {
           "rowName": "How to Visit"
         }, 
         "4": {
           "rowName": "Monthly News"
         }, 
-        "7": {
+        "5": {
           "rowName": "About the Monastery"
         }, 
         "6": {
@@ -482,7 +479,6 @@
       }, 
       "shortImageFile": "thumb_gurudeva_sharma-painting.png"
     },
-    
 "Listen": {
       "imageText": "Listen", 
       "link": {
@@ -824,15 +820,7 @@
       }, 
       "shortImageFile": "thumb_history-movie.png"
     },
-    
-"Aller au coeur de l'hindouisme": {
-      "imageText": "Aller\nau coeur de\nl'hindouisme", 
-      "link": {
-        "portal param": "https://www.hindouisme.org/", 
-        "portal command": "portal_GoURL"
-      }, 
-      "shortImageFile": "thumb_french-website-kada-outside-ganesha.png"
-    }, 
+ 
 "Our Daily Blog": {
       "imageText": "Our Daily\nBlog", 
       "link": {

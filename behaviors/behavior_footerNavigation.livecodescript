@@ -63,6 +63,15 @@ on mouseup
             showStoryMenu
          else if tCard is among the items of "listen-browse,listen-my-audio" then
             go card "listen-collection"
+            
+         else if tCard is "mainImagePuzzle" then
+            
+            if not vis of grp "makeTiles" then
+               up_InfoPanel
+            else
+               portal_GoStack ("Siva-Siva-Portal")
+            end if
+            
          else if tCard is "listen-file" then
             unlock screen
             put portal_GetLastStack() into tLastStack

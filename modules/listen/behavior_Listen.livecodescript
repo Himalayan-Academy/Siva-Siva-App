@@ -78,6 +78,7 @@ end preopencard
 
 
 on openCard
+   --breakpoint
    local tCardName
    local tLabelLoc, tLabelWidth, tBrowseHeader
    
@@ -536,7 +537,6 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
    local tPlaylistClass, tRecordTypeCount, tDbaseColumns
    local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
-   --showBusyIndicator true,"Loading Collection"
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
    
    --  dispatch "cleanUpGui" to card "listen-browse"      
@@ -614,10 +614,9 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  just sets the WHERE clause in the query with whatever you request. 
          # Then sorts on date sends back the request number of records.
          
-         --breakpoint
-         showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading"
          
-         put "Contacting server... " into fld "audioList" of card "listen-browse"
+         --put "Contacting server... " into fld "audioList" of card "listen-browse"
          
          # Set up the WHERE clause
          put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
@@ -626,6 +625,10 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          put sPlayListQueryA["recordCount"] into tQueryData["recordcount"]
          
          put arrayToJson(tQueryData) into tJSON # from server
+         
+         --
+         --put tJSON
+         --
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
@@ -646,20 +649,23 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
             exit to top
          else 
             put it into tRecords
+            --
+            --put tRecords
+            --
             put jsonToArray(tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
-         showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
          put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
-         showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading"
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          # a simple call to the server to get the TOC
          # can chose different books base on file_id

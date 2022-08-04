@@ -233,11 +233,16 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    portal_SetLabel pJournalLabel
    
    put the short name of this stack into oStackName
-   repeat for each item x  in tRequiresLandscape
-      if  pURL contains x then
-         put "goLandscape" into tBrowserView
-      end if
-   end repeat
+   
+   ## We have decided to go landscape for ALL the URLs
+   
+   put "goLandscape" into tBrowserView
+   
+   --repeat for each item x  in tRequiresLandscape
+   --if  pURL contains x then
+   --put "goLandscape" into tBrowserView
+   --end if
+   --end repeat
    
    if pTimeDelay is empty then put 100 into pTimeDelay
    
