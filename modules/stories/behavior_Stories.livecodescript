@@ -255,7 +255,7 @@ on mouseup
          break
       case "cancel" # colorIt card
          
-         doAnswer "Do you want save an image?", "Yes,No","downloadAffirmed"
+         doAnswer "Do you want save an image?", "No,Yes","downloadAffirmed"
          
          break
       case "save" # colorIt card
@@ -316,11 +316,12 @@ end showStoryText
 
 command downloadAffirmed pDailogParam
    
-   if pDailogParam <> empty then
+   if pDailogParam is "Yes" then
       saveTheImage
+      dontSaveImage
+   else
+      dontSaveImage
    end if
-   
-   dontSaveImage
    
 end downloadAffirmed
    
