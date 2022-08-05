@@ -216,12 +216,20 @@ end doAnswer
 -- which must in the card script or stack up that all the dialong.
 
 command doAnswerResponse 
+   
+   local pDialogParam
    # send by the buttons of   "answerDigGrp"
    get the dialogData
+   
+   put it into pDialogParam
    if it contains "cancel" then
       exit to top
    else
-     dispatch sHandleAffirm to this card
+      if pDialogParam <> empty then
+         dispatch sHandleAffirm to this card with pDialogParam
+      else
+         dispatch sHandleAffirm to this card
+      end if
    end if
 end doAnswerResponse
 

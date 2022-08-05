@@ -10,16 +10,17 @@ Revised 2020-10-01
 
 global sConfigA, sDefaultImage,
 local sStoriesMetaArray,sWhere  # get the metadata for each story; and parameters
+local sImageUndoCache, sImageUndoRect, sImageUndoHash
 
 # geometry vars
 local sStoryMenu, sTips, sStoryImage, sStoryText, sStoryTextBkg, sCaptionText, sCaptionBkg
-local sAllowLandscape, sStoryMenuTree, sStoryMetaArray
+local sAllowLandscape, sStoryMenuTree, sStoryMetaArray, sColorItImage
 
 # story control variables, stored cache
 # must wipe them on end of story
-local  sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
-local sAttribution, sStoryTitle,sLastScene,sTotalSceneCount
-local sStoryDataStack
+local sImageList, sLastImage, sQuoteList, sLastQuote, sLastStory
+local sAttribution, sStoryTitle, sLastScene, sTotalSceneCount
+local sStoryDataStack, sKeepStoryLoaded, sImageDirty
 
 # various screen display options
 local sTarget, sTargetOwner
@@ -44,7 +45,7 @@ Based on the card name
 */
 
 on preOpenCard
-   local tCard 
+   local tCard, tFileName
    put the short name of this card into tCard
    --
    if the logMessage <> empty then
@@ -58,6 +59,10 @@ on preOpenCard
       put the long id of fld "tips" into sTips
       hide group "loadingGroup"
    else if tCard is "showStories" then
+      if isMobile() then
+         mobileSetAllowedOrientations "portrait"
+      end if
+      send "landscapeOrientation allowed" to me in 5 seconds
       display_SetStatusBarVis false
       put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
@@ -68,6 +73,22 @@ on preOpenCard
       hide sStoryTextBkg
       hide sCaptionText
       hide sCaptionBkg
+   else if tCard is "colorIt" then
+      put the filename of sStoryImage into tFileName
+      import paint from file tFileName
+      set the name of the last image to "colorItImage"
+      put the long id of the last image into sColorItImage
+      relayer sColorItImage to front of grp "colorItImageGroup"
+      put the long id of img "colorItImage" into sColorItImage
+      if the width of sColorItImage > the height of sColorItImage then
+         lockLandscape
+      else
+         lockPortrait
+      end if
+      wait 10 milliseconds
+      hide group "BrushIcons" of card "colorIt"
+      hide control "Color map" of card "colorIt"
+      put false into sImageDirty
    end if
    updateUI
 end preopenCard
@@ -113,6 +134,7 @@ on opencard
       --
       showStoryMenu
    else if tCard is "showStories" then
+      put false into sKeepStoryLoaded
       --send "goNextScene" to me in 0 milliseconds
    end if
 end opencard
@@ -128,11 +150,23 @@ command showStoryMenu
 end showStoryMenu 
 
 
+function showColorItIcon
+   return (sStoryMetaArray["color"] = "yes")
+end showColorItIcon
+
+# when going to colorIt card, do not clear the story
+# flag set by footer navigation when going to colorIt card
+# flag cleared in openCard handler
+command keepStoryLoaded
+   put true into sKeepStoryLoaded
+end keepStoryLoaded
+
+
 /*
 UX for user for the stack and cardi
 */
 on mouseup
-   local tTips
+   local tTips, tFileName, tImageState
    --
    put the short name of the owner of the target into sTargetOwner
    put the short name of the target into sTarget
@@ -170,12 +204,10 @@ on mouseup
          dispatch "getSums" to grp "displayFilesSizes" with "stories"
          dispatch "displayTargetFolders" to grp "displayFilesSizes" with "stories"
          break
-         
+         --
       case "Loading"
-         
          showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
                & "Be patient."
-          
          exit top
          break
          --
@@ -184,6 +216,9 @@ on mouseup
       case "captionText"
       case "white-feathered-rect"
          updateImageState
+         break
+         --
+      case "colorItImage"
          break
          --
       case "goPrev"
@@ -219,8 +254,51 @@ on mouseup
             showStoryText
          end if
          break
+      case "cancel" # colorIt card
+         if sImageDirty then
+            doAnswer "Do you want to save the image?", "No,Yes", "backToStorySaveImage"
+         else
+            backToStorySaveImage "No"
+         end if
+         break
+      case "save" # colorIt card
+         set the opaque btn "save" to true
+         wait 250 milliseconds
+         set the opaque btn "save" to false
+         --
+         saveTheImage
+         put false into sImageDirty
+         break
    end switch
 end mouseup
+
+
+command backToStorySaveImage pSaveImage
+   if pSaveImage is "Yes" then
+      saveTheImage
+   end if
+   lock screen
+   initializeCycleImage sStoryImage
+   go cd "showStories"
+   unlock screen
+end backToStorySaveImage
+
+
+command saveTheImage
+   local tFileName
+   --
+   put the filename of sStoryImage into tFileName
+   set the itemDelimiter to "-"
+   if item -1 of tFileName is not "edited.gif" then
+      set the itemDelimiter to "."
+      put item 1 to -2 of tFileName & "-edited.gif" into tFileName
+   end if
+   lock screen
+   export sColorItImage to file tFileName as GIF
+   set the filename of sStoryImage to empty
+   set the filename of sStoryImage to tFileName
+   unlock screen
+end saveTheImage
 
 
 on showStoryText
@@ -270,6 +348,9 @@ on hiliteChanged
    if the number of items in tHilitedElement = 2 then
       put char 3 to -1 of item 2 of tHilitedElement into sStoryTitle
       put sStoriesMetaArray["Stories"][char 3 to -1 of item 1 of tHilitedElement][sStoryTitle] into sStoryMetaArray
+      # potentially a temporary solution, need to identify story type (folder) to know if
+      # the colorIt icon should be displayed
+      put char 3 to -1 of item 1 of tHilitedElement into sStoryMetaArray["StoryType"]
       --
       setupOrDownloadStory
       --
@@ -371,6 +452,7 @@ on doScrollerTap
    --
    switch sTarget
       case "storyImage"
+      case "colorItImage"
          updateImageState
          break
       case "storyText"
@@ -490,7 +572,12 @@ command goNextScene
       set the filename of sStoryImage to tImagePath
    else
       set the itemdel to "/"
-      set the filename of sStoryImage to item 1 to -2 of sStoryDataStack & "/" & tImagePath
+      put item 1 to -2 of sStoryDataStack & "/" before tImagePath
+      set the itemdel to "."
+      if there is a file (item 1 to -2 of tImagePath & "-edited.gif") then
+         put item 1 to -2 of tImagePath & "-edited.gif" into tImagePath
+      end if
+      set the filename of sStoryImage to tImagePath
    end if
    put there is a file (the filename of sStoryImage) into tShowPhoto
    if sLastScene is 1 then
@@ -579,27 +666,118 @@ command setupCaptionField
 end setupCaptionField
 
 
+command pushImage
+   local tNow, tKeyList, tRect
+   put the seconds into tNow
+   lock screen
+   put the rect of sColorItImage into tRect
+   put (0,0,the formattedWidth of sColorItImage,the formattedHeight of sColorItImage) into sImageUndoRect[tNow]
+   set the rect of sColorItImage to sImageUndoRect[tNow]
+   --put tRect & cr & sImageUndoRect[tNow]
+   put the imagedata of sColorItImage into sImageUndoCache[tNow]
+   set the rect of sColorItImage to tRect
+   put messageDigest(sImageUndoCache[tNow], "MD5") into sImageUndoHash[tNow]
+   unlock screen
+   put the keys of sImageUndoCache into tKeyList
+   sort tKeyList ascending numeric
+   if the number of lines of tKeyList > 1 and \
+         sImageUndoHash[tNow] = sImageUndoHash[line -2 of tKeyList] then
+      delete variable sImageUndoCache[line 1 of tKeyList]
+      delete variable sImageUndoRect[line 1 of tKeyList]
+      delete variable sImageUndoHash[line 1 of tKeyList]
+   end if
+   if the number of lines of tKeyList > 10 then
+      delete variable sImageUndoCache[line 1 of tKeyList]
+      delete variable sImageUndoRect[line 1 of tKeyList]
+      delete variable sImageUndoHash[line 1 of tKeyList]
+   end if
+end pushImage
+
+
+command popImage
+   local tKeyList, tRect, tFileName
+   lock screen
+   put the keys of sImageUndoCache into tKeyList
+   if the number of lines of tKeyList > 0 then
+      sort tKeyList ascending numeric
+      put the rect of sColorItImage into tRect
+      set the rect of sColorItImage to sImageUndoRect[line -1 of tKeyList]
+      --put tRect & cr & sImageUndoRect[line -1 of tKeyList]
+      set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
+      set the rect of sColorItImage to tRect
+      delete variable sImageUndoCache[line -1 of tKeyList]
+      delete variable sImageUndoRect[line -1 of tKeyList]
+      delete variable sImageUndoHash[line -1 of tKeyList]
+   else
+      put the filename of sStoryImage into tFileName
+      set the itemDelimiter to "-"
+      if item -1 of tFileName is "edited.gif" then
+         put the filename of image "slideImage" of cd sLastScene of stack sStoryDataStack into tFileName
+         set the itemdel to "/"
+         put item 1 to -2 of sStoryDataStack & "/" before tFileName
+      end if
+      delete sColorItImage
+      import paint from file tFileName
+      set the name of the last image to "colorItImage"
+      put the long id of the last image into sColorItImage
+      relayer sColorItImage to front of grp "colorItImageGroup"
+      put the long id of img "colorItImage" into sColorItImage
+      updateUI
+   end if
+   unlock screen
+end popImage
+
+
+command setColorItImage pName
+   put pName into sColorItImage
+end setColorItImage
+
+
+function getColorItImage
+   return sColorItImage
+end getColorItImage
+
+
+command makeImageDirty
+   put true into sImageDirty
+end makeImageDirty
+
+
 command updateImageState pResizeOnly
    -- pResizeOnly [boolean] is true to resize image after rotation vice cycle to next image
-   local tState, tLoc
+   local tState, tLoc, tImage, tImageGroup, tOnColorItCard
+   put (the short name of this card is "colorIt") into tOnColorItCard
+   if tOnColorItCard then
+      put sColorItImage into tImage
+      put "colorItImageGroup" into tImageGroup
+   else
+      put sStoryImage into tImage
+      put "storyImageGroup" into tImageGroup
+   end if
    lock screen for visual effect
-   if (not the visible of sStoryText) or (pResizeOnly is true) then
+   if tOnColorItCard then
+      setupImageScroller tImage, tImageGroup
+   else if (not the visible of sStoryText) or (pResizeOnly is true) then
       if pResizeOnly is true then
-         resetCycleImage sStoryImage
+         resetCycleImage tImage
       else
-         cycleImageState sStoryImage
+         cycleImageState tImage
       end if
       put the result into tState
       if tState is 2 then
-         if the text of sCaptionText is not empty then
-            show sCaptionText
-            show sCaptionBkg
+         if not tOnColorItCard then
+            if the text of sCaptionText is not empty then
+               show sCaptionText
+               show sCaptionBkg
+            end if
+            show grp "footerNavigation"
+            show btn "goPrev"
+            show btn "goNext"
          end if
-         show grp "footerNavigation"
-         show btn "goPrev"
-         show btn "goNext"
-         dispatch "deleteMobileControl" to grp "storyImageGroup" with "storyImageGroup"
-         landscapeOrientation "allowed"
+         dispatch "deleteMobileControl" to grp tImageGroup with tImageGroup
+         if not tOnColorItCard then
+            landscapeOrientation "allowed"
+         end if
       else
          if tState >= 3 then
             if the platform is "iPhone" then
@@ -610,41 +788,55 @@ command updateImageState pResizeOnly
                   lockPortrait
                end if
             end if
-            hide grp "footerNavigation"
-            -- hide btn "goPrev"
-            -- hide btn "goNext"
-            set the hscroll of grp "storyImageGroup" to 0
-            set the vscroll of grp "storyImageGroup" to 0
-            if the width of sStoryImage < CardWidth() then
-               put the loc of sStoryImage into tLoc
-               put item 1 of CardLoc() into item 1 of tLoc
-               set the loc of sStoryImage to tLoc
-            else
-               set the left of sStoryImage to 0
-               set the hScroll of grp "storyImageGroup" to (the width of sStoryImage - CardWidth()) div 2
+            if not tOnColorItCard then
+               hide grp "footerNavigation"
             end if
-            if the height of sStoryImage < CardHeight() then
-               put the loc of sStoryImage into tLoc
-               put item 2 of CardLoc() into item 2 of tLoc
-               set the loc of sStoryImage to tLoc
-            else
-               set the top of sStoryImage to 0
-               set the vScroll of grp "storyImageGroup" to (the height of sStoryImage - CardHeight()) div 2
-            end if
-            dispatch "createImageScroller" to grp "storyImageGroup" with "storyImageGroup"
+            setupImageScroller tImage, tImageGroup
          end if
-         hide sCaptionText
-         hide sCaptionBkg
+         if not tOnColorItCard then
+            hide sCaptionText
+            hide sCaptionBkg
+         end if
       end if
    end if
    unlock screen with visual effect "dissolve"
 end updateImageState
 
 
+command setupImageScroller pImage, pGroup
+   local tGroupLoc, tGroupWidth, tGroupHeight, tLoc, tOnColorItCard
+   put (the short name of this card is "colorIt") into tOnColorItCard
+   --
+   set the hscroll of grp pGroup to 0
+   set the vscroll of grp pGroup to 0
+   put the loc of grp pGroup into tGroupLoc
+   put the width of grp pGroup into tGroupWidth
+   put the height of grp pGroup into tGroupHeight
+   if the width of pImage < tGroupWidth then
+      put the loc of pImage into tLoc
+      put item 1 of tGroupLoc into item 1 of tLoc
+      set the loc of pImage to tLoc
+   else
+      set the left of pImage to the left of grp pGroup
+      set the hScroll of grp pGroup to (the width of pImage - tGroupWidth) div 2
+   end if
+   if the height of pImage < tGroupHeight then
+      put the loc of pImage into tLoc
+      put item 2 of tGroupLoc into item 2 of tLoc
+      set the loc of pImage to tLoc
+   else
+      set the top of pImage to the top of grp pGroup
+      set the vScroll of grp pGroup to (the height of pImage - tGroupHeight) div 2
+   end if
+   dispatch "createImageScroller" to grp pGroup with pGroup
+end setupImageScroller
+
+
 command landscapeOrientation pLandscapeMode
    # "off"     disables landscape
    # "allowed" enables rotation to landscape
    # "forced"  initially locks to landscape, unlocks in 5 seconds
+   # "only"    only allows landscape
    local tOrientations
    --
    if "landscapeOrientation" is in the pendingMessages then
@@ -657,8 +849,10 @@ command landscapeOrientation pLandscapeMode
    if sAllowLandscape then
       switch pLandscapeMode
          case "forced"
-            put empty into tOrientations
             send "landscapeOrientation allowed" to me in 5 seconds
+            -- fall through
+         case "only"
+            put empty into tOrientations
             -- fall through
          case "allowed"
             put "landscape left,landscape right," after tOrientations
@@ -673,12 +867,16 @@ end landscapeOrientation
 
 
 command lockLandscape
-   mobileSetAllowedOrientations "landscape left,landscape right"
+   if isMobile() then
+      mobileSetAllowedOrientations "landscape left,landscape right"
+   end if
 end lockLandscape
 
 
 command lockPortrait
-   mobileSetAllowedOrientations "portrait,portrait upside down"
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
 end lockPortrait
 
 
@@ -740,17 +938,24 @@ end resizeStack
 on updateUI
    local tCard, tFooter, tControl, tRect
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
-   local tStoryTextBkg, tGoNext, tGoPrev
+   local tStoryTextBkg, tGoNext, tGoPrev, tCancel, tSave
    local tProgressTitle
    --
    put the short name of this card into tCard
    --
-   put the long id of grp "footerNavigation" into tFooter
-   if currentlyLandscape() then
-      hide tFooter
-   else
-      show tFooter
+   if tCard is "colorIt" then
+      put the long id of grp "ToolGroup" into tFooter
       send "updateUI" to tFooter
+      put the long id of grp "footer" into tFooter
+      send "updateUI" to tFooter
+   else
+      put the long id of grp "footerNavigation" into tFooter
+      if currentlyLandscape() then
+         hide tFooter
+      else
+         show tFooter
+         send "updateUI" to tFooter
+      end if
    end if
    --
    if there is a control "Title" then
@@ -795,7 +1000,6 @@ on updateUI
       --
       put the long id of fld "ProgressTitle" into tControl
       bottomCenterMe tControl, 500
-      
    end if
    --
    if tCard is "storyDeleteFile" then
@@ -863,12 +1067,45 @@ on updateUI
       updateImageState true
    end if
    --
-   set the width of grp "share-ui" to cardWidth()
+   if tCard is "colorIt" then
+      put the long id of btn "cancel" into tCancel
+      put the long id of btn "save" into tSave
+      --
+      setRectOfCurrentGrc sColorItImage
+      if currentlyLandscape() then
+         bottomRightMe tCancel, 0, 8
+         topRightMe tSave, 0, 8
+         --
+         set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
+               CardHeight() - safeBottomMargin())
+         resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
+         --set the rect of grc "btnBackground" to (the left of tCancel, 0, CardWidth(), CardHeight())
+         --show grc "btnBackground"
+         set the loc of grp "BrushIcons" to CardLoc()
+         set the left of grp "BrushIcons" to the right of tFooter + 50
+      else
+         topLeftMe tCancel, 0, 8
+         topRightMe tSave, 0, 8
+         --
+         set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+         resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
+         --hide grc "btnBackground"
+         set the loc of grp "BrushIcons" to CardLoc()
+         set the bottom of grp "BrushIcons" to the top of tFooter - 50
+      end if
+      set the loc of sColorItImage to the loc of grp "colorItImageGroup"
+      send "setupImageScroller sColorItImage, colorItImageGroup" to me in 10 milliseconds
+      set the rect of control "Color map" to the rect of grp "colorItImageGroup"
+   end if
+   --
+   if tCard is not "colorIt" then
+      set the width of grp "share-ui" to cardWidth()
+   end if
 end updateUI
 
 
 on closeCard
-   local tCard
+   local tCard, tControl
    put the short name of this card into tCard
    --
    if tCard is "storyHome" then
@@ -878,18 +1115,29 @@ on closeCard
       show grp "storyMenu" of cd "storyHome"
       deleteMobileControl "storyNavTree"
    else if tCard is "showStories" then
-      set the text of sStoryText to empty
-      set the text of sCaptionText to empty
-      set the filename of sStoryImage to empty
-      --set the filename of sStoryImage to "../../assets/img/bkgnds/patterns/M09-Bkgrd-SYM-Sun-moon_opt-30.jpg"
-      set the destroyStack of stack sStoryDataStack to true
-      close stack sStoryDataStack
-      hide sStoryText
-      hide sStoryTextBkg
-      hide sCaptionText
-      hide sCaptionBkg
-      show grc "footerBackground" of grp "footerNavigation"
-      landscapeOrientation "off"
+      if sKeepStoryLoaded then
+         # going to colorIt card, leave everything in place for return
+      else
+         set the text of sStoryText to empty
+         set the text of sCaptionText to empty
+         set the filename of sStoryImage to empty
+         set the destroyStack of stack sStoryDataStack to true
+         close stack sStoryDataStack
+         hide sStoryText
+         hide sStoryTextBkg
+         hide sCaptionText
+         hide sCaptionBkg
+         show grc "footerBackground" of grp "footerNavigation"
+         landscapeOrientation "off"
+      end if
+   else if tCard is "colorIt" then
+      delete sColorItImage
+      delete variable sImageUndoCache
+      delete variable sImageUndoRect
+      delete variable sImageUndoHash
+      --set the filename of sColorItImage to empty
+      --set the imageData of sColorItImage to empty
+      send "clearHighlight" to grp "ToolGroup" of cd "colorIt"
    end if
 end closecard
 
@@ -897,7 +1145,3 @@ end closecard
 on closestack
    portal_SetLastStack "stories" 
 end closestack
-
-
-
-

@@ -16,6 +16,18 @@ on preOpenControl
       case "lib_CustomControls" 
          put "home,journal,save,share,settings" into sButtons
          break
+      case "stories"
+         if the short name of this card is "showStories" and \
+               showColorItIcon() then
+            put "home,colorit,journal,share,settings" into sButtons
+            show btn "colorit" of me
+         else
+            put "home,journal,share,settings" into sButtons
+            hide btn "colorit" of me
+         end if
+         hide btn "save" of me
+         send "resizeControl" to me
+         break
       default
          put "home,journal,share,settings" into sButtons
          hide btn "save" of me
@@ -162,6 +174,12 @@ on mouseup
          end if
          portal_GoStack "settings"
          break
+         --
+      case "colorit"
+         keepStoryLoaded
+         go cd "colorIt"
+         break
+         --
       default
          unlock screen
          pass mouseUp

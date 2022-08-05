@@ -517,6 +517,9 @@ command initializeCycleImage pImage, pState
          case "showAll"
             put 2 into pState
             break
+         case "fullSize"
+            put 3 into pState
+            break
          default
             put 2 into pState
       end switch
@@ -536,6 +539,9 @@ command setImageState pImage, pState
             break
          case "showAll"
             put 2 into pState
+            break
+         case "fullSize"
+            put 3 into pState
             break
          default
             put 1 into pState
@@ -567,6 +573,10 @@ command setImageState pImage, pState
    end switch
    put pState into sImageCycleStateA["state"]
 end setImageState
+
+function getImageState
+   return sImageCycleStateA["state"]
+end getImageState
 
 command cycleImageState pImage
    -- 3 way cycle of image state
