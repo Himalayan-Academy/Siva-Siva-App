@@ -1,24 +1,29 @@
-Script "stack_stories_group_id_1539"
+Script "stack_stories_bkgnd_id_1539"
 
 /*
-# Name: group "footer" of card "colorIt" of stack "stories"
-# ID: group id 1539 of card id 1421 of stack "stories"
+# Name: bkgnd "footer" of stack "stories"
+# ID: bkgnd id 1539 of stack "stories"
+
+# Shared group on card IDs: 1421
 */
 
 
 constant kButtons = "eraser,brush,bucket,fillColor"
+constant kBucketColor = "#5FE49F"
+constant kBrushColor = "#96E200"
+constant kHilightColor = "#FDBFFE"
 
 local sStarted, sSaveTime, sTool
 
-
 on mouseUp
-   local tTarget, tBrushIcon
+   local tLongTarget, tTarget, tBrushIcon, tColor
    --
    if (the visible of control "Color map") or (the visible of grp "BrushIcons") then
       pass mouseUp
    end if
    --
    put the short name of the target into tTarget
+   put the long id of the target into tLongTarget
    if tTarget is among the items kButtons then
       dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
@@ -26,17 +31,15 @@ on mouseUp
    if tTarget is "fillColor" then
       hide btn "cancel"
       hide btn "save"
-      hide grc "btnBackground"
+      --hide grc "btnBackground"
       --
       show control "Color map"
       put empty into sTool
-      --   else if tTarget is "toolIcon" then
-      --      set the layer of grp "BrushIcons" of cd "colorIt" to 99
-      --      show grp "BrushIcons" of cd "colorIt"
+      
    else if tTarget is among the items "brush,bucket" then
       hide btn "cancel"
       hide btn "save"
-      hide grc "btnBackground"
+      --hide grc "btnBackground"
       --
       pushImage
       put false into sStarted
@@ -45,24 +48,25 @@ on mouseUp
       setColorItImage (the long id of img "colorItImage")
       send "checkLoc" to me in 50 milliseconds
       set the brushColor to the backgroundColor of grc "fillColor"
-      set the opaque of the target to true
+      set the backgroundColor of tLongTarget to kHilightColor
       if tTarget is "bucket" then
          choose "bucket" tool
       else
          choose "brush" tool
       end if
    else -- erase
-      set the opaque of the target to true
+      put the backgroundColor of tLongTarget into tColor
+      set the backgroundColor of tLongTarget to kHilightColor
       popImage
       makeImageDirty
       wait 250 milliseconds
-      set the opaque of the target to false
+      set the backgroundColor of tLongTarget to tColor
    end if
 end mouseUp
 
 
 on checkLoc
-   local tLandscape
+   local tLandscape, tColor
    put currentlyLandscape() into tLandscape
    if (not tLandscape and item 2 of the mouseloc < item 2 of the rect of grp "footer" of cd "colorIt") \
          or (tLandscape and item 1 of the mouseloc > item 3 of the rect of grp "footer" of cd "colorIt") then
@@ -81,13 +85,14 @@ on checkLoc
          relayer getColorItImage() to front of grp "colorItImageGroup"
          setColorItImage (the long id of img "colorItImage")
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
-         set the opaque of btn "brush" of grp "footer" to false
-         set the opaque of btn "bucket" of grp "footer" to false
+         #colors:  brush 96E200, bucket 5FE49F
+         set the backgroundColor of btn "brush" of grp "footer" to kBrushColor
+         set the backgroundColor of btn "bucket" of grp "footer" to kBucketColor
          show btn "cancel"
          show btn "save"
-         if currentlyLandscape() then
-            show grc "btnBackground"
-         end if
+         --         if currentlyLandscape() then
+         --            show grc "btnBackground"
+         --         end if
          --
          exit "checkLoc"
       else

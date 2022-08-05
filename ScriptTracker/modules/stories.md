@@ -47,6 +47,12 @@
 * ID: button id 1425 of bkgnd id 1422 of stack "stories"
 * [stack_stories_button_id_1425](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1425.livecodescript)
 
+**bkgnd "footer" of stack "stories"**
+* ID: bkgnd id 1539 of stack "stories"
+
+* Shared group on card IDs: 1421
+* [stack_stories_bkgnd_id_1539](./../../ScriptTracker/modules/stories_Scripts/stack_stories_bkgnd_id_1539.livecodescript)
+
 **button "Edit Model Stories" of group "Tools" of card "storyHome" of stack "stories"**
 * ID: button id 1297 of group id 1298 of card id 1002 of stack "stories"
 * [stack_stories_button_id_1297](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1297.livecodescript)
@@ -91,17 +97,9 @@
 * ID: button id 1464 of group id 1449 of card id 1421 of stack "stories"
 * [stack_stories_button_id_1464](./../../ScriptTracker/modules/stories_Scripts/stack_stories_button_id_1464.livecodescript)
 
-**group "footer" of card "colorIt" of stack "stories"**
-* ID: group id 1539 of card id 1421 of stack "stories"
-* [stack_stories_group_id_1539](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1539.livecodescript)
-
 **colorPalette "Color map" of card "colorIt" of stack "stories"**
 * ID: colorPalette id 1561 of card id 1421 of stack "stories"
 * [stack_stories_colorPalette_id_1561](./../../ScriptTracker/modules/stories_Scripts/stack_stories_colorPalette_id_1561.livecodescript)
-
-**group "BrushIcons" of card "colorIt" of stack "stories"**
-* ID: group id 1472 of card id 1421 of stack "stories"
-* [stack_stories_group_id_1472](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1472.livecodescript)
 
 **group "answerDlgGrp" of card "colorIt" of stack "stories"**
 * ID: group id 1686 of card id 1421 of stack "stories"
@@ -114,4 +112,8 @@
 **field "lbl-dialogPrompt" of group "promptGroup" of group "answerDlgGrp" of card "colorIt" of stack "stories"**
 * ID: field id 1689 of group id 1688 of group id 1686 of card id 1421 of stack "stories"
 * [stack_stories_field_id_1689](./../../ScriptTracker/modules/stories_Scripts/stack_stories_field_id_1689.livecodescript)
+
+**group "BrushIcons" of card "colorIt" of stack "stories"**
+* ID: group id 1472 of card id 1421 of stack "stories"
+* [stack_stories_group_id_1472](./../../ScriptTracker/modules/stories_Scripts/stack_stories_group_id_1472.livecodescript)
 

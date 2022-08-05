@@ -792,25 +792,6 @@ command updateImageState pResizeOnly
                hide grp "footerNavigation"
             end if
             setupImageScroller tImage, tImageGroup
-            --            set the hscroll of grp tImageGroup to 0
-            --            set the vscroll of grp tImageGroup to 0
-            --            if the width of tImage < CardWidth() then
-            --               put the loc of tImage into tLoc
-            --               put item 1 of CardLoc() into item 1 of tLoc
-            --               set the loc of tImage to tLoc
-            --            else
-            --               set the left of tImage to 0
-            --               set the hScroll of grp tImageGroup to (the width of tImage - CardWidth()) div 2
-            --            end if
-            --            if the height of tImage < CardHeight() then
-            --               put the loc of tImage into tLoc
-            --               put item 2 of CardLoc() into item 2 of tLoc
-            --               set the loc of tImage to tLoc
-            --            else
-            --               set the top of tImage to 0
-            --               set the vScroll of grp tImageGroup to (the height of tImage - CardHeight()) div 2
-            --            end if
-            --            dispatch "createImageScroller" to grp tImageGroup with tImageGroup
          end if
          if not tOnColorItCard then
             hide sCaptionText
@@ -1019,7 +1000,6 @@ on updateUI
       --
       put the long id of fld "ProgressTitle" into tControl
       bottomCenterMe tControl, 500
-      
    end if
    --
    if tCard is "storyDeleteFile" then
