@@ -645,7 +645,8 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
-            portal_Link "Listen"
+        --   portal_Link "listen-collection"
+            
             exit to top
          else 
             put it into tRecords
