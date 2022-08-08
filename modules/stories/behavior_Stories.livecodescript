@@ -682,11 +682,10 @@ command pushImage
    sort tKeyList ascending numeric
    if the number of lines of tKeyList > 1 and \
          sImageUndoHash[tNow] = sImageUndoHash[line -2 of tKeyList] then
-      delete variable sImageUndoCache[line 1 of tKeyList]
-      delete variable sImageUndoRect[line 1 of tKeyList]
-      delete variable sImageUndoHash[line 1 of tKeyList]
-   end if
-   if the number of lines of tKeyList > 10 then
+      delete variable sImageUndoCache[tNow]
+      delete variable sImageUndoRect[tNow]
+      delete variable sImageUndoHash[tNow]
+   else if the number of lines of tKeyList > 10 then
       delete variable sImageUndoCache[line 1 of tKeyList]
       delete variable sImageUndoRect[line 1 of tKeyList]
       delete variable sImageUndoHash[line 1 of tKeyList]
