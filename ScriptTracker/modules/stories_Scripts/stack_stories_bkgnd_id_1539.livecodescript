@@ -85,7 +85,6 @@ on checkLoc
          relayer getColorItImage() to front of grp "colorItImageGroup"
          setColorItImage (the long id of img "colorItImage")
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
-         #colors:  brush 96E200, bucket 5FE49F
          set the backgroundColor of btn "brush" of grp "footer" to kBrushColor
          set the backgroundColor of btn "bucket" of grp "footer" to kBucketColor
          show btn "cancel"
@@ -108,6 +107,8 @@ on checkLoc
             set the layer of grp "BrushIcons" of cd "colorIt" to 99
             show grp "BrushIcons" of cd "colorIt"
             exit checkLoc
+         else if the mouseloc is within the rect of grp "footer" of cd "colorIt" then
+            put true into sStarted
          end if
       end if
    end if
