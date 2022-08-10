@@ -878,26 +878,26 @@ command lockPortrait
 end lockPortrait
 
 
--------
-local pData, tCd
-
 command journal_AddEntry -- save a bookmark to db
-   local tTitle
+   local tTitle, tData
    if (sStoryTitle is "false") OR (sStorytitle is empty) then 
       put "Main Menu" into tTitle
-      put "storyHome" into pData["card"]
+      put "storyHome" into tData["card"]
    else 
-      put sStoryTitle into pData["storyTitle"]
-      put sLastScene into pData["storyScene"]
-      put sAttribution into pData["Attribution"]
-      put sTotalSceneCount into pData["SceneCount"]
-      put "showStories" into pData["card"]
+      put sStoryTitle into tData["storyTitle"]
+      put sLastScene into tData["storyScene"]
+      put sAttribution into tData["Attribution"]
+      put sTotalSceneCount into tData["SceneCount"]
+      put "showStories" into tData["card"]
    end if
-   Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), pData -- send to journal
+   Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), tData -- send to journal
    dialog_CustomMsg "Saved to Journal"
-end journal_AddEntry --
+end journal_AddEntry
 		
+
 on journalResume pData -- sent from journal stack
+   local tCd
+   --
    put pData["Card"] into tCd
    put pData["storyTitle"] into sStoryTitle
    put pData["storyScene"] - 1 into sLastScene
