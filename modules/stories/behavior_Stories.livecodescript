@@ -100,7 +100,7 @@ end preopenCard
 on opencard
    local tCard, tStoryTree, tGroup, tTitle, tCount, tKeys, tFoldState, tStoryPath
    put the short name of this card into tCard
-   
+   --
    if tCard is "storyHome" then
       # load the menu
       # path delimiter is not currently saved with the widget
@@ -138,7 +138,6 @@ on opencard
       showStoryMenu
    else if tCard is "showStories" then
       put false into sKeepStoryLoaded
-      --send "goNextScene" to me in 0 milliseconds
    end if
 end opencard
 
@@ -377,9 +376,9 @@ on setupOrDownloadStory
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
          --if sLastStory is empty or sLastStory is not sStoryTitle then
-         
+         --
          dataLocalStack sStoryTitle
-         
+         --
          --end if
          put true into sAllowLandscape
          break
@@ -483,7 +482,6 @@ end visualArticle
 
 
 command goNextScene
-   
    local tImagePath, tMsg, tLoc, tShowPhoto
    --
    lock screen
@@ -676,7 +674,6 @@ command pushImage
    put the rect of sColorItImage into tRect
    put (0,0,the formattedWidth of sColorItImage,the formattedHeight of sColorItImage) into sImageUndoRect[tNow]
    set the rect of sColorItImage to sImageUndoRect[tNow]
-   --put tRect & cr & sImageUndoRect[tNow]
    put the imagedata of sColorItImage into sImageUndoCache[tNow]
    set the rect of sColorItImage to tRect
    put messageDigest(sImageUndoCache[tNow], "MD5") into sImageUndoHash[tNow]
@@ -704,7 +701,6 @@ command popImage
       sort tKeyList ascending numeric
       put the rect of sColorItImage into tRect
       set the rect of sColorItImage to sImageUndoRect[line -1 of tKeyList]
-      --put tRect & cr & sImageUndoRect[line -1 of tKeyList]
       set the imagedata of sColorItImage to sImageUndoCache[line -1 of tKeyList]
       set the rect of sColorItImage to tRect
       delete variable sImageUndoCache[line -1 of tKeyList]
@@ -1081,8 +1077,6 @@ on updateUI
          set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
                CardHeight() - safeBottomMargin())
          resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
-         --set the rect of grc "btnBackground" to (the left of tCancel, 0, CardWidth(), CardHeight())
-         --show grc "btnBackground"
          set the loc of grp "BrushIcons" to CardLoc()
          set the left of grp "BrushIcons" to the right of tFooter + 50
       else
@@ -1091,7 +1085,6 @@ on updateUI
          --
          set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
-         --hide grc "btnBackground"
          set the loc of grp "BrushIcons" to CardLoc()
          set the bottom of grp "BrushIcons" to the top of tFooter - 50
       end if
@@ -1137,8 +1130,6 @@ on closeCard
       delete variable sImageUndoCache
       delete variable sImageUndoRect
       delete variable sImageUndoHash
-      --set the filename of sColorItImage to empty
-      --set the imageData of sColorItImage to empty
       send "clearHighlight" to grp "ToolGroup" of cd "colorIt"
    end if
 end closecard
