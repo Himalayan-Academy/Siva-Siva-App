@@ -74,6 +74,9 @@ on preOpenCard
       hide sCaptionText
       hide sCaptionBkg
    else if tCard is "colorIt" then
+      if there is an img "colorItImage" then
+         delete img "colorItImage"
+      end if
       put the filename of sStoryImage into tFileName
       import paint from file tFileName
       set the name of the last image to "colorItImage"

@@ -11,6 +11,7 @@ Script "stack_stories_bkgnd_id_1539"
 constant kButtons = "eraser,brush,bucket,fillColor"
 constant kBucketColor = "#5FE49F"
 constant kBrushColor = "#96E200"
+constant kEraserColor = "#00EA63"
 constant kHilightColor = "#FDBFFE"
 
 local sStarted, sSaveTime, sTool
@@ -31,16 +32,14 @@ on mouseUp
    if tTarget is "fillColor" then
       hide btn "cancel"
       hide btn "save"
-      --hide grc "btnBackground"
-      --
+     
       show control "Color map"
       put empty into sTool
       
    else if tTarget is among the items "brush,bucket" then
       hide btn "cancel"
       hide btn "save"
-      --hide grc "btnBackground"
-      --
+      
       pushImage
       put false into sStarted
       put tTarget into sTool
@@ -59,8 +58,8 @@ on mouseUp
       set the backgroundColor of tLongTarget to kHilightColor
       popImage
       makeImageDirty
-      wait 250 milliseconds
-      set the backgroundColor of tLongTarget to tColor
+      wait 750 milliseconds
+      set the backgroundColor of tLongTarget to kEraserColor
    end if
 end mouseUp
 
