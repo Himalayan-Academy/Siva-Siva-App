@@ -17,7 +17,7 @@ constant kHilightColor = "#FDBFFE"
 local sStarted, sSaveTime, sTool
 
 on mouseUp
-   local tLongTarget, tTarget, tBrushIcon, tColor
+   local tLongTarget, tTarget, tBrushIcon
    --
    if (the visible of control "Color map") or (the visible of grp "BrushIcons") then
       pass mouseUp
@@ -32,14 +32,13 @@ on mouseUp
    if tTarget is "fillColor" then
       hide btn "cancel"
       hide btn "save"
-     
+      --
       show control "Color map"
       put empty into sTool
-      
    else if tTarget is among the items "brush,bucket" then
       hide btn "cancel"
       hide btn "save"
-      
+      --
       pushImage
       put false into sStarted
       put tTarget into sTool
@@ -54,7 +53,6 @@ on mouseUp
          choose "brush" tool
       end if
    else -- erase
-      put the backgroundColor of tLongTarget into tColor
       set the backgroundColor of tLongTarget to kHilightColor
       popImage
       makeImageDirty
@@ -88,10 +86,6 @@ on checkLoc
          set the backgroundColor of btn "bucket" of grp "footer" to kBucketColor
          show btn "cancel"
          show btn "save"
-         --         if currentlyLandscape() then
-         --            show grc "btnBackground"
-         --         end if
-         --
          exit "checkLoc"
       else
          if the seconds > sSaveTime then
@@ -144,7 +138,6 @@ on resizeControl
       set the left of me to 0
    else
       put the width of me / (the number of items in kButtons) into tHSpace
-      #put item 2 of the loc of button 1 of me into tV
       put the top of me + 26 into tV
       put the left of me + (tHSpace / 2) into tH
       --

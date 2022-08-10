@@ -24,7 +24,6 @@ on mouseUp
       hide me
       choose "brush" tool
       send "checkLoc" to grp "footer" in 50 milliseconds
-      --      dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
 end mouseUp
 
