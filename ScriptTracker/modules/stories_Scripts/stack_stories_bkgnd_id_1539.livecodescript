@@ -79,6 +79,7 @@ on checkLoc
             (not tLandscape and item 2 of the mouseloc < item 4 of the rect of btn "save" of cd "colorIt") then
          choose the browse tool
          put false into sStarted
+         dropImageIfSame
          relayer getColorItImage() to front of grp "colorItImageGroup"
          setColorItImage (the long id of img "colorItImage")
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"

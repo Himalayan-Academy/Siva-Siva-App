@@ -726,6 +726,21 @@ command popImage
 end popImage
 
 
+command dropImageIfSame
+   local tImageData, tImageHash, tKeyList
+   --
+   put the imagedata of sColorItImage into tImageData
+   put messageDigest(tImageData, "MD5") into tImageHash
+   put the keys of sImageUndoCache into tKeyList
+   sort tKeyList ascending numeric
+   if tImageHash = sImageUndoHash[line -1 of tKeyList] then
+      delete variable sImageUndoCache[line -1 of tKeyList]
+      delete variable sImageUndoRect[line -1 of tKeyList]
+      delete variable sImageUndoHash[line -1 of tKeyList]
+   end if
+end dropImageIfSame
+
+
 command setColorItImage pName
    put pName into sColorItImage
 end setColorItImage
