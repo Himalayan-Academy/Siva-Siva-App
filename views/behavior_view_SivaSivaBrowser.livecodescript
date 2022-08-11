@@ -17,6 +17,7 @@ local sLandscapeOnly, sOrientation, sBrowserRect,sHtmlText
 # is sent from portal_GoURL in the lib_SivaSivaPortal 
 
 on preopenstack
+  
    local tBrowser, tOrientations
    set the fullscreenmode of this stack to empty
    put the short name this stack into tBrowser
