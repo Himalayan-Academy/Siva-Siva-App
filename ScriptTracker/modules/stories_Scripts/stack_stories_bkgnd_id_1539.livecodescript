@@ -55,6 +55,7 @@ on mouseUp
    else -- erase
       set the backgroundColor of tLongTarget to kHilightColor
       popImage
+      dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
       makeImageDirty
       wait 750 milliseconds
       set the backgroundColor of tLongTarget to kEraserColor
