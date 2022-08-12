@@ -52,7 +52,7 @@ on mouseUp
       else
          choose "brush" tool
       end if
-   else -- erase
+   else if tTarget is "eraser" then
       set the backgroundColor of tLongTarget to kHilightColor
       popImage
       dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
