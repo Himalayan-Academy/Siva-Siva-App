@@ -485,6 +485,7 @@ command updateUIPortal
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
    local tNews, tNotification, tExplanationMarker, tNewsItems
+   local tPortalLabel
    
    #  UI responsive
    
@@ -575,6 +576,10 @@ command updateUIPortal
          
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 55
+         
+         put the long id of fld "Portal Label" into tPortalLabel
+         bottomLeftMe tPortalLabel, 20, 20
+         
          break
          
    end switch
