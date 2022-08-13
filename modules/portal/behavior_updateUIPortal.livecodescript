@@ -505,8 +505,6 @@ command updateUIPortal
       put 8 into tBottomMargin
    end if
    
-   
-   
    switch (the short name of this card)
       case "Home"
          if isMobile() then
@@ -543,7 +541,7 @@ command updateUIPortal
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
             set the textSize of tControl to 14
-            set the textSize of fld "pathtosiva"to 13
+            set the textSize of fld "pathtosiva" to 13
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
@@ -625,10 +623,11 @@ private command updateNavMandalaUI
    put (the top of grc "Practice" - the top of grc "read") into tDiameter
    put (the bottom of grc "read" + the top of grc "Practice")*.5 into tMidY
    put tMidY into item 2 of tLoc
-   set the width of grc "Surprise" to the formattedWidth of fld "Surprise"
-   set the height of grc "Surprise" to the formattedWidth of fld "Surprise"
-   set the loc of fld "Surprise" to tLoc
-   set the loc of grc "Surprise" to tLoc
+   set the width of grc "News" to the formattedWidth of fld "Surprise" + 7
+   set the height of grc "News" to the formattedWidth of fld "pathtosiva" + 2
+   set the height of fld "News" to the formattedheight of fld "News"
+   set the loc of fld "News" to tLoc
+   set the loc of grc "News" to tLoc
    
    put the long id of grc "upTriangle" into tControl
    set the height of tControl to tDiameter
@@ -662,10 +661,19 @@ private command updateNavMandalaUI
    setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX+1
    setBottomAndLoc the long id of button "Settings", (the top of fld "Settings")-3, tMidX+tDeltaX
    
+   set the rect of grc "pathtosiva" to the rect of grc "News"
    set left of grc "pathtosiva" to the left of  grc "Stories" + 5
    set top of grc "pathtosiva" to the bottom of  grc "Gems" + 5
-   set the loc of fld "pathtosiva" to (the loc of grc "pathtosiva" ) 
-   set the top of fld "pathtosiva" to (the top of grc "pathtosiva" + 5 ) 
+   set the height of fld "pathtosiva" to the formattedheight of fld "pathtosiva"
+   set the loc of fld "pathtosiva" to (the loc of grc "pathtosiva" )
+   --set the top of fld "pathtosiva" to (the top of grc "pathtosiva" + 5 )
+   
+   set the rect of grc "Surprise" to the rect of grc "News"
+   set right of grc "Surprise" to the right of  grc "Listen" - 5
+   set top of grc "Surprise" to the bottom of  grc "Gems" + 5
+   set the height of fld "Surprise" to the formattedheight of fld "Surprise"
+   set the loc of fld "Surprise" to (the loc of grc "Surprise" )
+   --set the top of fld "Surprise" to (the top of grc "Surprise" + 5 )
 end updateNavMandalaUI
 
 

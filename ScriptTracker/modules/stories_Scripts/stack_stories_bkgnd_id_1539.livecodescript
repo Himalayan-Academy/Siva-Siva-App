@@ -13,6 +13,7 @@ constant kBucketColor = "#5FE49F"
 constant kBrushColor = "#96E200"
 constant kEraserColor = "#00EA63"
 constant kHilightColor = "#FDBFFE"
+constant kUndoSaveInterval = 2
 
 local sStarted, sSaveTime, sTool
 
@@ -70,7 +71,7 @@ on checkLoc
          or (tLandscape and item 1 of the mouseloc > item 3 of the rect of grp "footer" of cd "colorIt") then
       if not sStarted then
          pushImage
-         put the seconds + 5 into sSaveTime
+         put the seconds + kUndoSaveInterval into sSaveTime
       end if
       put true into sStarted
       makeImageDirty
@@ -92,7 +93,7 @@ on checkLoc
       else
          if the seconds > sSaveTime then
             pushImage
-            put the seconds + 5 into sSaveTime
+            put the seconds + kUndoSaveInterval into sSaveTime
          end if
       end if
    else
