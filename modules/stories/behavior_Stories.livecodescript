@@ -62,7 +62,6 @@ on preOpenCard
       if isMobile() then
          mobileSetAllowedOrientations "portrait"
       end if
-      send "landscapeOrientation allowed" to me in 5 seconds
       display_SetStatusBarVis false
       put the long id of img "storyImage" into sStoryImage
       put the long id of fld "storyText" into sStoryText
