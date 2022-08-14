@@ -537,7 +537,7 @@ command updateUIPortal
          bottomCenterMe tControl,25
          
          put the long id of button "openGlobalNavTree" into tControl
-         topLeftMe tControl, -16, 0
+         bottomLeftMe tControl, 18, 18
          
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
@@ -576,9 +576,6 @@ command updateUIPortal
          
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 55
-         
-         put the long id of fld "Portal Label" into tPortalLabel
-         bottomLeftMe tPortalLabel, 20, 20
          
          break
          
