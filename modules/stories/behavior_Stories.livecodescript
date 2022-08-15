@@ -92,7 +92,7 @@ on preOpenCard
       hide control "Color map" of card "colorIt"
       put false into sImageDirty
    end if
-   --updateUI
+   updateUI
 end preopenCard
 
 
@@ -100,10 +100,6 @@ on opencard
    local tCard, tStoryTree, tGroup, tTitle, tCount, tKeys, tFoldState, tStoryPath
    put the short name of this card into tCard
    --
-   updateUI
-   
-   --
-   
    if tCard is "storyHome" then
       # load the menu
       # path delimiter is not currently saved with the widget
@@ -261,6 +257,9 @@ on mouseup
          break
       case "cancel" # colorIt card
          if sImageDirty then
+            if isMobile() then
+               mobileLockOrientation
+            end if
             doAnswer "Do you want to save the image?", "No,Yes", "backToStorySaveImage"
          else
             backToStorySaveImage "No"
@@ -286,6 +285,9 @@ command backToStorySaveImage pSaveImage
    initializeCycleImage sStoryImage
    go cd "showStories"
    unlock screen
+   if isMobile() then
+      mobileUnlockOrientation
+   end if
 end backToStorySaveImage
 
 
