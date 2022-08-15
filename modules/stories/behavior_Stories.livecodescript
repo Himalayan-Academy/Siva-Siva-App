@@ -92,7 +92,7 @@ on preOpenCard
       hide control "Color map" of card "colorIt"
       put false into sImageDirty
    end if
-   updateUI
+   --updateUI
 end preopenCard
 
 
@@ -100,6 +100,10 @@ on opencard
    local tCard, tStoryTree, tGroup, tTitle, tCount, tKeys, tFoldState, tStoryPath
    put the short name of this card into tCard
    --
+   updateUI
+   
+   --
+   
    if tCard is "storyHome" then
       # load the menu
       # path delimiter is not currently saved with the widget
@@ -980,27 +984,28 @@ on updateUI
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
       put the long id of btn "back" into tGoBack
-      bottomCenterMe tGoBack,65
-      set the bottom of tGoBack to the top of tFooter - 15
+      topRightMe tGoBack,0,0
+      --set the bottom of tGoBack to the top of tFooter - 15
       --
       put the long id of btn "showTips" into tGoTips
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
-      set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "back" - 21)
+      set the rect sTips to (10, 50, cardWidth() - 10, the top widget "deleteOn")
       set the rect of img "tipsImage" to (0, 0, cardWidth(), the top of tFooter)
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
       set the bottom of tControl to the top of tFooter - 18
       --
-      set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "back" - 21)
+      set the rect sStoryMenu to (45, 141, cardWidth() - 24, the top of btn "showTips" - 21)
       set the uRect of sStoryMenu to the rect of sStoryMenu
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
-      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "back" - 9)
+      set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "showTips" - 9)
       --
       set the rect of sStoryMenuTree to the rect of tMenuBkgnd
+      put the rect of tMenuBkgnd
       --
       show grc "footerBackground" of grp "footerNavigation"
       --
