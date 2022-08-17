@@ -257,9 +257,6 @@ on mouseup
          break
       case "cancel" # colorIt card
          if sImageDirty then
-            if isMobile() then
-               mobileLockOrientation
-            end if
             doAnswer "Do you want to save the image?", "No,Yes", "backToStorySaveImage"
          else
             backToStorySaveImage "No"
@@ -285,9 +282,8 @@ command backToStorySaveImage pSaveImage
    initializeCycleImage sStoryImage
    go cd "showStories"
    unlock screen
-   if isMobile() then
-      mobileUnlockOrientation
-   end if
+   lockPortrait
+   wait 10 milliseconds
 end backToStorySaveImage
 
 
@@ -1007,7 +1003,6 @@ on updateUI
       set the rect tMenuBkgnd to (0, 129, cardWidth(), the top of btn "showTips" - 9)
       --
       set the rect of sStoryMenuTree to the rect of tMenuBkgnd
-      put the rect of tMenuBkgnd
       --
       show grc "footerBackground" of grp "footerNavigation"
       --
