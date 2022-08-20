@@ -207,7 +207,7 @@ on mouseup
          break
          --
       case "Loading"
-         showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
+         showBusyIndicator false, "The Pause. . ." & cr & "It will take some time: ~35mb." &cr \
                & "Be patient."
          exit top
          break
@@ -376,11 +376,9 @@ on setupOrDownloadStory
       case "local"
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
-         --if sLastStory is empty or sLastStory is not sStoryTitle then
          --
          dataLocalStack sStoryTitle
          --
-         --end if
          put true into sAllowLandscape
          break
       case "server"
@@ -412,6 +410,7 @@ on showDownloadedStory
       visualArticle
    end if
 end showDownloadedStory
+
 
 on hideDownloadControls
    put empty into fld "ProgressTitle"
