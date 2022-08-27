@@ -207,7 +207,7 @@ on mouseup
          break
          --
       case "Loading"
-         showBusyIndicator false, "The Pause. . ." & cr & "It will take sometime: ~35mb." &cr \
+         showBusyIndicator false, "The Pause. . ." & cr & "It will take some time: ~35mb." &cr \
                & "Be patient."
          exit top
          break
@@ -376,11 +376,9 @@ on setupOrDownloadStory
       case "local"
          put (path_Modules() & "stories/makeStoryLocal.livecode") \
                into sStoryDataStack
-         --if sLastStory is empty or sLastStory is not sStoryTitle then
          --
          dataLocalStack sStoryTitle
          --
-         --end if
          put true into sAllowLandscape
          break
       case "server"
@@ -412,6 +410,7 @@ on showDownloadedStory
       visualArticle
    end if
 end showDownloadedStory
+
 
 on hideDownloadControls
    put empty into fld "ProgressTitle"
@@ -794,14 +793,6 @@ command updateImageState pResizeOnly
          end if
       else
          if tState >= 3 then
-            if the platform is "iPhone" then
-               -- bug in iOS where full screen scroller hangs app when device rotated
-               if currentlyLandscape() then
-                  lockLandscape
-               else
-                  lockPortrait
-               end if
-            end if
             if not tOnColorItCard then
                hide grp "footerNavigation"
             end if
@@ -842,7 +833,8 @@ command setupImageScroller pImage, pGroup
       set the top of pImage to the top of grp pGroup
       set the vScroll of grp pGroup to (the height of pImage - tGroupHeight) div 2
    end if
-   dispatch "createImageScroller" to grp pGroup with pGroup
+   -- using send to avoid lockup issue on iOS when done too soon after a rotate
+   send "createImageScroller pGroup" to grp pGroup in 10 milliseconds
 end setupImageScroller
 
 
