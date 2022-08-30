@@ -1,7 +1,7 @@
 ﻿script "behavior_ColorMeditation"
 local sColorA,sAboutText,sLastLevel,sLastLevelCycle,sMylocation,sLastActivityA
 local sCurrentFillGradientColor,sCurrentLevel,sColorCount,aColorMedPrefs, sColorLaunch
-local  sBreathCount, sBreathPace, sCycles,sAudioOn
+local  sBreathCount, sBreathPace, sCycles,sAudioOn, someJson, tControl.
 
 # BR vars are a bit of a mess... I would do it differnently today
 # sCurrentLevel is also used for interim navigation cards, which is "wrong"
@@ -101,6 +101,9 @@ on updateUI
    put the short name of this card into tCard
    put CardRect() into tCardRect
    
+   put the long id of grp "contentCardHeader" into tHeader
+   put the long id of grp "colorMedsToolbar" into tFooter
+   
    Switch tCard
       case  "colorOpening"
          
@@ -110,17 +113,14 @@ on updateUI
          put the long id of fld "moduleTitle" into tControl
          centerMe tControl,0,0
          
-         put the long id of grp "contentCardHeader" into tHeader
+         
          set the width of tHeader to CardWidth()
          topCenterMe tHeader, 10
          
-         put the long id of grp "colorMedsToolbar" into tFooter
          bottomCenterMe tFooter, 24
          
          put the long id of grp "aboutDisplay" into tControl
          centerMe tControl, 0, 62
-         
-         
          
          break
          
@@ -149,10 +149,12 @@ on updateUI
          break
          
       case   "colorPreferences" 
+         
          put the long id of grp "prefsSelectorGrp" into tControl
-         set the height of tControl to \
-               the top of tFooter - bottom of tHeader
+         
+         set the height of tControl to ( the top of tFooter - the bottom of tHeader )
          centerMe tControl, the height of tHeader, 116
+         
          put the long id of grp "cardBody" into tControl
          if the height of tControl > (the top of tFooter - the bottom of tHeader) then
             set the top of fld "completionTimeLabel" to the bottom of btn "Cycles" + 24

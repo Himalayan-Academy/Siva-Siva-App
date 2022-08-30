@@ -672,19 +672,28 @@ end showClues
  
 
 on displayAbout pLevel
-   local tPath, tAboutText
-   put the acceleratedRendering of this stack into sRendering
-   set the acceleratedRendering of this stack to true
-   put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
-   put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
-   send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
-   set the htmltext of fld "aboutText" to tAboutText
-   set the layer of grp "aboutDisplay" to top
-   show grp "aboutDisplay"
+   local tPath, tAboutText, tAnswer
+   answer "About Word Puzzle or Shortcuts?"  with "About" or "Shortcuts"
+   put it into tAnswer
+   
+   if tAnswer is "Shortcuts" then
+      journal_AddEntry
+   else
+      
+      put the acceleratedRendering of this stack into sRendering
+      set the acceleratedRendering of this stack to true
+      put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
+      put url ("file:" & tPath & "/wordPuzzles-about.txt") into tAboutText
+      send "createScroller aboutText" to fld "aboutText" in 500 milliseconds -- behavior attached to field
+      set the htmltext of fld "aboutText" to tAboutText
+      set the layer of grp "aboutDisplay" to top
+      show grp "aboutDisplay"
+   end if
+   
 end displayAbout
 
 on closeAbout
-   set the acceleratedRendering of this stack to sRendering
+   --set the acceleratedRendering of this stack to sRendering
    deleteMobileControl "aboutText"
    hide group "aboutDisplay"
 end closeAbout

@@ -120,21 +120,21 @@ on mouseup
          
          if  tCard is "surprise_audio" then
             if the visible of grp "downloadSelection"  then
-               dialog_CustomMsg "You have not Downloaded."
+               dialog_CustomMsg "You have not downloaded."
                exit to top
             end if
          end if
          
-         if tCard is among items of \
-               "listen-collection, listen-browse, listen-my-audio, listen-delete-file, listen-search" then
+         if tCard is among the items of \
+               "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search,surprise" then
             exit to top
-         else
-            put "listen-file" into tCard
+            --         else
+            --            put "listen-file" into tCard
          end if
          
          
          try 
-            journal_AddEntry
+            journal_AddEntry tCard
          end try
          
          break

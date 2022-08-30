@@ -189,19 +189,28 @@ on journal_AddEntry
    
    local pData, tTitle, tOutput, 
    local tParseURL, tLastItemInURL, tWords
-   local tFavorites
+   local tFavorites, tLastStack
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
    # we get the title from the original mouseup of the portal screen
    
+   put getJournalData() into tTitle
    
    if sBrowserURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
       # which are appears on this sub nav list.
       # for now, this implemention of Video is contrain to that list
       # leave it for now
-      put getJournalData() into tTitle
+      --
+      put getMediaMeta() into pData
+      --
+      put portal_GetLastStack() into tLastStack
+      
+      if  tLastStack is "Surprise" then
+         put pData["title"] into tTitle
+      end if 
+      
       put browser_GetLastURL() into pData["url"] 
       
    else
@@ -251,12 +260,11 @@ on journal_AddEntry
    
    if sLandscapeOnly then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
-      --put the long ID of btn "add-favorites" into tFavorites
       moveMe "add-favorites", 0, -25, 200
       moveMe "add-favorites", 0, 25, 200    --pControlName, pHorz, pVert, pSpeed
    else
       Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData
-      dialog_CustomMsg "Saved to Journal"   
+      dialog_CustomMsg "Saved to Shortcuts"   
    end if
    
 end journal_AddEntry

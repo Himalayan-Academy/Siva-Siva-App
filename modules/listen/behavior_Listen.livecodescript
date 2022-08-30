@@ -1218,7 +1218,7 @@ command journal_AddEntry -- save a bookmark to databast
    put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
    if the short name of this card is among the items of tNoSavingCards then
-      put "Nothing to save to Journal. Go an audio file." into tMsg
+      put "Nothing to save to Shortcuts. Go an audio file." into tMsg
       exit to top
       --exit addJournalEntry
    end if
@@ -1227,7 +1227,7 @@ command journal_AddEntry -- save a bookmark to databast
       # Do not do anything. Save the Journal entry 
    else
       if sDataA["url"] contains "http" then
-         dialog_CustomMsg "Download to Save to Journal."
+         dialog_CustomMsg ("Download to " & quote & "My Downloads" & quote )
          exit to top
          --exit addJournalEntry
       end if
@@ -1272,7 +1272,7 @@ command journal_AddEntry -- save a bookmark to databast
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
-   dialog_CustomMsg "Saved to Journal"
+   dialog_CustomMsg "Saved to Shortcuts"
    
 end journal_AddEntry
 

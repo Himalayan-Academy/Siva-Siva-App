@@ -608,7 +608,7 @@ command  journal_AddEntry -- save a bookmark to db
       put "Master Course Daily Lesson"  into tTitle
    end if
    Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
-   dialog_CustomMsg "Saved to Journal"
+   dialog_CustomMsg "Saved to Shortcuts"
 end  journal_AddEntry
 
 

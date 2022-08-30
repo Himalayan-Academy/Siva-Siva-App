@@ -886,20 +886,28 @@ command lockPortrait
 end lockPortrait
 
 
-command journal_AddEntry -- save a bookmark to db
+command journal_AddEntry tCard -- save a bookmark to db
    local tTitle, tData
-   if (sStoryTitle is "false") OR (sStorytitle is empty) then 
-      put "Main Menu" into tTitle
-      put "storyHome" into tData["card"]
-   else 
-      put sStoryTitle into tData["storyTitle"]
-      put sLastScene into tData["storyScene"]
-      put sAttribution into tData["Attribution"]
-      put sTotalSceneCount into tData["SceneCount"]
-      put "showStories" into tData["card"]
+   
+   if tCard is "storyHome" then
+      exit to top
    end if
+   
+   --   if (sStoryTitle is "false") OR (sStorytitle is empty) then 
+   --      put "Main Menu" into tTitle
+   --      put "storyHome" into tData["card"]
+   --   else 
+   
+   put sStoryTitle into tData["storyTitle"]
+   put sLastScene into tData["storyScene"]
+   put sAttribution into tData["Attribution"]
+   put sTotalSceneCount into tData["SceneCount"]
+   put "showStories" into tData["card"]
+   
+   --end if
+   
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), tData -- send to journal
-   dialog_CustomMsg "Saved to Journal"
+   dialog_CustomMsg "Saved to Shortcuts"
 end journal_AddEntry
 		
 

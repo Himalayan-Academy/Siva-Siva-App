@@ -310,7 +310,7 @@ on  journal_AddEntry pContext
          Journal_RecordEntry "gems", sTruncFirstLine, pDataA
          break 
    end switch
-   dialog_CustomMsg "Saved to Journal"
+   dialog_CustomMsg "Saved to Shortcuts"
 end  journal_AddEntry
 
 command switchViewState 

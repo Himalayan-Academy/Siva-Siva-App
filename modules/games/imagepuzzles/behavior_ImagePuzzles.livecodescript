@@ -553,10 +553,7 @@ on updateUI
          
          break
          
-         
    end switch
-   
-   
    
 end updateUI
 
@@ -566,7 +563,7 @@ command journal_AddEntry -- save a bookmark to db
    put 1 into tData["card"] -- store the last user cd   
    put "Image Puzzles" into tTitle
    Journal_RecordEntry "imagepuzzles",tTitle,tData -- send to journal
-   dialog_CustomMsg "Saved to Journal"
+   dialog_CustomMsg "Saved to Shortcuts"
 end journal_AddEntry
 
 on journalResume pData,pEntryA -- sent from journal stack

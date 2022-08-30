@@ -51,6 +51,11 @@ end opencard
 command _USER_INTERACTION
 end _USER_INTERACTION
 
+# this is a big deal!
+# https://himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
+
+
+
 on mouseup
    local tTarget, tTargetOwner, tUserGuide, tNews
    local tSelection

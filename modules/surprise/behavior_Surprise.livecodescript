@@ -290,19 +290,43 @@ on hideDownloadControls
 end hideDownloadControls
 
 
-command journal_AddEntry -- save a bookmark to db
+--command  journal_AddEntry -- save a bookmark to db
+--   local tCdName, tData, tTitle
+--   put sLastActivityA["CdName"] into tCdName
+
+--   put tCdName into tData["card"] -- store the last user cd   
+
+--   if tCdName = "daily-lesson" then -- store the lesson number
+--      put "Master Course Daily Lesson"  into tTitle
+--   end if
+
+--   Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
+--   dialog_CustomMsg "Saved to Shortcuts"
+--end  journal_AddEntry
+
+command journal_AddEntry tCard-- save a bookmark to db
    
-   local tData,pDataA, tTitle, tURL
+   local tData,pDataA, tTitle, tURL --, tCard
+   
+   
    put getMediaMeta() into tData
-   put tData["item_id"] into pDataA["item_id"]
-   put tData["title"] into pDataA["title"]
-   put tData["title"] into tTitle
    
-   put mediaUrl_Get() into pDataA["url"] 
-   put sTimeStamp  into pDataA["timestamp"]
-   put "listen-file" into pDataA["card"] 
-   Journal_RecordEntry "listen",tTitle,pDataA
-   dialog_CustomMsg "Saved to Journal"
+   if tCard is "surprise_audio" then
+      --put getMediaMeta() into tData
+      put tData["item_id"] into pDataA["item_id"]
+      put tData["title"] into pDataA["title"]
+      put tData["title"] into tTitle
+      put mediaUrl_Get() into pDataA["url"] 
+      put sTimeStamp  into pDataA["timestamp"]
+      put "listen-file" into pDataA["card"] 
+      Journal_RecordEntry "listen",tTitle,pDataA
+   else
+      put tCard  into tTitle
+      put tCard into tData["card"]
+      Journal_RecordEntry "surprise",tTitle,tData
+   end if
+   
+   dialog_CustomMsg "Saved to Shortcuts"
    
 end journal_AddEntry 
 
