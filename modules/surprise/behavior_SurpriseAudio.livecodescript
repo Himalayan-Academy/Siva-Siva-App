@@ -27,7 +27,7 @@ on opencard
 end opencard
 
 
-on getRandomAudio
+on getRandomAudio sMediaMetaA
    
    if isMobile() then
       mobileClearTouches
@@ -43,19 +43,20 @@ on getRandomAudio
    
    put fetchRandomMediaItem ("media_type","audio","approved_for_public","YES") into gotIt
    put getMediaURL () into tURL
+   
    if tURL = "" then -- jg: don't continue
       put "Media not found" into fld "audioDetails"
       set the height of fld "audioDetails" to the formattedHeight of fld "audioDetails"
       exit to top
    end if
    
-   --breakpoint
+   put gotIt[1]["title"] into fld "title"
    
    mediaUrl_Set tURL
    
    
    wait for 200 milliseconds
-  
+   
    startAudioPlayer tURL
 end getRandomAudio
 

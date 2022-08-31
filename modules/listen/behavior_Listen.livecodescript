@@ -361,7 +361,7 @@ command updateUI
          put the long id of grc "Loading" into tLoading
          set the loc of tLoading to CardLoc()
          
-         put the long id of button "downloadSelection" into tDownloadSelection
+         put the long id of grp "downloadSelection" into tDownloadSelection
          topRightMe tDownloadSelection, 5,  90
          
          put the long id of grp "pause-play" into tPausePlay

@@ -3,7 +3,7 @@ local sMediaURL, sQuoteData, sOnline
 local sCollection, sTimeStamp, sCard
 local sPlayerRect, sSelectHttp
 local sCurrentPlayListA,  sSelectNum
-
+put (20, the bottom of tNext + 30 ,CardWidth() - 20, the top of tPausePlay - 50) into tRect
 on preOpenStack
    --breakpoint
    if isMobile() then    
@@ -352,7 +352,7 @@ end resizeStack
 on updateUI
    local tHeader, tFooter, tCard, tLoc, tNext, tBackground, tRect
    local tLoading, tPausePlay, tLoadingNotice,tTouchTrap
-   local tAudioDetails, tDownloadSelection
+   local tAudioDetails, tDownloadSelection, tTitle
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -390,22 +390,23 @@ on updateUI
          break
       case "surprise_verse"
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of btn "go-next" into tNext
+         put the long id of grp "go-next" into tNext
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of btn "go-next" into tNext
+         put the long id of grp "go-next" into tNext
          
          break 
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-         put the long id of btn "go-next"into tNext
+         put the long id of grp "go-next"into tNext
          
          break
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
          
-         put the long id of btn "go-next" into tNext
+         put the long id of grp "go-next" into tNext
+         topRightMe tNext, 222, 220
          
          --ntinfo "switch card before going to audio before center in load/player"
          
@@ -415,8 +416,11 @@ on updateUI
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay,65
          
+         put the long id of fld "title" into tTitle
+         topLeftMe tTitle, 20, 20
+         
          put the long id of fld "audioDetails" into tAudioDetails
-         put (20, the bottom of tNext + 30 ,CardWidth() - 20, the top of tPausePlay - 50) into tRect
+         put (20, 100,CardWidth() - 20, the top of tPausePlay - 15) into tRect
          set the rect of  tAudioDetails to tRect
          
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
@@ -424,13 +428,14 @@ on updateUI
          set the rect of player "audioPlayer" to sPlayerRect
          
          put the long id of grp  "downloadSelection" into tDownloadSelection
-         topLeftMe tDownloadSelection, 22, 0
+         topRightMe tDownloadSelection, 35, 45
+         show grp  "downloadSelection" 
          break
          
       case "surprise_video"
          break
    end switch
-
+   
    
    if there is a tBackground then
       setImageToFullCardLoc tBackground, "portrait"

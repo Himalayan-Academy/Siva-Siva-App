@@ -91,6 +91,9 @@ on mouseup
       exit Mouseup
       break
       
+      -------------
+      -- News!
+      
    case "TAKA"
       hide grp "newsItems"
       portal_GoURL "https://www.himalayanacademy.com/blog/taka/"
@@ -133,6 +136,10 @@ on mouseup
       
       unlock screen
       
+      break
+      
+   case "Contact"
+      Share_Email
       break
       
       
@@ -434,11 +441,6 @@ function PhotoImagePath pImage
    return tPath
 end PhotoImagePath
 
---on closestack
---   saveUserPrefs sBrandImageNumber
---   pass closestack
---end closestack
-
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 
    doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
@@ -452,6 +454,21 @@ command downloadAffirmed
    unlock screen
 end downloadAffirmed
 
+command Share_Email sShareItemsA
+   local tSubject, tAddress, tBody
+   put sShareItemsA["subject"] && "From SivaSivaApp"  into tSubject
+   put "sivasiva@hindu.org" into tAddress
+   put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
+   put  cr & cr & "------------------------------------" & cr & \
+         "Get the SivaSivaApp today! Go to:" & cr & "https://www.himalayanacademy.com/view/sivasiva" after tBody
+   
+   if isMobile() = "true" then
+      mobileComposeMail tSubject,tAddress,,, tBody
+   else
+      revMail tAddress,,tSubject,tBody
+   end if
+   
+end share_Email
 
 #######################
 
@@ -587,7 +604,7 @@ command updateUIPortal
    end switch
    
    put the long id of grp "newsItems" into tNewsItems
-   centerMe tNewsItems, -85
+   centerMe tNewsItems, -80
    
    # background group of all cards
    
