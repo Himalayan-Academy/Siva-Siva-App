@@ -390,23 +390,16 @@ on updateUI
          break
       case "surprise_verse"
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of grp "go-next" into tNext
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of grp "go-next" into tNext
-         
          break 
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-         put the long id of grp "go-next"into tNext
-         
+       
          break
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
-         
-         put the long id of grp "go-next" into tNext
-         topRightMe tNext, 222, 220
          
          --ntinfo "switch card before going to audio before center in load/player"
          
@@ -428,7 +421,7 @@ on updateUI
          set the rect of player "audioPlayer" to sPlayerRect
          
          put the long id of grp  "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 35, 45
+         topRightMe tDownloadSelection, 45, 45
          show grp  "downloadSelection" 
          break
          
