@@ -95,7 +95,7 @@ on mouseup
                
                
                if sSelectHttp<> empty then  # we have a selection
-                  doAnswer "Download this audio file?" &cr& "Journal entry requires a download.", "Download,Cancel","downloadAffirmed" 
+                  doAnswer "Download this audio file?" &cr& "(Shortcut entry requires a download.)", "Download,Cancel","downloadAffirmed" 
                end if
                
                
@@ -207,6 +207,7 @@ on insertRandomVerse
    fetchRandomQuote (sCollection)
    -- go to the card first to shorten object references in the card script
    go to card "surprise_verse"
+   
    send "setUpQuote" to card "surprise_verse"
    send "positionQuote" to card "surprise_verse"
    unlock screen
@@ -350,7 +351,7 @@ end resizeStack
 
 
 on updateUI
-   local tHeader, tFooter, tCard, tLoc, tNext, tBackground, tRect
+   local tHeader, tFooter, tCard, tCards, tLoc, tNext, tBackground, tRect
    local tLoading, tPausePlay, tLoadingNotice,tTouchTrap
    local tAudioDetails, tDownloadSelection, tTitle
    
@@ -376,6 +377,7 @@ on updateUI
    topCenterMe tHeader, -12
    
    put the short name of this card into tCard
+   
    switch tCard
       
       case "surprise"
@@ -387,16 +389,20 @@ on updateUI
       case "surprise_verses"
          put the long id img "surprise-verses-bkgnd_opt-70.jpg" into tBackground
          set the right of grp "verse-collections" to CardWidth() - 10
+         
          break
       case "surprise_verse"
+        
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
+        
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
+         
          break 
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-       
+         
          break
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
@@ -413,15 +419,15 @@ on updateUI
          topLeftMe tTitle, 20, 20
          
          put the long id of fld "audioDetails" into tAudioDetails
-         put (20, 100,CardWidth() - 20, the top of tPausePlay - 15) into tRect
-         set the rect of  tAudioDetails to tRect
+         set the width of tAudioDetails to (CardWidth() -20)
+         centerMe tAudioDetails, 85,100
          
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
                into sPlayerRect
          set the rect of player "audioPlayer" to sPlayerRect
          
          put the long id of grp  "downloadSelection" into tDownloadSelection
-         topRightMe tDownloadSelection, 45, 45
+         topRightMe tDownloadSelection, 45, 50
          show grp  "downloadSelection" 
          break
          
@@ -429,15 +435,14 @@ on updateUI
          break
    end switch
    
-   
    if there is a tBackground then
       setImageToFullCardLoc tBackground, "portrait"
       set the loc of tBackground to CardLoc()
    end if
    
-   if there is a tNext then
-      set the top of tNext to safeTopMargin()
-      set the right of tNext to CardWidth() + 9
+   if there is a grp "go-next" then
+      put the long id of grp "go-next" into tNext
+      topRightMe tNext, 0, 0
    end if
    
    if there is a grp "audioGlobalControl" then

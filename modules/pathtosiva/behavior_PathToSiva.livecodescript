@@ -146,8 +146,6 @@ on mouseup
             --put "Journal Entry" & CR & "Was Made." into pHeaderMessage
          end if
          
-         --deployHeaders pHeaderMessage, "SVG Journal", 175,8
-         doAnswer "Do you want to exit Path to Siva?", "Yes,Cancel","downloadAffirmed"
          break
          
       case "SVG Menu"
