@@ -269,19 +269,21 @@ command updateUI
          bottomRightMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 75
+         set the rect of tHelpBkg to CardRect()
+         
+         --set the width of tHelpBkg to (CardWidth() + 20)
+         --topLeftMe tHelpBkg, -10, -10
          
          put the long id of grp "helpField" into tHelpFieldGrp
          set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 135
+         topLeftMe tHelpFieldGrp, 15, 15
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 135
+         topLeftMe tHelpField, 15, 15
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 75
+         topRightMe tHelpDismiss, 0, 0
          
          break
       case "listen-my-audio"
