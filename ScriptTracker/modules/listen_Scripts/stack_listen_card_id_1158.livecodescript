@@ -39,12 +39,12 @@ on touchMove pTouchID, pTouchX, pTouchY
    
    if sScrollDirection is "none" then
       // Check for vertical scroll
-      if pTouchY > (sStartY + 45) or pTouchY < (sStartY - 45) then
+      if pTouchY > (sStartY + 6) or pTouchY < (sStartY - 6) then
          put "vertical" into sScrollDirection
       else
          // Check for horizontal scroll
          if (the short name of tHgroup <> "all-collections") and \
-               (pTouchX > (sStartX + 3) or pTouchX < (sStartX - 3)) then
+               (pTouchX > (sStartX + 6) or pTouchX < (sStartX - 6)) then
             put "horizontal" into sScrollDirection
          end if
       end if
@@ -93,7 +93,6 @@ on mouseup
    if the short name target is "title-label" then
       put "listen-my-audio" into gCardName
       go to card "listen-my-audio"
-      
    else
       if the short name target is "Loading"then
          showBusyIndicator false

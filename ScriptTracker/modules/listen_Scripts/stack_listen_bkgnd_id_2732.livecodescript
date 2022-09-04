@@ -8,12 +8,11 @@ Script "stack_listen_bkgnd_id_2732"
 */
 
 
-on mouseUp
-   --answer "Stop Connecting?" with "yes" or "no"
-   --trap
-end mouseUp
+--on mouseUp
+--   --answer "Stop Connecting?" with "yes" or "no"
+--   --trap
+--end mouseUp
 
-on mouseDown
-   --trap
-end mouseDown
-
+--on mouseDown
+--   --trap
+--end mouseDown

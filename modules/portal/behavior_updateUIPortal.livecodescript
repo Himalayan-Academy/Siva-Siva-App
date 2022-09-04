@@ -589,9 +589,8 @@ command updateUIPortal
          bottomRightMe tHelpButton, 20, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, -30
-         
+         set the rect of tHelpBkg to CardRect()
+        
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
          topLeftMe tHelpField, 15, 45

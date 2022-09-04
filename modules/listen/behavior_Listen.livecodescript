@@ -271,16 +271,13 @@ command updateUI
          put the long id of grc "helpBkg" into tHelpBkg
          set the rect of tHelpBkg to CardRect()
          
-         --set the width of tHelpBkg to (CardWidth() + 20)
-         --topLeftMe tHelpBkg, -10, -10
-         
-         put the long id of grp "helpField" into tHelpFieldGrp
-         set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 15
+         put the long id of grp "helpFieldGrp" into tHelpFieldGrp
+         set the rect of tHelpFieldGrp to (15, 45 + safeTopMargin(), \
+               CardWidth() - 15, CardHeight())
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 15
+         topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 0
@@ -308,19 +305,18 @@ command updateUI
          bottomLeftMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 75
+         set the rect of tHelpBkg to CardRect()
          
-         put the long id of grp "helpField" into tHelpFieldGrp
-         set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 135
+         put the long id of grp "helpFieldGrp" into tHelpFieldGrp
+         set the rect of tHelpFieldGrp to (15, 45 + safeTopMargin(), \
+               CardWidth() - 15, CardHeight())
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 135
+         topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 75
+         topRightMe tHelpDismiss, 0, 0
          
          break
          
@@ -1555,10 +1551,6 @@ end informationGrp
 
 command helpAudio
    local tTarget, tAudioGuide
-   set the height of fld "helpField" to the formattedHeight of fld "helpField"
-   --set the vScroll of grp "helpField" to 0
-   set the top of fld "helpField" to the top of grp "helpField"
-   
    put the short name of the target into tTarget
    switch tTarget
       case "helpButton"
@@ -1566,28 +1558,22 @@ command helpAudio
          put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
          set the htmltext of fld "helpField" to tAudioGuide
          
-         show grc "helpBkg"
-         show btn "helpDismiss"
-         show grp "helpField"
-         
          lock screen
-         deleteMobileControl "helpField"
+         deleteMobileControl "helpFieldGrp"
          # recreate:
+         set the vscroll of grp "helpFieldGrp" to 0
          set the height of fld "helpField" to the formattedHeight of fld "helpField"
-         set the top of fld "helpField" to the top of grp "helpField"
-         send "CreateScroller helpField" to fld "helpField"
+         set the top of fld "helpField" to the top of grp "helpFieldGrp"
+         send "CreateScroller helpFieldGrp" to grp "helpFieldGrp"
          unlock screen
          
-         break
-         
-         
          show grc "helpBkg"
          show btn "helpDismiss"
-         show grp "helpField"
+         show grp "helpFieldGrp"
          break
          
       case "helpDismiss"
-         hide grp "helpField"
+         hide grp "helpFieldGrp"
          hide btn "helpDismiss"
          hide grc "helpBkg"
          break
