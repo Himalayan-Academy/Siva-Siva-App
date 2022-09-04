@@ -1,13 +1,11 @@
 <p>Unjumble word puzzles offers a fun way to explore quotations and absorb bite-sized bits of wisdom. </p>
 <p></p>
-Click on the Journal icon to the right to add the Word Puzzle to the your Journal
+Click on the "i" icon. You will be given to choice: "About" or "Shortcuts" to save it to the Siva-Siva-Portal (home) under "Shortcuts icon" to add the Word Puzzle to the your Shortcuts 
 <p></p>
 
 <p>Your job is to drag scattered tiles into proper order. A starting arrow in the upper left shows where to drop the first word.<br /></p>
 
 <p>Use the <i>Settings,</i> button to control the difficulty of the puzzles. Higher levels have more words.<br /></p>
-
-<p>Once you have completed a puzzle, if the "eye" button appears in the upper right, you can click to read the quote in it's original context. Note that not all quotes link back to a book.  A timer will tell you how long it took you to finish.<br /></p>
 
 <p><b>Puzzle Tips</b><br /></p>
 <ul>
@@ -17,4 +15,4 @@ Click on the Journal icon to the right to add the Word Puzzle to the your Journa
 <li>Word tiles that are in place have no border.</li>
 <li>Use "Reveal" to show the quote for 2 second. It the future you will lose points each time you use "Reveal"
 </ul>
-<p>* We hope to fix this in a future version so that any "of" will work. But for you must find the right one.</p>
+

@@ -107,7 +107,7 @@ on updateUI
    local tCard, tFooter, tControl, tRect, tWidth, tLeft
    local tMenu, tMenuBkgnd, tMenuImage, tGoTips, tGoBack
    local tStoryTextBkg, tGoNext, tGoPrev
-   local tProgressTitle
+   local tProgressTitle, tUserGuide
    --
    put the short name of this card into tCard
    --
@@ -128,16 +128,17 @@ on updateUI
       put the long id of img "menuImage" into tMenuImage
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
-      put the long id of btn "backFromTips" into tGoBack
-      bottomCenterMe tGoBack,65
-      set the bottom of tGoBack to the top of tFooter - 15
-      --
+      put the long id of btn "backFromUserGuide" into tGoBack
+      topRightMe tGoBack, 0, 0
+      
       put the long id of btn "showTips" into tGoTips
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
-      set the rect sTips to (10, 50, cardWidth() - 10, the top of btn "backFromTips" - 21)
-      set the rect of image "tipsImage" to (0, 0, cardWidth(), the top of tFooter)
+      put the long id of fld "tips" into tUserGuide
+      centerMe tUserGuide, 4, 50
+      
+      
       --
       put the long id of grc "menuBkgnd" into tMenuBkgnd
       set the rect tMenuBkgnd to (0, 75, cardWidth(), the top of btn "showTips" - 9)
@@ -268,7 +269,7 @@ on mouseUp
             portal_GoUrl sBookData["link"]["portal param"]
          end if
          break
-      case "backFromTips"
+      case "backFromUserGuide"
          hide grp "tipsGroup"
          break
       case "showTips"
