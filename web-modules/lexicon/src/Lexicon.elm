@@ -161,7 +161,7 @@ update msg model =
 
                 Err error ->
                     case error of
-                        Http.BadPayload errMsg _ ->
+                        Http.BadBody errMsg ->
                             ( { model | errorMessage = Just errMsg }, Cmd.none )
 
                         _ ->
@@ -174,7 +174,7 @@ update msg model =
 
                 Err error ->
                     case error of
-                        Http.BadPayload errMsg _ ->
+                        Http.BadBody errMsg ->
                             ( { model | errorMessage = Just errMsg }, Cmd.none )
 
                         _ ->

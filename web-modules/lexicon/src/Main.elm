@@ -307,7 +307,7 @@ appNavigation =
             ]
         ]
         [ icon "home" GoHome
-        , icon "cog" GoSettings
+        , icon "book" GoSettings
         ]
 
 

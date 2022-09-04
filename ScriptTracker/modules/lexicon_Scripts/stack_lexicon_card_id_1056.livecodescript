@@ -42,7 +42,7 @@ on resizeStack
 end resizeStack
 
 on goHome   
-   Journal_AddEntry
+   
    if getPhoneModel() is "iPhoneX" then
       mobileHideStatusBar
    end if
@@ -52,14 +52,12 @@ on goHome
 end goHome
 
 on goSettings
-   --go first card
-   portal_GoStack "settings"
+   
+   Journal_AddEntry
+  
 end goSettings
 
-local pData,  tCd,  
-
-
-end journalResume
+local pData, tCd
 
 on browserLoadRequested pUrl, pType
    put pURL, pType
@@ -134,6 +132,7 @@ on getWordDefinition pWordID
    do tJS in widget "browser"
    --put tBuf
 end getWordDefinition
+
 
 
 # this was removed the Javascript handlers of the 
