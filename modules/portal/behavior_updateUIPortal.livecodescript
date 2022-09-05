@@ -2,7 +2,7 @@
 global sConfigA
 local sStartLoc,sScreenRect
 local sLastImage, sMainImage,sBrandImageNumber
- 
+
 
 ##################
 -- At the top of this script we use functions and handlers
@@ -14,6 +14,11 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- 2019-08 Caveat: Brian: the surprise card still has an old "behavior_PortalCard"
 -- which we many need to deprecate and more the logic for behavior on the 
 -- old "panel" navigation to here. I will leave that to you.
+
+
+-- https://himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
+-- this is a virtual tour
+
 
 on preOpenCard
    local tControl, tCard, sNewNews
