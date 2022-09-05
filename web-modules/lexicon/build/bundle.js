@@ -8921,7 +8921,7 @@ var $author$project$Main$appNavigation = A2(
 		]),
 	_List_fromArray(
 		[
-			A2($author$project$Theme$Elements$icon, 'home', $author$project$Main$GoHome),
+			A2($author$project$Theme$Elements$icon, 'chevron-left', $author$project$Main$GoHome),
 			A2($author$project$Theme$Elements$icon, 'book', $author$project$Main$GoSettings)
 		]));
 var $rtfeldman$elm_css$Css$batch = $rtfeldman$elm_css$Css$Preprocess$ApplyStyles;
