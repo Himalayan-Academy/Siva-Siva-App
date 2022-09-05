@@ -158,7 +158,8 @@ on mouseup
       case "Inspired Talks"
          show grp "author"
          break
-         
+      default
+         pass mouseUp
    end switch
    
 end mouseup
