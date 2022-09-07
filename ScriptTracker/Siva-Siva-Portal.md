@@ -37,9 +37,9 @@
 * Widget Kind: com.livecode.widget.svgpath
 * [stack_Siva-Siva-Portal_widget_id_53648](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_widget_id_53648.livecodescript)
 
-**graphic "touchTrap" of bkgnd "loadingGroup" of stack "Siva-Siva-Portal"**
-* ID: graphic id 67467 of bkgnd id 67466 of stack "Siva-Siva-Portal"
-* [stack_Siva-Siva-Portal_graphic_id_67467](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_graphic_id_67467.livecodescript)
+**button "cancelLoading" of bkgnd "loadingGroup" of stack "Siva-Siva-Portal"**
+* ID: button id 67514 of bkgnd id 67511 of stack "Siva-Siva-Portal"
+* [stack_Siva-Siva-Portal_button_id_67514](./ScriptTracker/Siva-Siva-Portal_Scripts/stack_Siva-Siva-Portal_button_id_67514.livecodescript)
 
 **image "homeMainImage" of card "Home" of stack "Siva-Siva-Portal"**
 * ID: image id 8189 of card id 8169 of stack "Siva-Siva-Portal"
