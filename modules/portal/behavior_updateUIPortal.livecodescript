@@ -72,161 +72,161 @@ on mouseup
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
    # and not about the UI perse
    
+   local tMsg
    switch tTarget
-      local tMsg
       
-   case "Topics"
-      portal_GoUrl  "https://www.himalayanacademy.com/topics"
-      exit mouseup
-      break
-      
-   case "loading"
-      --showbusyIndicator false
-      exit Mouseup
-      break
-      
-      # beginning News!
-   case "news"
-      show grp "newsItems"
-      exit Mouseup
-      break
-      
-   case "newsDismiss"
-      hide grp "newsItems"
-      exit Mouseup
-      break
-      
-      -------------
-      -- News!
-      
-   case "TAKA"
-      hide grp "newsItems"
-      portal_GoURL "https://www.himalayanacademy.com/blog/taka/"
-      exit Mouseup
-      break
-      
-   case "Bodhinatha Latest"
-      hide grp "newsItems"
-      portal_GoStack "Listen"
-      put the long name of image "1-2-playlist-image" into tSelection
-      send "selectPlayList tSelection" to stack "Listen" in 200 milliseconds
-      exit Mouseup
-      break
-      
-   case "Webinars"
-      hide grp "newsItems"
-      portal_GoURL "https://www.youtube.com/user/kauaiaadheenam/videos"
-      exit Mouseup
-      break
-      
-   case "App News"
-      hide grp "newsItems"
-      News_Fetch
-      put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
-      
-      set the htmltext of fld "helpField" to tNews
-      
-      # end of News!
-      
-      
-      show grc "helpBkg"
-      show btn "helpDismiss"
-      show fld "helpField"
-      lock screen
-      deleteMobileControl "helpField"
-      # recreate:
-      -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      --set the top of fld "helpField" to the top of grp "helpField"
-      send "CreateScroller helpField" to fld "helpField"
-      
-      unlock screen
-      
-      break
-      
-   case "Contact"
-      Share_Email
-      break
-      
-      
-   case "HelpButton"
-      put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
-      set the htmltext of fld "helpField" to tUserGuide
-      
-      
-      show grc "helpBkg"
-      show btn "helpDismiss"
-      show fld "helpField"
-      lock screen
-      deleteMobileControl "helpField"
-      # recreate:
-      --set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      --set the top of fld "helpField" to the top of grp "helpField"
-      send "CreateScroller helpField" to fld "helpField"
-      
-      unlock screen
-      break
-      
-   case "helpDismiss"
-      hide fld "helpField"
-      hide btn "helpDismiss"
-      hide grc "helpBkg"
-      break
-      
-   case "cancelBrowser"
-      hide widget "portalBrowser" of me
-      hide grp "cancelBrowser" of me
-      wait 1000 milliseconds
-      showMandala
-      break
-end switch
-
-switch tTargetOwner
-   case "bkgndControls"
-      switch tTarget
-         case "hideNavMandala"
-            setDefaultImage
-            hideMandala
-            break
-         case "showNavMandala"
-            if the vis of  grp "subNav" is true then hide grp "subNav"
-            showMandala
-            break
-      end switch
-      break
-   case "globalNavTree"
-      hide grp "subNav"
-      break
-   case "navMandala"
-      if tTarget is among the items of "Stories,Path to Siva,pathtosiva,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Read,read,Video,Journal,My Menu,Settings" then
-         # These are top links, some go  directly to another module stack
-         portal_GoStack tTarget
+      case "Topics"
+         portal_GoUrl  "https://www.himalayanacademy.com/topics"
          exit mouseup
-      end if
-      
-      lock screen
-      hideMandala
-      setSubNavBkgndImage tTarget
-      show  img "subNavBkgImage"
-      unlock screen
-      fetchSubMenu tTarget
-      wait 200 milliseconds
-      
-      show grp "SubNav" with visual effect "dissolve fast"
-      break
-   case "subNav"
-      if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
-         put the value of clickline() into tTarget
+         break
          
-         # pass the target to journal data. It may be overwritten later
-         # but in some cases that will be the only title we can use 
-         # for a journal entry
+      case "loading"
+         --showbusyIndicator false
+         exit Mouseup
+         break
          
-         setJournalData tTarget
-         portal_DoRowLink tTarget
+         # beginning News!
+      case "news"
+         show grp "newsItems"
+         exit Mouseup
+         break
          
-      end if
-      break
-end switch
+      case "newsDismiss"
+         hide grp "newsItems"
+         exit Mouseup
+         break
+         
+         -------------
+         -- News!
+         
+      case "TAKA"
+         hide grp "newsItems"
+         portal_GoURL "https://www.himalayanacademy.com/blog/taka/"
+         exit Mouseup
+         break
+         
+      case "Bodhinatha Latest"
+         hide grp "newsItems"
+         portal_GoStack "Listen"
+         put the long name of image "1-2-playlist-image" into tSelection
+         send "selectPlayList tSelection" to stack "Listen" in 200 milliseconds
+         exit Mouseup
+         break
+         
+      case "Webinars"
+         hide grp "newsItems"
+         portal_GoURL "https://www.youtube.com/user/kauaiaadheenam/videos"
+         exit Mouseup
+         break
+         
+      case "App News"
+         hide grp "newsItems"
+         News_Fetch
+         put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
+         
+         set the htmltext of fld "helpField" to tNews
+         
+         # end of News!
+         
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show fld "helpField"
+         lock screen
+         deleteMobileControl "helpField"
+         # recreate:
+         -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         --set the top of fld "helpField" to the top of grp "helpField"
+         send "CreateScroller helpField" to fld "helpField"
+         
+         unlock screen
+         
+         break
+         
+      case "Contact"
+         Share_Email
+         break
+         
+         
+      case "HelpButton"
+         put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
+         set the htmltext of fld "helpField" to tUserGuide
+         
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show fld "helpField"
+         lock screen
+         deleteMobileControl "helpField"
+         # recreate:
+         --set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         --set the top of fld "helpField" to the top of grp "helpField"
+         send "CreateScroller helpField" to fld "helpField"
+         
+         unlock screen
+         break
+         
+      case "helpDismiss"
+         hide fld "helpField"
+         hide btn "helpDismiss"
+         hide grc "helpBkg"
+         break
+         
+      case "cancelBrowser"
+         hide widget "portalBrowser" of me
+         hide grp "cancelBrowser" of me
+         wait 1000 milliseconds
+         showMandala
+         break
+   end switch
+   
+   switch tTargetOwner
+      case "bkgndControls"
+         switch tTarget
+            case "hideNavMandala"
+               setDefaultImage
+               hideMandala
+               break
+            case "showNavMandala"
+               if the vis of  grp "subNav" is true then hide grp "subNav"
+               showMandala
+               break
+         end switch
+         break
+      case "globalNavTree"
+         hide grp "subNav"
+         break
+      case "navMandala"
+         if tTarget is among the items of "Stories,Path to Siva,pathtosiva,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Read,read,Video,Journal,My Menu,Settings" then
+            # These are top links, some go  directly to another module stack
+            portal_GoStack tTarget
+            exit mouseup
+         end if
+         
+         lock screen
+         hideMandala
+         setSubNavBkgndImage tTarget
+         show  img "subNavBkgImage"
+         unlock screen
+         fetchSubMenu tTarget
+         wait 200 milliseconds
+         
+         show grp "SubNav" with visual effect "dissolve fast"
+         break
+      case "subNav"
+         if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
+            put the value of clickline() into tTarget
+            
+            # pass the target to journal data. It may be overwritten later
+            # but in some cases that will be the only title we can use 
+            # for a journal entry
+            
+            setJournalData tTarget
+            portal_DoRowLink tTarget
+            
+         end if
+         break
+   end switch
 end mouseup
 
 
@@ -384,9 +384,9 @@ command setDefaultImage pContext
    setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
 end setDefaultImage 
-      
-      
-      
+
+
+
 command setSubNavBkgndImage pMenu
    local tMenuBkgnd, pImage, tPortalScreens, tPath
    
