@@ -171,6 +171,13 @@ on mouseup
       hide btn "helpDismiss"
       hide grc "helpBkg"
       break
+      
+   case "cancelBrowser"
+      hide widget "portalBrowser" of me
+      hide grp "cancelBrowser" of me
+      wait 1000 milliseconds
+      showMandala
+      break
 end switch
 
 switch tTargetOwner
@@ -306,14 +313,19 @@ command showMandala
    hide grp "globalNavigation"
    # hide sub nav menu
    hide grp "subNav"
-  hide img "homeMainImage"
+   hide img "homeMainImage"
    hide img "subNavBkgImage"
    show btn "brandLogo"
    hide grp "globalNavigation"
    show btn "backgroundOverlay"
    show grp "navMandala"
    hide img "showNavMandala" # button
+   hide widget "portalBrowser"
    show img "hideNavMandala" # button
+   
+   --
+   hide widget "portalBrowser" of me
+   
    unlock screen
 end showMandala
 
@@ -325,15 +337,23 @@ command hideMandala
    hide grp "globalNavigation"
    hide grp "navMandala"
    hide btn "backgroundOverlay"
-   show img "homeMainImage"
+   
+   show img "homeMainImage" with visual "dissolve" 
+   
    show img "showNavMandala"
    hide img "hideNavMandala"
+   
+   wait 1500 milliseconds
+   
+   --
+   show widget "portalBrowser" of me
+   show grp "cancelBrowser" of me
+   
 end hideMandala
 
 command hideSubNav
    hide grp "SubNav"
 end hideSubNav
-
 
 command setDefaultImage pContext
    --breakpoint
@@ -595,7 +615,7 @@ command updateUIPortal
          
          put the long id of grc "helpBkg" into tHelpBkg
          set the rect of tHelpBkg to CardRect()
-        
+         
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
          topLeftMe tHelpField, 15, 45
@@ -603,6 +623,11 @@ command updateUIPortal
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 0
          
+         put the long id of widget "portalBrowser" into tPortalBrowser
+         centerMe  tPortalBrowser, 0, 50
+         
+         put the long id of grp "cancelBrowser" into tCancelBrowser
+         bottomCenterMe tCancelBrowser, 0, 50
          break
          
    end switch
