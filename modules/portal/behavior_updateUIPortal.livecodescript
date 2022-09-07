@@ -532,7 +532,7 @@ command updateUIPortal
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
    local tNews, tNotification, tExplanationMarker, tNewsItems
-   local tPortalLabel
+   local tPortalLabel, tPortalBrowser, tCancelBrowser
    
    #  UI responsive
    
@@ -623,11 +623,22 @@ command updateUIPortal
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 0
          
+         if the platform is "iPhone" then
+            put iphoneSafeAreaInsets() into tRect
+         else
+            put (0,0,0,0) into tRect
+         end if
          put the long id of widget "portalBrowser" into tPortalBrowser
-         centerMe  tPortalBrowser, 0, 50
+         set the rect of tPortalBrowser to (0,item 2 of tRect,CardWidth(),CardHeight()-item 4 of tRect-50)
+         --centerMe  tPortalBrowser, 0, 50
          
          put the long id of grp "cancelBrowser" into tCancelBrowser
-         bottomCenterMe tCancelBrowser, 0, 50
+         --set the rect of tCancelBrowser to (0,the bottom of tPortalBrowser,CardWidth(),CardHeight())
+         set the rect of grc "footerBackground" to CardRect()
+         --bottomCenterMe tCancelBrowser, 0, 50
+         
+         set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
+         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser + 9
          break
          
    end switch
