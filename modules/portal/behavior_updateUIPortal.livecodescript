@@ -186,6 +186,8 @@ on mouseup
             case "hideNavMandala"
                setDefaultImage
                hideMandala
+               show widget "portalBrowser" of me
+               show grp "cancelBrowser" of me
                break
             case "showNavMandala"
                if the vis of  grp "subNav" is true then hide grp "subNav"
@@ -345,9 +347,9 @@ command hideMandala
    
    wait 1500 milliseconds
    
-   --
-   show widget "portalBrowser" of me
-   show grp "cancelBrowser" of me
+   -- can't do this here, disables all subnav menus
+   --   show widget "portalBrowser" of me
+   --   show grp "cancelBrowser" of me
    
 end hideMandala
 
