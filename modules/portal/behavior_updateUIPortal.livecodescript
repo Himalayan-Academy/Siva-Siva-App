@@ -173,8 +173,7 @@ on mouseup
          break
          
       case "cancelBrowser"
-         hide widget "portalBrowser" of me
-         hide grp "cancelBrowser" of me
+         hideTour
          wait 1000 milliseconds
          showMandala
          break
@@ -186,11 +185,10 @@ on mouseup
             case "hideNavMandala"
                setDefaultImage
                hideMandala
-               show widget "portalBrowser" of me
-               show grp "cancelBrowser" of me
+               showTour
                break
             case "showNavMandala"
-               if the vis of  grp "subNav" is true then hide grp "subNav"
+               hideTour
                showMandala
                break
          end switch
@@ -312,9 +310,9 @@ end fetchSubMenu
 # use the return state of home screen
 command showMandala
    lock screen
+   --
    hide grp "globalNavigation"
-   # hide sub nav menu
-   hide grp "subNav"
+   hideSubNav
    hide img "homeMainImage"
    hide img "subNavBkgImage"
    show btn "brandLogo"
@@ -322,12 +320,8 @@ command showMandala
    show btn "backgroundOverlay"
    show grp "navMandala"
    hide img "showNavMandala" # button
-   hide widget "portalBrowser"
    show img "hideNavMandala" # button
-   
    --
-   hide widget "portalBrowser" of me
-   
    unlock screen
 end showMandala
 
@@ -350,8 +344,23 @@ command hideMandala
    -- can't do this here, disables all subnav menus
    --   show widget "portalBrowser" of me
    --   show grp "cancelBrowser" of me
-   
 end hideMandala
+
+command showTour
+   show widget "portalBrowser" of me
+   show grp "cancelBrowser" of me
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down,landscape left,landscape right"
+   end if
+end showTour
+
+command hideTour
+   hide widget "portalBrowser" of me
+   hide grp "cancelBrowser" of me
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
+end hideTour
 
 command hideSubNav
    hide grp "SubNav"
@@ -517,10 +526,14 @@ end _RESPONSIVE
 
 on resizeStack x,y,ox,oy
    lock screen
-   -- When coming from a landscape stack, card rect is not updated correctly
-   -- and the resizeStack is called with a landscape rect.  If an answer is
-   -- inserted here, a second resizeStack gets sent with the correct rect.
-   setCardCoords "portrait"
+   if the short name of this card is "Home" and the visible of widget "portalBrowser" of me then
+      setCardCoords
+   else
+      -- When coming from a landscape stack, card rect is not updated correctly
+      -- and the resizeStack is called with a landscape rect.  If an answer is
+      -- inserted here, a second resizeStack gets sent with the correct rect.
+      setCardCoords "portrait"
+   end if
    updateUIPortal
    unlock screen
 end resizeStack
@@ -534,7 +547,7 @@ command updateUIPortal
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
    local tNews, tNotification, tExplanationMarker, tNewsItems
-   local tPortalLabel, tPortalBrowser, tCancelBrowser
+   local tPortalLabel, tPortalBrowser, tCancelBrowser, tInsets
    
    #  UI responsive
    
@@ -554,12 +567,39 @@ command updateUIPortal
    else
       put 8 into tBottomMargin
    end if
+   --
+   if the platform is "iPhone" then
+      put iphoneSafeAreaInsets() into tInsets
+   else
+      put (0,0,0,0) into tInsets
+   end if
    
    switch (the short name of this card)
       case "Home"
          if isMobile() then
             mobileHideStatusBar
          end if
+         
+         put the long id of widget "portalBrowser" of me into tPortalBrowser
+         put the long id of grp "cancelBrowser" of me into tCancelBrowser
+         set the rect of grc "footerBackground" to CardRect()
+         --
+         if the visible of tPortalBrowser then
+            if CardWidth() > CardHeight() then
+               # manually verify landscape
+               # only want to touch the browser widget
+               hide button "cancelBrowser" of group "cancelBrowser" of me
+               set the rect of tPortalBrowser to (item 1 of tInsets,0,CardWidth()-item 3 of tInsets,CardHeight()-item 4 of tInsets)
+               exit updateUIPortal
+            else
+               show button "cancelBrowser" of group "cancelBrowser" of me
+            end if
+         end if
+         --
+         set the rect of tPortalBrowser to (0,item 2 of tInsets,CardWidth(),CardHeight()-item 4 of tInsets-50)
+         set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
+         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser + 9
+         
          
          # background
          
@@ -625,22 +665,6 @@ command updateUIPortal
          put the long id of button "helpDismiss" into tHelpDismiss
          topRightMe tHelpDismiss, 0, 0
          
-         if the platform is "iPhone" then
-            put iphoneSafeAreaInsets() into tRect
-         else
-            put (0,0,0,0) into tRect
-         end if
-         put the long id of widget "portalBrowser" into tPortalBrowser
-         set the rect of tPortalBrowser to (0,item 2 of tRect,CardWidth(),CardHeight()-item 4 of tRect-50)
-         --centerMe  tPortalBrowser, 0, 50
-         
-         put the long id of grp "cancelBrowser" into tCancelBrowser
-         --set the rect of tCancelBrowser to (0,the bottom of tPortalBrowser,CardWidth(),CardHeight())
-         set the rect of grc "footerBackground" to CardRect()
-         --bottomCenterMe tCancelBrowser, 0, 50
-         
-         set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
-         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser + 9
          break
          
    end switch
