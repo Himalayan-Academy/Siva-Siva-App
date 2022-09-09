@@ -598,7 +598,7 @@ command updateUIPortal
          --
          set the rect of tPortalBrowser to (0,item 2 of tInsets,CardWidth(),CardHeight()-item 4 of tInsets-50)
          set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
-         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser + 9
+         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser
          
          
          # background
