@@ -113,13 +113,13 @@ private command _setPhoneModel
    
    switch sPhoneModel
       case "iPhoneX"
-         put 44 into sPortraitMargins["top"]
+         put 47 into sPortraitMargins["top"]
          put 34 into sPortraitMargins["bottom"]
          put  0 into sPortraitMargins["side"]
          
          put 0 into sLandscapeMargins["top"] -- 32 if status bar visible
          put 23 into sLandscapeMargins["bottom"]
-         put 44 into sLandscapeMargins["side"]
+         put 47 into sLandscapeMargins["side"]
          break
       case "iPadPro11"
       case "iPadPro12.9"

@@ -31,10 +31,10 @@ on preOpenCard
       case "Home"
          # init set up
          hide grp "globalNavigation"
+         hideTour
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          setDefaultImage
-         
    end switch
    
    updateUIPortal
@@ -569,7 +569,10 @@ command updateUIPortal
    end if
    --
    if the platform is "iPhone" then
-      put iphoneSafeAreaInsets() into tInsets
+      put safeSideMargin() into item 1 of tInsets -- left
+      put safeTopMargin() into item 2 of tInsets -- top
+      put safeSideMargin() into item 3 of tInsets -- right
+      put safeBottomMargin() into item 4 of tInsets -- bottom
    else
       put (0,0,0,0) into tInsets
    end if
@@ -599,7 +602,6 @@ command updateUIPortal
          set the rect of tPortalBrowser to (0,item 2 of tInsets,CardWidth(),CardHeight()-item 4 of tInsets-50)
          set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
          set the top of btn "cancelBrowser" to the bottom of tPortalBrowser
-         
          
          # background
          
