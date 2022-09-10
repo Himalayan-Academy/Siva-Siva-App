@@ -16,7 +16,7 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- old "panel" navigation to here. I will leave that to you.
 
 
--- https://himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
+-- https://www.himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
 -- this is a virtual tour
 
 
