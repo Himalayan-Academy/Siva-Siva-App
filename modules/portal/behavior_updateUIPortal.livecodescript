@@ -347,6 +347,10 @@ command hideMandala
 end hideMandala
 
 command showTour
+   
+   put "https://www.himalayanacademy.com/monastery-virtual-tour" into pURL
+   set the url of widget "portalBrowser"  to pURL
+   
    show widget "portalBrowser" of me
    show grp "cancelBrowser" of me
    if isMobile() then
