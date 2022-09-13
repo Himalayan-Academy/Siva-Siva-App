@@ -162,7 +162,7 @@
       "rowData": {}, 
       "portalName": "journal", 
       "headerImage": "", 
-      "portalLabel": "Journal"
+      "portalLabel": "Shortcuts"
     }, 
     "practice": {
       "rowData": {
@@ -423,7 +423,7 @@
 "Journal": {
       "imageText": "", 
       "link": {
-        "portal param": "stack \"wordpuzzles\"", 
+        "portal param": "stack \"journal\"", 
         "portal command": "portal_GoStack"
       }, 
       "shortImageFile": ""

@@ -88,7 +88,7 @@ command goMainMenu
       exit goMainMenu
    end if
    
-   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Read,Listen,Look,Video,Websites,Journal,My Menu" then
+   if sTarget is among the items of "Gems of Wisdom,Surprise Me,surprise,Read,Listen,Look,Video,Websites,Shortcuts,journal,My Menu" then
       # These are top links, using the portaLabel, 
       # some go  directly to another module stack
       # Some have to trigger connectivity, but do nothing (look and websites)
@@ -115,8 +115,8 @@ command goMainMenu
          case "Listen"
             portal_GoStack sTarget
             break
-         case "Journal"
-            portal_GoStack sTarget
+         case "Shortcuts"
+            portal_GoStack "journal"
             break
             
             
@@ -237,7 +237,7 @@ end  loadFavoritesToMyHome
 
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 
-   doAnswer "No Favorites in My Menu. Go to the Journal." && \
+   doAnswer "No Favorites in My Menu. Go to the Shortcuts." && \
          "Click the star to chose Favorites. They will appear in My Menu", \
          "OK","downloadAffirmed"
 end tellUserToGetFavorites
@@ -258,9 +258,6 @@ function checkConnectionStop
       return "true"
    end if
 end checkConnectionStop
-
-
-
 
 
 on formattedHeightChanged -- tree changed dimensions
