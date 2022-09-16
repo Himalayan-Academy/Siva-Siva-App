@@ -101,7 +101,10 @@ on mouseup
                   
                   --deployHeaders pHeaderMessage, "photo index", 68, 5
                   wait 100 milliseconds
-                  doAnswer "Want to go Home - SivaSiva Portal?", "Yes,Cancel","downloadAffirmed"
+                  
+                  
+                  dialog_CustomMsg "Last page going backwards."
+                 
                   
                   exit mouseup
                   break
