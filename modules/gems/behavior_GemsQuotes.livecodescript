@@ -114,8 +114,8 @@ command fetchQuote
       replace ":1" with tCats in tQuoteSQL
       
       dbSetSQL tQuoteSQL
-      put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
-      put textEncode(sTruncFirstLine,"UTF8") into sTruncFirstLine
+      --put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      --put textEncode(sTruncFirstLine,"UTF8") into sTruncFirstLine
       # store the quote id. see lib_SivaSivaMedia
       
       put dbGet("quote", tConnectionID) into aSelectedQuotes
@@ -123,13 +123,15 @@ command fetchQuote
       put textDecode ( aSelectedQuotes[1]["content"], "UTF8")  into tQuote
       setLastQuoteID (aSelectedQuotes[1]["quote_id"])
       replace "\n" with cr in tQuote
-      put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
+      put CR & cr after tQuote
+      -- put (char 1 to 35 of tQuote)& "..." into sTruncFirstLine
       --put getLastQuoteID() # check
    else 
       put sJournalData["lastQuote"] into pQuoteID 
       dbLike "quote_id",pQuoteID
       put dbGet("quote", tConnectionID) into aSelectedQuotes
       put textDecode  (aSelectedQuotes[1]["content"],"UTF8")  into tQuote
+      put CR & CR after tQuote
    end if
    
    replace "\n" with cr in tQuote
