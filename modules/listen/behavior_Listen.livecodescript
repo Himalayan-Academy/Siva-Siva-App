@@ -1495,8 +1495,18 @@ on playPausedAudio
 end playPausedAudio
 
 
+on audioSeekForward
+   #TODO
+end audioSeekForward
+
+
+on audioSeekBack
+   #TODO
+end audioSeekBack
+
+
 on clearPlayer
-  showPlayer false, "audioPlayer" 
+   showPlayer false, "audioPlayer" 
 end clearPlayer
 
 
