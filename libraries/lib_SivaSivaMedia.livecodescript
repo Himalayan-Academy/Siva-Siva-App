@@ -175,12 +175,14 @@ end getMediaURL
 
 function getSongLyrics pItemID    
    local tLyrics
-   put "SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.diacritical_transliteration,item.lyrics_id" \ 
+   
+   put "SELECT song_lyrics.lyrics_id,song_lyrics.song_title,song_lyrics.original_script,song_lyrics.transliteration,song_lyrics.literal_translation,item.lyrics_id" \ 
          &  " FROM song_lyrics JOIN  item ON item.lyrics_id= song_lyrics.lyrics_id WHERE item.item_id = " & pItemID into tSQL
+   
    put  JnanamDB() into tConnectionID
    dbSetSQL tSQL
    put dbGet(,tConnectionID) into tLyricsA
-   put "original_script,diacritical_transliteration,transliteration" into tLyrics
+   put "original_script,transliteration,literal_translation" into tLyrics
    repeat for each item x in tLyrics
       get textDecode (tLyricsA[1][x], "UTF8") 
       if it is not empty then put it into sMediaMetaA[x] 
@@ -211,29 +213,34 @@ function getMediaItemMetadata pRecords
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
    if (sMediaMetaA["artists"] <> empty) OR (sMediaMetaA["artists"] is "null") then
-      put "Artist: " & cr & sMediaMetaA["artists"] into tArtists
+      put "Artist: " & sMediaMetaA["artists"] into tArtists
    end if
    if sMediaMetaA["author"] <> empty then
-      put "Author: " &cr & sMediaMetaA["author"] into tAuthor
+      put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
+   
    put sMediaMetaA["description"] into tDescription
    --replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
+   
    put sMediaMetaA["date_created"] into tDateCreated
    put  sMediaMetaA["audio_file_transcript"] into tTranscript
+   
    # do not  display a non-date string as zeros
    if tDateCreated ="0000-00-00" then put "" into tDateCreated
+   
    if tTranscript is not empty then  
       put "Transcript: " & cr & cr before tTranscript
    end if
    
-   # Lyrics
-   put "original_script,diacritical_transliteration,transliteration" into tLyricsFields 
-   repeat for each item x in tLyricsFields
-      if sMediaMetaA[x] <> empty then 
-         put cr & cr & sMediaMetaA[x] after tLyrics
-      end if
-   end repeat 
-   
+   if sMediaMetaA[original_script] <> empty then 
+      put  "_________________" & cr & "Original Script: " & cr & cr & cr & sMediaMetaA[original_script] after tLyrics
+   end if
+   if sMediaMetaA[transliteration] <> empty then
+      put   "_________________" &  cr & "Transliteration: " & cr & cr & cr & sMediaMetaA[transliteration] after tLyrics 
+   end if  
+   if sMediaMetaA[literal_translation] <> empty then
+      put  "_________________" & cr & "Literal Translation: " & cr & cr & cr & sMediaMetaA[literal_translation] after tLyrics
+   end if  
    
    # data has commas so we have to use a lines as a delimiter
    --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
@@ -248,15 +255,28 @@ function getMediaItemMetadata pRecords
    
    put (tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
    
-   repeat for each line x in tFields
-      if x <> empty then
-         put x & cr & cr after tViewData
-      end if
-   end repeat
+   if tDateCreated <> empty then
+      put tDateCreated  after tViewData
+   end if
+   if tDescription <> empty then
+      put tDescription  after tViewData
+   end if
+   if tTranscript<> empty then
+      put tLyrics  after tViewData
+   end if
+   if tLyrics <> empty then
+      put tLyrics  after tViewData
+   end if
+   
+   
+   --   repeat for each line x in tFields
+   --      if x <> empty then
+   --         put x  after tViewData
+   --      end if
+   --   end repeat
+   
    replace "<p>" with "" in tViewData
    replace "</p>" with "" in tViewData
-   replace (cr &cr &cr) with cr in tViewData
-   replace (cr &cr &cr) with cr in tViewData
    
    replace "\n" with cr in tViewData
    replace "null" with "" in tViewData
