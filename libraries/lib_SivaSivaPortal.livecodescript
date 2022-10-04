@@ -217,7 +217,7 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    --lock screen
    local tRequiresLandscape, oStackName, tBrowserView, pTrackdata
    
-   put ("youtube.com","1988-apple-video") into tRequiresLandscape
+   put ("youtube.com","1988-apple-video","taka") into tRequiresLandscape
    
    if requiresConnection(sLastLinkTitle) = "false" then
       dialog_CustomMsg "Connection required."
@@ -233,6 +233,10 @@ command portal_GoUrl pURL,pJournalLabel,pTimeDelay
    portal_SetLabel pJournalLabel
    
    put the short name of this stack into oStackName
+   
+   --   ## We have decided to go landscape for ALL the URLs
+   --   put "goLandscape" into tBrowserView
+   
    repeat for each item x  in tRequiresLandscape
       if  pURL contains x then
          put "goLandscape" into tBrowserView

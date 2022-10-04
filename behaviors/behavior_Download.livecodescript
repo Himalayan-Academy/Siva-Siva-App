@@ -119,7 +119,7 @@ command showDownloadProgress pURL, pStatus
          put round(tKBreceived / tElapsedSeconds, 1) into tKBperSecond
       end if
       
-      put "Received (KB): " & tab & tKBreceived &cr & "Of Total (KB: " & tab &  tTotalKB & cr &\
+      put "Received (KB): " & tab & tKBreceived &cr & "Of Total KB: " & tab &  tTotalKB & cr &\
             "At KB/sec: " & tab & tKBperSecond into fld "ProgressField"
       
    end if
@@ -164,6 +164,7 @@ command downloadComplete pURL, pStatus
       end if
    end if
    hide grp "DownloadControls"
+   hide grp "DownloadSelection"
 end downloadComplete
 
 

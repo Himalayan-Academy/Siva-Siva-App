@@ -109,7 +109,7 @@ command dialog_CustomMsg pMsg,pBtn,pHandleAffirm
    --move grp "BottomToast" relative 0,-(tDialogHeight+400) in 500 milliseconds
    set the layer of grp "BottomToast" to top 
    move grp "BottomToast" relative 0,-(tDialogHeight+400) in 50 milliseconds
-   wait 750 milliseconds
+   wait 2000 milliseconds
    if isMobile() then
       mobileClearTouches
    end if
@@ -216,12 +216,20 @@ end doAnswer
 -- which must in the card script or stack up that all the dialong.
 
 command doAnswerResponse 
+   
+   local pDialogParam
    # send by the buttons of   "answerDigGrp"
    get the dialogData
+   
+   put it into pDialogParam
    if it contains "cancel" then
       exit to top
    else
-     dispatch sHandleAffirm to this card
+      if pDialogParam <> empty then
+         dispatch sHandleAffirm to this card with pDialogParam
+      else
+         dispatch sHandleAffirm to this card
+      end if
    end if
 end doAnswerResponse
 

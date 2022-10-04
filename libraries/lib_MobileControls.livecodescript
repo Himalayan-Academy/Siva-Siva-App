@@ -371,18 +371,13 @@ end playerFinished
 -------------------------------
 
 command showPlayer pBool, pPlayerName --jg: handles visibility of both mobile and desktop players
-   -- if audio is playing, player is shown on audio card, hidden elsewhere;
-   -- pBool = boolean
    if isMobile() then
-      --hide player pPlayerName -- the LC one; never show it
       mobileControlSet pPlayerName, "showController", pBool
       mobileControlSet pPlayerName, "visible", pBool
    else
       set the vis of player pPlayerName to pBool
    end if
 end showPlayer
-
-
 
 on deleteMobileControl pName -- jg: deletes an existing mobile control
    -- native controls should be deleted if possible when no longer needed, as

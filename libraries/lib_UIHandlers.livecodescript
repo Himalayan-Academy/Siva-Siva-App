@@ -113,13 +113,13 @@ private command _setPhoneModel
    
    switch sPhoneModel
       case "iPhoneX"
-         put 44 into sPortraitMargins["top"]
+         put 47 into sPortraitMargins["top"]
          put 34 into sPortraitMargins["bottom"]
          put  0 into sPortraitMargins["side"]
          
          put 0 into sLandscapeMargins["top"] -- 32 if status bar visible
          put 23 into sLandscapeMargins["bottom"]
-         put 44 into sLandscapeMargins["side"]
+         put 47 into sLandscapeMargins["side"]
          break
       case "iPadPro11"
       case "iPadPro12.9"
@@ -517,6 +517,9 @@ command initializeCycleImage pImage, pState
          case "showAll"
             put 2 into pState
             break
+         case "fullSize"
+            put 3 into pState
+            break
          default
             put 2 into pState
       end switch
@@ -536,6 +539,9 @@ command setImageState pImage, pState
             break
          case "showAll"
             put 2 into pState
+            break
+         case "fullSize"
+            put 3 into pState
             break
          default
             put 1 into pState
@@ -567,6 +573,10 @@ command setImageState pImage, pState
    end switch
    put pState into sImageCycleStateA["state"]
 end setImageState
+
+function getImageState
+   return sImageCycleStateA["state"]
+end getImageState
 
 command cycleImageState pImage
    -- 3 way cycle of image state
@@ -789,35 +799,48 @@ command display_Log
 end display_Log
 
 local sLoadingIndicator,sLoadingGroup,sLoadingFlag, sLabel, sLoadProgress
-local sBusySemaphore
+local sBusySemaphore, sLoadingDismiss
 
 command setBusySemphore pBool
    put pbool into sBusySemaphore
 end setBusySemphore
 
-command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
-   --breakpoint
+
+on dismissLoading
+   put the long id of btn "cancelLoading" into sLoadingDismiss
+   click button 2 at the loc of sLoadingDismiss
+   hide grc "loading"
    
+   --showBusyIndicator false
+end dismissLoading
+
+
+command showBusyIndicator pBool, sMsg --jg: for both desktop and mobile
+   --   breakpoint
    
    if there is a control "loadingGroup" then
       put sMsg into sLabel # stable string
-      --put sMsg into sLoadProgress # this string will change through the loop below.
       
       # Gets the visible of group
       put the long id of control "loadingGroup" into sLoadingGroup
       
-      # set a message
-      --set the label of sLoadingIndicator to sLabel
-      set the label of grc "Loading"  to sMsg
+      # gets the grc which serves as button
+      put the long id of grc "loading" into sLoadingIndicator
       
-      if there is a  sLoadingGroup then
+      # set a message
+      set the label of sLoadingIndicator to sLabel
+      
+      if there is a  sLoadingIndicator then
          set the vis of sLoadingGroup to pBool
          if pBool is true then
             put true into sLoadingFlag
+         else
+            set the vis of sLoadingGroup to pBool
+            set the label of sLoadingIndicator to ""
+            put false into sLoadingFlag
          end if
       end if
    end if
-   
 end showBusyIndicator
 
 command loadingInProgress

@@ -7,7 +7,7 @@ Script "stack_pathtosiva_field_id_1245"
 
 
 
-on mouseDown
-  resetFldColor
-  pass mouseDown
-end mouseDown
+--on mouseDown
+--  resetFldColor
+--  pass mouseDown
+--end mouseDown

@@ -162,7 +162,7 @@
       "rowData": {}, 
       "portalName": "journal", 
       "headerImage": "", 
-      "portalLabel": "Journal"
+      "portalLabel": "Shortcuts"
     }, 
     "practice": {
       "rowData": {
@@ -174,7 +174,16 @@
         }, 
         "2": {
           "rowName": "Color Meditation"
-        }
+        },
+        "4": {
+          "rowName": "Hinduism Today Magazine"
+        },
+        "5": {
+          "rowName": "Hindu Lexicon"
+        },
+        "6": {
+          "rowName": "Pillars of Iraivan"
+        } 
       }, 
       "portalName": "practice", 
       "headerImage": "hero_practice_girl-handstand-shtrstk-169396664.png", 
@@ -185,19 +194,16 @@
         "1": {
           "rowName": "Our Daily Blog"
         }, 
-        "3": {
+        "2": {
           "rowName": "Meet the Monks"
         }, 
-        "2": {
-          "rowName": "Aller au coeur de l'hindouisme"
-        }, 
-        "5": {
+        "3": {
           "rowName": "How to Visit"
         }, 
         "4": {
           "rowName": "Monthly News"
         }, 
-        "7": {
+        "5": {
           "rowName": "About the Monastery"
         }, 
         "6": {
@@ -417,7 +423,7 @@
 "Journal": {
       "imageText": "", 
       "link": {
-        "portal param": "stack \"wordpuzzles\"", 
+        "portal param": "stack \"journal\"", 
         "portal command": "portal_GoStack"
       }, 
       "shortImageFile": ""
@@ -473,7 +479,6 @@
       }, 
       "shortImageFile": "thumb_gurudeva_sharma-painting.png"
     },
-    
 "Listen": {
       "imageText": "Listen", 
       "link": {
@@ -815,15 +820,7 @@
       }, 
       "shortImageFile": "thumb_history-movie.png"
     },
-    
-"Aller au coeur de l'hindouisme": {
-      "imageText": "Aller\nau coeur de\nl'hindouisme", 
-      "link": {
-        "portal param": "https://www.hindouisme.org/", 
-        "portal command": "portal_GoURL"
-      }, 
-      "shortImageFile": "thumb_french-website-kada-outside-ganesha.png"
-    }, 
+ 
 "Our Daily Blog": {
       "imageText": "Our Daily\nBlog", 
       "link": {

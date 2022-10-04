@@ -24,6 +24,67 @@ private command _restoreDefaultFolder
    set the defaultfolder to sDF
 end _restoreDefaultFolder
 
+command createAndUploadReadDataFiles
+   local tReadFile, tDateFile
+   local tSQL, tConnectionID, tTitle, tFileID, tValue
+   local tBookData, tKeyList, tLanguage, tArray
+   local tLson, tDate
+   
+   _preserveDefaultFolder
+   
+   put "select *" && \
+         "from item" && \
+         "where ( (media_type = 'text/book') OR (media_type = 'text/booklet') ) AND (approved_for_public = 'YES')" \
+         into tSQL
+   put JnanamDB() into tConnectionID
+   dbSetSQL tSQL
+   put dbGet("item", tConnectionID) into tBookData
+   
+   put "file_id,title,author,category,subject,approved_for_public,init_id,media_type,sub_title," & \
+         "keywords,sales_blurb,description,language,isbn,product_details,edition,publisher,composer," & \
+         "genre,content,contributor,copyright_holder,copyright,creator,date_taken,entered_by,file_type," & \
+         "rights,source,use_permit_released,allowed_groups,tags" into tKeyList
+   
+   repeat for each element tBook in tBookData
+      put textDecode(tBook["title"], "UTF8") into tTitle
+      put textDecode(tBook["file_id"], "UTF8") into tFileID
+      put textDecode(tBook["language"], "UTF8") into tLanguage
+      if tLanguage is "" then
+         put "English" into tLanguage
+      end if
+      
+      repeat for each item tKey in tKeyList
+         put textDecode(tBook[tKey], "UTF8") into tValue
+         replace "\n" with cr in tValue
+         put tValue into tArray[tLanguage][tTitle][tKey]
+      end repeat
+      put "portal_GoURL" into tArray[tLanguage][tTitle]["link"]["portal command"]
+      put "https://www.himalayanacademy.com/media/books/" & tFileID & "/web/" into \
+            tArray[tLanguage][tTitle]["link"]["portal param"] 
+   end repeat
+   
+   put specialfolderpath("home") & "/Downloads/read.lson" into tReadFile
+   put specialfolderpath("home") & "/Downloads/read.date" into tDateFile
+   
+   put arrayencode(tArray, "7.0") into tLson
+   put tLson into URL ("binfile:" & tReadFile)
+   put the internet date into tDate
+   put tDate into URL ("binfile:" & tDateFile)
+   
+   put "Uploading read.lson" into field "status"
+   get shell(the merge of "rsync -v [[tReadFile]] devhap@dev.himalayanacademy.com:public_html/media/books/read.lson")
+   put it into field "debug"
+   
+   put "Uploading read.date" into field "status"
+   get shell(the merge of "rsync -v [[tDateFile]] devhap@dev.himalayanacademy.com:public_html/media/books/read.date")
+   put "-------" & cr & cr & it after field "debug"
+   
+   put "Done." into field "status"
+   set the thumbpos of scrollbar "progress" to 0
+   
+   _restoreDefaultFolder
+end createAndUploadReadDataFiles
+
 command updateBranchInformation
    _preserveDefaultFolder
    put shell("git rev-parse --abbrev-ref HEAD") into field "branch name"
@@ -31,6 +92,8 @@ command updateBranchInformation
 end updateBranchInformation
 
 command packAndUploadExternalAssets
+   local tManifestFile, tChecksum
+   
    _preserveDefaultFolder
    
    -- guards
@@ -72,7 +135,6 @@ command packAndUploadExternalAssets
    put url ("binfile:" & tManifestFile) into url ("binfile:" & specialfolderpath("home") & "/Downloads/assets.txt")
    
    put "Uploading assets.zip" into field "status"
-   
    get shell(the merge of "rsync -v [[sZipFile]] devhap@dev.himalayanacademy.com:public_html/media/apps/sivasiva/assets.zip")
    put it into field "debug"
    
@@ -86,6 +148,8 @@ command packAndUploadExternalAssets
 end packAndUploadExternalAssets
 
 private command _addFolderToZip pFolder
+   local tFolders, tFiles
+   
    put folders(pfolder) into tFolders
    filter lines of tFolders without ".."
    

@@ -14,6 +14,8 @@ Script "stack_pathtosiva_button_id_1252"
 local sMouseLoc,sStartLoc
 
 on mouseDown
+   --breakpoint
+   
    if the owner of the target is not me then exit mouseDown
    put the mouseloc into sMouseLoc
    put sMouseLoc into sStartLoc
@@ -30,12 +32,13 @@ on mouseUp
    if abs(the mouseH - item 1 of sStartLoc) <= 10 and abs(the mouseV - item 2 of sStartLoc) <= 10 then
       send "doScrollerTap" to the target in 0
    end if
+   pass mouseup
 end  mouseup
 
 on mouseMove x,y -- desktop scrolling
    local tVDist
-   if isMobile() or sMouseLoc = "" then pass mouseMove
-   put abs(y - item 2 of sMouseLoc) into tVDist
+   if isMobile() or sMouseLoc = "" then pass mouseMove 
+      put abs(y - item 2 of sMouseLoc) into tVDist
    if item 2 of sMouseLoc > y then -- pushing up
       set the vscroll of me to the vscroll of me + tVDist
    else if item 2 of sMouseLoc < y then -- pushing down

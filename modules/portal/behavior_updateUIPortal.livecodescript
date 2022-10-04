@@ -2,7 +2,7 @@
 global sConfigA
 local sStartLoc,sScreenRect
 local sLastImage, sMainImage,sBrandImageNumber
- 
+
 
 ##################
 -- At the top of this script we use functions and handlers
@@ -15,20 +15,26 @@ local sLastImage, sMainImage,sBrandImageNumber
 -- which we many need to deprecate and more the logic for behavior on the 
 -- old "panel" navigation to here. I will leave that to you.
 
+
+-- https://www.himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
+-- this is a virtual tour
+
+
 on preOpenCard
    local tControl, tCard, sNewNews
    put the short name of this card into tCard
    setCardCoords "portrait"
    put the long id of img "homeMainImage" of card "Home" into sMainImage
+   hide grp "newsItems"
    hide grp "loadingGroup"
    switch tCard
       case "Home"
          # init set up
          hide grp "globalNavigation"
+         hideTour
          showMandala
          dispatch "setGlobalNavVisible" to widget "globalNavTree" with "false"
          setDefaultImage
-         
    end switch
    
    updateUIPortal
@@ -50,122 +56,177 @@ end opencard
 command _USER_INTERACTION
 end _USER_INTERACTION
 
+# this is a big deal!
+# https://himalayanacademy.com/monastery-tour/?scene=62f4254aa6880ad54f07b143
+
+
+
 on mouseup
    local tTarget, tTargetOwner, tUserGuide, tNews
+   local tSelection
    
    put the short name of the owner of the target into tTargetOwner
    put the short name of the target into tTarget
    
    # one set of actions occurs if the user hits grp ""bkgndcontrol"
    # Another set, is  trapped by the mouseUp to behavior_GlobalNav because navigition
-   # and not abpout the UI perse
+   # and not about the UI perse
    
+   local tMsg
    switch tTarget
-      local tMsg
-   case "Topics"
-      portal_GoUrl  "https://www.himalayanacademy.com/topics"
-      exit mouseup
-      break
-   case "loading"
-      --showbusyIndicator false
-      exit Mouseup
-      break
       
-   case "News"
-      
-      News_Fetch
-      put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
-      
-      set the htmltext of fld "helpField" to tNews
-      
-      
-      show grc "helpBkg"
-      show btn "helpDismiss"
-      show fld "helpField"
-      lock screen
-      deleteMobileControl "helpField"
-      # recreate:
-    -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      --set the top of fld "helpField" to the top of grp "helpField"
-      send "CreateScroller helpField" to fld "helpField"
-      
-      unlock screen
-      hide fld "ExplanationMarker"
-      break
-      
-      
-   case "HelpButton"
-      put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
-      set the htmltext of fld "helpField" to tUserGuide
-      
-      
-      show grc "helpBkg"
-      show btn "helpDismiss"
-      show fld "helpField"
-      lock screen
-      deleteMobileControl "helpField"
-      # recreate:
-      --set the height of fld "helpField" to the formattedHeight of fld "helpField"
-      --set the top of fld "helpField" to the top of grp "helpField"
-      send "CreateScroller helpField" to fld "helpField"
-      
-      unlock screen
-      break
-      
-   case "helpDismiss"
-      hide fld "helpField"
-      hide btn "helpDismiss"
-      hide grc "helpBkg"
-      break
-end switch
-
-switch tTargetOwner
-   case "bkgndControls"
-      switch tTarget
-         case "hideNavMandala"
-            setDefaultImage
-            hideMandala
-            break
-         case "showNavMandala"
-            if the vis of  grp "subNav" is true then hide grp "subNav"
-            showMandala
-            break
-      end switch
-      break
-   case "globalNavTree"
-      hide grp "subNav"
-      break
-   case "navMandala"
-      if tTarget is among the items of "Stories,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Video,Journal,My Menu,Settings" then
-         # These are top links, some go  directly to another module stack
-         portal_GoStack tTarget
+      case "Topics"
+         portal_GoUrl  "https://www.himalayanacademy.com/topics"
          exit mouseup
-      end if
-      
-      lock screen
-      hideMandala
-      setSubNavBkgndImage tTarget
-      show  img "subNavBkgImage"
-      unlock screen
-      fetchSubMenu tTarget
-      wait 400 milliseconds
-      
-      show grp "SubNav" with visual effect "dissolve fast"
-      break
-   case "subNav"
-      if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
-         put the value of clickline() into tTarget
+         break
          
-         # pass the target to journal data. It may be overwritten later
-         # but in some cases that will be the only title we can use 
-         # for a journal entry
+      case "loading"
+         --showbusyIndicator false
+         exit Mouseup
+         break
          
-         setJournalData tTarget
-         portal_DoRowLink tTarget
+         # beginning News!
+      case "news"
+         show grp "newsItems"
+         exit Mouseup
+         break
          
-      end if
-      break
-end switch
+      case "newsDismiss"
+         hide grp "newsItems"
+         exit Mouseup
+         break
+         
+         -------------
+         -- News!
+         
+      case "TAKA"
+         hide grp "newsItems"
+         portal_GoURL "https://www.himalayanacademy.com/blog/taka/"
+         exit Mouseup
+         break
+         
+      case "Bodhinatha Latest"
+         hide grp "newsItems"
+         portal_GoStack "Listen"
+         put the long name of image "1-2-playlist-image" into tSelection
+         send "selectPlayList tSelection" to stack "Listen" in 200 milliseconds
+         exit Mouseup
+         break
+         
+      case "Webinars"
+         hide grp "newsItems"
+         portal_GoURL "https://www.youtube.com/user/kauaiaadheenam/videos"
+         exit Mouseup
+         break
+         
+      case "App News"
+         hide grp "newsItems"
+         News_Fetch
+         put url ("file:"& path_Documents()& "assets/info/siva-app-news.html") into tNews
+         
+         set the htmltext of fld "helpField" to tNews
+         
+         # end of News!
+         
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show fld "helpField"
+         lock screen
+         deleteMobileControl "helpField"
+         # recreate:
+         -- set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         --set the top of fld "helpField" to the top of grp "helpField"
+         send "CreateScroller helpField" to fld "helpField"
+         
+         unlock screen
+         
+         break
+         
+      case "Contact"
+         Share_Email
+         break
+         
+         
+      case "HelpButton"
+         put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
+         set the htmltext of fld "helpField" to tUserGuide
+         
+         
+         show grc "helpBkg"
+         show btn "helpDismiss"
+         show fld "helpField"
+         lock screen
+         deleteMobileControl "helpField"
+         # recreate:
+         --set the height of fld "helpField" to the formattedHeight of fld "helpField"
+         --set the top of fld "helpField" to the top of grp "helpField"
+         send "CreateScroller helpField" to fld "helpField"
+         
+         unlock screen
+         break
+         
+      case "helpDismiss"
+         hide fld "helpField"
+         hide btn "helpDismiss"
+         hide grc "helpBkg"
+         break
+         
+      case "cancelBrowser"
+         hideTour
+         wait 1000 milliseconds
+         showMandala
+         break
+   end switch
+   
+   switch tTargetOwner
+      case "bkgndControls"
+         switch tTarget
+            case "hideNavMandala"
+               setDefaultImage
+               hideMandala
+               showTour
+               break
+            case "showNavMandala"
+               hideTour
+               showMandala
+               break
+         end switch
+         break
+      case "globalNavTree"
+         hide grp "subNav"
+         break
+      case "navMandala"
+         if tTarget is among the items of "Stories,Path to Siva,pathtosiva,Gems of Wisdom,gems,Surprise Me,surprise,Listen,Read,read,Video,Journal,My Menu,Settings" then
+            # These are top links, some go  directly to another module stack
+            portal_GoStack tTarget
+            exit mouseup
+         end if
+         
+         lock screen
+         hideMandala
+         setSubNavBkgndImage tTarget
+         show  img "subNavBkgImage"
+         unlock screen
+         fetchSubMenu tTarget
+         wait 200 milliseconds
+         
+         show grp "SubNav" with visual effect "dissolve fast"
+         break
+      case "subNav"
+         if abs(item 2 of the mouseloc - item 2 of sStartLoc) < 30 then
+            put the value of clickline() into tTarget
+            
+            # pass the target to journal data. It may be overwritten later
+            # but in some cases that will be the only title we can use 
+            # for a journal entry
+            
+            setJournalData tTarget
+            portal_DoRowLink tTarget
+            
+         end if
+         break
+   end switch
 end mouseup
 
 
@@ -218,11 +279,8 @@ command showNewsNotification pBool
    if exists(fld "notification") then
       visMessageToUser pBool
       if pBool is true then
-         put  ("You have the latest news!" & cr & "Click  " & quote & "News!" & quote ) into fld "notification" of stack "Siva-Siva-Portal"
-         show fld "ExplanationMarker" 
-         wait 300 milliseconds
-      else
-         hide fld "ExplanationMarker" 
+         put  ("You have the latest " & quote &"App News!" & quote) into fld "notification" of stack "Siva-Siva-Portal"
+         wait 500 milliseconds
       end if
    end if
 end showNewsNotification
@@ -252,10 +310,10 @@ end fetchSubMenu
 # use the return state of home screen
 command showMandala
    lock screen
+   --
    hide grp "globalNavigation"
-   # hide sub nav menu
-   hide grp "subNav"
-  hide img "homeMainImage"
+   hideSubNav
+   hide img "homeMainImage"
    hide img "subNavBkgImage"
    show btn "brandLogo"
    hide grp "globalNavigation"
@@ -263,6 +321,7 @@ command showMandala
    show grp "navMandala"
    hide img "showNavMandala" # button
    show img "hideNavMandala" # button
+   --
    unlock screen
 end showMandala
 
@@ -274,15 +333,42 @@ command hideMandala
    hide grp "globalNavigation"
    hide grp "navMandala"
    hide btn "backgroundOverlay"
-   show img "homeMainImage"
+   
+   show img "homeMainImage" with visual "dissolve" 
+   
    show img "showNavMandala"
    hide img "hideNavMandala"
+   
+   wait 1500 milliseconds
+   
+   -- can't do this here, disables all subnav menus
+   --   show widget "portalBrowser" of me
+   --   show grp "cancelBrowser" of me
 end hideMandala
+
+command showTour
+   
+   put "https://www.himalayanacademy.com/monastery-virtual-tour" into pURL
+   set the url of widget "portalBrowser"  to pURL
+   
+   show widget "portalBrowser" of me
+   show grp "cancelBrowser" of me
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down,landscape left,landscape right"
+   end if
+end showTour
+
+command hideTour
+   hide widget "portalBrowser" of me
+   hide grp "cancelBrowser" of me
+   if isMobile() then
+      mobileSetAllowedOrientations "portrait,portrait upside down"
+   end if
+end hideTour
 
 command hideSubNav
    hide grp "SubNav"
 end hideSubNav
-
 
 command setDefaultImage pContext
    --breakpoint
@@ -313,9 +399,9 @@ command setDefaultImage pContext
    setPref "preferences/modules/portal/totalBrandImages", tTotalBrandImages
    
 end setDefaultImage 
-      
-      
-      
+
+
+
 command setSubNavBkgndImage pMenu
    local tMenuBkgnd, pImage, tPortalScreens, tPath
    
@@ -395,11 +481,6 @@ function PhotoImagePath pImage
    return tPath
 end PhotoImagePath
 
---on closestack
---   saveUserPrefs sBrandImageNumber
---   pass closestack
---end closestack
-
 -- BM:  From MainNav card script
 command tellUserToGetFavorites 
    doAnswer "There are no Favorites in My Home yet. Go to the Journal." && \
@@ -413,6 +494,21 @@ command downloadAffirmed
    unlock screen
 end downloadAffirmed
 
+command Share_Email sShareItemsA
+   local tSubject, tAddress, tBody
+   put sShareItemsA["subject"] && "From SivaSivaApp"  into tSubject
+   put "sivasiva@hindu.org" into tAddress
+   put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
+   put  cr & cr & "------------------------------------" & cr & \
+         "Get the SivaSivaApp today! Go to:" & cr & "https://www.himalayanacademy.com/view/sivasiva" after tBody
+   
+   if isMobile() = "true" then
+      mobileComposeMail tSubject,tAddress,,, tBody
+   else
+      revMail tAddress,,tSubject,tBody
+   end if
+   
+end share_Email
 
 #######################
 
@@ -434,10 +530,14 @@ end _RESPONSIVE
 
 on resizeStack x,y,ox,oy
    lock screen
-   -- When coming from a landscape stack, card rect is not updated correctly
-   -- and the resizeStack is called with a landscape rect.  If an answer is
-   -- inserted here, a second resizeStack gets sent with the correct rect.
-   setCardCoords "portrait"
+   if the short name of this card is "Home" and the visible of widget "portalBrowser" of me then
+      setCardCoords
+   else
+      -- When coming from a landscape stack, card rect is not updated correctly
+      -- and the resizeStack is called with a landscape rect.  If an answer is
+      -- inserted here, a second resizeStack gets sent with the correct rect.
+      setCardCoords "portrait"
+   end if
    updateUIPortal
    unlock screen
 end resizeStack
@@ -450,7 +550,8 @@ command updateUIPortal
    local tControl, tBrandImage, tBottomMargin, tMenuBkgnd, tTop, tBottom, tRect
    local tLoadingNotice, tTouchTrap, tBrandLogo
    local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
-   local tNews, tNotification, tExplanationMarker
+   local tNews, tNotification, tExplanationMarker, tNewsItems
+   local tPortalLabel, tPortalBrowser, tCancelBrowser, tInsets
    
    #  UI responsive
    
@@ -465,12 +566,19 @@ command updateUIPortal
    
    topCenterMe tBrandLogo,150 
    
-   --show sMainImage with visual effect "dissolve"
-   
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
    else
       put 8 into tBottomMargin
+   end if
+   --
+   if the platform is "iPhone" then
+      put safeSideMargin() into item 1 of tInsets -- left
+      put safeTopMargin() into item 2 of tInsets -- top
+      put safeSideMargin() into item 3 of tInsets -- right
+      put safeBottomMargin() into item 4 of tInsets -- bottom
+   else
+      put (0,0,0,0) into tInsets
    end if
    
    switch (the short name of this card)
@@ -478,6 +586,26 @@ command updateUIPortal
          if isMobile() then
             mobileHideStatusBar
          end if
+         
+         put the long id of widget "portalBrowser" of me into tPortalBrowser
+         put the long id of grp "cancelBrowser" of me into tCancelBrowser
+         set the rect of grc "footerBackground" to CardRect()
+         --
+         if the visible of tPortalBrowser then
+            if CardWidth() > CardHeight() then
+               # manually verify landscape
+               # only want to touch the browser widget
+               hide button "cancelBrowser" of group "cancelBrowser" of me
+               set the rect of tPortalBrowser to (item 1 of tInsets,0,CardWidth()-item 3 of tInsets,CardHeight()-item 4 of tInsets)
+               exit updateUIPortal
+            else
+               show button "cancelBrowser" of group "cancelBrowser" of me
+            end if
+         end if
+         --
+         set the rect of tPortalBrowser to (0,item 2 of tInsets,CardWidth(),CardHeight()-item 4 of tInsets-50)
+         set the loc of btn "cancelBrowser" to the loc of tPortalBrowser
+         set the top of btn "cancelBrowser" to the bottom of tPortalBrowser
          
          # background
          
@@ -504,16 +632,17 @@ command updateUIPortal
          bottomCenterMe tControl,25
          
          put the long id of button "openGlobalNavTree" into tControl
-         topLeftMe tControl, -16, 0
+         bottomLeftMe tControl, 18, 18
          
          put the long id of grp "navMandala" into tControl
          if CardHeight() < 736 then
             set the textSize of tControl to 14
-            set the textSize of fld "fun" to 14
-            set the textSize of fld "look" to 14
+            set the textSize of fld "pathtosiva" to 13
             set the rect of tControl to (0,tTop,CardWidth(),tBottom)
             set the height of fld "gems" to 27 -- need to reduce to account for text height change
             updateNavMandalaUI
+         else if CardHeight() > 900 then
+            centerMe tControl, the bottom of button "brandLogo", CardHeight() - the top of img "hideNavMandala"
          else
             topCenterMe tControl,75
          end if
@@ -529,28 +658,25 @@ command updateUIPortal
          put the left of tControl into item 1 of tRect
          set the rect of tControl to tRect
          
-         put the long id of btn "News" into tNews
-         bottomLeftMe tNews, 20, 40
-         
-         put the long id of fld "explanationMarker" into tExplanationMarker
-         bottomLeftMe tExplanationMarker,90, 35
-         
          put the long id of btn "helpButton" into tHelpButton
          bottomRightMe tHelpButton, 20, 40
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 30
+         set the rect of tHelpBkg to CardRect()
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
          topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 55
+         topRightMe tHelpDismiss, 0, 0
+         
          break
          
    end switch
+   
+   put the long id of grp "newsItems" into tNewsItems
+   centerMe tNewsItems, -80
    
    # background group of all cards
    
@@ -593,10 +719,11 @@ private command updateNavMandalaUI
    put (the top of grc "Practice" - the top of grc "read") into tDiameter
    put (the bottom of grc "read" + the top of grc "Practice")*.5 into tMidY
    put tMidY into item 2 of tLoc
-   set the width of grc "Surprise" to the formattedWidth of fld "Surprise"
-   set the height of grc "Surprise" to the formattedWidth of fld "Surprise"
-   set the loc of fld "Surprise" to tLoc
-   set the loc of grc "Surprise" to tLoc
+   set the width of grc "News" to the formattedWidth of fld "Surprise" + 7
+   set the height of grc "News" to the formattedWidth of fld "pathtosiva" + 2
+   set the height of fld "News" to the formattedheight of fld "News"
+   set the loc of fld "News" to tLoc
+   set the loc of grc "News" to tLoc
    
    put the long id of grc "upTriangle" into tControl
    set the height of tControl to tDiameter
@@ -629,7 +756,22 @@ private command updateNavMandalaUI
    setBottomAndLoc the long id of widget "Journal", (the top of fld "Journal")-3, tMidX-tDeltaX
    setBottomAndLoc the long id of fld "Settings", (the bottom of tGroup)-15, tMidX+tDeltaX+1
    setBottomAndLoc the long id of button "Settings", (the top of fld "Settings")-3, tMidX+tDeltaX
+   
+   set the rect of grc "pathtosiva" to the rect of grc "News"
+   set left of grc "pathtosiva" to the left of  grc "Stories" + 5
+   set top of grc "pathtosiva" to the bottom of  grc "Gems" + 5
+   set the height of fld "pathtosiva" to the formattedheight of fld "pathtosiva"
+   set the loc of fld "pathtosiva" to (the loc of grc "pathtosiva" )
+   --set the top of fld "pathtosiva" to (the top of grc "pathtosiva" + 5 )
+   
+   set the rect of grc "Surprise" to the rect of grc "News"
+   set right of grc "Surprise" to the right of  grc "Listen" - 5
+   set top of grc "Surprise" to the bottom of  grc "Gems" + 5
+   set the height of fld "Surprise" to the formattedheight of fld "Surprise"
+   set the loc of fld "Surprise" to (the loc of grc "Surprise" )
+   --set the top of fld "Surprise" to (the top of grc "Surprise" + 5 )
 end updateNavMandalaUI
+
 
 private command setTopAndLoc pControl, pTop, pXLoc
    local tLoc

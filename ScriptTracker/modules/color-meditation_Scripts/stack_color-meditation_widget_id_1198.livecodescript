@@ -8,7 +8,6 @@ Script "stack_color-meditation_widget_id_1198"
 
 
 on mouseUp
-   addJournalEntry
-   moveMe me,0,-100,200
-   moveMe me,0,100,70
+   journal_AddEntry
+   dialog_CustomMsg "Saved to Journal"
 end mouseUp

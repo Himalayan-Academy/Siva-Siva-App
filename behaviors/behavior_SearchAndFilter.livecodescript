@@ -157,6 +157,9 @@ command searchPlayList  # Search Audio
    # we use "none" to be explicit
    put "Search:" && sStringToFind into pBrowseHeader
    put pBrowseHeader into sBrowseHeader
+   
+   portal_SetLastStack "Listen"
+   
    playList_fetchData "none","none", pFilterListQueryA,pBrowseHeader
    
 end searchPlayList

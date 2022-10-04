@@ -306,8 +306,8 @@ appNavigation =
             , boxShadow4 zero zero (px 5) (rgb 0 0 0)
             ]
         ]
-        [ icon "home" GoHome
-        , icon "cog" GoSettings
+        [ icon "chevron-left" GoHome
+        , icon "book" GoSettings
         ]
 
 

@@ -78,6 +78,7 @@ end preopencard
 
 
 on openCard
+   --breakpoint
    local tCardName
    local tLabelLoc, tLabelWidth, tBrowseHeader
    
@@ -92,6 +93,7 @@ on openCard
          put empty into  fld "collections-label"
          put empty into  fld "my-audio-label"
          put "My Downloads" into fld "title-label"
+         put empty into  fld "search-label"
          break
          
       case "listen-browse"
@@ -104,6 +106,7 @@ on openCard
          put tBrowseHeader into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         put "Search" into  fld "search-label"
          break
          
       case "listen-my-audio"
@@ -113,6 +116,8 @@ on openCard
          put "Collections" into fld "collections-label"
          put empty into fld "my-audio-label"
          put empty into fld "audioList"
+         put "Search" into  fld "search-label"
+         
          getDownloadedAudio 
          put the result into sDownloadedAudioA
          if (fld "audioList" is empty) then
@@ -126,14 +131,17 @@ on openCard
          put "Delete File" into fld "title-label"
          put empty into fld "collections-label"
          put empty into fld "my-audio-label"
+         put empty into  fld "search-label"
+         
          break
       case "listen-file"
-       
+         
          clearSelection
          
          put "Listen" into fld "title-label"
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
+         put "Search" into  fld "search-label"
          
          // lib_MobileControls
          setZeroDurationProgress
@@ -146,6 +154,7 @@ on openCard
          put "Collections" into fld "collections-label"
          put "My Downloads" into fld "my-audio-label"
          put "Search" into fld "title-label"
+         put empty  into  fld "search-label"
          
          break
    end switch
@@ -196,24 +205,25 @@ command updateUI
    
    local tHeader, tFooter, tAudioGlobalControl
    local tSearchFilter, tPausePlay, tAudioPlayer
-   local tTitleLabel, tCollectionsLabel, tMyAudioLabel
+   local tTitleLabel, tCollectionsLabel, tMyAudioLabel, tMySearchLabel
    local tCardRect, tAllCollections, tAudioList, tAudioDetailsGrc, tAudioDetailsFld
    local tFilterAudio, tCurrentTitle, tDownloadSelection, tNoInformation
    local tRect, tControl, tRight, tAudioRect, tHelpAudio, tOffset, tLoading
    local tFldInformation, tGroupAudioDetails
    Local tHelpButton, tHelpBkg, tHelpFieldGrp, tHelpField, tHelpDismiss
-   Local tProgressTitle
    
    put the long id of grp "footerNavigation" into tFooter
    send "UpdateUI" to tFooter
    
    put the long id of fld "title-label" into tTitleLabel
    put the long id of fld "collections-label" into tCollectionsLabel
-   put the long id of fld "my-audio-label" into tMyAudioLabel 
+   put the long id of fld "my-audio-label" into tMyAudioLabel
+   put the long id of fld "search-label" into tMySearchLabel
    
    topCenterMe tTitleLabel, 5
    topLeftMe tCollectionsLabel, 10, 30
-   topRightMe tMyAudioLabel, 10, 30
+   topRightMe tMyAudioLabel, 5, 30
+   topLeftMe tMySearchLabel, 160,30
    
    if there is a grp "loadingGroup" then
       put the long id of grc "Loading" into tControl
@@ -228,7 +238,7 @@ command updateUI
          set the rect of tAllCollections to (4, the bottom of tTitleLabel + 5, \
                CardWidth() - 3, the top of tFooter)
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, -15, 5
+         topRightMe tSearchFilter, -400, -400
          
          put CardWidth() - 4 into tRight
          repeat with i = 1 to 7 
@@ -250,28 +260,27 @@ command updateUI
          centerMe tAudioList, 75, 70
          
          put the long id of grp "search-filter" into tSearchFilter
-         topRightMe tSearchFilter, -15, 5
+         topRightMe tSearchFilter, -400, -400
          
          put the long id of grp "audioGlobalControl" into tAudioGlobalControl
          topLeftMe tAudioGlobalControl, 10,0
          
          put the long id of btn "helpButton" into tHelpButton
-         bottomRightMe tHelpButton, 0, the height of tFooter
+         bottomRightMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 75
+         set the rect of tHelpBkg to CardRect()
          
-         put the long id of grp "helpField" into tHelpFieldGrp
-         set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 135
+         put the long id of grp "helpFieldGrp" into tHelpFieldGrp
+         set the rect of tHelpFieldGrp to (15, 45 + safeTopMargin(), \
+               CardWidth() - 15, CardHeight())
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 135
+         topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 75
+         topRightMe tHelpDismiss, 0, 0
          
          break
       case "listen-my-audio"
@@ -293,22 +302,21 @@ command updateUI
          
          -------- Help
          put the long id of btn "helpButton" into tHelpButton
-         bottomLeftMe tHelpButton, 0, the height of tFooter
+         bottomLeftMe tHelpButton, 0, the height of tFooter  - safeBottomMargin()
          
          put the long id of grc "helpBkg" into tHelpBkg
-         set the width of tHelpBkg to (CardWidth() + 20)
-         topLeftMe tHelpBkg, -10, 75
+         set the rect of tHelpBkg to CardRect()
          
-         put the long id of grp "helpField" into tHelpFieldGrp
-         set the width of tHelpFieldGrp to (CardWidth() - 30)
-         topLeftMe tHelpFieldGrp, 15, 135
+         put the long id of grp "helpFieldGrp" into tHelpFieldGrp
+         set the rect of tHelpFieldGrp to (15, 45 + safeTopMargin(), \
+               CardWidth() - 15, CardHeight())
          
          put the long id of fld "helpField" into tHelpField
          set the width of tHelpField to (CardWidth() - 30)
-         topLeftMe tHelpField, 15, 135
+         topLeftMe tHelpField, 15, 45
          
          put the long id of button "helpDismiss" into tHelpDismiss
-         topRightMe tHelpDismiss, 0, 75
+         topRightMe tHelpDismiss, 0, 0
          
          break
          
@@ -320,8 +328,6 @@ command updateUI
          break
          
       case "listen-file"
-         
-         
          put the long id of player "audioPlayer" into tAudioPlayer
          topLeftMe tAudioPlayer, 20, -1111
          
@@ -353,7 +359,7 @@ command updateUI
          put the long id of grc "Loading" into tLoading
          set the loc of tLoading to CardLoc()
          
-         put the long id of button "downloadSelection" into tDownloadSelection
+         put the long id of grp "downloadSelection" into tDownloadSelection
          topRightMe tDownloadSelection, 5,  90
          
          put the long id of grp "pause-play" into tPausePlay
@@ -383,7 +389,7 @@ command updateUI
          
       case "listen-search"
          put the long id of grp "filterAudio" into tFilterAudio
-         TopCenterMe tFilterAudio, 80
+         topCenterMe tFilterAudio, 100
          break
          
    end switch
@@ -417,7 +423,13 @@ command selectPlaylist pSelection
       exit to top
    else
       # we should put this a common library, but the are too many sceneros per moldule
-      offLineGoMyAudio
+      --offLineGoMyAudio
+      if not connectivity_PingServer() then
+         dialog_CustomMsg "Connection required." & CR & "You can play 'My Download'"
+         --go to card "listen-my-audio"
+         exit to top
+      end if
+   
    end if
    
    set the itemDelimiter to "-"
@@ -520,19 +532,14 @@ end playlist_GetRecords
 -----------------------------------------------------------------------
 
 on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
-   local tPlaylistClass, tRecordTypeCount, tDbaseColumns, tMessage
+   local tPlaylistClass, tRecordTypeCount, tDbaseColumns
    local  tQueryData, tJSON, tRecords, tSearchA, tFileID, tTocURL, tBookToc
    
    put empty into fld "audioList" of card "listen-browse" of stack "listen"
+   
+   --  dispatch "cleanUpGui" to card "listen-browse"      
+   
    put empty into sPlaylistQueryA 
-   
-   
-   
-   --   # Then sorts on date sends back the request number of records.
-   --   put "Loading....." & cr & "A little long. Be patient" into  tMessage
-   --   showBusyIndicator true, tMessage
-   --   show grp "LoadingGroup"
-   
    
    # if pFilterListQueryA is empty, it means we are coming in
    # the Search and Filter filter screen
@@ -603,21 +610,23 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          #  "{'data': {'media_type': 'inspiredtalk','author':'Satguru Bodhinatha Veylanswami'},'recordType':'latest','recordCount':'30'}"
          #  API is agnostic about query strings... if you just pass media type "song" with author or artist you get all the latest songs.
          #  just sets the WHERE clause in the query with whatever you request. 
+         # Then sorts on date sends back the request number of records.
          
-         # we have are showing busy singal
+         showBusyIndicator true,"Loading"
          
-         showBusyIndicator true, "The Pause. . ." & cr & "It will take sometime." &cr \
-               & "Be patient."
+         --put "Contacting server... " into fld "audioList" of card "listen-browse"
          
-         
-         # Set up the WHERE claus
-         
+         # Set up the WHERE clause
          put sPlayListQueryA["media_type"] into tQueryData["data"]["media_type"]
          put sPlayListQueryA["author"] into tQueryData["data"]["author"] 
          put sPlayListQueryA["recordType"] into tQueryData["recordType"]
          put sPlayListQueryA["recordCount"] into tQueryData["recordcount"]
          
          put arrayToJson(tQueryData) into tJSON # from server
+         
+         --
+         --put tJSON
+         --
          
          put the ticks into sStartTimer
          set the httpheaders to "content-type: application/json"
@@ -629,29 +638,33 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          # typically there CR in columns that shouldn't be there.
          --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
          
-         
          if the result is not empty then 
             # we did not get anything. Turn  off loader, inform the users
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
             dialog_CustomMsg "Offline or Low Bandwidth"
+        --   portal_Link "listen-collection"
+            
             exit to top
          else 
             put it into tRecords
+            --
+            --put tRecords
+            --
             put jsonToArray(tRecords) into sCurrentPlayListA["audioFiles"]
          end if
          # add list type for other operations
          put tPlaylistClass into sCurrentPlayListA["playlistClass"]  #now we have our local array
          break
       case "cached"
-         --showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading"
          put sPlaylistQueryA into tSearchA
          delete variable tSearchA["playlistClass"]  # don't pass this to the query
          put fetchMediaItems(tSearchA) into sCurrentPlayListA["audioFiles"]
          put tPlaylistClass into sCurrentPlayListA["playlistClass"] 
          break
       case "audiobook"
-         showBusyIndicator true,"Loading Collection"
+         showBusyIndicator true,"Loading"
          put "Contacting server... " into fld "audioList" of card "listen-browse"
          # a simple call to the server to get the TOC
          # can chose different books base on file_id
@@ -804,22 +817,13 @@ on  playlist_Instantiate
    
    show fld "audioList"
    
-   portal_SetLastStack "Listen"
-   portal_SetMyMenu false
    
    # here is where we have to check to see if any files are stored locally or not
-   
-   if the formattedHeight fld "audioList" > the height of fld "AudioList" then
-      send "CreateScroller audioList" to fld "audioList" of card "listen-browse"
-   end if
    
    put  sTargetPlayList into tData["audio_playlist"]
    tracking_RecordActivity "Listen", "navigation/playlist", tData
 end playlist_Instantiate
 
-function getBrowseHeaderText
-   return sBrowseHeader
-end getBrowseHeaderText
 
 command setSelectNumber pNum
    put pNum into sSelectNum
@@ -862,6 +866,7 @@ on direct_Play pSelectNum, pCardName
    put sDownloadedAudioA[pSelectNum]["localURL"] into sRemoteURL
    put sDownloadedAudioA[pSelectNum]["metadata"]["1"]["title"]  into pTitle
    put pTitle into fld "currentTitleLabel" 
+   
    startPlayer sRemoteURL,pTitle,pCardName,pSelectNum
    # skip the card name Parameter in this context.
    showBusyIndicator false
@@ -926,7 +931,7 @@ on select_Play pItemID, pSelectionNum
    if checkURLAvailable(sRemoteURL) is "false" then 
       clearPlayer
       showBusyIndicator false
-      put "Sound file unavailable. Are you connected to the internet? If so, please send feedback with the name song and artist so that we can fix it." into tMsg
+      put "Sound file unavailable." & CR & "Connected to the internet?" & cr & "Try it again." into tMsg
       doAnswer tMsg,"OK", tAnswerURLunavailable
       exit to top
    end if
@@ -1003,18 +1008,44 @@ command typeSetAudioList
    put 0 into tX
    repeat with x =1 to the number lines  in fld "audioList"
       add 1 to tX
+      
+      if (tX mod 2) = 1 then
+         set the textSize of line x of fld "audioList" to 20
+         
+         if  length(line x of fld "audioList") > 35 then 
+            put char 1 to 35 of  line x of fld "audioList" into line x of fld "audioList"
+            put "..." after  line x of fld "audioList"
+         end if
+      end if
+      
       if (tX mod 2) = 0 then
          set the leftIndent of line x of fld "audioList" to 10
          if  line x of fld "audioList" <> empty then
             set the spaceBelow of line x of fld "audioList" to 10
          end if   
-         set the textSize of line x of fld "audioList" to 15
-      else
          set the textSize of line x of fld "audioList" to 17
       end if
    end repeat 
-   
+   send "CreateScroller audioList" to fld "audioList" of this card
 end typeSetAudioList
+
+--command typeSetAudioList
+--   local tX
+--   put 0 into tX
+--   repeat with x =1 to the number lines  in fld "audioList"
+--      add 1 to tX
+--      if (tX mod 2) = 0 then
+--         set the leftIndent of line x of fld "audioList" to 10
+--         if  line x of fld "audioList" <> empty then
+--            set the spaceBelow of line x of fld "audioList" to 10
+--         end if   
+--         set the textSize of line x of fld "audioList" to 15
+--      else
+--         set the textSize of line x of fld "audioList" to 17
+--      end if
+--   end repeat 
+
+--end typeSetAudioList
 
 
 command getPlayListURLs pKeys
@@ -1174,7 +1205,7 @@ end markCachedItems
 
 
 -- AAG: Needs a ton of work
-command addJournalEntry -- save a bookmark to databast
+command journal_AddEntry -- save a bookmark to databast
    
    local  tTitle, tURL, tNoSavingCards,tMsg, tCard,tHoursMinutes,tCurrentTime,x
    local tFiveSeconds
@@ -1185,7 +1216,7 @@ command addJournalEntry -- save a bookmark to databast
    put "listen-collection,listen-browse,listen-my-audio,listen-delete-file,listen-search " into tNoSavingCards
    
    if the short name of this card is among the items of tNoSavingCards then
-      put "Nothing to save to Journal. Go an audio file." into tMsg
+      put "Nothing to save to Shortcuts. Go an audio file." into tMsg
       exit to top
       --exit addJournalEntry
    end if
@@ -1194,7 +1225,7 @@ command addJournalEntry -- save a bookmark to databast
       # Do not do anything. Save the Journal entry 
    else
       if sDataA["url"] contains "http" then
-         dialog_CustomMsg "Download to Save to Journal."
+         dialog_CustomMsg ("Download to " & quote & "My Downloads" & quote )
          exit to top
          --exit addJournalEntry
       end if
@@ -1239,19 +1270,15 @@ command addJournalEntry -- save a bookmark to databast
    put ", " & sDataA["hoursMinutes"] after tTitle
    
    Journal_RecordEntry "listen", tTitle, sDataA 
+   dialog_CustomMsg "Saved to Shortcuts"
    
-end addJournalEntry
+end journal_AddEntry
 
 on journalResume pDataA, pEntry
    
    local tRect, tAudioRect, tItemID, tLineNum, tLineValue
    local tURL, tAudioPlayer   
    local tCard
-   
-   # we to set the coming of My Menu 
-   # to make it is done 
-    portal_SetMyMenu true
-   
    
    if isMobile() then
       deleteAllMobileControls
@@ -1376,8 +1403,6 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
       # Metadata is missing.
       put sDownloadedAudioA[pSelectNum]["localURL"] into pURL
       put sDownloadedAudioA[pSelectNum]["metadata"][1]["item_id"] into tItemID
-      
-      
       put tItemID into sDataA["item_id"]
       put pTitle  into sDataA["title"]
       
@@ -1392,18 +1417,20 @@ command startPlayer pURL, pTitle, pCardName, pSelectNum
       put sSelectedItemA["item_id"] into tItemID
    end if
    
-   if isMobile() then
-      createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
-      wait 300 milliseconds
-   else
-      set the filename of player "audioPlayer" to pURL
-   end if
    put pURL into sDataA["url"]
    
    if sTimeStamp is empty then
       put 0 into sTimeStamp
    end if
    --
+   
+   if isMobile() then
+      createMobileAudioPlayer pURL, "audioPlayer",tAudioRect
+      wait 300 milliseconds
+   else
+      set the filename of player "audioPlayer" to pURL
+   end if
+   
    if not isMobile() then
       start player "audioPlayer"
       set the currenttime player "audioPlayer" to sTimeStamp
@@ -1478,14 +1505,15 @@ command offLineGoMyAudio
    if not connectivity_PingServer() then
       put (path_Documents() & "media/audio") into tFolder
       put listFilesWithPaths(tFolder, "true")  into tList
-      if tList is empty then
-         dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
-         go to card "listen-collection"
-      else
-         dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
-         go to card "listen-my-audio" 
-      end if
-   end if
+      --      if tList is empty then
+      --         dialog_CustomMsg "You have not downloaded any offline audio yet. Network required."
+      --          go to card "listen-collection"
+      --      else
+      dialog_CustomMsg "Connection Required. You Can Play Off Line. Going to My Audio"
+      --go to card "listen-my-audio"
+      exit to top
+   --end if
+end if
 end offLineGoMyAudio
 
 
@@ -1515,13 +1543,14 @@ command informationGrp
    end if
 end informationGrp
 
+--command doAnswerResponse -- sent from doAnswer dlg
+--   if gCardName = "listen-browse" then
+--      go to card "listen-collection"
+--   end if
+--end doAnswerResponse
 
 command helpAudio
    local tTarget, tAudioGuide
-   set the height of fld "helpField" to the formattedHeight of fld "helpField"
-   --set the vScroll of grp "helpField" to 0
-   set the top of fld "helpField" to the top of grp "helpField"
-   
    put the short name of the target into tTarget
    switch tTarget
       case "helpButton"
@@ -1529,28 +1558,22 @@ command helpAudio
          put url ("file:"& path_Modules()& "listen/audio-user-guide.html") into tAudioGuide
          set the htmltext of fld "helpField" to tAudioGuide
          
-         show grc "helpBkg"
-         show btn "helpDismiss"
-         show grp "helpField"
-         
          lock screen
-         deleteMobileControl "helpField"
+         deleteMobileControl "helpFieldGrp"
          # recreate:
+         set the vscroll of grp "helpFieldGrp" to 0
          set the height of fld "helpField" to the formattedHeight of fld "helpField"
-         set the top of fld "helpField" to the top of grp "helpField"
-         send "CreateScroller helpField" to fld "helpField"
+         set the top of fld "helpField" to the top of grp "helpFieldGrp"
+         send "CreateScroller helpFieldGrp" to grp "helpFieldGrp"
          unlock screen
          
-         break
-         
-         
          show grc "helpBkg"
          show btn "helpDismiss"
-         show grp "helpField"
+         show grp "helpFieldGrp"
          break
          
       case "helpDismiss"
-         hide grp "helpField"
+         hide grp "helpFieldGrp"
          hide btn "helpDismiss"
          hide grc "helpBkg"
          break

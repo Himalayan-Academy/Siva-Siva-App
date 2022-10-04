@@ -9,14 +9,12 @@ on preopenstack
       mobileShowStatusBar
    end if
    setCardCoords "portrait"
-   # Livecode is terrible running animation 
-   # Or I have yet to figure out the method, but Gif animation does not well.
-   --runFishAnimation
 end preopenstack
 
 
 on preOpenCard
-   updateUISettings
+   updateUI
+   
    if there is a fld "info-text" then
       send "CreateScroller info-text" to fld "info-text" in 50 milliseconds
    end if
@@ -150,18 +148,18 @@ end HandleToastDialog
 on resizeStack
    lock screen
    setCardCoords "portrait"
-   updateUISettings
+   updateUI
    unlock screen
 end resizeStack
 
 
 #  UI responsive
 
-on updateUISettings
+on updateUI
    local tControl, tBottomMargin, tMenuBkgnd, tItems, tWidth, tOffset
    local tTop, tBottom, tLeft, tRight, tRect
    
-   if the uRect of this cd is CardRect() then exit updateUISettings
+   --if the uRect of this cd is CardRect() then exit updateUI
    
    if safeBottomMargin() > 0 then
       put 0 into tBottomMargin
@@ -185,20 +183,21 @@ on updateUISettings
          topLeftMe tControl,19,16
          
          put the long id of grp "settings-options-1" of me into tControl
-         topRightMe tControl,15,60
+         centerMe tControl,30,120
+         
          put the left of tControl into tLeft
          put the bottom of tControl into tBottom
          
          put the long id of button "Close App" of me into tControl
-         bottomLeftMe tControl,-20,100
+         bottomLeftMe tControl,-20,90
          put the top of tControl into tTop
-         
+      
          if tBottom > tTop then
             # handle small screens
-            put the top of btn "App News" - the bottom of btn "User Guide" - \
-                  trunc((tBottom - tTop)/5) into tOffset
-            put the bottom of btn "User Guide" + tOffset into tTop
-            put "App News,My Data,Feedback,About,Release Notes,Credits" into tItems
+            put the top of btn "User Guide" - the bottom of btn "App News" - \
+                  trunc((tBottom - tTop)/6) into tOffset
+            put the bottom of btn "App News" + tOffset into tTop
+            put "User Guide,Feedback,My Data,About,Credits,Privacy-TOS-EULA" into tItems
             repeat for each item tControl in tItems
                set the top of btn tControl to tTop
                put the bottom of btn tControl + tOffset into tTop
@@ -206,8 +205,7 @@ on updateUISettings
          end if
          
          put the long id of img "04A-Ti-Cordyline.png" of me into tControl
-         set the left of tControl to tLeft - 7
-         set the top of tControl to the bottom of btn "About" + 2
+         bottomRightMe tControl,0,75
          
          put the long id of grp "footerNavigation" into tControl
          bottomLeftMe tControl,-24,0
@@ -215,7 +213,7 @@ on updateUISettings
          
       case "info"
          put the long id of grc "info-field-bkgnd" into tControl
-         centerMe tControl
+         centerMe tControl,15, 100
          
          put the long id of grp "fontResizer" into tControl
          bottomRightMe tControl,0,0
@@ -266,8 +264,8 @@ on updateUISettings
          
    end switch
    
-   set the uRect of this cd to CardRect()
-end updateUISettings
+   --set the uRect of this cd to CardRect()
+end updateUI
 
 
 

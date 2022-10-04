@@ -7,9 +7,7 @@ Script "stack_pathtosiva_widget_id_1275"
 */
 
 
-
 on hiliteChanged
-  flagGlossaryTerms the hilited of me
-  toggleHeader false
-  toggleMenu
+   flagGlossaryTerms the hilited of me
+   toggleMenu
 end hiliteChanged

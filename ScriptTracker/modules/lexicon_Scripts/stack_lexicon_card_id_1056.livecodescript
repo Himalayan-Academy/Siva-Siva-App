@@ -18,7 +18,7 @@ on preOpenCard
    --put "this is preOpenStack"
    put specialFolderPath("resources") into tUrl
    if the platform is not "android" then
-      put "file://" before tUrl
+      put "file:" before tUrl
    end if
    if the environment is not "development" then
       put "/modules/lexicon/web/index.html" after tUrl
@@ -42,7 +42,7 @@ on resizeStack
 end resizeStack
 
 on goHome   
-   addJournalEntry
+   
    if getPhoneModel() is "iPhoneX" then
       mobileHideStatusBar
    end if
@@ -52,14 +52,12 @@ on goHome
 end goHome
 
 on goSettings
-   --go first card
-   portal_GoStack "settings"
+   
+   Journal_AddEntry
+  
 end goSettings
 
-local pData,  tCd,  
-
-
-end journalResume
+local pData, tCd
 
 on browserLoadRequested pUrl, pType
    put pURL, pType
@@ -134,6 +132,7 @@ on getWordDefinition pWordID
    do tJS in widget "browser"
    --put tBuf
 end getWordDefinition
+
 
 
 # this was removed the Javascript handlers of the 

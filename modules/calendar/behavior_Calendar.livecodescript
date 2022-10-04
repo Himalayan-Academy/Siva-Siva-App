@@ -100,7 +100,7 @@ command initCalendar
 end initCalendar
 
 on mouseUp -- mobile: dismiss grp
-  if the vis of grp "citySearchGrp" then send "showCityList false" to grp "citySearchGrp"
+   if the vis of grp "citySearchGrp" then send "showCityList false" to grp "citySearchGrp"
 end mouseUp
 
 on keyboardDeactivated -- if user dismisses keyboard during search, this allows them to bring it back by tapping the fld
@@ -750,13 +750,14 @@ on journalResume pDataA, pEntryA
    go to card "main-calendar"
 end journalResume
 
-command AddJournalEntry
+command  journal_AddEntry
    local tCdName, tData, tTitle
    put 1 into tData["card"]
    put "Hindu Calendar, " & sCityName into tTitle
    Journal_RecordEntry "calendar",tTitle,tData -- send to journal
-end AddJournalEntry
-   
+   dialog_CustomMsg "Saved to Shortcuts"
+end  journal_AddEntry
+
 on cleanUpGui
    put empty into fld "cityDisplay"
    put empty into fld "monthDisplay"

@@ -143,7 +143,7 @@ on dataServerStack
    
    repeat for each line tZipItem in tFiles
       set the itemDel to comma
-      put item 6 of revZipDescribeItem(sFilePath,tItem) into tCompressionMethod
+      put item 6 of revZipDescribeItem(sFilePath,tZipItem) into tCompressionMethod
       set the itemDel to "/"
       if item 1 of tZipItem is sStoryTitle then
          -- some zip files include an extra folder level

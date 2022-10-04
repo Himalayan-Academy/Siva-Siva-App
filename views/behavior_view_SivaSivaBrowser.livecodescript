@@ -1,6 +1,7 @@
 ﻿script "behavior_view_SivaSivaBrowser"
 # this behavior is also use  by the view_BrowserLandscape.livecode stack
 # 
+global sConfigA
 local sMediaURL,sBrowserURL
 
 #local sPortraitRect, sLandscapeRect, sScreenRect,sBrowserOrientation
@@ -16,6 +17,7 @@ local sLandscapeOnly, sOrientation, sBrowserRect,sHtmlText
 # is sent from portal_GoURL in the lib_SivaSivaPortal 
 
 on preopenstack
+  
    local tBrowser, tOrientations
    set the fullscreenmode of this stack to empty
    put the short name this stack into tBrowser
@@ -187,18 +189,28 @@ on journal_AddEntry
    
    local pData, tTitle, tOutput, 
    local tParseURL, tLastItemInURL, tWords
+   local tFavorites, tLastStack
    
    # this is a hack  until we figure out the regEx for matchText 
    # for the <title class="whatever"....> in find in Gatsby and other pages
    # we get the title from the original mouseup of the portal screen
    
+   put getJournalData() into tTitle
    
    if sBrowserURL contains "YouTube" then
       # the journal label is taken from the JSON of out navigation dictionary
       # which are appears on this sub nav list.
       # for now, this implemention of Video is contrain to that list
       # leave it for now
-      put getJournalData() into tTitle
+      --
+      put getMediaMeta() into pData
+      --
+      put portal_GetLastStack() into tLastStack
+      
+      if  tLastStack is "Surprise" then
+         put pData["title"] into tTitle
+      end if 
+      
       put browser_GetLastURL() into pData["url"] 
       
    else
@@ -214,7 +226,8 @@ on journal_AddEntry
       
       if tParseURL contains "/web/" then
          # book
-         put getJournalData() into tTitle
+         --put getJournalData() into tTitle
+         put sConfigA["bookTitle"]  into tTitle
          
          # we get the title plus the url for "chapter"
          #  for "chapter" in the book
@@ -235,6 +248,9 @@ on journal_AddEntry
             put toUpper(char 1 of word  x of tLastItemInURL) into tWords
             delete char 1 of word  x of tLastItemInURL
             put tWords &  word  x of tLastItemInURL into  tWords
+            if tWords contains "Publication" then
+               put "Hinduism Today Magazine, " into tTitle
+            end if
             put tWords & " " after tTitle 
          end repeat
          delete char -1 of tTitle
@@ -244,10 +260,13 @@ on journal_AddEntry
    
    if sLandscapeOnly then
       Journal_RecordEntry "view_BrowserLandscape",tTitle,pData  
+      moveMe "add-favorites", 0, -25, 200
+      moveMe "add-favorites", 0, 25, 200    --pControlName, pHorz, pVert, pSpeed
    else
-      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData   
-      --dialog_CustomMsg "Saved to Journal"
+      Journal_RecordEntry "view_SivaSivaBrowser",tTitle,pData
+      dialog_CustomMsg "Saved to Shortcuts"   
    end if
+   
 end journal_AddEntry
 
 

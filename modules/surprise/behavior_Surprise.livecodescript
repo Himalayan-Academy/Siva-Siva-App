@@ -3,7 +3,7 @@ local sMediaURL, sQuoteData, sOnline
 local sCollection, sTimeStamp, sCard
 local sPlayerRect, sSelectHttp
 local sCurrentPlayListA,  sSelectNum
-
+put (20, the bottom of tNext + 30 ,CardWidth() - 20, the top of tPausePlay - 50) into tRect
 on preOpenStack
    --breakpoint
    if isMobile() then    
@@ -95,7 +95,7 @@ on mouseup
                
                
                if sSelectHttp<> empty then  # we have a selection
-                  doAnswer "Download this audio file?" &cr& "Journal entry requires a download.", "Download,Cancel","downloadAffirmed" 
+                  doAnswer "Download this audio file?" &cr& "(Shortcut entry requires a download.)", "Download,Cancel","downloadAffirmed" 
                end if
                
                
@@ -126,15 +126,15 @@ command setUpSurprise
    local tTargets, tTarget, tCard
    if connectivity_PingServer() = "true" then 
       --put "video" into tTarget # for test one card only: comment out the following 2 lines
-      --put "verse,audio,darshan,art,video" into tTargets
+      --put "verses" into tTarget --,audio,darshan,art,video" into tTargets
       # for some reason, video will not send the
       # broader download complete or  hideLoader to the browser
       # from this context so we are taking in out
-      put "verse,audio,darshan,art,video" into tTargets
+      put "verses,audio,darshan,art,video" into tTargets
       put item (random(5)) of tTargets into tTarget
       put "surprise_"&tTarget into tCard
    else
-      put "surprise_verse" into tCard
+      put "surprise_verses" into tCard
    end if
    
    switch tCard
@@ -207,6 +207,7 @@ on insertRandomVerse
    fetchRandomQuote (sCollection)
    -- go to the card first to shorten object references in the card script
    go to card "surprise_verse"
+   
    send "setUpQuote" to card "surprise_verse"
    send "positionQuote" to card "surprise_verse"
    unlock screen
@@ -290,20 +291,45 @@ on hideDownloadControls
 end hideDownloadControls
 
 
-command addJournalEntry-- save a bookmark to db
+--command  journal_AddEntry -- save a bookmark to db
+--   local tCdName, tData, tTitle
+--   put sLastActivityA["CdName"] into tCdName
+
+--   put tCdName into tData["card"] -- store the last user cd   
+
+--   if tCdName = "daily-lesson" then -- store the lesson number
+--      put "Master Course Daily Lesson"  into tTitle
+--   end if
+
+--   Journal_RecordEntry "daily-lesson",tTitle,tData -- send to journal
+--   dialog_CustomMsg "Saved to Shortcuts"
+--end  journal_AddEntry
+
+command journal_AddEntry tCard-- save a bookmark to db
    
-   local tData,pDataA, tTitle, tURL
+   local tData,pDataA, tTitle, tURL --, tCard
+   
+   
    put getMediaMeta() into tData
-   put tData["item_id"] into pDataA["item_id"]
-   put tData["title"] into pDataA["title"]
-   put tData["title"] into tTitle
    
-   put mediaUrl_Get() into pDataA["url"] 
-   put sTimeStamp  into pDataA["timestamp"]
-   put "listen-file" into pDataA["card"] 
-   Journal_RecordEntry "listen",tTitle,pDataA
+   if tCard is "surprise_audio" then
+      --put getMediaMeta() into tData
+      put tData["item_id"] into pDataA["item_id"]
+      put tData["title"] into pDataA["title"]
+      put tData["title"] into tTitle
+      put mediaUrl_Get() into pDataA["url"] 
+      put sTimeStamp  into pDataA["timestamp"]
+      put "listen-file" into pDataA["card"] 
+      Journal_RecordEntry "listen",tTitle,pDataA
+   else
+      put tCard  into tTitle
+      put tCard into tData["card"]
+      Journal_RecordEntry "surprise",tTitle,tData
+   end if
    
-end addJournalEntry
+   dialog_CustomMsg "Saved to Shortcuts"
+   
+end journal_AddEntry 
 
 on journalResume pData,pEntryA -- sent from journal stack
    lock screen
@@ -325,9 +351,9 @@ end resizeStack
 
 
 on updateUI
-   local tHeader, tFooter, tCard, tLoc, tNext, tBackground, tRect
+   local tHeader, tFooter, tCard, tCards, tLoc, tNext, tBackground, tRect
    local tLoading, tPausePlay, tLoadingNotice,tTouchTrap
-   local tAudioDetails, tDownloadSelection
+   local tAudioDetails, tDownloadSelection, tTitle
    
    
    put the long id of grp "footerNavigation" into tFooter
@@ -351,6 +377,7 @@ on updateUI
    topCenterMe tHeader, -12
    
    put the short name of this card into tCard
+   
    switch tCard
       
       case "surprise"
@@ -362,25 +389,23 @@ on updateUI
       case "surprise_verses"
          put the long id img "surprise-verses-bkgnd_opt-70.jpg" into tBackground
          set the right of grp "verse-collections" to CardWidth() - 10
+         
          break
       case "surprise_verse"
+        
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of btn "go-next" into tNext
+        
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
-         put the long id of btn "go-next" into tNext
          
          break 
       case "surprise_darshan"
          put the long id of img "fabric-blue_portrait-bkgnd_opt-12.jpg" into tBackground
-         put the long id of btn "go-next"into tNext
          
          break
       case "surprise_audio"
          put the long id img "headset_portrait_bkgnd_opt-50.jpg" into tBackground
-         
-         put the long id of btn "go-next" into tNext
          
          --ntinfo "switch card before going to audio before center in load/player"
          
@@ -390,31 +415,34 @@ on updateUI
          put the long id of grp "pause-play" into tPausePlay
          bottomCenterMe tPausePlay,65
          
+         put the long id of fld "title" into tTitle
+         topLeftMe tTitle, 20, 20
+         
          put the long id of fld "audioDetails" into tAudioDetails
-         put (20, the bottom of tNext + 30 ,CardWidth() - 20, the top of tPausePlay - 50) into tRect
-         set the rect of  tAudioDetails to tRect
+         set the width of tAudioDetails to (CardWidth() -20)
+         centerMe tAudioDetails, 85,100
          
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
                into sPlayerRect
          set the rect of player "audioPlayer" to sPlayerRect
          
          put the long id of grp  "downloadSelection" into tDownloadSelection
-         topLeftMe tDownloadSelection, 22, 0
+         topRightMe tDownloadSelection, 45, 50
+         show grp  "downloadSelection" 
          break
          
       case "surprise_video"
          break
    end switch
-
    
    if there is a tBackground then
       setImageToFullCardLoc tBackground, "portrait"
       set the loc of tBackground to CardLoc()
    end if
    
-   if there is a tNext then
-      set the top of tNext to safeTopMargin()
-      set the right of tNext to CardWidth() + 9
+   if there is a grp "go-next" then
+      put the long id of grp "go-next" into tNext
+      topRightMe tNext, 0, 0
    end if
    
    if there is a grp "audioGlobalControl" then
