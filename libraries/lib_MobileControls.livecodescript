@@ -137,9 +137,6 @@ on getPlaying pBool
    put pBool into sPlaying
 end getPlaying
 
-function setDuration 
-   return sDuration
-end setDuration
 
 ---------------------------------
 # here we get the player do play, pause or stop
@@ -148,7 +145,15 @@ command setMobileAudioPlayer pPlayerName, pState, pTimeStamp
    --showBusyIndicator false -- in case it's still showing
    log "setMobileAudioPlayer: " & pState
    --jg: control the state of the mobile player
-   -- pState = "pause", "play", or "stop"
+   -- pState = "currentTime", "pause", "play", or "stop"
+   
+   if pState = "currentTime" then
+      if pTimeStamp is empty then
+         put 0 into pTimeStamp
+      end if
+      mobileControlSet pPlayerName, "currentTime", pTimeStamp
+      exit setMobileAudioPlayer
+   end if
    
    mobileControlDo pPlayerName, pState
    
@@ -325,6 +330,10 @@ command updateTimer
       send "updateTimer" to me in 100 millisecs
    end if
 end updateTimer  
+
+function getDuration 
+   return sDuration
+end getDuration
 
 function getCurrentTime 
    return sCurrentTime

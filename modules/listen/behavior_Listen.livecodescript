@@ -1495,13 +1495,24 @@ on playPausedAudio
 end playPausedAudio
 
 
+command setAudioTime pTimeStamp
+   if not isMobile() then
+      set the currenttime player "audioPlayer" to sTimeStamp
+   else
+      setMobileAudioPlayer "audioPlayer", "currentTime", sTimeStamp
+   end if
+end setAudioTime
+
+
 on audioSeekForward
-   #TODO
+   put min(getDuration(), getCurrentTime() + 100000) into sTimeStamp
+   setAudioTime sTimeStamp
 end audioSeekForward
 
 
 on audioSeekBack
-   #TODO
+   put max(0,getCurrentTime() - 100000) into sTimeStamp
+   setAudioTime sTimeStamp
 end audioSeekBack
 
 
