@@ -71,6 +71,25 @@ on mouseup
          
          break
          
+         
+      case "Yamas"
+         clearBoard
+         hide widget "randomPuzzleSettings"
+         hide btn "getInfo"
+         createRandomPuzzle
+         
+         break
+         
+         
+      case "Niyams"
+         clearBoard
+         hide widget "randomPuzzleSettings"
+         hide btn "getInfo"
+         createRandomPuzzle
+         
+         break
+         
+         
       case "Random"
          clearBoard
          hide widget "randomPuzzleSettings"
