@@ -81,11 +81,11 @@ on mouseup
          break
          
          
-      case "Niyams"
+      case "Niyamas"
          clearBoard
-         hide widget "randomPuzzleSettings"
-         hide btn "getInfo"
-         createRandomPuzzle
+         hide grp "indexOfQuotes"
+         hide fld "MesmorizeFld"
+         fetchMesmorizeMap
          
          break
          
@@ -410,7 +410,7 @@ command fetchMesmorizeMap
    put url("file:" & tPath) into tJSON
    
    try
-      put JSONToArray(tJSON) into sMesmoriseGame
+      put JSONToArray(tJSON) into sMesmorizeGame
       
    catch n
       put "Error reading navigation map."
@@ -945,7 +945,6 @@ end journalResume
 
 on closeCard
    hide graphic "startHere"
-   hide btn "Random Puzzle"
    storeCurrentLevel sCurLevel
    --showTitle true
    ntInfo "closing word puzzle card"
