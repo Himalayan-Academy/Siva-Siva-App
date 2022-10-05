@@ -240,119 +240,121 @@ on createRandomPuzzle
    --clearBoard
    startTimer
    
-   -- Set the quote in a field
-   put (the number of words of sQuote) into sWordCount
-   put sQuote into fld "revealQuote"
-   setSizeAndLocationOfQuote sQuote
+   getTheQuote
    
-   set the blendlevel of fld "revealQuote" to 0  
-   show grp "revealQuoteGroup"
-   show fld "revealQuote"
+   --   -- Set the quote in a field
+   --   put (the number of words of sQuote) into sWordCount
+   --   put sQuote into fld "revealQuote"
+   --   setSizeAndLocationOfQuote sQuote
    
-   -- Take a snapsite of the quote, move it off screen
-   import snapshot from   grp "revealQuoteGroup"
+   --   set the blendlevel of fld "revealQuote" to 0  
+   --   show grp "revealQuoteGroup"
+   --   show fld "revealQuote"
    
-   
-   # need to save it because we are going to crop each word in a loop
-   # put it away for safe keeping
-   set the name of the last image to "currentPuzzle" 
-   set the loc of image "currentPuzzle"  to -1000,-1000
+   --   -- Take a snapsite of the quote, move it off screen
+   --   import snapshot from   grp "revealQuoteGroup"
    
    
-   -- copy the image to the same location/rect as the quote
-   
-   put empty into tLoc  # set the extents of loc array to 0 each iterations
-   
-   repeat with x = 1 to the number of words of fld "revealQuote"  
-      
-      copy img "CurrentPuzzle" to this card
-      set the name of the last image to "tempForCrop"
-      set the rect of the last image to the rect of fld "revealQuote"
-      
-      --make individual word tiles
-      put the formattedRect of word x of fld "revealQuote" into tNextWordRect  
-      
-      subtract 8 from item 1 of tNextWordRect
-      add 2 to item 2 of tNextWordRect
-      add 6 to item 3 of tNextWordRect
-      add 4 to item 4 of tNextWordRect
-      
-      #####################################################################
-      ### BM: `tNextWord` is undefined on the first time through this loop.
-      put word x of fld "revealQuote" into tNextWord
-      local tWordCantBeTileName
-      ### BM: this block of code seems unnecessary
-      if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
-         put tNextWord into tWordCantBeTileName
-         replace "---" with quote in tWordCantBeTileName
-         put  ("_" & tNextWord) into tNextWord
-         crop image "tempForCrop" to tNextWordRect
-         set the  name of image "tempForCrop"  to tWordCantBeTileName
-      else
-         crop image "tempForCrop" to tNextWordRect
-         set the  name of image "tempForCrop"  to tNextWord
-      end if
-      ### BM: line 132 below changes the image name again
-      #####################################################################
-      
-      -- name the tiles and apply the name as custom prop of the tile
-      put ("word_"&x) into tTileName
-      put tTileName & cr after tWordList
-      set the name of the last image to tTileName
-      set the showborder of the last image to true
-      set the behavior of the last image to the long id of btn "behavior_tileScript"
-      
-      set the cWord of last image to word x of fld "revealQuote"
-      put word x of fld "revealQuote" into tNextWord
-      
-      --Store tiles of screen, ready to distribute
-      
-      set the loc of the last image to  -200,-200
-      set the borderwidth of the last image to "4"
-      set the topcolor of the last image to tRGB
-      set the layermode of the last image to "dynamic"
-      set the alwaysbuffer of the last image to true
-      -- jg: required for smooth movment on slower devices
-      
-      getLocations tNextWord,tNextWordRect 
-      
-   end repeat
-   
-   assignHomeLocations 
-   
-   delete char -1 of tWordList
-   set the uWordList of this card to tWordList
-   
-   arrangeWords # Jacque's Method
-   
-   # set start indicator to the beginning of the first word
-   local pWord, tFirstWordPosition, tStartIconPosition
-   put the cWord of image "word_1" into pWord
-   put the  uWordLocation of image "word_1"  into tFirstWordPosition
-   put sWordLocationsA[pWord][1] into tFirstWordPosition
-   subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
-   put tFirstWordPosition into tStartIconPosition
-   add 4 to item 1 of tStartIconPosition
-   set the loc of grc "startHere" to tStartIconPosition
-   set the vis of grc "startHere" to true
+   --   # need to save it because we are going to crop each word in a loop
+   --   # put it away for safe keeping
+   --   set the name of the last image to "currentPuzzle" 
+   --   set the loc of image "currentPuzzle"  to -1000,-1000
    
    
-   hide grp "revealQuoteGroup"
-   hide fld "revealQuote" -- comment this out to see the quote during dev
+   --   -- copy the image to the same location/rect as the quote
    
-   local pTile, pTrackdata
-   put the long id of image "word_1" into pTile
-   setTileGlow "large" 
-   relayer  pTile to front of card "word-puzzle"
-   glowtile pTile, true
+   --   put empty into tLoc  # set the extents of loc array to 0 each iterations
    
-   put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
-   tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
-   unlock screen
-   set the acceleratedRendering  of this stack to true
-   show fld "wordPuzzleSubject"
-   send "hideSubjectFld" to me in 10 seconds
-   show grp "randomPuzzleInProgress"
+   --   repeat with x = 1 to the number of words of fld "revealQuote"  
+   
+   --      copy img "CurrentPuzzle" to this card
+   --      set the name of the last image to "tempForCrop"
+   --      set the rect of the last image to the rect of fld "revealQuote"
+   
+   --      --make individual word tiles
+   --      put the formattedRect of word x of fld "revealQuote" into tNextWordRect  
+   
+   --      subtract 8 from item 1 of tNextWordRect
+   --      add 2 to item 2 of tNextWordRect
+   --      add 6 to item 3 of tNextWordRect
+   --      add 4 to item 4 of tNextWordRect
+   
+   --      #####################################################################
+   --      ### BM: `tNextWord` is undefined on the first time through this loop.
+   --      put word x of fld "revealQuote" into tNextWord
+   --      local tWordCantBeTileName
+   --      ### BM: this block of code seems unnecessary
+   --      if ( isNumber(tNextWord) ) OR ( tNextWord contains "---")  then
+   --         put tNextWord into tWordCantBeTileName
+   --         replace "---" with quote in tWordCantBeTileName
+   --         put  ("_" & tNextWord) into tNextWord
+   --         crop image "tempForCrop" to tNextWordRect
+   --         set the  name of image "tempForCrop"  to tWordCantBeTileName
+   --      else
+   --         crop image "tempForCrop" to tNextWordRect
+   --         set the  name of image "tempForCrop"  to tNextWord
+   --      end if
+   --      ### BM: line 132 below changes the image name again
+   --      #####################################################################
+   
+   --      -- name the tiles and apply the name as custom prop of the tile
+   --      put ("word_"&x) into tTileName
+   --      put tTileName & cr after tWordList
+   --      set the name of the last image to tTileName
+   --      set the showborder of the last image to true
+   --      set the behavior of the last image to the long id of btn "behavior_tileScript"
+   
+   --      set the cWord of last image to word x of fld "revealQuote"
+   --      put word x of fld "revealQuote" into tNextWord
+   
+   --      --Store tiles of screen, ready to distribute
+   
+   --      set the loc of the last image to  -200,-200
+   --      set the borderwidth of the last image to "4"
+   --      set the topcolor of the last image to tRGB
+   --      set the layermode of the last image to "dynamic"
+   --      set the alwaysbuffer of the last image to true
+   --      -- jg: required for smooth movment on slower devices
+   
+   --      getLocations tNextWord,tNextWordRect 
+   
+   --   end repeat
+   
+   --   assignHomeLocations 
+   
+   --   delete char -1 of tWordList
+   --   set the uWordList of this card to tWordList
+   
+   --   arrangeWords # Jacque's Method
+   
+   --   # set start indicator to the beginning of the first word
+   --   local pWord, tFirstWordPosition, tStartIconPosition
+   --   put the cWord of image "word_1" into pWord
+   --   put the  uWordLocation of image "word_1"  into tFirstWordPosition
+   --   put sWordLocationsA[pWord][1] into tFirstWordPosition
+   --   subtract  (the width of image "word_1" /2-10) from item 1 of tFirstWordPosition
+   --   put tFirstWordPosition into tStartIconPosition
+   --   add 4 to item 1 of tStartIconPosition
+   --   set the loc of grc "startHere" to tStartIconPosition
+   --   set the vis of grc "startHere" to true
+   
+   
+   --   hide grp "revealQuoteGroup"
+   --   hide fld "revealQuote" -- comment this out to see the quote during dev
+   
+   --   local pTile, pTrackdata
+   --   put the long id of image "word_1" into pTile
+   --   setTileGlow "large" 
+   --   relayer  pTile to front of card "word-puzzle"
+   --   glowtile pTile, true
+   
+   --   put "Level" && sCurLevel into pTrackdata["puzzleLevel"]
+   --   tracking_RecordActivity "Word Puzzle", "generate/newpuzzle", pTrackdata
+   --   unlock screen
+   --   set the acceleratedRendering  of this stack to true
+   --   show fld "wordPuzzleSubject"
+   --   send "hideSubjectFld" to me in 10 seconds
+   --   show grp "randomPuzzleInProgress"
    
 end createRandomPuzzle
 
@@ -382,15 +384,6 @@ command fetchRandomQuote
    put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
    put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
    put textDecode ( sSelectedQuotes[tNo]["source_url"], "UTF8")  into sSourceURL
-   
-   #hack to deal with endline bug
-   replace "\n" with space in sQuote
-   
-   # fix  strings with straight quotes, which are word delimiters in LC
-   # change to curly's when they are included with the word 
-   replace (space & quote) with (space & "“") in sQuote 
-   replace (quote& space) with ( "”"& space) in sQuote 
-   
    
 end fetchRandomQuote
 
@@ -443,7 +436,17 @@ command getLocations tNextWord,tNextWordRect
    end if
 end getLocations
 
-Command getQuotes
+Command getTheQuote
+   local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
+   
+   #hack to deal with endline bug
+   replace "\n" with space in sQuote
+   
+   # fix  strings with straight quotes, which are word delimiters in LC
+   # change to curly's when they are included with the word 
+   replace (space & quote) with (space & "“") in sQuote 
+   replace (quote& space) with ( "”"& space) in sQuote 
+   
    -- Set the quote in a field
    put (the number of words of sQuote) into sWordCount
    put sQuote into fld "revealQuote"
@@ -558,7 +561,7 @@ Command getQuotes
    send "hideSubjectFld" to me in 10 seconds
    show grp "randomPuzzleInProgress"
    
-end getQuotes
+end getTheQuote
 
 command assignHomeLocations
    repeat with x = 1 to ( the number of images on this card)
