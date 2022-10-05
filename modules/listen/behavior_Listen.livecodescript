@@ -1496,23 +1496,26 @@ end playPausedAudio
 
 
 command setAudioTime pTimeStamp
+   if pTimeStamp is empty then
+      put 0 into pTimeStamp
+   end if
+   put pTimeStamp into sTimeStamp
    if not isMobile() then
       set the currenttime player "audioPlayer" to sTimeStamp
    else
-      setMobileAudioPlayer "audioPlayer", "currentTime", sTimeStamp
+      mobileControlSet "audioPlayer", "currentTime", sTimeStamp
    end if
+   updatePlayerTime sTimeStamp
 end setAudioTime
 
 
 on audioSeekForward
-   put min(getDuration(), getCurrentTime() + 100000) into sTimeStamp
-   setAudioTime sTimeStamp
+   setAudioTime min(getDuration(), getCurrentTime() + 10000)
 end audioSeekForward
 
 
 on audioSeekBack
-   put max(0,getCurrentTime() - 100000) into sTimeStamp
-   setAudioTime sTimeStamp
+   setAudioTime max(0,getCurrentTime() - 10000)
 end audioSeekBack
 
 
