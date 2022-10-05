@@ -383,7 +383,6 @@ command fetchRandomQuote
    put random (the number of lines of the keys of sSelectedQuotes) into tNo
    put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
    put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
-   put textDecode ( sSelectedQuotes[tNo]["source_url"], "UTF8")  into sSourceURL
    
 end fetchRandomQuote
 
@@ -413,6 +412,8 @@ command fetchMesmorizeMap
    
    put sMesmorizeGame["MesmorizeGame1"][Niyamas][1][content]   into  sQuote
    
+   put  sMesmorizeGame["MesmorizeGame1"][Niyamas][1][subject]  into fld "wordPuzzleSubject"
+
    getTheQuote
    
 end fetchMesmorizeMap
