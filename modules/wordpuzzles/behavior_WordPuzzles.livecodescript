@@ -387,7 +387,7 @@ command fetchRandomQuote
    
 end fetchRandomQuote
 
-local sMesmoriseGame
+local sMesmorizeGame
 
 command fetchMesmorizeMap
    local tPath, tJSON
@@ -410,6 +410,11 @@ command fetchMesmorizeMap
          put x
       end repeat
    end try
+   
+   put sMesmorizeGame["MesmorizeGame1"][Niyamas][1][content]   into  sQuote
+   
+   getTheQuote
+   
 end fetchMesmorizeMap
 
 command getRandomColors
