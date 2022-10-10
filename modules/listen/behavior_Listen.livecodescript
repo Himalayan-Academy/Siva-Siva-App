@@ -1481,6 +1481,7 @@ end pausePlayer
 
 
 on playPausedAudio
+   put getCurrentTime() into sTimeStamp
    put sTimeStamp into sDataA["timeStamp"]
    
    if not isMobile() then

@@ -22,7 +22,7 @@ or instance lib_MobileScroller and lib_MobileAudio etc ?
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId, sPlayerRect, sDuration
+local sPlayerId, sPlayerRect, sDuration, sTrackScrubbing
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -88,6 +88,8 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
+   
+   put false into sTrackScrubbing
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -320,6 +322,31 @@ command updatePlayerTime pCurrentTime
 end updatePlayerTime
 
 
+command startTrackingScrubbing
+   put true into sTrackScrubbing
+end startTrackingScrubbing
+
+
+command stopTrackingScrubbing
+   put false into sTrackScrubbing
+end stopTrackingScrubbing
+
+
+on touchMove pTouchID, pTouchX, pTouchY
+   if sTrackScrubbing then
+      put (pTouchX - the left of graphic "durationBG" of stack "listen") / \
+            the width of graphic "durationBG" of stack "listen" * sDuration \
+            into sCurrentTime
+      if not isMobile() then
+         set the currenttime player "audioPlayer" to sCurrentTime
+      else
+         mobileControlSet "audioPlayer", "currentTime", sCurrentTime
+      end if
+      updatePlayerTime sCurrentTime
+   end if
+end touchMove
+
+
 function getDuration 
    return sDuration
 end getDuration
@@ -365,6 +392,7 @@ on playerFinished -- sent on mobile when audio is done
    end if
    
    get runningAudioIndicatorVis("false")
+   setZeroDurationProgress
    
 end playerFinished
 

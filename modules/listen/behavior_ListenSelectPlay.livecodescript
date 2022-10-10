@@ -124,6 +124,12 @@ on mouseup
          
          break
          
+      case "durationBG"
+      case "durationProgress"
+      case "durationMarker"
+         stopTrackingScrubbing
+         break
+         
       case "noForwardBackup"
          dialog_CustomMsg "This is No Forward nor Backup. Next Version!"
          break
@@ -161,8 +167,20 @@ on mouseup
       default
          pass mouseUp
    end switch
-   
 end mouseup
+
+
+on mouseDown
+   local tTarget
+   put the short name of the Target  into tTarget
+   switch tTarget
+      case "durationBG"
+      case "durationProgress"
+      case "durationMarker"
+         startTrackingScrubbing
+         break
+   end switch
+end mouseDown
 
 
 on doScrollerTap
