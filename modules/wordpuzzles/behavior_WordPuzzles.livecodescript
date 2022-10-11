@@ -63,6 +63,16 @@ on mouseup
    
    switch tTarget
       
+      case "Index"
+         clearBoard
+         
+         hide  group "randomPuzzleControls"
+         hide group "randomPuzzleInProgress"
+         
+         show grp "indexOfQuotes"
+         
+         break
+         
       case "Random Puzzle"
          hide grp "indexOfQuotes"
          hide fld "MesmorizeFld"
@@ -86,16 +96,13 @@ on mouseup
          hide grp "indexOfQuotes"
          hide fld "MesmorizeFld"
          fetchMesmorizeMap
-         
          break
-         
          
       case "Random"
          clearBoard
          hide widget "randomPuzzleSettings"
          hide btn "getInfo"
          createRandomPuzzle
-         
          break
          
       case "Clear"
@@ -106,17 +113,6 @@ on mouseup
          
       case "Clues"
          showClues
-         
-         break
-         
-      case "Index"
-         clearBoard
-         
-         hide  group "randomPuzzleControls"
-         hide group "randomPuzzleInProgress"
-         
-         show grp "indexOfQuotes"
-         
          break
          
       case "randomPuzzleSettings"
@@ -390,57 +386,62 @@ local sMesmorizeGame
 
 command fetchMesmorizeMap
    local tPath, tJSON
-   put path_HomeLocal() into tPath
    
-   put "modules/wordpuzzles/mesmorize-game-1.json" after tPath
-   if there is not a file tPath then
-      put "portalerr,mesmorize-game-1.json not found"
-      exit fetchMesmorizeMap
-   end if
+   ----- 
+   local tConnectionID, tSQL, tCurRange, tNo
    
-   put url("file:" & tPath) into tJSON
+   ## Methods for getting from dBase
+   put  JnanamDB() into tConnectionID   
    
-   try
-      put JSONToArray(tJSON) into sMesmorizeGame
-      
-   catch n
-      put "Error reading navigation map."
-      repeat for each line x in n
-         put x
-      end repeat
-   end try
+   --   ## for testing specific quote from the datebase
+   --   put the uFetchOneQuote of this stack into tSQL
+   --   ## You must supply the quote_id manually here
+   --   replace ":1" with  "5428" in tSQL
    
-   put sMesmorizeGame["MesmorizeGame1"][Niyamas][1][content]   into  sQuote
+   # production routine, comment out the above
+   #  and use this for a runtime random selection
+   put the uFetchQuotesTags of this stack into tSQL
+   replace ":1" with  "Yamas Memory Game" in tSQL
    
-   put  sMesmorizeGame["MesmorizeGame1"][Niyamas][1][subject]  into fld "wordPuzzleSubject"
-
+   
+   dbSetSQL tSQL
+   
+   put dbGet("quote", tConnectionID) into sSelectedQuotes
+   put random (the number of lines of the keys of sSelectedQuotes) into tNo
+   put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
+   put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
+   
+   
+   
+   
+   -------
+   --   put path_HomeLocal() into tPath
+   
+   --   put "modules/wordpuzzles/mesmorize-game-1.json" after tPath
+   --   if there is not a file tPath then
+   --      put "portalerr,mesmorize-game-1.json not found"
+   --      exit fetchMesmorizeMap
+   --   end if
+   
+   --   put url("file:" & tPath) into tJSON
+   
+   --   try
+   --      put JSONToArray(tJSON) into sMesmorizeGame
+   
+   --   catch n
+   --      put "Error reading navigation map."
+   --      repeat for each line x in n
+   --         put x
+   --      end repeat
+   --   end try
+   
+   --   put sMesmorizeGame["MesmorizeGame1"][Niyamas][1][content]   into  sQuote
+   
+   --   put  sMesmorizeGame["MesmorizeGame1"][Niyamas][1][subject]  into fld "wordPuzzleSubject"
+   
    getTheQuote
    
 end fetchMesmorizeMap
-
-command getRandomColors
-   put getColors() into tColors
-   put line 1 of tColors into tRGB
-   put line 2 of tColors into tTileBkgndRGB
-   set the foregroundcolor of fld "revealQuote" to tRGB
-   set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
-end getRandomColors
-
-
-command getLocations tNextWord,tNextWordRect
-   -- set up an array of the location(x) of a word.
-   local tCoords, tLoc, theX, theY
-   put tNextWordRect into tCoords
-   if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
-         tNextWord is among the keys of sWordLocationsA then
-      --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
-      put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
-      put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
-      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
-      put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
-      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
-   end if
-end getLocations
 
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
@@ -459,7 +460,7 @@ Command getTheQuote
    setSizeAndLocationOfQuote sQuote
    
    set the blendlevel of fld "revealQuote" to 0  
-   show grp "revealQuoteGroup"
+   --show grp "revealQuoteGroup"
    show fld "revealQuote"
    
    -- Take a snapsite of the quote, move it off screen
@@ -568,6 +569,32 @@ Command getTheQuote
    show grp "randomPuzzleInProgress"
    
 end getTheQuote
+
+
+command getRandomColors
+   put getColors() into tColors
+   put line 1 of tColors into tRGB
+   put line 2 of tColors into tTileBkgndRGB
+   set the foregroundcolor of fld "revealQuote" to tRGB
+   set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
+end getRandomColors
+
+
+command getLocations tNextWord,tNextWordRect
+   -- set up an array of the location(x) of a word.
+   local tCoords, tLoc, theX, theY
+   put tNextWordRect into tCoords
+   if   ( item 2 of the extents of sWordLocationsA[tNextWord] is empty ) OR \
+         tNextWord is among the keys of sWordLocationsA then
+      --(tNextWord is among the keys of sWordLocationsA[tNextWord]) then
+      put (item 2 of the extents of sWordLocationsA[tNextWord]) + 1 into tLoc
+      put trunc ( (item 3 of tCoords - item 1 of tCoords)/2)  + trunc ( ( item 1 of tCoords) ) into theX
+      put trunc ( (item 4 of tCoords - item 2 of tCoords)/2)  + trunc (item 2 of tCoords) into theY
+      put (theX,theY) into sWordLocationsA[tNextWord][tLoc]
+      --put getLocation (tNextWordRect) into sWordLocationsA[tNextWord][tLoc]
+   end if
+end getLocations
+
 
 command assignHomeLocations
    repeat with x = 1 to ( the number of images on this card)
@@ -718,8 +745,11 @@ end randomInRange
 on unJumble
    local tWords
    put the uWordList of this card into tWords
+   put tWords
+   put the uWordLocations of img "word_1"
    repeat for each line x in tWords
-      set the loc of Img x to (the uWordLocation of img x)
+      put the uWordLocations of img x
+      set the loc of Img x to (the uWordLocations of img x)
    end repeat
 end unJumble
 
