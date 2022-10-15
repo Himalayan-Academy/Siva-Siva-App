@@ -20,7 +20,6 @@ on preOpenStack
       mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
    end if
-   hide grc "blankScreen"
    setCardCoords "landscape"
 end preOpenStack
 
@@ -30,7 +29,7 @@ end preOpenStack
 on preopencard
    # we have to  clear everything
    # while in development
-   
+   hide fld "wordPuzzleSubject"
    hide grp "indexOfQuotes"
    hide grp "randomPuzzleControls"
    hide grp "randomPuzzleInProgress"
@@ -151,7 +150,7 @@ on mousedown
    switch tTarget
       
       case "Reveal"
-         revealQuote
+         revealQuote "5"
          break
          
    end switch
@@ -763,16 +762,18 @@ command hideSubjectFld
    hide fld "wordPuzzleSubject"
 end hideSubjectFld
 
-command revealQuote
-   set the layer of grc "blankScreen" to top
-   show grc "blankScreen"
+command revealQuote pTimer
+   
    set the layer of grp "revealQuoteGroup"  to top
-   show fld "revealQuote"
+
    show grp "revealQuoteGroup" 
-   wait 2 seconds
+   show fld "revealQuote"
+   
+   wait pTimer seconds
+   
    hide grp "revealQuoteGroup" 
    hide fld "revealQuote"
-   hide grc "blankScreen"
+   
    --losePoints # later when we give badges
 end revealQuote
 
