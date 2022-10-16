@@ -104,6 +104,10 @@ on mouseup
          createRandomPuzzle
          break
          
+      case "Reveal"
+         revealQuote "5"
+         break
+         
       case "Clear"
          clearBoard
          show widget "randomPuzzleSettings" 
@@ -140,22 +144,22 @@ on mouseup
    
 end mouseup
 
-on mousedown
-   
-   local tTarget, tTargetOwner
-   
-   put the short name of the owner of the target into tTargetOwner
-   put the short name of the target into tTarget
-   
-   switch tTarget
-      
-      case "Reveal"
-         revealQuote "5"
-         break
-         
-   end switch
-   
-end mousedown
+--on mousedown
+
+--   local tTarget, tTargetOwner
+
+--   put the short name of the owner of the target into tTargetOwner
+--   put the short name of the target into tTarget
+
+--   switch tTarget
+
+--      case "Reveal"
+--         revealQuote "5"
+--         break
+
+--   end switch
+
+--end mousedown
 
 command loadNewBgImg -- change img for each new puzzle
    local pControl, tFolderPath, tFiles, tImgPath
@@ -455,14 +459,10 @@ command assignHomeLocations
       end if
    end repeat
 end assignHomeLocations
-   
 
 on checkLevel
    put sCurlevel
 end checkLevel
-
-
-
 
 command setSizeAndLocationOfQuote sQuote
    local tCharCount, tRequiredHeight
@@ -544,6 +544,27 @@ end getLocation
 --   end repeat
 --end distributeWords
 
+command revealQuote pTimer
+   
+   set the layer of grp "revealQuoteGroup" to top
+   
+   --set the layer of grc "blankGraphic" to top
+   
+   show grc "blankGraphic"
+   show grp "revealQuoteGroup"
+   show grc "quoteBkgnd" 
+   show fld "revealQuote"
+   
+   wait pTimer seconds
+   
+ hide grc "blankGraphic"
+   hide  grp "revealQuoteGroup"
+   hide fld "revealQuote"
+   hide grc "quoteBkgnd" 
+   
+   --losePoints # later when we give badges
+end revealQuote
+
 on clearBoard
    # use case: User want to leave the current puzzle and and new one
    lock screen
@@ -572,6 +593,9 @@ on clearBoard
       end try
    end repeat
    set the uWordList of me to empty
+   
+   hide grc "blankGraphic"
+   hide grp "revealQuoteGroup"
    hide grp "randomPuzzleInProgress"
    hide graphic "startHere" of me
    unlock screen
@@ -761,21 +785,6 @@ end glowTile
 command hideSubjectFld
    hide fld "wordPuzzleSubject"
 end hideSubjectFld
-
-command revealQuote pTimer
-   
-   set the layer of grp "revealQuoteGroup"  to top
-
-   show grp "revealQuoteGroup" 
-   show fld "revealQuote"
-   
-   wait pTimer seconds
-   
-   hide grp "revealQuoteGroup" 
-   hide fld "revealQuote"
-   
-   --losePoints # later when we give badges
-end revealQuote
 
 on showClues
    local pMsg
