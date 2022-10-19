@@ -65,7 +65,7 @@ end fetchMediaItems
 
 
 function fetchRandomMediaItem
-  
+   
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -203,83 +203,134 @@ function getMediaItemMetadata pRecords
    
    put empty into tArtists
    put empty into tAuthor
+   put empty into tDateCreated
+   put empty into tViewData
    
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
    
-   put empty into tViewData
-   # create small HTML chunck from the data we want
+   -------
+   # we to extract data from the array - sMediaMetaA
+   # from the "item" table
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   if (sMediaMetaA["artists"] <> empty) OR (sMediaMetaA["artists"] is "null") then
-      put "Artist: " & sMediaMetaA["artists"] into tArtists
+   put sMediaMetaA["artists"] into tArtists
+   
+   if tArtists <> empty then
+      if tArtists is "null" then
+         # We don't approve
+      else
+         put "Artists: " & sMediaMetaA["artists"] into tArtists
+      end if
    end if
+   
    if sMediaMetaA["author"] <> empty then
       put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
    
    put sMediaMetaA["description"] into tDescription
-   --replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
    
-   put sMediaMetaA["date_created"] into tDateCreated
+   if sMediaMetaA["date_created"] <> "0000-00-00" then
+      put sMediaMetaA["date_created"] into tDateCreated
+   end if
+   
+   
    put  sMediaMetaA["audio_file_transcript"] into tTranscript
    
-   # do not  display a non-date string as zeros
-   if tDateCreated ="0000-00-00" then put "" into tDateCreated
+   ---------------------
+   # we have song guidance
    
-   if tTranscript is not empty then  
-      put "Transcript: " & cr & cr before tTranscript
+   if sMediaMetaA["ragam"] <> empty then
+      if sMediaMetaA["ragam"] is "null" then
+         # We don't approve
+      else
+         put  "Ragam: " & sMediaMetaA["ragam"] into tMusicGuide
+      end if
    end if
    
-   if sMediaMetaA[original_script] <> empty then 
-      put  "_________________" & cr & "Original Script: " & cr & cr & cr & sMediaMetaA[original_script] after tLyrics
+   if sMediaMetaA["talam"] <> empty then
+      if sMediaMetaA["talam"] is "null" then
+         # Talam is no there
+      else
+         put  cr & "Talam: " & sMediaMetaA["talam"] after tMusicGuide
+      end if
    end if
-   if sMediaMetaA[transliteration] <> empty then
-      put   "_________________" &  cr & "Transliteration: " & cr & cr & cr & sMediaMetaA[transliteration] after tLyrics 
-   end if  
-   if sMediaMetaA[literal_translation] <> empty then
-      put  "_________________" & cr & "Literal Translation: " & cr & cr & cr & sMediaMetaA[literal_translation] after tLyrics
-   end if  
    
-   # data has commas so we have to use a lines as a delimiter
-   --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
+   if sMediaMetaA["sruti_tonic"] <> empty then
+      if sMediaMetaA["sruti_tonic"]  is "null" then
+      else
+         put  cr & "Sruti Pitch: " & sMediaMetaA["sruti_tonic"] after tMusicGuide
+      end if
+   end if
+   
+   if sMediaMetaA["graha_note"] <> empty then
+      if sMediaMetaA["graha_note"]   is "null" then
+      else
+         put  cr & "Graha Note: " & sMediaMetaA["graha_note"] after tMusicGuide
+      end if
+   end if
+   
    
    if tArtists <> empty then
-      put tArtists & cr after tViewData
+      if tArtists is "null" then
+         # We don't approve
+      else
+         put tArtists & cr after tViewData
+      end if
    end if
    
    if tAuthor <> empty then
       put tAuthor & cr & cr after tViewData
+   else
+      # not the  tAuthor
    end if
    
-   put (tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
-   
-   if tDateCreated <> empty then
-      put tDateCreated  after tViewData
+   if (tDateCreated <> empty ) OR (tDateCreated = "0000-00-00") then
+      put tDateCreated  & cr & cr after tViewData
+   else
+      # not the  tDateCreated
    end if
+   -----
+   # music guide
+   
+   
+   if tMusicGuide <> empty then
+      put tMusicGuide   & cr & cr after tViewData
+   else
+      # not the  tMusicGuide 
+   end if
+   
+   
+   
    if tDescription <> empty then
-      put tDescription  after tViewData
+      put tDescription  & cr & cr after tViewData
+   else
+      # not the  tDescription
    end if
+   
    if tTranscript<> empty then
-      put tLyrics  after tViewData
+      put "_________________" &cr & "Transcript:"  &cr& tTranscript after tViewData
+   else
+      # not the tTranscript
    end if
+   
    if tLyrics <> empty then
       put tLyrics  after tViewData
+   else
+      # not the tLyrics
    end if
    
-   
-   --   repeat for each line x in tFields
-   --      if x <> empty then
-   --         put x  after tViewData
-   --      end if
-   --   end repeat
+   # and we have to extract HTML
    
    replace "<p>" with "" in tViewData
-   replace "</p>" with "" in tViewData
+   replace "</p>" with "" in tViewData 
+   replace "\n" with "" in tViewData
+   replace  (cr & cr & cr & cr) with cr in tViewData
    
-   replace "\n" with cr in tViewData
-   replace "null" with "" in tViewData
+   --
+   --put tViewData
+   --
    return tViewData
    
 end getMediaItemMetadata
