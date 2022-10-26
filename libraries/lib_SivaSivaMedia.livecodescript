@@ -213,7 +213,9 @@ function getMediaItemMetadata pRecords
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   if (sMediaMetaA["artists"] is not in "null") then
+   if (sMediaMetaA["artists"] = "null") then
+      # nothing
+      else
       put "Artist: " & sMediaMetaA["artists"] & cr into tArtists
    end if
    
