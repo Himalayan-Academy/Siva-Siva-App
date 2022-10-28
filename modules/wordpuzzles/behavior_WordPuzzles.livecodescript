@@ -3,7 +3,7 @@ doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
 
 local sWordCount, sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
-
+local sSubjectOfCollection, sNoOfQuote
 
 /*
 The important handles for the tiles are  located in the script
@@ -67,41 +67,43 @@ on mouseup
          
          hide  group "randomPuzzleControls"
          hide group "randomPuzzleInProgress"
-         
+         show fld "MesmorizeFld"
          show grp "indexOfQuotes"
          
          break
          
       case "Random Puzzle"
-         hide grp "indexOfQuotes"
-         hide fld "MesmorizeFld"
-         show  group "randomPuzzleControls"
-         --show  group "randomPuzzleInProgress"
-         
+         show fld "MesmorizeFld"
+         hide grp "IndexOfQuotes"
+         show grp "randomPuzzleControls"
          break
          
+      case "Jumble"
+         break
          
       case "Yamas"
          clearBoard
-         hide grp "indexOfQuotes"
-         hide fld "MesmorizeFld"
-         
-         fetchMesmorizeMap "Yamas Memory Game"
+         --hide grp "indexOfQuotes"
+         show fld "MesmorizeFld"
+         put  "Yamas Memory Game" into sSubjectOfCollection
+         fetchMesmorizeMap "Yamas Memory Game" 
+         show btn "Jumble"
          break
-         
          
       case "Niyamas"
          clearBoard
-         hide grp "indexOfQuotes"
-         hide fld "MesmorizeFld"
+         --hide grp "indexOfQuotes"
+         show fld "MesmorizeFld"
+         put  "Niyamas Memory Game" into sSubjectOfCollection
          fetchMesmorizeMap "Niyamas Memory Game"
+         show btn "Jumble"
          break
          
       case "Random"
          clearBoard
-         hide widget "randomPuzzleSettings"
-         hide btn "getInfo"
+         hide grp "randomPuzzleControls"
          createRandomPuzzle
+         
          break
          
       case "Reveal"
@@ -136,6 +138,7 @@ on mouseup
             exit mouseUp
          else
             local tParam
+            clearBoard
             portal_GoStack "Siva-Siva-Portal"
          end if
          break
@@ -278,21 +281,26 @@ command fetchMesmorizeMap pQuotes
    ----- 
    local tConnectionID, tSQL, tCurRange, tNo
    
+   
    ## Methods for getting from dBase
    put  JnanamDB() into tConnectionID   
    
    # production routine, comment out the above
    #  and use this for a runtime random selection
+   
    put the uFetchQuotesTags of this stack into tSQL
    replace ":1" with  pQuotes in tSQL
    
    dbSetSQL tSQL
    
    put dbGet("quote", tConnectionID) into sSelectedQuotes
-   put random (the number of lines of the keys of sSelectedQuotes) into tNo
    
-   put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
-   --put textDecode ( sSelectedQuotes[tNo]["tags"], "UTF8")  into fld "wordPuzzleSubject"
+   # We have an array of sSelectedQuotes 
+   # which is Yamas or Niyamas
+   
+   put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
+   show fld  "wordPuzzleSubject"
+   
    put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
    
    getTheQuote
@@ -301,6 +309,8 @@ end fetchMesmorizeMap
 
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
+   
+   hide grp "indexOfQuotes"
    
    #hack to deal with endline bug
    replace "\n" with space in sQuote
@@ -322,12 +332,10 @@ Command getTheQuote
    -- Take a snapsite of the quote, move it off screen
    import snapshot from   grp "revealQuoteGroup"
    
-   
    # need to save it because we are going to crop each word in a loop
    # put it away for safe keeping
    set the name of the last image to "currentPuzzle" 
    set the loc of image "currentPuzzle"  to -1000,-1000
-   
    
    -- copy the image to the same location/rect as the quote
    
@@ -860,13 +868,7 @@ end showClues
 
 on displayAbout pLevel
    local tPath, tAboutText, tAnswer
-   answer "About Word Puzzle or Shortcuts?"  with "About" or "Shortcuts"
-   put it into tAnswer
    
-   if tAnswer is "Shortcuts" then
-      journal_AddEntry
-   else
-      
       put the acceleratedRendering of this stack into sRendering
       set the acceleratedRendering of this stack to true
       put sivasiva_GetModuleFolder ("wordpuzzles") into tPath
@@ -875,8 +877,7 @@ on displayAbout pLevel
       set the htmltext of fld "aboutText" to tAboutText
       set the layer of grp "aboutDisplay" to top
       show grp "aboutDisplay"
-   end if
-   
+  
 end displayAbout
 
 on closeAbout
@@ -947,6 +948,15 @@ function getUserPreferences
    put aWordPuzzleLevel["level"] into sPuzzleLevel
    return sPuzzleLevel
 end getUserPreferences
+
+command loadBooksMetaData
+   local tBooksData, tArray
+   put url ("binfile:" & path_Documents()& "modules/read/read.lson") into tBooksData
+   if tBooksData is empty then
+      put url ("binfile:" & path_Modules()& "read/read.lson") into tBooksData
+   end if
+   put arrayDecode(tBooksData) into sBooksMetaData
+end loadBooksMetaData
 
 command saveUserPrefs sPuzzleLevel
    setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
