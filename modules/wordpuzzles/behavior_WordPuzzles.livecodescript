@@ -3,7 +3,7 @@ doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
 
 local sWordCount, sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
-local sSubjectOfCollection, sNoOfQuote, sTheNoOfQuotes
+local sSubjectOfCollection, sNumOfQuotes
 
 /*
 The important handles for the tiles are  located in the script
@@ -279,12 +279,9 @@ local sMesmorizeGame
 
 command fetchMesmorizeMap pQuotes
    local tPath, tJSON
-   ----- 
+   
    local tConnectionID, tSQL, tCurRange, tNo
-   
-   getUserPreferences
-   
-   put the keys of sTheNoOfQuotes["wordpuzzles"]["Yamas"] into sTheNoOfQuotes
+   put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"] into sNumOfQuotes
    
    ## methods for getting from dBase
    put  JnanamDB() into tConnectionID   
@@ -298,11 +295,18 @@ command fetchMesmorizeMap pQuotes
    dbSetSQL tSQL
    
    # we down to 1
-   
+   ----- 
+   --breakpoint
+   -----
    put dbGet("quote", tConnectionID) into sSelectedQuotes
    
    # We have an array of sSelectedQuotes 
    # which is Yamas or Niyamas
+   
+   # put will poke a value to tNo
+   # which should  should be wordpuzzles-prefs.json
+   
+   put 1 into tNo
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
    show fld  "wordPuzzleSubject"
@@ -314,22 +318,16 @@ command fetchMesmorizeMap pQuotes
 end fetchMesmorizeMap
 
 Command getUserPreferences
-   local pWordPuzzlesTheNoOfQuotes, tArray, tPath
+   local pNumOfQuotes, tArray, tPath
    
-   put url ("binfile:" & path_Documents() & "modules/wordpuzzles/wordpuzzles-preferences.json")  into pWordPuzzlesTheNoOfQuotes
+   put url ("binfile:" & path_Documents() & "modules/wordpuzzles/wordpuzzles-prefs.json")  into pNumOfQuotes
    
-   if  pWordPuzzlesTheNoOfQuotes is empty then
-      
-      put specialFolderPath("documents") into tPath
-      
-      if not isMobile() then
-         put "/SivaSivaApp/" after tPath 
-         if not (there is a folder tPath) then  # need for first run ... 
-            create folder tPath
-         end if
-      end if  
+   if  pNumOfQuotes is empty then
+      put url ("binfile:" & path_Modules()& "wordpuzzles/wordpuzzles-prefs.json") into pNumOfQuotes
+      put pNumOfQuotes into url ("binfile:" & path_Documents()& "modules/wordpuzzles/wordpuzzles-prefs.json") 
    end if
-   put JSONToArray(pWordPuzzlesTheNoOfQuotes) into sTheNoOfQuotes
+   
+   put JSONToArray(pNumOfQuotes) into sNumOfQuotes
    
 end getUserPreferences
 
