@@ -3,7 +3,7 @@ doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
 
 local sWordCount, sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
-local sSubjectOfCollection, sNoOfQuote
+local sSubjectOfCollection, sNoOfQuote, sTheNoOfQuotes
 
 /*
 The important handles for the tiles are  located in the script
@@ -20,6 +20,7 @@ on preOpenStack
       mobileSetFullScreenRectForOrientations "landscape left,landscape right","0,0,736,414"
       set the fullscreenmode of this stack to "showAll" -- better for wider screens
    end if
+   getUserPreferences
    setCardCoords "landscape"
 end preOpenStack
 
@@ -243,7 +244,7 @@ on createRandomPuzzle
    startTimer
    
    getTheQuote
-    
+   
 end createRandomPuzzle
 
 command fetchRandomQuote
@@ -281,8 +282,11 @@ command fetchMesmorizeMap pQuotes
    ----- 
    local tConnectionID, tSQL, tCurRange, tNo
    
+   getUserPreferences
    
-   ## Methods for getting from dBase
+   put the keys of sTheNoOfQuotes["wordpuzzles"]["Yamas"] into sTheNoOfQuotes
+   
+   ## methods for getting from dBase
    put  JnanamDB() into tConnectionID   
    
    # production routine, comment out the above
@@ -292,6 +296,8 @@ command fetchMesmorizeMap pQuotes
    replace ":1" with  pQuotes in tSQL
    
    dbSetSQL tSQL
+   
+   # we down to 1
    
    put dbGet("quote", tConnectionID) into sSelectedQuotes
    
@@ -306,6 +312,38 @@ command fetchMesmorizeMap pQuotes
    getTheQuote
    
 end fetchMesmorizeMap
+
+Command getUserPreferences
+   local pWordPuzzlesTheNoOfQuotes, tArray, tPath
+   
+   put url ("binfile:" & path_Documents() & "modules/wordpuzzles/wordpuzzles-preferences.json")  into pWordPuzzlesTheNoOfQuotes
+   
+   if  pWordPuzzlesTheNoOfQuotes is empty then
+      
+      put specialFolderPath("documents") into tPath
+      
+      if not isMobile() then
+         put "/SivaSivaApp/" after tPath 
+         if not (there is a folder tPath) then  # need for first run ... 
+            create folder tPath
+         end if
+      end if  
+   end if
+   put JSONToArray(pWordPuzzlesTheNoOfQuotes) into sTheNoOfQuotes
+   
+end getUserPreferences
+
+--command loadBooksMetaData
+--   local tBooksData, tArray
+--   put url ("binfile:" & path_Documents()& "modules/read/read.lson") into tBooksData
+--   if tBooksData is empty then
+--      put url ("binfile:" & path_Modules()& "read/read.lson") into tBooksData
+--   end if
+--   put arrayDecode(tBooksData) into sBooksMetaData
+--end loadBooksMetaData
+
+
+
 
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
@@ -942,21 +980,14 @@ command resetUI
    clearBoard
 end resetUI
 
-function getUserPreferences
-   local aWordPuzzleLevel
-   put getPref ("preferences/modules/word-puzzle") into aWordPuzzleLevel
-   put aWordPuzzleLevel["level"] into sPuzzleLevel
-   return sPuzzleLevel
-end getUserPreferences
-
-command loadBooksMetaData
-   local tBooksData, tArray
-   put url ("binfile:" & path_Documents()& "modules/read/read.lson") into tBooksData
-   if tBooksData is empty then
-      put url ("binfile:" & path_Modules()& "read/read.lson") into tBooksData
+command loadWordPuzzlePrefs
+   local tWordPuzzlePrefs, tArray
+   put url ("binfile:" & path_Documents()& "modules/wordpuzzle/wordpuzzles-preferences.json") into tWordPuzzlePrefs
+   if tWordPuzzlePrefs is empty then
+      put url ("binfile:" & path_Modules()& "wordpuzzle/wordpuzzles-preferences.json") into  tWordPuzzlePrefs
    end if
-   put arrayDecode(tBooksData) into sBooksMetaData
-end loadBooksMetaData
+   put arrayDecode(tWordPuzzlePrefs) into sWordPuzzlePrefs
+end loadWordPuzzlePrefs
 
 command saveUserPrefs sPuzzleLevel
    setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
