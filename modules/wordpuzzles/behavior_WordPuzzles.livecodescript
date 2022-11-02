@@ -36,6 +36,8 @@ on preopencard
    hide grp "randomPuzzleInProgress"
    hide fld "MesmorizeFld"
    hide fld  "titleUnjumbleFld"
+   hide grp "revealQuoteGroup"
+   --hide fld "revealQuote"
    
    loadNewBgImg
 end preopencard
@@ -108,7 +110,7 @@ on mouseup
          break
          
       case "Reveal"
-         revealQuote "5"
+         revealQuote "5000"
          break
          
       case "Clear"
@@ -331,21 +333,10 @@ Command getUserPreferences
    
 end getUserPreferences
 
---command loadBooksMetaData
---   local tBooksData, tArray
---   put url ("binfile:" & path_Documents()& "modules/read/read.lson") into tBooksData
---   if tBooksData is empty then
---      put url ("binfile:" & path_Modules()& "read/read.lson") into tBooksData
---   end if
---   put arrayDecode(tBooksData) into sBooksMetaData
---end loadBooksMetaData
-
-
-
-
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
    
+   hide fld "MesmorizeFld"
    hide grp "indexOfQuotes"
    
    #hack to deal with endline bug
@@ -361,12 +352,13 @@ Command getTheQuote
    put sQuote into fld "revealQuote"
    setSizeAndLocationOfQuote sQuote
    
-   set the blendlevel of fld "revealQuote" to 0  
-   --show grp "revealQuoteGroup"
-   show fld "revealQuote"
+   ---
+   --breakpoint
+   ---
    
    -- Take a snapsite of the quote, move it off screen
-   import snapshot from   grp "revealQuoteGroup"
+   --import snapshot from   grp "revealQuoteGroup"
+   import snapshot from   fld "revealQuote"
    
    # need to save it because we are going to crop each word in a loop
    # put it away for safe keeping
@@ -451,7 +443,7 @@ Command getTheQuote
    set the vis of grc "startHere" to true
    
    
-   hide grp "revealQuoteGroup"
+   --hide grp "revealQuoteGroup"
    hide fld "revealQuote" -- comment this out to see the quote during dev
    
    local pTile, pTrackdata
@@ -472,11 +464,13 @@ end getTheQuote
 
 
 command getRandomColors
+   breakpoint
+   
    put getColors() into tColors
    put line 1 of tColors into tRGB
    put line 2 of tColors into tTileBkgndRGB
    set the foregroundcolor of fld "revealQuote" to tRGB
-   set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
+  
 end getRandomColors
 
 
@@ -549,7 +543,7 @@ command setSizeAndLocationOfQuote sQuote
    put the formattedHeight of fld "revealQuote" into tRequiredHeight
    set the height of fld "revealQuote" to tRequiredHeight
    set the top of fld "revealQuote" to 40
-   set the rect of grc "quoteBkgnd" to the rect of fld "revealQuote"
+ 
    
 end setSizeAndLocationOfQuote
 
@@ -590,23 +584,17 @@ end getLocation
 
 command revealQuote pTimer
    
-   set the layer of grp "revealQuoteGroup" to top
-   
-   --set the layer of grc "blankGraphic" to top
-   
-   show grc "blankGraphic"
    show grp "revealQuoteGroup"
-   show grc "quoteBkgnd" 
+   set the layer of grp "revealQuoteGroup" to top
+   show grc "blankGraphic"
    show fld "revealQuote"
    
-   wait pTimer seconds
+   wait pTimer milliseconds
    
- hide grc "blankGraphic"
    hide  grp "revealQuoteGroup"
+   hide grc "blankGraphic"
    hide fld "revealQuote"
-   hide grc "quoteBkgnd" 
    
-   --losePoints # later when we give badges
 end revealQuote
 
 on clearBoard
@@ -624,7 +612,7 @@ on clearBoard
    put empty into fld "revealQuote" of me
    hide  fld "revealQuote" of me
    hide fld "wordPuzzleSubject"
-   hide group "revealQuoteGroup"
+   --hide group "revealQuoteGroup"
    if the uwordlist of me = "" then exit clearBoard -- assume imgs are gone
    repeat with x = the number of imgs of me down to 1
       if the short name of img x of me begins with "word_"
@@ -639,7 +627,7 @@ on clearBoard
    set the uWordList of me to empty
    
    hide grc "blankGraphic"
-   hide grp "revealQuoteGroup"
+ -- hide grp "revealQuoteGroup"
    hide grp "randomPuzzleInProgress"
    hide graphic "startHere" of me
    unlock screen
