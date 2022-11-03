@@ -336,6 +336,14 @@ end getUserPreferences
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
    
+   
+   put getColors() into tColors
+   put line 1 of tColors into tRGB
+   put line 2 of  tColors into tTileBkgndRGB
+   set the foregroundcolor of fld "revealQuote" to tRGB
+   set the backgroundColor of grc "blankGraphic" to tTileBkgndRGB
+   
+   
    hide fld "MesmorizeFld"
    hide grp "indexOfQuotes"
    
@@ -348,16 +356,20 @@ Command getTheQuote
    replace (quote& space) with ( "”"& space) in sQuote 
    
    -- Set the quote in a field
+   
    put (the number of words of sQuote) into sWordCount
    put sQuote into fld "revealQuote"
    setSizeAndLocationOfQuote sQuote
    
+   set the blendlevel of fld "revealQuote" to 0  
+   show grp "revealQuoteGroup"
+   show fld "revealQuote"
    ---
    --breakpoint
    ---
    
    -- Take a snapsite of the quote, move it off screen
-   --import snapshot from   grp "revealQuoteGroup"
+   
    import snapshot from   fld "revealQuote"
    
    # need to save it because we are going to crop each word in a loop
