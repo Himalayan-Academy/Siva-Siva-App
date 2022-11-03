@@ -336,6 +336,8 @@ end getUserPreferences
 Command getTheQuote
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
    
+   hide fld "MesmorizeFld"
+   hide grp "indexOfQuotes"
    
    put getColors() into tColors
    put line 1 of tColors into tRGB
@@ -344,16 +346,13 @@ Command getTheQuote
    set the backgroundColor of grc "blankGraphic" to tTileBkgndRGB
    
    
-   hide fld "MesmorizeFld"
-   hide grp "indexOfQuotes"
+   --   #hack to deal with endline bug
+   --   replace "\n" with space in sQuote
    
-   #hack to deal with endline bug
-   replace "\n" with space in sQuote
-   
-   # fix  strings with straight quotes, which are word delimiters in LC
-   # change to curly's when they are included with the word 
-   replace (space & quote) with (space & "“") in sQuote 
-   replace (quote& space) with ( "”"& space) in sQuote 
+   --   # fix  strings with straight quotes, which are word delimiters in LC
+   --   # change to curly's when they are included with the word 
+   --   replace (space & quote) with (space & "“") in sQuote 
+   --   replace (quote& space) with ( "”"& space) in sQuote 
    
    -- Set the quote in a field
    
