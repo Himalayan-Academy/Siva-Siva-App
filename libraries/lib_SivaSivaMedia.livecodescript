@@ -65,7 +65,7 @@ end fetchMediaItems
 
 
 function fetchRandomMediaItem
-   
+  
    if the paramcount mod 2 is not 0 then
       return "err: param count needs to be even"
    end if
@@ -203,134 +203,74 @@ function getMediaItemMetadata pRecords
    
    put empty into tArtists
    put empty into tAuthor
-   put empty into tDateCreated
    put empty into tViewData
    
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
    
-   -------
-   # we to extract data from the array - sMediaMetaA
-   # from the "item" table
+   # get the data into sMediaMetaA 
+   # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   put sMediaMetaA["artists"] into tArtists
-   
-   if tArtists <> empty then
-      if tArtists is "null" then
-         # We don't approve
+   if (sMediaMetaA["artists"] = "null") then
+      # nothing
       else
-         put "Artists: " & sMediaMetaA["artists"] into tArtists
-      end if
+      put "Artist: " & sMediaMetaA["artists"] & cr into tArtists
    end if
    
-   if sMediaMetaA["author"] <> empty then
+   if sMediaMetaA["author"] <> empty  then
       put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
    
+   put sMediaMetaA["date_created"] into tDateCreated
    put sMediaMetaA["description"] into tDescription
-   
-   if sMediaMetaA["date_created"] <> "0000-00-00" then
-      put sMediaMetaA["date_created"] into tDateCreated
-   end if
-   
-   
    put  sMediaMetaA["audio_file_transcript"] into tTranscript
    
-   ---------------------
-   # we have song guidance
-   
-   if sMediaMetaA["ragam"] <> empty then
-      if sMediaMetaA["ragam"] is "null" then
-         # We don't approve
-      else
-         put  "Ragam: " & sMediaMetaA["ragam"] into tMusicGuide
-      end if
+   if tAuthor is not empty  then 
+      put tAuthor  & cr  after tViewData
+   end if
+   if  tArtists is not in "null" then 
+      put  tArtists & cr  after tViewData
    end if
    
-   if sMediaMetaA["talam"] <> empty then
-      if sMediaMetaA["talam"] is "null" then
-         # Talam is no there
-      else
-         put  cr & "Talam: " & sMediaMetaA["talam"] after tMusicGuide
-      end if
+   if tDateCreated is not "0000-00-00"  then 
+      put tDateCreated & cr & cr  after tViewData
    end if
    
-   if sMediaMetaA["sruti_tonic"] <> empty then
-      if sMediaMetaA["sruti_tonic"]  is "null" then
-      else
-         put  cr & "Sruti Pitch: " & sMediaMetaA["sruti_tonic"] after tMusicGuide
-      end if
+   if tTranscript <> empty then  
+      put  CR & "_________________" & cr & "Transcript: " & cr & cr before tTranscript
    end if
-   
-   if sMediaMetaA["graha_note"] <> empty then
-      if sMediaMetaA["graha_note"]   is "null" then
-      else
-         put  cr & "Graha Note: " & sMediaMetaA["graha_note"] after tMusicGuide
-      end if
-   end if
-   
-   
-   if tArtists <> empty then
-      if tArtists is "null" then
-         # We don't approve
-      else
-         put tArtists & cr after tViewData
-      end if
-   end if
-   
-   if tAuthor <> empty then
-      put tAuthor & cr & cr after tViewData
-   else
-      # not the  tAuthor
-   end if
-   
-   if (tDateCreated <> empty ) OR (tDateCreated = "0000-00-00") then
-      put tDateCreated  & cr & cr after tViewData
-   else
-      # not the  tDateCreated
-   end if
-   -----
-   # music guide
-   
-   
-   if tMusicGuide <> empty then
-      put tMusicGuide   & cr & cr after tViewData
-   else
-      # not the  tMusicGuide 
-   end if
-   
-   
    
    if tDescription <> empty then
-      put tDescription  & cr & cr after tViewData
-   else
-      # not the  tDescription
+      put tDescription  after tViewData
    end if
    
    if tTranscript<> empty then
-      put "_________________" &cr & "Transcript:"  &cr& tTranscript after tViewData
-   else
-      # not the tTranscript
+      put tTranscript  after tViewData
+   end if
+   
+   if sMediaMetaA[original_script] <> empty then 
+      put  "_________________" & cr & "Original Script: " & cr & cr & sMediaMetaA[original_script] after tLyrics
+   end if
+   if sMediaMetaA[transliteration] <> empty then
+      put   "_________________" &  cr & "Transliteration: " & cr & cr & sMediaMetaA[transliteration] after tLyrics 
+   end if  
+   if sMediaMetaA[literal_translation] <> empty then
+      put  "_________________" & cr & "Literal Translation: " & cr & cr &  sMediaMetaA[literal_translation] after tLyrics
    end if
    
    if tLyrics <> empty then
       put tLyrics  after tViewData
-   else
-      # not the tLyrics
    end if
    
-   # and we have to extract HTML
-   
    replace "<p>" with "" in tViewData
-   replace "</p>" with "" in tViewData 
-   replace "\n" with "" in tViewData
-   replace  (cr & cr & cr & cr) with cr in tViewData
+   replace "</p>" with "" in tViewData
+   replace cr & cr & cr with cr in tViewData
    
-   --
-   --put tViewData
-   --
+   replace "\n" with cr in tViewData
+   replace "null" with "" in tViewData
+   
    return tViewData
    
 end getMediaItemMetadata
