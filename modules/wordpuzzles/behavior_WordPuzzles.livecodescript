@@ -343,7 +343,7 @@ Command getTheQuote
    put line 1 of tColors into tRGB
    put line 2 of  tColors into tTileBkgndRGB
    set the foregroundcolor of fld "revealQuote" to tRGB
-   set the backgroundColor of grc "blankGraphic" to tTileBkgndRGB
+   set the backgroundColor of grc "quoteBkgnd" to tTileBkgndRGB
    
    
    --   #hack to deal with endline bug
