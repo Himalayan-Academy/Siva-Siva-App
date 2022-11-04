@@ -1511,12 +1511,12 @@ end setAudioTime
 
 
 on audioSeekForward
-   setAudioTime min(getDuration(), getCurrentTime() + 10000)
+   setAudioTime min(getDuration(), getCurrentTime() + 5000)
 end audioSeekForward
 
 
 on audioSeekBack
-   setAudioTime max(0,getCurrentTime() - 10000)
+   setAudioTime max(0,getCurrentTime() - 5000)
 end audioSeekBack
 
 
