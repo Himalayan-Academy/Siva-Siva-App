@@ -23,6 +23,7 @@ on preOpenStack
    end if
    getUserPreferences
    setCardCoords "landscape"
+   clearBoard
 end preOpenStack
 
 
@@ -87,7 +88,6 @@ on mouseup
          
       case "Yamas"
          clearBoard
-         --hide grp "indexOfQuotes"
          show fld "MesmorizeFld"
          put  "Yamas Memory Game" into sSubjectOfCollection
          fetchMesmorizeMap "Yamas Memory Game" 
@@ -96,7 +96,6 @@ on mouseup
          
       case "Niyamas"
          clearBoard
-         --hide grp "indexOfQuotes"
          show fld "MesmorizeFld"
          put  "Niyamas Memory Game" into sSubjectOfCollection
          fetchMesmorizeMap "Niyamas Memory Game"
