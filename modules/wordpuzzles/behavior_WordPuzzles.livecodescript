@@ -14,6 +14,7 @@ array that keeps the track tile locations.
 --script "behavior_WordPuzzles"
 local thePixie,tFadeIncrement,sPixies,sPuzzleLevel,sCardRect
 
+
 on preOpenStack
    if isMobile() then
       mobileSetAllowedOrientations "landscape left,landscape right" 
