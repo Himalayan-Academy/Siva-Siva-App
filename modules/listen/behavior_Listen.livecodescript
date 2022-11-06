@@ -33,7 +33,9 @@ local sFastforward
 
 
 on preOpenStack
-   if isMobile() then    
+  -- breakpoint
+      
+      if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
       iphoneSetAudioCategory "playback" 
@@ -638,7 +640,8 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          # typically there CR in columns that shouldn't be there.
          --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
          
-         if the result is not empty then 
+         if the result is not empty then
+            put the result 
             # we did not get anything. Turn  off loader, inform the users
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
