@@ -152,7 +152,6 @@ on mouseup
          put url ("file:"& path_Assets()& "info/user-guide.html") into tUserGuide
          set the htmltext of fld "helpField" to tUserGuide
          
-         
          show grc "helpBkg"
          show btn "helpDismiss"
          show fld "helpField"
