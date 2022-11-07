@@ -1228,9 +1228,9 @@ command journal_AddEntry -- save a bookmark to databast
       # Do not do anything. Save the Journal entry 
    else
       if sDataA["url"] contains "http" then
-         dialog_CustomMsg ("Downloads the upper right corner." & cr &  "NOT " & quote & "My Downloads" & quote ) 
+         dialog_CustomMsg ("Download" & cr &  "The upper right corner." & cr &  "NOT " & quote & "My Downloads" & quote ) 
          exit to top
-       
+         
       end if
    end if
    
@@ -1514,12 +1514,12 @@ end setAudioTime
 
 
 on audioSeekForward
-   setAudioTime min(getDuration(), getCurrentTime() + 5000)
+   setAudioTime min(getDuration(), getCurrentTime() + 10000)
 end audioSeekForward
 
 
 on audioSeekBack
-   setAudioTime max(0,getCurrentTime() - 5000)
+   setAudioTime max(0,getCurrentTime() - 10000)
 end audioSeekBack
 
 

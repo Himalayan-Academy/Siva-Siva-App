@@ -164,7 +164,6 @@ command downloadComplete pURL, pStatus
       end if
    end if
    hide grp "DownloadControls"
-   hide grp "DownloadSelection"
 end downloadComplete
 
 
