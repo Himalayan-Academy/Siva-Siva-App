@@ -1228,9 +1228,9 @@ command journal_AddEntry -- save a bookmark to databast
       # Do not do anything. Save the Journal entry 
    else
       if sDataA["url"] contains "http" then
-         dialog_CustomMsg ("Download to " & quote & "My Downloads" & quote )
+         dialog_CustomMsg ("Downloads the upper right corner." & cr &  "NOT " & quote & "My Downloads" & quote ) 
          exit to top
-         --exit addJournalEntry
+       
       end if
    end if
    
