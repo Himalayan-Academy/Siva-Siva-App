@@ -55,7 +55,7 @@ on resizeStack
 end resizeStack
 
 on updateUI
-   local tFooter, tHeader, tRect, tControl, tWidth, tLoc
+   local tFooter, tHeader, tRect, tControl, tWidth, tLoc, tCityList
    put CardWidth() into tWidth
    
    put the long id of grp "headerGrp" into tHeader
@@ -74,6 +74,9 @@ on updateUI
    put the loc of tControl into tLoc
    put horizCenter() into item 1 of tLoc
    set the loc of tControl to tLoc
+   put the long id of fld "CityList" into tCityList
+   set the rect of tCityList to (the left of tCityList, the top tCityList, the right of tCityList, \
+         the top of tFooter - 57)
 end updateUI
 
 command initCalendar
