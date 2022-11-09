@@ -203,83 +203,74 @@ function getMediaItemMetadata pRecords
    
    put empty into tArtists
    put empty into tAuthor
+   put empty into tViewData
    
    if pRecords is not empty then
       put pRecords into sMediaMetaA
    end if
    
-   put empty into tViewData
+   # get the data into sMediaMetaA 
    # create small HTML chunck from the data we want
    put sMediaMetaA["title"] into tTitle
    put sMediaMetaA["sub_title"] into tSubTitle
-   if (sMediaMetaA["artists"] <> empty) OR (sMediaMetaA["artists"] is "null") then
-      put "Artist: " & sMediaMetaA["artists"] into tArtists
+   if (sMediaMetaA["artists"] = "null") then
+      # nothing
+      else
+      put "Artist: " & sMediaMetaA["artists"] & cr into tArtists
    end if
-   if sMediaMetaA["author"] <> empty then
+   
+   if sMediaMetaA["author"] <> empty  then
       put "Author: " & sMediaMetaA["author"] into tAuthor
    end if
    
-   put sMediaMetaA["description"] into tDescription
-   --replace "\n" with cr in tDescription  # hopefully fixes the EOL chars passed to SQLLIte
-   
    put sMediaMetaA["date_created"] into tDateCreated
+   put sMediaMetaA["description"] into tDescription
    put  sMediaMetaA["audio_file_transcript"] into tTranscript
    
-   # do not  display a non-date string as zeros
-   if tDateCreated ="0000-00-00" then put "" into tDateCreated
-   
-   if tTranscript is not empty then  
-      put "Transcript: " & cr & cr before tTranscript
+   if tAuthor is not empty  then 
+      put tAuthor  & cr  after tViewData
+   end if
+   if  tArtists is not in "null" then 
+      put  tArtists & cr  after tViewData
    end if
    
-   if sMediaMetaA[original_script] <> empty then 
-      put  "_________________" & cr & "Original Script: " & cr & cr & cr & sMediaMetaA[original_script] after tLyrics
-   end if
-   if sMediaMetaA[transliteration] <> empty then
-      put   "_________________" &  cr & "Transliteration: " & cr & cr & cr & sMediaMetaA[transliteration] after tLyrics 
-   end if  
-   if sMediaMetaA[literal_translation] <> empty then
-      put  "_________________" & cr & "Literal Translation: " & cr & cr & cr & sMediaMetaA[literal_translation] after tLyrics
-   end if  
-   
-   # data has commas so we have to use a lines as a delimiter
-   --   put (tTitle& cr &tSubTitle& cr &tArtists& cr &tAuthor& cr &tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
-   
-   if tArtists <> empty then
-      put tArtists & cr after tViewData
+   if tDateCreated is not "0000-00-00"  then 
+      put tDateCreated & cr & cr  after tViewData
    end if
    
-   if tAuthor <> empty then
-      put tAuthor & cr & cr after tViewData
+   if tTranscript <> empty then  
+      put  CR & "_________________" & cr & "Transcript: " & cr & cr before tTranscript
    end if
    
-   put (tDateCreated& cr &tDescription& cr &cr & tTranscript & tLyrics) into tFields
-   
-   if tDateCreated <> empty then
-      put tDateCreated  after tViewData
-   end if
    if tDescription <> empty then
       put tDescription  after tViewData
    end if
+   
    if tTranscript<> empty then
-      put tLyrics  after tViewData
+      put tTranscript  after tViewData
    end if
+   
+   if sMediaMetaA[original_script] <> empty then 
+      put  "_________________" & cr & "Original Script: " & cr & cr & sMediaMetaA[original_script] after tLyrics
+   end if
+   if sMediaMetaA[transliteration] <> empty then
+      put   "_________________" &  cr & "Transliteration: " & cr & cr & sMediaMetaA[transliteration] after tLyrics 
+   end if  
+   if sMediaMetaA[literal_translation] <> empty then
+      put  "_________________" & cr & "Literal Translation: " & cr & cr &  sMediaMetaA[literal_translation] after tLyrics
+   end if
+   
    if tLyrics <> empty then
       put tLyrics  after tViewData
    end if
    
-   
-   --   repeat for each line x in tFields
-   --      if x <> empty then
-   --         put x  after tViewData
-   --      end if
-   --   end repeat
-   
    replace "<p>" with "" in tViewData
    replace "</p>" with "" in tViewData
+   replace cr & cr & cr with cr in tViewData
    
    replace "\n" with cr in tViewData
    replace "null" with "" in tViewData
+   
    return tViewData
    
 end getMediaItemMetadata

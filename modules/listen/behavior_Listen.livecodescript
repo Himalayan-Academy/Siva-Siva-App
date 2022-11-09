@@ -33,7 +33,9 @@ local sFastforward
 
 
 on preOpenStack
-   if isMobile() then    
+  -- breakpoint
+      
+      if isMobile() then    
       mobileSetAllowedOrientations "portrait,portrait upside down"
       set the fullscreenmode of this stack to empty
       iphoneSetAudioCategory "playback" 
@@ -638,7 +640,8 @@ on playList_FetchData pColl, pPlay , pFilterListQueryA, pBrowseHeader
          # typically there CR in columns that shouldn't be there.
          --put it into  url ("file:///Users/brahmanathaswami/Desktop/checkJson.txt" ); exit to top
          
-         if the result is not empty then 
+         if the result is not empty then
+            put the result 
             # we did not get anything. Turn  off loader, inform the users
             showBusyIndicator false
             put "Check your network connection." into  fld "audioList" of card "listen-browse" of stack "listen"
@@ -1225,9 +1228,9 @@ command journal_AddEntry -- save a bookmark to databast
       # Do not do anything. Save the Journal entry 
    else
       if sDataA["url"] contains "http" then
-         dialog_CustomMsg ("Download to " & quote & "My Downloads" & quote )
+         dialog_CustomMsg ("Download" & cr &  "The upper right corner." & cr &  "NOT " & quote & "My Downloads" & quote ) 
          exit to top
-         --exit addJournalEntry
+         
       end if
    end if
    
@@ -1481,6 +1484,7 @@ end pausePlayer
 
 
 on playPausedAudio
+   put getCurrentTime() into sTimeStamp
    put sTimeStamp into sDataA["timeStamp"]
    
    if not isMobile() then
@@ -1495,8 +1499,32 @@ on playPausedAudio
 end playPausedAudio
 
 
+command setAudioTime pTimeStamp
+   if pTimeStamp is empty then
+      put 0 into pTimeStamp
+   end if
+   put pTimeStamp into sTimeStamp
+   if not isMobile() then
+      set the currenttime player "audioPlayer" to sTimeStamp
+   else
+      mobileControlSet "audioPlayer", "currentTime", sTimeStamp
+   end if
+   updatePlayerTime sTimeStamp
+end setAudioTime
+
+
+on audioSeekForward
+   setAudioTime min(getDuration(), getCurrentTime() + 10000)
+end audioSeekForward
+
+
+on audioSeekBack
+   setAudioTime max(0,getCurrentTime() - 10000)
+end audioSeekBack
+
+
 on clearPlayer
-  showPlayer false, "audioPlayer" 
+   showPlayer false, "audioPlayer" 
 end clearPlayer
 
 

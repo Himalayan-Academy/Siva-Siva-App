@@ -392,9 +392,9 @@ on updateUI
          
          break
       case "surprise_verse"
-        
+         
          put the long id of img "parchment-portrait-bkgnd_opt-50.jpg" into tBackground
-        
+         
          break
       case "surprise_art"
          put the long id of img "fabric-lt-brown_portrait-bkgnd_opt-50.jpg" into tBackground
@@ -418,10 +418,6 @@ on updateUI
          put the long id of fld "title" into tTitle
          topLeftMe tTitle, 20, 20
          
-         put the long id of fld "audioDetails" into tAudioDetails
-         set the width of tAudioDetails to (CardWidth() -20)
-         centerMe tAudioDetails, 85,100
-         
          put (21, the top of tFooter - 53, CardWidth() - 21, the top of tFooter - 21) \
                into sPlayerRect
          set the rect of player "audioPlayer" to sPlayerRect
@@ -429,6 +425,11 @@ on updateUI
          put the long id of grp  "downloadSelection" into tDownloadSelection
          topRightMe tDownloadSelection, 45, 50
          show grp  "downloadSelection" 
+         
+         put the long id of fld "audioDetails" into tAudioDetails
+         set the rect of tAudioDetails to (10, the bottom of grp "downloadSelection" - 6, \
+               CardWidth() - 10, the top of grp "pause-play" - 12)
+         
          break
          
       case "surprise_video"

@@ -22,7 +22,7 @@ or instance lib_MobileScroller and lib_MobileAudio etc ?
 global gPlayerIsRunning
 # needed to allow audio to run freely as user moves to other cards
 
-local sPlayerId, sPlayerRect, sDuration
+local sPlayerId, sPlayerRect, sDuration, sTrackScrubbing
 
 ---------------------------------------------------------------------------------------
 -- createMobileAudioPlayer
@@ -88,6 +88,8 @@ command createMobileAudioPlayer pURL, pPlayerName, pAudioRect
    if mobileIdleTimerLocked() is false then
       mobileLockIdleTimer --jg: disallow screen lock
    end if
+   
+   put false into sTrackScrubbing
 end createMobileAudioPlayer 
 
 function getMobileAudioPlayerRect
@@ -137,9 +139,6 @@ on getPlaying pBool
    put pBool into sPlaying
 end getPlaying
 
-function setDuration 
-   return sDuration
-end setDuration
 
 ---------------------------------
 # here we get the player do play, pause or stop
@@ -268,19 +267,12 @@ command updateTimer
       exit updateTimer
    end if
    
-   --   if "updateTimer" is in the pendingMessages then
-   --      exit updateTimer
-   --   end if
+   if there is no fld "currentTime" of stack "listen" then
+      exit updateTimer 
+   end if
    
    // Update the time indicator
    if sPlaying is true then
-      
-      if there is no fld "currentTime" of stack "listen" then
-         exit updateTimer 
-      end if
-      
-      lock screen
-      
       
       if isMobile() then
          put mobileControlGet("audioPlayer","currentTime") into sCurrentTime
@@ -289,7 +281,6 @@ command updateTimer
          if sDuration is 0 then  
             put mobileControlGet("audioPlayer","Duration") into sDuration
          end if
-         
       else
          if the timeScale of player "audioPlayer" of stack "listen" is 0 then
             -- audio player thinks it is not playing any track...
@@ -300,35 +291,71 @@ command updateTimer
          put (the currentTime of player "audioPlayer" of stack "listen" / the timeScale of player "audioPlayer" of stack "listen") * 1000 into sCurrentTime
       end if
       
-      
-      if sCurrentTime > 0 and sDuration > 0 then         
-         // Update the time indicator
-         put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
-         
-         // Update time fields
-         put convertTime(sCurrentTime) into tHoursMinutes
-         put convertTime(sDuration) into tDuration
-         
-         put tHoursMinutes into fld "currentTime" of stack "listen"
-         put tDuration into fld "endTime" of stack "listen"
-         
-         // Update the time indicator
-         set the width of graphic "durationProgress" of stack "listen" to tWidth
-         
-         --         set the left of graphic "durationProgress" of stack "listen" to 20
-         set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
-         set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
-      end if
-      
-      unlock screen
+      updatePlayerTime sCurrentTime
       
       send "updateTimer" to me in 100 millisecs
    end if
 end updateTimer  
 
+command updatePlayerTime pCurrentTime
+   lock screen
+   --
+   put pCurrentTime into sCurrentTime
+   if sCurrentTime > 0 and sDuration > 0 then         
+      // Update the time indicator
+      put round((sCurrentTime/sDuration) * the width of graphic "durationBG" of stack "listen") into tWidth
+      --
+      // Update time fields
+      put convertTime(sCurrentTime) into tHoursMinutes
+      put convertTime(sDuration) into tDuration
+      --
+      put tHoursMinutes into fld "currentTime" of stack "listen"
+      put tDuration into fld "endTime" of stack "listen"
+      --
+      // Update the time indicator
+      set the width of graphic "durationProgress" of stack "listen" to tWidth
+      set the left of graphic "durationProgress" of stack "listen" to the left of graphic "durationBG" of stack "listen"
+      set the left of graphic "durationMarker" of stack "listen" to (the right of graphic "durationProgress" of stack "listen"  - 7)
+   end if
+   --
+   unlock screen
+end updatePlayerTime
+
+
+command startTrackingScrubbing
+   put true into sTrackScrubbing
+end startTrackingScrubbing
+
+
+command stopTrackingScrubbing
+   put false into sTrackScrubbing
+end stopTrackingScrubbing
+
+
+on touchMove pTouchID, pTouchX, pTouchY
+   if sTrackScrubbing then
+      put (pTouchX - the left of graphic "durationBG" of stack "listen") / \
+            the width of graphic "durationBG" of stack "listen" * sDuration \
+            into sCurrentTime
+      if not isMobile() then
+         set the currenttime player "audioPlayer" to sCurrentTime
+      else
+         mobileControlSet "audioPlayer", "currentTime", sCurrentTime
+      end if
+      updatePlayerTime sCurrentTime
+   end if
+end touchMove
+
+
+function getDuration 
+   return sDuration
+end getDuration
+
+
 function getCurrentTime 
    return sCurrentTime
 end getCurrentTime
+
 
 function getHoursMinsTime
    return tHoursMinutes
@@ -365,6 +392,7 @@ on playerFinished -- sent on mobile when audio is done
    end if
    
    get runningAudioIndicatorVis("false")
+   setZeroDurationProgress
    
 end playerFinished
 
@@ -415,8 +443,8 @@ command setZeroDurationProgress
    set the width of graphic "durationProgress" to 1
    set the left of graphic "durationProgress" to the left of graphic "durationBG"
    set the left of graphic "durationMarker" to (the right of graphic "durationProgress" - 7)
-   put "0.00" into field "currentTime"
-   put "0.00" into field "endTime"
+   put "00:00:00" into field "currentTime"
+   put "00:00:00" into field "endTime"
 end setZeroDurationProgress
 
 --on pausePlayer sTimeStamp
