@@ -102,6 +102,11 @@ on mouseup
          show btn "Jumble"
          break
          
+      case "wordPuzzleSubject"
+         show grp "collectionTheKeys"
+         wait 5000 milliseconds
+         hide grp "collectionTheKeys"
+         break
       case "Random"
          clearBoard
          hide grp "randomPuzzleControls"
@@ -468,7 +473,7 @@ Command getTheQuote
    unlock screen
    set the acceleratedRendering  of this stack to true
    show fld "wordPuzzleSubject"
-   send "hideSubjectFld" to me in 10 seconds
+   --send "hideSubjectFld" to me in 10 seconds
    show grp "randomPuzzleInProgress"
    
 end getTheQuote
