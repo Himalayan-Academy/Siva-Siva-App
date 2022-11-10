@@ -1082,13 +1082,13 @@ on updateUI
    end if
    --
    if tCard is "colorIt" then
-      put the long id of btn "cancel" into tCancel
-      put the long id of btn "save" into tSave
+      --      put the long id of btn "cancel" into tCancel
+      --      put the long id of btn "save" into tSave
       --
       setRectOfCurrentGrc sColorItImage
       if currentlyLandscape() then
-         bottomRightMe tCancel, 0, 8
-         topRightMe tSave, 0, 8
+         --         bottomRightMe tCancel, 0, 8
+         --         topRightMe tSave, 0, 8
          --
          set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
                CardHeight() - safeBottomMargin())
@@ -1096,10 +1096,10 @@ on updateUI
          set the loc of grp "BrushIcons" to CardLoc()
          set the left of grp "BrushIcons" to the right of tFooter + 50
       else
-         topLeftMe tCancel, 0, 8
-         topRightMe tSave, 0, 8
+         --         topLeftMe tCancel, 0, 8
+         --         topRightMe tSave, 0, 8
          --
-         set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+         set the rect of grp "colorItImageGroup" to (0, safeTopMargin(), CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
          set the loc of grp "BrushIcons" to CardLoc()
          set the bottom of grp "BrushIcons" to the top of tFooter - 50

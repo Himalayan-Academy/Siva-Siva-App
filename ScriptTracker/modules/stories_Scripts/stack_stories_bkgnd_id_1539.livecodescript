@@ -8,7 +8,7 @@ Script "stack_stories_bkgnd_id_1539"
 */
 
 
-constant kButtons = "eraser,brush,bucket,fillColor"
+constant kButtons = "cancel,eraser,brush,bucket,fillColor,save"
 constant kBucketColor = "#5FE49F"
 constant kBrushColor = "#96E200"
 constant kEraserColor = "#00EA63"
@@ -30,15 +30,19 @@ on mouseUp
       dispatch "deleteMobileControl" to grp "colorItImageGroup" with "colorItImageGroup"
    end if
    --
+   if tTarget is among the items "cancel,save" then
+      pass mouseUp
+   end if
+   --
    if tTarget is "fillColor" then
-      hide btn "cancel"
-      hide btn "save"
+      --hide btn "cancel"
+      --hide btn "save"
       --
       show control "Color map"
       put empty into sTool
    else if tTarget is among the items "brush,bucket" then
-      hide btn "cancel"
-      hide btn "save"
+      --hide btn "cancel"
+      --hide btn "save"
       --
       pushImage
       put false into sStarted
@@ -77,8 +81,7 @@ on checkLoc
       makeImageDirty
    end if
    if sStarted then
-      if the mouseloc is within the rect of grp "footer" of cd "colorIt" or \
-            (not tLandscape and item 2 of the mouseloc < item 4 of the rect of btn "save" of cd "colorIt") then
+      if the mouseloc is within the rect of grp "footer" of cd "colorIt" then
          choose the browse tool
          put false into sStarted
          dropImageIfSame
@@ -87,8 +90,8 @@ on checkLoc
          dispatch "createImageScroller" to grp "colorItImageGroup" with "colorItImageGroup"
          set the backgroundColor of btn "brush" of grp "footer" to kBrushColor
          set the backgroundColor of btn "bucket" of grp "footer" to kBucketColor
-         show btn "cancel"
-         show btn "save"
+         --show btn "cancel"
+         --show btn "save"
          exit "checkLoc"
       else
          if the seconds > sSaveTime then
