@@ -888,28 +888,21 @@ end lockPortrait
 
 command journal_AddEntry tCard -- save a bookmark to db
    local tTitle, tData
-   
+   --
    if tCard is "storyHome" then
       exit to top
    end if
-   
-   --   if (sStoryTitle is "false") OR (sStorytitle is empty) then 
-   --      put "Main Menu" into tTitle
-   --      put "storyHome" into tData["card"]
-   --   else 
-   
+   --
    put sStoryTitle into tData["storyTitle"]
    put sLastScene into tData["storyScene"]
    put sAttribution into tData["Attribution"]
    put sTotalSceneCount into tData["SceneCount"]
    put "showStories" into tData["card"]
-   
-   --end if
-   
+   --
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), tData -- send to journal
    dialog_CustomMsg "Saved to Shortcuts"
 end journal_AddEntry
-		
+	
 
 on journalResume pData -- sent from journal stack
    local tCd
@@ -1082,23 +1075,14 @@ on updateUI
    end if
    --
    if tCard is "colorIt" then
-      --      put the long id of btn "cancel" into tCancel
-      --      put the long id of btn "save" into tSave
-      --
       setRectOfCurrentGrc sColorItImage
       if currentlyLandscape() then
-         --         bottomRightMe tCancel, 0, 8
-         --         topRightMe tSave, 0, 8
-         --
          set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
                CardHeight() - safeBottomMargin())
          resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
          set the loc of grp "BrushIcons" to CardLoc()
          set the left of grp "BrushIcons" to the right of tFooter + 50
       else
-         --         topLeftMe tCancel, 0, 8
-         --         topRightMe tSave, 0, 8
-         --
          set the rect of grp "colorItImageGroup" to (0, safeTopMargin(), CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
          set the loc of grp "BrushIcons" to CardLoc()
