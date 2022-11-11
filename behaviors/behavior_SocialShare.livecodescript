@@ -88,10 +88,15 @@ command Share_Email sShareItemsA
    put "name@domain.com" into tAddress
    put  sShareItemsA["text"] &  CR & CR  & sShareItemsA["url"] into tBody
    put  cr & cr & "------------------------------------" & cr & \
-         "Get the SivaSivaApp today! Go to:" & cr & "https://www.himalayanacademy.com/view/sivasiva" after tBody
+         "Get the SivaSivaApp today! Go to:" & cr & \
+         "https://www.himalayanacademy.com/view/sivasiva" after tBody
    
    if isMobile() = "true" then
-      mobileComposeMail tSubject,tAddress,,, tBody
+      if sShareItemsA["attachment"] is not empty then
+         mobileComposeMail tSubject, tAddress,,, tBody, sShareItemsA["attachment"]
+      else
+         mobileComposeMail tSubject, tAddress,,, tBody
+      end if
    else
       revMail tAddress,,tSubject,tBody
    end if
@@ -643,6 +648,6 @@ command hideSharing
       --set the top of widget "body" to safeTopMargin()
       repositionBrowser
    end if    
-   set the left of grp "share-ui" to -2000
+   --set the left of grp "share-ui" to -2000
    hide group "share-ui"
 end hideSharing

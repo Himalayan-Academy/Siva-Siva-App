@@ -1110,7 +1110,9 @@ on updateUI
    end if
    --
    if tCard is not "colorIt" then
-      set the width of grp "share-ui" to cardWidth()
+      put the long ID of grp "share-ui" into tControl
+      bottomCenterMe tControl
+      set the width of tControl to cardWidth()
    end if
 end updateUI
 
@@ -1154,3 +1156,16 @@ end closecard
 on closestack
    portal_SetLastStack "stories" 
 end closestack
+
+
+command share_Items
+   local tShareItemsA
+   --
+   put "Stories" into tShareItemsA["subject"]
+   if the short name of this card is "showStories" then
+      put the filename of sStoryImage into tShareItemsA["text"]
+      put the filename of sStoryImage into tShareItemsA["attachment"]["file"]
+   end if
+   --
+   return tShareItemsA
+end share_Items
