@@ -1111,7 +1111,7 @@ on updateUI
    --
    if tCard is not "colorIt" then
       put the long ID of grp "share-ui" into tControl
-      bottomCenterMe tControl
+      bottomCenterMe tControl, -safeBottomMargin()
       set the width of tControl to cardWidth()
    end if
 end updateUI
@@ -1163,8 +1163,14 @@ command share_Items
    --
    put "Stories" into tShareItemsA["subject"]
    if the short name of this card is "showStories" then
-      put the filename of sStoryImage into tShareItemsA["text"]
+      set the itemDelimiter to "/"
+      put the last item of the filename of sStoryImage into tShareItemsA["text"]
       put the filename of sStoryImage into tShareItemsA["attachment"]["file"]
+      if tShareItemsA["attachment"]["file"] ends with "gif" then
+         put "image/gif" into tShareItemsA["attachment"]["type"]
+      else
+         put "image/jpeg" into tShareItemsA["attachment"]["type"]
+      end if
    end if
    --
    return tShareItemsA
