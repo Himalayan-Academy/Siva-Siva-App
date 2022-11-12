@@ -888,28 +888,21 @@ end lockPortrait
 
 command journal_AddEntry tCard -- save a bookmark to db
    local tTitle, tData
-   
+   --
    if tCard is "storyHome" then
       exit to top
    end if
-   
-   --   if (sStoryTitle is "false") OR (sStorytitle is empty) then 
-   --      put "Main Menu" into tTitle
-   --      put "storyHome" into tData["card"]
-   --   else 
-   
+   --
    put sStoryTitle into tData["storyTitle"]
    put sLastScene into tData["storyScene"]
    put sAttribution into tData["Attribution"]
    put sTotalSceneCount into tData["SceneCount"]
    put "showStories" into tData["card"]
-   
-   --end if
-   
+   --
    Journal_RecordEntry "Stories",(sStoryTitle &", "& sLastScene), tData -- send to journal
    dialog_CustomMsg "Saved to Shortcuts"
 end journal_AddEntry
-		
+	
 
 on journalResume pData -- sent from journal stack
    local tCd
@@ -1082,24 +1075,15 @@ on updateUI
    end if
    --
    if tCard is "colorIt" then
-      put the long id of btn "cancel" into tCancel
-      put the long id of btn "save" into tSave
-      --
       setRectOfCurrentGrc sColorItImage
       if currentlyLandscape() then
-         bottomRightMe tCancel, 0, 8
-         topRightMe tSave, 0, 8
-         --
          set the rect of grp "colorItImageGroup" to (the right of tFooter, 0, CardWidth() - safeSideMargin(), \
                CardHeight() - safeBottomMargin())
          resizeToWidth sColorItImage, the width of grp "colorItImageGroup"
          set the loc of grp "BrushIcons" to CardLoc()
          set the left of grp "BrushIcons" to the right of tFooter + 50
       else
-         topLeftMe tCancel, 0, 8
-         topRightMe tSave, 0, 8
-         --
-         set the rect of grp "colorItImageGroup" to (0, the bottom of tCancel + 12, CardWidth(), the top of tFooter)
+         set the rect of grp "colorItImageGroup" to (0, safeTopMargin(), CardWidth(), the top of tFooter)
          resizeToHeight sColorItImage, the height of grp "colorItImageGroup"
          set the loc of grp "BrushIcons" to CardLoc()
          set the bottom of grp "BrushIcons" to the top of tFooter - 50
@@ -1110,7 +1094,9 @@ on updateUI
    end if
    --
    if tCard is not "colorIt" then
-      set the width of grp "share-ui" to cardWidth()
+      put the long ID of grp "share-ui" into tControl
+      bottomCenterMe tControl, -safeBottomMargin()
+      set the width of tControl to cardWidth()
    end if
 end updateUI
 
@@ -1154,3 +1140,22 @@ end closecard
 on closestack
    portal_SetLastStack "stories" 
 end closestack
+
+
+command share_Items
+   local tShareItemsA
+   --
+   put "Stories" into tShareItemsA["subject"]
+   if the short name of this card is "showStories" then
+      set the itemDelimiter to "/"
+      put the last item of the filename of sStoryImage into tShareItemsA["text"]
+      put the filename of sStoryImage into tShareItemsA["attachment"]["file"]
+      if tShareItemsA["attachment"]["file"] ends with "gif" then
+         put "image/gif" into tShareItemsA["attachment"]["type"]
+      else
+         put "image/jpeg" into tShareItemsA["attachment"]["type"]
+      end if
+   end if
+   --
+   return tShareItemsA
+end share_Items
