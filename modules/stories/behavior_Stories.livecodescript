@@ -184,7 +184,7 @@ on mouseup
          break
          --
       case "showTips"
-         set the filename of img "tipsImage" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
+         --set the filename of grc"tipsBkgnd" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
          put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
          set the htmltext of fld "tips" to tTips 
          dispatch "createscroller" to sTips with "tips"
@@ -976,14 +976,13 @@ on updateUI
       --
       put the long id of btn "back" into tGoBack
       topRightMe tGoBack,0,0
-      --set the bottom of tGoBack to the top of tFooter - 15
       --
       put the long id of btn "showTips" into tGoTips
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
       set the rect sTips to (10, 50, cardWidth() - 10, the top widget "deleteOn")
-      set the rect of img "tipsImage" to (0, 0, cardWidth(), the top of tFooter)
+      set the rect of grc "tipsBkgnd" to (0, 0, cardWidth(), the top of tFooter)
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
