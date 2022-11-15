@@ -187,20 +187,22 @@ on mouseup
          break
          --
       case "showTips"
+         dispatch "deleteMobileControl" to sStoryMenuTree with "storyNavTree"
          put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
          set the htmltext of fld "tips" to tTips 
-         send "CreateScroller tTips" to fld "tips"
+         --send "CreateScroller tTips" to fld "tips"
          show grc "tipsBkg"
          show fld "tips"
          show btn "back"
+         dispatch "CreateScroller" to sTips with "tips"
          break
-       
-         
+         --
       case "back"
          dispatch "deleteMobileControl" to sTips with "tips"
          hide btn "back"
          hide fld "tips"
          hide grc "tipsBkg"
+         dispatch "createScroller" to sStoryMenuTree with "storyNavTree"
          break
          --
       case "deleteOn"
@@ -978,10 +980,6 @@ on updateUI
    end if
    --
    if tCard is "storyHome" then
-      
-      --
-      --breakpoint
-      --
       put the long id of img "menuImage" into tMenuImage
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
@@ -992,8 +990,8 @@ on updateUI
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
-      set the rect sTips to (10, 50, cardWidth() - 10,  the bottom of tFooter) --the top widget "deleteOn)
-      set the rect of grc "tipsBkg" to (0, 0, cardWidth(), the bottom of tFooter)
+      set the rect sTips to (10, 50, cardWidth() - 10, CardHeight()) --the top widget "deleteOn)
+      set the rect of grc "tipsBkg" to (0, 0, cardWidth(), CardHeight())
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
