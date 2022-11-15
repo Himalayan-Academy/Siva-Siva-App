@@ -134,22 +134,25 @@ on opencard
       set the arraydata of sStoryMenuTree to tStoryTree
       set the foldstate of sStoryMenuTree to tFoldState
       --
-      showStoryMenu
+      --showStoryMenu
    else if tCard is "showStories" then
       put false into sKeepStoryLoaded
    end if
 end opencard
 
 
-command showStoryMenu
-   dispatch "deleteMobileControl" to sTips with "tips"
-   dispatch "createScroller" to sStoryMenuTree with "storyNavTree"
-   set the filename of img "menuImage" of cd "storyHome" to \
-         (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-   hide grp "tipsGroup" of cd "storyHome"
-   show grp "storyMenu" of cd "storyHome"
-end showStoryMenu 
+--command showStoryMenu
+--   dispatch "deleteMobileControl" to sTips with "tips"
+--   dispatch "createScroller" to sStoryMenuTree with "storyNavTree"
+--   set the filename of img "menuImage" of cd "storyHome" to \
+--         (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
+--   hide grp "tipsGroup" of cd "storyHome"
+--   show grp "storyMenu" of cd "storyHome"
 
+--   show grc "tipsBkg" of cd "storyHome"
+--   show fld  "tips" of cd "storyHome"
+--   show btn "back" of cd "storyHome"
+--end showStoryMenu 
 
 function showColorItIcon
    return (sStoryMetaArray["color"] = "yes")
@@ -184,16 +187,20 @@ on mouseup
          break
          --
       case "showTips"
-         --set the filename of grc"tipsBkgnd" to (path_Assets()&"img/bkgnds/patterns/Blue-Texture-Square.jpg")
          put url ("file:"& path_Modules()& "stories/stories-user-guide.html") into tTips
          set the htmltext of fld "tips" to tTips 
-         dispatch "createscroller" to sTips with "tips"
-         show grp "tipsGroup"
+         send "CreateScroller tTips" to fld "tips"
+         show grc "tipsBkg"
+         show fld "tips"
+         show btn "back"
          break
-         --
+       
+         
       case "back"
          dispatch "deleteMobileControl" to sTips with "tips"
-         hide grp "tipsGroup"
+         hide btn "back"
+         hide fld "tips"
+         hide grc "tipsBkg"
          break
          --
       case "deleteOn"
@@ -971,6 +978,10 @@ on updateUI
    end if
    --
    if tCard is "storyHome" then
+      
+      --
+      --breakpoint
+      --
       put the long id of img "menuImage" into tMenuImage
       setImageToFullCardLoc tMenuImage, "Portrait"
       --
@@ -981,8 +992,8 @@ on updateUI
       bottomCenterMe tGoTips,70
       set the bottom of tGoTips to the top of tFooter - 18
       --
-      set the rect sTips to (10, 50, cardWidth() - 10, the top widget "deleteOn")
-      set the rect of grc "tipsBkgnd" to (0, 0, cardWidth(), the top of tFooter)
+      set the rect sTips to (10, 50, cardWidth() - 10,  the bottom of tFooter) --the top widget "deleteOn)
+      set the rect of grc "tipsBkg" to (0, 0, cardWidth(), the bottom of tFooter)
       --
       put the long id of grp "displayDelete" into tControl
       bottomRightMe tControl, 0, 50
@@ -1107,8 +1118,8 @@ on closeCard
    if tCard is "storyHome" then
       set the filename of img "menuImage" of cd "storyHome" to \
             (path_Assets()&"img/portal-screens/00-DonAngeIraivan-darkened_opt-80.jpg")
-      hide grp "tipsGroup" of cd "storyHome"
-      show grp "storyMenu" of cd "storyHome"
+      --      hide grp "tipsGroup" of cd "storyHome"
+      --      show grp "storyMenu" of cd "storyHome"
       deleteMobileControl "storyNavTree"
    else if tCard is "showStories" then
       if sKeepStoryLoaded then
