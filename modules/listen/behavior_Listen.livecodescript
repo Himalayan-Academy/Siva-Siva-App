@@ -230,6 +230,8 @@ command updateUI
    if there is a grp "loadingGroup" then
       put the long id of grc "Loading" into tControl
       centerMe tControl, 60, 70
+      put the long id of btn "cancelLoading" into tControl
+      centerMe tControl, 120, 70
    end if
    
    switch (the short name of this card)
