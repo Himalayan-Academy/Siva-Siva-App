@@ -839,7 +839,6 @@ on playlist_Reset
    put playlist_GetRecords() into  sCurrentPlayListA
 end playlist_Reset
 
-
 command fetchSingleMetadata pItemID
    local tSearchA,tTargetRecordA
    put pItemID  into tSearchA["item_id"]
@@ -1610,7 +1609,6 @@ command helpAudio
    end switch
    
 end helpAudio
-
 
 on closeStack
    portal_SetLastStack "Listen"
