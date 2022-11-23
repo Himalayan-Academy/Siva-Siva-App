@@ -32,6 +32,7 @@ end preOpenStack
 on preopencard
    # we have to  clear everything
    # while in development
+   
    hide fld "wordPuzzleSubject"
    hide grp "indexOfQuotes"
    hide grp "randomPuzzleControls"
@@ -185,16 +186,19 @@ end loadNewBgImg
 command showTitle
    local tFld
    
+   --
+   breakpoint
+   --
    wait 300 milliseconds --with messages
    show fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
-   wait 1000 milliseconds
+   wait 5000 milliseconds
    hide fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
    wait 200 milliseconds --with messages
    show fld "MesmorizeFld" with visual effect "dissolve" very slow
    
-   wait 500 milliseconds --with messages
+   wait 2000 milliseconds --with messages
    show grp "indexOfQuotes"  with visual effect "dissolve" very slow
    
 end showTitle
