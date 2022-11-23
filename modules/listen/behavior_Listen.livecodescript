@@ -329,9 +329,12 @@ command updateUI
          put the long id of grp "displayFilesSizes" into tDisplayFilesSizes
          set the width of tDisplayFilesSizes to  CardWidth()
          topLeftMe tDisplayFilesSizes, -3, 30
-         break
          
       case "listen-file"
+         
+         put the long id of btn "helpButton" into tHelpButton
+         bottomLeftMe tHelpButton, 15, the height of tFooter  - safeBottomMargin() + 110
+         
          put the long id of player "audioPlayer" into tAudioPlayer
          topLeftMe tAudioPlayer, 20, -1111
          
