@@ -190,16 +190,17 @@ command showTitle
    breakpoint
    --
    wait 300 milliseconds --with messages
-   show fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
-   wait 5000 milliseconds
-   hide fld "titleUnjumbleFld" with visual effect "dissolve" very slow
+   show fld "titleUnjumbleFld" with  visual effect "dissolve" very slow
    
-   wait 200 milliseconds --with messages
-   show fld "MesmorizeFld" with visual effect "dissolve" very slow
+   wait 3000 milliseconds
+   hide fld "titleUnjumbleFld" --with visual effect "dissolve" very slow
    
-   wait 2000 milliseconds --with messages
-   show grp "indexOfQuotes"  with visual effect "dissolve" very slow
+   --   wait 200 milliseconds --with messages
+   --   show fld "MesmorizeFld" --with visual effect "dissolve" very slow
+   
+   --   wait 2000 milliseconds --with messages
+   --   show grp "indexOfQuotes" -- with visual effect "dissolve" very slow
    
 end showTitle
 
