@@ -50,7 +50,7 @@ on openStack
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
-   showTitle
+   send "showTitle" to me in 0 milliseconds
 end openStack
 
 on mouseup
@@ -190,7 +190,7 @@ command showTitle
    --show fld "titleUnjumbleFld" with  visual effect "dissolve" very slow
    lock screen for visual effect
    show fld "titleUnjumbleFld"
-   unlock screen  with  visual effect "iris" close slow
+   unlock screen  with  visual effect "iris close" slow
    wait 3000 milliseconds
    hide fld "titleUnjumbleFld" --with visual effect "dissolve" very slow
    
@@ -483,6 +483,7 @@ end getTheQuote
 
 
 command getRandomColors
+   local tColors, tRGB, tTileBkgndRGB
    breakpoint
    
    put getColors() into tColors
@@ -987,6 +988,10 @@ end resetUI
 
 command loadWordPuzzlePrefs
    local tWordPuzzlePrefs, tArray
+   #TODO:  neeed to fix this
+   #var is not used anywhere else, so there is something wrong
+   #also, you can't arrayDecode a JSON file
+   local sWordPuzzlePrefs -- this is wrong, but to get past compile error
    put url ("binfile:" & path_Documents()& "modules/wordpuzzle/wordpuzzles-preferences.json") into tWordPuzzlePrefs
    if tWordPuzzlePrefs is empty then
       put url ("binfile:" & path_Modules()& "wordpuzzle/wordpuzzles-preferences.json") into  tWordPuzzlePrefs
