@@ -50,9 +50,7 @@ on openStack
    if sCurLevel is empty then
       put 1 into sCurLevel
    end if
-   
    showTitle
-   
 end openStack
 
 on mouseup
@@ -185,21 +183,21 @@ end loadNewBgImg
 
 command showTitle
    local tFld
-   
    --
-   breakpoint
+   --breakpoint
    --
-   wait 300 milliseconds --with messages
    
-   show fld "titleUnjumbleFld" with  visual effect "dissolve" very slow
-   
+   --show fld "titleUnjumbleFld" with  visual effect "dissolve" very slow
+   lock screen for visual effect
+   show fld "titleUnjumbleFld"
+   unlock screen  with  visual effect "iris" close slow
    wait 3000 milliseconds
    hide fld "titleUnjumbleFld" --with visual effect "dissolve" very slow
    
    --   wait 200 milliseconds --with messages
    --   show fld "MesmorizeFld" --with visual effect "dissolve" very slow
    
-   --   wait 2000 milliseconds --with messages
+   --   wait 1000 milliseconds --with messages
    --   show grp "indexOfQuotes" -- with visual effect "dissolve" very slow
    
 end showTitle
