@@ -55,6 +55,11 @@ end openStack
 
 on mouseup
    
+   --
+   --breakpoint
+   ---
+   
+   
    local tTarget, tTargetOwner
    
    put the short name of the owner of the target into tTargetOwner
@@ -154,23 +159,6 @@ on mouseup
    
 end mouseup
 
---on mousedown
-
---   local tTarget, tTargetOwner
-
---   put the short name of the owner of the target into tTargetOwner
---   put the short name of the target into tTarget
-
---   switch tTarget
-
---      case "Reveal"
---         revealQuote "5"
---         break
-
---   end switch
-
---end mousedown
-
 command loadNewBgImg -- change img for each new puzzle
    local pControl, tFolderPath, tFiles, tImgPath
    ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
@@ -190,15 +178,15 @@ command showTitle
    --show fld "titleUnjumbleFld" with  visual effect "dissolve" very slow
    lock screen for visual effect
    show fld "titleUnjumbleFld"
-   unlock screen  with  visual effect "iris close" slow
-   wait 3000 milliseconds
-   hide fld "titleUnjumbleFld" --with visual effect "dissolve" very slow
+   unlock screen  with  visual effect "dissolve" very slow
+   wait 2000 milliseconds
+   hide fld "titleUnjumbleFld" with visual effect "dissolve" very slow
    
-   --   wait 200 milliseconds --with messages
-   --   show fld "MesmorizeFld" --with visual effect "dissolve" very slow
+     wait 200 milliseconds 
+   show fld "MesmorizeFld" with visual effect "dissolve" very slow
    
-   --   wait 1000 milliseconds --with messages
-   --   show grp "indexOfQuotes" -- with visual effect "dissolve" very slow
+   wait 1000 milliseconds 
+     show grp "indexOfQuotes"  with visual effect "dissolve" very slow
    
 end showTitle
 
@@ -288,7 +276,11 @@ end fetchRandomQuote
 local sMesmorizeGame
 
 command fetchMesmorizeMap pQuotes
-   local tPath, tJSON
+   --
+   --breakpoint
+   --
+   
+   local tPath, tJSON, pOutPut
    
    local tConnectionID, tSQL, tCurRange, tNo
    put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"] into sNumOfQuotes
@@ -316,7 +308,13 @@ command fetchMesmorizeMap pQuotes
    # put will poke a value to tNo
    # which should  should be wordpuzzles-prefs.json
    
-   put 1 into tNo
+   --put 5 into tNo
+   --
+   breakpoint
+   --
+   
+   getUserPreferences
+   
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
    show fld  "wordPuzzleSubject"
@@ -328,7 +326,12 @@ command fetchMesmorizeMap pQuotes
 end fetchMesmorizeMap
 
 Command getUserPreferences
-   local pNumOfQuotes, tArray, tPath
+   local pNumOfQuotes, tArray, tPat
+   
+   --
+   --breakpoint
+   --
+   
    
    put url ("binfile:" & path_Documents() & "modules/wordpuzzles/wordpuzzles-prefs.json")  into pNumOfQuotes
    
@@ -337,7 +340,7 @@ Command getUserPreferences
       put pNumOfQuotes into url ("binfile:" & path_Documents()& "modules/wordpuzzles/wordpuzzles-prefs.json") 
    end if
    
-   put JSONToArray(pNumOfQuotes) into sNumOfQuotes
+   put JSONToArray(pNumOfQuotes) into sNumOfQuotes 
    
 end getUserPreferences
 
@@ -647,7 +650,8 @@ on clearBoard
    set the uWordList of me to empty
    
    hide grc "blankGraphic"
- -- hide grp "revealQuoteGroup"
+   -- hide grp "revealQuoteGroup"
+   hide btn "Jumble"
    hide grp "randomPuzzleInProgress"
    hide graphic "startHere" of me
    unlock screen

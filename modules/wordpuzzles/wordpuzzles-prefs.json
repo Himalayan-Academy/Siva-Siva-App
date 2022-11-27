@@ -1,10 +1,12 @@
 {
 	"wordpuzzles": {
-		"Yamas": [
-			{"NumOfQuotes":"10"}
-			],
-		"Niyamas": [
-			{"NumOfQuotes":"10"}
-			]
+		"Yamas": {
+			"MaxOfQuotes":"10",
+		    "singleQuotes":"5"
+			},
+		"Niyamas": {
+			"MaxOfQuotes":"10",
+		    "singleQuotes":"3"
+			}
 	}
 }
