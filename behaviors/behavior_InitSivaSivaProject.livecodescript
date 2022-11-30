@@ -466,6 +466,12 @@ command init_DocumentFiles
             url ("binfile:" &  path_Documents()  & "modules/stories/stories.json")
    end if
    
+   # Initialize wordpuzzles-prefs.json file for new installs 
+   if  there is not a file (path_Documents()  & "modules/wordpuzzles/wordpuzzles-prefs.json") then
+      put url ("binfile:" & path_Modules() & "wordpuzzles/wordpuzzles-prefs.json") into \
+            url ("binfile:" &  path_Documents()  & "modules/wordpuzzles/wordpuzzles-prefs.json")
+   end if
+   
    # Here is getting the time difference > between the json on the server
    
    put url ("binfile:" & path_Documents() & "modules/stories/stories.json") into tLocalJson

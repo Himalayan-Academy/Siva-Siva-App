@@ -94,8 +94,7 @@ on mouseup
          clearBoard
          show fld "MesmorizeFld"
          put  "Yamas Memory Game" into sSubjectOfCollection
-         fetchMesmorizeMap "Yamas Memory Game" 
-         show btn "Jumble"
+         fetchMesmorizeMap
          break
          
       case "Niyamas"
@@ -280,10 +279,10 @@ command fetchMesmorizeMap pQuotes
    --breakpoint
    --
    
-   local tPath, tJSON, pOutPut
-   
+   local tPath, tJSON, pOutPut, pQuote
    local tConnectionID, tSQL, tCurRange, tNo
-   put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"] into sNumOfQuotes
+   
+   put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"]["name"] into sNumOfQuotes
    
    ## methods for getting from dBase
    put  JnanamDB() into tConnectionID   
@@ -308,12 +307,17 @@ command fetchMesmorizeMap pQuotes
    # put will poke a value to tNo
    # which should  should be wordpuzzles-prefs.json
    
-   --put 5 into tNo
+   put 5 into tNo
    --
-   breakpoint
+   --breakpoint
    --
    
-   getUserPreferences
+  getUserPreferences
+   
+   --
+   --breakpoint
+   
+   put sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"] into tNo     
    
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
@@ -341,7 +345,7 @@ Command getUserPreferences
    end if
    
    put JSONToArray(pNumOfQuotes) into sNumOfQuotes 
-   
+   return sNumOfQuotes 
 end getUserPreferences
 
 Command getTheQuote

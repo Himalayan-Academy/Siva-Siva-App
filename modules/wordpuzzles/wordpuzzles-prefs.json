@@ -1,12 +1,14 @@
 {
 	"wordpuzzles": {
 		"Yamas": {
-			"MaxOfQuotes":"10",
-		    "singleQuotes":"5"
+		    "name":"Yamas",
+		    "maxQuotes":"10",
+		    "singleQuotes":"3"
 			},
 		"Niyamas": {
-			"MaxOfQuotes":"10",
-		    "singleQuotes":"3"
+		    "name":"Niyamas",
+			"maxQuotes":"10",
+		    "singleQuotes":"5"
 			}
 	}
 }
