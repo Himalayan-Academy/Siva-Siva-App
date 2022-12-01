@@ -307,23 +307,29 @@ command fetchMesmorizeMap pQuotes
    # put will poke a value to tNo
    # which should  should be wordpuzzles-prefs.json
    
-   put 5 into tNo
+   --put 11 into tNo
    --
    --breakpoint
    --
    
-  getUserPreferences
-   
+   --getUserPreferences
+  
+   put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tNo 
    --
    --breakpoint
+   
+   --put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tMaxQuotes
+   
+   if tNo is 11 then
+      Put 0 into tNo 
+   end if
    
    put sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"] into tNo     
-   
+   Put tNo + 1 into tNo 
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
-   show fld  "wordPuzzleSubject"
    
-   put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
+   put textDecode (sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
    
    getTheQuote
    
