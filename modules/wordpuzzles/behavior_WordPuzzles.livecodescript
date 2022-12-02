@@ -312,20 +312,28 @@ command fetchMesmorizeMap pQuotes
    --breakpoint
    --
    
-   --getUserPreferences
-  
-   put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tNo 
-   --
-   --breakpoint
+   getUserPreferences
    
-   --put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tMaxQuotes
+   --   put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tNo 
+   --   --
+   --   --breakpoint
    
-   if tNo is 11 then
-      Put 0 into tNo 
+   --   --put sNumOfQuotes["wordpuzzles"]["Yamas"]["maxQuotes"] into tMaxQuotes
+   
+   --   if tNo is 11 then
+   --      Put 0 into tNo 
+   --   end if
+   
+   put sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"] into tNo
+   if tNo is 10 then
+      put 1 into tNo
+   else
+      Put tNo + 1 into tNo
    end if
    
-   put sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"] into tNo     
-   Put tNo + 1 into tNo 
+   put tNo into sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"]
+   saveUserPrefs
+   put tNo
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
    
@@ -1013,9 +1021,12 @@ command loadWordPuzzlePrefs
    put arrayDecode(tWordPuzzlePrefs) into sWordPuzzlePrefs
 end loadWordPuzzlePrefs
 
-command saveUserPrefs sPuzzleLevel
-   setPref "preferences/modules/word-puzzle/level", sPuzzleLevel
-   get getUserPreferences()
+command saveUserPrefs pPuzzleLevel
+   --setPref "preferences/modules/word-puzzle/level", pPuzzleLevel
+   --get getUserPreferences()
+   local tNumOfQuotes
+   put ArrayToJSON(sNumOfQuotes) into tNumOfQuotes
+   put tNumOfQuotes into url ("binfile:" & path_Documents() & "modules/wordpuzzles/wordpuzzles-prefs.json")
 end saveUserPrefs
 
 command storeCurrentLevel pLevel
