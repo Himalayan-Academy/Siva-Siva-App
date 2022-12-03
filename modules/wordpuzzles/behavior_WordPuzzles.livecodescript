@@ -88,12 +88,14 @@ on mouseup
          break
          
       case "Jumble"
+         arrangeWords
          break
          
       case "Yamas"
          clearBoard
          show fld "MesmorizeFld"
          fetchMesmorizeMap "Yamas Memory Game"
+         show btn "Jumble"
          break
          
       case "Niyamas"
@@ -283,7 +285,7 @@ command fetchMesmorizeMap pQuotes
    local tPath, tJSON, pOutPut, pQuote
    local tConnectionID, tSQL, tCurRange, tNo
    
-   put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"]["name"] into sNumOfQuotes
+   --put the keys of sNumOfQuotes["wordpuzzles"]["Yamas"]["name"] into sNumOfQuotes
    
    ## methods for getting from dBase
    put  JnanamDB() into tConnectionID   
@@ -325,7 +327,7 @@ command fetchMesmorizeMap pQuotes
    --      Put 0 into tNo 
    --   end if
    
-   put sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"] into tNo
+   put sNumOfQuotes["wordpuzzles"][pQuotes]["singleQuotes"] into tNo
    if tNo is 10 then
       put 1 into tNo
    else
@@ -334,7 +336,7 @@ command fetchMesmorizeMap pQuotes
    
    --put tNo
    
-   put tNo into sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"]
+   put tNo into sNumOfQuotes["wordpuzzles"][pQuotes]["singleQuotes"]
    saveUserPrefs
    put tNo
    
