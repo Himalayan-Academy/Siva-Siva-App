@@ -93,14 +93,12 @@ on mouseup
       case "Yamas"
          clearBoard
          show fld "MesmorizeFld"
-         put  "Yamas Memory Game" into sSubjectOfCollection
-         fetchMesmorizeMap
+         fetchMesmorizeMap "Yamas Memory Game"
          break
          
       case "Niyamas"
          clearBoard
          show fld "MesmorizeFld"
-         put  "Niyamas Memory Game" into sSubjectOfCollection
          fetchMesmorizeMap "Niyamas Memory Game"
          show btn "Jumble"
          break
@@ -160,7 +158,7 @@ end mouseup
 
 command loadNewBgImg -- change img for each new puzzle
    local pControl, tFolderPath, tFiles, tImgPath
-   ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
+   --ntInfo (" loadNewBgImg: lockscreen: " & the lockscreen)
    put the long id of img "bgImage" into pControl
    put path_Assets() & "/img/bkgnds/nature/landscape/"   into tFolderPath
    put files(tFolderPath) into tFiles
@@ -211,7 +209,7 @@ on createRandomPuzzle
       set the acceleratedRendering of this stack to false 
    end if
    
-   ntinfo ("the lockscreen" && the lockscreen)
+   --ntinfo ("the lockscreen" && the lockscreen)
    
    lock screen
    
@@ -265,8 +263,11 @@ command fetchRandomQuote
    
    dbSetSQL tSQL
    
-   put dbGet("quote", tConnectionID) into sSelectedQuotes
+   --put dbGet("quote", tConnectionID) into sSelectedQuotes
+   put dbGet("Yamas", tConnectionID) into sSelectedQuotes
    put random (the number of lines of the keys of sSelectedQuotes) into tNo
+   --
+   --breakpoint
    put textDecode ( sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
    put textDecode ( sSelectedQuotes[tNo]["subject"], "UTF8")  into fld "wordPuzzleSubject"
    
@@ -299,7 +300,7 @@ command fetchMesmorizeMap pQuotes
    ----- 
    --breakpoint
    -----
-   put dbGet("quote", tConnectionID) into sSelectedQuotes
+   put dbGet("Yamas", tConnectionID) into sSelectedQuotes
    
    # We have an array of sSelectedQuotes 
    # which is Yamas or Niyamas
@@ -330,6 +331,8 @@ command fetchMesmorizeMap pQuotes
    else
       Put tNo + 1 into tNo
    end if
+   
+   --put tNo
    
    put tNo into sNumOfQuotes["wordpuzzles"]["Yamas"]["singleQuotes"]
    saveUserPrefs
@@ -1051,7 +1054,7 @@ on closeCard
    hide graphic "startHere"
    storeCurrentLevel sCurLevel
    --showTitle true
-   ntInfo "closing word puzzle card"
+   --ntInfo "closing word puzzle card"
 end closeCard
 
 on closeStack

@@ -1,14 +1,14 @@
 {
 	"wordpuzzles": {
-		"Yamas": {
+		"Yamas Memory Game": {
 		    "name":"Yamas",
-		    "maxQuotes":"10",
-		    "singleQuotes":"3"
+		    "maxQuotes":10,
+		    "singleQuotes":0
 			},
-		"Niyamas": {
+		"Niyamas Memory Game": {
 		    "name":"Niyamas",
-			"maxQuotes":"10",
-		    "singleQuotes":"5"
+			"maxQuotes":10,
+		    "singleQuotes":0
 			}
 	}
 }
