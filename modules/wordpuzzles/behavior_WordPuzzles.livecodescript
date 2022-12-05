@@ -88,6 +88,7 @@ on mouseup
          break
          
       case "Jumble"
+         
          arrangeWords
          break
          
@@ -341,8 +342,10 @@ command fetchMesmorizeMap pQuotes
    put tNo
    
    put textDecode ( sSubjectOfCollection, "UTF8")  into fld "wordPuzzleSubject"
-   
    put textDecode (sSelectedQuotes[tNo]["content"], "UTF8")  into sQuote
+   
+   --
+   --breakpoint
    
    getTheQuote
    
@@ -796,7 +799,7 @@ on arrangeWords
    put the uWordList of this card into tWords
    sort lines of tWords by random(100) -- reorder
    put the width of this cd into tW
-   put the height of this cd into tH
+   put the top of btn "Index" into tH
    repeat for each  line x in tWords
       put the loc of this cd into tPt
       repeat until anyIntersect(tPt,x) = false
