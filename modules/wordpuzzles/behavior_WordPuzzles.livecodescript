@@ -4,6 +4,7 @@ doAnswer "Could not find your city. Tap the location pin to choose one.","OK"
 local sWordCount, sSourceURL, sTextSize, sPuzzleNo,sUserColorRange
 local sCurLevel,sTileGlow,sCluesGiven,sRendering,sWordLocationsA,sClues,sQuote
 local sSubjectOfCollection, sNumOfQuotes
+local sSelectedQuotes
 
 /*
 The important handles for the tiles are  located in the script
@@ -88,8 +89,13 @@ on mouseup
          break
          
       case "Jumble"
-         
-         arrangeWords
+         lock screen for visual effect
+         loadNewBgImg
+         clearBoard
+         show fld "MesmorizeFld"
+         getTheQuote
+         show btn "Jumble"
+         unlock screen with visual effect "dissolve"
          break
          
       case "Yamas"
@@ -202,7 +208,6 @@ end toggleFldVis
 
 --> CREATE THE PUZZLE
 local tWordLoc
-local sSelectedQuotes
 
 on createRandomPuzzle
    local tColors, tRGB, tTileBkgndRGB, tLoc, tNextWordRect, tNextWord, tTileName, tWordList
